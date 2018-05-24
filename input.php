@@ -31,7 +31,8 @@
   <textarea id="langtext" name="langtext" rows="10" cols="60"></textarea><br>
      <input type="submit">
   </form> 
-
+<p><b><i>VSTENO is free software.</i></b></p><p><i>Source code at:</i></p>
+<p><a href="https://github.com/marcelmaci/vsteno">https://github.com/marcelmaci/vsteno</a></p>
 </center>
 
 </body>
