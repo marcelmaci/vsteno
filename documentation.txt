@@ -1,0 +1,266 @@
+VSTENO - Vector Steno Tool with Enhanced Notational Options
+(c) 2018 - Marcel Maci
+
+Dies ist eine Kurzdokumentation zum Programm VSTENO. Da dieses das deutsche
+Stenografie-System nach Stolze-Schrey umsetzt, halte ich diese in Deutsch.
+
+(1) Lizenz
+
+VSTENO ist freie Software. Das Programm darf also kopiert, weitergegeben und
+verändert werden. Der Quellcode in PHP ist verfügbar unter:
+
+https://github.com/marcelmaci/vsteno
+
+(2) Funktion
+
+VSTENO wandelt deutschen Text in "Langschrift" in Kurzschrift (Stenografie, 
+System Stolze-Schrey) um. Der Text wird in einem Textfeld auf einer HTML-
+Seite eingegeben. VSTENO wandelt diesen mittels eines REGEX-basierten Parsers
+zuerst in eine Metaform und schliesslich in vektorbasierte Stenografiezeichen
+im Grafikformat SVG um. Sämtliche Funktionen description SVG-Grafikformats 
+werden zur Verfügung stehen, also Skalierung der Zeichen, dickere oder dünnere
+Striche, gestrichelte Linien, verschiedene Farben etc. In VSTENO kann auch 
+die sogenannte Gehrung - also die Neigung der Stenozeichen - variiert werden.
+
+(3) Demoversion
+
+Eine Demoversion ist verfügbar unter:
+
+http://www.purelab-tefc.ch/test/welcome.html
+
+Die Demoversion erlaubt noch keine Verwendung der erwähnten Gestaltungs-
+funktionen. Stenogramme werden in einer fest eingestellten Grösse, 60° geneigt
+und in der Farbe schwarz angezeigt.
+
+(4) Dateien
+
+VSTENO teilt sich die folgenden Programmteile auf:
+
+- constants.php: Definiert globale Konstanten und Variablen.
+- data.php: Enthält linguistische Daten (Regeln) für den Parser und die Defi-
+nitionen der Stenozeichen.
+- engine.php: Setzt die Daten in Stenozeichen um.
+- parser.php: Wandelt Normalschrift über verschiedene Schritte in "stenotokens"
+um, die von der engine verarbeitet werden.
+
+Input.php und output.php dienen zur Ein- und Ausgabe. Welcome.html setzt zu 
+einer klingonischen Begrüssung in typisch klingonischem Uncharme an.
+
+(5) Parser
+
+Der Parser teilt die Umwandlung von Langschrift zu Stenozeichen (stenotokens) 
+in einzelne linguistische Unterschritte auf. Jeder Unterschritt erhält eine 
+Funktion mit entsprechendem Namen:
+
+- Filter: Filtert gewisse Sonderzeichen heraus, mit dem das Programm nicht
+umgehen kann (z.B. Bindestriche, französische Anführungszeichen u. dgl.)
+- Helvetizer: Wandelt deutsche Eigenarten (z.B. "sz") in schweizerische
+Schreibweise um ("ss").
+- Decapitalizer: Wandelt alle Grossbuchstaben in Kleinbuchstaben um.
+- Normalizer: Normalisiert gewisse uneinheitliche Schreibweisen (z.B. ie, ieh
+wird zu i verkürzt).
+- Bundler: Bündelt mehrere Zeichen, die einem einzelnen Stenozeichen entspre-
+chen, indem er sie mit eckiger Klammer umschliesst (z.B. "ss", aber auch typische
+Stenokürzel wie mpf, schw etc. werden zu [SS], [MPF], [SCHW] etc.
+- Shortener: Wendet Stenokürzungen an, indem er diese in geschweifte Klammern
+setzt (z.B. {INTER}, {ZUSAMMEN}, {HINTER} etc.)
+- Transcriptor: Schreibt gebündelte und gekürzte Wörter so um, dass sie direkt
+als Stenozeichen geschrieben werden können (unterscheidet z.B. zwischen r als
+Vokalträger und r als Anlaut, die als VR (vokalisches r) und AR (Anlaut-r) dar-
+gestellt werden).
+- Substituter: Ersetzt Kürzungen durch die entsprechenden Stenozeichen.
+
+Diese Funktionen werden ergänzt durch den "Trickster", der versucht gewisse
+automatische Umwandlungen, die nicht korrekt sind, zu verhindern, indem er 
+vorgängig am eingegebenen Text "herumtrickst".
+
+(7) Metaparser
+
+Der Metaparser fasst alle obigen Einzelschritte zu einem "Gesamtparser" zu-
+sammen, der sich als "Funktionskette" präsentiert, d.h. die einzelnen Funktio-
+nen werden ineinander verschachtelt hintereinander aufgerufen. Der Metaparser
+definiert, welche Art Funktionskette genau aufgerufen werden soll und integriert
+auch das Wörterbuch.
+
+(6) Wörterbuch
+
+Da niemals alle Wörter regelmässig (gemäss der Parserregeln) umgesetzt werden,
+ist das Führen eines Wörterbuches mit Ausnahmen unumgänglich. Die entsprechende
+Funktion - Lookuper genannt - wird ebenfalls vom Metaparser aufgerufen. Ist
+ein Wort im Wörterbuch vorhanden, wird die ganze Parserkette umgangen und das
+nachgeschlagene Wort - in Form direkt verwendbarer Stenozeichen - an die engine
+weitergegeben.
+
+(7) Regeln
+
+VSTENO versucht Programm und Regeln - als die Beschreibung, wie das entsprechende
+Stenografie-System (in diesem Fall Stolze-Schrey) zumzusetzen ist, möglichst zu
+trennen. Jeder Funktion entspricht deshalb eine entsprechende "Table" mit REGEX-
+Regeln, welche die systemspezifischen Umwandlungen definiert. Als Beispiel:
+
+- Shortener: Verwendet die shortener_table.
+- Normalizer: Verwendet die normalizer_table.
+- Transcriptor: Verwendet die transcriptor_table.
+
+Die Tables sind grundsätzlich Arrays, wo der Key den zu suchenden Text darstellt,
+und der erste Eintrag die Zeichenkette, durch welche die Zeichenfolge ersetzt 
+werden soll.
+Als Formelsprache kommen sogenannte regular expressions (REGEX) zu Einsatz. Einzig
+das Wörterbuch weicht von dieser Regel ab (dort muss das Wort genau dem Eintrag
+entsprechen).
+
+(8) Stenozeichen
+
+Stenozeichen werden als eine Folge von Punkten definiert, durch welche Bezier-
+Kurven so gelegt werden, dass sie entweder möglichst rund oder - falls vom Zeichen
+erfordert - eckig verlaufen. D.h. der Schriftverlauf besteht aus einer aneinander-
+gereihten Folge von Bezier-Kurven, die jeweils durch zwei Punkte und zwei Spannungen
+definiert werden. Zwei aufeinanderfolgende Bezier-Kurven haben somit immer den
+mittleren Punkt gemeinsam. Ein möglichst sanfter - oder spitzer - Übergang zwischen
+den Kurven wird durch die Tensions gesteuert. Eine solche Abfolge von Kurven wird
+auch Splines genannt. Alles in allem ist dies eine sehr effiziente Methode, um
+Stenozeichen zu beschreiben.
+
+Weitere Details zu Splines sind verfügbar unter:
+
+http://scaledinnovation.com/analytics/splines/aboutSplines.html
+
+(9) Gehrung
+
+Stenozeichen werden zunächst als vertikale Tokens definiert, da es dies leichter
+macht, die Zeichen aneinanderzufügen. Erst wenn sämtliche Zeichen eines Wortes an-
+einandergefügt sind, wird das ganze Wort mittels trigonometrischer Funktionen ge-
+neigt. Dies wiederum für dazu, dass die Neigung keine Drehung, sondern eine parallele
+Punktverschiebung ist. D.h. die einzelnen Punkte der Stenozeichen werden auf einer
+horizontalen Gerade um den entsprechenden Grad nach rechts (im System Stolze-Schrey)
+verschoben.
+
+(10) Schattierungen
+
+Im System Stolze-Schrey müssen Zeichen schattiert werden können, um gewisse
+Vokale (die nicht geschrieben werden) anzudeuten. Ideal wäre es, wenn das
+Grafikformat SVG hier die Funktion "Powerstroke" anböte (welche für spätere
+Versionen geplant ist). Da dies im Moment nicht möglich ist, werden Schattierungen
+so gelöst, dass die zu schattierende Strecke (oder "Pfad" in SVG-Terminologie) in
+Teilstrecken unterteilt wird. Jeder Teilstrecke wird dann eine zuerst ansteigende
+und danach abfallende Dicke (Thickness) zugewiesen. Exemplarisch:
+
+    Punkt 0 - 1: Dicke 1.0 (= normal dick)
+    Punkt 1 - 2: Dicke 1.5 (= etwas dicker)
+    Punkt 2 - 3: Dicke 2.0 (= noch etwas dicker)
+    Punkt 3 - 4: Dicke 2.5 (= ziemlich dick)
+    Punkt 4 - 5: Dicke 3.0 (= maximal dick)
+    Punkt 5 - 6: Dicke 2.5 (= wieder weniger dick)
+    Punkt 7 - 8: Dicke 2.0 (= noch weniger dick)
+    Punkt 8 - 9: Dicke 1.5 (= schon fast dünn)
+    Punkt 9 - 10: Dicke 1.0 (= wieder normal dick)
+    
+Je nach Zeichen müssen mehr oder weniger Zwischenschritte definiert werden, damit
+die Übergänge einigermassen sanft verlaufen. Ideal ist die Lösung nicht, da sie
+z.B. kein Antialiasing bietet, die Übergänge also wohl oder übel immer etwas
+pixelig werden (das Resultat ist aber brauchbar und dürfte in Zukunft, mit der 
+Implementierung von Powerstrokes in SVG noch besser und einfacher werden).
+
+(11) Verbindungen
+
+Verbindungen zwischen Stenozeichen sind komplex. Es gibt Buchstaben, die spitz
+(mit einer Geraden) verbunden werden. Im System Stolze-Schrey z.B. d und t. Diese
+sind sehr einfach umzusetzen. Dann gibt es Buchstaben, die möglichst rund verbunden
+werden müssen (z.B. m und sp). Diese können grundsätzliche ebenfalls als Splines
+gehandhabt werden. Allerdings können weitere Faktoren - z.B. Hoch- und Tiefstellung 
+des bzw. Distanz zum Folgezeichen - die Sache zusätzlich verkomplizieren. Wird bei
+m z.B. unten ein leichter Bogen nach oben definiert, soll das Folgezeichen jedoch 
+tiefer angeschlossen werden, dann entsteht ein hässlicher Schnörkel. 
+Allen Zeichen ist gemein, dass sie einen Anfangs- und Einen Endpunkt haben. Diese 
+können somit in jedem Zeichen entsprechend definiert werden. Für Zeichen mit Rund-
+ungen besteht zusätzlich die Möglichkeit, einen Pivot-Punkt zu definieren. Die
+Funktion SmoothenEntryAndExitPoints() in der Steno-Engine versucht, dann je nach
+Zeichenverbindung den Entry- und Exit-Punkt so anzupassen, dass ein möglichst
+sanfter Übergang entsteht. 
+
+(12) Endschlaufen
+
+Im System Stolze-Schrey gibt es Zeichen mit Schlaufen (z.B. 'ch', 'sch', 'z' etc.),
+welche am Ende des Wortes nicht komplett geschlossen werden. Für diesen Fall
+kann in den Zeichendefinitionen ein sogenannter Early-Exit-Point definiert werden.
+Die Engine wird dann die Schlaufe nur bis zu diesem Punkt zeichnen.
+
+(13) Zeichenkombinationen
+
+In Stolze-Schrey gibt es auch Zeichen (insbesondere r und l) welche sich mit an-
+deren Zeichen verbinden können (z.B. mit t, st, d etc.). Hierfür bietet VSTENO die 
+Funktion Connecting-Point an. Man definiert in dem Fall also ein Grundzeichen wie
+gehabt als eine Reihe von Punkten. Einer dieser Punkte jedoch wird als Connecting-
+Point definiert. Die Funktion TokenCombiner fügt dann an dieser Stelle ein zweites
+Zeichen ein und fügt dieses als neues "virtuelles" Zeichen in den Array der Steno-
+zeichen ein. Um ein kombiniertes virtuelles Zeichen zu generieren benötigt es also
+folgenes:
+
+- ein Grundzeichen mit einem Connecting-Point
+- ein zweites Zeichen
+- eine Liste mit Angaben, welche Zeichen die Engine mit welchen zusammenfügen soll
+
+Die Liste der Zeichen ist in data.php als combiner_table definiert. Das Zusammen-
+fügen der Tokens erfolgt dann automatisch. Die Engine passt auch die Zeichenbreite
+der neuen virtuellen Zeichen automatisch an.
+Wenn zwei Zeichen A und B zusammengefügt werden, dann lautet der Name des neuen
+Zeichens immer AB (d.h. der TokenCombiner fügt die Namen der beiden Zeichen als
+neuen String zusammen).
+Kombinierte Zeichen können vom Parser genau gleich verwendet werden wie Grund-
+zeichen.
+
+(14) Datenformate
+
+Das Datenformat der Stenozeichen wird in constants.php relativ ausführlich doku-
+mentiert. Deshalb hier nur noch einmal das wichtigste:
+
+- jedes Stenozeichen verfügt über einen Header (im Moment 24 Einträge), die all-
+gemeine Eigenschaften des Zeichens definieren.
+- danach folgend Datentuplets von jeweils 8 Einträge, welche die einzelnen Punkte
+(oder "knots") des Stenozeichens definieren. 
+
+Jeder Punkt enthält Angaben darüber, mit welcher Tension er mit dem nächsten Punkt
+verbunden werden soll (der Wert 0 bedeutet dabei eine "spitze" Verbindung, andere
+Werte zwischen 0 und 1 - in der Regel 0.5 als "mittlere" Spannung, bedeuten eine
+"sanfte" Verbindung). Ebenfalls wird bei jedem Punkt definiert, um welche Art von
+Punkt es sich handelt (0 = normaler Punkt, 1 = Entry- oder Exit-Point, 2 = Pivot-
+Punkt, 4 = Connecting-Point, 99 = Early-Exit-Point etc.) und wie dick die Linie
+zum nächsten Punkt gezeichnet werden soll (1.0 bedeutet "normale" Dicke, kleinere
+Werte bedeuten dünner, grössere Dicker - es handelt sich hierbei um eine relative
+Dicke, die zusätzlich durch eine vom Anwender wählbare Angabe in der Zeichenfunk-
+tion global gesteuert werden kann).
+
+(15) Installation
+
+Damit VSTENO läuft, muss ein Webserver (z.B. Apache) mit PHP installiert werden.
+Das Demo-Programm kann dann typischerweise im Browser aufgerufen werden mit:
+
+http://localhost/pfad/zum/webserver/welcome.html
+
+(16) Verwendung
+
+Falls nicht das Demo-Interface verwendet werden, sondern VSTENO in ein eigenes
+Programm eingebunden werden soll, ist die Verwendung denkbar einfach:
+
+(1) Verschiedene Programmteile in eigenes Programm einbinden: parser.php, 
+data.php, constants.php, engine.php.
+
+(2) Funktion NormalText2SVG() aufrufen, z.B:
+
+$stenogramm = NormalText2SVG( "Hello world!", $angle, 0.8, 1.5, "black", "", $alternative_text);
+
+Mit $angle kann die Gehrung gewählt werden. 
+0.8 entspricht der "globalen" Dicke der Linien.
+1.5 entsprich der Skalierung (also ob die Zeichen grösser oder kleiner geschrieben
+werden sollen.
+"black" entspricht in dem Fall der HTML-Farbe (es können auch rgb-Werte im HTML-Format
+verwendet werden.
+$alternative_text ist jener Text, der im SVG-Bild zwischen den Tags <title> und </title>
+eingesetzt wird (viele Browser zeigen diesen Text als "Alternativtext" an, wenn man mit
+der Maus darüberfährt).
+
+(17) Kompatibilität
+
+Nicht jeder Browser beherrscht sauberes SVG (mit entsprechendem Antialiasing). Falls
+das Resultat eckig ausfällt - oder bei vielen Wörtern nur "wilde Linien" zu sehen sind -,
+sollte ein anderer Browser verwendet werden.
