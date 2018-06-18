@@ -134,20 +134,21 @@ function ParserChain( $text ) {
 }
 
 function MetaParser( $text ) {
-        $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));
-        $punctuation = "";
-        if (preg_match( "/[.,:;!?]/", $text) == 1) {
+        global $punctuation;
+        $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
+        $actual_punctuation = "";
+        if (preg_match( "/[$punctuation]/", $text) == 1) {
             $text_length = mb_strlen( $text );
-            $punctuation = mb_substr( $text, $text_length-1, 1);
+            $actual_punctuation = mb_substr( $text, $text_length-1, 1);
             $text = mb_substr($text, 0, $text_length-1);
         }
         $subword_array = explode( "|", Helvetizer($text) );
         $output = ""; 
         foreach ($subword_array as $subword ) {
-                $output .= ParserChain( $subword ); //$text ); //$subword ):
+                $output .= ParserChain( $subword ); 
                 if ( $subword !== end($subword_array)) $output .= "[SPACER]";  // shouldn't be hardcoded
         }
-        if (mb_strlen($punctuation) > 0) $output .= "[PSPACE][$punctuation]";
+        if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
         return $output;
 }
 

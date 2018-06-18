@@ -73,6 +73,9 @@ const offs_dr = 5;      // offset 5: dr
 const offs_d2 = 6;      // offset 6: d2
 const offs_t2 = 7;      // offset 4: t2
 
+// parser
+$punctuation = ".,:;!?";                        // metaparser recognizes these tokens as punctuation and treats them differently 
+
 // variables
 $standard_height = 10;                          // height of one token like b, g, m etc.
 $svg_height = 6 * $standard_height;             // height for svg image

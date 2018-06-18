@@ -221,7 +221,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 }
                 if ($steno_tokens[$token][offs_interpretation_y_coordinates] == 1) { /*echo "use absolute y"; */$y_interpretation = $baseline_y ;} // offset 18 indicates if y-coordinates are relative or absolute
                 else $y_interpretation = $actual_y;
-                $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_preoffset_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
+                $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
                 $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
                 $splines[] = $steno_tokens[$token][$i+offs_t1];                        // tension following the point
                 $splines[] = $steno_tokens[$token][$i+offs_d1];                        // d1
@@ -321,7 +321,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
 
 function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
         // initialize variables
-        global $baseline_y, $steno_tokens_master, $steno_tokens, $baseline_y;
+        global $baseline_y, $steno_tokens_master, $steno_tokens, $baseline_y, $punctuation;
         SetGlobalScalingVariables( $scaling );
         CreateCombinedTokens();
         $actual_x = 1;                      // start position x
@@ -329,11 +329,15 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         $splines = array();                 // contains all information for later drawing routine
         $steno_tokens = ScaleTokens( $steno_tokens_master, $scaling );        
         $vertical = "no"; $distance = "none"; $shadowed = "no";
-        
+       
         $LastToken = ""; $length_tokenlist = count($TokenList); $position = "inside";
         for ($i = 0; $i < count($TokenList); $i++) {
             $temp = $TokenList[$i];
-            if ($i == $length_tokenlist-1) $position = "last";
+            $temp1 = $TokenList[$i+1];
+            // last position = length - 1 if normal word, length - 2 if word is followed by punctuation
+            $last_position = strpos( $punctuation, $temp1 ) !== false ? -2 : -1;
+            //echo "<p>Zeichen: $temp - i+1 = $temp1 - punctuation = $punctuation - last_position: $last_position</p>";
+            if ($i == $length_tokenlist + $last_position) $position = "last";
             //echo "<p>tokenlist($i) = $temp</p>";
             // if token is a vowel ("virtual token") then set positioning variables
             // vowel <=> value 2 at offset 12 --- positioning variables $vertical, $distance, $shadowed at offsets 19, 20, 21
