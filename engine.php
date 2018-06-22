@@ -136,13 +136,13 @@ function CreateSVG( $splines, $x, $stroke_width, $color_htmlrgb, $stroke_dasharr
     $x = $x+$shift_x;
     $svg_string = "<svg width=\"$x\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
     // draw auxiliary lines
-    /*
+    
     for ($y = 1; $y < 6; $y++) {
         $temp = $y * $standard_height;
         if ($y == 4) $width = 0.5; else $width = 0.1;
         $svg_string .= "<line x1=\"0\" y1=\"$temp\" x2=\"$x\" y2=\"$temp\" style=\"stroke:rgb(120,0,0);stroke-width:$width\" />";
     }
-    */
+    
     $array_length = count( $splines );
     
     for ($n = 0; $n < $array_length - 8; $n += 8) {
@@ -249,30 +249,39 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
 }
 
 function SmoothenEntryAndExitPoints( $splines ) {
-    $entry_x = 0; $entry_y = 0; $entry_i = 0;
-    $pivot_entry_x = 0; $pivot_entry_y = 0; $pivot_entry_i = 0;
-    $exit_x = 0; $exit_y = 0; $exit_i = 0;
-    $pivot_exit_x = 0; $pivot_exit_y = 0; $pivot_exit_i = 0;    
-    for ( $i = 0; $i < count( $splines ); $i += 8) { // dies ist nur ein QUICK-FIX!!!!!!!!!!!!!!!!!
+    $entry_x = 0; $entry_y = 0; $entry_i = 0; $entry_yes = false;
+    $pivot_entry_x = 0; $pivot_entry_y = 0; $pivot_entry_i = 0; $pivot_entry_yes = false;
+    $exit_x = 0; $exit_y = 0; $exit_i = 0; $exit_yes = false;
+    $pivot_exit_x = 0; $pivot_exit_y = 0; $pivot_exit_i = 0; $pivot_exit_yes = false;
+    $end_of_tuplet_list = false; $length_splines = count( $splines );
+    for ( $i = 0; $i < $length_splines; $i += tuplet_length) { // this is just a QUICK-FIX!!!!!!!!!!!!!!!!! => should be a clean solution now
         switch ( $splines[$i+offs_d1] ) {           // test, if point is entry or pivot; ignore entry if no exit is defined
-            case "1" : if ($exit_y > 0) { $entry_x = $splines[$i+offs_x1]; $entry_y = $splines[$i+offs_y1]; $entry_i = $i; }
+            case "1" : if ($exit_yes) { $entry_x = $splines[$i+offs_x1]; $entry_y = $splines[$i+offs_y1]; $entry_i = $i; $entry_yes = true; }
             break;
-            case "2" : if ($exit_y > 0) { $pivot_entry_x = $splines[$i+offs_x1]; $pivot_entry_y = $splines[$i+offs_y1]; $pivot_entry_i = $i; }
+            case "2" : if ($exit_yes) { $pivot_entry_x = $splines[$i+offs_x1]; $pivot_entry_y = $splines[$i+offs_y1]; $pivot_entry_i = $i; $pivot_entry_yes = true; }
             break;
         }
         switch ( $splines[$i+offs_d2] ) {           // test, if point is exit or pivot
-            case "1" : $exit_x = $splines[$i+offs_x1]; $exit_y = $splines[$i+offs_y1]; $exit_i = $i; 
+            case "1" : $exit_x = $splines[$i+offs_x1]; $exit_y = $splines[$i+offs_y1]; $exit_i = $i; $exit_yes = true; 
             break;
-            case "2" : $pivot_exit_x = $splines[$i+offs_x1]; $pivot_exit_y = $splines[$i+offs_y1]; $pivot_exit_i = $i; 
+            case "2" : $pivot_exit_x = $splines[$i+offs_x1]; $pivot_exit_y = $splines[$i+offs_y1]; $pivot_exit_i = $i; $pivot_exit_yes = true;
             break;
         }
-        // as soon as an exit- and an entry-point are defined, smoothen the connecting line
-        if (($exit_y > 0) && ($entry_y > 0)) {
+        // as soon as an exit- and an entry-point are defined, smoothen the connecting line => NO!
+        // problem: if entry-point is found, scanning stops and we can't know if there is a pivot-point after it or notes_body
+        // solution: test if following tuplet contains exit point or pivot exit point (= there's no more chance to find a pivot point belonging to 
+        // entry point of the actual token => problem: the following tuplet can be non-defined (end of array) => test also, if we are at the end of the array)
+        // echo "i = $i: splines = (" . $splines[$i+offs_x1] . "/" . $splines[$i+offs_y1] . ") exit = ($exit_x/$exit_y;$pivot_exit_x/$pivot_exit_y) entry = ($entry_x/$entry_y;$pivot_entry_x/$pivot_entry_y)<br>";
+        $value_d2_next_tuplet = $splines[$i+tuplet_length+offs_d2];
+        if (($entry_yes) && (($i + tuplet_length >= $length_splines) || ($value_d2_next_tuplet == 1) || ($value_d2_next_tuplet == 2))) { /*echo "endoftuplet: i = $i / length_splines = $length_splines <br><br>";*/ $end_of_tuplet_list = yes; }
+        if (($end_of_tuplet_list) && ($exit_yes) && ($entry_yes)) {
+            //echo "entry and exit point defined:<br> exit = ($exit_x/$exit_y) ($pivot_exit_x/$pivot_exit_y) / entry = ($entry_x/$entry_y) ($pivot_entry_x/$pivot_entry_y)<br>"; 
+            //echo "pivot_exit_yes = " . !$pivot_exit_yes . " / pivot_entry_yes = $pivot_entry_yes<br>" ;
             // four cases: (1) just entry points (without pivots), (2a) exit point with pivot, (2b) entry point with pivot, (4) both with pivot
             // case 1: trivial => don't do anything
             // case 2a:
-            if (($pivot_exit_y > 0) && ($pivot_entry_y == 0)) {
-              //  echo "<p>In case 2a:</p>";
+            if (($pivot_exit_yes) && (!$pivot_entry_yes)) {
+                //echo "case 2a<br>";
                 // define line going from pivot to entry point: y = m*x + c, where m = dy / dx and c = py - m * px
                 $dx = $entry_x - $pivot_exit_x;
                 $dy = $entry_y - $pivot_exit_y;
@@ -284,7 +293,8 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 $splines[$exit_i+1] = $new_exit_y+1; // +1 ... ??? don't know ... looks better
             }
             // case 2b
-            if (($pivot_entry_y > 0) && ($pivot_exit_y == 0)) {
+            if ((!$pivot_exit_yes) && ($pivot_entry_yes)) {
+                //echo "case 2b<br>";
                 // define line going from exit point to pivot: y = m*x + c, where m = dy / dx and c = exit_y - m * exit_x
                 $dx = $pivot_entry_x - $exit_x;
                 $dy = $pivot_entry_y - $exit_y;
@@ -292,12 +302,13 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 $c = $exit_y - ( $m * $exit_x );
                 // now calculate new entry point keeping x-coordinate the same (adapting just y)
                 $new_entry_y = $m * $entry_x + $c;
+                //echo "old_entry_y = " . $splines[$entry_i+1] . " new_entry_y = $new_entry_y<br>";
                 // replace y-value for entry-point in splines with new value
-                $splines[$entry_i+1] = $new_entry_y+1;
+                $splines[$entry_i+1] = $new_entry_y; // why the hell + 1 ?!?!?
             }
             // case 4:
-            if (($pivot_entry_y > 0) && ($pivot_exit_y > 0)) {
-                // define line going from pivot to pivot: y = m*x + c, where m = dy / dx and c = pivot_exit_y - m * pivot_exit_x
+            if (($pivot_entry_yes) && ($pivot_exit_yes)) {
+                //echo "in case 4<br>"; // define line going from pivot to pivot: y = m*x + c, where m = dy / dx and c = pivot_exit_y - m * pivot_exit_x
                 $dx = $pivot_entry_x - $pivot_exit_x;
                 $dy = $pivot_entry_y - $pivot_exit_y;
                 $m = $dy / $dx;
@@ -306,14 +317,15 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 $new_exit_y = $m * $exit_x + $c;
                 $new_entry_y = $m * $entry_x + $c;
                 // replace y-value for exit- and entry-points in splines with new value
-                $splines[$exit_i+1] = $new_exit_y+1;
-                $splines[$entry_i+1] = $new_entry_y+1;
+                $splines[$exit_i+1] = $new_exit_y;
+                $splines[$entry_i+1] = $new_entry_y;
             }
             // reset all variables in order to gather new points for next connection
-            $entry_x = 0; $entry_y = 0; $entry_i = 0;
-            $pivot_entry_x = 0; $pivot_entry_y = 0; $pivot_entry_i = 0;
-            $exit_x = 0; $exit_y = 0; $exit_i = 0;
-            $pivot_exit_x = 0; $pivot_exit_y = 0; $pivot_exit_i = 0;
+            $entry_x = 0; $entry_y = 0; $entry_i = 0; $entry_yes = false;
+            $pivot_entry_x = 0; $pivot_entry_y = 0; $pivot_entry_i = 0; $pivot_entry_yes = false;
+            $exit_x = 0; $exit_y = 0; $exit_i = 0; $exit_yes = false;
+            $pivot_exit_x = 0; $pivot_exit_y = 0; $pivot_exit_i = 0; $pivot_exit_yes = false;
+            $end_of_tuplet_list = false;
         }
     }
     return $splines;

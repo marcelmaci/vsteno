@@ -64,14 +64,15 @@ const offs_shadowed = 21;                       // offset 21: variable $shadowed
 //
 // tensions: 0 = "sharp" connection (not rounded) / other floating point values between 0 and 1 (typically 0.5) = smooth connection
 
-const offs_x1 = 0;      // offset 0: x1
-const offs_y1 = 1;      // offset 1: y1
-const offs_t1 = 2;      // offset 2: t1
-const offs_d1 = 3;      // offset 3: d1
-const offs_th = 4;      // offset 4: th
-const offs_dr = 5;      // offset 5: dr
-const offs_d2 = 6;      // offset 6: d2
-const offs_t2 = 7;      // offset 4: t2
+const tuplet_length = 8; // each tuplet contains 8 entries
+const offs_x1 = 0;       // offset 0: x1
+const offs_y1 = 1;       // offset 1: y1
+const offs_t1 = 2;       // offset 2: t1
+const offs_d1 = 3;       // offset 3: d1
+const offs_th = 4;       // offset 4: th
+const offs_dr = 5;       // offset 5: dr
+const offs_d2 = 6;       // offset 6: d2
+const offs_t2 = 7;       // offset 4: t2
 
 // parser
 $punctuation = ".,:;!?";                        // metaparser recognizes these tokens as punctuation and treats them differently 
