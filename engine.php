@@ -290,7 +290,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 // now calculate new exit point keeping x-coordinate the same (adapting just y)
                 $new_exit_y = $m * $exit_x + $c;
                 // replace y-value for exit-point in splines with new value
-                $splines[$exit_i+1] = $new_exit_y+1; // +1 ... ??? don't know ... looks better
+                $splines[$exit_i+1] = $new_exit_y;
             }
             // case 2b
             if ((!$pivot_exit_yes) && ($pivot_entry_yes)) {

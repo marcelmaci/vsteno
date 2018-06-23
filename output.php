@@ -54,11 +54,12 @@ foreach ( $test_text_array as $test_wort ) {
      $bundled = Bundler( $normalized );
      $transcripted = Transcriptor( $bundled );
      $substituted = Substituter( $transcripted );
+     $metaparsed = MetaParser( $test_wort );
      $alternative_text = $original;
      //$stenogramm = TokenList2SVG( $token_list, $angle, 0.8, 1.5, "black", "", $alternative_text);   
      $stenogramm = NormalText2SVG( $test_wort, $angle, 0.8, 1.5, "black", "", $alternative_text);
      
-//     echo "<p>Start: $original<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort";
+//     echo "<p>Start: $original<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed";
   //   echo "<br>$token_list[0]/$token_list[1]/$token_list[2]/$token_list[3]/$token_list[4]/$token_list[5]/$token_list[6]<br>$stenogramm</p>";
 
      echo "$stenogramm";
