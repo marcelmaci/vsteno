@@ -17,8 +17,8 @@ VSTENO wandelt deutschen Text in "Langschrift" in Kurzschrift (Stenografie,
 System Stolze-Schrey) um. Der Text wird in einem Textfeld auf einer HTML-
 Seite eingegeben. VSTENO wandelt diesen mittels eines REGEX-basierten Parsers
 zuerst in eine Metaform und schliesslich in vektorbasierte Stenografiezeichen
-im Grafikformat SVG um. Sämtliche Funktionen description SVG-Grafikformats 
-werden zur Verfügung stehen, also Skalierung der Zeichen, dickere oder dünnere
+im Grafikformat SVG um. Sämtliche Funktionen des SVG-Grafikformats werden 
+zur Verfügung stehen, also Skalierung der Zeichen, dickere oder dünnere
 Striche, gestrichelte Linien, verschiedene Farben etc. In VSTENO kann auch 
 die sogenannte Gehrung - also die Neigung der Stenozeichen - variiert werden.
 
@@ -160,6 +160,9 @@ die Übergänge einigermassen sanft verlaufen. Ideal ist die Lösung nicht, da s
 z.B. kein Antialiasing bietet, die Übergänge also wohl oder übel immer etwas
 pixelig werden (das Resultat ist aber brauchbar und dürfte in Zukunft, mit der 
 Implementierung von Powerstrokes in SVG noch besser und einfacher werden).
+Um die Darstellung zu verbessern, werden Zwischenpunkte (so genannte intermediate
+shadow points) bei unschattierten Zeichen ignoriert (die Kurven verlaufen dadurch
+sanfter und weisen weniger Kanten auf).
 
 (11) Verbindungen
 
@@ -171,7 +174,7 @@ gehandhabt werden. Allerdings können weitere Faktoren - z.B. Hoch- und Tiefstel
 des bzw. Distanz zum Folgezeichen - die Sache zusätzlich verkomplizieren. Wird bei
 m z.B. unten ein leichter Bogen nach oben definiert, soll das Folgezeichen jedoch 
 tiefer angeschlossen werden, dann entsteht ein hässlicher Schnörkel. 
-Allen Zeichen ist gemein, dass sie einen Anfangs- und Einen Endpunkt haben. Diese 
+Allen Zeichen ist gemein, dass sie einen Anfangs- und einen Endpunkt haben. Diese 
 können somit in jedem Zeichen entsprechend definiert werden. Für Zeichen mit Rund-
 ungen besteht zusätzlich die Möglichkeit, einen Pivot-Punkt zu definieren. Die
 Funktion SmoothenEntryAndExitPoints() in der Steno-Engine versucht, dann je nach
@@ -226,7 +229,7 @@ Werte zwischen 0 und 1 - in der Regel 0.5 als "mittlere" Spannung, bedeuten eine
 Punkt es sich handelt (0 = normaler Punkt, 1 = Entry- oder Exit-Point, 2 = Pivot-
 Punkt, 4 = Connecting-Point, 99 = Early-Exit-Point etc.) und wie dick die Linie
 zum nächsten Punkt gezeichnet werden soll (1.0 bedeutet "normale" Dicke, kleinere
-Werte bedeuten dünner, grössere Dicker - es handelt sich hierbei um eine relative
+Werte bedeuten dünner, grössere dicker - es handelt sich hierbei um eine relative
 Dicke, die zusätzlich durch eine vom Anwender wählbare Angabe in der Zeichenfunk-
 tion global gesteuert werden kann).
 
@@ -239,7 +242,7 @@ http://localhost/pfad/zum/webserver/welcome.html
 
 (16) Verwendung
 
-Falls nicht das Demo-Interface verwendet werden, sondern VSTENO in ein eigenes
+Falls nicht das Demo-Interface verwendet, sondern VSTENO in ein eigenes
 Programm eingebunden werden soll, ist die Verwendung denkbar einfach:
 
 (1) Verschiedene Programmteile in eigenes Programm einbinden: parser.php, 
@@ -247,16 +250,17 @@ data.php, constants.php, engine.php.
 
 (2) Funktion NormalText2SVG() aufrufen, z.B:
 
-$stenogramm = NormalText2SVG( "Hello world!", $angle, 0.8, 1.5, "black", "", $alternative_text);
+$stenogramm = NormalText2SVG( "Hallo Welt!", $angle, $thickness, $scaling, $color, $stroke_dasharray, $alternative_text);
 
-Mit $angle kann die Gehrung gewählt werden. 
-0.8 entspricht der "globalen" Dicke der Linien.
-1.5 entsprich der Skalierung (also ob die Zeichen grösser oder kleiner geschrieben
-werden sollen.
-"black" entspricht in dem Fall der HTML-Farbe (es können auch rgb-Werte im HTML-Format
-verwendet werden.
-$alternative_text ist jener Text, der im SVG-Bild zwischen den Tags <title> und </title>
-eingesetzt wird (viele Browser zeigen diesen Text als "Alternativtext" an, wenn man mit
+Parameter:
+- $angle: definiert die Gehrung/Neigung (empfohlen 60 Grad). - 
+- $thickness: Dicke der Linien (empfohlen 0.8).
+- $scaling: Skalierung (Vergössern oder Verkleinern) der Zeichen (empfohlen 1.5).
+- $color: hier kann HTML-Notation verwendet werden (z.B. "black" oder rgb(0,0,0) für Schwarz.
+- $stroke_dasharray: definiert den Stil der Linie (z.B. gepunktet, gestrichtelt etc.); wird als HTML-Attribut 
+stroke-dasharray=\"$stroke_dasharray\" gesetzt (möglich ist z.B. der Wert "1,1").
+- $alternative_text: Text, der im SVG-Bild zwischen die Tags <title></title>
+gesetzt wird (viele Browser zeigen diesen Text als "Alternativtext" an, wenn man mit
 der Maus darüberfährt).
 
 (17) Kompatibilität
@@ -264,3 +268,20 @@ der Maus darüberfährt).
 Nicht jeder Browser beherrscht sauberes SVG (mit entsprechendem Antialiasing). Falls
 das Resultat eckig ausfällt - oder bei vielen Wörtern nur "wilde Linien" zu sehen sind -,
 sollte ein anderer Browser verwendet werden.
+
+(18) Worttrennung
+
+Lange Wörter werden in Steno oft getrennt geschrieben. VSTENO kann dies mit 
+dem Zeichen "|" umsetzen: Bei der Eingabe "Tisch|tuch" führt wird also zuerst das
+Wort Tisch stenografiert, danach kehrt die "virtuelle Feder" zur Grundlinie zurück
+und schreibt das Wort "tuch" knapp (d.h. mit engem Abstand) dahinter. Obwohl das Wort
+in zwei Schritten geschrieben wird, betrachtet VSTENO beide Teile als zusammengehörig
+und schreibt das Resultat ins gleiche SVG (d.h. die Teile werden also auch bei Zeilen-
+umbruch nicht getrennt).
+
+(19) Satzzeichen
+
+Satzzeichen werden von VSTENO ebenfalls als zum vohergehenden Wort gehörig betrachtet,
+d.h. das Wort "Super!" wird zusammen mit dem Satzzeichen ins gleiche SVG geschrieben.
+Auch dies verhindert, dass beim Vergrössern/Verkleinern des Browserfensters das Satz-
+zeichen vom Wort getrennt wird (und z.B. "verwaist" auf der nächsten Zeile erscheint).
