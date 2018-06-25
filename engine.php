@@ -165,9 +165,12 @@ function CreateSVG( $splines, $x, $stroke_width, $color_htmlrgb, $stroke_dasharr
 }
 
 function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_token, $actual_x, $actual_y, $vertical, $distance, $shadowed, $factor ) {
-        global $steno_tokens, $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $half_upordown, $one_upordown, $standard_height, $baseline_y;
+        global $steno_tokens, $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $half_upordown, $one_upordown, 
+        $standard_height, $baseline_y, $dont_connect;
         $token_definition_length = count( $steno_tokens[$token] );           // continue splines-list
+        //$old_dont_connect = $dont_connect;
     if ( count( $steno_tokens[$token] > 0)) { ///????
+        // ********************** header operations *************************************
         // if token is prefix then adjust actual_y
         // add inconditional deltay to token if specified in token_list
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_before] * $standard_height;
@@ -198,7 +201,10 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 case "up" : $actual_y -= ($steno_tokens[$token][offs_delta_y_before] * $standard_height); break;
                 case "down" : $actual_y += $half_upordown /*0.5 * $standard_height*/; 
                 break; 
-        }    
+        }   
+        $old_dont_connect = $dont_connect;
+        $dont_connect = $steno_tokens[$token][offs_dont_connect]; // echo "$token: old_dont_connect=$old_dont_connect / dont_connect = $dont_connect<br>";
+        // ******************************** data operations *************************************************
         // start with $i after header (offset header_length)
         $stop_inserting = FALSE; 
         $initial_splines_length = count($splines);
@@ -207,11 +213,24 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
             // set tension for preceeding point at offset 7 from header offset 3 of token to insert
             $splines[$initial_splines_length - 1] = $steno_tokens[$token][$i+offs_tension_before];
         }
-        for ($i = header_length; $i < $token_definition_length; $i += 8) {
+        for ($i = header_length; $i < $token_definition_length; $i += tuplet_length) {
             $insert_this_point = TRUE;
-            $temp = $steno_tokens[$token][$i+3];
-            if ($steno_tokens[$token][$i+offs_d1] == 4) $insert_this_point = FALSE;
-           
+            $pt_type_entry = $steno_tokens[$token][$i+offs_d1];
+            $pt_type_exit = $steno_tokens[$token][$i+offs_d2];
+            // dont insert: (1) connecting points, (2) intermediate shadow points, if token is not shadowed, 
+            if (
+                ($pt_type_entry == connecting_point) 
+                || (($pt_type_entry == intermediate_shadow_point) && ($shadowed == "no")) 
+               ) $insert_this_point = FALSE;
+            // pivot point: if entry/exit point is conditional pivot (= value 3) 
+            // (1) if token in normal position => insert pivot as normal point (= value 0)
+            // (2) if token in up oder down position => insert normal pivot point (= value 2)
+               
+               
+            //   || (($pt_type_entry == conditional_pivot_point) && ($vertical !== "no"))
+            //    || (($pt_type_exit == conditional_pivot_point) && ($vertical !== "no"))
+               
+            //echo "$token\[$i\]: type: entry = $pt_type_entry, exit = $pt_type_exit / shadowed = $shadowed  / vertical = $vertical / insert = $insert_this_point<br>";
             if (( $stop_inserting === FALSE ) && ($insert_this_point === TRUE)) {
                 //echo "inserting point ...";
                 $exit_point_type = $steno_tokens[$token][$i+offs_d2];     // test if point is early exit point with value 99
@@ -219,16 +238,33 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                     $stop_inserting = TRUE;
                     $exit_point_type = 1;                           // make this point a classical exit point
                 }
-                if ($steno_tokens[$token][offs_interpretation_y_coordinates] == 1) { /*echo "use absolute y"; */$y_interpretation = $baseline_y ;} // offset 18 indicates if y-coordinates are relative or absolute
+                if ($steno_tokens[$token][offs_interpretation_y_coordinates] == 1) { /*echo "$token: use absolute y = $baseline_y"; */ $y_interpretation = $baseline_y; $actual_y = $baseline_y; } // offset 18 indicates if y-coordinates are relative or absolute
                 else $y_interpretation = $actual_y;
                 $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
                 $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
                 $splines[] = $steno_tokens[$token][$i+offs_t1];                        // tension following the point
-                $splines[] = $steno_tokens[$token][$i+offs_d1];                        // d1
+                // pivot point: if entry/exit point is conditional pivot (= value 3) 
+                // (1) if token in normal position or down => insert pivot as normal point (= value 0)
+                // (2) if token in up position => insert normal pivot point (= value 2)
+                $value_to_insert = $steno_tokens[$token][$i+offs_d1];
+                /*
+                if ($value_to_insert == conditional_pivot_point) {
+                    if ($vertical !== "up") $value_to_insert = 0;
+                    else $value_to_insert = 2;
+                }
+                */
+                $splines[] = $value_to_insert;                        // d1
                 if (($shadowed == "yes") || ($steno_tokens[$token][offs_token_type] == "1")) $splines[] = $steno_tokens[$token][$i+offs_th];  // th = relative thickness of following spline (1.0 = normal thickness)
                 else $splines[] = 1.0;
-                $splines[] = $steno_tokens[$token][$i+offs_dr];                        // dr
-                $splines[] = $exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
+                $tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
+                $value_to_insert = $exit_point_type;
+                /*
+                if ($value_to_insert == conditional_pivot_point) {
+                    if ($vertical !== "up") $value_to_insert = 0;
+                    else $value_to_insert = 2;
+                }
+                */
+                $splines[] = $value_to_insert; //$exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
                 //$splines[] = $token_list[$token][$i+7];                          // tension before next point // this line is WRONG !!!!???
                 $splines[] = $steno_tokens[$token][$i+offs_t2];
             }
@@ -346,10 +382,11 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         for ($i = 0; $i < count($TokenList); $i++) {
             $temp = $TokenList[$i];
             $temp1 = $TokenList[$i+1];
-            // last position = length - 1 if normal word, length - 2 if word is followed by punctuation
-            $last_position = strpos( $punctuation, $temp1 ) !== false ? -2 : -1;
+            // last position = length - 1 if normal word, length - 2 if word is followed by punctuation => wrong: there may be more than one punctuation char, in addition there might be the "|" char ... !
+            $temp1_punctuation = mb_strpos( $punctuation, $temp1 ) !== false ? true : false;
+            $temp1_separator = mb_strpos( "|", $temp1) !== false ? true : false;
             //echo "<p>Zeichen: $temp - i+1 = $temp1 - punctuation = $punctuation - last_position: $last_position</p>";
-            if ($i == $length_tokenlist + $last_position) $position = "last";
+            if (($i == $length_tokenlist -1) || ($temp1_punctuation) || ($temp1_separator)) $position = "last";
             //echo "<p>tokenlist($i) = $temp</p>";
             // if token is a vowel ("virtual token") then set positioning variables
             // vowel <=> value 2 at offset 12 --- positioning variables $vertical, $distance, $shadowed at offsets 19, 20, 21

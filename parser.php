@@ -146,7 +146,7 @@ function MetaParser( $text ) {
         $output = ""; 
         foreach ($subword_array as $subword ) {
                 $output .= ParserChain( $subword ); 
-                if ( $subword !== end($subword_array)) $output .= "[SPACER]";  // shouldn't be hardcoded
+                if ( $subword !== end($subword_array)) $output .= "|";  // shouldn't be hardcoded
         }
         if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
         return $output;

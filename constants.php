@@ -28,7 +28,7 @@ error_reporting(0);                 // turn off all error reporting
 // for steno tokens (array with header and data tuplets)
 
 // header
-const header_length = 24;                       // 24 first values of every tokens is reserved for header
+const header_length = 24;                       // 24 first values of every token is reserved for header
 const offs_token_width = 0;                     // offset 0: width of token
 const offs_delta_y_before = 1;                  // offset 1: delta_y (if token has to be placed higher)
 const offs_delta_y_after = 2;                   // offset 2: baseline after higher position (different for "ich" and "is" for example)
@@ -49,7 +49,8 @@ const offs_interpretation_y_coordinates = 18;   // offset 18: interpretation for
 const offs_vertical = 19;                       // offset 19: variable $vertical (string): "no" = next token has same vertical height / "up" = next token must be placed higher / "down" = next token has to be placed lower (connected to offset 12)
 const offs_distance = 20;                       // offset 20: variable $distance (string): "narrow" or "none" = no distance / "wide" = distance defined in constants $horizontal_distance_narrow/wide (connected to offset 12)
 const offs_shadowed = 21;                       // offset 21: variable $shadowed (string): "yes" = shadowed / "no" = not shadowed
-                                                // offsets 22-23: not used
+const offs_dont_connect = 22;                   // offset 22: 0 = default, 1 = don't connect to the following token (i.e. insert it without connection to previous token)
+                                                // offset 23: not used
 
 // data tuplets: each tuplets contains 8 entries like so:  [x1, y1, t1, d1, th, dr, d2, t2 ]
 //
@@ -57,9 +58,12 @@ const offs_shadowed = 21;                       // offset 21: variable $shadowed
 // y1: y coordinate of knot
 // t1: tension following the knot (bezier curve, tension preceeding the knot is stored in preceeding knot at offset 7)
 // d1: entry data field: 0 = regular point / 1 = entry point / 2 = pivot point / 4 = connecting point (for combined tokens created "on the fly")
+//                       5 = "intermediate shadow point" (this point will only be used if the token is shadowed, otherwise it wont be inserted into splines),
+//                       3 = conditional pivot point: if token is in normal position this point will be ignored/considered as a normal point (= value 0)
 // th: relative thickness of knot: 1.0 = normal thickness (lower values = thinner / higher values = thicker)
 // dr: data field for drawing function: 0 = normal (i.e. connect points) / 5 = don't connect to this point from preceeding point
 // d2: exit data field: 0 = regular point / 1 = exit point / 2 = pivot point / 99 = early exit point (= this point is the last one inserted into splines if token is the last one in tokenlist)
+//                      3 = conditional pivot point: if token is in normal position this point will be ignored/considered as a normal point (= value 0)
 // t2: tension preceeding the following knot (bezier kurve)
 //
 // tensions: 0 = "sharp" connection (not rounded) / other floating point values between 0 and 1 (typically 0.5) = smooth connection
@@ -74,6 +78,22 @@ const offs_dr = 5;       // offset 5: dr
 const offs_d2 = 6;       // offset 6: d2
 const offs_t2 = 7;       // offset 4: t2
 
+const regular_point = 0;
+const entry_point = 1;
+const pivot_point = 2;
+//const conditional_pivot_point = 3;        
+// probably not a goog concept: conflict with alternative exit point (e.g. sch: wischen, rauschen, puschen, preschen 
+// => better to leave this job to the parser: define special tokens for higher poisitions, e.g. "^SCH" without alternative exit point (=> "-EN" will be added correctly)
+// this means more data, but is less complicated
+const connecting_point = 4;
+const intermediate_shadow_point = 5;
+
+const exit_point = 1;
+const early_exit_point = 99;
+
+const draw_normal = 0;
+const draw_no_connection = 5;
+
 // parser
 $punctuation = ".,:;!?";                        // metaparser recognizes these tokens as punctuation and treats them differently 
 
@@ -87,6 +107,9 @@ $one_upordown = $standard_height;               //   "                          
 $horizontal_distance_none = 0;
 $horizontal_distance_narrow = $standard_height / 4;
 $horizontal_distance_wide = $standard_height * 1;
+
+// flags
+$dont_connect = 0;
 
 // declarations
 $splines = array();                             // not really necessary in php
