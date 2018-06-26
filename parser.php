@@ -84,7 +84,7 @@ function Trickster( $word ) {
     global $trickster_table;
     $output = $word;
     foreach ( $trickster_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
+        $output = preg_replace( "/$pattern/", $replacement, $output ); //echo "trickster-pattern: $pattern word: $word output: $output<br>";
     }
     if (strcmp($word, $output) == 0) return ""; // if no trickster rule was applied return "" to tell metaparser to apply normal parserchain
     else return $output; // if there was a match in trickster return it in order to tell metaparser to apply reduced parserchain (i.e. without decapitalizer)
@@ -128,7 +128,7 @@ function ParserChain( $text ) {
         // if there is no entry in the dictionary: try trickster first (befory applying parserchain)
         // if trickster returns a result, then avoid decapitalizer (trickster needs capital letter to distinguish between certain words, avoiding decapitalizing
         // gives the trickster the possibility to mark certain parts of the words as capitals (so they won't get treated by certain rules of the parser chain))
-        $result = Trickster( $text );
+        $result = Trickster( $text ); // echo "text: $text / trickster: $result<br>";
         if ( mb_strlen($result) > 0 ) return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Filter( $result )))))); // don't apply decapitalizer
         else return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Decapitalizer( Filter(( $text )))))))); // apply normal parserchain on original word
 }
