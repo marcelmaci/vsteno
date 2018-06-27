@@ -35,7 +35,10 @@ const offs_delta_y_after = 2;                   // offset 2: baseline after high
 const offs_tension_before = 3;                  // offset 3: tension before first point of token
 const offs_additional_x_before = 4;             // offset 4: additional width before token (added to offset 0)
 const offs_additional_x_after = 5;              // offset 5: additional width after token (added to offset 0)
-const offs_additional_delta_y = 6;              // offset 6: additional vertical delta_y (?) (unclear, probably obsolete!?! => some tokens like "ist" use it => leave it for the moment )
+const offs_additional_delta_y = 6;              // offset 6: additional delta y (used e.g. by [0D-]
+//const offs_relative_baseline_shifter = 6;       // offset 6: reused from "additional vertical delta_y" (which seems to be obsolete: WRONG! IS USED BY [0D-])
+                                                //           0 = use standard baseline, positive values: 1 = place token 1 line higher
+                                                //           negative values: -0.5: place token 1/2 line lower => can be used for [&T] + consonant
                                                 // offsets 7-11: unused (obsolete, free for reuse)
 const offs_token_type = 12;                     // offset 12: token type: 0 = normal token (with/without shadows) / 
                                                 //            1 = allways shadowed / 2 = "virtual" tokens (defines how the following 
@@ -71,13 +74,22 @@ const offs_dont_connect = 22;                   // offset 22: 0 = default, 1 = d
 const tuplet_length = 8; // each tuplet contains 8 entries
 const offs_x1 = 0;       // offset 0: x1
 const offs_y1 = 1;       // offset 1: y1
-const offs_t1 = 2;       // offset 2: t1
-const offs_d1 = 3;       // offset 3: d1
+const offs_t1 = 2;       // offset 2: t1 => qx1*
+const offs_d1 = 3;       // offset 3: d1 => qy1*
 const offs_th = 4;       // offset 4: th
-const offs_dr = 5;       // offset 5: dr
-const offs_d2 = 6;       // offset 6: d2
-const offs_t2 = 7;       // offset 4: t2
+const offs_dr = 5;       // offset 5: dr 
+const offs_d2 = 6;       // offset 6: d2 => qx2*
+const offs_t2 = 7;       // offset 4: t2 => qy2*
 
+// * IMPORTANT:
+// Values t1, d1 (offsets 2+3) and d2, t2 (offsets 6+7) are later overwritten by function CalculateWord()
+// The new values written to the tuplet correspond to the control points for the bezier curve (qx1, qy1, qx2, qy2)
+const bezier_offs_qx1 = 3;
+const bezier_offs_qy1 = 4;
+const bezier_offs_qx2 = 6;
+const bezier_offs_qy2 = 7;
+
+// constants for signification of values contained in data tuplets
 const regular_point = 0;
 const entry_point = 1;
 const pivot_point = 2;

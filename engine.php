@@ -97,7 +97,7 @@ function CalculateWord( $splines ) {     // parameter $splines
         // set control points for first knot to coordinates of first knot
         $splines[2] = $splines[0];
         $splines[3] = $splines[1];            
-        for ($n = 8; $n < $array_length - 8; $n += 8) {         // start with second point and end with second point before the end
+        for ($n = tuplet_length; $n < $array_length - tuplet_length; $n += tuplet_length) {         // start with second point and end with second point before the end
             // define variables
             $x0 = $splines[$n-8];
             $y0 = $splines[$n-7];
@@ -127,6 +127,20 @@ function CalculateWord( $splines ) {     // parameter $splines
         $splines[$n-1] = $splines[$n+1];
         $sn = $splines[$n]; 
         $sn1 = $splines[$n+1]; 
+        // Feature of non-connecting knots (= value 5 in position offs_dr in data-tuplet) has been introduced after original CalculatWord-function.
+        // Non-connecting knots means that the control-points calculated by the function are superflous / wrong (instead of the calculated values,
+        // the control point of the last knot should be set to the same value (i.e. x-/y-coordinates of last knot).
+        // In order to simplify things, this correction is applied as a second step after the original calculation.
+        // too complicated: leave this to function CreateSVG() --- following code is WRONG!
+        /*
+        for ($n = 0; $n < $array_length; $n += tuplet_length) {
+            $value_dr_next_tuplet = $splines[$n+tuplet_length+offs_dr];
+            if ($value_dr_next_tuplet == draw_no_connection) {
+                $splines[$n+bezier_offs_qx1] = $splines[$n+tuplet_length+offs_x1];
+                $splines[$n+bezier_offs_qy1] = $splines[$n+tuplet_length+offs_y1];
+            }
+        }
+        */
         return $splines;
 }
 
@@ -144,8 +158,11 @@ function CreateSVG( $splines, $x, $stroke_width, $color_htmlrgb, $stroke_dasharr
     }
     
     $array_length = count( $splines );
-    
-    for ($n = 0; $n < $array_length - 8; $n += 8) {
+/*    for ($n = 0; $n <= $array_length - tuplet_length; $n+=tuplet_length) {
+            echo "splines($n): "; for ($i = 0; $i < tuplet_length; $i++) echo $splines[$n+$i] . "-";
+            echo "<br>";
+    }*/
+    for ($n = 0; $n <= $array_length - 8; $n += tuplet_length) {
         $x1 = $splines[$n] + $shift_x;
         $y1 = $splines[$n+1];
         $q1x = $splines[$n+2] + $shift_x;
@@ -156,8 +173,13 @@ function CreateSVG( $splines, $x, $stroke_width, $color_htmlrgb, $stroke_dasharr
         $q2y = $splines[$n+7];
         $x2 = $splines[$n+8] + $shift_x;
         $y2 = $splines[$n+9];
-        $absolute_thickness = $stroke_width * $relative_thickness;
-        if ($splines[$n+8+5] == 5) $absolute_thickness = 0; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+        $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+        // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+        // this method doesn't work with n, m, b ... why???
+        if ($splines[$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+        // correct control points if following point is non-connecting (see CalculateWord() for more detail)
+        // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
+        if ($splines[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
         $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
     }
     $svg_string .= "</g>Sorry, your browser does not support inline SVG.</svg>";
@@ -174,11 +196,12 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         // if token is prefix then adjust actual_y
         // add inconditional deltay to token if specified in token_list
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_before] * $standard_height;
-        $additional_deltay = 0;
+        $additional_deltay = 0; // probably obsolete ?!
         if ($steno_tokens[$token][offs_additional_delta_y] === 1) {         // probably obsolete with absolute positioning at offset 18 (but leave it for the moment)
             $additional_deltay = $standard_height * $steno_tokens[$token][offs_delta_y_after];
             $actual_y -= $additional_deltay;
         }
+        //$actual_y -= $steno_tokens[$token][offs_relative_baseline_shifter] * $standard_height; // didn't work ...
         // offset 17 == 1 means: use alternative exit point of preceding token (= $LastToken), if it offers one
         if ($steno_tokens[$token][offs_exit_point_to_use] == 1) {
             // token requires alternative exit point
@@ -204,6 +227,8 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         }   
         $old_dont_connect = $dont_connect;
         $dont_connect = $steno_tokens[$token][offs_dont_connect]; // echo "$token: old_dont_connect=$old_dont_connect / dont_connect = $dont_connect<br>";
+        if ($dont_connect == 1) $actual_y = $baseline_y;
+        
         // ******************************** data operations *************************************************
         // start with $i after header (offset header_length)
         $stop_inserting = FALSE; 
@@ -242,7 +267,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 else $y_interpretation = $actual_y;
                 $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
                 $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
-                $splines[] = $steno_tokens[$token][$i+offs_t1];                        // tension following the point
+                $splines[] = /*(($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 0 :*/ $steno_tokens[$token][$i+offs_t1];                        // tension following the point
                 // pivot point: if entry/exit point is conditional pivot (= value 3) 
                 // (1) if token in normal position or down => insert pivot as normal point (= value 0)
                 // (2) if token in up position => insert normal pivot point (= value 2)
@@ -257,6 +282,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 if (($shadowed == "yes") || ($steno_tokens[$token][offs_token_type] == "1")) $splines[] = $steno_tokens[$token][$i+offs_th];  // th = relative thickness of following spline (1.0 = normal thickness)
                 else $splines[] = 1.0;
                 $tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
+                //echo "token = $token / i = $i / old_dont_connect = $old_dont_connect / tempdr = $tempdr<br>";
                 $value_to_insert = $exit_point_type;
                 /*
                 if ($value_to_insert == conditional_pivot_point) {
@@ -266,7 +292,13 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 */
                 $splines[] = $value_to_insert; //$exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
                 //$splines[] = $token_list[$token][$i+7];                          // tension before next point // this line is WRONG !!!!???
-                $splines[] = $steno_tokens[$token][$i+offs_t2];
+                /*echo "i = $i / token_definition_length = $token_definition_length / position = $position<br>";*/ $splines[] = /*(($position === "last") && ($i == ($token_definition_lenght - tuplet_length))) ? 0 :*/ $steno_tokens[$token][$i+offs_t2];
+                // duplicate last point of last token in order to avoid weired lines before punctuation
+            /*    if (($position === "last") && ($i == ($token_definition_length - tuplet_length))) {
+                    $splines_actual_length = count( $splines );
+                    $start_last_point = $splines_actual_length - tuplet_length;
+                    for ($t = 0; $t < 8; $t++) $splines[] = $splines[$start_last_point + $t];
+                } */
             }
         }
         // correct start tension of preceeding point (for example upper point from d in "leider") - only if tension is 0
@@ -290,6 +322,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
     $exit_x = 0; $exit_y = 0; $exit_i = 0; $exit_yes = false;
     $pivot_exit_x = 0; $pivot_exit_y = 0; $pivot_exit_i = 0; $pivot_exit_yes = false;
     $end_of_tuplet_list = false; $length_splines = count( $splines );
+    $dont_connect_flag = false;
     for ( $i = 0; $i < $length_splines; $i += tuplet_length) { // this is just a QUICK-FIX!!!!!!!!!!!!!!!!! => should be a clean solution now
         switch ( $splines[$i+offs_d1] ) {           // test, if point is entry or pivot; ignore entry if no exit is defined
             case "1" : if ($exit_yes) { $entry_x = $splines[$i+offs_x1]; $entry_y = $splines[$i+offs_y1]; $entry_i = $i; $entry_yes = true; }
@@ -304,13 +337,18 @@ function SmoothenEntryAndExitPoints( $splines ) {
             break;
         }
         // as soon as an exit- and an entry-point are defined, smoothen the connecting line => NO!
-        // problem: if entry-point is found, scanning stops and we can't know if there is a pivot-point after it or notes_body
+        // problem: if entry-point is found, scanning stops and we can't know if there is a pivot-point after it or not
         // solution: test if following tuplet contains exit point or pivot exit point (= there's no more chance to find a pivot point belonging to 
         // entry point of the actual token => problem: the following tuplet can be non-defined (end of array) => test also, if we are at the end of the array)
+        // additional problem: if last token has pivot point and is followed by punctuation token (which should be completely disconnected from preceeding
+        // token) in also smoothens the exit point (which is wrond). Solution: test if following entry point is non-connection (= value 5 in offs_dr)
+        // => if following point is non-connecting, don't smoothen the exit point!
         // echo "i = $i: splines = (" . $splines[$i+offs_x1] . "/" . $splines[$i+offs_y1] . ") exit = ($exit_x/$exit_y;$pivot_exit_x/$pivot_exit_y) entry = ($entry_x/$entry_y;$pivot_entry_x/$pivot_entry_y)<br>";
         $value_d2_next_tuplet = $splines[$i+tuplet_length+offs_d2];
+        $value_dr_next_tuplet = $splines[$i+tuplet_length+offs_dr]; // echo "value_dr_next_tuplet = $value_dr_next_tuplet / dont_connect_flag = $dont_connect_flag<br>";
+        if ($value_dr_next_tuplet == draw_no_connection) $dont_connect_flag = true;
         if (($entry_yes) && (($i + tuplet_length >= $length_splines) || ($value_d2_next_tuplet == 1) || ($value_d2_next_tuplet == 2))) { /*echo "endoftuplet: i = $i / length_splines = $length_splines <br><br>";*/ $end_of_tuplet_list = yes; }
-        if (($end_of_tuplet_list) && ($exit_yes) && ($entry_yes)) {
+        if (($end_of_tuplet_list) && ($exit_yes) && ($entry_yes) && (!$dont_connect_flag)) {
             //echo "entry and exit point defined:<br> exit = ($exit_x/$exit_y) ($pivot_exit_x/$pivot_exit_y) / entry = ($entry_x/$entry_y) ($pivot_entry_x/$pivot_entry_y)<br>"; 
             //echo "pivot_exit_yes = " . !$pivot_exit_yes . " / pivot_entry_yes = $pivot_entry_yes<br>" ;
             // four cases: (1) just entry points (without pivots), (2a) exit point with pivot, (2b) entry point with pivot, (4) both with pivot
@@ -361,7 +399,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
             $pivot_entry_x = 0; $pivot_entry_y = 0; $pivot_entry_i = 0; $pivot_entry_yes = false;
             $exit_x = 0; $exit_y = 0; $exit_i = 0; $exit_yes = false;
             $pivot_exit_x = 0; $pivot_exit_y = 0; $pivot_exit_i = 0; $pivot_exit_yes = false;
-            $end_of_tuplet_list = false;
+            $end_of_tuplet_list = false; $dont_connect_flag = false;
         }
     }
     return $splines;
@@ -369,7 +407,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
 
 function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
         // initialize variables
-        global $baseline_y, $steno_tokens_master, $steno_tokens, $baseline_y, $punctuation;
+        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation;
         SetGlobalScalingVariables( $scaling );
         CreateCombinedTokens();
         $actual_x = 1;                      // start position x
