@@ -410,6 +410,7 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation;
         SetGlobalScalingVariables( $scaling );
         CreateCombinedTokens();
+        CreateShiftedTokens();
         $actual_x = 1;                      // start position x
         $actual_y = $baseline_y;            // start position y
         $splines = array();                 // contains all information for later drawing routine
@@ -512,7 +513,7 @@ function TokenCombiner( $first_token, $second_token ) {
     $new_token[offs_additional_x_before] = $new_token[offs_additional_x_before] + $steno_tokens_master[$second_token][offs_token_width];
 
     // now copy all the points of the $first_token, inserting second token at connection point
-    for ($i = header_length; $i < count($steno_tokens_master[$first_token]); $i += 8) {
+    for ($i = header_length; $i < count($steno_tokens_master[$first_token]); $i += tuplet_length) {
         if ( $steno_tokens_master[$first_token][$i+offs_d1] != 4 ) {
                 // point is not a connection point => copy point without modification 
                 for ($j = 0; $j < 8; $j++) $new_token[] = $steno_tokens_master[$first_token][$i+$j];
@@ -567,4 +568,48 @@ function CreateCombinedTokens() {
     foreach ($combiner_table as $entry ) TokenCombiner( $entry[0], $entry[1] );
 }
 
+// TokenShifter: 
+// - shifts tokens adding deltax, deltay to coordinates of original token
+// - additionally TokenShifter writes values offs_inconditional_delta_y_before/after (offsets 13 & 14) to header of new token
+//
+
+function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $inconditional_delta_y_before, $inconditional_delta_y_after ) {
+    global $steno_tokens_master;
+    $new_token = array();
+    $new_token_key = $key_for_new_token;
+    // copy the header of $base_token
+    // first copy all values without modification
+    //echo "TokenShifter: $base_token => $key_for_new_token: deltax = $delta_x / deltay = $delta_y / inc_deltay_bef = $inconditional_delta_y_before / inc_deltay_after = $inconditional_delta_y_after<br>";
+    //echo "Header:<br>";
+    for ($i = 0; $i < header_length; $i++) {
+        $new_token[] = $steno_tokens_master[$base_token][$i]; //echo "Offset $i: " . $steno_tokens_master[$base_token][$i] . "<br>";
+    }
+    // now adjust inconditional_deltay_before/after (offsets 13 & 14) and new width (add delta_x to width)
+    //echo "<br>Adjustments:<br>";
+    $new_token[offs_token_width] += $delta_x;
+    $new_token[offs_inconditional_delta_y_before] += /*$steno_tokens_master[$base_token][offs_inconditional_delta_y_before] +*/ $inconditional_delta_y_before;
+    $new_token[offs_inconditional_delta_y_after] += /*$steno_tokens_master[$base_token][offs_inconditional_delta_y_after] +*/ $inconditional_delta_y_after;
+    //echo "delta_y_before: " . $new_token[offs_inconditional_delta_y_before] . "<br>";
+    //echo "delta_y_after: " . $new_token[offs_inconditional_delta_y_after] . "<br><br>";
+    //echo "Data tuplets:<br>";
+   
+    // now copy all the points of the $first_token, inserting second token at connection point
+    for ($i = header_length; $i < count($steno_tokens_master[$base_token]); $i += tuplet_length) {
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_x1] + $delta_x;
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_y1] + $delta_y;
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_t1];
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_d1];
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_th];
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_dr];
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_d2];
+        $new_token[] = $steno_tokens_master[$base_token][$i+offs_t2];
+    }
+    //for ($i = header_length; $i < count( $new_token ); $i++) echo "Offset $i: " . $new_token[$i] . "<br>";
+    $steno_tokens_master["$key_for_new_token"] = $new_token; 
+}
+
+function CreateShiftedTokens() {
+    global $shifter_table;
+    foreach ($shifter_table as $entry ) { /*var_dump($entry);*/ TokenShifter( $entry[0], $entry[1], $entry[2], $entry[3], $entry[4], $entry[5] );}
+}
 ?>
