@@ -499,6 +499,9 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
 // connecting points: 
 // - 1st token: value 4 at offset 6 in header
 // - 2nd token: entry point
+// IMPORTANT BUG: second token may not have entry point! Example: B + @L => B@L / afterwards, the word Publizität (which uses B@L is rendered
+// wrong (bug in SmoothenEntryExitPoints()) - for the moment: live with the bug (if no entry point is given, the word is rendered correctly); 
+// Needs further investigation.
 
 function TokenCombiner( $first_token, $second_token ) {
     global $steno_tokens_master;
