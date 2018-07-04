@@ -144,16 +144,44 @@ function CalculateWord( $splines ) {     // parameter $splines
         return $splines;
 }
 
-function CreateSVG( $splines, $x, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
+// TrimSplines: finds left and right x-borders (= min x / max x) and adjust coordinates in splines
+// returns max_width
+function TrimSplines( $splines ) {
+         global $border_margin;
+         $left_x = 9999; $right_x = -9999;
+         $length_splines = count( $splines );
+         // first find left_x / right_x;
+         for ($i = 0; $i < $length_splines; $i += tuplet_length) {
+                $test_x = $splines[$i+offs_x1];
+                if ($test_x < $left_x) $left_x = $test_x;
+                if ($test_x > $right_x) $right_x = $test_x;
+         }
+         // now left_x / right_x contain min x / max x => use as delta_x to place splines at coordinate 0 at the left
+         $left_x -= $border_margin; $right_x += $border_margin;
+         //echo "left_x = $left_x / right_x = $right_x <br><br>";
+         for ($i = 0; $i < $length_splines; $i += tuplet_length) {
+                //echo "splines($i) OLD: p1(" . $splines[$i+offs_x1] . "/" . $splines[$i+offs_y1] . ") q1(" . $splines[$i+bezier_offs_qx1] . "/" . $splines[$i+bezier_offs_qy1] . ") q2(" . $splines[$i+bezier_offs_qx2] . "/" . $splines[$i+bezier_offs_qy2] . ")<br>";
+                $splines[$i+offs_x1] -= $left_x;
+                $splines[$i+bezier_offs_qx1] -= $left_x;
+                $splines[$i+bezier_offs_qx2] -= $left_x;
+                //echo "splines($i) NEW: p1(" . $splines[$i+offs_x1] . "/" . $splines[$i+offs_y1] . ") q1(" . $splines[$i+bezier_offs_qx1] . "/" . $splines[$i+bezier_offs_qy1] . ") q2(" . $splines[$i+bezier_offs_qx2] . "/" . $splines[$i+bezier_offs_qy2] . ")<br><br>";
+         }
+         $width = round($right_x - $left_x)+1;
+         //echo "width = $width<br>";
+         return array( $splines, $width );
+}
+
+function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open;
-    $shift_x = 7; // temporally for z or rück at beginning
-    $x = $x+$shift_x;
-    $svg_string = "<svg width=\"$x\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
+    //list( $splines, $width ) = TrimSplines( $splines );
+    //$shift_x = 0; // temporally for z or rück at beginning
+    //$x = $x+$shift_x;
+    $svg_string = "<svg width=\"$width\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
     // draw auxiliary lines
     
     for ($y = 1; $y < 6; $y++) {
         $temp = $y * $standard_height;
-        if ($y == 4) $width = 0.5; else $width = 0.1;
+        if ($y == 4) $width = 0.2; else $width = 0.1;
         $svg_string .= "<line x1=\"0\" y1=\"$temp\" x2=\"$x\" y2=\"$temp\" style=\"stroke:rgb(120,0,0);stroke-width:$width\" />";
     }
     
@@ -163,15 +191,15 @@ function CreateSVG( $splines, $x, $stroke_width, $color_htmlrgb, $stroke_dasharr
             echo "<br>";
     }*/
     for ($n = 0; $n <= $array_length - 8; $n += tuplet_length) {
-        $x1 = $splines[$n] + $shift_x;
+        $x1 = $splines[$n]; // + $shift_x;
         $y1 = $splines[$n+1];
-        $q1x = $splines[$n+2] + $shift_x;
+        $q1x = $splines[$n+2]; // + $shift_x;
         $q1y = $splines[$n+3];
         $relative_thickness = $splines[$n+4];
         $unused = $splines[$n+5];
-        $q2x = $splines[$n+6] + $shift_x;
+        $q2x = $splines[$n+6]; // + $shift_x;
         $q2y = $splines[$n+7];
-        $x2 = $splines[$n+8] + $shift_x;
+        $x2 = $splines[$n+8]; // + $shift_x;
         $y2 = $splines[$n+9];
         $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
         // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
@@ -407,7 +435,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
 
 function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
         // initialize variables
-        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation;
+        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm;
         SetGlobalScalingVariables( $scaling );
         CreateCombinedTokens();
         CreateShiftedTokens();
@@ -443,8 +471,9 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         // first tilt and then smoothen for better quality!!!
         $splines = TiltWordInSplines( $angle, $splines );
         $splines = SmoothenEntryAndExitPoints( $splines );
+        list( $splines, $width) = TrimSplines( $splines );        
         $splines = CalculateWord( $splines );
-        $svg_string = CreateSVG( $splines, $actual_x + 20 * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ); // width is handgelenk mal pi ...
+        $svg_string = CreateSVG( $splines, $actual_x + 20 * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ); // width is handgelenk mal pi ...
         return $svg_string;
 }
 

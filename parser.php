@@ -142,11 +142,11 @@ function MetaParser( $text ) {
             $actual_punctuation = mb_substr( $text, $text_length-1, 1);
             $text = mb_substr($text, 0, $text_length-1);
         }
-        $subword_array = explode( "|", Helvetizer($text) );
+        $subword_array = explode( "\\", Helvetizer($text) );
         $output = ""; 
         foreach ($subword_array as $subword ) {
                 $output .= ParserChain( $subword ); 
-                if ( $subword !== end($subword_array)) $output .= "|";  // shouldn't be hardcoded
+                if ( $subword !== end($subword_array)) $output .= "\\";  // shouldn't be hardcoded
         }
         if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
         return $output;
