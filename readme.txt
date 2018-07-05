@@ -7,6 +7,12 @@ The program is early stage and under heavy development.
 
 			* * *
 
-You can test the program via this link:
+MAJOR UPDATE (05/07/2018): A new version with a completely
+new interface is available at:
+
+http://www.purelab-tefc.ch/test1/web/introduction.php
+
+The last version with the old layout will still be available
+for some time:
 
 http://www.purelab-tefc.ch/test/welcome.html

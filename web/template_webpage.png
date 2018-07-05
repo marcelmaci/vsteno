@@ -1,0 +1,4 @@
+<?php require "vsteno_template_top.php"; ?>
+<h1>Titel</h1>
+<p>Inhalt</p>
+<?php require "vsteno_template_bottom.php"; ?>

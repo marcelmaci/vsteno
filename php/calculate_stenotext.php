@@ -18,10 +18,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<head>
-    <meta charset='utf-8'>
-    <title>VSTENO - Vector Steno Tool with Enhanced Notational Options"</title>
-</head>
+<head></head>
 <body>
 <h1>VSTENO</h1>
 <i><p>(Vector Steno Tool with Enhanced Notational Options)</p></i>
@@ -32,11 +29,12 @@ require_once "constants.php";
 require_once "data.php";
 require_once "parser.php";
 require_once "engine.php";
+require_once "session.php";
 
 $angle = 60;
 
-if (isset($_POST['langtext'])) {
-    $test_text = htmlspecialchars($_POST['langtext']);
+if (isset($_POST['original_text'])) {
+    $test_text = htmlspecialchars($_POST['original_text']);
     //echo "eingeben: $test_text";
 } else echo "Hm ... seems as if there's no text ...";
 
@@ -66,6 +64,6 @@ foreach ( $test_text_array as $test_wort ) {
      //$incremental_string .= $stenogramm . "<!-- -->";
 }
 ?>
-<a href="input.php"><br><button>"Nochmals!"</button></a>
+<a href="../web/vsteno_input_options.php"><br><button>"Nochmals!"</button></a>
 </body>
 </html> 

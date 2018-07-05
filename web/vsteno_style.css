@@ -1,0 +1,311 @@
+/* general layout */
+
+html { 
+ /*   font-family: Nimbus, sans-serif; */
+    font-family: Helvetica, sans-serif;
+    
+}
+
+body { 
+    background: #aaa; 
+    color: black; 
+}
+
+/* page layout */
+
+#container { 
+    background: #eee;
+    width: 1024px;  
+    margin-left: auto ;
+    margin-right: auto ;
+}
+
+#title { 
+    width:1024px; 
+    height:120px; 
+    background:#aaa;
+    float: left;
+}
+
+#purelab_banner { 
+    background-color: #ededed;
+    float: left; 
+    /* margin-right: 10px; */
+    border-radius: 20px 0px 0px 0px;
+}
+
+#purelab_banner img {
+/*    background-color: red;  */
+    width: 120 px;
+    border-radius: 20px 0px 0px 0px;
+}
+
+#purelab_title { 
+    background-color: #ddd;
+    /*background-color: red;*/
+    width: 781px;
+    height: 120px;
+    /*border-radius: 0px 20px 0px 0px;*/
+    float: left; 
+    margin-left: 0px; 
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom; 0px;
+}
+
+#purelab_title h1 {
+    margin-top: 0px;
+    margin-left: 10px;
+    font-size: 70px;
+}
+
+#purelab_title h2 {
+    margin-left: 14px;
+    margin-top: -55px;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: normal;
+}
+
+#purelab_texts {
+          position: relative;
+     top: 0px;
+     left: 0px;
+     height: 120px;
+     /*margin: auto;*/
+     width: 120px;
+     background-color: #ddd;
+     border-radius: 0px 20px 0px 0px;
+     float: left;
+}
+
+#main { 
+    list-style-type: none;
+    background: #eee;
+    width:1024px; 
+    clear: both;
+    margin-left: auto ;
+    margin-right: auto ;
+float: left;
+}
+
+/* link layout */
+
+#navigation { 
+    float: left;
+    width: 120px; 
+    background: #000; /* #ddd; why doesn't it change */
+}
+
+#navigation a:hover {
+    color: #666;
+}
+
+#navigation li, ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+}
+
+#navigation li a {
+    list-style-type: none;
+    display: block;
+    background: #eee;
+    color: #000;
+    padding: 4px 8px;
+    text-decoration: none;
+}
+
+#navigation li a.active {
+    background-color: #eee;
+    color: #666;
+}
+
+#navigation p {
+    background: #ddd;
+    width: 112px;
+    margin: 0px;
+    padding: 4px;
+    float: left;
+}
+
+#content {
+    background: #eee;
+   /* margin: 10px; */
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 834px;
+    float: left;
+}
+
+#content ul, li {
+    margin-left: 20px;
+   list-style-type: disc;
+    background: #eee;
+}
+
+#content h1 {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+#content h2 {
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+#content ol, li {
+  /*  type: numeric; */
+    margin-left: 0px;
+}
+
+#content table, td, tr {
+    vertical-align: top;
+}
+
+#content td {
+    padding: 5px;
+}
+/*
+#content ul, li {
+  /*  type: numeric; *//*
+    margin-left: -10px;
+}
+*/
+/*
+#content p {
+    font-size: 12px;
+}
+*/
+
+#text {
+    left: 0px;
+}
+
+#pinguin {
+    position: absolute;
+    top: 145px;
+    right: 350px;
+}
+
+#specifications tr:nth-child(even){background-color: #ddd}
+#specifications table {
+    border: 1px solid black;
+        border-collapse: collapse;
+       /* padding: -20px; */
+}
+#specifications tr {
+    border: 1px solid black;
+        border-collapse: collapse;
+       /* padding: -20px; */
+}
+
+#specifications td {
+    border: 1px solid black;
+        border-collapse: collapse;
+       /* padding: -20px; */
+}
+
+#order tr:nth-child(odd){background-color: #ddd}
+#order table {
+        /*border: 1px solid white;*/
+        border-collapse: collapse;
+        border-width: 2px;
+        border-style: solid;
+        border-color: gray;
+       /* padding: -20px; */
+}
+#order tr {
+    /* border: 1px solid black; */
+        border-collapse: collapse;
+        border-width: 2px;
+        border-style: solid;
+        border-color: gray;
+       /* padding: -20px; */
+}
+
+#order td {
+    border: 1px solid black; 
+        border-collapse: collapse;
+       /* padding: -20px; */
+}
+
+#container button {
+    font-size: 20px;
+    background-color: #eee;
+    color: black;
+    border-radius: 5px;
+    border: 2px solid #333;
+}
+
+#container button:hover {
+    background-color: #fff;
+}
+
+#computer button {
+    font-size: 10px;
+}
+
+#computer td {
+    padding: 20px;
+}
+
+#gnu_linux_freedom {
+    position: absolute;
+    top: 160px;
+    left: 50%;
+    margin-left: 280px;
+}
+
+#bestellen td {
+    padding: 20px;
+}
+
+#no_borders table {
+    border : 0px solid #eee;
+    border-collapse: collapse;
+}
+
+#no_borders td {
+    border : 0px solid #eee;
+    border-collapse: collapse;
+}
+
+#footer {
+    width: 100%;
+    float: left;
+    background: #ddd;
+    border-radius: 0px 0px 10px 10px;
+}
+
+#footer_left {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    float: left;
+    width: 150px;
+}
+
+#footer_middle {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    float: left;
+    width: 734px;
+}
+
+#footer_right {
+    position: relative;
+    top: 10px;
+    left: 0px;
+    float: left;
+    width: 140px;
+}
+
+#footer p {
+    font-size: 10px;
+    margin-left: 2px;
+}
