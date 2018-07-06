@@ -3,14 +3,14 @@
 <head>
     <meta charset='utf-8'>
     <title>VSTENO - Vector Steno Tool with Enhanced Notational Options</title>
-    <link rel="stylesheet" type="text/css" href="vsteno_style.css">
+    <link rel="stylesheet" type="text/css" href="../web/vsteno_style.css">
 </head>
 <body>
 	<!-- page layout inside div container -->
 	<div id="container">
 		<div id="title">
             <div id="purelab_banner">
-                <a href="pen_black_and_white.php"><img src="pen_black_and_white_120px.jpg" height="120"></a>
+                <a href="pen_black_and_white.php"><img src="../web/pen_black_and_white_120px.jpg" height="120"></a>
             </div>
             <div id="purelab_title">
                 <h1>VSTENO</h1>

@@ -171,6 +171,47 @@ function TrimSplines( $splines ) {
          return array( $splines, $width );
 }
 
+function InsertAuxiliaryLines( $width ) {
+    global $standard_height;
+    $lines_string = "";
+    if ($_SESSION['auxiliary_upper3yesno']) {
+        $thickness = $_SESSION['auxiliary_upper3_thickness'];
+        $color = $_SESSION['auxiliary_upper3_color'];
+        $tempy = 1 * $standard_height;
+        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+    }
+    if ($_SESSION['auxiliary_upper12yesno']) {
+        $thickness = $_SESSION['auxiliary_upper12_thickness'];
+        $color = $_SESSION['auxiliary_upper12_color'];
+        for ($i = 2; $i <= 3; $i++) {
+            $tempy = $i * $standard_height;
+            $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+        }
+    }
+    if ($_SESSION['auxiliary_baselineyesno']) {
+        $thickness = $_SESSION['auxiliary_baseline_thickness'];
+        $color = $_SESSION['auxiliary_baseline_color'];
+        $tempy = 4 * $standard_height;
+        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+    
+    }
+    if ($_SESSION['auxiliary_loweryesno']) {
+        $thickness = $_SESSION['auxiliary_lower_thickness'];
+        $color = $_SESSION['auxiliary_lower_color'];
+        $tempy = 5 * $standard_height;
+        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+    }
+
+/*
+    for ($y = 1; $y < 6; $y++) {
+        $temp = $y * $standard_height;
+        if ($y == 4) $thickness = 0.2; else $thickness = 0.1;
+        $lines_string .= "<line x1=\"0\" y1=\"$temp\" x2=\"$width\" y2=\"$temp\" style=\"stroke:rgb(120,0,0);stroke-width:$thickness\" />";
+    }
+*/
+    return $lines_string;
+}
+
 function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open;
     //list( $splines, $width ) = TrimSplines( $splines );
@@ -179,11 +220,7 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
     $svg_string = "<svg width=\"$width\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
     // draw auxiliary lines
     
-    for ($y = 1; $y < 6; $y++) {
-        $temp = $y * $standard_height;
-        if ($y == 4) $width = 0.2; else $width = 0.1;
-        $svg_string .= "<line x1=\"0\" y1=\"$temp\" x2=\"$x\" y2=\"$temp\" style=\"stroke:rgb(120,0,0);stroke-width:$width\" />";
-    }
+    $svg_string .= InsertAuxiliaryLines( $width );
     
     $array_length = count( $splines );
 /*    for ($n = 0; $n <= $array_length - tuplet_length; $n+=tuplet_length) {

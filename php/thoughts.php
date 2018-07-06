@@ -8,12 +8,12 @@ und blieben so der Nachwelt erhalten. Dies war also der Ursprung und die Grundid
 über 1000 Jahre (d.h. bis ins Mittelalter hinein) als Kurzschriftsystem für die Lateinische Sprache erhalten.
 </p>
 <h2>Boom</h2>
-<p>So richtig zu boomen begann dann die Stenografie im 19. und 20. Jahrhundert. Diverse Systeme in diversen Sprachen wurden entwickelt. Auf Deutsch waren dies - um nur die wichtigsten zu nennen -
-z.B. Gabelsberger, Stolze, Faulmann, Arends, Roller etc. Die Systeme wurden kontinuierlich weiterentwickelt und mündeten schliesslich in den zwei Systemen DEK (Deutsche Einheitskurzschrift) und
-Stolze-Schrey, welche heute in Deutschland und in der Schweiz am verbreitesten sind. Beide System sind in drei Stufen unterteilt: die Verkehrsschrift, die Eilschrift und die Redeschrift. Wobei
-die Verkehrsschrift die detaillierteste, aber langsamste, und die Redeschrift die am stärksten gekürzte und somit schnellste Variante darfstellt.</p>
+<p>So richtig zu boomen begann die Stenografie im 19. und 20. Jahrhundert. Diverse Systeme in diversen Sprachen wurden entwickelt. Auf Deutsch waren dies - um nur die wichtigsten zu nennen - 
+Gabelsberger, Stolze, Faulmann, Arends, Roller etc. Die Systeme wurden kontinuierlich weiterentwickelt und mündeten schliesslich in den zwei Systemen DEK (Deutsche Einheitskurzschrift) und
+Stolze-Schrey, welche heute in Deutschland und in der Schweiz am verbreitetsten sind. Beide System unterscheiden drei Stufen: die Verkehrsschrift, die Eilschrift und die Redeschrift. Wobei
+die Verkehrsschrift die detaillierteste, aber langsamste, und die Redeschrift die am stärksten gekürzte - und somit schnellste - Variante darstellt.</p>
 <p>Zu Beginn des 20. Jahrhunderts gab es tausende von Stenovereinen und Stenografie war Pflichtfach in vielen (insbesondere kaufmännischen) Ausbildungen. Das Interesse blieb ungefähr bis 
-in die 60er Jahre bestehen. Danach wurde Stenografie ca. bis in die 90er Jahre oft nur noch als Wahl- oder Freifach angeboten. Mit dem neuen Jahrtausend folgte schliesslich der totale Niedergang:
+in die 60er Jahre hoch. Danach wurde Stenografie ca. bis in die 90er Jahre oft nur noch als Wahl- oder Freifach angeboten. Mit dem neuen Millenium folgte schliesslich der totale Niedergang:
 Heute ist die Rede von etwa 5000 Personen in der Schweiz, welche Stenografie noch selber lesen oder schreiben.
 </p>
 <h2>Technik</h2>
@@ -26,14 +26,15 @@ In neuester Zeit macht auch die Spracherkennung immer weitere Fortschritte.</p>
 nicht einmal so sehr, ob und wie gut die neuen Technologien sind. Es wird oft ins Feld geführt, dass die moderne Spracherkennung mit der Respeak-Methode "nur" rund 180 Silben pro Minute erreiche.
 Im Vergleich dazu liege (und liegt) der Weltrekord der Stenografie bei 500 Silben ("voilà, qed"). Aber leider ist dieses Argument ja offensichtlich nur von bedingter Gültigkeit. Die Technik 
 wird zweifellos Fortschritte machen und die Stenografie auch hier einholen.</p>
-Wer aber die Stenografie nur auf die Geschwindigkeit reduziert, vergisst, dass sie weit mehr ist als das. Zweifellos ist es eine sehr schnelle und effiziente Notizschrift, aber gleichzeitig 
-führt Stenografie zu einer intensiven Auseinandersetzung mit Sprache. Stenografie ist somit auch durchaus persönlichkeitsbildend. Aber auch dieses "Nützlichkeits"-Argument erinnert irgendwie an
-einen verzweifelten Versuch der Stenograf/innen eine Lanze für einen sterbenden Schwan zu brechen.</p>
+Wer indes die Stenografie nur auf die Geschwindigkeit reduziert, vergisst, dass sie weit mehr ist als das. Zweifellos ist es eine sehr schnelle und effiziente Notizschrift, aber gleichzeitig 
+führt Stenografie zu einer intensiven Auseinandersetzung mit Sprache. Stenografie ist somit auch durchaus weiter- und persönlichkeitsbildend. Doch auch dieses "Nützlichkeits"-Argument erinnert 
+irgendwie an den verzweifelten Versuch der Stenograf/innen eine Lanze für einen sterbenden Schwan zu brechen.</p>
 <p>Deshalb: Warum soll sich die Stenografie hinsichtlich ihrer Nützlichkeit eigentlich dauernd rechtfertigen müssen? Darf sie nicht einfach Spass machen? Darf ich mich nicht einfach freuen, 
-wenn ich - irgendwo auf einer Fahrradtour unterwegs und von einem Unwetter überrascht - die 10 Minuten im gedeckten Bushäuschen effizient dazu nutzen kann, auf einem Fresszettel "mal eben schnell
-noch" an meinem Reisetagebuch weiterzuschreiben? Und dass ich dazu nicht mehr brauche als ein Blatt Papier und einen Kugelschreiber.</p>
-<p>Moderne Technik hat bestimmt ihre Vorteile, aber jedes Mal, wenn ich auf meinem Smartphone oder einem Tablett irgend etwas auf dieser fummeligen "Tastatur" namens Touch Screen eintippen 
-soll, werde ich halb wahnsinnig. Ich stelle mir dann immer vor, die Technik wäre wirklich modern und verfügte über einen Stylus und eine Handschriftenerkennung für Steno. Das wäre wirklich 
-fantastisch: auf einem Tablett Steno schreiben zu können ... ;-)
+wenn ich - irgendwo auf einer Fahrradtour unterwegs und von einem Unwetter überrascht - die 10 Minuten im gedeckten Bushäuschen dazu nutzen kann, "mal eben rasch" ein paar Schnörkel auf einen
+Fresszettel hinzukritzeln und an meinem Reisetagebuch weiterzuschreiben? Und dass ich dazu auch draussen, im Feld, nicht mehr brauche als ein Blatt Papier und einen Kugelschreiber.</p>
+<p>Moderne Technik hat bestimmt ihre Vorteile, aber sie ist beileibe nicht das krönende Non-Plus-Ultra einer über alles erhabenen Ingenieurskunst. Und ich schwöre: Jedes Mal, wenn ich auf 
+meinem Smartphone oder einem Tablett irgend etwas auf dieser fummeligen "Tastatur" namens Touch Screen eintippen soll, werde ich halb wahnsinnig. Wer bitte hat diesen Mist erfunden?
+Ich stelle mir dann immer vor, die Technik wäre wirklich modern und gäbe mir die Möglichkeit, meine Texteingaben flink und flüssig mit Steno zu erledigen. DAS wäre fantastisch: 
+ein Tablett mit Handschriftenerkennung für Steno ... ;-)
 </p>
 <?php require "vsteno_template_bottom.php"; ?>

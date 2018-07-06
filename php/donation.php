@@ -1,6 +1,6 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Spende</h1>
-<p>Bitte Lesen Sie zunächst die Hinweise unter <a href="copyright.php">Copyright</a>.</p>
+<p>Bitte lesen Sie zunächst die Hinweise unter <a href="copyright.php">Copyright</a>.</p>
 <p>Sie können VSTENO durch eine Spende unterstützen:</p>
 <p>Via Banküberweisung:</p>
 <pre>
@@ -10,7 +10,7 @@ Name:   Marcel Maci
         Avenue du Guintzet 15
         1700 Fribourg
 </pre>
-<p>Möglich ist auch eine anonyme Unterstützung in bar.
+<p>Möglich sind auch anonyme Spenden in bar.
 </p>
-<p>Besten Dank, wenn Sie VSTENO und die Entwicklung Freier Software unterstützen!</p>
+<p>Besten Dank, dass Sie VSTENO und die Entwicklung Freier Software unterstützen!</p>
 <?php require "vsteno_template_bottom.php"; ?>
