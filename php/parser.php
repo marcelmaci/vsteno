@@ -24,6 +24,16 @@
 // (e.g. mark affixes, correct different representation of same phonetics etc.)
 // (2) KISS (keep it stupid, simple): one function = one (simple and basic) task!
 
+// globalizer (= full text scanner, applied before any other operation)
+function Globalizer( $word ) {
+    global $globalizer_table;
+    $output = $word;
+    foreach ( $globalizer_table as $pattern => $replacement ) {
+        $output = preg_replace( "/$pattern/", $replacement, $output );
+    }
+    return $output;
+}
+
 // helvetizer
 function Helvetizer( $word ) {
     global $helvetizer_table;
@@ -115,7 +125,12 @@ function Transcriptor( $word ) {
 // lookuper (checks if word is in dictionary)
 function Lookuper( $word ) {
     global $dictionary_table;
-    return $dictionary_table[ mb_strtolower($word) ]; // not really good to convert everything to lower case ...
+    $original_result =  $dictionary_table[ $word ];
+    if (mb_strlen( $original_result ) > 0) return $original_result;
+    else {
+        $lower_result = $dictionary_table[ mb_strtolower($word)];
+        if (mb_strlen( $lower_result ) > 0) return $lower_result; // empty string is returned automatically if no entry is found // good idea to convert to lower case ... ?!?
+    }
 }
 
 
@@ -136,6 +151,7 @@ function ParserChain( $text ) {
 function MetaParser( $text ) {
         global $punctuation;
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
+        $text = Globalizer( $text );
         $actual_punctuation = "";
         if (preg_match( "/[$punctuation]/", $text) == 1) {
             $text_length = mb_strlen( $text );

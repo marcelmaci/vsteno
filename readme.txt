@@ -12,7 +12,7 @@ new interface is available at:
 
 http://www.purelab-tefc.ch/test1/php/introduction.php
 
-(Click on link "Verwenden" at the left to use the pro-
+(Click on link "Vollversion" at the left to use the pro-
 gram.)
 
 The last version with the old layout will still be available

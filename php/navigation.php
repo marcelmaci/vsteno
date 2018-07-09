@@ -2,15 +2,21 @@
                 <ul>
                 <li><A href="introduction.php">Einführung</A></li>
                 <li><A href="documentation.php">Dokumentation</a></li>
-                <li><A href="input.php">Verwenden</a></li>
                 <li><A href="copyright.php">Copyright</a></li>
                 <li><A href="donation.php">Spende</a></li>
-                
+                </ul>
+                <p><b>Testen</b></p>
+                <ul>
+                <li><A href="hints.php">Tutorial</A></li>
+                <li><A href="mini.php">Miniversion</A></li>
+                <li><A href="input.php">Vollversion</A></li>
+                <li><A href="web.php">Webversion</A></li>
                 </ul>
                 <p><b>Stenografie</b></p>
                 <ul>
                 <li><A href="thoughts.php">Gedanken</A></li>
                 <li><A href="links.php">Wegweiser</A></li>
+                </ul>
                 <p><b>Kontakt</b></p>
                 <ul>
                 <li><A href="https://github.com/marcelmaci/vsteno">Github</A></li>

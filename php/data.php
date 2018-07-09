@@ -23,6 +23,13 @@
 // see function that uses mb_strtolower (no table)
 
 
+// define globalizer
+
+$globalizer_table = array(
+    "^(.+)\.\.\." => "$1\\...",            // resolve multiple punctuation problem (= end vowels missing if not separated ... ")
+   // "\n" => "<br>",                        // do some basic formatting (doesn't work)
+);
+
 // define helvetizer
 $filter_table = array(
     // use this to filter out special characters that the program can't handle
@@ -42,6 +49,7 @@ $helvetizer_table = array (
 // the trickster tries to avoid some automatical changes done by the parserchain (especially shortings by the shortener)
 $trickster_table = array(
     
+     "([Pp])astete" => "$1ast[E]te",
      "^([Hh])eiter" => "$1{HEIT}er",
      "^([Ff])röhlich" => "$1rö[H]lich", 
      "^([Rr])ohh?eit" => "$1o[H]{HEIT}",  // can be written in two ways in steno (with &O or H)
@@ -99,6 +107,8 @@ $trickster_table = array(
      "([aeiouäöü])ther$" => "$1t[H]er", // avoid normalizing (= falling out) of h in ending her (like "seither")
      "thin$" => "t[H][N]", // avoid normalizing (= falling out) of h in ending her (like "letzthin")
      "thaft" => "t{HAFT}", // avoid normalizing (= falling out) of h in ending her (like "gesamthaft")
+     //"[Hh]all" => "[$1][A][LL]", // avoid shortening "all" and falling out of "h"
+     //"hall" => "ha[LL]", // avoid shortening "all" and falling out of "h"
     
 );
 
@@ -136,6 +146,7 @@ $dictionary_table = array (
                        "also" => "[0N-][A][L][SS]",
                        "beret" => "[B][E][VR][E][T]", // béret doesn't work as key ...
                        "ebenso" => "[0N-][E][B][E][N][SS]",
+                       "sogleich" => "[0N-][SS][G@L3][EI][^CH]",
                        //"sozusagen" => "{so}zsagen",
                        //"soweit" => "{so}w{heit}",
                        //"solange" => "{so}lange",
@@ -154,7 +165,7 @@ $dictionary_table = array (
                        "dagegen" => "[DA][GEGEN]",
                        "dahin" => "[DA]HN",
                        "insofern" => "[IN][SS][F][E][VR][N]",
-                       "ins" => "I[NS]",
+                       "ins" => "[0D-]I[NS]",
                        "sich" => "[SICH]",
                        "daselbst" => "[DA][SELB][ST]",
                        "bevorzugen" => "[B][VOR][Z]UG[EN]",
@@ -189,6 +200,8 @@ $shortener_table = array    (
                            //"\." => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
                             //"\," => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
                             "qu" => "q",                                                // makes it easier to handle => normally, should go to a separate, preceeding parser function, e.g. "simplifier"
+                            "([Hh])all" => "[$1]a[LL]", // avoid shortening "all" and falling out of h
+                            
                             "th" => "t",                                                // should be done in a separate part (e.g. "prenormalizer")
                             "ä([eaio])" => "ä[&A]$1",                                   // easier to do here, but should go to separate parser
                             "ö([aeiou])" => "ö[&O]$1",                                   // easier to do here, but should go to separate parser
@@ -196,6 +209,7 @@ $shortener_table = array    (
                             "o([aeiu])" => "[&O]$1",                                   // easier to do here, but should go to separate parser
                             "ü([aeiou])" => "[#WS][&U]$1",                                   // easier to do here, but should go to separate parser
                             "i[o|ö]nn?" => "{ION}",
+                            "eiu" => "[EI][&E]u",
                             "i([aou])" => "[&I]$1",                                   // easier to do here, but should go to separate parser
                             "e([ao])" => "[#W][&E]$1",                                   // easier to do here, but should go to separate parser
                             "ei([aeou])" => "[EI][&E]$1",                                   // easier to do here, but should go to separate parser
@@ -208,11 +222,11 @@ $shortener_table = array    (
                             "usf" => "{USF}",
                             "über" => "{ÜBER}",
                             "unter" => "{UNTER}",
-                            "^(dar|wor)?auf" => "$1{AUF}",
                             "wie?der" => "{WIDER}",
                             "([AEIOUÄÖÜaeiouäöü]+[bcdfghjklmnpqrstvwxyz\]]*)er$" => "$1{ER}",    // shorten -er => -r in bi- or multisyllabic words
-                            "^(ein|an)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2",
+                            "^(ein|an|auf|zu|ab)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2",
                             "^unange" => "{UN}an{GE}",
+                            "^(dar|wor|her|hin)?auf" => "$1{AUF}",
                             "haft(e|en|es)?" => "{HAFT}$1",
                             "gegen" => "{GEGEN}",
                             "zum" => "Zum",
@@ -234,15 +248,17 @@ $shortener_table = array    (
                             "^uns(er.*)?$" => "u[NS]$1",
                             "davon" => "{DA}{VON}",
                             "^beid(e[n|r|s]?)" => "[B]eid$1",
+                            
                             "all(e[n|m|s]?)$" => "{ALL}$1",
                             "^all" => "{ALL}",
                             "mal(s)" => "MAL\$1",
-                            "als" => "{ALS}",
+                            "^[Aa]ls$" => "{ALS}",
                             "zurück" => "{ZURÜCK}",
                             "dazu" => "{DA}{ZU}",
                             "(\[^a-z\])all" => "{\$1ALL}",
                             "^auch$" => "{AUCH}",
-                            "^auss" => "au[SS]",
+                            "^ausse(r|n)" => "au[SS]e$1",
+                            "^auss([aeiou])" => "{AUS}s$1",
                             "^aus" => "{AUS}",
                             "beinahe" => "{BEI}nahe",
                             "bein" => "[B][EI][N]",
@@ -319,6 +335,7 @@ $shortener_table = array    (
                             "(^|\|)({?ver}?)?ur" => "$1$2{UR}",       
                             "(^|\|)({?des}?)?in" => "$1$2{IN}",
                             "eien" => "[EI][&E]{EN}",
+                            "^([Ss]ch|[Zz])ien$" => "$1[I]n", // avoid the following rule
                             "ien$" => "[&I]{EN}",
                             "en$" => "{EN}",
                             "em$" => "{EM}",
@@ -326,9 +343,11 @@ $shortener_table = array    (
                             "je" => "[J][E]",
                             "planet" => "[P@L][A][N][E][T]",
                             "iet" => "[I]t",
+                            "etektiv" => "[E]Tektiv",   // avoid schortening et in "Detektiv"
                             "([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)et(e?|en?)" => "$1{ET}\$2", // only multisyllabic words
                             
                             "([^c])(haft)\$" => "$1{HAFT}",
+                            "([Pp])flicht" => "[$1F@L]icht",
                             "lich(te?n?)?$" => "{LICH}$1",
                             "{ANT}{LICH}" => "en{TLICH}",
                             "{ET}t" => "e[TT]",
@@ -337,6 +356,14 @@ $shortener_table = array    (
 
 // define normalizer (handles ortographical irregularities and corrects them)
 $normalizer_table = array(
+                            "-(i|au|eu|äu|ei)" => "|[-]\\[0D-]$1",            // words with "-" in the middle
+                            "-(a|e|o|u)" => "|[-]\\[0N-]$1",            // words with "-" in the middle => problem with \\ character (probably escaping; no other rule find's \ afterwards ... ?!)
+                            "-" => "|[-]\\",
+                            
+                            "'(i|au|eu|äu|ei)" => "|[']\\[0D-]$1",            // words with "-" in the middle
+                            "'(a|e|o|u)" => "|[']\\[0N-]$1",            // words with "-" in the middle => problem with \\ character (probably escaping; no other rule find's \ afterwards ... ?!)
+                            "'" => "|[']\\",
+                            
                             "a([ah])([flmnrst])" => "a\$2",
                             "o([oh])([flmnrst])" => "o\$2",
                             "ieh(\[tmn\])" => "i\$1",
@@ -570,16 +597,18 @@ $transcriptor_table = array(
                     "oi" => "[&O][I]",
                 
                     // end vowels
-                    "a\$" => "[A][&A]",
-                    "e\$" => "[-E]",
-                    "i\$" => "[#N][&I]",
-                    "o\$" => "[#N][&O]",
-                    "u\$" => "[#NS][&U]",
-                    "ä\$" => "[#WS][&A]",
-                    "ö\$" => "[#W][&O]",
-                    "ü\$" => "[#WS][&U]",
-                    "\[EU\]\$" => "[EU][&E]",
-                    "\[AU\]\$" => "[AU][&E]",
+                    "a($|\|)" => "[A][&A]$1",        // the eternal punctuation problem ...
+                    "e($|\|)" => "[-E]$1",
+                    "i($|\|)" => "[#N][&I]$1",
+                    "o($|\|)" => "[#N][&O]$1",
+                    "u($|\|)" => "[#NS][&U]$1",
+                    "ä($|\|)" => "[#WS][&A]$1",
+                    "ö($|\|)" => "[#W][&O]$1",
+                    "ü($|\|)" => "[#WS][&U]$1",
+                    "\[EU\]($|\|)" => "[EU][&E]$1",
+                    "\[AU\]($|\|)" => "[AU][&E]$1",
+                    "\[EI\]($|\|)" => "[#W][-E]",
+                    
                     
                     // initial vowels
                     "^a" => "[0N-][A]",
@@ -700,6 +729,7 @@ $transcriptor_table = array(
                     "{&T-L}" => "[&TL]",    // replace curly brackets; rule for tl in "wertlos" for example
                     
                     
+                    "\[&T\]\[SCH\]" => "[&T^SCH]",
                     "\[&T\]\[?S\]?" => "[&TS]",
                     "\[&T\]\[?U\]?" => "[&TU]",
                     "\[&T\]\[?SCH\]?" => "[&T^SCH]",
@@ -755,6 +785,8 @@ $transcriptor_table = array(
                     
                     "{TUM}" => "[A][&TM]",
                     "\[TLICH\]T" => "[TLICH][&T]",
+                    "\[&EITNG\]\[SP\]" => "[&EITNG][S][P]",     // "Zeitungspapier"
+                    "\[AU\]\[-E\]" => "[AU][&E][-E]",
                     
                     
 );
@@ -822,6 +854,7 @@ $substituter_table = array(
                             "{GEHABT}" => "[G][&T]",
                             "{HAB}T" => "[HAB][&T]",
                             "{HAB}" => "[HAB]",
+                            "{ZUSAMMEN}" => "[Z][A][S]",
 );
 
 // base definitions for all tokens  x, y, t, d1, th, 0, d2, t2, /**/  
@@ -983,7 +1016,7 @@ $steno_tokens_master = array(
                         // dummy tokens at beginning of the word: 0n[ / 0d[ for normal and down / offset 7 <=> 1(or 3?) means: shifting point (offset 2 = vertical delta)
                         "0-" => array( /*header*/ 0,  0, 0,   0,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0, 0, 0, 1, 1.0, 0, 0, 0, /**/ 0, 0, 0, 0, 1.0, 0, 1, 0.5 ),
                         "0N-" => array( /*header*/ 1,  0, 0,   0,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0, 0, 0, 1, 1.0, 0, 0, 0, /**/ 0, 0, 0, 0, 1.0, 0, 1, 0.5 ),
-                        "0D-" => array( /*header*/ 20,  0, -0.5,   0,   0,   0, 1, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  20, 0, 0, 1, 1.0, 0, 0, 0, /**/ 20, 0, 0, 0, 1.0, 0, 1, 0.5 ),
+                        "0D-" => array( /*header*/ 0,  0, -0.5,   0,   0,   0, 1, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0, 0, 0, 1, 1.0, 0, 0, 0, /**/ 0, 0, 0, 0, 1.0, 0, 1, 0.5 ),
                         "0U-" => array( /*header*/ 5,  0, 0 /*used for "war" but completely wrong*/, 0,   0,   0, 1, ""/**/,"","","","",0,0.5,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0, 0, 0, 1, 1.0, 0, 0, 0, /**/ 0, 0, 0, 0, 1.0, 0, 1, 0.5 ),
                        
                         "PSPACE" => array( /*header*/ 2,  0, /*+0.5*/0, 0,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0, 0, 0, 1, 1.0, 5, 0, 0, /**/ 2, 0, 0, 0, 1.0, 5, 2, 0, /**/ ),
@@ -993,6 +1026,8 @@ $steno_tokens_master = array(
                         ":" => array( /*header*/ 3,  0, /*+0.5*/0, 0,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,1,0,0,0,0,0, /*data*/  0.5, 4.5, 0, 1, 1.0, 5, 0, 0, /**/ 1, 5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0.5, 5.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0, 5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0.5, 4.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0.5, 0, 0, 1, 1.0, 5, 0, 0, /**/ 1, 0.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0.5, 1, 0, 0, 1.0, 0, 1, 0.5, /**/ 0, 0.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0.5, 0, 0, 0, 1.0, 0, 1, 0.5,  ),
                         "!" => array( /*header*/ 2,  0, /*+0.5*/0, 0,   4,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,1,0,0,0,0,0, /*data*/  0.5, 20, 0, 1, 1.0, 5, 0, 0, /**/ 0.5, 5, 0, 1, 1.0, 0, 0, 0, /**/  0.5, 0, 0, 1, 1.0, 5, 0, 0, /**/ 1, 0.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0.5, 1, 0, 0, 1.0, 0, 1, 0.5, /**/ 0, 0.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 0.5, 0, 0, 0, 1.0, 0, 1, 0.5, ),
                         "?" => array( /*header*/ 5,  0, /*+0.5*/0, 0,   4,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,1,0,0,0,0,0, /*data*/   0, 15, 0, 0, 1.0, 5, 0, 0.5, /**/   1.25, 19, 0.5, 0, 1.0, 0, 0, 0.5, /**/   2.5, 20, 0.5, 0, 1.0, 0, 0, 0.5, /**/   3.75, 19, 0.5, 0, 1.0, 0, 0, 0.5, /**/   5, 15, 0.5, 0, 1.0, 0, 0, 0.5, /**/   5, 13, 0.5, 0, 1.0, 0, 0, 0.5, /**/   2.5, 10, 0.5, 0, 1.0, 0, 0, 0.5, /**/   2.5, 5, 0.5, 0, 1.0, 0, 0, 0, /**/    2.5, 0, 0, 1, 1.0, 5, 0, 0, /**/ 3, 0.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 2.5, 1, 0, 0, 1.0, 0, 1, 0.5, /**/ 2, 0.5, 0, 0, 1.0, 0, 1, 0.5, /**/ 2.5, 0, 0, 0, 1.0, 0, 1, 0.5, ),
+                        "-" => array( /*header*/ 5,  0, /*+0.5*/0, 0,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,1,0,0,0,0,0, /*data*/   0, 11, 0, 1, 1.0, 5, 0, 0.5, /**/   /**/ 5, 11, 0, 0, 1.0, 0, 0, 0.5, /**/ 0, 9, 0, 0, 1.0, 5, 0, 0.5, /**/   /**/ 5, 9, 0, 0, 1.0, 0, 1, 0.5, ),
+                        "'" => array( /*header*/ 1,  0, /*+0.5*/0, 0,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,1,0,0,0,0,0, /*data*/   0, 14, 0, 1, 1.0, 5, 0, 0.5, /**/ 1, 15, 0, 0, 1.0, 0, 0, 0.5, /**/   /**/ 1, 18, 0, 0, 1.0, 0, 0, 0.5,  ),
                         
                         // numbers
                         "0" => array( /*header*/ 7,  0, /*+0.5*/0, 0,   4,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,1,0,0,0,0,0, /*data*/   3.5, 1, 0, 0, 1.0, 5, 0, 0.5, /**/   6, 2.5, 0.5, 0, 1.0, 0, 0, 0.5, /**/   7, 10, 0.5, 0, 1.0, 0, 0, 0.5, /**/   6, 17.5, 0.5, 0, 1.0, 0, 0, 0.5, /**/   3.5, 19, 0.5, 0, 1.0, 0, 0, 0.5, /**/   1, 17.5, 0.5, 0, 1.0, 0, 0, 0.5, /**/   0, 10, 0.5, 0, 1.0, 0, 0, 0.5, /**/   1, 2.5, 0.5, 0, 1.0, 0, 0, 0, /**/   3.5, 1, 0, 1, 1.0, 0, 0, 0, /**/ 6, 2.5, 0, 0, 1.0, 5, 1, 0.5, /**/ /*2.5, 1, 0, 0, 1.0, 0, 1, 0.5, /**//* 2, 0.5, 0, 0, 1.0, 0, 1, 0.5, /**/ /*2.5, 0, 0, 0, 1.0, 0, 1, 0.5,*/ ),

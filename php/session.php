@@ -3,7 +3,7 @@
 require_once "constants.php";
 
 function InitializeSessionVariables() {
-    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
+    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words;
     // set standard values for use in session
     $_SESSION['initialized'] = true;
     $_SESSION['original_text_format'] = "normal";
@@ -57,10 +57,20 @@ function InitializeSessionVariables() {
     $_SESSION['output_page_start_value'] = "";
     $_SESSION['output_page_start_at'] = "";
     $_SESSION['mark_wordlist'] = "";
-    $_SESSION['mark_formatlist'] = "";
+    
+    // later additions
+    $_SESSION['distance_words'] = $distance_words;
+    $_SESSION['style_nouns'] = "";
+    $_SESSION['style_beginnings'] = "";
+    $_SESSION['baseline_style'] = "";
+    $_SESSION['upper12_style'] = "";
+    $_SESSION['upper3_style'] = "";
+    $_SESSION['lower_style'] = "";
+    $_SESSION['auxiliary_style_general'] = "";
+    $_SESSION['return_address'] = "input.php";
 }
 
-function CopyFormToSessionVariables() {
+function CopyFormToSessionVariablesMaxi() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
     $_SESSION['original_text_format'] = htmlspecialchars($_POST['text_format_metayesno']);
     $_SESSION['original_text_content'] = htmlspecialchars($_POST['original_text']);
@@ -113,8 +123,31 @@ function CopyFormToSessionVariables() {
     $_SESSION['output_page_start_value'] = htmlspecialchars($_POST['page_numbers_start_number']);
     $_SESSION['output_page_start_at'] = htmlspecialchars($_POST['page_numbers_start_page']);
     $_SESSION['mark_wordlist'] = htmlspecialchars($_POST['marker_word_list']);
-    $_SESSION['mark_formatlist'] = htmlspecialchars($_POST['marker_style_list']);
+    
+    // later additions
+    $_SESSION['distance_words'] = htmlspecialchars($_POST['distance_words']);
+    $distance_words = $_SESSION['distance_words'];                                  // maybe not a good idea to save this values in two different variables (session and global var in constants.php) ...
+    $_SESSION['style_nouns'] = htmlspecialchars($_POST['nouns_style']);
+    $_SESSION['style_beginnings'] = htmlspecialchars($_POST['beginnings_style']);
+    $_SESSION['baseline_style'] = htmlspecialchars($_POST['baseline_style']);
+    $_SESSION['upper12_style'] = htmlspecialchars($_POST['upper12_style']);
+    $_SESSION['upper3_style'] = htmlspecialchars($_POST['upper3_style']);
+    $_SESSION['lower_style'] = htmlspecialchars($_POST['lower_style']);
+    $_SESSION['auxiliary_style_general'] = htmlspecialchars($_POST['auxiliary_lines_style']);
+    
 }
+
+function CopyFormToSessionVariablesMini() {
+    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
+    $_SESSION['original_text_format'] = htmlspecialchars($_POST['text_format_metayesno']);
+    $_SESSION['original_text_content'] = htmlspecialchars($_POST['original_text']);
+}
+
+function CopyFormToSessionVariables() {
+    if ($_SESSION['return_address'] === "input.php") CopyFormToSessionVariablesMaxi();
+    else CopyFormToSessionVariablesMini();
+}
+
 
     session_start();
     if (!isset($_SESSION['initialized'])) {

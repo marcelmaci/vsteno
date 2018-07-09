@@ -472,7 +472,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
 
 function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
         // initialize variables
-        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm;
+        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
         SetGlobalScalingVariables( $scaling );
         CreateCombinedTokens();
         CreateShiftedTokens();
@@ -510,7 +510,7 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         $splines = SmoothenEntryAndExitPoints( $splines );
         list( $splines, $width) = TrimSplines( $splines );        
         $splines = CalculateWord( $splines );
-        $svg_string = CreateSVG( $splines, $actual_x + 20 * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ); // width is handgelenk mal pi ...
+        $svg_string = CreateSVG( $splines, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
         return $svg_string;
 }
 
