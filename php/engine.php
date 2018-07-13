@@ -212,11 +212,18 @@ function InsertAuxiliaryLines( $width ) {
     return $lines_string;
 }
 
-function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
+function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open;
     //list( $splines, $width ) = TrimSplines( $splines );
     //$shift_x = 0; // temporally for z or rück at beginning
     //$x = $x+$shift_x;
+    // echo "CreateSVG: Pre: $pre Post: $post<br>";
+    list( $variable, $newcolor_htmlrgb ) = GetTagVariableAndValue( $pre ); 
+//if (mb_strlen($newcolor_htmlrgb) > 0) $color_htmlrgb = $newcolor_htmlrgb;
+    
+    //echo "CreateSVG:<br>Pre: $pre<br>Post: $post<br>colorhtmlrgb: $color_htmlrgb<br>";
+    //if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
+        
     $svg_string = "<svg width=\"$width\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
     // draw auxiliary lines
     
@@ -248,6 +255,8 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
         $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
     }
     $svg_string .= "</g>Sorry, your browser does not support inline SVG.</svg>";
+    //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
+        
     return $svg_string;
 }
 
@@ -470,12 +479,14 @@ function SmoothenEntryAndExitPoints( $splines ) {
     return $splines;
 }
 
-function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
+function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
         // initialize variables
         global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
         SetGlobalScalingVariables( $scaling );
         CreateCombinedTokens();
         CreateShiftedTokens();
+        //if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
+        
         $actual_x = 1;                      // start position x
         $actual_y = $baseline_y;            // start position y
         $splines = array();                 // contains all information for later drawing routine
@@ -510,12 +521,14 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         $splines = SmoothenEntryAndExitPoints( $splines );
         list( $splines, $width) = TrimSplines( $splines );        
         $splines = CalculateWord( $splines );
-        $svg_string = CreateSVG( $splines, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+        $svg_string = CreateSVG( $pre, $splines, $post, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+        //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
+        
         return $svg_string;
 }
 
 
-function MetaForm2TokenList( $text ) {
+function MetaForm2TokenList( $pre, $text, $post ) {
     global $steno_tokens_master;
     $token_list_to_return = array();   
     $text_length = mb_strlen( $text );
@@ -546,19 +559,37 @@ function MetaForm2TokenList( $text ) {
             //echo "in single token: insert $token_to_insert - new i = $i<br>";
         }
     }
-    return $token_list_to_return;
+    return array ($pre, $token_list_to_return, $post);
 }
 
 function NormalText2TokenList( $text ) {
-    $metaform = MetaParser( $text );
-    $tokenlist = MetaForm2TokenList( $metaform );
-    return $tokenlist;
+    //list( $pre, $word, $post ) = GetPreAndPostTags( $text );
+    $text = htmlspecialchars_decode( $text );
+    list( $pre, $metaform, $post) = MetaParser( $text );
+    //echo "Metaform: $metaform<br>";
+    if (mb_strlen($metaform)>0) {
+        list( $pre, $tokenlist, $post ) = MetaForm2TokenList( $pre, $metaform, $post );     // somehow idiot to pass $pre and $post through this function without changing anything - but do it like that for the moment
+        return array( $pre, $tokenlist, $post );
+    } else {
+        return array( $pre, null, $post );
+    }
 }
 
 function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
-    $tokenlist = NormalText2TokenList( $text );
-    $svg = TokenList2SVG( $tokenlist, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
-    return $svg;
+    list( $pre, $tokenlist, $post ) = NormalText2TokenList( $text );
+    if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
+    // ugly solution to set parameters (just a quick fix: has to be replaced later)
+    $angle = $_SESSION['token_inclination'];
+    $stroke_width = $_SESSION['token_thickness'];
+    $scaling = $_SESSION['token_size'];
+    $color_htmlrgb = $_SESSION['token_color'];
+    $stroke_dasharray = $_SESSION['token_style_custom_value'];
+    
+    if ($tokenlist !== null) {
+        $svg = TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+        if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
+        return $svg;
+    } else return "";
 }
 
 // TokenCombiner combines 2 tokens, creating a new token (as an array) and adds it into the multidimensional array steno_tokens_master[]

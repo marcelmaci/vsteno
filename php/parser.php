@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+require_once "options.php"; 
+
 ///////////////////////////////////////////// parser functions ////////////////////////////////////////////////
 
 // general philosophy for parser:
@@ -151,21 +153,24 @@ function ParserChain( $text ) {
 function MetaParser( $text ) {
         global $punctuation;
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
-        $text = Globalizer( $text );
+        list( $pre, $word, $post ) = GetPreAndPostTags( $text );
+        //echo "Metaparser(): Word: $word<br>";
+        $word = Globalizer( $word );
+        //echo "Metaparser(): Globalized: $word<br>";
         $actual_punctuation = "";
-        if (preg_match( "/[$punctuation]/", $text) == 1) {
-            $text_length = mb_strlen( $text );
-            $actual_punctuation = mb_substr( $text, $text_length-1, 1);
-            $text = mb_substr($text, 0, $text_length-1);
+        if (preg_match( "/[$punctuation]/", $word) == 1) {
+            $word_length = mb_strlen( $word );
+            $actual_punctuation = mb_substr( $word, $word_length-1, 1);
+            $word = mb_substr($word, 0, $word_length-1);
         }
-        $subword_array = explode( "\\", Helvetizer($text) );
+        $subword_array = explode( "\\", Helvetizer($word) );
         $output = ""; 
         foreach ($subword_array as $subword ) {
                 $output .= ParserChain( $subword ); 
                 if ( $subword !== end($subword_array)) $output .= "\\";  // shouldn't be hardcoded
         }
         if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
-        return $output;
+        return array( $pre, $output, $post );
 }
 
 

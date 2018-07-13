@@ -36,7 +36,7 @@ Grösse <input type="text" name="token_size"  size="10" value="<?php echo $_SESS
 Dicke <input type="text" name="token_thickness"  size="10" value="<?php echo $_SESSION['token_thickness']; ?>">
 Neigung <input type="text" name="token_inclination"  size="10" value="<?php echo $_SESSION['token_inclination']; ?>">
 <br>
-Farbe <input type="text" name="token_color"  size="10" value="<?php echo $_SESSION['color_text_in_general']; ?>">
+Farbe <input type="text" name="token_color"  size="10" value="<?php echo $_SESSION['token_color']; ?>">
 Schattierung <input type="text" name="token_shadow"  size="10" value="<?php echo $_SESSION['token_shadow']; ?>">
 <input type="checkbox" name="background_color_yesno" value="background_color_yes" <?php echo ($_SESSION['color_backgroundyesno']) ? "checked" : "";?>> 
 Hintergrund <input type="text" name="background_color"  size="10" value="<?php echo $_SESSION['color_background']; ?>">

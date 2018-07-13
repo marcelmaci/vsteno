@@ -4,7 +4,7 @@
 <p>Stenografie ist eine alte Kunst. Gewöhnlich wird ihr Anfang in den Tironischen Noten (oder sogar noch früher) verortet. Die Tironischen Noten waren ein Lateinisches Kurzschriftsystem,
 welches von Marcus Tullius Tiro (103 v.Chr. - 4 v.Chr.) erfunden wurde. Besagter Marcus Tullius Tiro war erst Sklave, wurde dann aber von Marcus Tullius Cicero (dem berühmten römischen Politiker
 und Konsul) freigekauft. Dieser Marcus Tullius Cicero wiederum war es, der im Jahre 63 v.Chr. die berühmten Catilinischen Reden hielt. Und eben selbige Reden wurden von Tiro mitgeschrieben
-und blieben so der Nachwelt erhalten. Dies war also der Ursprung und die Grundidee der Stenografie: Gesprochene Sprache in Echtzeit festzuhalten. Das System der Tironischen Noten blieben danach
+und blieben so der Nachwelt erhalten. Dies war also der Ursprung und die Grundidee der Stenografie: Gesprochene Sprache in Echtzeit festzuhalten. Das System der Tironischen Noten blieb danach
 über 1000 Jahre (d.h. bis ins Mittelalter hinein) als Kurzschriftsystem für die Lateinische Sprache erhalten.
 </p>
 <h2>Boom</h2>

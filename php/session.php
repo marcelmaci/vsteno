@@ -24,8 +24,8 @@ function InitializeSessionVariables() {
     $_SESSION['token_distance_narrow'] = $horizontal_distance_narrow;
     $_SESSION['token_distance_wide'] = $horizontal_distance_wide;
     $_SESSION['token_style_type'] = "solid"; // solid line
-    $_SESSION['token_style_custom_value'] = "1,1"; 
-    $_SESSION['color_text_in_general'] = "black";
+    $_SESSION['token_style_custom_value'] = ""; 
+    $_SESSION['token_color'] = "black";
     $_SESSION['color_nounsyesno'] = false;
     $_SESSION['color_nouns'] = "black";
     $_SESSION['color_beginningsyesno'] = false;
@@ -91,7 +91,7 @@ function CopyFormToSessionVariablesMaxi() {
     $_SESSION['token_distance_wide'] = htmlspecialchars($_POST['distance_wide']);
     $_SESSION['token_style_type'] = htmlspecialchars($_POST['token_line_style']); 
     $_SESSION['token_style_custom_value'] = htmlspecialchars($_POST['token_line_style_custom_value']); 
-    $_SESSION['color_text_in_general'] = htmlspecialchars($_POST['token_color']);
+    $_SESSION['token_color'] = htmlspecialchars($_POST['token_color']);
     $_SESSION['color_nounsyesno'] = (htmlspecialchars($_POST['colored_nouns_yesno']) === "colored_nouns_yes") ? true : false;
     $_SESSION['color_nouns'] = htmlspecialchars($_POST['nouns_color']);
     $_SESSION['color_beginningsyesno'] = (htmlspecialchars($_POST['colored_beginnings_yesno']) === "colored_beginnings_yes") ? true : false;
