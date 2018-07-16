@@ -150,6 +150,20 @@ function ParserChain( $text ) {
         else return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Decapitalizer( Filter(( $text )))))))); // apply normal parserchain on original word
 }
 
+function GetPreAndPostTokens( $text ) {
+        // Separates pre- und posttokens, $text must be middle part of "word", i.e. original word without pre- and posttags (must be separated
+        // by GetPreAndPostTags() first
+        // Returns: array($pretokens, $pureword, $posttokens) 
+        global $pretokenlist, $posttokenlist;
+        //$text_decoded = htmlspecialchars_decode( $text );
+        preg_match( "/^[$pretokenlist]*/", $text, $pretokens);
+        preg_match( "/[$posttokenlist]*$/", $text, $posttokens);
+        $pre_regex = preg_quote( $pretokens[0] );                                        // found patterns must be escaped before being
+        $post_regex = preg_quote( $posttokens[0] );    
+        preg_match( "/(?<=$pre_regex).+(?=$post_regex)/", $text, $word_array );
+        return array( $pretokens[0], $word_array[0], $posttokens[0] );
+}
+
 function MetaParser( $text ) {
         global $punctuation;
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
@@ -157,19 +171,39 @@ function MetaParser( $text ) {
         //echo "Metaparser(): Word: $word<br>";
         $word = Globalizer( $word );
         //echo "Metaparser(): Globalized: $word<br>";
+        list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $word );
+        
+        /*
         $actual_punctuation = "";
         if (preg_match( "/[$punctuation]/", $word) == 1) {
             $word_length = mb_strlen( $word );
             $actual_punctuation = mb_substr( $word, $word_length-1, 1);
             $word = mb_substr($word, 0, $word_length-1);
         }
-        $subword_array = explode( "\\", Helvetizer($word) );
+        */
+        
+        $separated_word_parts_array = explode( "\\", Helvetizer($word) );
+        //var_dump($separated_word_parts_array);echo"<br";
         $output = ""; 
-        foreach ($subword_array as $subword ) {
-                $output .= ParserChain( $subword ); 
-                if ( $subword !== end($subword_array)) $output .= "\\";  // shouldn't be hardcoded
+        foreach ($separated_word_parts_array as $word_part ) {
+                //echo "Metaparser(): Wordpart: $word_part<br>";
+                $subword_array = explode( "|", $word_part );
+                //var_dump($subword_array);echo"<br>";
+                foreach ($subword_array as $subword) { 
+                    //echo "Metaparser(): subword: $subword<br>";
+                    $output .= ParserChain( $subword ); 
+                    if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
+                    //echo "Metaparser() inner-foreach: output: $output<br>";
+                }
+                if ( $word_part !== end($separated_word_parts_array)) { /*echo "adding \\<br>";*/ $output .= "\\";}  // shouldn't be hardcoded?!
+                //echo "Metaparser() outer-foreach: output: $output<br>";
         }
-        if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
+        //if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
+        // echo "Metaparser(): output: $output<br>";
+        if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
+        if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
+        //$output = "$pretokens\\" . "$output" . "\\$posttokens";
+        //echo "Metaparser(): output: $output<br>";
         return array( $pre, $output, $post );
 }
 
