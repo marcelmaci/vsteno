@@ -579,7 +579,11 @@ function NormalText2TokenList( $text ) {
 
 function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     list( $pre, $tokenlist, $post ) = NormalText2TokenList( $text );
-    if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
+    if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // set inline options
+    $svg = $pre_html_tag_list;
+    $esc_svg = htmlspecialchars($svg);
+   // echo "svg: $esc_svg<br>";
+    
     // ugly solution to set parameters (just a quick fix: has to be replaced later)
     $angle = $_SESSION['token_inclination'];
     $stroke_width = $_SESSION['token_thickness'];
@@ -588,10 +592,13 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     $stroke_dasharray = $_SESSION['token_style_custom_value'];
     
     if ($tokenlist !== null) {
-        $svg = TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
-        if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
+        $svg .= TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+        if (mb_strlen($post)>0) {
+            $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
+            $svg .= $post_html_tag_list;
+        }
         return $svg;
-    } else return "";
+    } else return $svg;
 }
 
 // TokenCombiner combines 2 tokens, creating a new token (as an array) and adds it into the multidimensional array steno_tokens_master[]

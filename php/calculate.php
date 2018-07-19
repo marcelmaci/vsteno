@@ -57,8 +57,11 @@ function CalculateStenoPage() {
     }
     $angle = 60;
     if (isset($_POST['original_text']) && (strlen($_POST['original_text']) > 0)) {
-        $test_text = htmlspecialchars($_POST['original_text']);
-        // echo "Eingegeben: >$test_text<";
+        $test_text = /*htmlspecialchars(*/$_POST['original_text']; //);     // do not escape entered text
+        $test_text = preg_replace( "/>([^<])/", "> $1", $test_text );         // with this replacement inline- and html-tags can be placed everywhere
+        $test_text = preg_replace( "/([^>])</", "$1 <", $test_text );         // with this replacement inline- and html-tags can be placed everywhere
+        
+        //echo "Eingegeben: >$test_text<";
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
 
     $test_text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim($test_text)) );

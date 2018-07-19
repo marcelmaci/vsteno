@@ -34,20 +34,37 @@
 // $_SESSION[]-element. Therefore, it probably is possible to create a buffer overflow setting a high amount of (non used,
 // existing, non defined) session-variables.
 // SOLUTION: Check if variable has been set before
+//
+// Extension: normal HTML-tags (like "<br>" can be combined with inline-option-tags, e.g:
+//
+// <@token_color="red"><br>Achtung!<br><@token_color="black">
+//
+// The HTML-tags can stand at any position (before or after inline tags or mixed), but not inside words (like inline-option-tags)
+// HTML-tags will be inserted into HTML-page without modifications when stenograms are generated. Any HTML-tag is allowed (it's up to the user
+// to provide correct and working tags).
 
 function GetPreAndPostTags( $text ) {
-        preg_match( "/^<@.+>(?=[^<])/", $text, $pre_tag);                      // suppose regex is greedy
-        preg_match( "/(?<=[^>])<@.+>$/", $text, $post_tag);                    // idem
-        preg_match( "/^<@.+>$/", $text, $only_tags );
+        // preg_match( "/^<@.+>(?=[^<])/", $text, $pre_tag);                      // suppose regex is greedy // old version with @ (= no html-tags)
+        // preg_match( "/(?<=[^>])<@.+>$/", $text, $post_tag);                    // idem
+        // preg_match( "/^<@.+>$/", $text, $only_tags );
+        $text = htmlspecialchars_decode( $text );                                 // work with unescaped text
+        $text = preg_replace( "/\//", "!", $text );                               // replace / in </.>-html-tags in order to avoid escaping problems => is this necessary?
+        $pre_tags_pattern = "^<.+>(?=[^<])";
+        $post_tags_pattern = "(?<=[^>])<.+>$";
+        $general_tags_pattern = "^<.+>$";
+        preg_match( "/$pre_tags_pattern/", $text, $pre_tag);                      // suppose regex is greedy // include html-tags also (search for <, not only <@)
+        preg_match( "/$post_tags_pattern/", $text, $post_tag);                    // idem
+        preg_match( "/$general_tags_pattern/", $text, $only_tags );
         $pre = $pre_tag[0];
         $post = $post_tag[0];
         $pre_regex = preg_quote( $pre );                                        // found patterns must be escaped before being
         $post_regex = preg_quote( $post );                                      // reused in preg_match() !!!
         preg_match( "/(?<=$pre_regex).+(?=$post_regex)/", $text, $word_array );
-        $word = $word_array[0];       
-        preg_match( "/^<@.+>$/", $word, $only_tags );
-        //$pre = htmlspecialchars_decode( $pre );                                // convert escaped html chars back to normal text
-        //$post = htmlspecialchars_decode( $post );                                // convert escaped html chars back to normal text
+        $word = $word_array[0];    
+        // convert escaped html chars back to normal text
+        $only_tags[0] = preg_replace( "/\!/", "/", $only_tags[0] );              // convert / back in </.>-html-tags => is this necessary?
+        $pre = preg_replace( "/\!/", "/", $pre );
+        $post = preg_replace( "/!/", "/", $post);                                // "/" <=> chr(47)
         if (mb_strlen( $only_tags[0] ) > 0) return array( $only_tags[0], "", "" );
         else return array($pre, $word, $post);
 }
@@ -63,13 +80,27 @@ function GetTagVariableAndValue( $tag ) {
 
 }
 
+// INCREDIBLE: Pattern "/<@.*?[>]/": "?" . ">", must be written as ?[>] otherwhise PHP-Parser thinks it's the end of PHP-code (even inside comments) ... ?!?!
 function ParseAndSetInlineOptions( $tags ) {
-       preg_match_all( "/<@.*?>/", $tags, $matches );                           // .*? makes expression non greedy
+       // preg_match_all( "/<@.*?[>]/", $tags, $matches );                        // .*? makes expression non greedy // old version with @ (= no html-tags)
+       preg_match_all( "/<[^>]+[>]/", $tags, $matches );                         // .*? makes expression non greedy; parse all tags of both types (inline- and html-)
+       //var_dump($matches);
+       $html_tag_list = "";
        foreach( $matches[0] as $match ) {
-            list( $variable, $value ) = GetTagVariableAndValue($match);
-            //echo "Match: $match => Variable: $variable Value: $value<br>";
-            if (isset($_SESSION[$variable])) $_SESSION[$variable] = $value;     // check if variable has been set before
+            if (preg_match( "/<@/", $match ) == 0) {$html_tag_list .= $match;    // match is html-tag
+            //$esc_html_tag_list = htmlspecialchars( $html_tag_list );
+            //echo "html-tag-list: $esc_html_tag_list<br>";
+            }
+            else {                                                              // match is inline-tag => set values
+                list( $variable, $value ) = GetTagVariableAndValue($match);
+                //echo "Match: " . htmlspecialchars($match) . " => Variable: $variable Value: $value<br>";
+                if (isset($_SESSION[$variable])) $_SESSION[$variable] = $value;     // check if variable has been set before
+            }
        }
+       //$esc_html_tag_list = htmlspecialchars( $html_tag_list );
+       //echo "html-tag-list: $esc_html_tag_list<br>";
+       return $html_tag_list;
 }
+
 
 ?>

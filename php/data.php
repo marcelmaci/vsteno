@@ -30,6 +30,7 @@ $globalizer_table = array(
     //"^[\[(]" => "[#BO#]\\",        // opening brackets
     //"[\])]$" => "\\[#BC#]",        // closing brackets
     "-" => "|[~~]\\",
+    //"><" => "> <",                  // test (with this rule inline- and html-tags can be placed everywhere)
     //"&(quot|QUOT);" => "\"",
    // "\n" => "<br>",                        // do some basic formatting (doesn't work)
 );

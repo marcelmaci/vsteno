@@ -109,8 +109,10 @@ const draw_no_connection = 5;
 // parser
 $punctuation = ".,:;!?";                        // metaparser recognizes these tokens as punctuation and treats them differently 
 $numbers = "01234567890";
-$pretokenlist = "$numbers(\[{\"\'";               // metaparser recognizes these tokens as pre/posttokens and treats them differently 
-$posttokenlist = "$punctuation)\]}\"\'$numbers";  // treat punctuation and numbers as posttokens
+$only_pretokens = "(\[{\"\'";
+$only_posttokens = ")\]}\"\'";
+$pretokenlist = $numbers . $only_pretokens;               // metaparser recognizes these tokens as pre/posttokens and treats them differently 
+$posttokenlist = $punctuation . $only_posttokens . $numbers;  // treat punctuation and numbers as posttokens
 
 // variables
 $standard_height = 10;                          // height of one token like b, g, m etc.
