@@ -54,6 +54,9 @@ $helvetizer_table = array (
 // the trickster tries to avoid some automatical changes done by the parserchain (especially shortings by the shortener)
 $trickster_table = array(
     
+     "[Dd]asein" => "{DA}s[EI]n",
+     "^([Oo])dem" => "[0N-]$1[D]em",
+     "^([Ee])rheiter" => "{ER}h[EI]t{ER}",
      "^([Bb])eb(en|s?t)" => "$1Eb$2",
      "([Hh])ohn(.+)" => "$1ohn|$2",
      "([Pp])astete" => "$1ast[E]te",
@@ -194,81 +197,9 @@ $dictionary_table = array (
               
 // define abbreviations, prefixes and suffixes
 $shortener_table = array    (   
-                           //"Uri" => "[0N-][U]r[#N][&I]", // should go into dictionary ?!
-                           "(^|\|)({?des}?)?inter" => "$1$2{INTER}",
-                           "^({?des}?)?[Ii]n" => "$1{IN}",
-                            "damit" => "{DA}{MIT}",
-                            "davon" => "{DA}{VON}",
-                            "dazu" => "{DA}{ZU}",
-                            "damals" => "{DA}mals",
-                           "über" => "{ÜBER}",
-                           "zusammen" => "{ZUSAMMEN}",
-                            "dieselb" => "{DI}{SELB}",
-                            "selb" => "{SELB}",
-                            "^der" => "{DER}",
-                            "unter" => "{UNTER}",
-                            "(^|\|)(((un)?(ver|be|über))|(gegen|neben|rück|fehl|ur|nach|vor|voll))?[ae]nt([^i])" => "$1$2{ANT}$7",
-                            "^unent" => "{UN}{ANT}",
-                            "^aufent" => "{AUF}{ANT}",
-                            "^(ein|auf|bei|an|vor|ab)?zuer" => "$1{ZU}{ER}",
-                            "^(ein|auf|bei|an|vor|ab|aus|durch|dar|hervor|mit|vorher|nieder)?zu(?![mr])" => "$1{ZU}",
                             
-                            "(?<!^)lich(s?t?e?[mn]?|ere?[mn]?|keit(en)?|es)?$" => "{LICH}$1",
-                           
-                            "([Nn])ieder(.+)" => "$1ieder|$2",
-                            "ietät" => "[&I]{HEIT}",
-                            "^[Gg]ea([bcdfghjklmnpqrstvx])" => "{GE}a$1",
-                            "^[Bb]eur" => "{BE}{UR}",
-                            "^[Bb]eun" => "{BE}{UN}",
-                            "^[Rr]ückver" => "{RÜCK}{VER}",
-                            "^[Rr]ücker" => "{RÜCK}{ER}",
-                            "^[Mm]itver" => "{M}{VER}",
-                            "^([Mm]iss|[Kk]riminal|[Ee]in)?ver" => "$1{VER}",
-                            
-                            "(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}",
-                            "(^|\|)[Zz]uver" => "$1{Z}{VER}",
-                            "wie?der" => "{WIDER}",
-                            "([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)et(e?|en?)$" => "$1{ET}\$2", // only multisyllabic words
-                            "erer([se]?[nm]?)$" => "{ER}{ER}$1",
-                            "rr" => "[RR]", // avoid shortening {er} in following rule
-                            "^([bcdfghjklmnpqrstwxyz]{1,4})er([^e])?" => "$1Er$2",       // avoid applying of ER-rule in monosyllabic words
-                            "(?<!i)er(?=t?e?[nmrs]?$)" => "{ER}",
-                            "erei(en)?$" => "{ER}ei$1",
-                            "\[RR\]" => "rr", // set [rr] back to rr
-                            
-                           
-                            
-                           
-                           //"\." => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
-                            //"\," => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
-                            "qu" => "q",                                                // makes it easier to handle => normally, should go to a separate, preceeding parser function, e.g. "simplifier"
-                            "([Hh])all" => "[$1]a[LL]", // avoid shortening "all" and falling out of h
-      /*                      
-                            "th" => "t",                                                // should be done in a separate part (e.g. "prenormalizer")
-                            "ä([eaio])" => "ä[&A]$1",                                   // easier to do here, but should go to separate parser
-                            "ö([aeiou])" => "ö[&O]$1",                                   // easier to do here, but should go to separate parser
-                            "a([aeio])" => "a[&A]$1",                                   // easier to do here, but should go to separate parser
-                            "o([aeiu])" => "[&O]$1",                                   // easier to do here, but should go to separate parser
-                            "ü([aeiou])" => "[#WS][&U]$1",                                   // easier to do here, but should go to separate parser
-                  */          
-                   /*         "eiu" => "[EI][&E]u",
-                            "i([aou])" => "[&I]$1",                                   // easier to do here, but should go to separate parser
-          */                  "e([ao])" => "[#W][&E]$1",                                   // easier to do here, but should go to separate parser
-                            "ei([aeou])" => "[EI][&E]$1",                                   // easier to do here, but should go to separate parser
-                            "eu([aeou]|lich)" => "[EU][&E]$1",                                   // easier to do here, but should go to separate parser
-                            "ei([aeou]|lich)" => "[EI][&E]$1",                                   // easier to do here, but should go to separate parser
-                            
-                            "([Ee])in(?=[kg][aeiou])" => "$1in|",
-                            "^([Aa])n([bfghklmnprswz][aeiouäöü])" => "$1[N]$2",             // don't add combination "and": too many wrong cases (andere, android vs. Andenken)
-                            "sch(a|ä)ft$" => "{SCHAFT}",     // CAUTION WITH THOSE UMLAUT: [aä] doesn't work - (a|ä) is a workaround ...
-                            "t(u|ü)m(ers?|in|innen|s)?$" => "{TUM}$2",           // umlaut .. workaround see above
-                            "usw" => "{USW}",
-                            "usf" => "{USF}",
-                            
-                            
-                            
-                            //"([AEIOUÄÖÜaeiouäöü]+[bcdfghjklmnpqrstvwxyz\]]*)er$" => "$1{ER}",    // shorten -er => -r in bi- or multisyllabic words
-                            "^(ein|an|au[fs]|zu|ab)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2",
+                                                        "nieder" => "nied{ER}",
+                            "f(o|ö)rder" => "f$1rd{ER}", 
                             "^unange" => "{UN}an{GE}",
                             "^(dar|wor|her|hin)?auf" => "$1{AUF}",
                             "(?<!sc)haft(e|en|es)?" => "{HAFT}$1",
@@ -283,15 +214,7 @@ $shortener_table = array    (
                             
                             
                             
-                            "tret" => "trEt",
-                            "^gebe" => "Gebe",
-                            "^gern" => "Gern",
-                            "^erd" => "[0N-]Erd",
-                            "^angab" => "aNgab",
-                            "heraus" => "her{AUS}",
-                            "rosen" => "roseN",
-                            "^zur$" => "[Z]ur",
-                            "^uns(er.*)?$" => "u[NS]$1",
+                            
                             
                             "^beid(e[n|r|s]?)" => "[B]eid$1",
                             
@@ -306,7 +229,7 @@ $shortener_table = array    (
                             "^aussen" => "au[SS]en",
                             "^ausser" => "au[SS]er",
                             "^auss([aeiou])" => "{AUS}s$1",
-                            "^(un)?aus(?!s)" => "$1{AUS}",
+                            
                             "beinahe" => "{BEI}nahe",
                             "bein" => "[B][EI][N]",
                             "^darf" => "[D]arf",
@@ -329,9 +252,8 @@ $shortener_table = array    (
                             "gehabt" => "{GEHABT}",
                             "hab" => "{HAB}",
                             "hatt?" => "{HAT}",
-                            "hint" => "{HINT}",
+                            //"hint" => "{HINT}",
                             "^chin" => "[CH]in",       // avoid shortening "hin" in "chin"
-                            "hin(?![dz])" => "{HIN}",
                             "^hinzu" => "{HIN}{ZU}",
                             "^in$" => "{IN}",
                             //"itinhab" => "it{IN}hab",
@@ -340,7 +262,7 @@ $shortener_table = array    (
                             "mit" => "{M}",                   // perform mit substitution
                             "m1i2t3t4" => "mitt",           // convert mitt back
                             "^nicht" => "{NICHT}",
-                            "sein" => "{SEIN}",
+                            
                             "^sie$" => "{SI}",
                             "^[Ss]ind$" => "{SIND}",
                             "solch" => "{SOLCH}",
@@ -364,11 +286,111 @@ $shortener_table = array    (
                             "([hk]?[ea]it)|([ie]?tät(en)?$)" => "{HEIT}",
                             "bei(?!l)" => "{BEI}",
                             "geh" => "Geh",
+                            "^([Mm])iss" => "$1i[SS]",
+                            
+                            "([Hh])inter" => "HN[&TVR]", 
+                             "^([Hh])ing$" => "$1I[NG]",
+                            
+                            "hin(?![dz])" => "{HIN}",
+                            
+                            "tret" => "trEt",
+                            "^gebe" => "Gebe",
+                            "^gern" => "Gern",
+                            "^erd" => "[0N-]Erd",
+                            "^angab" => "aNgab",
+                            "heraus" => "her{AUS}",
+                            "rosen" => "roseN",
+                            "^zur$" => "[Z]ur",
+                            "^uns(er.*)?$" => "u[NS]$1",
+                           //"Uri" => "[0N-][U]r[#N][&I]", // should go into dictionary ?!
+                           "(^|\|)({?des}?)?inter" => "$1$2{INTER}",
+                           "^({?des}?)?[Ii]n" => "$1{IN}",
+                            "damit" => "{DA}{MIT}",
+                            "davon" => "{DA}{VON}",
+                            "dazu" => "{DA}{ZU}",
+                            "damals" => "{DA}mals",
+                           "über" => "{ÜBER}",
+                            "dieselb" => "{DI}{SELB}",
+                            "selb" => "{SELB}",
+                            "^der" => "{DER}",
+                            "unter" => "{UNTER}",
+                            "(^|\|)(((un)?(ver|be|über))|(gegen|neben|rück|fehl|ur|nach|vor|voll))?[ae]nt([^i])" => "$1$2{ANT}$7",
+                            "^unent" => "{UN}{ANT}",
+                            "^aufent" => "{AUF}{ANT}",
+                            "^(ein|auf|bei|an|vor|ab)?zuer" => "$1{ZU}{ER}",
+                            "^(ein|auf|bei|an|vor|ab|aus|durch|dar|hervor|mit|vorher|nieder|zusammen)?zu(?![mr])" => "$1{ZU}",
+                            "^([Nn])achzu" => "$1ach{ZU}",
+                            
+                            "zusammen" => "{ZUSAMMEN}",
+                          
+                            "(?<!^)lich(s?t?e?[mn]?|ere?[mn]?|keit(en)?|es)?$" => "{LICH}$1",
+                           
+                            //"([Nn])ieder(.+)" => "$1ieder|$2",        // bad idea to add | (not a separate word, but suffix)
+                            "ietät" => "[&I]{HEIT}",
+                            "^[Gg]ea([bcdfghjklmnpqrstvx])" => "{GE}a$1",
+                            "^[Bb]eur" => "{BE}{UR}",
+                            "^[Bb]eun" => "{BE}{UN}",
+                            "^[Rr]ückver" => "{RÜCK}{VER}",
+                            "^[Rr]ücker" => "{RÜCK}{ER}",
+                            "^[Mm]itver" => "{M}{VER}",
+                            "^([Mm]iss|[Kk]riminal|[Ee]in)?ver" => "$1{VER}",
+                            
+                            "(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}",
+                            "(^|\|)[Zz]uver" => "$1{Z}{VER}",
+                            "wie?der" => "{WIDER}",
+                            "([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)et(e?|en?)$" => "$1{ET}\$2", // only multisyllabic words
+                            "erer([se]?[nm]?)$" => "{ER}{ER}$1",
+                            "rr" => "[RR]", // avoid shortening {er} in following rule
+                            "([Bb])ech" => "$1Ech",
+                            //"^([bcdfghjklmnpqrstwxyz]{1,4})er(?=[bcdfghjklmnpqrstwxyz]{1,4}" => "$1Er",       // avoid applying of ER-rule in monosyllabic words
+                            //"(?<=(^[cdfghjklmnpqrstwxyz]{1,4}))er(?=([bcdfghjklmnpqrstwxyz]{1,4}$))" => "Er",
+                            "(w|qu)er" => "$1Er", // temporary substitution for preceeding rule that doesn't work ...
+                            "(?<!i)er(?=t?e?[nmrs]?$)" => "{ER}",
+                            "erei(en)?$" => "{ER}ei$1",
+                            "\[RR\]" => "rr", // set [rr] back to rr
+                            
+                           
+                            
+                           
+                           //"\." => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
+                            //"\," => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
+                            "qu" => "q",                                                // makes it easier to handle => normally, should go to a separate, preceeding parser function, e.g. "simplifier"
+                            "(?<!sc)([Hh])all" => "[$1]a[LL]", // avoid shortening "all" and falling out of h
+      /*                      
+                            "th" => "t",                                                // should be done in a separate part (e.g. "prenormalizer")
+                            "ä([eaio])" => "ä[&A]$1",                                   // easier to do here, but should go to separate parser
+                            "ö([aeiou])" => "ö[&O]$1",                                   // easier to do here, but should go to separate parser
+                            "a([aeio])" => "a[&A]$1",                                   // easier to do here, but should go to separate parser
+                            "o([aeiu])" => "[&O]$1",                                   // easier to do here, but should go to separate parser
+                            "ü([aeiou])" => "[#WS][&U]$1",                                   // easier to do here, but should go to separate parser
+                  */          
+                   /*         "eiu" => "[EI][&E]u",
+                            "i([aou])" => "[&I]$1",                                   // easier to do here, but should go to separate parser
+          */                  "e([ao])" => "[#W][&E]$1",                                   // easier to do here, but should go to separate parser
+                            "ei([aeou])" => "[EI][&E]$1",                                   // easier to do here, but should go to separate parser
+                            "eu([aeou]|lich)" => "[EU][&E]$1",                                   // easier to do here, but should go to separate parser
+                            "ei([aeou]|lich)" => "[EI][&E]$1",                                   // easier to do here, but should go to separate parser
+                            
+                            //"([Ee])in(?=[kg][aeiou])" => "$1in|",
+                            "^([Aa])n([bfghklmnprswz][aeiouäöü])" => "$1[N]$2",             // don't add combination "and": too many wrong cases (andere, android vs. Andenken)
+                            "sch(a|ä)ft$" => "{SCHAFT}",     // CAUTION WITH THOSE UMLAUT: [aä] doesn't work - (a|ä) is a workaround ...
+                            "t(u|ü)m(ers?|in|innen|s)?$" => "{TUM}$2",           // umlaut .. workaround see above
+                            "usw" => "{USW}",
+                            "usf" => "{USF}",
+                            
+                            
+                            
+                            //"([AEIOUÄÖÜaeiouäöü]+[bcdfghjklmnpqrstvwxyz\]]*)er$" => "$1{ER}",    // shorten -er => -r in bi- or multisyllabic words
+                            "^(ein|an|au[fs]|zu|ab|nieder|auseinander)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2",
+
                             "^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2",        
                             "(^|\|)be(un|ur)" => "$1{BE}$2",
                             "^beu" => "b[EU]",              // if combination is not be(un|ur) consider eu as diphtong
                             "^(an)?be(?!(tte?n?s?$)|i)" => "\$1{BE}",                
                             "(^|\|)anti" => "$1{ANTI}",
+                            "einander" => "einand{ER}",
+                            "^(un)?aus(?!s)" => "$1{AUS}",
+                            "sein" => "{SEIN}",
                             
                             "anten$" => "[A]nten",
                             //"([^gz]?)[a|e]nt([^i])" => "\$1{ANT}\$2",
@@ -550,7 +572,8 @@ $bundler_table = array(
                     "au" => "[AU]",
                     "äu" => "[EU]",
                     "eu" => "[EU]",
-                    "ei" => "[EI]",   
+                    "ei" => "[EI]", 
+                    "ai" => "[EI]",
                     // "qu" => "[QU]",              // not necessary if qu => qu
                         
 );
@@ -579,8 +602,9 @@ $transcriptor_table = array(
                     "\[PFL\]" => "[PF@L]",
                     "\[VL\]" => "[V@L]",
                     "\[WL\]" => "[W@L]",
-                    "([bcdfghjklmnpqrvwxyzsBCDFGHJKLMNPQRVWXYZS])\[T" => "$1][&T][",
+                    "(?<=([bcdfghjklmnpqrsvwxyzBCDFGHJKLMNPQRVWXYZS])|(\[CH\]))\[TL\]" => "[&T@L3]", // Flüchtling, Textlein
                     "\[TL\]" => "[T@L3]",
+                    "([bcdfghjklmnpqrvwxyzsBCDFGHJKLMNPQRVWXYZS])\[T" => "$1][&T][",
                     "\[TR\]" => "[T@R]",
                     "\[DR\]" => "[D@R]",
                     "\[CK\]l" => "[CK@L]",
@@ -872,7 +896,12 @@ $transcriptor_table = array(
                     "\[&T\](\[-E[MN]?\])" => "[&T][&E]$1", 
                     "\[&EITNG\]\[SP\]" => "[&EITNG][S][P]",     // "Zeitungspapier"
                     "\[AU\]\[-E\]" => "[AU][&E][-E]",
+                    "\[EI\]{ER}" => "[EI][&E]{ER}",
+                    //"VR@L" => "/VR@L",      // replace combination VR+@L by /VR@L (<=> deltay of +0.5) => not necessary if functionality of TokenCombiner is extended
                     
+                    //"\[CH\]\[T@L3\]", "[CH][&T@L3]",
+                   // "T@L3", "&T@L3",
+                
 );
 
 // substituter table: replaces shortings by steno tokens that can be handled directly by steno engine
@@ -928,7 +957,6 @@ $substituter_table = array(
                             "{SOLCH}" => "[SOLCH]",
                             "{WELCH}" => "[CH]",
                             "{HIN}" => "[H][N]",
-                            "{HINT}" => "[H][N][&T]",
                             "\[&T\]{EN}$" => "[&T][&E][EN]",
                             "\[&T\]{EM}$" => "[&T][&E][EM]",
                             "\[&T\]\[#N\]\[VR\]$" => "[&T][VR]",
@@ -1049,14 +1077,16 @@ $steno_tokens_master = array(
                         "J"  => array( /*header*/ 3, 0.5, 0,   0,2,2, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  3,  10, 0, 1, 3.0, 0, 0, 0.5, /**/ 3, 2, 0.5, 0, 3.0, 0, 0, 0.5, /**/  1.5, 0, 0.5, 0, 2.5, 0, 0, 0.5, /**/  0, 1.5, 0.5, 0, 1.5, 0, 2, 0.5, /**/  3, 5, 0.5, 0, 1.0, 0, 1, 0.5 /**/     ),
                         "K"  => array( /*headr*/2.5, 0.5, 0, 0.5,   2,   2, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0, 18.5, 0.5, 1, 1.5, 0, 0, 0.5, /**/1.25, 20, 0.5, 2, 2, 0, 0, 0.5, /**/   2.5, 17, 0.5, 0, 2.5, 0, 0, 0.5, /**/ 2.5, 15, 0.5, 0, 3, 0, 0, 0, /**/ 2.5, 0, 0, 0, 1.0, 0, 1, 0.0, /**/ 2.5, 2.5, 0, 4, 1.0, 0, 0, 0.5,),
                         "L"  => array( /*header*/ 3, 0.5, 0, 0.5,0.75,0.75, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0,  5, 0.5, 1, 1.5, 0, 0, 0.5, /**/2,  8.5, 0.5, 2, 2, 0, 0, 0.5, /**/   1.1, 10, 0.5, 0, 2.5, 0, 0, 0.5, /**/ 0, 7, 0.5, 0, 3.0, 0, 0, 0.5, /**/   0, 2, 0.5, 0, 2.5, 0, 0,   0, /**/ 2, 0, 0.5, 4, 1.5, 0, 0, 0.5, /**/ 2, 0, 0.5, 0, 1.5, 0, 2, 0.5, /**/ 3, 0, 0.5, 0, 1.0, 0, 1, 0.5),                       
-                        "@L" => array( /*header*/ 0, 0, 0, 0.5, 2, 2, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/    0, 0, 0.5, 0, 1.0, 0, 0, 0.5, /**/  1, 1, 0.5, 0, 1.0, 0, 0, 0.5, /**/  0, 2, 0.5, 0, 1.0, 0, 0, 0.5, /**/  -1, 1, 0.5, 0, 1.0, 0, 2, 0.5, /**/  0, 0, 0.5, 0, 1.0, 0, 1, 0.5 /**/ ),                       
-                        "@L3" => array( /*header*/ 0, 0, 0, 0.5, 0, 0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/    0, 0, 0.5, 0, 1.0, 0, 0, 0.5, /**/  -1, 1, 0.5, 0, 1.0, 0, 0, 0.5, /**/  -2, 0, 0.5, 0, 1.0, 0, 0, 0.5, /**/  -1, -1, 0.5, 0, 1.0, 0, 2, 0.5, /**/  0, 0, 0.5, 0, 1.0, 0, 1, 0.5 /**/ ),                       
+                        "@L" => array( /*header*/ 0, 0, 0, 0.5, 2, 2, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/    0, 0, 1, 0.5, 1.0, 0, 0, 0.5, /**/  1, 1, 0.5, 0, 1.0, 0, 0, 0.5, /**/  0, 2, 0.5, 0, 1.0, 0, 0, 0.5, /**/  -1, 1, 0.5, 0, 1.0, 0, 2, 0.5, /**/  0, 0, 0.5, 0, 1.0, 0, 1, 0.5 /**/ ),                       
+                        "@L3" => array( /*header*/ 0, 0, 0, 0.5, 0, 0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/    0, 0, 1, 0.5, 1.0, 0, 0, 0.5, /**/  -1, 1, 0.5, 0, 1.0, 0, 0, 0.5, /**/  -2, 0, 0.5, 0, 1.0, 0, 0, 0.5, /**/  -1, -1, 0.5, 0, 1.0, 0, 2, 0.5, /**/  0, 0, 0.5, 0, 1.0, 0, 1, 0.5 /**/ ),                       
                         "&L"  => array( /*header*/ 2, 0.5, 0, 0.5,1,1, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0.5,  0, 0.5, 1, 1.5, 0, 0, 0.5, /**/ 1,  0.5, 0.5, 0, 2, 0, 0, 0.5, /**/   0.5, 1, 0.5, 0, 2.5, 0, 0, 0.5, /**/ 0, 0.5, 0.5, 0, 3.0, 0, 0, 0.5, /**/   0.5, 0, 0.5, 0, 2.5, 0, 1,   0, ),                       
                         "M"  => array( /*headr*/5.5, 0.5, 0, 0.5, 0.5, 0.5, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0,  8.75, 0.5, 1, 1.5, 0, 0,   0, /**/  1.0, 10, 0.5, 2, 2.5, 0, 0, 0.5, /**/  2.5,  8, 0.5, 0, 3.0, 0, 0, 0.5, /**/ 2.5,   2,0.5, 0, 2.5, 0, 0,   0, /**/ 4.0,  0, 0.5, 4, 1.5, 0, 0, 0.5, /**/ 4.0,  0, 0.5, 0, 1.5, 0, 2, 0.5, /**/ 5.5,  2,0.5, 0, 1.0, 0, 1,   0.5),                                                
                         "N"  => array( /*header*/11, 0.5, 0, 0.5,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0,     4.5, 0.5, 1, 1.5, 0, 0, 0.5, /**/ 1,  5, 0.5, 2, 2.0, 0, 0, 0.5, /**/   2,  5, 0.5, 0, 3.0, 0, 0, 0.5, /**/ /*3,  4, 0.5, 0, 3.0, 0, 0, 0.5, /**/ 5.5, 2, 0.5, 0, 2.5, 0, 0, 0.5, /**/  7.5, 0, 0.5, 4, 1.5, 0, 0, 0.5, /**/ 8.5, 0, 0.5, 0, 1.5, 0, 2, 0.5, /**/ 11, 1, 0.5, 0, 1.0, 0, 1, 0.5 /**/  ),
                         "P"  => array( /*headr*/4, 0.5, 0,   0,   2,   2, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0,    20,   0, 1, 3.0, 0, 0, 0.0, /**/    0,  2.5, 0.5, 0, 2.5, 0, 0, 0.5, /**/      2,  0, 0.5, 4, 1.5, 0, 0, 0.5, /**/   2,  0, 0.5, 0, 1.5, 0, 2, 0.5, /**/ 4, 2, 0, 0, 1.0, 0, 1, 0),
                         "Q"  => array( /*header*/ 3, 0.5, 0, 0.5,0.75,0.75, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  1,19, 0.5, 0, 1.0, 0, 0, 0.5, /**/   3, 20, 0.5, 0, 3.0, 0, 0, 0.5, /**/  1,19,0.5, 0, 3.0, 0, 0, 0.5, /**/ 0,15, 0.5, 0, 3.0, 0, 0, 0, /**/ 0, 0, 0, 0, 1.0, 0, 1,   0),
                         "VR" => array( /*header*/ 5, 0.5, 0, 0.5,   2,   2, 0, ""/**/,"","","","",0,0,0,2.5, /*++*/ 5,0,0,0,0,0,0,0, /*data*/  2.5, 5, 0.5, 1, 1.5, 0, 0, 0.5, /**/ 3.75, 4, 0.7, 5, 2.5, 0, 0, 0.7, /**/ 5, 2.5, 0.7, 0, 3.0, 0, 0, 0.7, /**/ 4.5, 0.5, 0.7, 5, 2, 0, 0, 0.7, /**/ 3.25, 0.15, 0.7, 5, 1.5, 0, 0, 0.7, /**/ 2.5, 0, 0.7, 0, 1.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 1.0, 0, 0, 0.5, /**/ 2.5, 5, 0.5, 4, 1.0, 0, 0, 0.5, /**/ 2.5, 5, 0.5, 0, 1.0, 0, 1, 0.0),    
+                        // /VR = normal VR but 1/2 line up when in combination with @L (inconditional_delta_y_after = offset 14 = 0.5)
+                        //"/VR" => array( /*header*/ 5, 0.5, 0, 0.5,   2,   2, 0, ""/**/,"","","","",0,0,0.5,2.5, /*++*/ 5,0,0,0,0,0,0,0, /*data*/  2.5, 5, 0.5, 1, 1.5, 0, 0, 0.5, /**/ 3.75, 4, 0.7, 5, 2.5, 0, 0, 0.7, /**/ 5, 2.5, 0.7, 0, 3.0, 0, 0, 0.7, /**/ 4.5, 0.5, 0.7, 5, 2, 0, 0, 0.7, /**/ 3.25, 0.15, 0.7, 5, 1.5, 0, 0, 0.7, /**/ 2.5, 0, 0.7, 0, 1.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 1.0, 0, 0, 0.5, /**/ 2.5, 5, 0.5, 4, 1.0, 0, 0, 0.5, /**/ 2.5, 5, 0.5, 0, 1.0, 0, 1, 0.0),    
                         "AR" => array( /*header*/ 5, 0.5, 0, 0.5,   0,   1, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  2.5, 0, 0.5, 1, 1.0, 0, 0, 0.7, /**/ 5, 2.5, 0.7, 0, 1.0, 0, 0, 0.7, /**/  2.5, 5, 0.7, 0, 3.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 3.0, 0, 0, 0.5, /**/ 2.5, 0, 0.5, 0, 1.0, 0, 1, 0.0),    
                         "AR5" => array( /*header*/ 5, 0.5, 0, 0.5,   0,   1, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  5, 2.5, 0.7, 1, 1.0, 0, 0, 0.7, /**/  2.5, 5, 0.7, 0, 3.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 3.0, 0, 0, 0.5, /**/ 2.5, 0, 0.5, 0, 1.0, 0, 0, 0.0, /**/ 2.5, 0, 0.5, 1, 1.0, 0, 1, 0.7, ),    
                         "@R" => array( /*header*/ 5, 0.5, 0, 0.5,   0,   1, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/   0, 0, 0.7, 0, 1.0, 0, 0, 0.7, /**/  -2, 2, 0.7, 0, 1.0, 0, 0, 0.5, /**/  -4, 0, 0.7, 0, 1.0, 0, 0, 0.5, /**/ -2, -2, 0.5, 0, 1.0, 0, 2, 0.5, /**/ 0, 0, 0.5, 0, 1.0, 0, 1, 0.7, /**/ ),    
@@ -1165,51 +1195,52 @@ $steno_tokens_master = array(
 $combiner_table = array(
     //array("T15", "B"),  // test
     //array("^1", "B"),  // test
-    array("D", "@R"),
-    array("ND", "@R"),
-    array("T", "@R"),
-    array("G", "@R"),
-    array("K", "@R"),
-    array("CH", "@R"),
-    array("NK", "@R"),
-    array("SCH", "@R"),
-    array("ST", "@R"),
-    array("L", "@L"),
-    array("B", "@L"),
-    array("G", "@L3"),
-    array("M", "@L"),
-    array("F", "@L"),
-    array("P", "@L"),
-    array("PF", "@L"),
-    array("V", "@L"),
-    array("SP", "@L"),
-    array("W", "@L"),
-    array("T", "@L3"),
-    array("NG", "@L3"),
-    array("D", "@L3"),
-    array("ND", "@L3"),
-    array("ST", "@L3"),
-    array("NK", "@L3"),
-    array("K", "@L3"),
-    array("Z", "@L3"),
-    array("SCH", "@L3"),
-    array("CH", "@L3"),
-    array("B", "@R6"),
-    array("SP", "@R6"),
-    array("F", "@R6"),
-    array("M", "@R6"),
-    array("P", "@R6"),
-    array("PF", "@R6"),
-    array("V", "@R6"),
-    array("W", "@R6"),
-    array("Z", "@R"),
-    array("Z", "@L3"),
-    array("DA", "@R"),
-    array("N", "@R6"),
-    array("N", "@L"),
-    array("VR", "@L"),
-    array("CK", "@L"),
-    array("L", "@R6"),
+    array("D", "@R", 0, 0),
+    array("ND", "@R", 0, 0),
+    array("T", "@R", 0, 0),
+    array("G", "@R", 0, 0),
+    array("K", "@R", 0, 0),
+    array("CH", "@R", 0, 0),
+    array("NK", "@R", 0, 0),
+    array("SCH", "@R", 0, 0),
+    array("ST", "@R", 0, 0),
+    array("L", "@L", 0, 0),
+    array("B", "@L", 0, 0),
+    array("G", "@L3", 0, 0),
+    array("M", "@L", 0, 0),
+    array("F", "@L", 0, 0),
+    array("P", "@L", 0, 0),
+    array("PF", "@L", 0, 0),
+    array("V", "@L", 0, 0),
+    array("SP", "@L", 0, 0),
+    array("W", "@L", 0, 0),
+    array("T", "@L3", 0, 0),
+    array("NG", "@L3", 0, 0),
+    array("D", "@L3", 0, 0),
+    array("ND", "@L3", 0, 0),
+    array("ST", "@L3", 0, 0),
+    array("NK", "@L3", 0, 0),
+    array("K", "@L3", 0, 0),
+    array("Z", "@L3", 0, 0),
+    array("SCH", "@L3", 0, 0),
+    array("CH", "@L3", 0, 0),
+    array("B", "@R6", 0, 0),
+    array("SP", "@R6", 0, 0),
+    array("F", "@R6", 0, 0),
+    array("M", "@R6", 0, 0),
+    array("P", "@R6", 0, 0),
+    array("PF", "@R6", 0, 0),
+    array("V", "@R6", 0, 0),
+    array("W", "@R6", 0, 0),
+    array("Z", "@R", 0, 0),
+    array("Z", "@L3", 0, 0),
+    array("DA", "@R", 0, 0),
+    array("N", "@R6", 0, 0),
+    array("N", "@L", 0, 0),
+    array("VR", "@L", 0, 0.5),  // should be obsolete with following line => not necessary: implement deltay for tokencombiner
+    //array("/VR", "@L"), // unnecessary, if tokencombiner offers possibility to add deltay like tokenshifter => implement that
+    array("CK", "@L", 0, 0),
+    array("L", "@R6", 0, 0),
 );
 
 $shifter_table = array(

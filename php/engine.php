@@ -608,8 +608,13 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
 // IMPORTANT BUG: second token may not have entry point! Example: B + @L => B@L / afterwards, the word Publizität (which uses B@L is rendered
 // wrong (bug in SmoothenEntryExitPoints()) - for the moment: live with the bug (if no entry point is given, the word is rendered correctly); 
 // Needs further investigation.
+// Solution: entry- and "entry"-pivot- points "inside" are DELETED ("inside" means: "keep" the first and the last one, delete the other; assuming
+// that those points come frome the second token (...)
+//
+// New feature: TokenCombiner accepts two more parameters: inconditional_deltay_before & inconditional_deltay_after like TokenShifter
+// Values are written to header of new token
 
-function TokenCombiner( $first_token, $second_token ) {
+function TokenCombiner( $first_token, $second_token, $deltay_before, $deltay_after ) {
     global $steno_tokens_master;
     $new_token = array();
     $new_token_key = $first_token . $second_token;
@@ -620,6 +625,9 @@ function TokenCombiner( $first_token, $second_token ) {
     }
     // now adjust width adding width (offset 0) of second token to pre-offset of new_token at offset 4
     $new_token[offs_additional_x_before] = $new_token[offs_additional_x_before] + $steno_tokens_master[$second_token][offs_token_width];
+    // adjust inconditional_deltay_before/after at offsets 13/14
+    $new_token[offs_inconditional_delta_y_before] = $deltay_before;
+    $new_token[offs_inconditional_delta_y_after] = $deltay_after;
 
     // now copy all the points of the $first_token, inserting second token at connection point
     for ($i = header_length; $i < count($steno_tokens_master[$first_token]); $i += tuplet_length) {
@@ -658,15 +666,25 @@ function TokenCombiner( $first_token, $second_token ) {
     }
     // the problem now is, that the combined token may have 2 exit/pivot points
     // assume that the last exit/pivot points are the valid ones (and therefore delete preceeding ones, if they exist)
+    // same problem with entry- and "entry"-pivot point => DELETE them
     $last_pivot = 0; $last_exit = 0;
+    $first_pivot = 9999; $first_entry = 9999;
     for ($i = header_length; $i < count($new_token); $i+=8) {
         if ($new_token[$i+offs_d2] == 2) {
-           if ($last_pivot > 0) $new_token[$last_pivot+offs_d2] = 0; // transform last pivot point to normal point
+           if ($last_pivot > 0) $new_token[$last_pivot+offs_d2] = 0; // transform last pivot point to normal point // $last_pivot?!? why not $i?!?
             $last_pivot = $i; 
         }
         if ($new_token[$i+offs_d2] == 1) {
             if ($last_exit > 0) $new_token[$last_exit+offs_d2] = 0; // transform last exit point to normal point
             $last_exit = $i;
+        }
+        if ($new_token[$i+offs_t1] == 1) {          // test if it is an entry-point
+            if ($first_entry < 9999) $new_token[$i+offs_t1] = 0;
+            $first_entry = $i;
+        }
+        if ($new_token[$i+offs_t1] == 2) {          // test if it is an entry-pivot-point
+            if ($first_pivot < 9999) $new_token[$i+offs_t1] = 0;
+            $first_pivot = $i;
         }
     }
     $steno_tokens_master["$new_token_key"] = $new_token; 
@@ -674,7 +692,7 @@ function TokenCombiner( $first_token, $second_token ) {
 
 function CreateCombinedTokens() {
     global $combiner_table;
-    foreach ($combiner_table as $entry ) TokenCombiner( $entry[0], $entry[1] );
+    foreach ($combiner_table as $entry ) TokenCombiner( $entry[0], $entry[1], $entry[2], $entry[3] );
 }
 
 // TokenShifter: 
