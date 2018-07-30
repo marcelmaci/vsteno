@@ -1,6 +1,7 @@
 <?php require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return_address'] = "input.php"; ?>
 <br>
 <center>
+<?php require_once "constants.php"; echo "<i>Commit: " . version_commit_id . " (" . version_date . ")</i><br>"; ?>
 <b>HINWEIS: Es sind noch nicht alle Optionen implementiert.<br>
 Im Moment funktionieren: Textfeld (Langschrift), Titel, Einleitung (ohne Grösse),<br>
 Zeichen (Grösse, Dicke, Neigung), Textfarbe, Hilfslinien, Ausgabe (Fenster integriert,<br>

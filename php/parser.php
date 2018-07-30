@@ -19,6 +19,14 @@
 
 require_once "options.php"; 
 
+function replace_all( $pattern, $replacement, $string ) {
+    do {
+        $old_string = $string;
+        $string = preg_replace( $pattern, $replacement, $string );
+    } while ($old_string !== $string );
+    return $string;
+}
+    
 ///////////////////////////////////////////// parser functions ////////////////////////////////////////////////
 
 // general philosophy for parser:
@@ -172,39 +180,45 @@ function MetaParser( $text ) {
         $word = Globalizer( $word );
         //echo "Metaparser(): Globalized: $word<br>";
         list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $word );
-        
-        /*
-        $actual_punctuation = "";
-        if (preg_match( "/[$punctuation]/", $word) == 1) {
-            $word_length = mb_strlen( $word );
-            $actual_punctuation = mb_substr( $word, $word_length-1, 1);
-            $word = mb_substr($word, 0, $word_length-1);
-        }
-        */
-        
-        $separated_word_parts_array = explode( "\\", Helvetizer($word) );
-        //var_dump($separated_word_parts_array);echo"<br";
-        $output = ""; 
-        foreach ($separated_word_parts_array as $word_part ) {
-                //echo "Metaparser(): Wordpart: $word_part<br>";
-                $subword_array = explode( "|", $word_part );
-                //var_dump($subword_array);echo"<br>";
-                foreach ($subword_array as $subword) { 
-                    //echo "Metaparser(): subword: $subword<br>";
-                    $output .= ParserChain( $subword ); 
-                    if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
-                    //echo "Metaparser() inner-foreach: output: $output<br>";
-                }
-                if ( $word_part !== end($separated_word_parts_array)) { /*echo "adding \\<br>";*/ $output .= "\\";}  // shouldn't be hardcoded?!
+       
+        switch ($_SESSION['token_type']) {
+            case "shorthand": 
+                $separated_word_parts_array = explode( "\\", Helvetizer($word) );
+                //var_dump($separated_word_parts_array);echo"<br";
+                $output = ""; 
+                foreach ($separated_word_parts_array as $word_part ) {
+                    //echo "Metaparser(): Wordpart: $word_part<br>";
+                    $subword_array = explode( "|", $word_part );
+                    //var_dump($subword_array);echo"<br>";
+                    foreach ($subword_array as $subword) { 
+                        //echo "Metaparser(): subword: $subword<br>";
+                        $output .= ParserChain( $subword ); 
+                        if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
+                        //echo "Metaparser() inner-foreach: output: $output<br>";
+                    }
+                    if ( $word_part !== end($separated_word_parts_array)) { /*echo "adding \\<br>";*/ $output .= "\\";}  // shouldn't be hardcoded?!
                 //echo "Metaparser() outer-foreach: output: $output<br>";
+                }
+                //if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
+                // echo "Metaparser(): output: $output<br>";
+                if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
+                if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
+                //$output = "$pretokens\\" . "$output" . "\\$posttokens";
+                //echo "Metaparser(): output: $output<br>";
+                return array( $pre, $output, $post );//break; // donnow if break is necessary?!
+            case "handwriting":
+                $output = $word;
+                $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+]", $output ); // upper case
+                $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-]", $output ); // lower case
+                $output = mb_strtoupper( $output );
+                return array( $pre, $output, $post ); break; // break necessary?!
+/*
+            case "htmlcode":
+                $_SESSION['token_type'] = "shorthand";
+                //return( $pre, $word, $post); 
+                break; // break necessary? 
+*/
         }
-        //if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
-        // echo "Metaparser(): output: $output<br>";
-        if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
-        if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
-        //$output = "$pretokens\\" . "$output" . "\\$posttokens";
-        //echo "Metaparser(): output: $output<br>";
-        return array( $pre, $output, $post );
 }
 
 

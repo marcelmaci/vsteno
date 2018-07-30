@@ -2,6 +2,8 @@
 <br>
 <center>
 <b>Mini-Version</b><br>
+<?php require_once "constants.php"; echo "<i>Commit: " . version_commit_id . " (" . version_date . ")</i><br>"; ?>
+
 <div id="order">
 <form action="../php/calculate.php" method="post">
 <table>

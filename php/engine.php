@@ -215,48 +215,41 @@ function InsertAuxiliaryLines( $width ) {
 function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open;
     //list( $splines, $width ) = TrimSplines( $splines );
-    //$shift_x = 0; // temporally for z or rück at beginning
-    //$x = $x+$shift_x;
-    // echo "CreateSVG: Pre: $pre Post: $post<br>";
-    list( $variable, $newcolor_htmlrgb ) = GetTagVariableAndValue( $pre ); 
-//if (mb_strlen($newcolor_htmlrgb) > 0) $color_htmlrgb = $newcolor_htmlrgb;
     
-    //echo "CreateSVG:<br>Pre: $pre<br>Post: $post<br>colorhtmlrgb: $color_htmlrgb<br>";
-    //if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
-        
-    $svg_string = "<svg width=\"$width\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
-    // draw auxiliary lines
-    
-    $svg_string .= InsertAuxiliaryLines( $width );
-    
-    $array_length = count( $splines );
-/*    for ($n = 0; $n <= $array_length - tuplet_length; $n+=tuplet_length) {
-            echo "splines($n): "; for ($i = 0; $i < tuplet_length; $i++) echo $splines[$n+$i] . "-";
-            echo "<br>";
-    }*/
-    for ($n = 0; $n <= $array_length - 8; $n += tuplet_length) {
-        $x1 = $splines[$n]; // + $shift_x;
-        $y1 = $splines[$n+1];
-        $q1x = $splines[$n+2]; // + $shift_x;
-        $q1y = $splines[$n+3];
-        $relative_thickness = $splines[$n+4];
-        $unused = $splines[$n+5];
-        $q2x = $splines[$n+6]; // + $shift_x;
-        $q2y = $splines[$n+7];
-        $x2 = $splines[$n+8]; // + $shift_x;
-        $y2 = $splines[$n+9];
-        $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
-        // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
-        // this method doesn't work with n, m, b ... why???
-        if ($splines[$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
-        // correct control points if following point is non-connecting (see CalculateWord() for more detail)
-        // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
-        if ($splines[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
-        $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
-    }
-    $svg_string .= "</g>Sorry, your browser does not support inline SVG.</svg>";
-    //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
-        
+   // if ($_SESSION['token_type'] !== "htmlcode") {
+        // echo "CreateSVG: Pre: $pre Post: $post<br>";
+        list( $variable, $newcolor_htmlrgb ) = GetTagVariableAndValue( $pre ); 
+        //if (mb_strlen($newcolor_htmlrgb) > 0) $color_htmlrgb = $newcolor_htmlrgb;
+        //echo "CreateSVG:<br>Pre: $pre<br>Post: $post<br>colorhtmlrgb: $color_htmlrgb<br>";
+        //if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
+        $svg_string = "<svg width=\"$width\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
+        // draw auxiliary lines
+        $svg_string .= InsertAuxiliaryLines( $width );
+        $array_length = count( $splines );
+
+        for ($n = 0; $n <= $array_length - 8; $n += tuplet_length) {
+            $x1 = $splines[$n]; // + $shift_x;
+            $y1 = $splines[$n+1];
+            $q1x = $splines[$n+2]; // + $shift_x;
+            $q1y = $splines[$n+3];
+            $relative_thickness = $splines[$n+4];
+            $unused = $splines[$n+5];
+            $q2x = $splines[$n+6]; // + $shift_x;
+            $q2y = $splines[$n+7];
+            $x2 = $splines[$n+8]; // + $shift_x;
+            $y2 = $splines[$n+9];
+            $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+            // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+            // this method doesn't work with n, m, b ... why???
+            if ($splines[$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+            // correct control points if following point is non-connecting (see CalculateWord() for more detail)
+            // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
+            if ($splines[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
+            $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
+        }
+        $svg_string .= "</g>Sorry, your browser does not support inline SVG.</svg>";
+        //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
+    // } 
     return $svg_string;
 }
 
@@ -529,6 +522,19 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
         return $svg_string;
 }
 
+function NormalText2NormalTextInSVG( $text, $size ) {
+    global $svg_height, $baseline_y;
+    // $size contains the text size in pixels (height)
+    // font: the Courier font is used since all characters have the same width => allows the calculation of svg-width in advance
+    $svg_width = $size * 0.59871795 * mb_strlen( $text ) + 6;    // note: factor is an empirical value (estimation); height: use $svg_height from constants (= same height as shorthand system); add additional 8px to width for spacing
+    $svg_baseline = $baseline_y;    // use same baseline as shorthand words
+    $svg_color = $_SESSION['token_color'];                  // use same color as shorthand text
+    //echo "SVG: height=$svg_height width=$svg_width baseline=$svg_baseline color=$svg_color text=$text<br>";
+    $svg  = "<svg height=\"$svg_height\" width=\"$svg_width\">";
+    $svg .= "<text x=\"0\" y=\"$svg_baseline\" fill=\"$svg_color\" font-size=\"$size\" font-family=\"Courier\">";
+    $svg .= "$text</text></svg>";
+    return $svg;
+}
 
 function MetaForm2TokenList( $pre, $text, $post ) {
     global $steno_tokens_master;
@@ -581,7 +587,7 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     list( $pre, $tokenlist, $post ) = NormalText2TokenList( $text );
     if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // set inline options
     $svg = $pre_html_tag_list;
-    $esc_svg = htmlspecialchars($svg);
+    //$esc_svg = htmlspecialchars($svg);
    // echo "svg: $esc_svg<br>";
     
     // ugly solution to set parameters (just a quick fix: has to be replaced later)
@@ -591,14 +597,39 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     $color_htmlrgb = $_SESSION['token_color'];
     $stroke_dasharray = $_SESSION['token_style_custom_value'];
     
-    if ($tokenlist !== null) {
-        $svg .= TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
-        if (mb_strlen($post)>0) {
-            $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
+    switch ($_SESSION['token_type']) {
+        case "htmltext" : 
+            list( $pre_nil, $middle, $post_nil) = GetPreAndPostTags( $text );
+            //echo "<br>Inside NormalText2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
+            $pre_html_tag_list .= ParseAndSetInlineOptions ( $pre_nil );
+            $svg .= $pre_html_tag_list;
+            $svg .= " " . $middle;          // use raw text and insert it directly between $pre and $post html-text (= raw html code); add a space because spaces have been parsed out ...
+            $post_html_tag_list = ParseAndSetInlineOptions( $post_nil );
             $svg .= $post_html_tag_list;
-        }
-        return $svg;
-    } else return $svg;
+            return $svg;
+            break;
+        case "svgtext" : 
+            list( $pre_nil, $middle, $post_nil) = GetPreAndPostTags( $text );
+            //echo "<br>Inside NormalText2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
+            $pre_html_tag_list .= ParseAndSetInlineOptions ( $pre_nil );
+            $svg .= $pre_html_tag_list;
+            $text_as_svg .= NormalText2NormalTextInSVG( $middle, 20 );  // use fix size
+            $svg .= $text_as_svg;
+            $post_html_tag_list = ParseAndSetInlineOptions( $post_nil );
+            $svg .= $post_html_tag_list;
+            return $svg;
+            break;
+        default:
+            if ($tokenlist !== null) {
+                $svg .= TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+                if (mb_strlen($post)>0) {
+                    $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
+                    $svg .= $post_html_tag_list;
+                }
+                return $svg;
+            } else return $svg;
+            break;
+    } 
 }
 
 // TokenCombiner combines 2 tokens, creating a new token (as an array) and adds it into the multidimensional array steno_tokens_master[]
@@ -678,12 +709,12 @@ function TokenCombiner( $first_token, $second_token, $deltay_before, $deltay_aft
             if ($last_exit > 0) $new_token[$last_exit+offs_d2] = 0; // transform last exit point to normal point
             $last_exit = $i;
         }
-        if ($new_token[$i+offs_t1] == 1) {          // test if it is an entry-point
-            if ($first_entry < 9999) $new_token[$i+offs_t1] = 0;
+        if ($new_token[$i+offs_d1] == 1) {          // test if it is an entry-point
+            if ($first_entry < 9999) $new_token[$i+offs_d1] = 0;
             $first_entry = $i;
         }
-        if ($new_token[$i+offs_t1] == 2) {          // test if it is an entry-pivot-point
-            if ($first_pivot < 9999) $new_token[$i+offs_t1] = 0;
+        if ($new_token[$i+offs_d1] == 2) {          // test if it is an entry-pivot-point
+            if ($first_pivot < 9999) $new_token[$i+offs_d1] = 0;
             $first_pivot = $i;
         }
     }

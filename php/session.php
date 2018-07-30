@@ -17,6 +17,7 @@ function InitializeSessionVariables() {
     $_SESSION['introduction_size'] = 1; // h1
     $_SESSION['introduction_color'] = "black";
     $_SESSION['token_size'] = 1.5; // factor
+    $_SESSION['token_type'] = "shorthand";  // defines if tokens are shown as "shorthand", "handwriting", "svgtext", "htmltext" (normal text with browser fonts) - can only be set via inline-tag
     $_SESSION['token_thickness'] = 0.8; // factor
     $_SESSION['token_inclination'] = 60; // degree
     $_SESSION['token_shadow'] = 1;

@@ -65,8 +65,25 @@ function CalculateStenoPage() {
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
 
     $test_text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim($test_text)) );
+    
+    // Original idea: use spaces to separate words that have to be transformed into shorthand-sgvs
+    // Problem: there are html-tags which have spaces inside, e.g. <font size="7"> (consequence: the tags will get separated and the different
+    // parts will be treated as words to transform.
+    // Solution: Replace temporarily all spaces inside html-tags with $nbsp; => separate the words => replace all &nbsp; with ' '
+    // (Potential problem with that solution: $nbsp; inside html-tags inserted by user will also get converted => don't think that should happen)
+    //echo "Text before: $test_text<br>";
+    
+    $test_text = replace_all( '/(<[^>]*?) (.*?>)/', '$1#XXX#$2', $test_text );
+    //echo "<br>Replaced Spaces:<br>" . htmlspecialchars($test_text) . "<br><br>";
     $test_text_array = explode( " ", $test_text);
-
+    foreach ( $test_text_array as $key => $separate_entry) {
+        //echo "<br>Entry aus Array: " . htmlspecialchars($separate_entry) . " => ";
+        $test_text_array[$key] = replace_all( '/(<[^>]*?)#XXX#(.*?>)/', '$1 $2', $separate_entry);
+        //echo htmlspecialchars($separate_entry) . "<br>";
+        
+    }
+    //foreach ( $test_text_array as $separate_entry) echo "$separate_entry Test";
+    
     foreach ( $test_text_array as $test_wort ) {
         
         $original = $test_wort;

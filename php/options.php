@@ -55,17 +55,20 @@ function GetPreAndPostTags( $text ) {
         preg_match( "/$pre_tags_pattern/", $text, $pre_tag);                      // suppose regex is greedy // include html-tags also (search for <, not only <@)
         preg_match( "/$post_tags_pattern/", $text, $post_tag);                    // idem
         preg_match( "/$general_tags_pattern/", $text, $only_tags );
+        //echo "<br>Inside GetPreAndPostTags:<br>- pre_tag: " . htmlspecialchars($pre_tag[0]) . "<br>- post_tag: " . $post_tag[0] . "<br>- only_tags: " . htmlspecialchars($only_tags[0]) . "<br><br>";
         $pre = $pre_tag[0];
         $post = $post_tag[0];
         $pre_regex = preg_quote( $pre );                                        // found patterns must be escaped before being
         $post_regex = preg_quote( $post );                                      // reused in preg_match() !!!
         preg_match( "/(?<=$pre_regex).+(?=$post_regex)/", $text, $word_array );
         $word = $word_array[0];    
+        //echo "<br>Inside GetPreAndPostTags:<br>- word: " . htmlspecialchars($word) . "<br><br>";
         // convert escaped html chars back to normal text
         $only_tags[0] = preg_replace( "/\!/", "/", $only_tags[0] );              // convert / back in </.>-html-tags => is this necessary?
         $pre = preg_replace( "/\!/", "/", $pre );
         $post = preg_replace( "/!/", "/", $post);                                // "/" <=> chr(47)
-        if (mb_strlen( $only_tags[0] ) > 0) return array( $only_tags[0], "", "" );
+        if ((mb_strlen( $pre ) >0) && (mb_strlen( $post ) > 0) && (mb_strlen( $only_tags[0]) > 0) && (mb_strlen( $word ) > 0)) return array( $pre, $word, $post );
+        elseif ((mb_strlen( $only_tags[0] ) > 0) && (mb_strlen( $word ) > 0)) return array( $only_tags[0], "", "" );
         else return array($pre, $word, $post);
 }
 
