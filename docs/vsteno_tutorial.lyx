@@ -1,0 +1,1264 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+VSTENO Tutorial
+\end_layout
+
+\begin_layout Date
+30.
+ Juni 2018
+\end_layout
+
+\begin_layout Author
+Marcel Maci
+\end_layout
+
+\begin_layout Abstract
+Dieses Tutorial führt Sie kurz und bündig in die Verwendung und einige Möglichke
+iten von VSTENO ein.
+ VSTENO (Vector Steno Tool with Enhanced Notational Options) ist ein PHP-Program
+m, das Langschrift-Texte in Stenogramme (System Stolze-Schrey) überträgt
+ und einige zusätzliche Gestaltungsoptionen zur Darstellung und Gliederung
+ des Textes bietet.
+ VSTENO steht unter der GPL (GNU General Public Licence) und ist somit freie
+ Software.
+\end_layout
+
+\begin_layout Part*
+Erste Schritte
+\end_layout
+
+\begin_layout Section*
+Grundsätzliches
+\end_layout
+
+\begin_layout Standard
+Sie können VSTENO entweder online verwenden (am einfachsten) oder lokal
+ installieren.
+ Dieses Tutorial basiert auf der Online-Version.
+ In einem späteren Teil erfahren Sie, wie Sie VSTENO lokal auf Ihrem Computer
+ installieren können.
+\end_layout
+
+\begin_layout Section*
+Erster Text
+\end_layout
+
+\begin_layout Standard
+Um Ihren ersten Stenografie-Text zu erstellen, gehen Sie wie folgt vor:
+\end_layout
+
+\begin_layout Enumerate
+Rufen Sie die Webseite www.purelab-tefc.ch/test1/php/mini.php auf.
+\end_layout
+
+\begin_layout Enumerate
+Geben Sie im Textfeld den Langschrift-Text ein (eintippen oder kopieren).
+\end_layout
+
+\begin_layout Enumerate
+Klicken Sie auf 
+\begin_inset Quotes eld
+\end_inset
+
+abschicken
+\begin_inset Quotes erd
+\end_inset
+
+ - fertig!
+\end_layout
+
+\begin_layout Standard
+Ihr Text wird nun mit voreingestellten Optionen als Stenografie-Text angezeigt.
+\end_layout
+
+\begin_layout Section*
+Schriftgrösse
+\end_layout
+
+\begin_layout Standard
+Falls Ihnen die Schrift zu gross oder zu klein erscheint, können Sie diese
+ mit der Zoom-/Shrink-Funktion Ihres Browsers anpassen.
+ 
+\end_layout
+
+\begin_layout Standard
+Um lediglich etwas Text in Stenografie zu lesen, reichen die Funktionen
+ der so genannten 
+\begin_inset Quotes eld
+\end_inset
+
+Miniversion
+\begin_inset Quotes erd
+\end_inset
+
+ von VSTENO vermutlich aus.
+\end_layout
+
+\begin_layout Section*
+Vollversion
+\end_layout
+
+\begin_layout Standard
+Sie können auf weitere Optionen zugreifen, indem Sie die so genannte 
+\begin_inset Quotes eld
+\end_inset
+
+Vollversion
+\begin_inset Quotes erd
+\end_inset
+
+ von VSTENO aufrufen:
+\end_layout
+
+\begin_layout Enumerate
+Klicken Sie auf 
+\begin_inset Quotes eld
+\end_inset
+
+Vollversion
+\begin_inset Quotes erd
+\end_inset
+
+ (oder rufen sie die Adresse www.purelab-tefc.ch/test1/php/input.php auf).
+\end_layout
+
+\begin_layout Enumerate
+Wählen Sie die entsprechenden Optionen.
+\end_layout
+
+\begin_layout Enumerate
+Klicken Sie auf 
+\begin_inset Quotes eld
+\end_inset
+
+abschicken
+\begin_inset Quotes erd
+\end_inset
+
+ - fertig!
+\end_layout
+
+\begin_layout Standard
+Falls Sie in der Miniversion bereits einen Text eingegeben haben, wird dieser
+ automatisch in die Vollversion übernommen.
+ Die Standard-Optionen sind vorgewählt, können einzeln angepasst werden
+ und bleiben gespeichert.
+ Sie können die Optionen zurücksetzen, indem Sie 
+\begin_inset Quotes eld
+\end_inset
+
+zurücksetzen
+\begin_inset Quotes erd
+\end_inset
+
+ wählen.
+ Wenn Sie ohne Text auf 
+\begin_inset Quotes eld
+\end_inset
+
+abschicken
+\begin_inset Quotes erd
+\end_inset
+
+ klicken, werden nur die Optionen gesetzt.
+ Sie können danach frei zwischen der Mini- und Vollversion hin- und herwechseln
+ - die Optionen bleiben dabei gespeichert.
+\end_layout
+
+\begin_layout Section*
+Optionen
+\end_layout
+
+\begin_layout Standard
+Die Funktionalität von VSTENO wird laufend ausgebaut.
+ Im Moment stehen Ihnen die folgende Optionen zur Verfügung (der aktuelle
+ Entwicklungsstand wird in den Fussnoten angegeben):
+\end_layout
+
+\begin_layout Itemize
+Titel & Einleitung: Werden zu Beginn des Textes in Langschrift dargestellt.
+ Die Funktion lässt sich abwählen (dann wird nur der Stenografie-Text angezeigt).
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Farbe und Grösse Einleitung noch nicht umgesetzt.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Zeichen: Grösse, Strichdicke, Neigung, Farbe, Schattierung, Hintergrundfarbe,
+ Abstände (zwischen den Zeichen) und Linienstil können eingestellt werden.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Hintergrundfarbe noch nicht umgesetzt.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Markieren: Hauptwörter, Satzanfänge und weitere Wörter können hervorgehoben
+ werden.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Noch nicht umgesetzt.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Hilfslinien: Farbe, Stil und Dicke der Hilfslinien können eingestellt werden
+ (die Option lässt sich abwählen, dann erscheinen die Stenogramme auf einem
+ blanken Hintergrund).
+\end_layout
+
+\begin_layout Itemize
+Ausgabe: Integriert (innerhalb des bestehenden Layouts) oder auf einer separaten
+ Vollseite (besser geeignet, wenn der Text ausgedruckt werden soll - in
+ diesen Fall empfiehlt es sich, auch die Ausgabe des 
+\begin_inset Quotes eld
+\end_inset
+
+zurück
+\begin_inset Quotes erd
+\end_inset
+
+-Buttons unterdrücken).
+ Langschrift-Tags: Die Langschrift-Form eines Stenogramms wird angezeigt,
+ wenn man mit der Maus darüber fährt (geeignet für das Lesetraining).
+ Zusätzlich ist hier eine Blocksatzausgabe geplant.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Blocksatz und Ausgabe in Metaform sind noch nicht implementiert, die Debug-Ausga
+be ist rudimentär.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Formate
+\end_layout
+
+\begin_layout Standard
+Für die Eingabe der Optionen verwendet VSTENO verschiedene Formate und Werte:
+\end_layout
+
+\begin_layout Itemize
+Farbe: Es können die in HTML üblichen Farbnamen (z.B.
+ red, black, green, blue etc.) oder rgb-Werte verwendet werden.
+ Der Farbname 
+\begin_inset Quotes eld
+\end_inset
+
+black
+\begin_inset Quotes erd
+\end_inset
+
+ entspricht z.B.
+ rgb(0,0,0), 
+\begin_inset Quotes eld
+\end_inset
+
+red
+\begin_inset Quotes erd
+\end_inset
+
+ ist rgb(255,0,0) usw.
+\end_layout
+
+\begin_layout Itemize
+Stil: Entspricht dem Wert stroke-dasharray innerhalb des SVG-tags.
+ Eine gestrichelte Linie kann z.B.
+ mit 1,1 (ohne Anführungszeichen) angegeben werden.
+\end_layout
+
+\begin_layout Itemize
+Grösse: Die Referenzgrösse für Stenozeichen beträgt 10 Pixel pro Stufe bzw.
+ 60 Pixel für die 6 Stufen, die von VSTENO angezeigt werden.
+ Der angegebene Wert gibt den Zoomfaktor an.
+ Eine Grösse von 1.5 bedeutet also, dass die Standardstufe 15 Pixel hoch
+ angezeigt wird.
+\end_layout
+
+\begin_layout Itemize
+Dicke: Die Standardliniendicke beträgt 1 Pixel, Werte >1 bedeuten dickere,
+ <1 dünnere Linien.
+\end_layout
+
+\begin_layout Itemize
+Neigung: Stenozeichen sind intern als senkrechte Zeichen (= 90 Grad) definiert.
+ In der Standardeinstellung sind sie 60 Grad geneigt.
+\end_layout
+
+\begin_layout Itemize
+Schattierung: Dieser Wert gibt an, wie stark schattierte Zeichen schattiert
+ werden sollen.
+ Ein Wert von 1 gibt eine Standardschattierung an, <1 bedeutet eine schwächere,
+ >1 eine stärkere Schattierung.
+\end_layout
+
+\begin_layout Itemize
+Abstand: Gibt den Abstand zweier aufeinanderfolgender Stenozeichen an (Standard
+ ist 2.5 Pixel für eine enge Verbindung und 10 Pixel für eine weite Verbindung).
+\end_layout
+
+\begin_layout Part*
+Anspruchsvollere Layouts
+\end_layout
+
+\begin_layout Standard
+Nebst diesen allgemeinen Optionen bietet VSTENO die Möglichkeit durch so
+ genannte Tags, das Layout weiter anzupassen und zu verfeinern.
+ Es gibt zwei Arten von Tags: HTML-Tags und Inline-Option-Tags.
+\end_layout
+
+\begin_layout Subsection*
+HTML-Tags
+\end_layout
+
+\begin_layout Standard
+HTML-Tags können nahtlos in Langschrift-Texte eingebunden werden:
+\end_layout
+
+\begin_layout LyX-Code
+Dies ist eine 
+\end_layout
+
+\begin_layout LyX-Code
+erste Zeile.
+ <br> Dies ist eine 
+\end_layout
+
+\begin_layout LyX-Code
+zweite Zeile.
+\end_layout
+
+\begin_layout Standard
+VSTENO gibt diesen Text in zwei (!) Zeilen aus, der Zeilenumbruch erfolgt
+ an der Stelle des <br>-Tags.
+ Bitte beachten Sie, dass VSTENO sämtlichen Text als fortlaufend betrachtet.
+ Die Zeilenumbrüche nach 
+\begin_inset Quotes eld
+\end_inset
+
+eine
+\begin_inset Quotes erd
+\end_inset
+
+ sind also wirkungslos! Verwenden Sie zur Gestaltung Ihrer Seite deshalb
+ HTML-Tags.
+\end_layout
+
+\begin_layout Section*
+Inline-Option-Tags
+\end_layout
+
+\begin_layout Standard
+Inline-Option-Tags (oder kurz: Inline-Tags) bieten Ihnen eine weitere wichtige
+ Möglichkeit, die Gestaltung eines Stenografie-Textes zu verändern.
+ Inline-Tags sehen HTML-Tags sehr ähnlich und können wie diese an jeder
+ beliebigen Textstelle eingefügt werden.
+\end_layout
+
+\begin_layout LyX-Code
+Dies ist ein 
+\end_layout
+
+\begin_layout LyX-Code
+<@token_color='red'>
+\end_layout
+
+\begin_layout LyX-Code
+rotes
+\end_layout
+
+\begin_layout LyX-Code
+<@token_color='black'> 
+\end_layout
+
+\begin_layout LyX-Code
+Wort.
+\end_layout
+
+\begin_layout Standard
+Beachten Sie, dass VSTENO den Text 
+\begin_inset Quotes eld
+\end_inset
+
+Dies ist ein rotes Wort
+\begin_inset Quotes erd
+\end_inset
+
+ auch hier als fortlaufende Stenogramme ausgibt (Zeilenumbrüche haben keine
+ Bedeutung).
+ Mit dem Inline-Tag <@token_color='red'> wird die Zeichenfarbe nach 
+\begin_inset Quotes eld
+\end_inset
+
+dies ist ein
+\begin_inset Quotes erd
+\end_inset
+
+ auf rot gesetzt und das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+rot
+\begin_inset Quotes erd
+\end_inset
+
+ somit in roter Farbe ausgegeben.
+ Analog wechselt <@token_color='black'> die Schriftfarbe wieder zurück auf
+ schwarz.
+\end_layout
+
+\begin_layout Standard
+Inline-Tags weisen somit folgendes Format auf:
+\end_layout
+
+\begin_layout LyX-Code
+<@variable=¨Wert¨>
+\end_layout
+
+\begin_layout LyX-Code
+<@variable='neuer Wert'>
+\end_layout
+
+\begin_layout LyX-Code
+<@variable=Wert>
+\end_layout
+
+\begin_layout Standard
+Die Variable bezeichnet somit die Option, die verändert wird.
+ Dieser wird der Wert 
+\begin_inset Quotes eld
+\end_inset
+
+Wert
+\begin_inset Quotes erd
+\end_inset
+
+ zugewiesen.
+ Der Wert kann in doppelten oder einfachen Anführungszeichen stehen oder
+ auch direkt zwischen = und > (wählen Sie hier die Form, die Ihnen persönlich
+ am besten passt).
+\end_layout
+
+\begin_layout Section*
+Variablen
+\end_layout
+
+\begin_layout Standard
+Grundsätzlich können sämtliche Optionen - insbesondere auch jene, welche
+ in der Vollversion per Webformular zur Verfügung stehen - mit Inline-Tags
+ verändert werden.
+ Anbei eine Liste der wichtigsten Variablen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Eine noch detaillierte Sammlung finden Sie im File session.php: Alle Optionen
+ sind als Session-Variablen angelegt, die verändert werden können.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+token_size: Grösse der Stenozeichen (Zoomfaktor), Standard 1.5.
+\end_layout
+
+\begin_layout Itemize
+token_type: Kann die Werte 
+\begin_inset Quotes eld
+\end_inset
+
+shorthand
+\begin_inset Quotes erd
+\end_inset
+
+ (Standard), 
+\begin_inset Quotes eld
+\end_inset
+
+handwriting
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+htmltext
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+svgtext
+\begin_inset Quotes erd
+\end_inset
+
+ annehmen.
+ Dadurch kann kann Text in Langschrift und Stenografie gemischt werden (mehr
+ dazu im folgenden Abschnitt 
+\begin_inset Quotes eld
+\end_inset
+
+gemischte Texte
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+token_thickness: Liniendicke der Stenozeichen (Standard 0.8).
+\end_layout
+
+\begin_layout Itemize
+token_inclination: Neigung der Stenozeichen (Standard 60).
+\end_layout
+
+\begin_layout Itemize
+token_shadow: Stärke der Schattierung (Standard 1).
+\end_layout
+
+\begin_layout Itemize
+token_distance_narrow / token_distance_wide: Abstand zwischen zwei Stenozeichen
+ (Standard 2.5 für eng, 10 für weit).
+\end_layout
+
+\begin_layout Itemize
+token_color: Farbe der Stenozeichen (Standard 
+\begin_inset Quotes eld
+\end_inset
+
+black
+\begin_inset Quotes erd
+\end_inset
+
+ bzw.
+ rgb(0,0,0)).
+\end_layout
+
+\begin_layout Section*
+Gemischte Texte
+\end_layout
+
+\begin_layout Standard
+VSTENO bietet auch die Möglichkeit Stenogramme und Langschrift zu mischen:
+\end_layout
+
+\begin_layout LyX-Code
+Einige Kürzungen:
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=
+\begin_inset Quotes erd
+\end_inset
+
+svgtext
+\begin_inset Quotes erd
+\end_inset
+
+>
+\end_layout
+
+\begin_layout LyX-Code
+gegen
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=
+\begin_inset Quotes erd
+\end_inset
+
+shorthand
+\begin_inset Quotes erd
+\end_inset
+
+>
+\end_layout
+
+\begin_layout LyX-Code
+gegen
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=
+\begin_inset Quotes erd
+\end_inset
+
+svgtext
+\begin_inset Quotes erd
+\end_inset
+
+>
+\end_layout
+
+\begin_layout LyX-Code
+mit
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=
+\begin_inset Quotes erd
+\end_inset
+
+shorthand
+\begin_inset Quotes erd
+\end_inset
+
+>
+\end_layout
+
+\begin_layout LyX-Code
+mit
+\end_layout
+
+\begin_layout Standard
+Hier wird also nach jeder in Abkürzung in Langschrift die entsprechende
+ Ausführung als Stenogramm angezeigt.
+\end_layout
+
+\begin_layout Standard
+Die Variable 
+\begin_inset Quotes eld
+\end_inset
+
+token_type
+\begin_inset Quotes erd
+\end_inset
+
+ kann folgende Werte annehmen:
+\end_layout
+
+\begin_layout Itemize
+shorthand: Kurzschrift (in diesem Fall die Grundschrift von Stolze-Schrey
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+in Zukunft sollte es auch möglich sein, zwischen verschiedenen Varianten
+ der Kurzschrift zu wählen, also z.B.
+ Eilschrift nach Stolze-Schrey oder Spanische Kurzschrift
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+handwriting: Langschrift handgeschrieben (Blockschrift im ähnlichen Stil
+ wie die Stenozeichen).
+\end_layout
+
+\begin_layout Itemize
+htmltext: Langschrift als HTML-Text
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Diese Funktion ist allenfalls nur bedingt nützlich, da die Gestaltungsmöglichkei
+ten in HTML in Verbindung mit SVG-Grafiken relativ eingeschränkt sind)
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+svgtext: Langschrift als SVG-Grafik dargestellt
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bietet am meisten Gestaltungsmöglichkeiten und ist somit die Variante, die
+ wir vorrangig empfehlen.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Part*
+Weiteres
+\end_layout
+
+\begin_layout Section*
+Drucken
+\end_layout
+
+\begin_layout Standard
+Sie können Stenografie-Texte ausdrucken, indem Sie die Druckfunktion des
+ Browser verwenden.
+ Gehen Sie hierzu wie folgt vor:
+\end_layout
+
+\begin_layout Enumerate
+Generieren Sie Ihren Text, indem Sie in der Vollversion die Ausgabe-Option
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Vollseite
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+ohne Button
+\begin_inset Quotes erd
+\end_inset
+
+ anwählen (passen Sie nötigenfalls auch andere Optionen an, z.B.
+ Titel, Einleitung, Zeichengrösse, Linienstärke und ob Sie den Text gerne
+ mit oder ohne Hilfslinien drucken möchten).
+\end_layout
+
+\begin_layout Enumerate
+Wählen Sie anschliessend die Funktion 
+\begin_inset Quotes eld
+\end_inset
+
+Drucken
+\begin_inset Quotes erd
+\end_inset
+
+ Ihres Browsers: Deaktivieren Sie sämtliche Formateinstellungen (z.B.
+ Druck von Titel, URL, Seiten und Zeit in der Kopf und Fussleiste) und drucken
+ Sie die Seite(n) als PDF in eine Datei.
+\end_layout
+
+\begin_layout Enumerate
+Öffnen Sie nun diese Datei mit einem PDF-Viewer: Hier können Sie die Seiten
+ weiter layouten (z.B.
+ Ausdrucken von 2 Seiten auf einem A4-Blatt quer - dieses Format ist für
+ Stenografie-Texte sehr zu empfehlen).
+\end_layout
+
+\begin_layout Standard
+Anbei sehen Sie die einzelnen Schritte mit ABrowser und Linux (Screenshots).
+\end_layout
+
+\begin_layout Standard
+Probieren Sie verschiedene Schriftgrössen und Strichstärken (Stenozeichen
+ und Hilfslinien) aus und notieren Sie sich gegebenenfalls die optimalen
+ Werte.
+\end_layout
+
+\begin_layout Section*
+E-Reader
+\end_layout
+
+\begin_layout Standard
+Ihre Stenografie-Texte können Sie auch auf einem E-Reader lesen.
+ Grundsätzlich gibt es hierzu zwei Möglichkeiten:
+\end_layout
+
+\begin_layout Enumerate
+Wenn Ihr Gerät über einen Internet-Zugang und einen guten Browser verfügt,
+ können Sie die VSTENO-Seite aufrufen und Ihre Steno-Texte direkt im Browser
+ lesen.
+\end_layout
+
+\begin_layout Enumerate
+Alternativ verfahren Sie gleich, wie unter dem Punkt 
+\begin_inset Quotes eld
+\end_inset
+
+Drucken
+\begin_inset Quotes erd
+\end_inset
+
+ erklärt: Statt das PDF am Schluss zu drucken, speichern Sie es ab und übertrage
+n Sie es auf Ihren E-Reader.
+\end_layout
+
+\begin_layout Standard
+Probieren Sie auch hier verschiedene Schriftgrössen und Strichstärken aus
+ und wählen Sie jene, die auf Ihrem Gerät am besten dargestellt werden.
+\end_layout
+
+\begin_layout Section*
+Lesestoff
+\end_layout
+
+\begin_layout Standard
+Gerade E-Reader eignen sich ausgezeichnet, um ganze Bücher in Steno zu lesen.
+ Doch woher soll man diese Bücher nehmen bzw.
+ wie kommen z.B.
+ heruntergeladene Bücher ins richtige Format?
+\end_layout
+
+\begin_layout Itemize
+Freie Bücher: Im Projekt 
+\begin_inset Quotes eld
+\end_inset
+
+Gutenberg
+\begin_inset Quotes erd
+\end_inset
+
+ (gutenberg.spiegel.de) finden Sie tausende Bücher, deren Copyright abgelaufen
+ ist und die somit 
+\begin_inset Quotes eld
+\end_inset
+
+gemeinfrei
+\begin_inset Quotes erd
+\end_inset
+
+ gelesen und weitergegeben werden dürfen.
+ Eine grosse Zahl an Stenolektüren ist somit nur ein Copy&Paste entfernt!
+\end_layout
+
+\begin_layout Itemize
+Kommerzielle E-Books: Diese befinden sich in der Regel in einem Format,
+ das nicht direkt in VSTENO übernommen werden kann.
+ Hier hilft das freie Programm 
+\begin_inset Quotes eld
+\end_inset
+
+Calibre
+\begin_inset Quotes erd
+\end_inset
+
+ weiter.
+ Damit können Sie Ihr E-Book in reinen ASCII-Text umwandeln und diesen dann
+ für VSTENO verwenden.
+\end_layout
+
+\begin_layout Standard
+Technisch sollte es in Zukunft auch möglich sein, Texte des Projektes Gutenberg
+ direkt durch einen simplen Klick im Browser zu übertragen.
+ Bevor VSTENO diese Optionen anbieten kann, sind jedoch noch einige Copyright-te
+chnische Fragen zu klären.
+\end_layout
+
+\begin_layout Part*
+Sprachliche Hinweise
+\end_layout
+
+\begin_layout Standard
+Die Generierung der Stenogramme erfolgt bei VSTENO automatisch anhand von
+ Regeln.
+ Gewisse Wörter, die unregelmässig sind bzw.
+ nicht durch Regeln erfasst werden können, werden anhand eines Wörterbuches
+ erstellt.
+ Da niemals sämtliche Wörter der deutschen Sprache erfasst werden können,
+ ist VSTENO nicht unfehlbar.
+ Es kann also sein, dass VSTENO Wörter falsch schreibt.
+ Oft geschieht dies, weil Konsonantengruppen falsch geordnet oder Kürzungen
+ falsch (oder nicht) angewendet werden.
+ Sie haben in diesem Fall die Möglichkeit, ein falsch geschriebenes Wort
+ zu korrigieren, indem Sie es manuell trennen oder selber in Stenozeichen
+ zerlegen.
+\end_layout
+
+\begin_layout Section*
+Das Zeichen |
+\end_layout
+
+\begin_layout Standard
+Das Zeichen | trennt Wörter, die vom Programm falsch getrennt werden.
+ Vergleichen sie z.B.
+ die Wörter 
+\begin_inset Quotes eld
+\end_inset
+
+Eulenspiegel
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+Lebenspartner
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Im ersten Fall, sollte die Konsonantengruppe 
+\begin_inset Quotes eld
+\end_inset
+
+nsp
+\begin_inset Quotes erd
+\end_inset
+
+ als Stenozeichen 
+\begin_inset Quotes eld
+\end_inset
+
+n
+\begin_inset Quotes erd
+\end_inset
+
+ + 
+\begin_inset Quotes eld
+\end_inset
+
+sp
+\begin_inset Quotes erd
+\end_inset
+
+ dargestellt werden (Eulen-Spiegel), im zweiten Fall jedoch 
+\begin_inset Quotes eld
+\end_inset
+
+ns
+\begin_inset Quotes erd
+\end_inset
+
+ + 
+\begin_inset Quotes eld
+\end_inset
+
+p
+\begin_inset Quotes erd
+\end_inset
+
+ (Lebens-Partner).
+ Sie können solche Wortkompositionen explizit durch | angeben
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Das Zeichen | erhalten Sie durch Drücken von ALT+7
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+Eulen|spiegel
+\end_layout
+
+\begin_layout LyX-Code
+Lebens|partner
+\end_layout
+
+\begin_layout Section*
+Das Zeichen 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+In Steno kann es vorkommen, dass zusammengestellte Wörter sehr umständlich
+ zu schreiben sind.
+ Das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Monochrom-Okular
+\begin_inset Quotes erd
+\end_inset
+
+ z.B.
+ weist aufgrund der Vokale o und u eine fünffache (!) Tiefstellung auf.
+ Dieses Problem kann gelöst werden, indem man die beiden Wortteile durch
+ 
+\backslash
+ abtrennt
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Das Zeichen 
+\backslash
+ erhalten Sie durch Drücken der ALT+< Tasten.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+Monochrom
+\backslash
+okular
+\end_layout
+
+\begin_layout Standard
+VSTENO schreibt hier also das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+monochrom
+\begin_inset Quotes erd
+\end_inset
+
+ (3x Tiefstellung), setzt dann ab und beginnt auf der Grundlinie neu mit
+ dem Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Okular
+\begin_inset Quotes erd
+\end_inset
+
+ (2x Tiefstellung).
+ Die Wortteile werden eng zusammengschrieben und von VSTENO als ein zusammenhäng
+endes Wort behandelt (d.h.
+ beide Wortteile erscheinen im gleichen SVG).
+\end_layout
+
+\begin_layout Section*
+Die Zeichen []
+\end_layout
+
+\begin_layout Standard
+Wenn ein Wort falsch geschrieben wird, können Sie auch eckige Klammern verwenden
+, um es selber in Stenozeichen aufzutrennen:
+\end_layout
+
+\begin_layout LyX-Code
+[EU][L][E][N][SP][I][G][E][L]
+\end_layout
+
+\begin_layout Standard
+Jeder Laut oder Lautfolge innerhalb der Klammern bezeichnet einen einzelnen
+ Vokal/Diphtong oder ein Stenozeichen.
+ Beachten Sie, dass Stenozeichen (so genannte stenotokens) mit Grossbuchstaben
+ dargestellt werden.
+\end_layout
+
+\begin_layout Standard
+Die Methode kann leider relativ rasch kompliziert werden, da z.T.
+ spezielle (virtuelle) Stenozeichen eingefügt werden müssen und die Zeichen
+ - je nach Kontext - auch ganz spezielle Bezeichnungen haben, z.B.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Eulenspiegel
+\begin_inset Quotes erd
+\end_inset
+
+: Benötigt das virtuelle Zeichen [0D-] am Anfang, dieses bedeutet 
+\begin_inset Quotes eld
+\end_inset
+
+beginne am Wortanfang vor dem Diphtong EU in Tieferstellung (d = down)
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Welt
+\begin_inset Quotes erd
+\end_inset
+
+: Das Schluss-T wird als Aufstrich-T realisiert, welches dem Stenozeichen
+ [&T] entspricht.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Rennen
+\begin_inset Quotes erd
+\end_inset
+
+: Beginnt mit einem Anlaut-R und endet mit der Kürzung -EN, die als [AR]
+ und [EN] notiert werden.
+\end_layout
+
+\begin_layout Standard
+Die Wörter werden vom Parser intern also folgendermassen geschrieben:
+\end_layout
+
+\begin_layout LyX-Code
+[0D-][EU][L][E][N][SP][I][G][E][L]
+\end_layout
+
+\begin_layout LyX-Code
+[W][E][L][&T]
+\end_layout
+
+\begin_layout LyX-Code
+[AR][E][NN][EN]
+\end_layout
+
+\begin_layout Standard
+Manchmal reicht es aber auch, wenn nur jene Teile, in Klammer geschrieben
+ werden, welche nicht richtig übertragen werden:
+\end_layout
+
+\begin_layout LyX-Code
+Eule[N][SP]iegel
+\end_layout
+
+\begin_layout Standard
+In diesem Fall wird VSTENO die eingeklammerten Stenozeichen [N][SP] ohne
+ Modifikation übernehmen und die übrigen Buchstaben automatisch übertragen.
+\end_layout
+
+\begin_layout Part*
+Programm
+\end_layout
+
+\begin_layout Section*
+Installation
+\end_layout
+
+\begin_layout Standard
+Wenn Sie VSTENO lokal auf Ihrem Computer installieren und verwenden möchten,
+ sollten Sie folgende Hinweise und Schritte beachten:
+\end_layout
+
+\begin_layout Enumerate
+Es wird empfohlen, VSTENO auf einer freien Linux-Distribution (z.B.
+ Trisquel oder Debian) zu verwenden, da diese die Philosophie der Freien
+ Software teilen und von Hause aus einen Webserver (z.B.
+ Apache) mit sich bringen.
+\end_layout
+
+\begin_layout Enumerate
+Der Apache-Webserver kann in Trisquel oder Debian installiert werden mit:
+ sudo apt-get install apache2.
+ Der Apache-Server ist bereits vorkonfiguriert und das home-Verzeichnis
+ von localhost befindet sich in /var/www/html/.
+\end_layout
+
+\begin_layout Enumerate
+Installieren Sie nun PHP mit: sudo apt-get install php5 (anschliessend sollten
+ Sie Ihren Webserver neu starten; falls dies nicht automatisch geschieht,
+ können Sie es manuell tun mit: sudo service apache2 restart).
+\end_layout
+
+\begin_layout Enumerate
+Wechseln Sie ins Verzeichnis /var/www/html und 
+\begin_inset Quotes eld
+\end_inset
+
+klonen
+\begin_inset Quotes erd
+\end_inset
+
+ Sie VSTENO mit: git clone https://github.com/marcelmaci/vsteno.
+\end_layout
+
+\begin_layout Enumerate
+Öffnen Sie Ihren Webbrowser und geben Sie die Adresse localhost/vsteno/php/input.
+php ein - that's it!
+\end_layout
+
+\begin_layout Section*
+Fehler
+\end_layout
+
+\begin_layout Standard
+VSTENO ist nach wie vor in der Entwicklungsphase.
+ Sollten Sie Fehler entdecken bzw.
+ auf Wörter stossen, die nicht richtig geschrieben werden, zögern Sie bitte
+ nicht, dies zu melden (m.maci@gmx.ch).
+ 
+\end_layout
+
+\end_body
+\end_document

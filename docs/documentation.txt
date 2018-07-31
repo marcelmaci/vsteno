@@ -26,7 +26,7 @@ die sogenannte Gehrung - also die Neigung der Stenozeichen - variiert werden.
 
 Eine Demoversion ist verfügbar unter:
 
-http://www.purelab-tefc.ch/test/welcome.html
+http://www.purelab-tefc.ch/test1/php/input.php
 
 Die Demoversion erlaubt noch keine Verwendung der erwähnten Gestaltungs-
 funktionen. Stenogramme werden in einer fest eingestellten Grösse, 60° geneigt
@@ -42,9 +42,6 @@ nitionen der Stenozeichen.
 - engine.php: Setzt die Daten in Stenozeichen um.
 - parser.php: Wandelt Normalschrift über verschiedene Schritte in "stenotokens"
 um, die von der engine verarbeitet werden.
-
-Input.php und output.php dienen zur Ein- und Ausgabe. Welcome.html setzt zu 
-einer klingonischen Begrüssung in typisch klingonischem Uncharme an.
 
 (5) Parser
 
