@@ -175,12 +175,17 @@ function GetPreAndPostTokens( $text ) {
 function MetaParser( $text ) {
         global $punctuation;
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
+        //echo "text: #$text#<br>";
         list( $pre, $word, $post ) = GetPreAndPostTags( $text );
         //echo "Metaparser(): Word: $word<br>";
-        $word = Globalizer( $word );
+        $temp_word = Globalizer( $word );
         //echo "Metaparser(): Globalized: $word<br>";
-        list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $word );
-       
+        list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $temp_word );
+        if ($temp_word === $posttokens) $pretokens = "";  // if the whole word consists of pre/posttokens, both variables are set => keep only $posttokens (i.e. delete pretokens)
+        //echo "word: #$word#<br>";
+        //echo "Pretokens: $pretokens <br>";
+        //echo "Posttokens: $posttokens <br>";
+        
         switch ($_SESSION['token_type']) {
             case "shorthand": 
                 $separated_word_parts_array = explode( "\\", Helvetizer($word) );
@@ -188,19 +193,20 @@ function MetaParser( $text ) {
                 $output = ""; 
                 foreach ($separated_word_parts_array as $word_part ) {
                     //echo "Metaparser(): Wordpart: $word_part<br>";
-                    $subword_array = explode( "|", $word_part );
-                    //var_dump($subword_array);echo"<br>";
+                    $subword_array = explode( "|", $word_part ); // problem with this method is, that certain shortings (e.g. -en) will be applied at the end of a subword, while the shouldn't ... Workaround: add | at the end (that will be eliminated later shortly before transformation into token_list) ... (?!) seems to work for the moment, but keep an eye on that! Sideeffect: shortenings at the end won't be applied (this was intended at the beginning...) => rules must be rewritten with $ and | to mark end of words and subwords
+                    //var_dump($subword_array);echo"<br>"; 
                     foreach ($subword_array as $subword) { 
-                        //echo "Metaparser(): subword: $subword<br>";
+                        if ($subword !== end($subword_array)) $subword .= "|";
+                        // echo "Metaparser(): subword: $subword<br>";
                         $output .= ParserChain( $subword ); 
-                        if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
+                        //if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
                         //echo "Metaparser() inner-foreach: output: $output<br>";
                     }
                     if ( $word_part !== end($separated_word_parts_array)) { /*echo "adding \\<br>";*/ $output .= "\\";}  // shouldn't be hardcoded?!
                 //echo "Metaparser() outer-foreach: output: $output<br>";
                 }
                 //if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
-                // echo "Metaparser(): output: $output<br>";
+                //echo "Metaparser(): output: $output<br>";
                 if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
                 if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
                 //$output = "$pretokens\\" . "$output" . "\\$posttokens";

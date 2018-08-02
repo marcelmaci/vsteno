@@ -494,7 +494,7 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
             $temp1_punctuation = mb_strpos( $punctuation, $temp1 ) !== false ? true : false;
             $temp1_separator1 = mb_strpos( "\\", $temp1) !== false ? true : false;
             $temp1_separator2 = mb_strpos( "|", $temp1) !== false ? true : false;
-            $temp1_separator = $temp1_separator1 || $temp1_separator2;
+            $temp1_separator = $temp1_separator1; // || $temp1_separator2;
             //echo "<p>Zeichen: $temp - i+1 = $temp1 - punctuation = $punctuation - last_position: $last_position</p>";
             if (($i == $length_tokenlist -1) || ($temp1_punctuation) || ($temp1_separator)) $position = "last";
             //echo "<p>tokenlist($i) = $temp</p>";

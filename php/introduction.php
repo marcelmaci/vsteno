@@ -11,7 +11,7 @@ Schweizerischen Stenografenverbands). Das Programm wurde jedoch von Anfang an so
 Stenografie-Systeme definiert werden können.
 </p>
 <h2>Lizenz</h2>
-<p>VSTENO ist Freie Software, d.h. das Programm darf also kopiert, weitergegeben und verändert werden. Bitte beachten Sie weitere Hinweise unter <a href="copyright.php">Copyright</a> und <a href="donations.php">Spende</a>.
+<p>VSTENO ist Freie Software, d.h. das Programm darf also kopiert, weitergegeben und verändert werden. Bitte beachten Sie weitere Hinweise unter <a href="copyright.php">Copyright</a> und <a href="donation.php">Spende</a>.
 </p>
 <br>
 <?php require "vsteno_template_bottom.php"; ?>

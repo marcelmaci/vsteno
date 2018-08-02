@@ -197,8 +197,30 @@ $dictionary_table = array (
               
 // define abbreviations, prefixes and suffixes
 $shortener_table = array    (   
-                            
-                                                        "nieder" => "nied{ER}",
+                            "solch" => "{SOLCH}",
+                            "^und\$" => "{UND}",
+                            "usw." => "{USW.}",
+                            "usw" => "{USW}",
+                            "usf" => "{USF}",
+                            "vielleicht" => "{VILLEICHT}",
+                            "von" => "{VON}",
+                             "^war(st|en)?$" => "{WAR}$1",
+                            "^wär(e?st|e|en|et|t)?$" => "{WÄR}$1",
+                            "welch" => "{WELCH}",
+                            "wenn" => "{WENN}",
+                            "^werd" => "{WERD}",
+                            "^wie$" => "{WI}",     // ! is wrong!
+                            "wird" => "{WIRD}",
+                            "vor" => "{VOR}",
+                            "fort" => "{FORT}",
+                            "eiht" => "eit",        // according to manual, geweiht is written geweit (phonetically)
+                            "usw" => "{USW}",
+                            "usf" => "{USF}",
+                            "[Pp]lanet" => "[P@L][A][N][E][T]",
+                            "etektiv" => "[E]Tektiv",   // avoid schortening et in "Detektiv"
+                            "([Pp])flicht" => "[$1F@L]icht",
+                            "zusammen" => "{ZUSAMMEN}",
+                            "nieder" => "nied{ER}",
                             "f(o|ö)rder" => "f$1rd{ER}", 
                             "^unange" => "{UN}an{GE}",
                             "^(dar|wor|her|hin)?auf" => "$1{AUF}",
@@ -211,13 +233,7 @@ $shortener_table = array    (
                             "ndwo$" => "nd{WO}",
                             "trotzdem" => "trotz{DEM}", 
                             "(s|m)ehr" => "$1Er",
-                            
-                            
-                            
-                            
-                            
                             "^beid(e[n|r|s]?)" => "[B]eid$1",
-                            
                             "(?<!f)all(e[n|m|s]?)$" => "{ALL}$1",
                             "^all" => "{ALL}",
                             "mal(s)" => "MAL\$1",
@@ -229,7 +245,6 @@ $shortener_table = array    (
                             "^aussen" => "au[SS]en",
                             "^ausser" => "au[SS]er",
                             "^auss([aeiou])" => "{AUS}s$1",
-                            
                             "beinahe" => "{BEI}nahe",
                             "bein" => "[B][EI][N]",
                             "^darf" => "[D]arf",
@@ -237,7 +252,6 @@ $shortener_table = array    (
                             "dast(.+)" => "{DA}st$1",
                             "dasselb" => "{DASS}{SELB}",
                             "dass?(?!t)" => "{DASS}",
-                            
                             "^dem" => "{DEM}",
                             "(?<!n)(nach|zu)?dem$" => "$1{DEM}",
                             "^denn" => "de[NN]",
@@ -252,47 +266,23 @@ $shortener_table = array    (
                             "gehabt" => "{GEHABT}",
                             "hab" => "{HAB}",
                             "hatt?" => "{HAT}",
-                            //"hint" => "{HINT}",
                             "^chin" => "[CH]in",       // avoid shortening "hin" in "chin"
                             "^hinzu" => "{HIN}{ZU}",
                             "^in$" => "{IN}",
-                            //"itinhab" => "it{IN}hab",
                             "^ist$" => "{IST}",
                             "mitt" => "m1i2t3t4",           // convert mitt to something else
                             "mit" => "{M}",                   // perform mit substitution
                             "m1i2t3t4" => "mitt",           // convert mitt back
                             "^nicht" => "{NICHT}",
-                            
                             "^sie$" => "{SI}",
                             "^[Ss]ind$" => "{SIND}",
-                            "solch" => "{SOLCH}",
-                            "^und\$" => "{UND}",
-                            "usw." => "{USW.}",
-                            "vielleicht" => "{VILLEICHT}",
-                            "von" => "{VON}",
-                             "^war(st|en)?$" => "{WAR}$1",
-                            "^wär(e?st|e|en|et|t)?$" => "{WÄR}$1",
-                            "welch" => "{WELCH}",
-                            "wenn" => "{WENN}",
-                            "^werd" => "{WERD}",
-                            "^wie$" => "{WI}",     // ! is wrong!
-                            "wird" => "{WIRD}",
-                            
-                            //"([^{])zu([^g]?)$" => "\$1{ZU}\$2",
-                            //"^(ein|auf|bei|an|vor|ab)?zu" => "$1{ZU}",
-                            "vor" => "{VOR}",
-                            "fort" => "{FORT}",
-                            "eiht" => "eit",        // according to manual, geweiht is written geweit (phonetically)
                             "([hk]?[ea]it)|([ie]?tät(en)?$)" => "{HEIT}",
                             "bei(?!l)" => "{BEI}",
                             "geh" => "Geh",
                             "^([Mm])iss" => "$1i[SS]",
-                            
                             "([Hh])inter" => "HN[&TVR]", 
                              "^([Hh])ing$" => "$1I[NG]",
-                            
                             "hin(?![dz])" => "{HIN}",
-                            
                             "tret" => "trEt",
                             "^gebe" => "Gebe",
                             "^gern" => "Gern",
@@ -320,12 +310,7 @@ $shortener_table = array    (
                             "^(ein|auf|bei|an|vor|ab)?zuer" => "$1{ZU}{ER}",
                             "^(ein|auf|bei|an|vor|ab|aus|durch|dar|hervor|mit|vorher|nieder|zusammen)?zu(?![mr])" => "$1{ZU}",
                             "^([Nn])achzu" => "$1ach{ZU}",
-                            
-                            "zusammen" => "{ZUSAMMEN}",
-                          
                             "(?<!^)lich(s?t?e?[mn]?|ere?[mn]?|keit(en)?|es)?$" => "{LICH}$1",
-                           
-                            //"([Nn])ieder(.+)" => "$1ieder|$2",        // bad idea to add | (not a separate word, but suffix)
                             "ietät" => "[&I]{HEIT}",
                             "^[Gg]ea([bcdfghjklmnpqrstvx])" => "{GE}a$1",
                             "^[Bb]eur" => "{BE}{UR}",
@@ -334,7 +319,6 @@ $shortener_table = array    (
                             "^[Rr]ücker" => "{RÜCK}{ER}",
                             "^[Mm]itver" => "{M}{VER}",
                             "^([Mm]iss|[Kk]riminal|[Ee]in)?ver" => "$1{VER}",
-                            
                             "(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}",
                             "(^|\|)[Zz]uver" => "$1{Z}{VER}",
                             "wie?der" => "{WIDER}",
@@ -342,18 +326,10 @@ $shortener_table = array    (
                             "erer([se]?[nm]?)$" => "{ER}{ER}$1",
                             "rr" => "[RR]", // avoid shortening {er} in following rule
                             "([Bb])ech" => "$1Ech",
-                            //"^([bcdfghjklmnpqrstwxyz]{1,4})er(?=[bcdfghjklmnpqrstwxyz]{1,4}" => "$1Er",       // avoid applying of ER-rule in monosyllabic words
-                            //"(?<=(^[cdfghjklmnpqrstwxyz]{1,4}))er(?=([bcdfghjklmnpqrstwxyz]{1,4}$))" => "Er",
                             "(w|qu)er" => "$1Er", // temporary substitution for preceeding rule that doesn't work ...
                             "(?<!i)er(?=t?e?[nmrs]?$)" => "{ER}",
                             "erei(en)?$" => "{ER}ei$1",
                             "\[RR\]" => "rr", // set [rr] back to rr
-                            
-                           
-                            
-                           
-                           //"\." => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
-                            //"\," => "", // vor the moment: filter out all point (otherwise detection of end of word won't work correctly)
                             "qu" => "q",                                                // makes it easier to handle => normally, should go to a separate, preceeding parser function, e.g. "simplifier"
                             "(?<!sc)([Hh])all" => "[$1]a[LL]", // avoid shortening "all" and falling out of h
       /*                      
@@ -370,38 +346,23 @@ $shortener_table = array    (
                             "ei([aeou])" => "[EI][&E]$1",                                   // easier to do here, but should go to separate parser
                             "eu([aeou]|lich)" => "[EU][&E]$1",                                   // easier to do here, but should go to separate parser
                             "ei([aeou]|lich)" => "[EI][&E]$1",                                   // easier to do here, but should go to separate parser
-                            
                             //"([Ee])in(?=[kg][aeiou])" => "$1in|",
                             "^([Aa])n([bfghklmnprswz][aeiouäöü])" => "$1[N]$2",             // don't add combination "and": too many wrong cases (andere, android vs. Andenken)
                             "sch(a|ä)ft$" => "{SCHAFT}",     // CAUTION WITH THOSE UMLAUT: [aä] doesn't work - (a|ä) is a workaround ...
                             "t(u|ü)m(ers?|in|innen|s)?$" => "{TUM}$2",           // umlaut .. workaround see above
-                            "usw" => "{USW}",
-                            "usf" => "{USF}",
-                            
-                            
-                            
-                            //"([AEIOUÄÖÜaeiouäöü]+[bcdfghjklmnpqrstvwxyz\]]*)er$" => "$1{ER}",    // shorten -er => -r in bi- or multisyllabic words
                             "^(ein|an|au[fs]|zu|ab|nieder|auseinander)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2",
-
                             "^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2",        
                             "(^|\|)be(un|ur)" => "$1{BE}$2",
                             "^beu" => "b[EU]",              // if combination is not be(un|ur) consider eu as diphtong
                             "^(an)?be(?!(tte?n?s?$)|i)" => "\$1{BE}",                
-                            "(^|\|)anti" => "$1{ANTI}",
+                            "^anti" => "{ANTI}",
                             "einander" => "einand{ER}",
                             "^(un)?aus(?!s)" => "$1{AUS}",
                             "sein" => "{SEIN}",
-                            
                             "anten$" => "[A]nten",
-                            //"([^gz]?)[a|e]nt([^i])" => "\$1{ANT}\$2",
-                            
-                            
                             "(^|\|)(in|un)?[k|c]on([^n])" => "$1$2{CON}\$3",
-                            // "^(ur|an|un|zu|selb|selbst)?ver" => "\$1{VER}",
-                            //"(^|\|)(ur|an|un|zu|selb|selbst)?ver" => "\$1$2{VER}",
                             "^(ur|an|un|zu|selb|selbst)?ver(?!((se?n?s?$)|(sion(en)?$)))" => "\$1{VER}",
                             "i[o|ö]nn?" => "{ION}",
-                            
                             "(^|\|)(un)?er" => "$1$2{ER}",
                             "(^|\|)(un)?zer" => "$1$1{ZER}",
                             "(^|\|)rück(?=!ens?$)" => "$1{RÜCK}",           // why doesn't it work?!?
@@ -415,15 +376,10 @@ $shortener_table = array    (
                             "(?<!(^[Ww])|i)en$" => "{EN}",
                             "(?<!^[Ww])em$" => "{EM}",
                              "je" => "[J][E]",
-                            "planet" => "[P@L][A][N][E][T]",
                             "iet" => "[I]t",
-                            "etektiv" => "[E]Tektiv",   // avoid schortening et in "Detektiv"
-                            
                             "([^c])(haft)\$" => "$1{HAFT}",
-                            "([Pp])flicht" => "[$1F@L]icht",
                             "{ANT}{LICH}" => "en{TLICH}",
                             "{ET}t" => "e[TT]",
-                              
                         );
 
 // define normalizer (handles ortographical irregularities and corrects them)
