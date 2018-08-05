@@ -54,6 +54,13 @@ $helvetizer_table = array (
 // the trickster tries to avoid some automatical changes done by the parserchain (especially shortings by the shortener)
 $trickster_table = array(
     
+     "([Vv])orzurücken" => "{VOR}{ZU}[AR]ück{EN}",
+     "([Hh])ierauf" => "hier{AUF}",
+     "([Dd])ahinter" => "{DA}[H][N][&TVR]",
+     "(Ü|ü)berdies" => "{ÜBER}{DIS}",
+     "([Dd])urchaus" => "{DURCH}{AUS}",
+     "([Jj])edem" => "$1e[D]{EM}",
+     "([Gg])eradem" => "$1era[D]{EM}",
      "[Dd]asein" => "{DA}s[EI]n",
      "^([Oo])dem" => "[0N-]$1[D]em",
      "^([Ee])rheiter" => "{ER}h[EI]t{ER}",
@@ -125,6 +132,9 @@ $trickster_table = array(
 // define lexical entries in dictionary
 $dictionary_table = array (  
                         
+                       "Zuge" => "ZUG[-E]",
+                       "Anton" => "[0N-][A][N][&T][&E][O][N]",
+                       "eins" => "[0D-][EI][NS]",
                        "Familie" => "FAMIL[#N][&I][-E]",
                        "Familien" => "FAMIL[#N][&I][EN]",
                        
@@ -197,6 +207,8 @@ $dictionary_table = array (
               
 // define abbreviations, prefixes and suffixes
 $shortener_table = array    (   
+                            
+                            "iet$" => "[I]T",
                             "solch" => "{SOLCH}",
                             "^und\$" => "{UND}",
                             "usw." => "{USW.}",
@@ -223,6 +235,7 @@ $shortener_table = array    (
                             "nieder" => "nied{ER}",
                             "f(o|ö)rder" => "f$1rd{ER}", 
                             "^unange" => "{UN}an{GE}",
+                            "^unt([^e])" => "{UN}t$1",
                             "^(dar|wor|her|hin)?auf" => "$1{AUF}",
                             "(?<!sc)haft(e|en|es)?" => "{HAFT}$1",
                             "gegen" => "{GEGEN}",
@@ -294,7 +307,7 @@ $shortener_table = array    (
                             "^uns(er.*)?$" => "u[NS]$1",
                            //"Uri" => "[0N-][U]r[#N][&I]", // should go into dictionary ?!
                            "(^|\|)({?des}?)?inter" => "$1$2{INTER}",
-                           "^({?des}?)?[Ii]n" => "$1{IN}",
+                           "^({?des}?)?[Ii]n([^n])" => "$1{IN}$2",
                             "damit" => "{DA}{MIT}",
                             "davon" => "{DA}{VON}",
                             "dazu" => "{DA}{ZU}",
@@ -309,6 +322,7 @@ $shortener_table = array    (
                             "^aufent" => "{AUF}{ANT}",
                             "^(ein|auf|bei|an|vor|ab)?zuer" => "$1{ZU}{ER}",
                             "^(ein|auf|bei|an|vor|ab|aus|durch|dar|hervor|mit|vorher|nieder|zusammen)?zu(?![mr])" => "$1{ZU}",
+                            
                             "^([Nn])achzu" => "$1ach{ZU}",
                             "(?<!^)lich(s?t?e?[mn]?|ere?[mn]?|keit(en)?|es)?$" => "{LICH}$1",
                             "ietät" => "[&I]{HEIT}",
@@ -322,7 +336,7 @@ $shortener_table = array    (
                             "(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}",
                             "(^|\|)[Zz]uver" => "$1{Z}{VER}",
                             "wie?der" => "{WIDER}",
-                            "([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)et(e?|en?)$" => "$1{ET}\$2", // only multisyllabic words
+                            "([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)et(e?|e(n|s)?)$" => "$1{ET}\$2", // only multisyllabic words
                             "erer([se]?[nm]?)$" => "{ER}{ER}$1",
                             "rr" => "[RR]", // avoid shortening {er} in following rule
                             "([Bb])ech" => "$1Ech",
@@ -596,7 +610,7 @@ $transcriptor_table = array(
                     
                     "\{ANT\}" => "[0N-][#N]{ANT}",
                     "{HEIT}{ET}" => "{HEIT}[&E][ET3/4]",
-                    "{ET}(e|{EN}|{EM})" => "{ET}[&E]$1",
+                    "{ET}(e[^s]|{EN}|{EM})" => "{ET}[&E]$1",
                     "^\{ER\}" => "[0N-][#N][VR]", 
                     "\[EI\]t" => "[EI]T", 
                     "([BCDFGHJKLMNPQRVWXYZS])\]t" => "$1][&T]",
@@ -794,7 +808,8 @@ $transcriptor_table = array(
                     "\[&T\]\[?U\]?" => "[&TU]",
                     "\[&T\]\[?SCH\]?" => "[&T^SCH]",
                     "\[&T\]\[?Z\]?" => "[&T^Z]",
-                    "\[&T\]\[?F\]?" => "[&TF]",
+                    "\[&T\]\[F@L\]" => "[&TF@L]",
+                    "\[&T\]F" => "[&TF]",
                     "\[&T\]\[?K\]?" => "[&TK]",
                     "\[&T\]\[?P\]?" => "[&TP]",
                     "\[&T\]\[?Q\]?" => "[&TQ]",
@@ -853,6 +868,8 @@ $transcriptor_table = array(
                     "\[&EITNG\]\[SP\]" => "[&EITNG][S][P]",     // "Zeitungspapier"
                     "\[AU\]\[-E\]" => "[AU][&E][-E]",
                     "\[EI\]{ER}" => "[EI][&E]{ER}",
+                    "\[AU\]U" => "[AU][&E]U",
+                    
                     //"VR@L" => "/VR@L",      // replace combination VR+@L by /VR@L (<=> deltay of +0.5) => not necessary if functionality of TokenCombiner is extended
                     
                     //"\[CH\]\[T@L3\]", "[CH][&T@L3]",
@@ -949,7 +966,7 @@ $steno_tokens_master = array(
                         "SIND" => array( /*headr*/2.5, 0.5, 0, 0.5,   1, 2.5, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  0,  5, 0.5, 1, 1.5, 0, 0, 0.5, /**/2.5,  8.25, 0.5, 2, 2, 0, 0, 0.5, /**/   1.1, 10, 0.5, 0, 2.5, 0, 0, 0.5, /**/ 0, 7, 0.5, 0, 3.0, 0, 0, 0.5, /**/   0, 0, 0.0, 0, 1.0, 0, 0,   0 ),                       
                         "VOR" => array( /*header*/ 5, 0.5, 0, 0,   2,   2, 0, ""/**/,"","","","",0,0,0,2.5, /*++*/ 5,0,0,0,0,0,0,0, /*data*/   0, 10, 0, 1, 1.0, 0, 0, 0.5, /**/  0, 6.5, 0.5, 0, 1.0, 0, 0, 0.5, /**/  1.25, 5.75, 0.5, 0, 1.0, 0, 0, 0.5, /**/ /* x, y, t, d1, th, 0, d2, t2, *//**/ 2.5, 5, 0.5, 1, 3.0, 0, 0, 0.5, /**/ 5, 2.5, 0.7, 0, 3.0, 0, 0, 0.7, /**/  2.5, 0, 0.7, 0, 1.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 1.0, 0, 0, 0.5, /**/ 2.5, 5, 0.5, 0, 1.0, 0, 1, 0.0),    
                         "ANT"  => array( /*header*/25, 0.5, 0, 0.5,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  4,     4.5, 0.5, 1, 1.5, 0, 0, 0.5, /**/ 8,  5, 0.5, 2, 2.0, 0, 0, 0.5, /**/  11,  4, 0.5, 0, 3.0, 0, 0, 0.5, /**/ 18, 1, 0.5, 0, 2.5, 0, 0, 0.5, /**/  22, 0, 0.5, 0, 1.5, 0, 2, 0.5, /**/ 25, 0, 0.5, 0, 1.0, 0, 1, 0.5 /**/  ),
-                        "RÜCK" => array( /*header*/ 5, 0.5, 0, 0.5,   0,   1, 0, ""/**/,"","","","",1,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  2.5, 0, 0.5, 1, 1.0, 0, 0, 0.7, /**/ 5, 2.5, 0.7, 0, 1.0, 0, 0, 0.7, /**/  2.5, 5, 0.7, 0, 3.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 3.0, 0, 0, 0.5, /**/ 2.5, 0, 0.5, 0, 1.0, 0, 1, 0.0),    
+                        "RÜCK" => array( /*header*/ 8, 0.5, 0, 0.5,   2,   2, 0, ""/**/,"","","","",1,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  2.5, 0, 0.5, 1, 1.0, 0, 0, 0.7, /**/ 5, 2.5, 0.7, 0, 1.0, 0, 0, 0.7, /**/  2.5, 5, 0.7, 0, 3.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 3.0, 0, 0, 0.5, /**/ 2.5, 0, 0.5, 0, 1.0, 0, 1, 0.0),    
                         "UR" => array( /*header*/ 5, 0.5, 0, 0,   0,   1, 0, ""/**/,"","","","",1,0,0,2.5, /*++*/ 5,0,0,0,0,0,0,0, /*data*/    -2, 10, 0, 1, 3.0, 0, 0, 0.5, /**/  3, 5, 0.5, 0, 1.0, 0, 0, 0.7, /**/5, 2.5, 0.7, 0, 1.0, 0, 0, 0.7, /**/  2.5, 0, 0.7, 0, 1.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 1.0, 0, 0, 0.5, /**/ 2.5, 5, 0.5, 0, 1.0, 0, 1, 0.0),    
                         "ANTI"  => array( /*header*/25, 0.5, 0, 0.5,   0,   0, 0, ""/**/,"","","","",0,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/  4,     4.5, 0.5, 1, 1.5, 0, 0, 0.5, /**/ 8,  5, 0.5, 2.5, 2.0, 0, 0, 0.5, /**/  11,  4, 0.5, 0, 3.0, 0, 0, 0.5, /**/ 18, 1, 0.5, 0, 2.5, 0, 0, 0.5, /**/   22, 0, 0.5, 0, 1.5, 0, 0, 0.5, /**/ 22.5, 1, 0.5, 0, 1.0, 0, 0, 0.5, /**/ 23.5, 2, 0.5, 0, 1.0, 0, 0, 0.5, /**/  24.5, 1, 0.5, 0, 1.0, 0, 0, 0.5, /**/  23.5, 0, 0.5, 0, 1.0, 0, 0, 0.5, /**/  22.5, 1, 0.5, 0, 1.0, 0, 1, 0.5,      ),
                         "ZURÜCK" => array( /*header*/ 5, 0.5, 0, 0.5,   2,   1, 0, ""/**/,"","","","",1,0,0,0, /*++*/ 0,0,0,0,0,0,0,0, /*data*/   -2, -4, 0.5, 1, 1.0, 0, 0, 0.5, /**/  1.5, -3, 0.5, 0, 1.0, 0, 0, 0.5, /**/  4, 0, 0.5, 0, 1.0, 0, 0, 0.5, /**/  5, 2.5, 0.7, 0, 1.0, 0, 0, 0.7, /**/  2.5, 5, 0.7, 0, 3.0, 0, 0, 0.5, /**/  0, 2.5, 0.7, 0, 3.0, 0, 0, 0.5, /**/ 2.5, 0, 0.5, 0, 1.0, 0, 0, 0.0, /**/ 3.5, 0, 0.5, 1, 1.0, 0, 1, 0.7, /**/),    
@@ -1255,6 +1272,7 @@ $shifter_table = array(
     array("^CH", "&T^CH", 4, 20, 0, 1),
     array("^SCH", "&T^SCH", 4, 20, 0, 1),
     array("Z", "&TZ", 4, 20, 0, 1),
+    array("F@L", "&TF@L", 4, 10, 0, 1),
     array("F", "&TF", 4, 10, 0, 1),
     array("HAFT", "&THAFT", 4, 10, 0, 1),
     array("K", "&TK", 4, 20, 0, 1),
