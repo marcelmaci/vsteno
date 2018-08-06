@@ -133,6 +133,10 @@ require_once "session.php";
 
 // main
 
+// just create combined/shifted-tokens once per call of calculate.php (performace)
+CreateCombinedTokens();
+CreateShiftedTokens();
+        
 if ($_POST['action'] === "abschicken") {
     CalculateStenoPage();
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)

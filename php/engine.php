@@ -293,6 +293,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         // if there is a late_entry-position and the token is at beginning of tokenlist (i.e. $position === "first") => set $start_position (= values will be inserted from here on) to $entry_position; otherwise start as usual at beginning (position 0 after header)
         if (($late_entry_position) && ($position === "first")) $start_position = $late_entry_position;
         else $start_position = 0;
+        //echo "token: $token position: $position startposition: $start_position<br>";
         
     if ( count( $steno_tokens[$token] > 0)) { ///????
         // ********************** header operations *************************************
@@ -515,8 +516,9 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
         // initialize variables
         global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
         SetGlobalScalingVariables( $scaling );
-        CreateCombinedTokens();
-        CreateShiftedTokens();
+        //call the following function only once per text (performance)
+        //CreateCombinedTokens();
+        //CreateShiftedTokens();
         //if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
         
         $actual_x = 1;                      // start position x
@@ -525,7 +527,7 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
         $steno_tokens = ScaleTokens( $steno_tokens_master, $scaling );        
         $vertical = "no"; $distance = "none"; $shadowed = "no";
        
-        $LastToken = ""; $length_tokenlist = count($TokenList); $position = "inside";
+        $LastToken = ""; $length_tokenlist = count($TokenList); $position = "first";
         for ($i = 0; $i < count($TokenList); $i++) {
             $temp = $TokenList[$i];
             $temp1 = $TokenList[$i+1];
@@ -536,7 +538,6 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
             $temp1_separator = $temp1_separator1; // || $temp1_separator2;
             //echo "<p>Zeichen: $temp - i+1 = $temp1 - punctuation = $punctuation - last_position: $last_position</p>";
             if (($i == $length_tokenlist -1) || ($temp1_punctuation) || ($temp1_separator)) $position = "last";
-            elseif ($i == 0) $position = "first";
             
             //echo "<p>tokenlist($i) = $temp</p>";
             // if token is a vowel ("virtual token") then set positioning variables
@@ -551,6 +552,7 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
                 $vertical = "no"; $distance = "none"; $shadowed = "no";
                 $LastToken = $TokenList[$i];
             }
+            $position = "inside";
         }
         // first tilt and then smoothen for better quality!!!
         $splines = TiltWordInSplines( $angle, $splines );
