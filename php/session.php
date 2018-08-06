@@ -3,7 +3,7 @@
 require_once "constants.php";
 
 function InitializeSessionVariables() {
-    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words;
+    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word;
     // set standard values for use in session
     $_SESSION['initialized'] = true;
     $_SESSION['original_text_format'] = "normal";
@@ -61,6 +61,8 @@ function InitializeSessionVariables() {
     
     // later additions
     $_SESSION['distance_words'] = $distance_words;
+    $_SESSION['space_before_word'] = $space_before_word;
+    
     $_SESSION['style_nouns'] = "";
     $_SESSION['style_beginnings'] = "";
     $_SESSION['baseline_style'] = "";
@@ -128,6 +130,7 @@ function CopyFormToSessionVariablesMaxi() {
     // later additions
     $_SESSION['distance_words'] = htmlspecialchars($_POST['distance_words']);
     $distance_words = $_SESSION['distance_words'];                                  // maybe not a good idea to save this values in two different variables (session and global var in constants.php) ...
+    // form field for space_before_words has to be inserted here (do that later)
     $_SESSION['style_nouns'] = htmlspecialchars($_POST['nouns_style']);
     $_SESSION['style_beginnings'] = htmlspecialchars($_POST['beginnings_style']);
     $_SESSION['baseline_style'] = htmlspecialchars($_POST['baseline_style']);

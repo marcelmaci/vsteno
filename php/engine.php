@@ -213,10 +213,12 @@ function InsertAuxiliaryLines( $width ) {
 }
 
 function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
-    global $svg_height, $standard_height, $html_comment_open;
+    global $svg_height, $standard_height, $html_comment_open, $space_before_word;
+    $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
+    
     //list( $splines, $width ) = TrimSplines( $splines );
     
-   // if ($_SESSION['token_type'] !== "htmlcode") {
+    // if ($_SESSION['token_type'] !== "htmlcode") {
         // echo "CreateSVG: Pre: $pre Post: $post<br>";
         list( $variable, $newcolor_htmlrgb ) = GetTagVariableAndValue( $pre ); 
         //if (mb_strlen($newcolor_htmlrgb) > 0) $color_htmlrgb = $newcolor_htmlrgb;
@@ -228,15 +230,15 @@ function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htm
         $array_length = count( $splines );
 
         for ($n = 0; $n <= $array_length - 8; $n += tuplet_length) {
-            $x1 = $splines[$n]; // + $shift_x;
+            $x1 = $splines[$n] + $shift_x;
             $y1 = $splines[$n+1];
-            $q1x = $splines[$n+2]; // + $shift_x;
+            $q1x = $splines[$n+2] + $shift_x;
             $q1y = $splines[$n+3];
             $relative_thickness = $splines[$n+4];
             $unused = $splines[$n+5];
-            $q2x = $splines[$n+6]; // + $shift_x;
+            $q2x = $splines[$n+6] + $shift_x;
             $q2y = $splines[$n+7];
-            $x2 = $splines[$n+8]; // + $shift_x;
+            $x2 = $splines[$n+8] + $shift_x;
             $y2 = $splines[$n+9];
             $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
             // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
@@ -253,11 +255,30 @@ function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htm
     return $svg_string;
 }
 
+function GetLateEntryPoint( $token ) {
+        $length = count( $token );
+        $result = 0;
+        for ($i = header_length; $i < $length; $i += tuplet_length) {
+            if ($token[$i+offs_d1] == 98) {
+                $result = $i;
+                break;
+            }
+        }
+        if ($result) $result = (int)(($result - header_length) / tuplet_length);
+        return $result;         // returns 0 if no late_entry-point is defined, otherwise returns tuplet after header which contains late_entry-point
+}
+
 function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_token, $actual_x, $actual_y, $vertical, $distance, $shadowed, $factor ) {
         global $steno_tokens, $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $half_upordown, $one_upordown, 
         $standard_height, $baseline_y, $dont_connect;
         $token_definition_length = count( $steno_tokens[$token] );           // continue splines-list
         //$old_dont_connect = $dont_connect;
+        $late_entry_position = GetLateEntryPoint( $steno_tokens[$token] );
+        //echo "Token: $token - LateEntry: $late_entry_position<br>";
+        // if there is a late_entry-position and the token is at beginning of tokenlist (i.e. $position === "first") => set $start_position (= values will be inserted from here on) to $entry_position; otherwise start as usual at beginning (position 0 after header)
+        if (($late_entry_position) && ($position === "first")) $start_position = $late_entry_position;
+        else $start_position = 0;
+        
     if ( count( $steno_tokens[$token] > 0)) { ///????
         // ********************** header operations *************************************
         // if token is prefix then adjust actual_y
@@ -305,9 +326,12 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
             // set tension for preceeding point at offset 7 from header offset 3 of token to insert
             $splines[$initial_splines_length - 1] = $steno_tokens[$token][$i+offs_tension_before];
         }
-        for ($i = header_length; $i < $token_definition_length; $i += tuplet_length) {
+        //for ($i = header_length /* + $late_entry_position * tuplet_length */; $i < $token_definition_length; $i += tuplet_length) {
+        for ($i = header_length+$start_position * tuplet_length; $i < $token_definition_length; $i += tuplet_length) {
+        
             $insert_this_point = TRUE;
-            $pt_type_entry = $steno_tokens[$token][$i+offs_d1];
+            //$pt_type_entry = $steno_tokens[$token][$i+offs_d1];
+            $pt_type_entry = ($steno_tokens[$token][$i+offs_d1] == 98) ? 1 : $steno_tokens[$token][$i+offs_d1]; // not sure if this is correct ... ?! maybe distinguish: if token is first position => transform 98 to 1; if token is inside or last position => transform 98 to 0 (!?)
             $pt_type_exit = $steno_tokens[$token][$i+offs_d2];
             // dont insert: (1) connecting points, (2) intermediate shadow points, if token is not shadowed, 
             if (
@@ -497,6 +521,8 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
             $temp1_separator = $temp1_separator1; // || $temp1_separator2;
             //echo "<p>Zeichen: $temp - i+1 = $temp1 - punctuation = $punctuation - last_position: $last_position</p>";
             if (($i == $length_tokenlist -1) || ($temp1_punctuation) || ($temp1_separator)) $position = "last";
+            elseif ($i == 0) $position = "first";
+            
             //echo "<p>tokenlist($i) = $temp</p>";
             // if token is a vowel ("virtual token") then set positioning variables
             // vowel <=> value 2 at offset 12 --- positioning variables $vertical, $distance, $shadowed at offsets 19, 20, 21

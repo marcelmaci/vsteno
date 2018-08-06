@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "a02915a71bb1a366c60cb27726b1e6b7a05ed1ac";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "2. August 2018";                                  // idem
+const version_commit_id = "38fe545fe80654de42e3975c428fab48f97797ef";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "5. August 2018";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -67,6 +67,7 @@ const offs_dont_connect = 22;                   // offset 22: 0 = default, 1 = d
 // d1: entry data field: 0 = regular point / 1 = entry point / 2 = pivot point / 4 = connecting point (for combined tokens created "on the fly")
 //                       5 = "intermediate shadow point" (this point will only be used if the token is shadowed, otherwise it wont be inserted into splines),
 //                       3 = conditional pivot point: if token is in normal position this point will be ignored/considered as a normal point (= value 0)
+//                      98 = late entry point (= if token is first token in tokenlist then don't draw points before late entry point; consider this point as entry point)
 // th: relative thickness of knot: 1.0 = normal thickness (lower values = thinner / higher values = thicker)
 // dr: data field for drawing function: 0 = normal (i.e. connect points) / 5 = don't connect to this point from preceeding point
 // d2: exit data field: 0 = regular point / 1 = exit point / 2 = pivot point / 99 = early exit point (= this point is the last one inserted into splines if token is the last one in tokenlist)
@@ -131,6 +132,7 @@ $horizontal_distance_wide = $standard_height * 1;
 $space_at_end_of_stenogramm = $horizontal_distance_wide;    // defines horizontal distance between stenogramms
 $border_margin = 1;                                         // additional ("security") margin for trimmed stenogramms (should be > 0, since bezier curves tend to go outside of min and max coordinates
 $distance_words = 20;                           // distance between words (added to svg at the end of the stenogram)
+$space_before_word = 10;                        // part of $distance_words that goes to the left side of the word (inside SVG); $distance_word = 20 and $space_before_word means that the word will have 10 pixels of free space on both sides (= half of the total distance, in other words: the word is centered inside the svg)
 
 // flags
 $dont_connect = 0;
