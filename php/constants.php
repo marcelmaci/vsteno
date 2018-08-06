@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "38fe545fe80654de42e3975c428fab48f97797ef";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "5. August 2018";                                  // idem
+const version_commit_id = "8fd9fb40a08e9f71fe913be3ec7fc280233cbaef";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "6. August 2018";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -133,6 +133,9 @@ $space_at_end_of_stenogramm = $horizontal_distance_wide;    // defines horizonta
 $border_margin = 1;                                         // additional ("security") margin for trimmed stenogramms (should be > 0, since bezier curves tend to go outside of min and max coordinates
 $distance_words = 20;                           // distance between words (added to svg at the end of the stenogram)
 $space_before_word = 10;                        // part of $distance_words that goes to the left side of the word (inside SVG); $distance_word = 20 and $space_before_word means that the word will have 10 pixels of free space on both sides (= half of the total distance, in other words: the word is centered inside the svg)
+$svg_not_compatible_browser_text = "";         // only add text if you really want to be nice to people with old browsers (it creates overhead ...)
+// $svg_not_compatible_browser_text = "Sorry, your browser does not support inline SVG.";
+$vector_value_precision = 3;                    // number of decimals (eliminates overhead, but reduces precision)
 
 // flags
 $dont_connect = 0;

@@ -213,7 +213,7 @@ function InsertAuxiliaryLines( $width ) {
 }
 
 function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
-    global $svg_height, $standard_height, $html_comment_open, $space_before_word;
+    global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
     
     //list( $splines, $width ) = TrimSplines( $splines );
@@ -229,7 +229,20 @@ function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htm
         $svg_string .= InsertAuxiliaryLines( $width );
         $array_length = count( $splines );
 
-        for ($n = 0; $n <= $array_length - 8; $n += tuplet_length) {
+        for ($n = 0; $n <= $array_length - (tuplet_length*2); $n += tuplet_length) {
+            
+            $x1 = round($splines[$n] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $y1 = round($splines[$n+1], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q1x = round($splines[$n+2] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q1y = round($splines[$n+3], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $relative_thickness = $splines[$n+4];
+            $unused = $splines[$n+5];
+            $q2x = round($splines[$n+6] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q2y = round($splines[$n+7], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $x2 = round($splines[$n+8] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $y2 = round($splines[$n+9], $vector_value_precision, PHP_ROUND_HALF_UP);
+            //echo "n($n): y2 = $y2<br>";
+            /*
             $x1 = $splines[$n] + $shift_x;
             $y1 = $splines[$n+1];
             $q1x = $splines[$n+2] + $shift_x;
@@ -240,6 +253,8 @@ function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htm
             $q2y = $splines[$n+7];
             $x2 = $splines[$n+8] + $shift_x;
             $y2 = $splines[$n+9];
+            echo "n($n): y2 = $y2<br>";
+            */
             $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
             // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
             // this method doesn't work with n, m, b ... why???
@@ -249,7 +264,7 @@ function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htm
             if ($splines[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
             $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
         }
-        $svg_string .= "</g>Sorry, your browser does not support inline SVG.</svg>";
+        $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
     // } 
     return $svg_string;
