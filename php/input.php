@@ -50,7 +50,7 @@ Wort: <input type="text" name="distance_words"  size="10" value="<?php echo $_SE
 Stil: 
 <input type="radio" name="token_line_style" value="solid" <?php echo ($_SESSION['token_style_type'] === "solid") ? "checked" : "";?>> Linie 
 <input type="radio" name="token_line_style" value="dotted" <?php echo ($_SESSION['token_style_type'] === "dotted") ? "checked" : "";?>> gepunktet 
-<input type="radio" name="token_line_style" value="dashed" <?php echo ($_SESSION['token_style_type'] === "solid") ? "dashed" : "";?>> gestrichelt 
+<input type="radio" name="token_line_style" value="dashed" <?php echo ($_SESSION['token_style_type'] === "dashed") ? "checked" : "";?>> gestrichelt 
 <input type="radio" name="token_line_style" value="custom" <?php echo ($_SESSION['token_style_type'] === "custom") ? "checked" : "";?>> benutzerdefiniert:
 <input type="text" name="token_line_style_custom_value"  size="10" value="<?php echo $_SESSION['token_style_custom_value'];?>">
 <br>
@@ -113,7 +113,7 @@ Fenster:
 <input type="radio" name="output_format" value="metaform" <?php echo ($_SESSION['output_format'] === "metaform") ? "checked" : "";?>> Metaform
 <input type="radio" name="output_format" value="debug" <?php echo ($_SESSION['output_format'] === "debug") ? "checked" : "";?>> Debug<br>
 
-<input type="radio" name="output_format" value="output_layout" <?php echo ($_SESSION['output_format']) === "layout" ? "checked" : "";?>> Layout 
+<input type="radio" name="output_format" value="layout" <?php echo ($_SESSION['output_format']) === "layout" ? "checked" : "";?>> Layout 
 Breite: <input type="text" name="layout_width"  size="10" value="<?php echo $_SESSION['output_width']; ?>"> 
 Höhe: <input type="text" name="layout_height"  size="10" value="<?php echo $_SESSION['output_height']; ?>"><br>
 Stil: <input type="radio" name="layout_style" value="align_left" <?php echo ($_SESSION['output_style'] === "align_left") ? "checked" : "";?>> 

@@ -25,7 +25,7 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "200698682804b179a26a96f382870c4d53d93d01";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_commit_id = "eb416f06a5df41757c4a904216447b011a99f9ff";   // must be inserted manually after commit => could be from last commit if forgotten
 const version_date = "6. August 2018";                                  // idem
 
 // constants

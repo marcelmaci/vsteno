@@ -626,7 +626,7 @@ function NormalText2TokenList( $text ) {
     }
 }
 
-function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
+function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     list( $pre, $tokenlist, $post ) = NormalText2TokenList( $text );
     if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // set inline options
     $svg = $pre_html_tag_list;
@@ -638,12 +638,12 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     $stroke_width = $_SESSION['token_thickness'];
     $scaling = $_SESSION['token_size'];
     $color_htmlrgb = $_SESSION['token_color'];
-    $stroke_dasharray = $_SESSION['token_style_custom_value'];
+   // $stroke_dasharray = $_SESSION['token_style_custom_value'];
     
     switch ($_SESSION['token_type']) {
         case "htmltext" : 
             list( $pre_nil, $middle, $post_nil) = GetPreAndPostTags( $text );
-            //echo "<br>Inside NormalText2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
+            //echo "<br>Inside SingleWord2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
             $pre_html_tag_list .= ParseAndSetInlineOptions ( $pre_nil );
             $svg .= $pre_html_tag_list;
             $svg .= " " . $middle;          // use raw text and insert it directly between $pre and $post html-text (= raw html code); add a space because spaces have been parsed out ...
@@ -653,7 +653,7 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
             break;
         case "svgtext" : 
             list( $pre_nil, $middle, $post_nil) = GetPreAndPostTags( $text );
-            //echo "<br>Inside NormalText2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
+            //echo "<br>Inside SingleWord2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
             $pre_html_tag_list .= ParseAndSetInlineOptions ( $pre_nil );
             $svg .= $pre_html_tag_list;
             $text_as_svg .= NormalText2NormalTextInSVG( $middle, 20 );  // use fix size
@@ -669,11 +669,131 @@ function NormalText2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
                     $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
                     $svg .= $post_html_tag_list;
                 }
+                // include debug information directly in $svg
+                if ($_SESSION['output_format'] === "debug") {
+                    $debug_information = GetDebugInformation( $text );
+                    $svg = "$debug_information<br>$svg";
+                    //   echo "<br>$token_list[0]/$token_list[1]/$token_list[2]/$token_list[3]/$token_list[4]/$token_list[5]/$token_list[6]<br>$stenogramm</p>";
+                } 
                 return $svg;
             } else return $svg;
             break;
     } 
 }
+
+function GetDebugInformation( $word) {
+        $original = $word;
+        $globalized = Globalizer( $word );
+        $lookuped = Lookuper( $word );
+        //$test_wort = Trickster( $test_wort);
+        $decapitalized = Decapitalizer( $word );
+        $shortened = Shortener( $decapitalized );
+        $normalized = Normalizer( $shortened );
+        $bundled = Bundler( $normalized );
+        $transcripted = Transcriptor( $bundled );
+        $substituted = Substituter( $transcripted );
+        list($pre, $metaparsed, $post) = MetaParser( $word );
+        $alternative_text = $original;
+        $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
+        return $debug_text;        
+}
+
+function PreProcessNormalText( $text ) {
+    $text = preg_replace( "/>([^<])/", "> $1", $text );         // with this replacement inline- and html-tags can be placed everywhere
+    $text = preg_replace( "/([^>])</", "$1 <", $text );         // with this replacement inline- and html-tags can be placed everywhere
+    $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim($text)) );
+    
+    // Original idea: use spaces to separate words that have to be transformed into shorthand-sgvs
+    // Problem: there are html-tags which have spaces inside, e.g. <font size="7"> (consequence: the tags will get separated and the different
+    // parts will be treated as words to transform.
+    // Solution: Replace temporarily all spaces inside html-tags with $nbsp; => separate the words => replace all &nbsp; with ' '
+    // (Potential problem with that solution: $nbsp; inside html-tags inserted by user will also get converted => don't think that should happen)
+    //echo "Text before: $text<br>";
+    
+    $text = replace_all( '/(<[^>]*?) (.*?>)/', '$1#XXX#$2', $text );
+    //echo "<br>Replaced Spaces:<br>" . htmlspecialchars($text) . "<br><br>";
+    return $text;
+}
+
+function PostProcessNormalText( $text ) {
+    $text = replace_all( '/(<[^>]*?)#XXX#(.*?>)/', '$1 $2', $text);
+    return $text;
+}
+
+function PostProcessTextArray( $text_array ) {
+    foreach ( $text_array as $key => $separate_entry) {
+        $text_array[$key] = PostProcessNormalText($separate_entry);
+    }
+    return $text_array;
+}
+
+function GetLineStyle() {
+    switch ($_SESSION['token_style_type']) {
+        case "solid" : return ""; break;
+        case "dotted" : return "1,1"; break;
+        case "dashed" : return "3,1"; break;
+        case "custom" : return $_SESSION['token_style_custom_value']; break;
+    }
+}
+
+function CalculateInlineSVG( $text_array) {
+    $output = "";
+    foreach ( $text_array as $single_word ) {
+        
+        $debug_information = GetDebugInformation( $single_word );
+        $alternative_text = ($_SESSION['output_texttagsyesno']) ? $single_word : "";
+        
+        $output .= SingleWord2SVG( $single_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+    }
+    return $output;
+}
+
+function CalculateLayoutedSVG( $text_array ) {
+    // function for layouted svg
+    return "layouted svg";
+}
+
+function NormalText2SVG( $text ) {
+    $text = PreProcessNormalText( $text );
+    $text_array = PostProcessTextArray(explode( " ", $text));
+    
+    switch ($_SESSION['output_format']) {
+            case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;
+            default : $svg = CalculateInlineSVG( $text_array ); 
+    }
+    
+    echo "$svg";
+    
+/*  
+    foreach ( $text_array as $test_wort ) {
+        
+        $debug_information = GetDebugInformation( $test_wort );
+       
+        //$stenogramm = TokenList2SVG( $token_list, $angle, 0.8, 1.5, "black", "", $alternative_text);   
+        //$stenogramm = NormalText2SVG( $test_wort, $angle, 0.8, 1.5, "black", "", $alternative_text);
+        $angle = $_SESSION['token_inclination'];
+        $thickness = $_SESSION['token_thickness'];
+        $zoom = $_SESSION['token_size'];
+        $color = $_SESSION['token_color'];
+        if (!$_SESSION['output_texttagsyesno']) $alternative_text = "";
+        
+        $stenogramm = SingleWord2SVG( $test_wort, $angle, $thickness, $zoom, $color, "", $alternative_text);
+     
+        if (mb_strlen($stenogramm) > 0) {
+            if ($_SESSION['output_format'] === "debug") {
+                echo $debug_information;
+                //   echo "<br>$token_list[0]/$token_list[1]/$token_list[2]/$token_list[3]/$token_list[4]/$token_list[5]/$token_list[6]<br>$stenogramm</p>";
+            } 
+            echo "$stenogramm";
+            //echo "Trickster: " . Trickster("Markthalle") . "<br>";
+        
+            //$incremental_string .= $stenogramm . "<!-- -->";
+        }
+    }
+*/
+
+}
+
 
 // TokenCombiner combines 2 tokens, creating a new token (as an array) and adds it into the multidimensional array steno_tokens_master[]
 // connecting points: 
