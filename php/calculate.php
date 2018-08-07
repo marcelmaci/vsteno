@@ -57,7 +57,9 @@ function CalculateStenoPage() {
     if (strlen($text) > 0) {
         InsertTitle();
         InsertIntroduction();
+       
         NormalText2SVG( $text ); // do not escape entered text (will be done in parser: pre/postprocessnormaltext())
+       
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
     
     //echo '<a href="input.php"><br><button>"Nochmals!"</button></a>';

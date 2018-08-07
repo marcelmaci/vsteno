@@ -516,6 +516,7 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
         // initialize variables
         global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
         SetGlobalScalingVariables( $scaling );
+      
         //call the following function only once per text (performance)
         //CreateCombinedTokens();
         //CreateShiftedTokens();
@@ -526,7 +527,7 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
         $splines = array();                 // contains all information for later drawing routine
         $steno_tokens = ScaleTokens( $steno_tokens_master, $scaling );        
         $vertical = "no"; $distance = "none"; $shadowed = "no";
-       
+      
         $LastToken = ""; $length_tokenlist = count($TokenList); $position = "first";
         for ($i = 0; $i < count($TokenList); $i++) {
             $temp = $TokenList[$i];
@@ -664,7 +665,9 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
             break;
         default:
             if ($tokenlist !== null) {
+                
                 $svg .= TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+               
                 if (mb_strlen($post)>0) {
                     $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
                     $svg .= $post_html_tag_list;
@@ -675,6 +678,7 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
                     $svg = "$debug_information<br>$svg";
                     //   echo "<br>$token_list[0]/$token_list[1]/$token_list[2]/$token_list[3]/$token_list[4]/$token_list[5]/$token_list[6]<br>$stenogramm</p>";
                 } 
+              
                 return $svg;
             } else return $svg;
             break;
@@ -742,24 +746,184 @@ function CalculateInlineSVG( $text_array) {
         
         $debug_information = GetDebugInformation( $single_word );
         $alternative_text = ($_SESSION['output_texttagsyesno']) ? $single_word : "";
-        
+       
         $output .= SingleWord2SVG( $single_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
     }
     return $output;
 }
 
+function LayoutedSVGProcessHTMLTags( $html_string ) {
+    // Unlike inline-svgs (= svgs containing each one only one word that is given to the browser as inline-element), 
+    // HTML-Tags in layouted-SVG can not handled by browser.
+    // To offer some basic layout control to the user, the tags <br> and </p> are used as linebreak (newline).
+    // All the other HTML-tags are filtered out!!! (In other words: no support for html-tags in layouted svgs).
+    // This function filters out the tags and returns number of linebreaks as int value.
+   return 0;    // for the moment return 0 (= no linebreak)
+}
+
+function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $line_style) {
+        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
+        SetGlobalScalingVariables( $scaling );
+        
+        $actual_x = 1;                      // start position x
+        $actual_y = $baseline_y;            // start position y
+        $splines = array();                 // contains all information for later drawing routine
+        $steno_tokens = ScaleTokens( $steno_tokens_master, $scaling );        
+        $vertical = "no"; $distance = "none"; $shadowed = "no";
+       
+        $LastToken = ""; $length_tokenlist = count($TokenList); $position = "first";
+        for ($i = 0; $i < count($TokenList); $i++) {
+            $temp = $TokenList[$i];
+            $temp1 = $TokenList[$i+1];
+            // last position = length - 1 if normal word, length - 2 if word is followed by punctuation => wrong: there may be more than one punctuation char, in addition there might be the "|" char ... !
+            $temp1_punctuation = mb_strpos( $punctuation, $temp1 ) !== false ? true : false;
+            $temp1_separator1 = mb_strpos( "\\", $temp1) !== false ? true : false;
+            $temp1_separator2 = mb_strpos( "|", $temp1) !== false ? true : false;
+            $temp1_separator = $temp1_separator1; // || $temp1_separator2;
+            //echo "<p>Zeichen: $temp - i+1 = $temp1 - punctuation = $punctuation - last_position: $last_position</p>";
+            if (($i == $length_tokenlist -1) || ($temp1_punctuation) || ($temp1_separator)) $position = "last";
+            
+            //echo "<p>tokenlist($i) = $temp</p>";
+            // if token is a vowel ("virtual token") then set positioning variables
+            // vowel <=> value 2 at offset 12 --- positioning variables $vertical, $distance, $shadowed at offsets 19, 20, 21
+            if ($steno_tokens[$TokenList[$i]][offs_token_type] == 2) {
+                //echo "tokenlist(i) = " . $TokenList[$i] . " offsets: 12 = " . $steno_tokens[$TokenList[$i]][12] . " 19 = " . $steno_tokens[$TokenList[$i]][19] . " 20 = " . $steno_tokens[$TokenList[$i]][20] . " 21 = " . $steno_tokens[$TokenList[$i]][21] . " <br>";
+                $vertical = $steno_tokens[$TokenList[$i]][offs_vertical];
+                $distance = $steno_tokens[$TokenList[$i]][offs_distance];
+                $shadowed = $steno_tokens[$TokenList[$i]][offs_shadowed];
+            } else {
+                list( $splines, $actual_x, $actual_y) = InsertTokenInSplinesList( $TokenList[$i], $position, $splines, $LastToken, $actual_x, $actual_y, $vertical, $distance, $shadowed, $scaling );
+                $vertical = "no"; $distance = "none"; $shadowed = "no";
+                $LastToken = $TokenList[$i];
+            }
+            $position = "inside";
+        }
+        // first tilt and then smoothen for better quality!!!
+        $splines = TiltWordInSplines( $angle, $splines );
+        $splines = SmoothenEntryAndExitPoints( $splines );
+        list($splines, $width) = TrimSplines( $splines );        
+        $splines = CalculateWord( $splines );
+        
+        //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
+        
+        return array( $splines, $width );
+}
+
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
-    return "layouted svg";
+    global $standard_height, $distance_words;
+    // set variables
+    $left_margin = 5; $right_margin = 5;
+    $num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
+    $line_height = $standard_height * $_SESSION['token_size'] * $num_system_lines;
+    $baseline = 4 * $standard_height;   // set baseline at 4th line <=> first line has enough space above
+    $word_position_x = $left_margin; $max_width = $_SESSION['output_width'];
+    $word_position_y = $baseline; $max_height = $_SESSION['output_height'];
+    $svg_string = "<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
+    $svg_string .= "<line x1=\"0\" y1=\"1\" x2=\"$max_width\" y2=\"1\" style=\"stroke:red;stroke-width:1\" />";
+    $svg_string .= "<line x1=\"$max_width\" y1=\"1\" x2=\"$max_width\" y2=\"$max_height\" style=\"stroke:red;stroke-width:1\" />";
+    
+    $temp_width = 0;
+    $actual_word = 0;
+    $text_array_length = count($text_array);
+    
+    foreach ( $text_array as $key => $single_word ) {
+            //echo "layoutedsvg: key: $key word: $single_word<br>";
+           
+            //do {
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            list( $pre, $tokenlist, $post ) = NormalText2TokenList( $single_word );
+            if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // set inline options
+            // following line is inactive for the moment (just dummy-code)
+            $number_line_breaks = LayoutedSVGProcessHTMLTags( $pre_html_tag_list ); 
+
+            $angle = $_SESSION['token_inclination'];
+            $stroke_width = $_SESSION['token_thickness'];
+            $scaling = $_SESSION['token_size'];
+            $color_htmlrgb = $_SESSION['token_color'];
+            // $stroke_dasharray = $_SESSION['token_style_custom_value'];
+    
+            if ($tokenlist !== null) {
+                echo "inserting: key: $key word: $single_word => word_splines($actual_word)<br>";
+                list( $word_splines[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
+                $word_width[$actual_word] = $delta_width;
+                //var_dump($word_splines[$actual_word]);
+                $temp_width += $distance_words + $delta_width;
+                //echo "tempwidth: $temp_width / delta_width: $delta_width<br>";
+                //echo "word: $single_word tempwidth: $temp_width / delta_width: $delta_width<br>";
+            }
+            /*
+            if (mb_strlen($post)>0) {
+                $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
+                $svg .= $post_html_tag_list;
+            }
+            */
+            $actual_word++;
+            //} while ($temp_width < $max_width);
+            
+            //echo "key: " . $key . " count: " . count($text_array) . "<br>";
+            if (($temp_width > $max_width-$right_margin) || ($key == $text_array_length-1)) {
+            // if ($temp_width > $max_width) {
+                echo "Draw actual line at key: $key word: $single_word temp_width: $temp_width actual_word: $actual_word<br>";
+                // we have reached end of actual line => draw that line and set curser at beginning of next line
+                $word_position_x = $left_margin;
+                //echo "actual_word: $actual_word<br>";
+
+                //$last_word = (($key == $text_array_length-1) && ($temp_width <= $max_wdith-$right_margin)) ? $actual_word : $actual_word-1;
+                $last_word = ($key == $text_array_length-1) ? $actual_word : $actual_word-1;
+                echo "last_word: $last_word<br>";
+                for ($i = 0; $i < $last_word; $i++) {
+                    echo "calculating word_splines($i)<br>";
+                    //echo "array-length($i) = " . count($word_splines[$i]) . "<br>";
+                    for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
+                        $x1 = round($word_splines[$i][$n] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $y1 = round($word_splines[$i][$n+1] + $word_position_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $q1x = round($word_splines[$i][$n+2] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $q1y = round($word_splines[$i][$n+3] + $word_position_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $relative_thickness = $word_splines[$i][$n+4];
+                        $unused = $word_splines[$i][$n+5];
+                        $q2x = round($word_splines[$i][$n+6] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $q2y = round($word_splines[$i][$n+7] + $word_position_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $x2 = round($word_splines[$i][$n+8] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $y2 = round($word_splines[$i][$n+9] + $word_position_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                        $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+                        // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+                        // this method doesn't work with n, m, b ... why???
+                        if ($word_splines[$i][$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+                        // correct control points if following point is non-connecting (see CalculateWord() for more detail)
+                        // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
+                        if ($word_splines[$i][$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
+                        //echo "inserting: word($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
+                        $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
+                    }    
+                    $word_position_x += $word_width[$i] + $distance_words;
+                }
+                // PROBLEM: if temp_widtH exceeds right border at the same time as last
+                // element in array is reached (in foreach-loop), the remaining word won't
+                // be drawn (should be written to following line => fix this later
+                $last_word_splines = $word_splines[$actual_word-1];
+                unset($word_splines);
+                $word_splines[0] = $last_word_splines;
+                $word_width[0] = $word_width[$actual_word-1];
+                $actual_word = 1;
+                $word_position_y += $line_height;
+                $temp_width = $left_margin + $word_width[0];
+                
+            }
+        
+    }
+    $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
+    return $svg_string;
 }
 
 function NormalText2SVG( $text ) {
     $text = PreProcessNormalText( $text );
     $text_array = PostProcessTextArray(explode( " ", $text));
     
+    
     switch ($_SESSION['output_format']) {
             case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;
-            default : $svg = CalculateInlineSVG( $text_array ); 
+            default : $svg = CalculateInlineSVG( $text_array );
     }
     
     echo "$svg";
