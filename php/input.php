@@ -116,6 +116,15 @@ Fenster:
 <input type="radio" name="output_format" value="layout" <?php echo ($_SESSION['output_format']) === "layout" ? "checked" : "";?>> Layout 
 Breite: <input type="text" name="layout_width"  size="10" value="<?php echo $_SESSION['output_width']; ?>"> 
 Höhe: <input type="text" name="layout_height"  size="10" value="<?php echo $_SESSION['output_height']; ?>"><br>
+Ränder: 
+L: <input type="text" name="left_margin"  size="10" value="<?php echo $_SESSION['left_margin']; ?>">
+R: <input type="text" name="right_margin"  size="10" value="<?php echo $_SESSION['right_margin']; ?>">
+O: <input type="text" name="top_margin"  size="10" value="<?php echo $_SESSION['top_margin']; ?>">
+U: <input type="text" name="bottom_margin"  size="10" value="<?php echo $_SESSION['bottom_margin']; ?>">
+<br>
+Systemhöhe: <input type="text" name="num_system_lines"  size="10" value="<?php echo $_SESSION['num_system_lines']; ?>">
+1. Zeile: <input type="text" name="baseline"  size="10" value="<?php echo $_SESSION['baseline']; ?>">
+<br>
 Stil: <input type="radio" name="layout_style" value="align_left" <?php echo ($_SESSION['output_style'] === "align_left") ? "checked" : "";?>> 
 Flattersatz <input type="radio" name="layout_style" value="block" <?php echo ($_SESSION['output_texttagsyesno'] == "block") ? "checked" : "";?>> Blocksatz
 <br>

@@ -137,6 +137,13 @@ $svg_not_compatible_browser_text = "";         // only add text if you really wa
 // $svg_not_compatible_browser_text = "Sorry, your browser does not support inline SVG.";
 $vector_value_precision = 3;                    // number of decimals (eliminates overhead, but reduces precision)
 
+// layouted svg
+$left_margin = 5;                               // margins for layouted svg
+$right_margin = 5;
+$top_margin = 5;
+$bottom_margin = 50;
+$num_system_lines = 3;                          // number of shortand system lines between two text lines (lower values = narrower)
+
 // flags
 $dont_connect = 0;
 

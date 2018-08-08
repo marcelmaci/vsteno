@@ -3,7 +3,8 @@
 require_once "constants.php";
 
 function InitializeSessionVariables() {
-    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word;
+    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
+    $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height;
     // set standard values for use in session
     $_SESSION['initialized'] = true;
     $_SESSION['original_text_format'] = "normal";
@@ -51,8 +52,8 @@ function InitializeSessionVariables() {
     $_SESSION['output_format'] = "inline";
     $_SESSION['output_without_button_yesno'] = false;
     $_SESSION['output_texttagsyesno'] = yes;
-    $_SESSION['output_width'] = 0;
-    $_SESSION['output_height'] = 0;
+    $_SESSION['output_width'] = 670;
+    $_SESSION['output_height'] = 950;
     $_SESSION['output_style'] = "align_left";
     $_SESSION['output_page_numberyesno'] = false;
     $_SESSION['output_page_start_value'] = "";
@@ -71,10 +72,20 @@ function InitializeSessionVariables() {
     $_SESSION['lower_style'] = "";
     $_SESSION['auxiliary_style_general'] = "";
     $_SESSION['return_address'] = "input.php";
+    
+    // layouted svg
+    $_SESSION['left_margin'] = $left_margin;
+    $_SESSION['right_margin'] = $right_margin;
+    $_SESSION['top_margin'] = $top_margin;
+    $_SESSION['bottom_margin'] = $bottom_margin;
+    $_SESSION['num_system_lines'] = $num_system_lines;
+    $_SESSION['baseline'] = 4;                                  // start at 4th system line for first shorthand text line in layouted svg
+    
+    
 }
 
 function CopyFormToSessionVariablesMaxi() {
-    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
+    global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide; // probably superfluous .. ?!
     $_SESSION['original_text_format'] = htmlspecialchars($_POST['text_format_metayesno']);
     $_SESSION['original_text_content'] = htmlspecialchars($_POST['original_text']);
     $_SESSION['title_yesno'] = (htmlspecialchars($_POST['title_yesno']) === "title_yes") ? true : false;
@@ -138,6 +149,14 @@ function CopyFormToSessionVariablesMaxi() {
     $_SESSION['upper3_style'] = htmlspecialchars($_POST['upper3_style']);
     $_SESSION['lower_style'] = htmlspecialchars($_POST['lower_style']);
     $_SESSION['auxiliary_style_general'] = htmlspecialchars($_POST['auxiliary_lines_style']);
+    
+    // layouted svg
+    $_SESSION['left_margin'] = htmlspecialchars($_POST['left_margin']);
+    $_SESSION['right_margin'] = htmlspecialchars($_POST['right_margin']);
+    $_SESSION['top_margin'] = htmlspecialchars($_POST['top_margin']);
+    $_SESSION['bottom_margin'] = htmlspecialchars($_POST['bottom_margin']);
+    $_SESSION['num_system_lines'] = htmlspecialchars($_POST['num_system_lines']);
+    $_SESSION['baseline'] = htmlspecialchars($_POST['baseline']);
     
 }
 
