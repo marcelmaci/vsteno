@@ -121,12 +121,16 @@ L: <input type="text" name="left_margin"  size="10" value="<?php echo $_SESSION[
 R: <input type="text" name="right_margin"  size="10" value="<?php echo $_SESSION['right_margin']; ?>">
 O: <input type="text" name="top_margin"  size="10" value="<?php echo $_SESSION['top_margin']; ?>">
 U: <input type="text" name="bottom_margin"  size="10" value="<?php echo $_SESSION['bottom_margin']; ?>">
+<input type="checkbox" name="show_margins" value="yes" <?php echo ($_SESSION['show_margins']) ? "checked" : "";?>> anzeigen
+
 <br>
 Systemhöhe: <input type="text" name="num_system_lines"  size="10" value="<?php echo $_SESSION['num_system_lines']; ?>">
 1. Zeile: <input type="text" name="baseline"  size="10" value="<?php echo $_SESSION['baseline']; ?>">
 <br>
 Stil: <input type="radio" name="layout_style" value="align_left" <?php echo ($_SESSION['output_style'] === "align_left") ? "checked" : "";?>> 
-Flattersatz <input type="radio" name="layout_style" value="block" <?php echo ($_SESSION['output_texttagsyesno'] == "block") ? "checked" : "";?>> Blocksatz
+Flattersatz <input type="radio" name="layout_style" value="align_left_right" <?php echo ($_SESSION['output_style'] == "align_left_right") ? "checked" : "";?>> Blocksatz
+<input type="checkbox" name="show_distances" value="yes" <?php echo ($_SESSION['show_distances']) ? "checked" : "";?>> anzeigen
+
 <br>
 <input type="checkbox" name="page_numbers_yesno" value="page_numbers_yes" <?php echo ($_SESSION['output_page_numberyesno']) ? "checked" : "";?>> 
 Seitenzahlen: Beginn <input type="text" name="page_numbers_start_number"  size="10" value="<?php echo $_SESSION['output_page_start_value']; ?>"> 

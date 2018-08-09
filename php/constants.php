@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "eb416f06a5df41757c4a904216447b011a99f9ff";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "6. August 2018";                                  // idem
+const version_commit_id = "dbf5d06430eab0318e2dd3c10404c541854ca244";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "8. August 2018";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -139,7 +139,7 @@ $vector_value_precision = 3;                    // number of decimals (eliminate
 
 // layouted svg
 $left_margin = 5;                               // margins for layouted svg
-$right_margin = 5;
+$right_margin = 10;
 $top_margin = 5;
 $bottom_margin = 50;
 $num_system_lines = 3;                          // number of shortand system lines between two text lines (lower values = narrower)

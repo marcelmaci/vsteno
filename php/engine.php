@@ -770,8 +770,8 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
     
     //echo "in Auxiliary Lines: starty: $starty maxy: $maxy line_height: $line_height ...<br>";
     
-    for ($y = $starty; $y < $maxy; $y += $line_height) {
-        
+    for ($y = $starty; $y <= $maxy; $y += $line_height) {
+        //echo "drawing at: $y maxy: $maxy line_height: $line_height<br>";
         if ($_SESSION['auxiliary_upper3yesno']) {
             $thickness = $_SESSION['auxiliary_upper3_thickness'];
             $color = $_SESSION['auxiliary_upper3_color'];
@@ -868,23 +868,56 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
     */
     //echo "In DrawOneLineInLayoutedSVG: word_position_x: $word_position_x word_position_y: $word_position_y last_word: $last_word stroke_width: $stroke_width<br>word_splines[]<br>";
     //var_dump($word_splines);
+    //
+    $normal_distance = $_SESSION['distance_words'];
+    if ($_SESSION['output_style'] === "align_left_right") {
+        $number_of_words = count($word_splines) - 1;
+        $number_of_gaps = $number_of_words - 1;
+        $width_without_correction = 0;
+        $normal_distance = $_SESSION['distance_words'];
+        for ($i = 0; $i<$number_of_words; $i++) $width_without_correction += $normal_distance + $word_width[$i];
+        $width_without_correction -= $normal_distance;  // first word has no distance
+        $leftover_right_side = $_SESSION['output_width'] - $_SESSION['left_margin'] - $_SESSION['right_margin'] - $width_without_correction;
+        $additional_distance = $leftover_right_side / $number_of_gaps;
+        // echo "number_of_words: $number_of_words number_of_gaps: $number_of_gaps width_without_correction: $width_without_correction leftover_right_side: $leftover_right_side additional_distance: $additional_distance<br>";
+    } else $additional_distance = 0;
     
     for ($i = 0; $i < $last_word; $i++) {
         // echo "calculating word_splines($i)<br>";
         // echo "array-length($i) = " . count($word_splines[$i]) . "<br>";
         $extra_shift_y = -$baseline_y; // - ( $line_height + $system_line_height );  // something is wrong with vertical postioning of shorthand text ...
-        //echo "extra_shift_y: $extra_shift_y<br>";
+        if ($i == 0) $align_shift_x = 0;
+        else $align_shift_x = $additional_distance;
+        
+        if ($_SESSION['show_distances']) {
+            // mark distances graphically
+            // normal distance = blue
+            $ndx = $word_position_x - $normal_distance;
+            $ndy = $word_position_y - 30;
+            $ndwidth = $normal_distance;
+            $ndheight = 40;
+            //echo "ndx: $ndx ndy: $ndy normal_distance: $normal_distance ndwidth: $ndwidth ndheight: $ndheight<br>";
+            if ($i > 0) $svg_string .= "<rect x=\"$ndx\" y=\"$ndy\" width=\"$ndwidth\" height=\"$ndheight\" style=\"fill:white;stroke:blue;stroke-width:1;opacity:0.5\" />";
+            // additional distance = purple
+            $adx = $ndx + $normal_distance;
+            $ady = $word_position_y - 30;
+            $adwidth = $align_shift_x;
+            $adheight = 40;
+            //echo "ndx: $ndx ndy: $ndy normal_distance: $normal_distance ndwidth: $ndwidth ndheight: $ndheight<br>";
+            if ($i > 0) $svg_string .= "<rect x=\"$adx\" y=\"$ady\" width=\"$adwidth\" height=\"$adheight\" style=\"fill:white;stroke:purple;stroke-width:1;opacity:0.5\" />";
+        }
         
         for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
-            $x1 = round($word_splines[$i][$n] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            
+            $x1 = round($word_splines[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $y1 = round($word_splines[$i][$n+1] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $q1x = round($word_splines[$i][$n+2] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q1x = round($word_splines[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $q1y = round($word_splines[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
             $relative_thickness = $word_splines[$i][$n+4];
             $unused = $word_splines[$i][$n+5];
-            $q2x = round($word_splines[$i][$n+6] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q2x = round($word_splines[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $q2y = round($word_splines[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $x2 = round($word_splines[$i][$n+8] + $word_position_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $x2 = round($word_splines[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $y2 = round($word_splines[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
             $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
             // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
@@ -893,10 +926,11 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             // correct control points if following point is non-connecting (see CalculateWord() for more detail)
             // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
             if ($word_splines[$i][$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
+            
             //echo "ins: wrd($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
             $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
         }    
-        $word_position_x += $word_width[$i] + $distance_words;
+        $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
     }
     
     return $svg_string;            
@@ -904,25 +938,40 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
 
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
-    global $baseline_y, $standard_height, $distance_words, $left_margin, $num_system_lines;
+    global $baseline_y, $standard_height, $distance_words;
     // set variables
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
     $system_line_height = $standard_height * $_SESSION['token_size'];
+    $num_system_lines = $_SESSION['num_system_lines'];
     $line_height = $system_line_height * $num_system_lines;
     $token_size = $_SESSION['token_size'];
     $session_baseline = $_SESSION['baseline'];
     $top_margin = $_SESSION['top_margin'];
-    $starty = $standard_height * $token_size * $session_baseline + $top_margin;   // set baseline at 4th line <=> first line has enough space above
+    $bottom_margin = $_SESSION['bottom_margin'];
+    $left_margin =  $_SESSION['left_margin'];
+    $right_margin =  $_SESSION['right_margin'];
+    $top_start_on_page = $standard_height * $token_size * $session_baseline + $top_margin;
+    $starty = $top_start_on_page;
     $word_position_x = $left_margin; $max_width = $_SESSION['output_width'];
     $word_position_y = $starty; $max_height = $_SESSION['output_height'];
-    $bottom_limit = $max_height-$bottom_margin-$line_height; // baseline_y-bug: impossible to set baseline to 0 in calculation; extra_shift_y to correct bug etc. => has to be investigated!
+    $bottom_limit = $max_height-$bottom_margin; // -$line_height; // baseline_y-bug: impossible to set baseline to 0 in calculation; extra_shift_y to correct bug etc. => has to be investigated!
     
     $svg_string = "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
-    // rectangle to show width&heigt of svg
- //   $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
     
-    $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height);
+    if ($_SESSION['show_margins']) {
+        // rectangle to show width&heigt of svg
+        $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
+        //rectangle to show margin
+        $mx = $_SESSION['left_margin'];
+        $my = $_SESSION['top_margin'];
+        $mwidth = $max_width - $mx - $_SESSION['right_margin'];
+        $mheight = $max_height - $my - $_SESSION['bottom_margin'];
+        // echo "mx: $mx my: $my mwidth: $mwidth mheight: $mheight<br>";
+        $svg_string .= "<rect x=\"$mx\" y=\"$my\" width=\"$mwidth\" height=\"$mheight\" style=\"fill:white;stroke:green;stroke-width:1;opacity:0.5\" />";
+    }
+    
+    $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $word_position_y, $system_line_height, $line_height);
     //echo "standard_height: $standard_height line_height: $line_height starty: $starty token_size: $token_size session_baseline: $session_baseline top_margin: $top_margin num_system_lines: $num_system_lines word_position_y: $word_position_y<br>";
     //echo "auxiliary: " . htmlspecialchars(InsertAuxiliaryLinesInLayoutedSVG()) . "<br>";
             
@@ -963,7 +1012,7 @@ function CalculateLayoutedSVG( $text_array ) {
             */
             $actual_word++;
             //echo "key: " . $key . " count: " . count($text_array) . "<br>";
-            if (($temp_width > $max_width-$right_margin) || ($key == $text_array_length-1)) {
+            if (($temp_width > $max_width-$right_margin-$left_margin) || ($key == $text_array_length-1)) {
             // if ($temp_width > $max_width) {
                 //echo "Draw actual line at key: $key word: $single_word temp_width: $temp_width actual_word: $actual_word<br>";
                 // we have reached end of actual line => draw that line and set curser at beginning of next line
@@ -976,7 +1025,7 @@ function CalculateLayoutedSVG( $text_array ) {
                 //$svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word );
                             
                 
-                if (($temp_width <= $max_width-$right_margin) && ($key == $text_array_length-1)) {
+                if (($temp_width < $max_width-$right_margin) && ($key == $text_array_length-1)) {
                     //echo "Draw shorter (incomplete) line before leaving foreach-loop<br>";
                     $last_word = $actual_word;
                     $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word );
@@ -993,6 +1042,7 @@ function CalculateLayoutedSVG( $text_array ) {
                 $last_word = 2;
                 $temp_width = $left_margin + $word_width[0];
                 $word_position_y += $line_height;
+                // echo "word_position_y: $word_position_y bottom_limit: $bottom_limit<br>";
                 if (($word_position_y > $bottom_limit) && ($key != $text_array_length-1)) {
                         //echo "word_position_y: $word_position_y max_height: $max_height bottom_margin: $bottom_margin => start new svg ...<br>";
                         // close svg-tag 
@@ -1000,14 +1050,15 @@ function CalculateLayoutedSVG( $text_array ) {
                         // reopen svg-tag 
                         $svg_string .= "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
                         // rectangle to show width&heigt of svg
-                 //       $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
+                        if ($_SESSION['show_margins']) $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
                         // insert auxiliary lines
                         $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height);
                         //$svg_string .= InsertAuxiliaryLinesInLayoutedSVG();
                         //echo "auxiliary: " . htmlspecialchars(InsertAuxiliaryLinesInLayoutedSVG()) . "<br>";
             //echo "baseline_y: $baseline_y<br>";
             
-                        $word_position_y = $baseline_y- (10 * $_SESSION['token_size']) + $top_margin; // baseline_bug ....................................
+                        // $word_position_y = $baseline_y- (10 * $_SESSION['token_size']) + $top_margin; // baseline_bug ....................................
+                        $word_position_y = $top_start_on_page;
                 }
                 
             }
@@ -1027,7 +1078,7 @@ function CalculateLayoutedSVG( $text_array ) {
             // reopen svg-tag 
             $svg_string .= "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
             // rectangle to show width&heigt of svg
-      //      $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
+            if ($_SESSION['show_margins']) $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
             // insert auxiliary lines
             $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height);
             //echo "auxiliary: " . htmlspecialchars(InsertAuxiliaryLinesInLayoutedSVG()) . "<br>";
