@@ -758,7 +758,23 @@ function LayoutedSVGProcessHTMLTags( $html_string ) {
     // To offer some basic layout control to the user, the tags <br> and </p> are used as linebreak (newline).
     // All the other HTML-tags are filtered out!!! (In other words: no support for html-tags in layouted svgs).
     // This function filters out the tags and returns number of linebreaks as int value.
-   return 0;    // for the moment return 0 (= no linebreak)
+    //echo "LayoutedSVGProcessHTMLTags(): text: $html_string<br>";
+    // preg_match_all( "/<[^>]+[>]/", $html_string, $matches );                         // .*? makes expression non greedy; parse all tags of both types (inline- and html-)
+    preg_match_all( "/<.*?[>]/", $html_string, $matches );                         // .*? makes expression non greedy; parse all tags of both types (inline- and html-)
+    
+    $number_linebreaks = 0;
+    foreach( $matches[0] as $match ) {
+        $match_as_lower = mb_strtolower($match);
+        //echo "match before: #" . htmlspecialchars($match_as_lower) . "#<br>";
+        $match_as_lower = preg_replace( "/[<](.+) .*?[>]/", "<$1>", $match_as_lower );      // strip out all additional parameters => keep only bare html tags
+        //echo "match after: #" . htmlspecialchars($match_as_lower) . "#<br>";
+        switch ($match_as_lower) {
+                case "<br>" : $number_linebreaks++; break;
+                case "</p>" : $number_linebreaks++; break;
+                case "<p>" : $number_linebreaks++; break;
+        }
+    }
+    return $number_linebreaks;
 }
 
 function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height ) {
@@ -853,7 +869,7 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
         return array( $splines, $width );
 }
 
-function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word ) {
+function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, $force_left_align ) {
     global $distance_words, $vector_value_precision, $baseline_y;
     $angle = $_SESSION['token_inclination'];
     $stroke_width = $_SESSION['token_thickness'];
@@ -866,11 +882,11 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
     $word_position_x = $left_margin; $max_width = $_SESSION['output_width'];
     $word_position_y = $baseline; $max_height = $_SESSION['output_height'];
     */
-    //echo "In DrawOneLineInLayoutedSVG: word_position_x: $word_position_x word_position_y: $word_position_y last_word: $last_word stroke_width: $stroke_width<br>word_splines[]<br>";
+    //echo "In DrawOneLineInLayoutedSVG(): word_position_x: $word_position_x word_position_y: $word_position_y last_word: $last_word stroke_width: $stroke_width<br>word_splines[]<br>";
     //var_dump($word_splines);
     //
     $normal_distance = $_SESSION['distance_words'];
-    if ($_SESSION['output_style'] === "align_left_right") {
+    if (($_SESSION['output_style'] === "align_left_right") && (!$force_left_align)) {
         $number_of_words = count($word_splines) - 1;
         $number_of_gaps = $number_of_words - 1;
         $width_without_correction = 0;
@@ -883,8 +899,8 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
     } else $additional_distance = 0;
     
     for ($i = 0; $i < $last_word; $i++) {
-        // echo "calculating word_splines($i)<br>";
-        // echo "array-length($i) = " . count($word_splines[$i]) . "<br>";
+        //echo "calculating word_splines($i)";
+        //echo " array-length($i) = " . count($word_splines[$i]) . "<br>";
         $extra_shift_y = -$baseline_y; // - ( $line_height + $system_line_height );  // something is wrong with vertical postioning of shorthand text ...
         if ($i == 0) $align_shift_x = 0;
         else $align_shift_x = $additional_distance;
@@ -907,32 +923,33 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             if ($i > 0) $svg_string .= "<rect x=\"$adx\" y=\"$ady\" width=\"$adwidth\" height=\"$adheight\" style=\"fill:white;stroke:purple;stroke-width:1;opacity:0.5\" />";
         }
         
-        for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
+        if (count($word_splines[$i])>0) { // ignore empty arrays (can be rests of filtered out html-tags
+            for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
             
-            $x1 = round($word_splines[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $y1 = round($word_splines[$i][$n+1] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $q1x = round($word_splines[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $q1y = round($word_splines[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $relative_thickness = $word_splines[$i][$n+4];
-            $unused = $word_splines[$i][$n+5];
-            $q2x = round($word_splines[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $q2y = round($word_splines[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $x2 = round($word_splines[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $y2 = round($word_splines[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-            $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
-            // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
-            // this method doesn't work with n, m, b ... why???
-            if ($word_splines[$i][$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
-            // correct control points if following point is non-connecting (see CalculateWord() for more detail)
-            // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
-            if ($word_splines[$i][$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
+                $x1 = round($word_splines[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $y1 = round($word_splines[$i][$n+1] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q1x = round($word_splines[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q1y = round($word_splines[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $relative_thickness = $word_splines[$i][$n+4];
+                $unused = $word_splines[$i][$n+5];
+                $q2x = round($word_splines[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q2y = round($word_splines[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $x2 = round($word_splines[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $y2 = round($word_splines[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+                // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+                // this method doesn't work with n, m, b ... why???
+                if ($word_splines[$i][$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+                // correct control points if following point is non-connecting (see CalculateWord() for more detail)
+                // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
+                if ($word_splines[$i][$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
             
-            //echo "ins: wrd($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
-            $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
-        }    
-        $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
+                //echo "ins: wrd($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
+                $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
+            }    
+            $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
     }
-    
+    }
     return $svg_string;            
 }
 
@@ -983,19 +1000,25 @@ function CalculateLayoutedSVG( $text_array ) {
     $text_array_length = count($text_array);
     
     foreach ( $text_array as $key => $single_word ) {
-            //echo "layoutedsvg: key: $key word: $single_word<br>";
+            //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
             list( $pre, $tokenlist, $post ) = NormalText2TokenList( $single_word );
-            if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // set inline options
-            // following line is inactive for the moment (just dummy-code)
-            $number_line_breaks = LayoutedSVGProcessHTMLTags( $pre_html_tag_list ); 
-
+            //echo "pretags: " . htmlspecialchars($pre) . "<br>";
+            $pre_html_tag_list = "";                                                             // must be set to "", because following options returns tags that aren't there ... ?!?
+            if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // must be a bug in ParseAndSetInlineOptions() ... !!! => fix it later, workaround works for the moment
+            //echo "prehtmltaglist: " . htmlspecialchars($pre_html_tag_list) . "<br>";
+            $number_linebreaks = LayoutedSVGProcessHTMLTags( $pre_html_tag_list ); 
+            //echo "number_linebreaks: $number_linebreaks<br>";
+            
             $angle = $_SESSION['token_inclination'];
             $stroke_width = $_SESSION['token_thickness'];
             $scaling = $_SESSION['token_size'];
             $color_htmlrgb = $_SESSION['token_color'];
             // $stroke_dasharray = $_SESSION['token_style_custom_value'];
-    
-            if ($tokenlist !== null) {
+            
+            
+            //echo "tokenlist: $tokenlist isset(): " . isset($tokenlist) . " count(): " . count($tokenlist) . "<br>";
+            if (count($tokenlist) > 0) {
+                //echo "Processing tokenlist ...<br>";
                 //echo "inserting: key: $key word: $single_word => word_splines($actual_word)<br>";
                 list( $word_splines[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
                 $word_width[$actual_word] = $delta_width;
@@ -1011,6 +1034,27 @@ function CalculateLayoutedSVG( $text_array ) {
             }
             */
             $actual_word++;
+            
+            if ($number_linebreaks > 0) {
+                // echo "num_linebreaks: $number_linebreaks => inserting linebreak ...<br>";
+                $last_word = $actual_word;
+                // echo "Drawoneline: word_position_x: $word_position_x word_position_y: $word_position_y word_splines: $word_splines word_width: $word_width last_word: $last_word <br>";
+                $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, true );
+                //$last_word_splines = $word_splines[$actual_word-1];
+                unset($word_splines);
+                //$word_splines[0] = $last_word_splines;
+                //$word_width[0] = $word_width[$actual_word-1];
+                $actual_word = 0;
+                //$old_temp_width = $temp_width;
+                //$last_word = 2;
+                $temp_width = 0;
+                $word_position_x = $left_margin;
+                $word_position_y += $line_height * $number_linebreaks;  // what happens if number_linebreaks exceeds bottom limit ... ?!?
+                
+            }
+            
+            // echo "position_x: $word_position_x temp_width: $temp_width<br>";
+            
             //echo "key: " . $key . " count: " . count($text_array) . "<br>";
             if (($temp_width > $max_width-$right_margin-$left_margin) || ($key == $text_array_length-1)) {
             // if ($temp_width > $max_width) {
@@ -1028,10 +1072,10 @@ function CalculateLayoutedSVG( $text_array ) {
                 if (($temp_width < $max_width-$right_margin) && ($key == $text_array_length-1)) {
                     //echo "Draw shorter (incomplete) line before leaving foreach-loop<br>";
                     $last_word = $actual_word;
-                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word );
+                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, true );
                 } else {
                     $last_word = (($key == $text_array_length-1) && ($temp_width <= $max_wdith-$right_margin)) ? $actual_word : $actual_word-1;
-                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word );
+                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, false );
                 }
                 $last_word_splines = $word_splines[$actual_word-1];
                 unset($word_splines);
@@ -1043,24 +1087,25 @@ function CalculateLayoutedSVG( $text_array ) {
                 $temp_width = $left_margin + $word_width[0];
                 $word_position_y += $line_height;
                 // echo "word_position_y: $word_position_y bottom_limit: $bottom_limit<br>";
-                if (($word_position_y > $bottom_limit) && ($key != $text_array_length-1)) {
-                        //echo "word_position_y: $word_position_y max_height: $max_height bottom_margin: $bottom_margin => start new svg ...<br>";
-                        // close svg-tag 
-                        $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
-                        // reopen svg-tag 
-                        $svg_string .= "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
-                        // rectangle to show width&heigt of svg
-                        if ($_SESSION['show_margins']) $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
-                        // insert auxiliary lines
-                        $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height);
-                        //$svg_string .= InsertAuxiliaryLinesInLayoutedSVG();
-                        //echo "auxiliary: " . htmlspecialchars(InsertAuxiliaryLinesInLayoutedSVG()) . "<br>";
-            //echo "baseline_y: $baseline_y<br>";
-            
-                        // $word_position_y = $baseline_y- (10 * $_SESSION['token_size']) + $top_margin; // baseline_bug ....................................
-                        $word_position_y = $top_start_on_page;
-                }
                 
+                
+            }
+            if (($word_position_y > $bottom_limit) && ($key != $text_array_length-1)) {
+                //echo "word_position_y: $word_position_y max_height: $max_height bottom_margin: $bottom_margin => start new svg ...<br>";
+                // close svg-tag 
+                $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
+                // reopen svg-tag 
+                $svg_string .= "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
+                // rectangle to show width&heigt of svg
+                if ($_SESSION['show_margins']) $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
+                // insert auxiliary lines
+                $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height);
+                //$svg_string .= InsertAuxiliaryLinesInLayoutedSVG();
+                //echo "auxiliary: " . htmlspecialchars(InsertAuxiliaryLinesInLayoutedSVG()) . "<br>";
+    //echo "baseline_y: $baseline_y<br>";
+        
+                // $word_position_y = $baseline_y- (10 * $_SESSION['token_size']) + $top_margin; // baseline_bug ....................................
+                $word_position_y = $top_start_on_page;
             }
         
     }
@@ -1086,7 +1131,7 @@ function CalculateLayoutedSVG( $text_array ) {
         }
         //echo "insert last line<br>";
         //var_dump($word_splines);
-        $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word );
+        $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, true );
     } 
     
     /*elseif ($old_temp_width <= $max_width-$right_margin) {
