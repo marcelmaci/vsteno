@@ -55,9 +55,25 @@ function CalculateStenoPage() {
     
     // if there is text, insert title&introduction and SVG(s)
     if (strlen($text) > 0) {
-        InsertTitle();
-        InsertIntroduction();
-       
+        if ($_SESSION['output_format'] === "layout") {
+            // insert introduction as text in svg if necessary, use inline/html-options
+            $title_to_add = "";
+            if ($_SESSION['title_yesno']) {
+                    $title_to_add = "<@token_type=\"svgtext\"><@svgtext_size=\"40\">";
+                    $title_to_add .= $_SESSION['title_text'];
+                    $title_to_add .= "<@token_type=\"shorthand\"><br>";
+            }
+            if ($_SESSION['introduction_yesno']) {
+                    $title_to_add .= "<@token_type=\"svgtext\"><@svgtext_size=\"30\">";
+                    $title_to_add .= $_SESSION['introduction_text'];
+                    $title_to_add .= "<@token_type=\"shorthand\"><br>";
+            }
+            // add this at beginning of original text
+            $text = $title_to_add . $text;
+        } else {
+            InsertTitle();
+            InsertIntroduction();
+        }
         NormalText2SVG( $text ); // do not escape entered text (will be done in parser: pre/postprocessnormaltext())
        
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
