@@ -64,8 +64,8 @@ VSTENO Tutorial
 \end_layout
 
 \begin_layout Date
-30.
- Juni 2018
+11.
+ August 2018
 \end_layout
 
 \begin_layout Author
@@ -75,11 +75,11 @@ Marcel Maci
 \begin_layout Abstract
 Dieses Tutorial führt Sie kurz und bündig in die Verwendung und einige Möglichke
 iten von VSTENO ein.
- VSTENO (Vector Steno Tool with Enhanced Notational Options) ist ein PHP-Program
-m, das Langschrift-Texte in Stenogramme (System Stolze-Schrey) überträgt
- und einige zusätzliche Gestaltungsoptionen zur Darstellung und Gliederung
- des Textes bietet.
- VSTENO steht unter der GPL (GNU General Public Licence) und ist somit freie
+ VSTENO (Vector Shorthand Tool with Enhanced Notational Options) ist ein
+ PHP-Programm, das Langschrift-Texte in Stenogramme (System Stolze-Schrey)
+ überträgt und einige zusätzliche Gestaltungsoptionen zur Darstellung und
+ Gliederung des Textes bietet.
+ VSTENO steht unter der GPL (GNU General Public Licence) und ist somit Freie
  Software.
 \end_layout
 
@@ -298,15 +298,22 @@ zurück
 \end_inset
 
 -Buttons unterdrücken).
- Langschrift-Tags: Die Langschrift-Form eines Stenogramms wird angezeigt,
- wenn man mit der Maus darüber fährt (geeignet für das Lesetraining).
- Zusätzlich ist hier eine Blocksatzausgabe geplant.
+ Inline: Jedes Stenogramm wird als einzelnes SVG generiert.
+ Diese Option eignet sich am besten, wenn Sie Stenotext direkt im Browser
+ lesen wollen.
+ Langschrift-Tags (nur mit Inline wählbar): Die Langschrift-Form eines Stenogram
+ms wird angezeigt, wenn man mit der Maus darüber fährt (geeignet für das
+ Lesetraining).
+ Layout: Im Unterschied zu Inline werden die Stenogramme innerhalb eines
+ grossen SVG platziert, dessen Grösse frei wählbar ist (sollte so gewählt
+ werden, dass das SVG eine PDF-Seite füllt).
+ Dieses Layout ist am besten geeignet, wenn Sie den Stenotext ausdrucken
+ oder auf einem E-Reader lesen möchten.
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Blocksatz und Ausgabe in Metaform sind noch nicht implementiert, die Debug-Ausga
-be ist rudimentär.
+Metaform ist noch nicht implementiert, die Debug-Ausgabe ist rudimentär.
 \end_layout
 
 \end_inset
@@ -387,7 +394,7 @@ Anspruchsvollere Layouts
 
 \begin_layout Standard
 Nebst diesen allgemeinen Optionen bietet VSTENO die Möglichkeit durch so
- genannte Tags, das Layout weiter anzupassen und zu verfeinern.
+ genannte Tags das Layout weiter anzupassen und zu verfeinern.
  Es gibt zwei Arten von Tags: HTML-Tags und Inline-Option-Tags.
 \end_layout
 
@@ -426,6 +433,18 @@ eine
 
  sind also wirkungslos! Verwenden Sie zur Gestaltung Ihrer Seite deshalb
  HTML-Tags.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In Verbindung mit der Option Layout können nur die HTLM-Tags <br>, <p> und
+ </p> verwendet werden (andere Tags und Parameter innerhalb des <p>-Tags
+ werden ignoriert).
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -468,8 +487,8 @@ Dies ist ein rotes Wort
 \begin_inset Quotes erd
 \end_inset
 
- auch hier als fortlaufende Stenogramme ausgibt (Zeilenumbrüche haben keine
- Bedeutung).
+ auch hier als fortlaufende Stenogramme in einer einzigen Zeil ausgibt (Zeilenum
+brüche haben keine Bedeutung).
  Mit dem Inline-Tag <@token_color='red'> wird die Zeichenfarbe nach 
 \begin_inset Quotes eld
 \end_inset
@@ -482,7 +501,7 @@ dies ist ein
 \begin_inset Quotes eld
 \end_inset
 
-rot
+rotes
 \begin_inset Quotes erd
 \end_inset
 
@@ -625,6 +644,11 @@ black
  rgb(0,0,0)).
 \end_layout
 
+\begin_layout Itemize
+svgtext_size: Grösse der Zeichen in Normalschrift in px (Standard 30, es
+ wird die Schrift Courier verwendet).
+\end_layout
+
 \begin_layout Section*
 Gemischte Texte
 \end_layout
@@ -638,15 +662,7 @@ Einige Kürzungen:
 \end_layout
 
 \begin_layout LyX-Code
-<@token_type=
-\begin_inset Quotes erd
-\end_inset
-
-svgtext
-\begin_inset Quotes erd
-\end_inset
-
->
+<@token_type='svgtext'>
 \end_layout
 
 \begin_layout LyX-Code
@@ -654,15 +670,7 @@ gegen
 \end_layout
 
 \begin_layout LyX-Code
-<@token_type=
-\begin_inset Quotes erd
-\end_inset
-
-shorthand
-\begin_inset Quotes erd
-\end_inset
-
->
+<@token_type='shorthand'>
 \end_layout
 
 \begin_layout LyX-Code
@@ -670,15 +678,7 @@ gegen
 \end_layout
 
 \begin_layout LyX-Code
-<@token_type=
-\begin_inset Quotes erd
-\end_inset
-
-svgtext
-\begin_inset Quotes erd
-\end_inset
-
->
+<@token_type='svgtext'>
 \end_layout
 
 \begin_layout LyX-Code
@@ -686,15 +686,7 @@ mit
 \end_layout
 
 \begin_layout LyX-Code
-<@token_type=
-\begin_inset Quotes erd
-\end_inset
-
-shorthand
-\begin_inset Quotes erd
-\end_inset
-
->
+<@token_type='shorthand'>
 \end_layout
 
 \begin_layout LyX-Code
@@ -737,6 +729,16 @@ in Zukunft sollte es auch möglich sein, zwischen verschiedenen Varianten
 \begin_layout Itemize
 handwriting: Langschrift handgeschrieben (Blockschrift im ähnlichen Stil
  wie die Stenozeichen).
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Im Moment noch nicht umgesetzt.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -746,7 +748,8 @@ status open
 
 \begin_layout Plain Layout
 Diese Funktion ist allenfalls nur bedingt nützlich, da die Gestaltungsmöglichkei
-ten in HTML in Verbindung mit SVG-Grafiken relativ eingeschränkt sind)
+ten in HTML in Verbindung mit SVG-Grafiken relativ eingeschränkt sind).
+ Funktioniert nicht in Verbindung mit Layout (in diesem Fall svgtext verwenden).
 \end_layout
 
 \end_inset
@@ -804,6 +807,19 @@ ohne Button
  anwählen (passen Sie nötigenfalls auch andere Optionen an, z.B.
  Titel, Einleitung, Zeichengrösse, Linienstärke und ob Sie den Text gerne
  mit oder ohne Hilfslinien drucken möchten).
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Für Druck (oder den Export als PDF in einen E-Reader) wird die Ausgabe Layout
+ empfohlen.
+ Wählen Sie die Grösse (Höhe, Breite) so, dass ein SVG jeweils eine ganze
+ PDF-Seite füllt.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -815,7 +831,8 @@ Drucken
 \begin_inset Quotes erd
 \end_inset
 
- Ihres Browsers: Deaktivieren Sie sämtliche Formateinstellungen (z.B.
+ Ihres Browsers: Deaktivieren Sie sämtliche Formateinstellungen Ihres Browsers
+ (z.B.
  Druck von Titel, URL, Seiten und Zeit in der Kopf und Fussleiste) und drucken
  Sie die Seite(n) als PDF in eine Datei.
 \end_layout
@@ -825,10 +842,7 @@ Drucken
  weiter layouten (z.B.
  Ausdrucken von 2 Seiten auf einem A4-Blatt quer - dieses Format ist für
  Stenografie-Texte sehr zu empfehlen).
-\end_layout
-
-\begin_layout Standard
-Anbei sehen Sie die einzelnen Schritte mit ABrowser und Linux (Screenshots).
+ 
 \end_layout
 
 \begin_layout Standard
@@ -849,7 +863,18 @@ Ihre Stenografie-Texte können Sie auch auf einem E-Reader lesen.
 \begin_layout Enumerate
 Wenn Ihr Gerät über einen Internet-Zugang und einen guten Browser verfügt,
  können Sie die VSTENO-Seite aufrufen und Ihre Steno-Texte direkt im Browser
- lesen.
+ lesen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Von dieser Möglichkeit wird aber grundsätzlich abgeraten: In der Regel ist
+ der Export via PDF die bessere Wahl.
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Enumerate
@@ -868,6 +893,57 @@ n Sie es auf Ihren E-Reader.
 \begin_layout Standard
 Probieren Sie auch hier verschiedene Schriftgrössen und Strichstärken aus
  und wählen Sie jene, die auf Ihrem Gerät am besten dargestellt werden.
+ Für den Kindle Paperwhite empfehlen sich folgende Werden:
+\end_layout
+
+\begin_layout Itemize
+Zeichen: Grösse = 1.6, Dicke = 1.0 (Rest Standardeinstellungen belassen).
+\end_layout
+
+\begin_layout Itemize
+Hilfslinien: Wählen Sie nur die Grundlinie mit der Dicke 0.08.
+\end_layout
+
+\begin_layout Itemize
+Ausgabe: Vollseite ohne Button und Layout mit den voreingestellten Werten
+ (Breite = 660, Höhe = 950, Ränder = 5/5/5/50, Systemhöhe = 3, 1.
+ Zeile = 4, Blocksatz
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Der Blocksatz ist die ästhetisch beste Variante: Dies funktioniert auch,
+ wenn Sie Stenotext mit normalem Text abwechseln (durch Verwendung der Inline-Op
+tion-Tags <@token_type='svgtext'>normaler Text<@token_type='shorthand'>).
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Titel&Einleitung: Es wird empfohlen, einen Titel zu setzen.
+\end_layout
+
+\begin_layout Standard
+Tipps&Tricks: Die besten Resultate erreichen Sie, wenn Sie nicht nur den
+ Text, sondern den gesamten HTML-Code ins Textfeld kopieren.
+ Wählen Sie hierzu in Ihrem Browser 
+\begin_inset Quotes eld
+\end_inset
+
+Quellcode anzeigen
+\begin_inset Quotes erd
+\end_inset
+
+, wählen Sie die entsprechende Textstelle (Ihren Text mit HTML-Tags) aus,
+ kopieren Sie diesen in die Zwischenablage und fügen Sie ihn danach ins
+ Formular von VSTENO ein.
+ Dieses Vorgehen bewirkt, dass Ihr Text später auch in Steno in Abschnitte
+ getrennt und somit besser lesbar wird (wenn Sie nur den Text kopieren,
+ wird der Text in fortlaufenden Stenotext - d.h.
+ ohne Abschnitte - umgewandelt).
 \end_layout
 
 \begin_layout Section*
@@ -890,8 +966,8 @@ Gutenberg
 \begin_inset Quotes erd
 \end_inset
 
- (gutenberg.spiegel.de) finden Sie tausende Bücher, deren Copyright abgelaufen
- ist und die somit 
+ (http://gutenberg.spiegel.de) finden Sie tausende Bücher, deren Copyright
+ abgelaufen ist und die somit 
 \begin_inset Quotes eld
 \end_inset
 
@@ -914,16 +990,25 @@ Calibre
 \begin_inset Quotes erd
 \end_inset
 
- weiter.
+ (http://calibre-ebook.com) weiter.
  Damit können Sie Ihr E-Book in reinen ASCII-Text umwandeln und diesen dann
  für VSTENO verwenden.
 \end_layout
 
 \begin_layout Standard
 Technisch sollte es in Zukunft auch möglich sein, Texte des Projektes Gutenberg
- direkt durch einen simplen Klick im Browser zu übertragen.
- Bevor VSTENO diese Optionen anbieten kann, sind jedoch noch einige Copyright-te
-chnische Fragen zu klären.
+ direkt durch einen simplen Klick im Browser zu übertragen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bevor VSTENO diese Optionen anbieten kann, sind jedoch noch einige copyright-tec
+hnische Fragen zu klären.
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Part*

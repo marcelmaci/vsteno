@@ -26,14 +26,22 @@ function replace_all( $pattern, $replacement, $string ) {
     } while ($old_string !== $string );
     return $string;
 }
-    
+
+function GenericParser( $table, $word ) {
+    $output = $word;
+    foreach ( $table as $pattern => $replacement ) {
+        $output = preg_replace( "/$pattern/", $replacement, $output );
+    }
+    return $output;
+}
+
 ///////////////////////////////////////////// parser functions ////////////////////////////////////////////////
 
 // general philosophy for parser:
 // (1) divide et impera! Divide parsing task into different subtasks corresponding to linguisticly logical steps
 // (e.g. mark affixes, correct different representation of same phonetics etc.)
 // (2) KISS (keep it stupid, simple): one function = one (simple and basic) task!
-
+/*
 // globalizer (= full text scanner, applied before any other operation)
 function Globalizer( $word ) {
     global $globalizer_table;
@@ -53,13 +61,15 @@ function Helvetizer( $word ) {
     }
     return $output;
 }
+*/
 
-// decapitalizer
+// decapitalizer: can't be replaced with GenericParser! (?)
 function Decapitalizer( $word ) {
     $output = mb_strtolower($word);
     return $output;
 }
 
+/*
 function Substituter( $word ) {
     global $substituter_table;
     $output = $word;
@@ -98,6 +108,7 @@ function Shortener( $word ) {
     }
     return $output;
 }
+*/
 
 // trickster: functions like dictionary, but word goes to parserchain afterwards
 function Trickster( $word ) {
@@ -110,6 +121,7 @@ function Trickster( $word ) {
     else return $output; // if there was a match in trickster return it in order to tell metaparser to apply reduced parserchain (i.e. without decapitalizer)
 }
 
+/*
 // filter
 function Filter( $word ) {
     global $filter_table;
@@ -131,6 +143,7 @@ function Transcriptor( $word ) {
     }
     return $output;
 }
+*/
 
 // lookuper (checks if word is in dictionary)
 function Lookuper( $word ) {
@@ -143,19 +156,38 @@ function Lookuper( $word ) {
     }
 }
 
-
-
 // metaparser: combines all the above parsers
 function ParserChain( $text ) {
+        global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
+            $bundler_table, $transcriptor_table, $substituter_table;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
-        $result = Lookuper( $text );
+        $result = Lookuper( $text ); // can't be replaced with GenericParser => will be database-function
+        
         if ( mb_strlen($result) > 0 ) return $result;
         // if there is no entry in the dictionary: try trickster first (befory applying parserchain)
         // if trickster returns a result, then avoid decapitalizer (trickster needs capital letter to distinguish between certain words, avoiding decapitalizing
         // gives the trickster the possibility to mark certain parts of the words as capitals (so they won't get treated by certain rules of the parser chain))
-        $result = Trickster( $text ); // echo "text: $text / trickster: $result<br>";
+        $result = Trickster( $text ); // can't be replaced with GenericParser! (?)
+        /* old version
         if ( mb_strlen($result) > 0 ) return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Filter( $result )))))); // don't apply decapitalizer
         else return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Decapitalizer( Filter(( $text )))))))); // apply normal parserchain on original word
+        */
+        
+        if ( mb_strlen($result) > 0 ) {
+            
+            $result = GenericParser( $substituter_table, GenericParser( $transcriptor_table, GenericParser( $bundler_table, GenericParser( 
+                $normalizer_table, GenericParser( $shortener_table, GenericParser( $filter_table, $result))))));
+            return $result;
+            // return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Filter( $result )))))); // don't apply decapitalizer
+        
+        } else {
+            
+            $result = GenericParser( $substituter_table, GenericParser( $transcriptor_table, GenericParser( $bundler_table, GenericParser( 
+                $normalizer_table, GenericParser( $shortener_table, Decapitalizer( GenericParser( $filter_table, $text)))))));
+            return $result;
+            
+            //return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Decapitalizer( Filter(( $text )))))))); // apply normal parserchain on original word
+        }
 }
 
 function GetPreAndPostTokens( $text ) {
@@ -178,7 +210,7 @@ function MetaParser( $text ) {
         //echo "text: #$text#<br>";
         list( $pre, $word, $post ) = GetPreAndPostTags( $text );
         //echo "Metaparser(): Word: $word<br>";
-        $temp_word = Globalizer( $word );
+        $temp_word = GenericParser( $globalizer_table, $word ); // Globalizer( $word );
         //echo "Metaparser(): Globalized: $word<br>";
         list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $temp_word );
         if ($temp_word === $posttokens) $pretokens = "";  // if the whole word consists of pre/posttokens, both variables are set => keep only $posttokens (i.e. delete pretokens)
@@ -188,7 +220,7 @@ function MetaParser( $text ) {
         
         switch ($_SESSION['token_type']) {
             case "shorthand": 
-                $separated_word_parts_array = explode( "\\", Helvetizer($word) );
+                $separated_word_parts_array = explode( "\\", GenericParser( $helvetizer_table, $word ));  // Helvetizer($word) );
                 //var_dump($separated_word_parts_array);echo"<br";
                 $output = ""; 
                 foreach ($separated_word_parts_array as $word_part ) {

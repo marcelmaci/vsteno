@@ -618,6 +618,7 @@ function NormalText2TokenList( $text ) {
     //list( $pre, $word, $post ) = GetPreAndPostTags( $text );
     $text = htmlspecialchars_decode( $text );
     list( $pre, $metaform, $post) = MetaParser( $text );
+        
     //echo "Metaform: $metaform<br>";
     if (mb_strlen($metaform)>0) {
         list( $pre, $tokenlist, $post ) = MetaForm2TokenList( $pre, $metaform, $post );     // somehow idiot to pass $pre and $post through this function without changing anything - but do it like that for the moment
@@ -685,21 +686,27 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     } 
 }
 
-function GetDebugInformation( $word) {
+function GetDebugInformation( $word ) {
+        global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
+            $bundler_table, $transcriptor_table, $substituter_table;
+            
+// /* disable debugging text for the moment
         $original = $word;
-        $globalized = Globalizer( $word );
+        $globalized = GenericParser( $globalizer_table, $word ); // Globalizer( $word );
         $lookuped = Lookuper( $word );
         //$test_wort = Trickster( $test_wort);
         $decapitalized = Decapitalizer( $word );
-        $shortened = Shortener( $decapitalized );
-        $normalized = Normalizer( $shortened );
-        $bundled = Bundler( $normalized );
-        $transcripted = Transcriptor( $bundled );
-        $substituted = Substituter( $transcripted );
+        $shortened = GenericParser( $shortener_table, $decapitalized ); // Shortener( $decapitalized );
+        $normalized = GenericParser( $normalizer_table, $shortened ); // Normalizer( $shortened );
+        $bundled = GenericParser( $bundler_table, $normalized ); // Bundler( $normalized );
+        $transcripted = GenericParser( $transcriptor_table, $bundled ); // Transcriptor( $bundled );
+        $substituted = GenericParser( $substituter_table, $transcripted ); // Substituter( $transcripted );
         list($pre, $metaparsed, $post) = MetaParser( $word );
         $alternative_text = $original;
         $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
         return $debug_text;        
+    
+    // return "debugging disabled<br>";
 }
 
 function PreProcessNormalText( $text ) {
@@ -740,13 +747,14 @@ function GetLineStyle() {
     }
 }
 
-function CalculateInlineSVG( $text_array) {
+function CalculateInlineSVG( $text_array ) {
     $output = "";
+    
     foreach ( $text_array as $single_word ) {
         
         $debug_information = GetDebugInformation( $single_word );
         $alternative_text = ($_SESSION['output_texttagsyesno']) ? $single_word : "";
-       
+      
         $output .= SingleWord2SVG( $single_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
     }
     return $output;
@@ -1201,6 +1209,7 @@ function CalculateLayoutedSVG( $text_array ) {
 }
 
 function NormalText2SVG( $text ) {
+    
     $text = PreProcessNormalText( $text );
     $text_array = PostProcessTextArray(explode( " ", $text));
     
