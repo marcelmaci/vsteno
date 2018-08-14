@@ -146,6 +146,7 @@ $num_system_lines = 3;                          // number of shortand system lin
 
 // flags
 $dont_connect = 0;
+$original_word = "";                            // transitional solution before rewrite words.php in OOP
 
 // declarations
 $splines = array();                             // not really necessary in php

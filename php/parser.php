@@ -28,11 +28,47 @@ function replace_all( $pattern, $replacement, $string ) {
 }
 
 function GenericParser( $table, $word ) {
+    global $original_word;
+    //echo "GenericParser(): word: $word<br>";
     $output = $word;
     foreach ( $table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
+        $type = gettype($table[$pattern]);
+        //echo "type: $type<br>";
+        if ($type === "array") {
+            //echo "replacement == array:<br>";
+            //echo "apply rule: $pattern => " . $table[$pattern][0] . " with exception: " . $table[$pattern][1] . "<br>";
+            $extra_replacement = $table[$pattern][0];
+            $output = preg_replace( "/$pattern/", $extra_replacement, $output );
+            //echo "word: $word output: $output replaced: $replaced FROM: rule: $pattern => $replacement <br>";
+            if ($output !== $word) {   // rule has been applied => test, if there are exceptions
+                //echo "word: $word output: $output FROM: rule: $pattern => $extra_replacement <br>";
+                //echo "length(array): $length<br>";
+                $length = count($table[$pattern]);
+                $there_is_a_match = false;
+                for ($i=1; $i<=$length; $i++) {
+                    $extra_pattern = $table[$pattern][$i];
+                    //$original_word = "Pflicht"; // must be the original word without any modifications! => take it from constants before rewrite as OOP
+                    if (mb_strlen($extra_pattern)>0)$result = preg_match( "/$extra_pattern/", $original_word );
+                    if ($result == 1) {  // exception matches
+                        $there_is_a_match = true;
+                        //echo "Match with: $extra_pattern in Original: $original_word<br>";
+                    }
+                }
+                if ($there_is_a_match) {
+                    // echo "Don't apply rule!<br>";
+                    $output = $word; // don't apply rule (i.e. set $output back to $word)
+                }
+            }
+        } else {
+            $preceeding_result = $output;
+            $output = preg_replace( "/$pattern/", $replacement, $output );
+            if ($output !== $preceeding_result) {
+                //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
+            }
+        }
     }
-    return $output;
+    
+     return $output;
 }
 
 ///////////////////////////////////////////// parser functions ////////////////////////////////////////////////

@@ -665,8 +665,8 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
             return $svg;
             break;
         default:
-            if ($tokenlist !== null) {
-                
+            //if ($tokenlist !== null) {
+            if (count($tokenlist)>0) {
                 $svg .= TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
                
                 if (mb_strlen($post)>0) {
@@ -748,14 +748,19 @@ function GetLineStyle() {
 }
 
 function CalculateInlineSVG( $text_array ) {
+    global $original_word;
     $output = "";
     
-    foreach ( $text_array as $single_word ) {
+    foreach ( $text_array as $this_word ) {
         
-        $debug_information = GetDebugInformation( $single_word );
-        $alternative_text = ($_SESSION['output_texttagsyesno']) ? $single_word : "";
+        $original_word = $this_word;
+        $SingleWord = new SingleWord( $this_word );
+        // echo "class single word: Original: " . $SingleWord->Original . "<br>";
+        
+        $debug_information = GetDebugInformation( $SingleWord->Original );
+        $alternative_text = ($_SESSION['output_texttagsyesno']) ? $SingleWord->Original : "";
       
-        $output .= SingleWord2SVG( $single_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+        $output .= SingleWord2SVG( $SingleWord->Original, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
     }
     return $output;
 }
@@ -990,7 +995,7 @@ function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
 
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
-    global $baseline_y, $standard_height, $distance_words;
+    global $baseline_y, $standard_height, $distance_words, $original_word;
     // set variables
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
@@ -1036,6 +1041,7 @@ function CalculateLayoutedSVG( $text_array ) {
     
     foreach ( $text_array as $key => $single_word ) {
     //if ($_SESSION['token_type'] === "shorthand") {
+            $original_word = $single_word;
             //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
             list( $temp_pre, $bare_word, $temp_post) = GetPreAndPostTags( "<@token_type=\"svgtext\">" );
             //echo "=° single_word: $single_word pre: $temp_pre bare_word: $bare_word post: $temp_post<br>";

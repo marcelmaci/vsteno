@@ -91,6 +91,7 @@ require_once "data.php";
 require_once "parser.php";
 require_once "engine.php";
 require_once "session.php";
+require_once "words.php";
 
 // main
 
