@@ -146,7 +146,15 @@ $num_system_lines = 3;                          // number of shortand system lin
 
 // flags
 $dont_connect = 0;
+
+// variables for procedural approach
 $original_word = "";                            // transitional solution before rewrite words.php in OOP
+$combined_pretags = "";
+$combined_posttags = "";
+//$inline_options_pretags = "";                    // better: leave procedural approach as it is
+//$inline_options_posttags = "";                   // add oop on top of functions
+$html_pretags = ""; 
+$html_posttags = "";
 
 // declarations
 $splines = array();                             // not really necessary in php

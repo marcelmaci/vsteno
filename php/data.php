@@ -17,6 +17,30 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
  
+ 
+/*
+14. August 2018: New rule formalism
+
+Either:    A => B
+Or:        A => array(a, b, c, d ...)
+where:     a is the original B (i.e. replacement for REGEX)
+           b, c, d ... are exceptions: if one of the matches, the rule won't be applied
+           
+           can be used for example for word "geschäft": 
+           define a rule which replaces "schäft" => "{SCHAFT}"
+           define exception "geschäft" (rule shouldn't be applied to that word)
+
+           in PHP:
+           "schaft$ => array( "{SCHAFT}", "Geschäft(en?)?" )
+
+           Advantages:
+           (1) exceptions can be indicated together with rules (more logical and better to understand)
+           (2) possible to use REGEX also for exceptions (big plus)
+           
+           Performance-whise this should also be beneficial since exceptions are only tested if first part of rule matches
+           (in the old version, every exception was tested on every word).
+*/
+ 
 /////////////////////////////////////// data definitions /////////////////////////////////////////////////////
 
 // define decapitalizer (changes all uppercase caracters to lower case => marks works starting with uppercase as "nouns" in order to show them in different color (not yet implemented))

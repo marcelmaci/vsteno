@@ -212,12 +212,13 @@ function InsertAuxiliaryLines( $width ) {
     return $lines_string;
 }
 
-function CreateSVG( $pre, $splines, $post, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
-    global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision;
+function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
+    global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
+    $combined_pretags;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
     
     //list( $splines, $width ) = TrimSplines( $splines );
-    
+    $pre = $combined_pretags;
     // if ($_SESSION['token_type'] !== "htmlcode") {
         // echo "CreateSVG: Pre: $pre Post: $post<br>";
         list( $variable, $newcolor_htmlrgb ) = GetTagVariableAndValue( $pre ); 
@@ -512,7 +513,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
     return $splines;
 }
 
-function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
+function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
         // initialize variables
         global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
         SetGlobalScalingVariables( $scaling );
@@ -560,7 +561,7 @@ function TokenList2SVG( $pre, $TokenList, $post, $angle, $stroke_width, $scaling
         $splines = SmoothenEntryAndExitPoints( $splines );
         list( $splines, $width) = TrimSplines( $splines );        
         $splines = CalculateWord( $splines );
-        $svg_string = CreateSVG( $pre, $splines, $post, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+        $svg_string = CreateSVG( $splines, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
         
         return $svg_string;
@@ -580,7 +581,7 @@ function NormalText2NormalTextInSVG( $text, $size ) {
     return $svg;
 }
 
-function MetaForm2TokenList( $pre, $text, $post ) {
+function MetaForm2TokenList( $text ) {
     global $steno_tokens_master;
     $token_list_to_return = array();   
     $text_length = mb_strlen( $text );
@@ -611,26 +612,30 @@ function MetaForm2TokenList( $pre, $text, $post ) {
             //echo "in single token: insert $token_to_insert - new i = $i<br>";
         }
     }
-    return array ($pre, $token_list_to_return, $post);
+    return $token_list_to_return;
 }
 
 function NormalText2TokenList( $text ) {
     //list( $pre, $word, $post ) = GetPreAndPostTags( $text );
     $text = htmlspecialchars_decode( $text );
-    list( $pre, $metaform, $post) = MetaParser( $text );
+    $metaform = MetaParser( $text );
         
     //echo "Metaform: $metaform<br>";
     if (mb_strlen($metaform)>0) {
-        list( $pre, $tokenlist, $post ) = MetaForm2TokenList( $pre, $metaform, $post );     // somehow idiot to pass $pre and $post through this function without changing anything - but do it like that for the moment
-        return array( $pre, $tokenlist, $post );
+        $tokenlist = MetaForm2TokenList( $metaform );     // somehow idiot to pass $pre and $post through this function without changing anything - but do it like that for the moment
+        return $tokenlist;
     } else {
-        return array( $pre, null, $post );
+        return null;
     }
 }
 
 function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
-    list( $pre, $tokenlist, $post ) = NormalText2TokenList( $text );
+    global $combined_pretags, $combined_posttags, $html_pretags, $html_posttags;
+    $tokenlist = NormalText2TokenList( $text );
+    $pre = $combined_pretags;
+    $post = $combined_posttags;
     if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // set inline options
+    $html_pretags = $pre_html_tag_list; // set global variable
     $svg = $pre_html_tag_list;
     //$esc_svg = htmlspecialchars($svg);
    // echo "svg: $esc_svg<br>";
@@ -644,33 +649,41 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     
     switch ($_SESSION['token_type']) {
         case "htmltext" : 
-            list( $pre_nil, $middle, $post_nil) = GetPreAndPostTags( $text );
+            $middle = GetWordSetPreAndPostTags( $text );
             //echo "<br>Inside SingleWord2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
+            $pre_nil = $combined_pretags;   // get global variables
+            $post_nil = $combined_posttags;
             $pre_html_tag_list .= ParseAndSetInlineOptions ( $pre_nil );
             $svg .= $pre_html_tag_list;
             $svg .= " " . $middle;          // use raw text and insert it directly between $pre and $post html-text (= raw html code); add a space because spaces have been parsed out ...
             $post_html_tag_list = ParseAndSetInlineOptions( $post_nil );
+            $html_posttags = $post_html_tag_list; // set global variable
             $svg .= $post_html_tag_list;
             return $svg;
             break;
         case "svgtext" : 
-            list( $pre_nil, $middle, $post_nil) = GetPreAndPostTags( $text );
+            $middle = GetWordSetPreAndPostTags( $text );
+            $pre_nil = $combined_pretags;   // get global variables
+            $post_nil = $combined_posttags;
             //echo "<br>Inside SingleWord2SVG:<br>-text: " . htmlspecialchars($text) . "<br>- pre_nil: $pre_nil<br>- middle: $middle<br>- post_nil: $post_nil<br><br>";
             $pre_html_tag_list .= ParseAndSetInlineOptions ( $pre_nil );
+            $svg .= $pre_html_tag_list; // set global variable
             $svg .= $pre_html_tag_list;
             $text_as_svg .= NormalText2NormalTextInSVG( $middle, 20 );  // use fix size
             $svg .= $text_as_svg;
             $post_html_tag_list = ParseAndSetInlineOptions( $post_nil );
+            $html_posttags = $post_html_tag_list; // set global variable
             $svg .= $post_html_tag_list;
             return $svg;
             break;
         default:
             //if ($tokenlist !== null) {
             if (count($tokenlist)>0) {
-                $svg .= TokenList2SVG( $pre, $tokenlist, $post, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+                $svg .= TokenList2SVG( $tokenlist, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
                
                 if (mb_strlen($post)>0) {
                     $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
+                    $html_posttags = $post_html_tag_list; // set global variable
                     $svg .= $post_html_tag_list;
                 }
                 // include debug information directly in $svg
@@ -701,7 +714,7 @@ function GetDebugInformation( $word ) {
         $bundled = GenericParser( $bundler_table, $normalized ); // Bundler( $normalized );
         $transcripted = GenericParser( $transcriptor_table, $bundled ); // Transcriptor( $bundled );
         $substituted = GenericParser( $substituter_table, $transcripted ); // Substituter( $transcripted );
-        list($pre, $metaparsed, $post) = MetaParser( $word );
+        $metaparsed = MetaParser( $word );
         $alternative_text = $original;
         $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
         return $debug_text;        
@@ -995,7 +1008,7 @@ function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
 
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
-    global $baseline_y, $standard_height, $distance_words, $original_word;
+    global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags;
     // set variables
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
@@ -1043,14 +1056,20 @@ function CalculateLayoutedSVG( $text_array ) {
     //if ($_SESSION['token_type'] === "shorthand") {
             $original_word = $single_word;
             //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
-            list( $temp_pre, $bare_word, $temp_post) = GetPreAndPostTags( "<@token_type=\"svgtext\">" );
+            $bare_word = GetWordSetPreAndPostTags( "<@token_type=\"svgtext\">" );
+            $temp_pre = $combined_pretags;
+            $temp_post = $combined_posttags;
             //echo "=° single_word: $single_word pre: $temp_pre bare_word: $bare_word post: $temp_post<br>";
-            list( $temp_pre, $bare_word, $temp_post) = GetPreAndPostTags( $single_word );
+            $bare_word = GetWordSetPreAndPostTags( $single_word );
+            $temp_pre = $combined_pretags;
+            $temp_post = $combined_posttags;
             
-            list( $pre, $tokenlist, $post ) = NormalText2TokenList( $single_word );
+            $tokenlist = NormalText2TokenList( $single_word );
+            
             //echo "pretags: " . htmlspecialchars($pre) . "<br>";
             $pre_html_tag_list = "";                                                             // must be set to "", because following options returns tags that aren't there ... ?!?
             if (mb_strlen($temp_pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $temp_pre );        // must be a bug in ParseAndSetInlineOptions() ... !!! => fix it later, workaround works for the moment
+            $html_pretags = $pre_html_tag_list;
             //echo "====> set inline options: " . htmlspecialchars($pre) . " session_token_type: " . $_SESSION['token_type'] . "<br>";
             
             //echo "prehtmltaglist: " . htmlspecialchars($pre_html_tag_list) . "<br>";

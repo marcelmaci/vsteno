@@ -241,10 +241,10 @@ function GetPreAndPostTokens( $text ) {
 }
 
 function MetaParser( $text ) {
-        global $punctuation;
+        global $punctuation, $combined_pretags, $combined_posttags;
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
         //echo "text: #$text#<br>";
-        list( $pre, $word, $post ) = GetPreAndPostTags( $text );
+        $word = GetWordSetPreAndPostTags( $text );
         //echo "Metaparser(): Word: $word<br>";
         $temp_word = GenericParser( $globalizer_table, $word ); // Globalizer( $word );
         //echo "Metaparser(): Globalized: $word<br>";
@@ -279,13 +279,15 @@ function MetaParser( $text ) {
                 if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
                 //$output = "$pretokens\\" . "$output" . "\\$posttokens";
                 //echo "Metaparser(): output: $output<br>";
-                return array( $pre, $output, $post );//break; // donnow if break is necessary?!
+                // return array( $pre, $output, $post );//break; // donnow if break is necessary?!
+                return $output;
             case "handwriting":
                 $output = $word;
                 $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+]", $output ); // upper case
                 $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-]", $output ); // lower case
                 $output = mb_strtoupper( $output );
-                return array( $pre, $output, $post ); break; // break necessary?!
+                // return array( $pre, $output, $post ); break; // break necessary?!
+                return $output;
 /*
             case "htmlcode":
                 $_SESSION['token_type'] = "shorthand";

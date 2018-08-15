@@ -13,26 +13,31 @@ class Splitted {
       public $PostTag = "";
       public $PostHTML = "";
       /*
-      public function __construct() {
-        $this->PreTag = "";
-        $this->PreHTML = "";
-        $this->BareWord = "";
-        $this->PostTag = "";
-        $this->PostHTML = "";
-      }
-      */
+      public function __construct( $pretag, $prehtml, $word, $posttag, $posthtml ) {
+        $this->PreTag = $pretag;
+        $this->PreHTML = $prehtml;
+        $this->BareWord = $word;
+        $this->PostTag = $posttag;
+        $this->PostHTML = $posthtml;
+    }
+    */
 }
 
 class Processed {
         public $ActualMetaform = "";
         public $StandardShorthand = "";
         public $PrintableShorthand = "";
+        function __construct( $word ) {
+            $this->PrintableShorthand = "blabla"; //MetaParser( $word );
+        }
 }
 
 class SingleWord {
     public $Original = "";
     public $Splitted = null;
     public $Processed = null;
+    public $Splines = null;
+    public $SVG = "";
     public function SetOriginalWord( $word ) {
         $this->Original = $word;
     }
@@ -47,6 +52,11 @@ class SingleWord {
     }
     public function __construct( $word = "" ) {
         $this->Original = $word;
+        //$temp = new Processed( "hardcoded" );         // how do I insert an instance of Processed ?!?!?
+        //$this->Processed = new Processed( $word );
+        //$this->Processed = $temp;
+        //$this-InsertProcessed( new Processed( $word ));
+   
     }
 }
 
