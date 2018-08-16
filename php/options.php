@@ -45,6 +45,8 @@
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
+        //echo "GetWordSetPreAndPostTags(): text: $text<br>";
+       
         // preg_match( "/^<@.+>(?=[^<])/", $text, $pre_tag);                      // suppose regex is greedy // old version with @ (= no html-tags)
         // preg_match( "/(?<=[^>])<@.+>$/", $text, $post_tag);                    // idem
         // preg_match( "/^<@.+>$/", $text, $only_tags );
@@ -71,11 +73,14 @@ function GetWordSetPreAndPostTags( $text ) {
         // write result to global variables (instead of passing them through several functions
         $combined_pretags = $pre;
         $combined_posttags = $post;
-        /*
-        if ((mb_strlen( $pre ) >0) && (mb_strlen( $post ) > 0) && (mb_strlen( $only_tags[0]) > 0) && (mb_strlen( $word ) > 0)) return array( $pre, $word, $post );
-        elseif ((mb_strlen( $only_tags[0] ) > 0) && (mb_strlen( $word ) > 0)) return array( $only_tags[0], "", "" );
-        else return array($pre, $word, $post);
-        */
+        
+        if ((mb_strlen( $pre ) >0) && (mb_strlen( $post ) > 0) && (mb_strlen( $only_tags[0]) > 0) && (mb_strlen( $word ) > 0)) return $word;
+        elseif ((mb_strlen( $only_tags[0] ) > 0) && (mb_strlen( $word ) > 0)) {
+            $combined_pretags = $only_tags[0];
+            $combined_posttags = "";
+            return "";
+        } else return $word;
+        
         return $word;
 }
 /*
@@ -126,6 +131,7 @@ function GetTagVariableAndValue( $tag ) {
 
 // INCREDIBLE: Pattern "/<@.*?[>]/": "?" . ">", must be written as ?[>] otherwhise PHP-Parser thinks it's the end of PHP-code (even inside comments) ... ?!?!
 function ParseAndSetInlineOptions( $tags ) {
+       //echo "ParseAndSetInlineOptions(): tags: $tags<br>";
        // preg_match_all( "/<@.*?[>]/", $tags, $matches );                        // .*? makes expression non greedy // old version with @ (= no html-tags)
        preg_match_all( "/<[^>]+[>]/", $tags, $matches );                         // .*? makes expression non greedy; parse all tags of both types (inline- and html-)
        //var_dump($matches);

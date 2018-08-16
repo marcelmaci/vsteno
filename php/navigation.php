@@ -19,6 +19,7 @@
                 </ul>
                 <p><b>Kontakt</b></p>
                 <ul>
+                <li><A href="collaborate.php">Mithelfen</A></li>
                 <li><A href="https://github.com/marcelmaci/vsteno">Github</A></li>
                 <li><A href="feedback.php">Fehler</A></li>
                 <li><A href="mailto:m.maci@gmx.ch"><img src="../web/email_icon_grau_transparent.png" height="13" width="23"> Mail</A></li>

@@ -127,7 +127,9 @@ $baseline_y = 40;                               // baseline for steno tokens
 $half_upordown = $standard_height / 2;          // value for tokens that have to be placed 1/2 line higher or lower
 $one_upordown = $standard_height;               //   "                                 "     1   "
 $horizontal_distance_none = 0;
-$horizontal_distance_narrow = $standard_height / 4;
+//$horizontal_distance_narrow = $standard_height / 4;
+$horizontal_distance_narrow = 0;
+
 $horizontal_distance_wide = $standard_height * 1;
 $space_at_end_of_stenogramm = $horizontal_distance_wide;    // defines horizontal distance between stenogramms
 $border_margin = 1;                                         // additional ("security") margin for trimmed stenogramms (should be > 0, since bezier curves tend to go outside of min and max coordinates
@@ -148,8 +150,9 @@ $num_system_lines = 3;                          // number of shortand system lin
 $dont_connect = 0;
 
 // variables for procedural approach
-$original_word = "";                            // transitional solution before rewrite words.php in OOP
-$combined_pretags = "";
+$original_word = "";
+$result_after_last_rule = "";
+$combined_pretags = "testtag";
 $combined_posttags = "";
 //$inline_options_pretags = "";                    // better: leave procedural approach as it is
 //$inline_options_posttags = "";                   // add oop on top of functions

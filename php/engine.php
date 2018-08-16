@@ -566,6 +566,20 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         
         return $svg_string;
 }
+/*
+function TokenList2SVGWithSessionVariables( $TokenList ) {
+        $angle = $_SESSION['token_inclination'];
+        $stroke_width = $_SESSION['token_thickness'];
+        $scaling = $_SESSION['token_size'];
+        $color_htmlrgb = $_SESSION['token_color'];
+        $stroke_dasharray = $_SESSION['token_style_custom_value'];
+        $alternative_text = "";
+        echo "fct-call: tokenlist: $TokenList angle: $angle stroke_width: $stroke_width scaling: $scaling color_htmlrgb: $color_htmlrgb stroke_dasharray: $stroke_dasharray alternativ_text: $alternative_text<br>";
+        $temp = TokenList2SVGWithSessionVariables( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ); 
+        echo "svg: $temp<br>";
+        return $temp;
+}
+*/
 
 function NormalText2NormalTextInSVG( $text, $size ) {
     global $svg_height, $baseline_y;
@@ -646,7 +660,7 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     $scaling = $_SESSION['token_size'];
     $color_htmlrgb = $_SESSION['token_color'];
    // $stroke_dasharray = $_SESSION['token_style_custom_value'];
-    
+    //echo "singleword2svg(): text: $text pre: $pre post: $post htmlpre: $pre_html_tag_list htmlpost: $post_html_tag_list<br>";
     switch ($_SESSION['token_type']) {
         case "htmltext" : 
             $middle = GetWordSetPreAndPostTags( $text );
@@ -761,19 +775,25 @@ function GetLineStyle() {
 }
 
 function CalculateInlineSVG( $text_array ) {
-    global $original_word;
+    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule;
     $output = "";
     
     foreach ( $text_array as $this_word ) {
+        $bare_word = GetWordSetPreAndPostTags( $this_word );
+        $html_pretags = ParseAndSetInlineOptions( $combined_pretags );
+        $original_word = $bare_word;
+        $result_after_last_rule = $bare_word;
         
-        $original_word = $this_word;
-        $SingleWord = new SingleWord( $this_word );
-        // echo "class single word: Original: " . $SingleWord->Original . "<br>";
+        //echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
         
-        $debug_information = GetDebugInformation( $SingleWord->Original );
-        $alternative_text = ($_SESSION['output_texttagsyesno']) ? $SingleWord->Original : "";
+        if (mb_strlen($bare_word)>0) {
+            $debug_information = GetDebugInformation( /*$SingleWord->Original*/ $bare_word );       // revert back to procedural-only version
+            $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
       
-        $output .= SingleWord2SVG( $SingleWord->Original, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+            $output .= $html_pretags . SingleWord2SVG( /*$SingleWord->Original*/ $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+        } else {
+            $output .= $html_pretags;
+        }
     }
     return $output;
 }
@@ -1008,7 +1028,7 @@ function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
 
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
-    global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags;
+    global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule;
     // set variables
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
@@ -1056,20 +1076,26 @@ function CalculateLayoutedSVG( $text_array ) {
     //if ($_SESSION['token_type'] === "shorthand") {
             $original_word = $single_word;
             //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
-            $bare_word = GetWordSetPreAndPostTags( "<@token_type=\"svgtext\">" );
+            $bare_word = GetWordSetPreAndPostTags( $single_word ); // ???"<@token_type=\"svgtext\">" );
             $temp_pre = $combined_pretags;
             $temp_post = $combined_posttags;
-            //echo "=° single_word: $single_word pre: $temp_pre bare_word: $bare_word post: $temp_post<br>";
+            $result_after_last_rule = $bare_word;
+            //echo "=> single_word: $single_word pre: $temp_pre bare_word: $bare_word post: $temp_post<br>";
+            /*
             $bare_word = GetWordSetPreAndPostTags( $single_word );
             $temp_pre = $combined_pretags;
             $temp_post = $combined_posttags;
+            */ 
             
             $tokenlist = NormalText2TokenList( $single_word );
             
             //echo "pretags: " . htmlspecialchars($pre) . "<br>";
+            //echo "Session(token_color): " . $_SESSION['token_color'] . "<br>";
             $pre_html_tag_list = "";                                                             // must be set to "", because following options returns tags that aren't there ... ?!?
             if (mb_strlen($temp_pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $temp_pre );        // must be a bug in ParseAndSetInlineOptions() ... !!! => fix it later, workaround works for the moment
             $html_pretags = $pre_html_tag_list;
+            //echo "Session(token_color): " . $_SESSION['token_color'] . "<br>";
+            
             //echo "====> set inline options: " . htmlspecialchars($pre) . " session_token_type: " . $_SESSION['token_type'] . "<br>";
             
             //echo "prehtmltaglist: " . htmlspecialchars($pre_html_tag_list) . "<br>";
@@ -1097,6 +1123,15 @@ function CalculateLayoutedSVG( $text_array ) {
                     //echo "word: $single_word tempwidth: $temp_width / delta_width: $delta_width<br>";
                 } else {
                     if (mb_strlen($bare_word)>0) {
+                        
+                        // BUG: all session-variables don't work in this part of code!!! REASON: no tokenlist is created, word is not draw => this will only be done by 
+                        // DrawOneLineInLayouted ... so either the whole line gets the color (if the line is full) or the line is drawn with old color, for example)
+                        // Solution: 
+                        // (1) Process pre/post-tags ohnly inside DrawOneLineInLayouted ...
+                        // (2) check Session-Variables inside DrawOneLineInLayouted SVG...
+                        // => fix this later
+                        
+                        
                        //echo "single_word: $single_word bare_word: $bare_word => mach daraus text ...<br>";
                         $size = $_SESSION['svgtext_size']; 
                         //echo "text_size: $size session: " . $_SESSION['svgtext_size'] . "<br>";
