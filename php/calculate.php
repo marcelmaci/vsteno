@@ -69,12 +69,13 @@ function CalculateStenoPage() {
                     $title_to_add .= "<@token_type=\"shorthand\"><br>";
             }
             // add this at beginning of original text
+            //echo "title_to_add: $title_to_add<br>";
             $text = $title_to_add . $text;
         } else {
             InsertTitle();
             InsertIntroduction();
         }
-        
+        //echo "\nText aus CalculateStenoPage()<br>$text<br>\n";
         NormalText2SVG( $text ); // do not escape entered text (will be done in parser: pre/postprocessnormaltext())
        
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";

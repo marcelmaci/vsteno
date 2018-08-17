@@ -29,9 +29,10 @@ function replace_all( $pattern, $replacement, $string ) {
 
 function GenericParser( $table, $word ) {
     global $original_word, $result_after_last_rule;
-    //echo "GenericParser(): word: $word<br>";
+    //echo "GenericParser(): word: $word table: $table ";
     $output = $word;
     foreach ( $table as $pattern => $replacement ) {
+        //echo "pattern: $pattern replacement: $replacement output: $output<br>";
         $type = gettype($table[$pattern]);
         //echo "type: $type<br>";
         if ($type === "array") {
@@ -61,8 +62,11 @@ function GenericParser( $table, $word ) {
             }
         } else {
             $preceeding_result = $output;
+            $temp = $output;
             $output = preg_replace( "/$pattern/", $replacement, $output );
-            if ($output !== $preceeding_result) {
+            //echo "\nStandardProcedureForRule: pattern: $pattern => replacement: $replacement<br>word: $word result: $output preceeding: $preceeding_result last: $result_after_last_rule<br>";
+            
+            if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                 $result_after_last_rule = $output;
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
             }
@@ -241,15 +245,24 @@ function GetPreAndPostTokens( $text ) {
         return array( $pretokens[0], $word_array[0], $posttokens[0] );
 }
 
-function MetaParser( $text ) {
-        global $punctuation, $combined_pretags, $combined_posttags;
+function MetaParser( $text ) {          // $text is a single word!
+        global $punctuation, $combined_pretags, $combined_posttags, $globalizer_table, $helvetizer_table;
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
+        //echo "GenericParser: text before: $text<br>";
+        $text1 = GenericParser( $globalizer_table, $text ); // Globalizer( $word );
+        //echo "GenericParser: text after: $text1<br>";
+        
+        //echo "EntityDecode: text before: $text1<br>";
+        $text1 = html_entity_decode( $text1 );    // do it here the hardcoded way
+        //echo "EntityDecode: text after: $text1<br>";
+        
         //echo "text: #$text#<br>";
-        $word = GetWordSetPreAndPostTags( $text );
+        $text2 = GetWordSetPreAndPostTags( $text1 );
         //echo "Metaparser(): Word: $word<br>";
-        $temp_word = GenericParser( $globalizer_table, $word ); // Globalizer( $word );
-        //echo "Metaparser(): Globalized: $word<br>";
-        list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $temp_word );
+        //$text2 = GenericParser( $globalizer_table, $text1 ); // Globalizer( $word );
+        
+        //echo "\nText aus Metaparser() nach Globalizer:<br>$text<br>\n";
+        list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
         if ($temp_word === $posttokens) $pretokens = "";  // if the whole word consists of pre/posttokens, both variables are set => keep only $posttokens (i.e. delete pretokens)
         //echo "word: #$word#<br>";
         //echo "Pretokens: $pretokens <br>";
@@ -268,6 +281,7 @@ function MetaParser( $text ) {
                         if ($subword !== end($subword_array)) $subword .= "|";
                         // echo "Metaparser(): subword: $subword<br>";
                         $output .= ParserChain( $subword ); 
+                        //echo "subword: $subword output: $output<br>";
                         //if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
                         //echo "Metaparser() inner-foreach: output: $output<br>";
                     }
@@ -281,6 +295,7 @@ function MetaParser( $text ) {
                 //$output = "$pretokens\\" . "$output" . "\\$posttokens";
                 //echo "Metaparser(): output: $output<br>";
                 // return array( $pre, $output, $post );//break; // donnow if break is necessary?!
+                //echo "output: $output<br>";
                 return $output;
             case "handwriting":
                 $output = $word;

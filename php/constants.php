@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "14e949066944cf0fdf5abda829b5666f320335df";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "10. August 2018";                                  // idem
+const version_commit_id = "0959131751b74e76415641741a5bf9ac52bb5121";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "16. August 2018";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -133,7 +133,7 @@ $horizontal_distance_narrow = 0;
 $horizontal_distance_wide = $standard_height * 1;
 $space_at_end_of_stenogramm = $horizontal_distance_wide;    // defines horizontal distance between stenogramms
 $border_margin = 1;                                         // additional ("security") margin for trimmed stenogramms (should be > 0, since bezier curves tend to go outside of min and max coordinates
-$distance_words = 20;                           // distance between words (added to svg at the end of the stenogram)
+$distance_words = 5;                           // distance between words (added to svg at the end of the stenogram)
 $space_before_word = 10;                        // part of $distance_words that goes to the left side of the word (inside SVG); $distance_word = 20 and $space_before_word means that the word will have 10 pixels of free space on both sides (= half of the total distance, in other words: the word is centered inside the svg)
 $svg_not_compatible_browser_text = "";         // only add text if you really want to be nice to people with old browsers (it creates overhead ...)
 // $svg_not_compatible_browser_text = "Sorry, your browser does not support inline SVG.";
@@ -143,7 +143,7 @@ $vector_value_precision = 3;                    // number of decimals (eliminate
 $left_margin = 5;                               // margins for layouted svg
 $right_margin = 5;
 $top_margin = 5;
-$bottom_margin = 50;
+$bottom_margin = 30;
 $num_system_lines = 3;                          // number of shortand system lines between two text lines (lower values = narrower)
 
 // flags

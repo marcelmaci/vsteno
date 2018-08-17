@@ -56,6 +56,8 @@ $globalizer_table = array(
     //"[\n]" => "<br>",
     // the following lines convert html-chars => should be put into a special parser (e.g. "filter") which can be selected/deselected as an option in the input-form
  
+    // the following is all rubbish ... do this for every word separately using the function html_entity_decode() => only leave those who replace chars the engine can't handle, e.g. &ndash; => -
+    // IMPORTANT: globalizer - despite it's name - isn't applied to the whole text (but to single words)
     "&ndash;" => "-",
     "&mdash;" => "-",
     "&uuml;" => "ü",
@@ -72,10 +74,12 @@ $globalizer_table = array(
     "&rdquo;" => "\"",
     "&quot;" => "\"",
     "&hellip;" => "...",
+    "#hellip#" => "...",
+    
     "&nbsp;" => " ",
     "&deg;" => "°", 
     "&szlig;" => "ss",
-    
+    /*
     // accents (simplify)
     "&agrave;" => "a",
     "&egrave;" => "e",
@@ -97,6 +101,7 @@ $globalizer_table = array(
     
     "&ccedil;" => "c",
     "&ntilde;" => "n",
+    */
     
     // use the following for word separation with -
     "-" => "|[~~]\\",

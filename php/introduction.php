@@ -1,8 +1,8 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Einführung</h1>
 <p>Herzlich willkommen bei VSTENO!</p>
-<p>Der Name VSTENO ist ein Acronym und bedeutet "Vector Steno Tool with Enhanced Notational Options", frei übersetzt also in etwa 
-"vektorbasiertes Steno-Werkzeug mit verbesserten Darstellungsoptionen". VSTENO wurde dazu entwickelt, normale Langschrift-Texte im ASCII-Format automatisch in Stenogramme zu übertragen. 
+<p>Der Name VSTENO ist ein Acronym und bedeutet "Vector Shorthand Tool with Enhanced Notational Options", frei übersetzt also in etwa 
+"vektorbasiertes Kurzschrift-Werkzeug mit verbesserten Darstellungsoptionen". VSTENO wurde dazu entwickelt, normale Langschrift-Texte im ASCII-Format automatisch in Stenogramme zu übertragen. 
 Dadurch wird es also im Prinzip möglich, jedweden elektronisch vorliegenden Text in Steno zu lesen oder eigene Webseiten mit automatisch generierten Stenogrammen zu gestalten.</p>
 <h2>System</h2>
 <p>

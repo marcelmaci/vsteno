@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>VSTENO - Vector Steno Tool with Enhanced Notational Options</title>
+    <title>VSTENO - Vector Shorthand Tool with Enhanced Notational Options</title>
     <link rel="stylesheet" type="text/css" href="../web/vsteno_style.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
             </div>
             <div id="purelab_title">
                 <h1>VSTENO</h1>
-                <h2>Vector Steno Tool with Enhanced Notational Options</h2>
+                <h2>Vector Shorthand Tool with Enhanced Notational Options</h2>
             </div>
            <div id="purelab_texts">
 <!--

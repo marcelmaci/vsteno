@@ -779,17 +779,18 @@ function CalculateInlineSVG( $text_array ) {
     $output = "";
     
     foreach ( $text_array as $this_word ) {
-        $bare_word = GetWordSetPreAndPostTags( $this_word );
+        $bare_word = /*html_entity_decode(*/GetWordSetPreAndPostTags( $this_word )/*)*/;           // decode html manually ...
+         
         $html_pretags = ParseAndSetInlineOptions( $combined_pretags );
         $original_word = $bare_word;
         $result_after_last_rule = $bare_word;
         
-        //echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
+       // echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
         
         if (mb_strlen($bare_word)>0) {
             $debug_information = GetDebugInformation( /*$SingleWord->Original*/ $bare_word );       // revert back to procedural-only version
             $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
-      
+            // echo "CalculateInlineSVG()1111: bare_word: $bare_word<br>";
             $output .= $html_pretags . SingleWord2SVG( /*$SingleWord->Original*/ $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
         } else {
             $output .= $html_pretags;
@@ -837,28 +838,32 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
         if ($_SESSION['auxiliary_upper3yesno']) {
             $thickness = $_SESSION['auxiliary_upper3_thickness'];
             $color = $_SESSION['auxiliary_upper3_color'];
+            $stroke_dasharray = $_SESSION['upper3_style'];
             $tempy = $y - 3 * $system_line_height;
-            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
         if ($_SESSION['auxiliary_upper12yesno']) {
             $thickness = $_SESSION['auxiliary_upper12_thickness'];
             $color = $_SESSION['auxiliary_upper12_color'];
+            $stroke_dasharray = $_SESSION['upper12_style'];
             for ($i = 1; $i < 3; $i++) {
                 $tempy = $y - $i * $system_line_height;
-                $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+                $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
             }
         }
         if ($_SESSION['auxiliary_baselineyesno']) {
             $thickness = $_SESSION['auxiliary_baseline_thickness'];
             $color = $_SESSION['auxiliary_baseline_color'];
+            $stroke_dasharray = $_SESSION['baseline_style'];
             $tempy = $y;
-            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
         if ($_SESSION['auxiliary_loweryesno']) {
             $thickness = $_SESSION['auxiliary_lower_thickness'];
             $color = $_SESSION['auxiliary_lower_color'];
+            $stroke_dasharray = $_SESSION['lower_style'];
             $tempy = $y + $system_line_height;
-            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
     }
     //echo "auxiliary lines: ". htmlspecialchars($lines_string) . "<br><br>";
@@ -1022,6 +1027,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
 
 function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
     //$width = $size * 0.59871795 * mb_strlen( $text ) + 6;                   // empirical value for courrier font
+    $single_word = html_entity_decode($single_word);
     $width = $size * 0.59871795 * mb_strlen( $single_word );                   // empirical value for courrier font
     return $width;
 }
@@ -1272,6 +1278,7 @@ function NormalText2SVG( $text ) {
     
     $text = PreProcessNormalText( $text );
     $text_array = PostProcessTextArray(explode( " ", $text));
+    //echo "\nText aus Normaltext2svg()<br>$text<br>\n";
     
     switch ($_SESSION['output_format']) {
             case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;

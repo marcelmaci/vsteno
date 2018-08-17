@@ -80,25 +80,25 @@ Stil <input type="text" name="auxiliary_lines_style"  size="10" value="<?php ech
 Grundlinie: 
 Dicke <input type="text" name="baseline_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_baseline_thickness']; ?>"> 
 Farbe <input type="text" name="baseline_color"  size="10" value="<?php echo $_SESSION['auxiliary_baseline_color']; ?>">
-Stil <input type="text" name="baseline_style"  size="10" value="<?php echo $_SESSION['auxiliary_baseline_style']; ?>">
+Stil <input type="text" name="baseline_style"  size="10" value="<?php echo $_SESSION['baseline_style']; ?>">
 <br>
 <input type="checkbox" name="upper12_yesno" value="upper12_yes" <?php echo ($_SESSION['auxiliary_upper12yesno']) ? "checked" : "";?>> 
 1./2. Oberstufe: 
 Dicke <input type="text" name="upper12_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_upper12_thickness']; ?>"> 
 Farbe <input type="text" name="upper12_color"  size="10" value="<?php echo $_SESSION['auxiliary_upper12_color']; ?>">
-Stil <input type="text" name="upper12_style"  size="10" value="<?php echo $_SESSION['auxiliary_upper12_style']; ?>">
+Stil <input type="text" name="upper12_style"  size="10" value="<?php echo $_SESSION['upper12_style']; ?>">
 <br>
 <input type="checkbox" name="lower_yesno" value="lower_yes" <?php echo ($_SESSION['auxiliary_loweryesno']) ? "checked" : "";?>> 
 Unterstufe: 
 Dicke <input type="text" name="lower_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_lower_thickness']; ?>"> 
 Farbe <input type="text" name="lower_color"  size="10" value="<?php echo $_SESSION['auxiliary_lower_color']; ?>">
-Stil <input type="text" name="lower_style"  size="10" value="<?php echo $_SESSION['auxiliary_lower_style']; ?>">
+Stil <input type="text" name="lower_style"  size="10" value="<?php echo $_SESSION['lower_style']; ?>">
 <br>
 <input type="checkbox" name="upper3_yesno" value="upper3_yes" <?php echo ($_SESSION['auxiliary_upper3yesno']) ? "checked" : "";?>> 
 3. Oberstufe: 
 Dicke <input type="text" name="upper3_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_upper3_thickness']; ?>"> 
 Farbe <input type="text" name="upper3_color"  size="10" value="<?php echo $_SESSION['auxiliary_upper3_color']; ?>">
-Stil <input type="text" name="upper3_style"  size="10" value="<?php echo $_SESSION['auxiliary_upper3_style']; ?>">
+Stil <input type="text" name="upper3_style"  size="10" value="<?php echo $_SESSION['upper3_style']; ?>">
 <br>
 </td></tr>
 <tr><td>Ausgabe</td></tr>

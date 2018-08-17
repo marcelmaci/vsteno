@@ -2,6 +2,6 @@
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>VSTENO - Vector Steno Tool with Enhanced Notational Options</title>
+    <title>VSTENO - Vector Shorthand Tool with Enhanced Notational Options</title>
 </head>
 <body>
