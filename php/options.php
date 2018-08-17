@@ -45,7 +45,7 @@
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
-        //echo "GetWordSetPreAndPostTags(): text: $text<br>";
+       // echo "GetWordSetPreAndPostTags(): text: $text<br>";
        
         // preg_match( "/^<@.+>(?=[^<])/", $text, $pre_tag);                      // suppose regex is greedy // old version with @ (= no html-tags)
         // preg_match( "/(?<=[^>])<@.+>$/", $text, $post_tag);                    // idem
@@ -80,7 +80,8 @@ function GetWordSetPreAndPostTags( $text ) {
             $combined_posttags = "";
             return "";
         } else return $word;
-        
+      //  echo "GetWordSetPreAndPostTags(): word: $word<br>";
+       
         return $word;
 }
 /*

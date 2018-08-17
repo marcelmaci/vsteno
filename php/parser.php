@@ -253,7 +253,22 @@ function GetPreAndPostTokens( $text ) {
         $pre_regex = preg_quote( $pretokens[0] );                                        // found patterns must be escaped before being
         $post_regex = preg_quote( $posttokens[0] );    
         preg_match( "/(?<=$pre_regex).+(?=$post_regex)/", $text, $word_array );
-        return array( $pretokens[0], $word_array[0], $posttokens[0] );
+        if ($pre_regex === preg_quote($text)) {
+            $ret_pre = $text;
+            $ret_word = "";
+            $ret_post = "";
+        } elseif ($post_regex === preg_quote($text)) {
+            $ret_pre = $text;
+            $ret_word = "";
+            $ret_post = "";
+        } else {
+            $ret_pre = $pretokens[0];
+            $ret_word = $word_array[0];
+            $ret_post = $posttokens[0];
+        }
+        //return array( $pretokens[0], $word_array[0], $posttokens[0] );
+        //echo "pretokens: $ret_pre word: $ret_word post_tokens: $ret_post<br>";
+        return array( $ret_pre, $ret_word, $ret_post );
 }
 
 function MetaParser( $text ) {          // $text is a single word!
@@ -272,12 +287,9 @@ function MetaParser( $text ) {          // $text is a single word!
         //echo "Metaparser(): Word: $word<br>";
         //$text2 = GenericParser( $globalizer_table, $text1 ); // Globalizer( $word );
         
-        //echo "\nText aus Metaparser() nach Globalizer:<br>$text<br>\n";
+        //echo "\nText aus Metaparser() nach Globalizer: $text1 <br>nach Getwordsetpreandposttags: $text2<br>\n";
         list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
-        if ($temp_word === $posttokens) $pretokens = "";  // if the whole word consists of pre/posttokens, both variables are set => keep only $posttokens (i.e. delete pretokens)
-        //echo "word: #$word#<br>";
-        //echo "Pretokens: $pretokens <br>";
-        //echo "Posttokens: $posttokens <br>";
+        //echo "Metaparser: pretokens: $pretokens posttokens: $posttokens<br>";
         
         switch ($_SESSION['token_type']) {
             case "shorthand": 
