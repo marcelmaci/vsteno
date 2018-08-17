@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "0959131751b74e76415641741a5bf9ac52bb5121";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "16. August 2018";                                  // idem
+const version_commit_id = "5be1cce3f683236e7bdf8a016e5829ca1f27e3bd";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "17. August 2018";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -158,6 +158,8 @@ $combined_posttags = "";
 //$inline_options_posttags = "";                   // add oop on top of functions
 $html_pretags = ""; 
 $html_posttags = "";
+$global_debug_string = "";
+$global_number_of_rules_applied = 0;
 
 // declarations
 $splines = array();                             // not really necessary in php

@@ -28,12 +28,14 @@ function replace_all( $pattern, $replacement, $string ) {
 }
 
 function GenericParser( $table, $word ) {
-    global $original_word, $result_after_last_rule;
+    global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
     //echo "GenericParser(): word: $word table: $table ";
     $output = $word;
     foreach ( $table as $pattern => $replacement ) {
         //echo "pattern: $pattern replacement: $replacement output: $output<br>";
         $type = gettype($table[$pattern]);
+        //$type = gettype($table[$replacement]);
+        
         //echo "type: $type<br>";
         if ($type === "array") {
             //echo "replacement == array:<br>";
@@ -52,12 +54,17 @@ function GenericParser( $table, $word ) {
                     if (mb_strlen($extra_pattern)>0)$result = preg_match( "/$extra_pattern/", $original_word );
                     if ($result == 1) {  // exception matches
                         $there_is_a_match = true;
+                        $matching_pattern = $extra_pattern;
                         //echo "Match with: $extra_pattern in Original: $original_word<br>";
                     }
                 }
                 if ($there_is_a_match) {
                     //echo "Don't apply rule!<br>";
                     $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
+                    $global_debug_string .= "NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . " REASON: pattern: $matching_pattern matches in $original_word<br>";
+                } else {
+                    $global_number_of_rules_applied++;
+                    $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>";
                 }
             }
         } else {
@@ -68,6 +75,10 @@ function GenericParser( $table, $word ) {
             
             if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                 $result_after_last_rule = $output;
+                $global_number_of_rules_applied++;
+                $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>"; 
+                
+                //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
             }
         }

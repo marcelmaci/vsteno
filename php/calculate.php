@@ -48,6 +48,8 @@ function InsertReturnButton() {
 }
 
 function CalculateStenoPage() {
+    global $global_debug_string;
+    $global_debug_string = "";
     CopyFormToSessionVariables();
     InsertHTMLHeader();
     

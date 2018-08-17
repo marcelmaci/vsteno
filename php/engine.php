@@ -715,9 +715,9 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
 
 function GetDebugInformation( $word ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-            $bundler_table, $transcriptor_table, $substituter_table;
+            $bundler_table, $transcriptor_table, $substituter_table, $global_debug_string, $global_number_of_rules_applied;
             
-// /* disable debugging text for the moment
+/*
         $original = $word;
         $globalized = GenericParser( $globalizer_table, $word ); // Globalizer( $word );
         $lookuped = Lookuper( $word );
@@ -731,6 +731,9 @@ function GetDebugInformation( $word ) {
         $metaparsed = MetaParser( $word );
         $alternative_text = $original;
         $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
+*/
+        $debug_text .= "<br>ORIGINAL: $word<br>$global_debug_string" . "NUMBER OF RULES APPLIED: $global_number_of_rules_applied<br>";
+        $global_number_of_rules_applied = 0; // suppose, this function is called at the end of the calculation (not before ... since this will give false information then ... ;-)
         return $debug_text;        
     
     // return "debugging disabled<br>";
@@ -775,10 +778,12 @@ function GetLineStyle() {
 }
 
 function CalculateInlineSVG( $text_array ) {
-    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule;
+    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied;
     $output = "";
     
     foreach ( $text_array as $this_word ) {
+        $global_debug_string = "";
+        $global_number_of_rules_applied = 0;
         $bare_word = /*html_entity_decode(*/GetWordSetPreAndPostTags( $this_word )/*)*/;           // decode html manually ...
          
         $html_pretags = ParseAndSetInlineOptions( $combined_pretags );
@@ -788,10 +793,11 @@ function CalculateInlineSVG( $text_array ) {
        // echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
         
         if (mb_strlen($bare_word)>0) {
-            $debug_information = GetDebugInformation( /*$SingleWord->Original*/ $bare_word );       // revert back to procedural-only version
             $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
             // echo "CalculateInlineSVG()1111: bare_word: $bare_word<br>";
             $output .= $html_pretags . SingleWord2SVG( /*$SingleWord->Original*/ $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+            
+            $debug_information = GetDebugInformation( /*$SingleWord->Original*/ $bare_word );       // revert back to procedural-only version
         } else {
             $output .= $html_pretags;
         }
@@ -1034,7 +1040,8 @@ function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
 
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
-    global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule;
+    global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
+        $global_debug_string, $global_number_of_rules_applied;
     // set variables
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
@@ -1079,6 +1086,7 @@ function CalculateLayoutedSVG( $text_array ) {
     $text_array_length = count($text_array);
     
     foreach ( $text_array as $key => $single_word ) {
+            $global_debug_string = ""; // even if there is no debug output in layouted svg, set $debug_string = "" in order to avoid accumulation of data in this variable by parser functions
     //if ($_SESSION['token_type'] === "shorthand") {
             $original_word = $single_word;
             //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
