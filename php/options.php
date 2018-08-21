@@ -51,7 +51,7 @@ function GetWordSetPreAndPostTags( $text ) {
         // preg_match( "/(?<=[^>])<@.+>$/", $text, $post_tag);                    // idem
         // preg_match( "/^<@.+>$/", $text, $only_tags );
         $text = htmlspecialchars_decode( $text );                                 // work with unescaped text
-        $text = preg_replace( "/\//", "!", $text );                               // replace / in </.>-html-tags in order to avoid escaping problems => is this necessary?
+        $text = preg_replace( "/[<]\//", "<!", $text );                               // replace / in </.>-html-tags in order to avoid escaping problems => is this necessary?
         $pre_tags_pattern = "^<.+>(?=[^<])";
         $post_tags_pattern = "(?<=[^>])<.+>$";
         $general_tags_pattern = "^<.+>$";

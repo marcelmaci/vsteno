@@ -1,0 +1,8850 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+VSTENO Tutorial
+\end_layout
+
+\begin_layout Date
+18.
+ August 2018
+\end_layout
+
+\begin_layout Author
+Marcel Maci
+\end_layout
+
+\begin_layout Abstract
+Dieses Tutorial führt in die 
+\begin_inset Quotes eld
+\end_inset
+
+Programmierung
+\begin_inset Quotes erd
+\end_inset
+
+ von VSTENO ein.
+ Mit Programmierung ist gemeint, dass Sie in VSTENO eigene Zeichen und Regeln
+ definieren können, um Normalschrift in Kurzschrift umzuwandeln.
+ Das Tutorial richtet sich hauptsächlich an LinguistInnen bzw.
+ StenografInnen, die eigene Stenografie-Systeme mit VSTENO umsetzen möchten.
+ Die hier gezeigten Beispiele basieren auf Zeichen und Regeln zur Umsetzung
+ der deutschen Grundschrift von Stolze-Schrey.
+\end_layout
+
+\begin_layout Part*
+Einleitung
+\end_layout
+
+\begin_layout Standard
+Wenn Sie das Programm VSTENO einfach zur Übertragung von deutschen Texten
+ in die Grundschrift von Stolze-Schrey nutzen möchten (z.B.
+ zum Lesen von Texten auf einem E-Reader oder dergleichen), dann benötigen
+ dieses Tutorial nicht, sondern können einfach die Demoversion von VSTENO
+ mit den vordefinierten Zeichen und Regeln verwenden.
+ Wenn Sie aber ein eigenes Stenografie-System umsetzen möchten - z.B.
+ die Eilschrift von Stolze-Schrey oder auch andere Sprachen wie Spanisch,
+ Französisch, Italienisch, Englisch oder auch ein System, das nicht von
+ Stolze-Schrey ist, aber ähnlich funktioniert (wie z.B.
+ DEK) - dann benötigen Sie das folgenden Tutorial, um zu verstehen, wie
+ man selber Zeichen und Regeln formuliert, um Langschrift- in Kurzschrifttexte
+ umzuwandeln.
+\end_layout
+
+\begin_layout Standard
+Mit Drucklegung dieser Dokumentation verfügt VSTENO noch über keine Datenbankfun
+ktionen und keinen Editor zum Erstellen, Speichern und Einlesen von Zeichen
+ und Regeln.
+ Besagte Daten müssen deshalb als PHP-Code eingegeben werden.
+ Ich bin mir bewusst, dass Linguisten und Sprachwissenschaftler nicht zwangsläuf
+ig über Programmierkenntnisse verfügen (oder zumindest wenig erpicht sind,
+ linguistische Daten als Programmcode einzugeben).
+ Dennoch ist dies - wie ich im Folgenden zeigen möchte - auch keine Hexerei
+ (oder zumindest nicht schwieriger als das Verfassen eigener Zeichen und
+ Regeln).
+ Ein separator Editor für linguistische Daten ist selbstverständlich geplant.
+ Die Implementierung desselben wir jedoch einige Zeit in Anspruch nehmen,
+ weshalb es mir ein Anliegen ist, die linguistischen Funktionen bereits
+ jetzt zu erklären und dokumentieren.
+ Es ist übrigens zu betonen, dass sich an der Funktionalität von VSTENO
+ nichts ändert: Ob mit oder ohne Editor - die Möglichkeiten des Programmes
+ bleiben genau die gleichen.
+ Der geplante Editor wird somit nur eine andere (selbstverständlich leichtere
+ und intuitivere) Möglichkeit sein, dem Programm die linguistischen Daten
+ zur Verfügung zu stellen.
+ 
+\end_layout
+
+\begin_layout Part*
+Zeichen
+\end_layout
+
+\begin_layout Section*
+Linguistische Betrachtung
+\end_layout
+
+\begin_layout Standard
+Beginnen wir mit den stenografischen Zeichen.
+ Vermutlich kennen Sie jene Kindermalbücher mit Zeichnungen, die aus vielen
+ nummerierten Punkten bestehen.
+ Die Zeichnung entsteht, indem man den Stift bei Punkt 1 ansetzt und dann
+ alle folgenden Punkte verbindet.
+ VSTENO funktioniert im Prinzip genau gleich: Jedes Zeichen ist als eine
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Folge von Punkten
+\begin_inset Quotes erd
+\end_inset
+
+ definiert.
+ Der einzige Unterschied zu den Kinderzeichnungen besteht darin, dass VSTENO
+ die Punkte nicht einfach mit einer geraden Linie verbindet, sondern so
+ genannte Bezier-Kurven durch diese Punkte legt - und zwar so, dass die
+ Übergänge je nachdem möglichst 
+\begin_inset Quotes eld
+\end_inset
+
+sanft
+\begin_inset Quotes erd
+\end_inset
+
+ oder möglichst 
+\begin_inset Quotes eld
+\end_inset
+
+spitz
+\begin_inset Quotes erd
+\end_inset
+
+ verlaufen.
+\end_layout
+
+\begin_layout Subsection*
+Ein erstes Zeichen ...
+\end_layout
+
+\begin_layout Standard
+Aber der Reihe nach.
+ Beginnen wir mit einem ganz einfachen Zeichen: dem 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ in der Grundschrift Stolze-Schrey.
+ Dieses besteht aus nur einem Strich 
+\begin_inset Quotes eld
+\end_inset
+
+von oben nach unten
+\begin_inset Quotes erd
+\end_inset
+
+.
+ D.h.
+ wir können zwei Punkte definieren - einen 
+\begin_inset Quotes eld
+\end_inset
+
+oberen
+\begin_inset Quotes erd
+\end_inset
+
+ und einen 
+\begin_inset Quotes eld
+\end_inset
+
+unteren
+\begin_inset Quotes erd
+\end_inset
+
+ - und diese dann durch eine gerade Linie verbinden.
+ Der entsprechende PHP-Code hierfür sieht folgendermassen aus:
+\end_layout
+
+\begin_layout LyX-Code
+"T" => array( /*header*/ 6, 0.5, 0, 0, 3, 3, 0, "" 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ ,"","","","",0,0,0,0, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 0,0,0,0,0,0,0,0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data*/ 0, 20, 0, 1, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 0, 0, 0, 0, 1.0, 0, 1, 0 )
+\end_layout
+
+\begin_layout Standard
+Wenn Sie noch nie programmiert haben, dann sieht dies vermutlich reichlich
+ verwirrend aus, deshalb vereinfachen wir die Sache noch etwas.
+ Ausserdem: Informationen zwischen /* und */ haben für das Programm selber
+ keine Bedeutung.
+ Die beiden Zeichen markieren nämlich einen 
+\begin_inset Quotes eld
+\end_inset
+
+Kommentar
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Eine weitere Möglichkeit sind Kommentare mit //: diese sind im Unterschied
+ zu /* und */ jedoch auf eine Zeile beschränkt.
+\end_layout
+
+\end_inset
+
+ In diesem Fall weisen die Kommentare /*header*/ und /*data*/ darauf hin,
+ dass es sich bei den folgenden Zahlen um Header-Informationen (= allgemeine
+ Angaben zum Zeichen) und um Daten-Werte (= Punkte, die das Zeichen definieren)
+ handelt.
+ Der Übersicht halber lassen wir den Header vorerst mal weg:
+\end_layout
+
+\begin_layout LyX-Code
+"T" => array( /*data*/ 0, 20, 0, 1, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 0, 0, 0, 0, 1.0, 0, 1, 0 )
+\end_layout
+
+\begin_layout Standard
+Damit verbleiben also zwei Datentupel - eines nach /*data*/ und eines nach
+ /**/, die je aus 8 Werten bestehen.
+ Das 1.
+ Datentupelm welches dem ersten Punkt entspricht, enthält die folgenden
+ Werte:
+\end_layout
+
+\begin_layout LyX-Code
+ 0, 20,  0,  1, 1.0,  0,  0,  0
+\end_layout
+
+\begin_layout LyX-Code
+x1, y1, t1, d1,  th, dr, d2, t2 
+\end_layout
+
+\begin_layout Standard
+Auf der zweiten Zeile habe ich die Bedeutung der einzelnen Werte notiert.
+ Wichtig sind für uns im Moment vor allem die Werte x1 und y1, welche die
+ Koordinaten des ersten Punktes (0,20) markieren.
+ Der Vollständigkeit halber dokumentieren wir aber gleich alle Bedeutungen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Aber bitte tun Sie mir den Gefallen: Vergessen Sie Werte, die wir nicht
+ benötigen, gleich wieder - wir haben später Gelegenheit darauf zurückzukommen!
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+x1, y1: x- und y-Koordinate des Punktes
+\end_layout
+
+\begin_layout Itemize
+t1, t2: Spannungen (tensions) im Anschluss an den Punkt (t1) und vor dem
+ folgenden Punkt (t2)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die Bedeutung der tension wird später erklärt.
+ Sie gibt bei einer Bezier-Kurve an, ob der Punkt 
+\begin_inset Quotes eld
+\end_inset
+
+spitz
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+sanft
+\begin_inset Quotes erd
+\end_inset
+
+ (rund) verbunden werden soll.
+ Der Wert 0 gibt hier an, dass die Verbindung spitz sein soll, wie es das
+ Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ verlangt.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+d1, d2: Art des Punktes (der Wert d1 = 1 bedeutet, dass es sich um einen
+ so genannten entry-point handelt - also den ersten Punkt des Zeichens).
+\end_layout
+
+\begin_layout Itemize
+th: Dicke (thickness) - dieser Wert wird vor allem für Schattierungen verwendet
+ und hat im Moment keine weitere Bedeutung.
+\end_layout
+
+\begin_layout Itemize
+dr: Der so genannte draw-Wert (Zeichnungswert), der bestimmt, ob der Punkt
+ verbunden oder abgesetzt gezeichnet werden soll (der Wert 0 bedeutet, dass
+ der Punkt verbunden wird).
+\end_layout
+
+\begin_layout Standard
+Es mag sein, dass die vielen Informationen im Moment etwas verwirrlich sind,
+ aber wie bereits erwähnt geht es im Moment nur um die x- und y-Koordinaten.
+ Wie man sehen kann wird im ersten Datentuplet der Punkt 1=(0,20) und im
+ zweiten Datentuplet der Punkt 2=(0,0) definiert.
+ Dies bedeutet nichts anderes als die Umsetzung dessen, was wir weiter oben
+ vermerkt haben: Das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ ist die Verbindung zwischen einem 
+\begin_inset Quotes eld
+\end_inset
+
+oberen
+\begin_inset Quotes erd
+\end_inset
+
+ Punkt (0,20) und einem 
+\begin_inset Quotes eld
+\end_inset
+
+unteren
+\begin_inset Quotes erd
+\end_inset
+
+ Punkt (0,0).
+\end_layout
+
+\begin_layout Standard
+An dieser Stelle weise ich gleich auf zwei weitere wichtige Aspekte hin:
+ (1) Stenografie-Zeichen werden senkrecht (also ohne Neigung) definiert
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wenn sie, wie im System Stolze-Schrey, geneigt sein sollen, so kann VSTENO
+ das geneigte Zeichen anhand des senkrechten selbständig berechnen.
+\end_layout
+
+\end_inset
+
+ und (2) das Koordinatensystem von VSTENO verläuft auf der x-Achse von links
+ nach rechts und auf der y-Achse von unten nach oben.
+ Die Grösse der Zeichen können Sie als LinguistIn im Prinzip frei wählen
+ (da es sich um Vektorkoordinaten handelt, lassen sich die Zeichen später
+ beliebig und verlustfrei vergrössern oder verkleinern).
+ Es wird aber empfohlen, eine gut lesbare und intuitiv verständliche Standardgrö
+sse zu verwenden.
+ Im vorliegenden Fall verwenden wir 10 Punkte für eine Stufe des Systems
+ Stolze-Schrey.
+ Da das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ zwei Stufen hoch ist, ergibt dies für die y-Koordinate den Wert 20.
+ Beachten Sie, dass alle Werte Fliesskommazahlen sind, d.h.
+ Sie können auch Koordinaten mit Kommastellen - z.B.
+ 19.5 oder 19.999999 - verwenden.
+\end_layout
+
+\begin_layout Standard
+Wenn Sie sehen möchten, wie das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ aussieht, dann gehen Sie am besten zur Demoversion und geben Wörter mit
+ 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ ein, z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+beten
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In der Demoversion ist eine Neigung von 60° voreingestellt, weshalb das
+ Zeichen nicht senkrecht, sondern um 60 Grad geneigt erscheint.
+ Wenn Sie das Zeichen so sehen möchten, wie wir es oben definiert haben,
+ dann geben Sie im Formular unter Optionen 90° ein: Sowohl der Buchstabe
+ 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ als auch 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ werden nun senkrecht dargestellt.
+ Machen Sie sich im Moment noch keine Gedanken über den Vokal 
+\begin_inset Quotes eld
+\end_inset
+
+E
+\begin_inset Quotes erd
+\end_inset
+
+ oder die Endkürzung 
+\begin_inset Quotes eld
+\end_inset
+
+EN
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Widmen wir uns nun als nächstes dem Buchstaben 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Dieser weist im Unterschied zu 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ eine Rundung am unteren Ende auf.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Rund oder spitzig?
+\end_layout
+
+\begin_layout Standard
+Im ersten Abschnitt haben wir den denkbar einfachsten Fall behandelt: ein
+ Zeichen, das mit zwei Punkten definiert wird, die spitzig miteinander verbunden
+ werden sollen.
+ Die Art und Weise, wie die Punkte verbunden werden sollen, ist im Datenfeld-Ten
+sion definiert.
+ Betrachten wir noch einmal die zwei Punkte von 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"T" => array( 0, 20, /*p1t1*/ 0, 1, 1.0, 0, 0, /*p1t2*/ 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ /*p2t1*/ 0, 0, 0, 0, 1.0, 0, 1, /*p2t2*/ 0 )
+\end_layout
+
+\begin_layout Standard
+Zur Veranschaulichung habe ich Kommentare eingefügt.
+ Wie man sieht, enthält jeder Punkt (p1 und p2) zwei Tensions (t1 und t2).
+ Bevor wir über die Bedeutung dieser Tensions weiterreden, empfehle ich
+ Ihnen am besten, die folgende Internet-Seite zu besuchen: Sie enthält eine
+ interaktive Demo so genannter Splines.
+ Ein Spline ist nichts anderes als eine Folge von Punkten (wie wir sie in
+ unseren Zeichen, z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, definieren).
+ Sie können nun mit den Tension der verschiedenen Punkte (im Englischen
+ manchmal auch knots genannt) herumspielen und so ein intuitives Verständnis
+ dafür bekommen, welchen Einfluss die Spannung auf den Verlauf von Bezier-Kurven
+ haben:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\begin_inset CommandInset href
+LatexCommand href
+target "http://scaledinnovation.com/analytics/splines/aboutSplines.html"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Vereinfacht gesagt ergibt die Spannung mit dem Wert 0 eine spitze Verbindung,
+ die Spannung mit dem Wert 0.5 eine runde Verbindung (es sind natürlich auch
+ andere Werte möglich).
+ Wichtig zu wissen ist, dass die Kurve zwischen zwei Punkten P1 zu P2 durch
+ zwei Spannungen definiert wird: Die Spannung p1t1 gibt die Spannung nach
+ dem Punkt P1 (Richtung P2) an, die Spannung p1t2 gibt die Spannung vor
+ dem Punkt P2 (aus Richtung P1) an.
+ Wir verwenden diese Spannungen nun, um das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ zu definieren:
+\end_layout
+
+\begin_layout LyX-Code
+"B" => array( /*data p1*/ 0, 10, 0, 1, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 0, 2, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 2.5, 0, 0.5, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p4*/ 5, 2, 0.5, 0, 1.0, 0, 1, 0)
+\end_layout
+
+\begin_layout Standard
+Wiederum haben wir aus Gründen der Übersichtlichkeit den Header weggelassen.
+ Wenn wir nur die Koordinaten aus den Tupeln anschauen, wird das Zeichen
+ 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ mit 4 Punkten definiert: P1(0,10), P2(0,2), P3(2.5,0), P4(5,2).
+ Zur Veranschaulichung können Sie z.B.
+ ein Blatt Papier nehmen, die Punkte auf einem Koordinatensystem eintragen
+ und diese dann - wie eingangs anhand der Kinderzeichnungen erwähnt - verbinden.
+ Beachten Sie, dass dieses Zeichen nur 10 Punkte hoch ist (im Unterschied
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ ist 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ einstufig).
+\end_layout
+
+\begin_layout Standard
+Der ganze mathematische Hokuspokus - bzw.
+ wie Magie ;-) - liegt nun in den Tensions.
+ Sie betragen für die Punkte 1-4: T1(0,0.5), T2(0.5,0.5), T3(0.5,0.5), T4(0.5,0).
+ Das bedeutet, dass beim Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ nur der erste Punkt spitz (Wert 0) verbunden wird.
+ Alle anderen Punkte werden danach rund (mit der Spannung 0.5) verbunden.
+ Die letzte Spannung T4 enthält in diesem Beispiel wieder den Wert 0: Dieser
+ hat keine Bedeutung, denn wenn wir das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ mit einem weiteren Zeichen verbinden, so können wir nicht wissen, ob die
+ Verbindung mit dem folgenden Zeichen rund oder spitzig sein muss (im Falle
+ von 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ spitzig, im Falle von 
+\begin_inset Quotes eld
+\end_inset
+
+M
+\begin_inset Quotes erd
+\end_inset
+
+ hingegen rund).
+ Anders gesagt: Dieser Wert hängt vom Folgezeichen ab - und es ist somit
+ völlig egal, welchen Wert Sie hier eintragen (er wird später überschrieben).
+\end_layout
+
+\begin_layout Subsection*
+Schattierungen
+\end_layout
+
+\begin_layout Standard
+Bis jetzt haben wir Zeichen als Folge von Punkten definiert, die spitz oder
+ rund miteinander verbunden werden.
+ Damit lässt sich schon einiges machen! Allerdings verlangen gewisse Stenografie
+-Systeme - darunter auch Stolze-Schrey -, dass man Zeichen schattieren kann.
+ Auch diese Funktion können wir durch Setzen der entsprechenden Werte innerhalb
+ der Datentupel erreichen.
+ Nehmen wir noch einmal unser einfaches Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, wie wir es definiert haben:
+\end_layout
+
+\begin_layout LyX-Code
+"T" => array( /*data p1*/ 0, 20, 0, 1, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 0, 0, 0, 0, 1.0, 0, 1, 0 )
+\end_layout
+
+\begin_layout Standard
+An der 5.
+ Stelle sehen wir hier den Wert 1.0.
+ Dieser Wert entspricht der Dicke (thickness) und bedeutet also, dass das
+ Zeichen immer mit der Standarddicke gezeichnet werden soll.
+ Genau genommen ist der Wert 1.0 ein Multiplikationsfaktor in Bezug zu einer
+ (vom/von der Nutzer/in vorgegebenen) Grunddicke: Werte >1.0 geben eine dickere,
+ Werte <1.0 eine dünnere Linie an.
+ Es können - wie für alle anderen Werte - Fliesskommazahlen verwendet werden
+ (also auch 0.77 ist eine gültige Liniendicke).
+ Wir passen diesen Wert nun an:
+\end_layout
+
+\begin_layout LyX-Code
+"T" => array( /*data p1*/ 0, 20, 0, 1, 2.5, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 0, 0, 0, 0, 1.0, 0, 1, 0 )
+\end_layout
+
+\begin_layout Standard
+Wie man sieht, habe ich im ersten Datentupel (= Punkt 1) als Dicke den Wert
+ 2.5 eingetragen.
+ Dies bedeutet nun Folgendes: Wenn das Zeichen schattiert werden soll, dann
+ wird ausgehend vom ersten Punkt P1 die Linie (genauer: Bezier-Kurve) zum
+ Punkt P2 mit der 2.5-fachen Dicke gezeichnet.
+ Bitte beachten Sie: Für das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ genügt es, nur diesen einen Wert zu ändern, um das Zeichen zu schattieren.
+ Würden wir auch im Punkt P2 den Wert auf 2.5 erhöhen, so würde dies bedeuten,
+ dass auch die Verbindungslinie zum nächsten Zeichen schattiert würde (was
+ wir nicht wollen).
+ Sie können diese Schattierung sehen, indem Sie in der Demoversion das Wort
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Tat
+\begin_inset Quotes erd
+\end_inset
+
+ eingeben: Das erste 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ wird normal gezeichnet, das zweite schattiert.
+\end_layout
+
+\begin_layout Standard
+Leider ist es aber nicht immer so einfach mit den Schattierungen wie beim
+ Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, das mit einem spitzen Punkt beginnt und endet.
+ Speziell bei Zeichen, die mit Rundungen beginnen und/oder aufhören, sieht
+ es unschön aus, wenn wir einfach ab einem bestimmten Punkt eine wesentlich
+ dickere Linie definieren.
+ Bei runden Zeichen empfiehlt es sich also, die Schattierung in mehrere
+ Schritte abgestuft beginnen und/oder enden zu lassen.
+ Zur Illustration zeigen wir dies an unserem zweiten Beispielzeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+, welches einen spitzen Anfang und ein rundes Ende aufweist:
+\end_layout
+
+\begin_layout LyX-Code
+"B" => array( /*data p1*/ 0, 10, 0, 1, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 0, 2, 0.5, 0, 1.75, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 2.5, 0, 0.5, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p4*/ 5, 2, 0.5, 0, 1.0, 0, 1, 0)
+\end_layout
+
+\begin_layout Standard
+Da unser Zeichen mit einem spitzen Punkt beginnt, können wir hier problemlos
+ direkt die Dicke 2.5 einsetzen.
+ Die Kurve von P1 zu P2 wird also 
+\begin_inset Quotes eld
+\end_inset
+
+maximal dick
+\begin_inset Quotes erd
+\end_inset
+
+ gezeichnet.
+ Danach setzen wir ab Punkt P2 eine mittlere Dicke von 1.75 ein.
+ Die Kurve von P2 zu P3 wird also 
+\begin_inset Quotes eld
+\end_inset
+
+weniger dick
+\begin_inset Quotes erd
+\end_inset
+
+ gezeichnet.
+ Schliesslich bleibt noch die Verbindung von P3 zu P4: Hier kehren wir zur
+ 
+\begin_inset Quotes eld
+\end_inset
+
+normalen
+\begin_inset Quotes erd
+\end_inset
+
+ Dicke von 1.0 zurück.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Intermediate shadow points
+\end_layout
+
+\begin_layout Standard
+Die soeben dargestellte Abstufung der Schattierungen funktioniert relativ
+ gut, wenn das Zeichen selbst bereits aus mehreren Punkten besteht, die
+ eine abgestufte Schattierung zulassen.
+ Schwieriger wird es, wenn zu wenige Punkte vorhanden sind, um eine optisch
+ einigermassen gelungene Abstufung zu erreichen.
+ In einem solchen Fall besteht zwar die Möglichkeit, zusätzliche Punkte
+ in die Zeichendefinition einzufügen, um mehr Zwischenschritte in der Schattieru
+ng zu erreichen.
+ Diese Zwischenpunkte können jedoch den Nachteil haben, dass sie das optische
+ Bild in der unschattierten Variante stören, da der kontinuierliche Lauf
+ der Bezier-Kurve unterbrochen wird.
+ Die Lösung besteht in diesem Fall in so genannten 
+\begin_inset Quotes eld
+\end_inset
+
+intermediate shadow points
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Dies sind Zwischenpunkte, die nur dann gezeichnet werden, wenn das Zeichen
+ schattiert dargestellt werden soll.
+ In der normalen Zeichendarstellung werden diese Punkte ignoriert.
+ Als Beispiel zeigen wir hier das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+R
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Da der Laut 
+\begin_inset Quotes eld
+\end_inset
+
+R
+\begin_inset Quotes erd
+\end_inset
+
+ im System Stolze-Schrey zwei Ausführungsvarianten hat, unterscheiden wir
+ zwischen 
+\begin_inset Quotes eld
+\end_inset
+
+AR
+\begin_inset Quotes erd
+\end_inset
+
+ (= Anlaut-R) und 
+\begin_inset Quotes eld
+\end_inset
+
+VR
+\begin_inset Quotes erd
+\end_inset
+
+ (= vokalisches R).
+ Das 
+\begin_inset Quotes eld
+\end_inset
+
+vokalische R
+\begin_inset Quotes erd
+\end_inset
+
+ ist somit jenes, das im Uhrzeigersinn ausgeführt wird und nach Vokal steht.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"VR" => array( /*data*/  /*1*/ 2.5, 5, 0.5, 1, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*2*/ 3.75, 4, 0.7, 5, 2.5, 0, 0, 0.7, 
+\end_layout
+
+\begin_layout LyX-Code
+/*3*/ 5, 2.5, 0.7, 0, 3.0, 0, 0, 0.7, 
+\end_layout
+
+\begin_layout LyX-Code
+/*4*/ 4.5, 0.5, 0.7, 5, 2, 0, 0, 0.7, 
+\end_layout
+
+\begin_layout LyX-Code
+/*5*/ 3.25, 0.15, 0.7, 5, 1.5, 0, 0, 0.7, 
+\end_layout
+
+\begin_layout LyX-Code
+/*6*/ 2.5, 0, 0.7, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*7*/  0, 2.5, 0.7, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*8*/ 2.5, 5, 0.5, 0, 1.0, 0, 1, 0.0)
+\end_layout
+
+\begin_layout Standard
+Der Einfachheit halber wurden hier die Punkte 1-9 innerhalb von Kommentaren
+ nummeriert.
+ Für die Definition des nicht schattierten Zeichens reichen hier im Prinzip
+ die folgenden Punkte aus: 1=(2.5,5), 3=(5,2.5), 6=(2.5,0), 7=(0,2.5), 8=(2.5,5).
+ Wie man sehen kann, markieren diese 5 Punkte, die Eckpunkte eines geschlossenen
+ Kreises, die jeweils rund - d.h.
+ mit Tensions zwischen 0.5 - 0.7 - verbunden werden.
+ Würde man allerdings nur diese 5 Punkte für das schattierte Zeichen verwenden,
+ so stünden für die Schattierung lediglich die Strecken von Punkt 1 - 3
+ und von Punkt 3 - 6 zur Verfügung.
+ Aus diesem Grund wurden die übrigen Punkte - also 2, 4, 5 - als intermediate
+ shadow points eingefügt.
+ Erkennbar ist dies am Wert 5 an der 4.
+ Stelle im Datatupel.
+ Wie wir weiter oben schon angedeutet hatte, steht der Wert in der 4.
+ Position für den 
+\begin_inset Quotes eld
+\end_inset
+
+Typ
+\begin_inset Quotes erd
+\end_inset
+
+ des Punktes.
+ Wir haben hier schon den entry point (mit Wert 1) und den normalen Punkt
+ (mit Wert 0) kennen gelernt.
+ Der intermediate shadow point ist also einfach ein weiterer Typ, den ein
+ Punkt annehmen kann.
+\end_layout
+
+\begin_layout Standard
+Wie bereits erwähnt würde das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+VR
+\begin_inset Quotes erd
+\end_inset
+
+ unschön aussehen, wenn diese Zwischenpunkte auch für das unschattierte
+ Zeichen verwendet werden (dies ist hier besonders deutlich, weil Kreise
+ kontinuierliche Kurven sind, wo es besonders auffällt, wenn sie durch weitere
+ Punkte unterbrochen werden).
+ Aus diesem Grund lässt der Zeichenalgorithmus von VSTENO diese Zusatzpunkte
+ weg, wenn das Zeichen nicht schattiert ist.
+\end_layout
+
+\begin_layout Subsection*
+Punkttypen
+\end_layout
+
+\begin_layout Standard
+An dieser Stelle ist es nun an der Zeit, die verschiedenen Punkttypen in
+ ihrer Vollständigkeit vorzustellen.
+ Wiederum: Vergessen Sie bitte sämtliche Punkttypen, die hier vorgestellt
+ werden und die noch nicht anhand von Beispielen erklärt werden.
+ Im Moment genügt es, wenn Sie ein erstes Mal gehört haben, dass diese Punkttype
+n existieren.
+\end_layout
+
+\begin_layout Standard
+Wichtig im Zusammenhang mit diesen Punkttypen ist zu wissen, dass es im
+ Datentuplet zwei Stellen gibt, wo diese definiert werden.
+ Hier noch einmal das Datentuplet des ersten Punktes, das wir für das Zeichen
+ 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ definiert hatten:
+\end_layout
+
+\begin_layout LyX-Code
+0,  20,  0,  1, 1.0,  0,  0,  0
+\end_layout
+
+\begin_layout LyX-Code
+x1, y1, t1, d1,  th, dr, d2, t2 
+\end_layout
+
+\begin_layout Standard
+Das Feld d1 steht hier für die Eingangs-Information (entry information),
+ d.h.
+ die Information, die angibt, wie das Zeichen verbunden wird.
+ Es kann folgende Werte annehmen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wert
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bedeutung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+normaler Punkt
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+entry point (Anfangspunkt = erster Punkt des Zeichens)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pivot point (Drehpunkt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+conditional pivot point (bedingter Drehpunkt)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wird in der jetzigen Version nicht unterstützt und deshalb nicht weiter
+ dokumentiert.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+connecting point (Verbindungspunkt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+intermediate shadow point (Zwischenschattierungspunkt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+98
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+late entry point (später Anfangspunkt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Analog steht das Feld d2 für die Ausgangs-Information (exit information),
+ d.h.
+ die Information, die angibt, wie das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+beendet
+\begin_inset Quotes erd
+\end_inset
+
+ wird.
+ Die Werte hier sind ähnlich wie bei d1, aber mit einigen kleinen Unterschieden:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wert
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bedeutung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+normaler Punkt
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+exit point (Endpunkt = letzter Punkt des Zeichens)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pivot point (Drehpunkt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+conditional pivot point (bedingter Drehpunkt)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wird in der jetzigen Version nicht unterstützt und deshalb nicht weiter
+ dokumentiert.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+99
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+early exit point (früher Endpunkt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wie gesagt: Zerbrechen Sie sich nicht jetzt schon den Kopf über alle diese
+ Punkttypen, wir werden sie einzeln mit Beispielen erläutern.
+ Beginnen werden wir mit dem pivot point, also dem 
+\begin_inset Quotes eld
+\end_inset
+
+Drehpunkt
+\begin_inset Quotes erd
+\end_inset
+
+, mit dem Wert 2 in d1 oder d2.
+\end_layout
+
+\begin_layout Subsection*
+Verbundene Rundungen
+\end_layout
+
+\begin_layout Standard
+Zwei Stenozeichen mit spitzen Anfangs- und Endpunkten zu verbinden, ist
+ trivial: Eine gerade Linie genügt! Schwieriger wird es jedoch, wenn eines
+ - oder beide Zeichen - Rundungen als Anfangs- oder Endpunkt aufweisen.
+ Möglich sind hier die Kombinationen spitz + rund (
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ + 
+\begin_inset Quotes eld
+\end_inset
+
+M
+\begin_inset Quotes erd
+\end_inset
+
+ im Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Thema
+\begin_inset Quotes erd
+\end_inset
+
+), rund + spitz (
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ + 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ im Wort 
+\begin_inset Quotes eld
+\end_inset
+
+beten
+\begin_inset Quotes erd
+\end_inset
+
+) oder rund + rund (
+\begin_inset Quotes eld
+\end_inset
+
+M
+\begin_inset Quotes erd
+\end_inset
+
+ + 
+\begin_inset Quotes eld
+\end_inset
+
+M
+\begin_inset Quotes erd
+\end_inset
+
+ im Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Mumie
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Zusätzlich kann im System Stolze-Schrey (das wir immer als Beispiel nehmen)
+ das folgende Zeichen eng oder weit verbunden und hoch oder tiefgestellt
+ werden.
+ Während die Verbindung 
+\begin_inset Quotes eld
+\end_inset
+
+eng
+\begin_inset Quotes erd
+\end_inset
+
+ vs 
+\begin_inset Quotes eld
+\end_inset
+
+weit
+\begin_inset Quotes erd
+\end_inset
+
+ noch einigermassen überschaubar ist (2 Möglichkeiten) ergibt sich bei der
+ Hoch- und Tiefstellung eine Vielzahl von Fällen: Zum einen bedeutet Hoch-
+ und Tiefstellung nicht bei jedem Zeichen dasselbe (beim Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ bedeutet Hochstellung eine halbe Stufe höher, beim Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+SCH
+\begin_inset Quotes erd
+\end_inset
+
+ hingegen beträgt der Unterschied eine ganze Stufe), zum anderen können
+ Zeichen halb-, ein-, zwei- oder dreistufig sein, was zu einer Unzahl von
+ Verbindungsarten (damit meinen wir vor allem Länge, Winkel und allenfalls
+ Verlauf der Verbindung) führt.
+\end_layout
+
+\begin_layout Standard
+Aus diesem Grund besteht die Möglichkeit bei gerundeten Zeichen einen Drehpunkt
+ zu definieren.
+ Dieser Drehpunkt sollte sich im Fuss- oder Scheitelpunkt des Zeichens befinden
+ und somit so gelegen sein, dass er das Zeichen in 2 (Zeichen mit einer
+ Rundung) oder 3 Teile (Zeichen mit 2 Rundungen) auftrennt.
+ D.h.
+ dass solche Zeichen über einen fixen Mittel- oder Kernteil verfügen, an
+ den sich die variablen Rundungen anschliessen.
+ Der Drehpunkt markiert also den Übergang zwischen dem fixen und dem Variablen
+ Teil eines Zeichens.
+ Wir illustrieren dies am Beispiel 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+, welches eine Rundung am Fusse aufweist:
+\end_layout
+
+\begin_layout LyX-Code
+"B" => array( /*data*/ /*1*/0, 10, 0, 1, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*2*/ 0, 2, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*3*/ 2.5, 0, 0.5, 0, 1.0, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*4*/ 5, 2, 0.5, 0, 1.0, 0, 1, 0)
+\end_layout
+
+\begin_layout Standard
+Diese Definition ist identisch mit jener, die wir bereits weiter oben gegeben
+ haben, mit dem einzigen Unterschied, dass der 3.
+ Punkt als Drehpunkt definiert wird (Wert 2 im vorletzten Datentupel).
+ Dies bedeutet nun, dass die Punkte 1-3 fix (also unveränderlich) sind,
+ während der Punkt 4 (= exit point) variabel ist.
+ Betrachten wir hier das Beispiel 
+\begin_inset Quotes eld
+\end_inset
+
+Bohne
+\begin_inset Quotes erd
+\end_inset
+
+: Hier trifft die Rundung von 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ mit der Tiefstellung des einstufigen Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+ zusammen, welches eng verbunden wird.
+ Wie man leicht erkennen kann, befindet sich somit der Anschlusspunkt des
+ Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+ unterhalb (!) des Endpunktes des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ (in Koordinaten gesprochen: der Endpunkt von 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ liegt bei y=2, der Anschlusspunkt von 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+ liegt bei y=0).
+ Mit anderen Worten: Würde das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ ohne Anpassung verbunden, dann entstünde ein hässlicher 
+\begin_inset Quotes eld
+\end_inset
+
+Schnörkel
+\begin_inset Quotes erd
+\end_inset
+
+ anstelle einer kontinuierlichen Linie.
+\end_layout
+
+\begin_layout Standard
+VSTENO passt in diesem Fall die Endpunkte beider Zeichen (auch 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+ ist ein Zeichen, welches mit einer Rundung beginnt) an, sodass ein 
+\begin_inset Quotes eld
+\end_inset
+
+sanfter
+\begin_inset Quotes erd
+\end_inset
+
+ Übergang entsteht.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die Anpassung erfolgt im Moment als simple Gerade, d.h.
+ VSTENO nimmt den Drehpunkt von 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ und den Drehpunkt von 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+, zieht eine Gerade zwischen den beiden und passt den Endpunkt von 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ und den Anfangspunkt von 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+ so an, dass sie auf dieser Geraden liegen.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Early exit und late entry
+\end_layout
+
+\begin_layout Standard
+Und es geht weiter mit einem neuen Punkttyp: dem early exit point oder dem
+ vorzeitigen Endpunkt.
+ Dieser wird im System Stolze-Schrey für Zeichen mit Unterschlaufe verwendet,
+ die am Ende eines Wortes ohne Schlaufe geschrieben werden.
+ Beispiele sind hier die Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+NG
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+NS
+\begin_inset Quotes erd
+\end_inset
+
+ (als einstufige Variante) oder 
+\begin_inset Quotes eld
+\end_inset
+
+SCH
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+SCHW
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+ZW
+\begin_inset Quotes erd
+\end_inset
+
+ usw.
+ (als zweistufige Variante).
+ Der early exit point bedeutet also nichts anderes, als dass das Zeichen
+ an diesem Punkt 
+\begin_inset Quotes eld
+\end_inset
+
+vorzeitig
+\begin_inset Quotes erd
+\end_inset
+
+ endet, wenn es am Ende eines Wortes steht.
+ Hier das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+NS
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"NS" => array( /*data*/ 0.75, 5, 0.5, 1, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 3.75, 8.5, 0.5, 2, 2.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 2.65, 10, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 1.75, 9, 0.5, 0, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 1.75, 1, 0.5, 0, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*late entry point*/ 0.75, 0, 0.5, 0, 2.5, 0, 99, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 0, 2.25, 0.5, 0, 1.5, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 1.75, 3, 0.5, 0, 1.0, 0, 1, 0.5 )
+\end_layout
+
+\begin_layout Standard
+Einen ähnlichen Fall gibt es bei Zeichen, die mit einer Rundung beginnen
+ und wo in Verbindung mit anderen Zeichen ein Teil der Rundung zweimal gezeichne
+t wird.
+ Nehmen wir hier als Beispiel das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+V
+\begin_inset Quotes erd
+\end_inset
+
+: In Zusammensetzungen wie 
+\begin_inset Quotes eld
+\end_inset
+
+davon
+\begin_inset Quotes erd
+\end_inset
+
+ - wo das Zeichen vom Fusspunkt der Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+DA
+\begin_inset Quotes erd
+\end_inset
+
+ - von unten her verbunden werden muss, wird der oberste Teil des Zeichens
+ 
+\begin_inset Quotes eld
+\end_inset
+
+V
+\begin_inset Quotes erd
+\end_inset
+
+ zweimal gezeichnet (einmal beim Hochfahren, einmal beim Herunterfahren).
+ Dies ist in diesem Fall - d.h.
+ wenn das Zeichen verbunden ist - richtig und somit kein Problem.
+ Nehmen wir nun aber nur die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+VON
+\begin_inset Quotes erd
+\end_inset
+
+ (welche dem Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+V
+\begin_inset Quotes erd
+\end_inset
+
+ alleine entspricht).
+ Auch hier würde VSTENO den obersten Teil des Zeichens zweimal zeichnen
+ - was nicht schön ist (wenn die beiden Kurven beim Hoch- und Herunterfahren
+ nicht exakt übereinander liegen, dann erscheint das Kopfende dunkler).
+ Deshalb existiert auch hier der late entry point oder eben der 
+\begin_inset Quotes eld
+\end_inset
+
+späte Eintrittspunkt
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"V" => array( /*data*/ 1, 16, 0.5, 1, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 2, 18, 0.6, 2, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*late entry point*/ 6, 20, 0, 98, 0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 2, 18, 0.6, 0, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 1, 16, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 0, 14, 0.5, 0, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 0, 5, 0.5, 0, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 1, 2, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 3, 0, 0.5, 4, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 3, 0, 0.5, 0, 1.5, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 5, 2, 0.5, 0, 1.0, 0, 1, 0.5 )
+\end_layout
+
+\begin_layout Standard
+Der Wert 98 bedeutet hier also, dass die Punkte 1 und 2 nicht gezeichnet
+ werden, wenn das Zeichen am Anfang steht.
+ In diesem Fall wird der late entry point (also der 3.
+ Punkt) als Anfangspunkt gesetzt.
+\end_layout
+
+\begin_layout Subsection*
+Header
+\end_layout
+
+\begin_layout Standard
+Bei all unseren Definitionen haben wir bis jetzt den Header der Einfachheit
+ halber weggelassen.
+ Dieser enthält Informationen, die das ganze Zeichen (also nicht nur einzelne
+ Punkte) betreffen.
+ In der aktuellen Version ist der Header 24 Felder lang, welche folgende
+ Bedeutungen haben:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="25" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Offset
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bedeutung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+token width (Zeichenbreite)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+delta-y before (Delta-Y vorher)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+delta-y after (Delta-Y nachher)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tension before (Spannung vorher)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+additional x before (zusätzliches x vorher)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+additional x after (zusätzliches x nachher)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+additional delta-y (zusätzliches Delta-Y)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nicht verwendet
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nicht verwendet
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nicht verwendet
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nicht verwendet
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nicht verwendet
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+12
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+token type (Zeichentyp)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+13
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+inconditional delta-y before (unbedingtes Delta-Y vorher)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+inconditional delta-y after (unbedingtes Delta-Y nachher)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alternative exit point x (alternativer Endpunkt x)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alternative exit point y (alternativer Endpunkt y)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+exit point to use (zu verwendender Endpunkt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+18
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+interpretation y coordinates (Interpretation y-Koordinaten)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+19
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+vertical (vertikale Höher-/Tieferstellung)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+distance (horizontaler Abstand)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+21
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+shadowed (schattiert)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+22
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+don't connect (nicht verbinden)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+23
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nicht verwendet
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Beachten Sie bitte, dass wir die Feldnummer als Offset bezeichnen und mit
+ der Nummerierung bei 0 beginnen.
+ Auch hier werden wir wieder Schritt für Schritt vorgehen und die Bedeutung
+ der einzelnen Werte anhand von Beispielen zeigen.
+ Wir beginnen mit den Feldern 19-21, welche die Höher-/Tieferstellung (Offset
+ 19), den horizontalen Abstand (Offset 20) und die Schattierung (Offset
+ 21) betreffen.
+\end_layout
+
+\begin_layout Subsection*
+Vokale
+\end_layout
+
+\begin_layout Standard
+Diese drei Felder können wir verwenden, um im System Stolze-Schrey die Vokale
+ zu definieren.
+ Im Unterschied zu Konsonantenzeichen entsprechen diese nämlich keinen real
+ geschriebenen Zeichen, sondern werden durch die Art, wie Zeichen verbunden
+ werden, dargestellt.
+ Mit anderen Worten: Ein Vokal entspricht im System Stolze-Schrey einem
+ 
+\begin_inset Quotes eld
+\end_inset
+
+leeren Zeichen
+\begin_inset Quotes erd
+\end_inset
+
+ (= keine Punkte im Data-Bereich), das nur aus einem Header besteht.
+ Als Beispiel der Vokal 
+\begin_inset Quotes eld
+\end_inset
+
+E
+\begin_inset Quotes erd
+\end_inset
+
+, der aus einer weiten Verbindung ohne Hochstellung und ohne Schattierung
+ besteht:
+\end_layout
+
+\begin_layout LyX-Code
+"E" => array( /*header0-7*/ 0, 0, 0, 0, 0, 0, 0, "", 
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 2, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0,0,0,"no","wide","no",0,0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data*/ ) 
+\end_layout
+
+\begin_layout Standard
+Zunächst einmal weisen wir auf den Offset 12 hin, der dem Zeichentyp (token
+ type) entspricht.
+ Hier wurde der Wert 2 gesetzt, der 
+\begin_inset Quotes eld
+\end_inset
+
+virtuelles Zeichen
+\begin_inset Quotes erd
+\end_inset
+
+ bedeutet (dagegen bezeichnet der Wert 0 ein 
+\begin_inset Quotes eld
+\end_inset
+
+normales
+\begin_inset Quotes erd
+\end_inset
+
+ und der Wert 1 ein 
+\begin_inset Quotes eld
+\end_inset
+
+unbedingt schattiertes
+\begin_inset Quotes erd
+\end_inset
+
+ Zeichen, wie wir später sehen werden).
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Virtuell
+\begin_inset Quotes erd
+\end_inset
+
+ bedeutet in diesem Fall nichts anderes, als dass das Zeichen keine grafische
+ Entsprechung (als 
+\begin_inset Quotes eld
+\end_inset
+
+Punktezeichnung
+\begin_inset Quotes erd
+\end_inset
+
+) hat, sondern nur aus einem Header besteht.
+\end_layout
+
+\begin_layout Standard
+Weiter weisen wir im Header-Untertupel 16-23 auf die Werte 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ (Offset 19), 
+\begin_inset Quotes eld
+\end_inset
+
+wide
+\begin_inset Quotes erd
+\end_inset
+
+ (Offset 20) und 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ (Offset 21) hin.
+ Diese entsprechen somit der Angabe 
+\begin_inset Quotes eld
+\end_inset
+
+keine Höher-/Tieferstellung
+\begin_inset Quotes erd
+\end_inset
+
+ (also horizontale Verbindung), 
+\begin_inset Quotes eld
+\end_inset
+
+weite Verbindung
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+nicht schattiert
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Anbei die Liste der Werte, die Felder annehmen können:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Offset
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wert & Bedeutung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+19
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ (horizontale Verbindung), 
+\begin_inset Quotes eld
+\end_inset
+
+up
+\begin_inset Quotes erd
+\end_inset
+
+ (Höherstellung), 
+\begin_inset Quotes eld
+\end_inset
+
+down
+\begin_inset Quotes erd
+\end_inset
+
+ (Tieferstellung)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+wide
+\begin_inset Quotes erd
+\end_inset
+
+ (weite Verbindung), 
+\begin_inset Quotes eld
+\end_inset
+
+narrow
+\begin_inset Quotes erd
+\end_inset
+
+ (enge Verbindung), 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ (kein Abstand)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+21
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ (keine Schattierung), 
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+ (Schattierung)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ein weiteres Beispiel: Der Diphtong 
+\begin_inset Quotes eld
+\end_inset
+
+AU
+\begin_inset Quotes erd
+\end_inset
+
+ wird als 
+\begin_inset Quotes eld
+\end_inset
+
+enge Verbindung
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+hochgestellt
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+schattiert
+\begin_inset Quotes erd
+\end_inset
+
+ definiert:
+\end_layout
+
+\begin_layout LyX-Code
+"AU" => array( /*header0-7*/ 0, 0, 0, 0, 0, 0, 0, "", 
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 2, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0,0,0,"up","narrow","yes",0,0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data*/ ), 
+\end_layout
+
+\begin_layout Standard
+Bitte beachten Sie, dass in beiden Fällen der Data-Bereich leer bleibt:
+ Die Vokale enhalten also wie bereits erwähnt keine Punkte!
+\end_layout
+
+\begin_layout Subsection*
+Hochstellung
+\end_layout
+
+\begin_layout Standard
+Mit den Offsets 19-21 im Header können wir also die Verbindung von Zeichen
+ und insbesondere deren Hoch- oder Tiefstellung (Offset 19) bestimmen.
+ Allerdings bedeutet 
+\begin_inset Quotes eld
+\end_inset
+
+Hochstellung
+\begin_inset Quotes erd
+\end_inset
+
+ nicht in allen Fällen dasselbe: Bei den meisten Zeichen im System Stolze-Schrey
+ bedeutet es, dass das Folgezeichen eine halbe Stufe höher (d.h.
+ dass sich die y-Koordinate sich um den Wert 5 erhöht) geschrieben wird.
+ Es gibt jedoch auch Zeichen - z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+SCH
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Z
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+ZW
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+ -, welche eine ganze Stufe (als 10 Punkte) höher geschrieben werden müssen.
+ Ausserdem unterscheiden sich diese Zeichen darin, wie ein weiteres Folgezeichen
+ angeschlossen wird: Bei den meisten Zeichen werden weitere Folgezeichen
+ ebenfalls eine halbe Stufe höher geschrieben, bei 
+\begin_inset Quotes eld
+\end_inset
+
+SCH
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Z
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+ZW
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+ hingegen, muss nach der Hochstellung wieder zur Grundlinie zurückgekehrt
+ werden.
+ All dies kann im Header mit den Offsets 1 (delta-y before) und 2 (delta-y
+ after) definiert werden:
+\end_layout
+
+\begin_layout LyX-Code
+"SCH" => array( /*header0-7*/ 9, 1,-1, 0.5, 0, 0, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data*/ /*...*/ ) 
+\end_layout
+
+\begin_layout Standard
+Hier wird also im Offset 1 ein delta-y before mit dem Wert 1 (= 1 Stufe
+ höher) und im Offset 2 ein delta-y after mit dem Wert -1 (= eine Stufe
+ tiefer) definiert.
+ Mit anderen Worten: Nachdem das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+SCH
+\begin_inset Quotes erd
+\end_inset
+
+ eine Stufe höher an das Vorzeichen angeschlossen wird, wird die Schreiblinie
+ danach wieder um den Wert -1 auf die ursprüngliche Linie zurückgesetzt.
+ Im Vergleich dazu das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"B" => array( /*header0-7*/ 5, 0.5, 0, 0, 1, 1, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data*/ /*...*/ ) 
+\end_layout
+
+\begin_layout Standard
+Hier wird die Schreiblinie vor dem Zeichen um eine halbe Stufe (Wert 0.5)
+ erhöht und danach gleich belassen (der Wert 0 bedeutet, dass keine Veränderung
+ vorgenommen wird).
+\end_layout
+
+\begin_layout Subsection*
+Zeichenbreite
+\end_layout
+
+\begin_layout Standard
+Bis jetzt haben wir Zeichen definiert, ohne uns Gedanken über deren Breite
+ zu machen.
+ Das sollten wir nun tun, denn es ist offensichtlich, dass jedes Zeichen
+ eine Breite hat bzw.
+ haben muss, um eine vernünftige und saubere Aneinanderreihung zu erreichen.
+ Betrachten wir zum Beispiel noch einmal unser allererstes Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, das aus einem einzigen senkrechten Strich besteht:
+\end_layout
+
+\begin_layout LyX-Code
+"T" => array( /*header0-7*/ 6, 0.5, 0, 0, 3, 3, 0, "", 
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 20, 0, 1, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 0, 0, 0, 0, 1.0, 0, 1, 0 )
+\end_layout
+
+\begin_layout Standard
+Da dieses Zeichen nur aus einem senkrechten Strich besteht, der in einer
+ bestimmten Dicke gezeichnet wird, ist es per se nur so breit wie der Strich
+ dick ist.
+ Das macht aber wenig Sinn, da das Zeichen so unmittelbar auf ein vorhergehendes
+ oder ein nachfolgendes Zeichen angeschlossen wird.
+ Selbst bei 
+\begin_inset Quotes eld
+\end_inset
+
+engem
+\begin_inset Quotes erd
+\end_inset
+
+ bzw.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+keinem
+\begin_inset Quotes erd
+\end_inset
+
+ Abstand zwischen den Zeichen, sollten sie ein Minimum voneinander entfernt
+ sein.
+ Dies können wir durch die Werte in den Offsets 4 (additional x before)
+ und Offset 5 (additional x after), sowie dem Offset 1 (token width) erreichen.
+ Der Wert in Offset 4 entspricht dabei dem 
+\begin_inset Quotes eld
+\end_inset
+
+linken
+\begin_inset Quotes erd
+\end_inset
+
+, Offset 5 dem 
+\begin_inset Quotes eld
+\end_inset
+
+rechten
+\begin_inset Quotes erd
+\end_inset
+
+ Leerraum, der auf das Zeichen folgt.
+ Im obigen Beispiel wurde hier 3 Pixel für den linken und 3 Pixel für den
+ rechten Abstand definiert, was für das Zeichen eine Gesamtbreite von 6
+ Pixeln (Offset 0) ergibt.
+\end_layout
+
+\begin_layout Standard
+Bitte beachten Sie, dass die Werte in den Offsets 4 und 5 zusätzlich zur
+ jener Breite addiert werden muss, welche sich aus den Punkten, die das
+ Zeichen definieren, ergibt:
+\end_layout
+
+\begin_layout LyX-Code
+"Y" => array( /*header0-7*/ 14, 0.5, 0, 0, 2, 2, 0, ""
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 10, 0, 1, 3.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 10, 0, 0, 0, 1.0, 0, 1, 0 /**/ ), 
+\end_layout
+
+\begin_layout Standard
+Das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+Y
+\begin_inset Quotes erd
+\end_inset
+
+ - in Stolze-Schrey als gerader Strich von links oben P1(0,10) nach rechts
+ unten P2(10,0) definiert, ist - rein von den Punkten her - bereits 10 Pixel
+ breit.
+ Wird nun in Offsets 4 und 5 ein zusätzlicher Leerabstand links und rechts
+ von 2 Pixeln (also insgesamt 4 Pixel) definiert, so ist das Zeichen insgesamt
+ 14 Pixel breit.
+\end_layout
+
+\begin_layout Standard
+Es empfiehlt sich, beim Erstellen neuer Zeichen, mit diesen Möglichkeiten
+ etwas herumzuspielen, um optimale Werte zu finden, die in Verbindungen
+ mit anderen Zeichen am besten aussehen.
+\end_layout
+
+\begin_layout Subsection*
+Schreiblinienverschiebung
+\end_layout
+
+\begin_layout Standard
+Es gibt auch Zeichen, bei welchen sich die Schreiblinie in jedem Fall -
+ also unabhängig von Hoch- oder Tiefstellung - verschiebt.
+ Im System Stolze-Schrey ist dies z.B.
+ bei 
+\begin_inset Quotes eld
+\end_inset
+
+RR
+\begin_inset Quotes erd
+\end_inset
+
+ der Fall: Hier müssen Folgezeichen eine Stufe höher angeschlossen werden.
+ Wir erreichen dies durch Setzen der Offsets 13 (inconditional y before)
+ und 14 (inconditional y after):
+\end_layout
+
+\begin_layout LyX-Code
+"RR" => array( /*header0-7*/ 10, 0.5, 0, 0.5, 0, 0, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 1, 7.75, 0.5, 1, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 5, 10, 0.7, 0, 3.0, 0, 0, 0.8, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 10, 5, 0.8, 0, 3.0, 0, 0, 0.7, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p4*/ 5, 0, 0.7, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p5*/ 0, 5, 0.5, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p6*/ 1, 7.75, 0.5, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p7*/ 5, 10, 0.5, 0, 1.0, 0, 1, 0.5, /**/ )
+\end_layout
+
+\begin_layout Standard
+In diesem Zeichen sehen wir gleich zwei Phänomene: (1) Die Schreiblinie
+ verschiebt sich nach dem Zeichen in Normalstellung um 1 Stufe nach oben
+ (Offset 14 mit Wert 1) und (2) Wird das Zeichen höher gestellt, so beträgt
+ die Höherstellung eine halbe Stufe (Wert 0.5 im Offset 1) und die Schreiblinie
+ liegt 1.5 (d.h.
+ die Summe aus Offset 1 und Offset 14) höher!
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Falsch wäre hier, die Schreiblinienverschiebung in Offset 3 - z.B.
+ mit dem Wert 0.5 - zu definieren: Dies würde zwar für höher gestellte 
+\begin_inset Quotes eld
+\end_inset
+
+RR
+\begin_inset Quotes erd
+\end_inset
+
+ gelten, normal gestellte 
+\begin_inset Quotes eld
+\end_inset
+
+RR
+\begin_inset Quotes erd
+\end_inset
+
+ würden jedoch falsch geschrieben, da sich bei 
+\begin_inset Quotes eld
+\end_inset
+
+RR
+\begin_inset Quotes erd
+\end_inset
+
+ die Schreibline in jedem Fall um eine Stufe erhöht!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Unbedingte Schattierung
+\end_layout
+
+\begin_layout Standard
+Und weiter geht's mit Besonderheiten des Systems Stolze-Schrey.
+ Nebst allen präsentierten Anforderungen an stenografische Zeichen, gibt
+ es auch Abkürzungen, in jedem Fall eine Schattierung verlangen.
+ Ein Beispiel dafür ist die Abkürzung 
+\begin_inset Quotes eld
+\end_inset
+
+AUCH
+\begin_inset Quotes erd
+\end_inset
+
+, welche aus einem höher gestellt, schattierten 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+ besteht:
+\end_layout
+
+\begin_layout LyX-Code
+"AUCH" => array( /*header0-7*/ 5, 1,-1, 0.5, 0.5, 0.5, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 1, 1, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 8.5, 0.5, 1, 1.3, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 2.5, 10, 0.7, 2, 2.5, 0, 0, 0.8, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 5, 7, 0.8, 0, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p4*/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p5*/ 3, -10, 0.5, 0, 2, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p6*/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p7*/ 0, -7, 0.5, 0, 1.0, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p8*/ 5, 0, 0.5, 0, 1.0, 0, 1, 0.5 ), 
+\end_layout
+
+\begin_layout Standard
+Definiert wird die Schattierung hier im Offset 12 durch den Wert 1.
+ Wie wir bereits bei den Vokalen gesehen haben, steht der Offset 12 für
+ den Zeichentyp (token type).
+ Bei Vokalen haben wir hier den Wert 2 (virtuelles Zeichen) gesetzt, für
+ alle anderen Zeichen den Wert 0 (normales Zeichen).
+ Der Wert 1 nun bedeutet für VSTENO, dass das Zeichen in jedem Fall schattiert
+ werden soll (also unabhängig davon, welcher Vokal oder welches Zeichen
+ vorausgeht).
+\end_layout
+
+\begin_layout Standard
+Bitte beachten Sie in diesem Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+AUCH
+\begin_inset Quotes erd
+\end_inset
+
+ eine weitere Besonderheit: Da 
+\begin_inset Quotes eld
+\end_inset
+
+AUCH
+\begin_inset Quotes erd
+\end_inset
+
+ einem hoch gestellten 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+ entspricht, konnte hier einfach die Definition von 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+ kopiert und in den Offsets 13 und 14 (inconditional y before/after), die
+ wir bereits gesehen haben, der Wert +1 gesetzt werden (was bedeutet, dass
+ das ursprüngliche Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+ einfach um eine Stufe nach oben verschoben wird).
+ Definitionen dieser Art sind sehr effizient, da man bereits definierte
+ Zeichen wiederverwenden (und wie hier für eine Kürzung gebrauchen) kann.
+ Wir werden später noch weitere Möglichkeiten sehen, um aus bereits definierten
+ Zeichen zusätzliche - kombinierte oder verschobene - Zeichen zu erstellen.
+\end_layout
+
+\begin_layout Standard
+Das Kopieren eines Zeichens hat aber auch den Nachteil, dass die Definition
+ u.U.
+ nicht optimal ist: Im Falle von 
+\begin_inset Quotes eld
+\end_inset
+
+AUCH
+\begin_inset Quotes erd
+\end_inset
+
+ verwendet das urprüngliche Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+CH
+\begin_inset Quotes erd
+\end_inset
+
+ z.B.
+ einen early exit point in Punkt P6 (Wert 99 an vorletzter Stelle im Datentupel).
+ Da die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+AUCH
+\begin_inset Quotes erd
+\end_inset
+
+ immer alleine steht, kann man den early exit point auch durch einen normalen
+ Endpunkt ersetzen und die Punkte P7 und P8 löschen:
+\end_layout
+
+\begin_layout LyX-Code
+"AUCH" => array( /*header0-7*/ 5, 1,-1, 0.5, 0.5, 0.5, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 1, 1, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 8.5, 0.5, 1, 1.3, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 2.5, 10, 0.7, 2, 2.5, 0, 0, 0.8, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 5, 7, 0.8, 0, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p4*/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p5*/ 3, -10, 0.5, 0, 2, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p6*/ 1.5, -9, 0.5, 0, 1.5, 0, 1, 0.5 )
+\end_layout
+
+\begin_layout Standard
+Eine letzte Bemerkung zur Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+AUCH
+\begin_inset Quotes erd
+\end_inset
+
+: Es ist VSTENO vollkommen egal, ob Sie nun eine Kürzung oder ein Zeichen
+ definieren.
+ VSTENO betrachtet alles, was gezeichnet werden kann, als Zeichen.
+ Die Namen der Zeichen können einen oder beliebig viele Buchstaben lang
+ sein (auch die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+VIELLEICHT
+\begin_inset Quotes erd
+\end_inset
+
+ wird - obwohl es in der Langschrift 10 Buchstaben lang ist - von VSTENO
+ als 1 Zeichen betrachtet).
+ Auch das Aneinanderreihen von Buchstaben und/oder Kürzungen macht für VSTENO
+ keinen Unterschied: Das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+dafür
+\begin_inset Quotes erd
+\end_inset
+
+ zum Beispiel wird von VSTENO als zwei Kürzungen betrachtet, welche als
+ zwei Zeichen (schattiertes D + normales F) aneinandergereiht wird.
+ Wir werden später bei den Regeln sehen, wie Kürzungen - und die Übertragung
+ derselben aus der Langschrift - definiert werden können.
+\end_layout
+
+\begin_layout Subsection*
+Alternative exit points
+\end_layout
+
+\begin_layout Standard
+Man würde nun vielleicht denken, dass wir langsam alle Besonderheiten stenografi
+scher Zeichen abgedeckt haben, aber dem ist nicht so: Es gibt weitere Zeichen,
+ die nach Spezialfunktionen verlangen und dazu gehören jene, welche Folgezeichen
+ auf zwei verschiedene Arten anschliessen können: entweder (1) 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+: also auf der gleichen Schreiblinie wie bei 95% der Fälle) oder aber (2)
+ 
+\begin_inset Quotes eld
+\end_inset
+
+anders
+\begin_inset Quotes erd
+\end_inset
+
+: in ganz wenigen Fällen.
+ Zu diesen Zeichen gehört z.B.
+ das vokalische R 
+\begin_inset Quotes eld
+\end_inset
+
+VR
+\begin_inset Quotes erd
+\end_inset
+
+, welches Folgezeichen normalerweise auf der Grundlinie anschliesst (vgl.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+gern
+\begin_inset Quotes erd
+\end_inset
+
+: die Zeichen r und n stehen auf der gleichen Linie), die Endungskürzungen
+ 
+\begin_inset Quotes eld
+\end_inset
+
+(D)EN
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+(D)EM
+\begin_inset Quotes erd
+\end_inset
+
+ hingegen am oberen Ende anschliesst (vgl.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+äusseren
+\begin_inset Quotes erd
+\end_inset
+
+: das Zeichen r steht auf der Grundlinie, die Endung en hingegen eine halbe
+ Stufe höher.
+ Dies können wir mit dem Offset 16 alternative exit point (alternativer
+ Endpunkt) im Header definieren
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Der Einfachkeit halber werden in der Definition die intermediate shadow
+ points weggelassen.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"VR" => array( /*header0-7*/ 5, 0.5, 0, 0.5, 2, 2, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 2.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 5, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 2.5, 5, 0.5, 1, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 5, 2.5, 0.7, 0, 3.0, 0, 0, 0.7, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 2.5, 0, 0.7, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p4*/ 0, 2.5, 0.7, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p5*/ 2.5, 5, 0.5, 0, 1.0, 0, 1, 0.0), 
+\end_layout
+
+\begin_layout Standard
+Wie wir sehen können, enthält der Header im Offset 16 den Wert 5.
+ Dies bedeutet nun, dass der 
+\begin_inset Quotes eld
+\end_inset
+
+alternative Endpunkt
+\begin_inset Quotes erd
+\end_inset
+
+ auf der y-Achse 5 Pixel höher liegen soll.
+ Dies entspricht dem y-Wert des letzten Punktes P5 - also dem Kopfende des
+ Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+VR
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Die Definition einer x-Koordinate ist nicht nötig, da diese automatisch
+ beim aneinanderfügen der Zeichen errechnet wird.
+ 
+\end_layout
+
+\begin_layout Standard
+Die Frage ist nun: Wann kommt dieser alternative Endpunkt zum Einsatz.
+ Hierzu sehen wir uns die Definition der Endung 
+\begin_inset Quotes eld
+\end_inset
+
+EN
+\begin_inset Quotes erd
+\end_inset
+
+ an:
+\end_layout
+
+\begin_layout LyX-Code
+"EN" => array( /*header0-7*/ 5, 0, 0, 0.5, 0, 0, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 1, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data*/ 5, 0, 0, 1, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/ 5, 0, 0, 0, 1.0, 0, 1, 0 ), 
+\end_layout
+
+\begin_layout Standard
+Der entscheidende Wert steht hier im Offset 17 des Headers: Dieser Wert
+ entspricht dem exit point to use (zu verwendender Endpunkt).
+ VSTENO handhabt dies nun folgendermassen: Verlangt ein Zeichen - wie in
+ diesem Fall die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+EN
+\begin_inset Quotes erd
+\end_inset
+
+ - nach einem alternativen Endpunkt, so prüft VSTENO, ob das vorhergehende
+ Zeichen einen solchen definiert.
+ Ist dies der Fall (wie beim Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+VR
+\begin_inset Quotes erd
+\end_inset
+
+), dann wird er verwendet.
+ Bietet das vorhergehende Zeichen keinen alternativen Endpunkt an, so wird
+ der normale Endpunkt verwendet (was das richtige Ergebnis liefert, vgl.
+ z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+laufen
+\begin_inset Quotes erd
+\end_inset
+
+: hier wird die Endung 
+\begin_inset Quotes eld
+\end_inset
+
+EN
+\begin_inset Quotes erd
+\end_inset
+
+ auf der Grundlinie angeschlossen).
+\end_layout
+
+\begin_layout Standard
+Bietet ein Zeichen einen alternativen Endpunkt an und das Folgezeichen verlangt
+ nicht danach, so wird der alternative Endpunkt ignoriert.
+\end_layout
+
+\begin_layout Subsection*
+Absolute Koordinaten
+\end_layout
+
+\begin_layout Standard
+Damit nähern wir uns allmählich doch dem Ende der Erklärungen zum Header.
+ Es bleiben uns allerdings noch drei letzte Dinge zu klären.
+ Das erste betrifft den Offset 18, der für die 
+\begin_inset Quotes eld
+\end_inset
+
+Interpretation y-Koordinate
+\begin_inset Quotes erd
+\end_inset
+
+ steht.
+ Dieses Feld kann zwei Werte annehmen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wert
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bedeutung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+y-Koordinaten sind relativ (standard)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+y-Koordinaten sind absolut
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diese Einstellung tut genau das, was der Name sagt: Sämtliche Zeichen, die
+ wir bis jetzt definiert haben, verwenden relative Koordinaten (Standardeinstell
+ung, Wert 0), was bedeutet, dass die Zeichen bei Höher- oder Tieferstellung
+ automatisch 
+\begin_inset Quotes eld
+\end_inset
+
+mitverschoben
+\begin_inset Quotes erd
+\end_inset
+
+ werden.
+ Wird hier der Wert 1 gesetzt, so wird die y-Koordinaten in den Punkten
+ absolut gesetzt.
+ Dies kann verwendet werden, wenn Zeichen unter keinen Umständen verschoben
+ werden sollen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wir fügen hier kein Beispiel an, weil das Phänomen in der Grundschrift kaum
+ vorkommt.
+ In der Eilschrift hingegen gibt es die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+Ding(e)
+\begin_inset Quotes erd
+\end_inset
+
+, welche dem Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+NG
+\begin_inset Quotes erd
+\end_inset
+
+ in unschattierter Höherstellung entspricht.
+ Dieses Zeichen muss unbedingt abgetrennt und in Höherstellung geschrieben
+ werden.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Unverbundene Zeichen
+\end_layout
+
+\begin_layout Standard
+Der zweitletzte Hinweis zum Header betrifft unverbundene Zeichen: Dies können
+ zum Beispiel Zahlen sein.
+ Diese werden - auch in einem stenografischen Text - als normale Zahlen
+ geschrieben (und dürfen somit nicht an das vorangehende Zeichen angeschlossen
+ werden).
+ Als Beispiel hier die Definition der Zahl 1 (die wir wiederum deshalb wählen,
+ weil sie nur aus zwei geraden Strichen besteht und damit sehr einfach ist):
+\end_layout
+
+\begin_layout LyX-Code
+"1" => array( /*header0-7*/ 7, 0, 0, 0, 4, 0, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 1, 0, 0, 0, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 11, 0, 1, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 7, 19, 0, 0, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 7, 1, 0, 0, 1.0, 0, 1, 0 ) 
+\end_layout
+
+\begin_layout Standard
+Der Wert 1 im Offset 22 bedeutet also 
+\begin_inset Quotes eld
+\end_inset
+
+dieses Zeichen nicht verbinden
+\begin_inset Quotes erd
+\end_inset
+
+ (der Wert 0 - den wir bis jetzt immer verwendet haben - bedeutet hingegen
+ 
+\begin_inset Quotes eld
+\end_inset
+
+dieses Zeichen verbinden
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Alternativ können Sie auch das Feld dr (draw) im Datentupel des ersten Punktes
+ P1 auf den Wert 5 (= don't connect) setzen:
+\end_layout
+
+\begin_layout LyX-Code
+"1" => array( /*header0-7*/ 7, 0, 0, 0, 4, 0, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 1, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 11, 0, 1, 1.0, 5, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 7, 19, 0, 0, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 7, 1, 0, 0, 1.0, 0, 1, 0 )
+\end_layout
+
+\begin_layout Standard
+Zu guter Letzt: Wenn Sie auf Nummer sicher gehen wollen, können Sie sowohl
+ 1 im Header also auch 5 im draw-Feld des Punktes eintragen ...
+ ;-)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Zu bevorzugen ist in diesem Fall die Variante 
+\begin_inset Quotes eld
+\end_inset
+
+Header
+\begin_inset Quotes erd
+\end_inset
+
+: Es handelt sich hier ja um eine Information, die das ganze Zeichen betrifft.
+ Das draw-Feld des Punktes hingegen sollte verwendet werden, wenn INNERHALB
+ eines Zeichens gewisse Punkte nicht miteinander verbunden werden.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Anfangsspannung
+\end_layout
+
+\begin_layout Standard
+Damit kommen wir zum definitiv letzten Punkt des Headers, dem Offset 3,
+ welcher der Bedeutung tension before (Anfangsspannung betrifft).
+ Wie wir bei der Definition einzelner Punkte gesehen haben, enthält jedes
+ Datentupel zwei Spannungen: t1 für die Spannung die auf den Punkt folgt
+ und Spannung t2 vor dem nächsten Punkt.
+ Wenn die Spannungswerte auf diese Art gespeichert werden, ist schnell klar,
+ dass für den ersten Punkt keine Anfangsspannung definiert werden kann (da
+ ihm ja dann ein Punkt vorausgehen müsste, der ein Feld tension before enthält).
+ Dies wird nun so gelöst, dass die Spannung vor dem ersten Punkt in den
+ Offset 3 des Headers geschrieben wird.
+\end_layout
+
+\begin_layout Standard
+Die Standardregel für diesen Wert lautet: Zeichen, die mit einer Rundung
+ beginnen (z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+M
+\begin_inset Quotes erd
+\end_inset
+
+), sollten hier den Wert 0.5 (oder ähnlich) enthalten, Zeichen die spitz
+ beginnen (z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+), den Wert 0.
+\end_layout
+
+\begin_layout Subsection*
+Kombinierte Zeichen
+\end_layout
+
+\begin_layout Standard
+Nachdem wir den Header nun vollständig kennen, widmen wir us noch einmal
+ den Punkten, um auch hier ein paar letzte, sehr hilfreiche Funktionen zu
+ erläutern.
+\end_layout
+
+\begin_layout Standard
+Im System Stolze-Schrey gibt es bekanntlich Zeichen, welche sich mit anderen
+ 
+\begin_inset Quotes eld
+\end_inset
+
+kombinieren
+\begin_inset Quotes erd
+\end_inset
+
+ können.
+ Es sind dies vor allem R und L in Verbindung mit verschiedenen Konsonantenzeich
+en wie z.B.
+ T, B etc.
+ Wir könnten nun für diese Kombinationen einfach neue Zeichen definieren.
+ D.h.
+ in unserer Gesamtliste an Zeichen würden wir zuerst ein Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ definieren, dann ein Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T+R
+\begin_inset Quotes erd
+\end_inset
+
+ und schliesslich ein Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T+L
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Das Problem hierbei: Wir betreiben damit doppelt und dreifachen Aufwand!
+ Es wäre viel effizienter, wenn VSTENO eine Funktion anböte, um gewisse
+ Zeichen automatisch zu kombinieren - und eine solche Funktion existiert
+ in der Tat: Sie nennt sich TokenCombiner.
+\end_layout
+
+\begin_layout Standard
+Damit der TokenCombiner zwei Zeichen verbinden kann, muss er jedoch wissen,
+ wo (d.h.
+ an welcher Stelle) Zeichen miteinander verbunden werden können und auf
+ welche Zeichen dies angewandt werden soll.
+ VSTENO stellt hier die Funktion so genannter connection points (Verbindungspunk
+te) zur Verfügung: Ein Verbindungspunkt ist ein Punkt eines Zeichens, der
+ im Datentupel-Feld d1 (= Offset 3) den Wert 4 enthält.
+ Als Beispiel zeigen wir wieder unser Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"T" => array( /*header*/ 0, 0.5, 0, 0,4,2.5, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/**/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/**/  0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 20, 0, 1, 3.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ 0, 0, 0, 0, 1.0, 0, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ 0, 2.5, 0, 4, 1.0, 0, 0, 0.5 )  
+\end_layout
+
+\begin_layout Standard
+Wir haben hier das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ also um einen zusätzlichen dritten Punkt P3 ergänzt, welcher die Koordinanten
+ (0,2.5) aufweist.
+ Dieser Punkt liegt also auf halber Höhe eines halbstufigen Zeichens - und
+ ist somit der ideale Ansatzpunkt, um ein 
+\begin_inset Quotes eld
+\end_inset
+
+R
+\begin_inset Quotes erd
+\end_inset
+
+ einzufügen.
+\end_layout
+
+\begin_layout Standard
+Das Problem ist hier jedoch, dass wir nicht die bereits definierten r (d.h.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+VR
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+AR
+\begin_inset Quotes erd
+\end_inset
+
+) verwenden können, da diese entweder oben bzw.
+ bei 12 Uhr (
+\begin_inset Quotes eld
+\end_inset
+
+VR
+\begin_inset Quotes erd
+\end_inset
+
+) oder unten bzw.
+ bei 6 Uhr (
+\begin_inset Quotes eld
+\end_inset
+
+AR
+\begin_inset Quotes erd
+\end_inset
+
+) beginnen.
+ Deshalb definieren wir hier ein spezielles R, welches bei 3 Uhr - also
+ rechts auf Viertelhöhe, d.h.
+ genau bei der Koordinate (0,2.5) - beginnt:
+\end_layout
+
+\begin_layout LyX-Code
+"@R" => array( /*header0-7*/ 5, 0.5, 0, 0.5, 0, 1, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+/*8-15*/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*16-23*/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+/*data p1*/ 0, 0, 0.7, 0, 1.0, 0, 0, 0.7, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p2*/ -2, 2, 0.7, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p3*/ -4, 0, 0.7, 0, 1.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p4*/ -2, -2, 0.5, 0, 1.0, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+/*p5*/ 0, 0, 0.5, 0, 1.0, 0, 1, 0.7 )
+\end_layout
+
+\begin_layout Standard
+Beachten Sie nun, dass wir dieses spezielle R - das wir 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+ nennen, nun nicht an der Koordinate (0,2.5) - wo das Zeichen letztlich eigentlic
+h hinkommen soll -, sondern an der Ursprungskoordinate (0,0) beginnen.
+ Mit anderen Worten: Sämtliche Koordinaten dieses 
+\begin_inset Quotes eld
+\end_inset
+
+Verbundzeichens
+\begin_inset Quotes erd
+\end_inset
+
+ sind relativ zu verstehen.
+ Beim Einfügen werden hier also jeweils die Koordinaten des connection point
+ - im dem Falle also (0,2.5) - dazuaddiert.
+ Die Punkte P1-P5 definieren einen Kreis im Gegenuhrzeigersinn, der im Ursprung
+ endet (wo er begonnen hat).
+ Beachten Sie auch, dass der Punkt P4 als Drehpunkt definiert wird: Dadurch
+ wird sichergestellt, dass Zeichen, die tiefergestellt werden (wie z.B.
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+Thron
+\begin_inset Quotes erd
+\end_inset
+
+) später elegant angeschlossen werden.
+\end_layout
+
+\begin_layout Standard
+Nachdem wir unsere beiden Einzel-Zeichen nun definiert haben, brauchen wir
+ VSTENO nur noch zu sagen, dass wir die Zeichen kombinieren wollen.
+ Wir tun dies, indem wir dem TokenCombiner vier Informationen übergeben:
+\end_layout
+
+\begin_layout LyX-Code
+$token_combiner = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array( 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, 0, 0 )
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Machen Sie sich wiederum nicht zu viele Gedanken um die Klammern, die Variable
+ $token_combiner und den Strichpunkt (es ist PHP-Code).
+ Es geht hier im Moment nur um die 4 Informationen, die der TokenCombiner
+ benötigt: (1) erstes Zeichen: 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, (2) zweites Zeichen: 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, (3) Vorgängiges Delta-y: 0, (4) Nachträgliches Delta-y: 0.
+\end_layout
+
+\begin_layout Standard
+Diese Zeile genügt also, um das neue Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T@R
+\begin_inset Quotes erd
+\end_inset
+
+ zu generieren.
+ Beachten Sie hierbei, dass der Name des kombinierten Zeichens immer die
+ Zusammenfügung von 
+\begin_inset Quotes eld
+\end_inset
+
+Zeichen1
+\begin_inset Quotes erd
+\end_inset
+
+ + 
+\begin_inset Quotes eld
+\end_inset
+
+Zeichen2
+\begin_inset Quotes erd
+\end_inset
+
+ ist (hier also 
+\begin_inset Quotes eld
+\end_inset
+
+T@R
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Die Werte vorgängiges und nachträgliches Delta-y werden in den Header des
+ neuen Zeichens geschrieben.
+ Genauer gesagt: Der TokenCombiner verwendet den Header des ersten Zeichens
+ als Basis und ersetzt dann nur diese beiden Felder durch die angegebenen
+ Werte.
+ Ebenfalls passt der TokenCombiner die Breite des neuen Zeichens automatisch
+ an (die Breite des neuen Zeichens entspricht der Summe der beiden Zeichenbreite
+n).
+ Zu guter Letzt: Wenn wir zwei Zeichen kombinieren, besteht natürlich die
+ Gefahr, dass das neue Zeichen mehrere Anfangs- und Endpunkte hat.
+ Der TokenCombiner analysiert deshalb das neue Zeichen, löscht überflüssige
+ Anfangs- oder Endpunkte (indem er sie in 
+\begin_inset Quotes eld
+\end_inset
+
+normale
+\begin_inset Quotes erd
+\end_inset
+
+ Punkte umwandelt) und behält nur den ersten und letzten Punkt des Zeichens
+ als Anfangs- und Endpunkt.
+\end_layout
+
+\begin_layout Standard
+Der TokenCombiner ist ein ungemein praktisches Werkzeug, um im Handumdrehen
+ neue Zeichenkombinationen zu generieren.
+ Z.B.
+ genügt es, beim Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ einen Verbindungspunkt P3 = 0, 2.5, 0, 4, 1.0, 0, 0, 0.5 wie im Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ einzusetzen und den TokenCombiner zu ergänzen:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array(
+\end_layout
+
+\begin_layout LyX-Code
+     "D" => array( /*header*/ 0, 0.5, 0, 0, 2 ,3, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+     /**/ "","","","",0,0,0,0, 
+\end_layout
+
+\begin_layout LyX-Code
+     /*++*/ 0,0,0,0,0,0,0,0, 
+\end_layout
+
+\begin_layout LyX-Code
+     /*data*/ 0, 10, 0, 1, 3.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+     /**/ 0, 0, 0, 0, 1.0, 0, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+     /*connection point*/ 0, 2.5, 0, 4, 1.0, 0, 0, 0.5 )   // neue Zeile
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout LyX-Code
+$combiner_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array( 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, 0, 0 ),
+\end_layout
+
+\begin_layout LyX-Code
+    array( 
+\begin_inset Quotes eld
+\end_inset
+
+D
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, 0, 0 )     // neue Zeile
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Zwei Zeilen genügen somit, um das neue Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+D@R
+\begin_inset Quotes erd
+\end_inset
+
+ zu generieren.
+ Da dieses - wie alle übrigen Grundzeichen - ebenfalls in die Variable $steno_to
+kens_master geschrieben wird, können Sie es danach ohne Einschränkung wie
+ jedes andere Zeichen verwenden!
+\end_layout
+
+\begin_layout Subsection*
+Verschobene Zeichen
+\end_layout
+
+\begin_layout Standard
+Ähnlich wie der TokenCombiner funktioniert auch der TokenShifter: Dieser
+ ermöglicht es, Zeichen horizontal oder vertikal zu verschieben.
+ Im System Stolze-Schrey kann dies z.B.
+ dazu verwendet werden, Anschlüsse von Zeichen an ein Aufstrich-T zu definieren,
+ ohne das entsprechende Zeichen noch einmal neu eingeben zu müssen:
+\end_layout
+
+\begin_layout LyX-Code
+$shifter_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array("N", "&TN", 4, 15, 0, 1.5)
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Der TokenShifter benötigt 6 Informationen, die folgendes bedeuten: (1) zu
+ verschiebendes Zeichen: 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+, (2) Name des neuen Zeichens: 
+\begin_inset Quotes eld
+\end_inset
+
+&TN
+\begin_inset Quotes erd
+\end_inset
+
+, (3) Verschiebung auf x-Achse: 4 Pixel nach rechts, (4) Verschiebung auf
+ y-Achse: 15 Pixel nach oben, (5) vorgängiges Delta-y: 0 (Schreibzeile verschieb
+t sich nicht), (6) nachträgliches Delta-y: 15 (Schreibzeile verschiebt sich
+ um 15 Pixel bzw.
+ 1.5 Stufen nach oben).
+ Das Grundzeichen 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+ wird durch diese Anweisung also um 1.5 Stufen nach oben und 4 Pixel nach
+ rechts verschoben.
+ Das neue Zeichen heisst 
+\begin_inset Quotes eld
+\end_inset
+
+&TN
+\begin_inset Quotes erd
+\end_inset
+
+ und die Schreiblinie verschiebt sich nach dem Zeichen um 1.5 nach oben.
+ Wenn nun dieses Zeichen im Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Zentner
+\begin_inset Quotes erd
+\end_inset
+
+ vom Grundlinien-N aus verbunden wird, so entspricht 
+\begin_inset Quotes eld
+\end_inset
+
+&TN
+\begin_inset Quotes erd
+\end_inset
+
+ einem Aufstrich-T.
+ Die neue Schreiblinie befindet sich am Fusspunkt des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Auch dies ist eine sehr effiziente Art, neue Zeichen zu generieren.
+ Für das neue Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+&TENS
+\begin_inset Quotes erd
+\end_inset
+
+, welches einem Aufstricht-T verbunden mit dem Grundzeichen 
+\begin_inset Quotes eld
+\end_inset
+
+NS
+\begin_inset Quotes erd
+\end_inset
+
+ entspricht, genügt z.B.
+ die folgende zusätzliche Zeile:
+\end_layout
+
+\begin_layout LyX-Code
+$shifter_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array("N", "&TN", 4, 15, 0, 1.5),
+\end_layout
+
+\begin_layout LyX-Code
+    array("NS", "&TENS", 4, 10, 0, 1)    
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Soll statt dem Aufstrich-T die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+HEIT
+\begin_inset Quotes erd
+\end_inset
+
+ verwendet werden, genügt eine grössere Verschiebung auf der x-Achse:
+\end_layout
+
+\begin_layout LyX-Code
+$shifter_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array("N", "&TN", 4, 15, 0, 1.5),
+\end_layout
+
+\begin_layout LyX-Code
+    array("NS", "&TENS", 4, 10, 0, 1), 
+\end_layout
+
+\begin_layout LyX-Code
+    array("NS", "&EITENS", 18, 10, 0, 1) 
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Beachten Sie dass die vertikale Verschiebung hier nur 10 Pixel beträgt,
+ da das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+NS
+\begin_inset Quotes erd
+\end_inset
+
+ im Unterschied zu 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+ einstufig ist.
+ Aus diesem Grund kommt auch die neue Schreiblinie nur 1 Stufe höher zu
+ liegen (also eine halbe Stufe tiefer als bei 
+\begin_inset Quotes eld
+\end_inset
+
+N
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section*
+Zeichen als PHP-Code
+\end_layout
+
+\begin_layout Standard
+Wie eingangs erwähnt verfügt VSTENO im Moment noch über keinen Editor, um
+ Zeichen grafisch zu editieren und automatisch einzulesen.
+ Deshalb bleibt bis auf Weiteres nichts anderes übrig als alle Daten direkt
+ als PHP-Code einzugeben.
+ Ich habe weiter oben geschrieben, dass Sie kein/e PHP-Programmierer/in
+ sein müssen, um VSTENO als Linguist/in zu verwenden.
+ Das stimmt insofern, als dass Sie keine eigenen Algorithmen oder Programmteil
+ erstellen müssen, um VSTENO z.B.
+ für ein neues System anzupassen.
+ Das 
+\begin_inset Quotes eld
+\end_inset
+
+Programmieren
+\begin_inset Quotes erd
+\end_inset
+
+ beschränkt sich also streng genommen auf das Definieren bestimmter Variablen:
+ Diese enthalten dann die linguistischen Daten, auf die VSTENO zugreift.
+\end_layout
+
+\begin_layout Standard
+Dieser Aufgabe widmen sich nun also die folgenden Kapitel: Ein Mini-Crash-Kurs
+ in PHP sozusagen, bei dem es lediglich darum geht, dass Sie lernen, wie
+ und welche Variablen Sie in PHP setzten müssen, damit VSTENO funktioniert.
+ Da wir bis jetzt erst Zeichen (und noch keine Regeln) behandelt haben,
+ beschränken wir uns zunächst nur darauf.
+ Die Frage somit: Wie geben Sie die oben erläuterten Zeichendefinitionen
+ in PHP ein?
+\end_layout
+
+\begin_layout Subsection*
+Grundstruktur
+\end_layout
+
+\begin_layout Standard
+Eine PHP-Datei trägt den Namen dateiname.php und lässt sich mit jedem beliebigen
+ Texteditor editieren.
+ Die linguistischen Daten von VSTENO befinden sich in der Datei data.php.
+ Wenn Sie also eigene Zeichen und Regeln definieren wollen, dann öffnen
+ Sie am besten diese Datei, löschen Sie sämtlichen Inhalt (machen Sie vorher
+ ein Backup, wenn Sie die Original-Datei später noch verwenden möchten)
+ und beginnen Sie mit folgenden Zeilen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Alternativ können Sie auch die Datei data_template.php verwenden, die auf
+ der Webseite zum Download bereitssteht.
+ Diese enthält die Grundstruktur, in die Sie nur noch die linguistischen
+ Daten einsetzen müssen.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+<?php
+\end_layout
+
+\begin_layout LyX-Code
+         // hier können Sie Kommentarzeilen
+\end_layout
+
+\begin_layout LyX-Code
+         /* oder PHP-Code einfügen */
+\end_layout
+
+\begin_layout LyX-Code
+?>
+\end_layout
+
+\begin_layout Standard
+Diese Zeilen bedeuten nichts anderes, als dass zwischen <?php und ?> unser
+ ganzer PHP-Code stehen wird.
+ Auch Kommentarzeilen können Sie, wie bereits weiter oben beschrieben, mit
+ // (eine Zeile) oder /* und */ (eine oder mehrere Zeilen) einfügen.
+\end_layout
+
+\begin_layout Subsection*
+Stenozeichen
+\end_layout
+
+\begin_layout Standard
+Um nun unsere Stenozeichen einzufügen, speichern wir diese direkt in die
+ Variable $steno_tokens_master (beachten Sie, dass Variablen in PHP immer
+ durch ein Dollarzeichen markiert werden).
+ Die Variable $steno_tokens_master soll nun eine 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ von Zeichen sein (die ihrerseits eine 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ von Informationen sind, welche diese Zeichen definieren).
+ Eine 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ von Daten in PHP nennt man 
+\begin_inset Quotes eld
+\end_inset
+
+Array
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Wenn ich in PHP also schreibe:
+\end_layout
+
+\begin_layout LyX-Code
+$meine_variable = array( 
+\begin_inset Quotes eld
+\end_inset
+
+dies
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+ist
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+meine
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ );
+\end_layout
+
+\begin_layout Standard
+So enthält die Variable $meine_variable eine 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ mit 4 Werten (Wörtern): (1) Dies, (2) ist, (3) meine, (4) Sammlung.
+ Beachten Sie bitte, dass in PHP eine Befehlszeile durch ein Semikolon (Strichpu
+nkt) abgeschlossen wird.
+ 
+\end_layout
+
+\begin_layout Standard
+Für unsere 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ an Stenozeichen können wir nun also schreiben:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array( 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ );
+\end_layout
+
+\begin_layout Standard
+Dadurch enthält unsere Sammlung an Stenozeichen zwei Zeichen: (1) T, (2)
+ B.
+ 
+\end_layout
+
+\begin_layout Standard
+Leider lässt sich damit noch nichts anfangen, denn unsere Zeichen sind ja
+ noch nicht weiter definiert ...
+ Deshalb fügen wir diese Definition nun ein, indem wir PHP wieder darauf
+ hinweisen, dass die Definition eine 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ an weiteren Daten (in unserem Fall Header und Punktedaten) ist:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array(
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ => array( /* hier folgen die Daten des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ */ ),
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ => array( /* hier folgen die Daten des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ */ )
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Wie Sie sehen, habe ich die Definition der Variable nun auf mehrere Zeilen
+ aufgeteilt, weil dies übersichtlicher ist.
+ Wichtig ist hier: (1) Verschiedene Elemente einer Sammlung (bzw.
+ eines Arrays) müssen durch Kommas abgetrennt werden und (2) Wir verwenden
+ hier das Symbol =>, welches unser Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ zu einem so genannten Key definiert.
+ Mit diesem Key kann VSTENO später ganz einfach auf die Daten innerhalb
+ des Arrays zugreifen.
+ 
+\end_layout
+
+\begin_layout Standard
+Bezüglich der Kommas: Ich kann es nicht genug betonen - vergessen Sie diese
+ (und auch die Semikolons) nicht! Wenn in Ihrer Datei auch nur ein solches
+ Zeichen fehlt, dann läuft das ganze Programm nicht (PHP ist da SEHR pingelig
+ und wird Ihnen auch nicht unbedingt verraten, WO ein Komma fehlt).
+ Weniger haarspalterisch ist PHP hingegen, falls Sie innerhalb von Arrays
+ ein Komma zu viel schreiben:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array(
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ => array( /* hier folgen die Daten des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ */, ),
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ => array( /* hier folgen die Daten des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ */, ),
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Die drei zusätzlichem Kommas in diesem File sind eigentlich überflüssig
+ - PHP ignoriert diese aber.
+ Das Problem ist meistens folgendes: Wenn Sie die erste Schreibweise verwenden
+ und nachträglich noch eine zusätzliche Zeile einfügen, dann ist das Risiko
+ gross, dass Sie das Komma vergessen:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array(
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ => array( /* hier folgen die Daten des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ */ ),
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ => array( /* am Ende dieser Zeile fehlt ein Komma */ )
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+K
+\begin_inset Quotes erd
+\end_inset
+
+ => array( /* nach dieser Zeile braucht es kein Komma */ )
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Im Zweifelsfall setzen Sie am Ende einer Sammlung von Elementen (in einem
+ Array) somit lieber ein Komma, statt keines!
+\end_layout
+
+\begin_layout Standard
+Nun brauchen wir anstelle der Kommentare nur noch echte Daten einzufügen.
+ Wir verwenden hier - einmal mehr - die Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array(
+\end_layout
+
+\begin_layout LyX-Code
+      "T" => array( /*header*/ 0, 0.5, 0, 0,4,2.5, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0 , 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /*data*/ 0, 20, 0, 1, 3.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0, 0, 0, 0, 1.0, 0, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0, 2.5, 0, 4, 1.0, 0, 0, 0.5, ), 
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+      "B"  => array( /*header*/ 5, 0.5, 0, 0, 1, 1, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /*data*/  0, 10, 0, 1, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  0,  2, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 2.5,  0, 0.5, 4, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  2.5,  0, 0.5, 0, 1.5, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 5,  2,0.5, 0, 1.0, 0, 1,   0),    
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Ich brauche wohl an dieser Stelle nicht zu sagen, dass die Sache relativ
+ schnell unübersichtlich wird (und gerade darum wird ein visueller Editor
+ hier eine enorme Erleichterung bringen).
+ Es hilft somit ungemein, die Daten beim Eingeben möglichst sauber zu strukturie
+ren (indem man z.B.
+ Dateneinheiten auf verschiedene Zeilen schreibt).
+ Zusätzliche Zeilenumbrüche, Leerzeichen und Einrückungen (Tabulatoren)
+ sind PHP egal - solange Sie die Klammern und Kommas nicht vergessen -,
+ also machen Sie davon Gebrauch!
+\end_layout
+
+\begin_layout Subsection*
+TokenCombiner
+\end_layout
+
+\begin_layout Standard
+Genau gleich dazu können Sie nun den TokenCombiner definieren.
+ Den eigentlichen Code hierfür haben wir ja schon früher präsentiert und
+ fügen ihn hier nun noch einmal ein:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array(
+\end_layout
+
+\begin_layout LyX-Code
+      
+\end_layout
+
+\begin_layout LyX-Code
+      "T" => array( /*header*/ 0, 0.5, 0, 0,4,2.5, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0 , 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /*data*/ 0, 20, 0, 1, 3.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0, 0, 0, 0, 1.0, 0, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0, 2.5, 0, 4, 1.0, 0, 0, 0.5, ), 
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+      "B"  => array( /*header*/ 5, 0.5, 0, 0, 1, 1, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /*data*/  0, 10, 0, 1, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  0,  2, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 2.5,  0, 0.5, 4, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  2.5,  0, 0.5, 0, 1.5, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 5,  2,0.5, 0, 1.0, 0, 1,   0),    
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+$combiner_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array( 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, 0, 0 ),
+\end_layout
+
+\begin_layout LyX-Code
+    array( 
+\begin_inset Quotes eld
+\end_inset
+
+D
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, 0, 0 )
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Beginnen Sie also ausserhalb der Zeichendefinitionen eine neue Definition
+ für die Variable $combiner_table.
+ Der TokenCombiner verwendet somit diese Variable $combiner_table, um sämtliche
+ darin stehenden Zeichen automatisch zu erzeugen (der Name muss genau so
+ lauten, damit VSTENO die Daten findet).
+\end_layout
+
+\begin_layout Subsection*
+TokenShifter
+\end_layout
+
+\begin_layout Standard
+Genau gleich funktioniert dies mit dem TokenShifter:
+\end_layout
+
+\begin_layout LyX-Code
+$steno_tokens_master = array(
+\end_layout
+
+\begin_layout LyX-Code
+      
+\end_layout
+
+\begin_layout LyX-Code
+      "T" => array( /*header*/ 0, 0.5, 0, 0,4,2.5, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0 , 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /*data*/ 0, 20, 0, 1, 3.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0, 0, 0, 0, 1.0, 0, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0, 2.5, 0, 4, 1.0, 0, 0, 0.5, ), 
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+      "B"  => array( /*header*/ 5, 0.5, 0, 0, 1, 1, 0, "",
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ "","","","", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /*data*/  0, 10, 0, 1, 3.0, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  0,  2, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 2.5,  0, 0.5, 4, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/  2.5,  0, 0.5, 0, 1.5, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 5,  2,0.5, 0, 1.0, 0, 1,   0),    
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+$combiner_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array( 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, 0, 0 ),
+\end_layout
+
+\begin_layout LyX-Code
+    array( 
+\begin_inset Quotes eld
+\end_inset
+
+D
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@R
+\begin_inset Quotes erd
+\end_inset
+
+, 0, 0 )
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+$shifter_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+    array("N", "&TN", 4, 15, 0, 1.5),
+\end_layout
+
+\begin_layout LyX-Code
+    array("NS", "&TENS", 4, 10, 0, 1), 
+\end_layout
+
+\begin_layout LyX-Code
+    array("NS", "&EITENS", 18, 10, 0, 1) 
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Auch hier wird die Variable $shifter_table vom TokenShifter dazu verwendet,
+ automatisch sämtliche darin enthaltenen Zeichen zu generieren!
+\end_layout
+
+\begin_layout Part*
+Regeln
+\end_layout
+
+\begin_layout Standard
+Nach den Zeichendefinitionen kommen wir nun zu den so genannten Regeln,
+ welche einzelne Wörter der Langschrift Schritt um Schritt so umwandeln,
+ dass sie am Schluss durch Aneinanderfügen der definierten Zeichen als Stenogram
+me dargestellt werden können.
+ Diese 
+\begin_inset Quotes eld
+\end_inset
+
+Übertragung
+\begin_inset Quotes erd
+\end_inset
+
+ findet in mehreren Schritten statt und um diese sichtbar zu machen, können
+ Sie in der Demoversion die Funktion 
+\begin_inset Quotes eld
+\end_inset
+
+Debug
+\begin_inset Quotes erd
+\end_inset
+
+ anwählen.
+ Für das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+baten
+\begin_inset Quotes erd
+\end_inset
+
+ sehen Sie dann:
+\end_layout
+
+\begin_layout LyX-Code
+ORIGINAL: baten 
+\end_layout
+
+\begin_layout LyX-Code
+[1] WORD: bat{EN} FROM: rule: (?<!(^[Ww])|i)en$ => {EN}
+\end_layout
+
+\begin_layout LyX-Code
+[2] WORD: bAt{EN} FROM: rule: a => A 
+\end_layout
+
+\begin_layout LyX-Code
+[3] WORD: BAt{EN} FROM: rule: b => B 
+\end_layout
+
+\begin_layout LyX-Code
+[4] WORD: BAT{EN} FROM: rule: t => T 
+\end_layout
+
+\begin_layout LyX-Code
+NUMBER OF RULES APPLIED: 4
+\end_layout
+
+\begin_layout Standard
+Beim Wort 
+\begin_inset Quotes eld
+\end_inset
+
+baten
+\begin_inset Quotes erd
+\end_inset
+
+ wird also zuerst die Endkürzung -en erkannt und durch {EN} markiert (Schritt
+ 1), danach wird der Vokal a erkannt und mit dem Grossbuchstaben A markiert
+ (Schritt 2).
+ Analog dazu werden auch die Konsonanten b und t erkannt und mit den Grossbuchst
+aben B und T markiert (Schritte 3+4).
+ Die so entstanden Folge - die VSTENO intern als TokenList (Zeichenliste)
+ bezeichnet - kann danach sehr simpel zu einem Stenogramm verarbeitet werden,
+ indem die Zeichendefinitionen aus der Variable $steno_tokens_master ausgelesen
+ und die einzelnen Zeichen aneinandergefügt werden.
+\end_layout
+
+\begin_layout Standard
+Das obige Beispiel ist natürlich relativ simpel, da alle Zeichen ohne grosse
+ Veränderungen verwendet werden können.
+ Gewisse Zeichen müssen aber je nach Kontext anders geschrieben werden.
+ So z.B.
+ das Aufstrich-T, wie es in 
+\begin_inset Quotes eld
+\end_inset
+
+bunt
+\begin_inset Quotes erd
+\end_inset
+
+ vorkommt:
+\end_layout
+
+\begin_layout LyX-Code
+ORIGINAL: bunt 
+\end_layout
+
+\begin_layout LyX-Code
+[1] WORD: bun[&T] FROM: rule: ([bcdfghjklmnpqrvwxyz])t => $1[&T] 
+\end_layout
+
+\begin_layout LyX-Code
+[2] WORD: bUn[&T] FROM: rule: u => U 
+\end_layout
+
+\begin_layout LyX-Code
+[3] WORD: BUn[&T] FROM: rule: b => B 
+\end_layout
+
+\begin_layout LyX-Code
+[4] WORD: BUN[&T] FROM: rule: n => N 
+\end_layout
+
+\begin_layout LyX-Code
+NUMBER OF RULES APPLIED: 4
+\end_layout
+
+\begin_layout Standard
+Alle diese Dinge müssen VSTENO anhand von Regeln genauestens 
+\begin_inset Quotes eld
+\end_inset
+
+erklärt
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wenn man dieses Verb im Zusammenhang mit einem Computer verwenden kann ...
+ ;-) Aber in gewissem Sinn ist die Analogie triftig: Der Computer bzw.
+ das Programm VSTENO ist unser Schüler, dem wir als Linguisten Stenografie
+ beibringen (und 
+\begin_inset Quotes eld
+\end_inset
+
+erklären
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\end_inset
+
+ bzw.
+ beigebracht werden.
+ Damit VSTENO die Anweisungen versteht, müssen müssen sie in einer klar
+ definierten Formelsprache abgefasst werden.
+ Im Falle von VSTENO ist dies REGEX, eine Formelsprache die standardmässig
+ in PHP integriert ist.
+ Regex ist ein sehr mächtiges Instrument, das einige Tücken aufweist ...
+ das aber - richtig angewandt - sämtlichen linguistischen Bedürfnissen gerecht
+ werden kann.
+\end_layout
+
+\begin_layout Standard
+Beachten Sie bitte, dass Regeln nach dem Format 
+\begin_inset Quotes eld
+\end_inset
+
+Wenn A, dann B
+\begin_inset Quotes erd
+\end_inset
+
+ funktionieren.
+ In den obigen Beispielen bedeutet 
+\begin_inset Quotes eld
+\end_inset
+
+b => B
+\begin_inset Quotes erd
+\end_inset
+
+ also: 
+\begin_inset Quotes eld
+\end_inset
+
+Wenn du innerhalb des Wortes den Kleinbuchstaben b findest, dann erstetze
+ ihn durch den Grossbuchstaben B
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+REGEX
+\end_layout
+
+\begin_layout Standard
+Die Möglichkeiten von REGEX (Abkürzung für so genannte 
+\begin_inset Quotes eld
+\end_inset
+
+regular expressions
+\begin_inset Quotes erd
+\end_inset
+
+) auch nur ansatzweise darzustellen, würde den Rahmen dieses Tutorial sprengen
+ - schliesslich gibt es ganze Bücher, die sich ausschliesslich mit REGEX
+ beschäftigen! Wir werden uns also damit begnügnen, hier nur einige wesentliche
+ Elemente zu erklären.
+ Für den Rest verweisen wir Sie auf die folgenden Seiten, die Ihnen weiterhelfen
+ können:
+\end_layout
+
+\begin_layout Standard
+Ein guter Start, um einen Überblick zu REGEX zu erhalten, sind die beiden
+ Wikipedia-Seiten auf Deutsch und auf Englisch:
+\end_layout
+
+\begin_layout Itemize
+Deutsch: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Englisch: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://en.wikipedia.org/wiki/Regular_expression
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ebenfalls sehr zu empfehlen ist der folgende REGEX-Tester:
+\end_layout
+
+\begin_layout Itemize
+Online-REGEX-Tester: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://regex101.com/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Er erlaubt es Ihnen, einzelne REGEX-Ausdrücke direkt im Webbrowser zu testen
+ und so Fehler in bzw.
+ falsch forumlierte Formeln zu finden und zu korrigieren.
+\end_layout
+
+\begin_layout Standard
+REGEX kann man durchaus als 
+\begin_inset Quotes eld
+\end_inset
+
+learning by doing
+\begin_inset Quotes erd
+\end_inset
+
+ lernen: Spielen Sie also mit den Elementen die wir im Folgenden vorstellen
+ im REGEX-Tester etwas herum und Sie werden bald ein relativ intuitives
+ Verständnis dafür erlangen, wie REGEX funktioniert!
+\end_layout
+
+\begin_layout Subsection*
+Wortgrenzen und Lookaround-Expressions
+\end_layout
+
+\begin_layout Standard
+Hier nun also einige wenige Grundregeln und Prinzipien von REGEX, die Sie
+ für linguistische Regeln mit Sicherheit benötigen werden.
+ Beginnen wir mit den Zeichen ^ und $.
+ Sie markieren den Anfang und das Ende eines Wortes:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+^hab$
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bedeutet also: Falls das Wort genau der Zeichenfolge 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ entspricht (bzw.
+ sich vor 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ der Wortanfang und nach 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ das Wortende befindet), dann ersetze die Zeichenfolge 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ durch 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Beachten Sie, dass die Ausdrücke ^hab$ und {HAB} innerhalb von Anführungszeiche
+n 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ gesetzt werden müssen, da es sich dabei um Strings (Zeichenfolgen) handelt.
+ Diese Regel kann also verwendet werden, um die Kürzung HAB zu definieren.
+ Sie ist allerdings schlecht formuliert: Sie berücksichtigt z.B.
+ nicht, dass das Verb 
+\begin_inset Quotes eld
+\end_inset
+
+haben
+\begin_inset Quotes erd
+\end_inset
+
+ auch am Wortanfang stehen kann (was bedeutet, dass 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ dann mit einem Grossbuchstaben beginnt).
+ Ausserdem wird die Kürzung HAB auch in längeren Wörtern angewendet (wie
+ z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Inhaber
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+habt
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+haben
+\begin_inset Quotes erd
+\end_inset
+
+ etc.).
+ Auch diese Fälle würden nicht berücksichtigt, da die Regel verlangt, dass
+ das Wort nach 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ zu Ende ist.
+ Wir formulieren die Regel deshalb um:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+[Hh]ab
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die eckige Klammer [] bedeutet hier: 
+\begin_inset Quotes eld
+\end_inset
+
+einer der aufgelisteten Buchstaben
+\begin_inset Quotes erd
+\end_inset
+
+ (die Liste kann beliebig lang sein - z.B.
+ [aeiou] für die 5 Grundvokale - oder man kann auch weitere Ausdrücke verwenden
+ wie z.B.
+ [a-z] oder [A-Z] für Kleinbuchstaben und Grossbuchstaben, [0-9] für Ziffern
+ etc.).
+ Da wir die Zeichen ^ und $ (Wortanfang und Wortende) entfernt haben, trifft
+ diese Regel nun auf die oben genannten Fälle zu: 
+\begin_inset Quotes eld
+\end_inset
+
+Inhaber
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+habt
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+haben
+\begin_inset Quotes erd
+\end_inset
+
+ werden zum Beispiel in 
+\begin_inset Quotes eld
+\end_inset
+
+In{HAB}er
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}t
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}en
+\begin_inset Quotes erd
+\end_inset
+
+ umgewandelt.
+ Allerdings ist auch diese Regel zu ungenau formuliert, da auch Wörter wie
+ 
+\begin_inset Quotes eld
+\end_inset
+
+schaben
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Haber
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wir meinen hier das umganssprachliche Wort für 
+\begin_inset Quotes eld
+\end_inset
+
+Hafer
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+sc{HAB}en
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}er
+\begin_inset Quotes erd
+\end_inset
+
+ umgewandelt werden, was wiederum falsch ist ...
+\end_layout
+
+\begin_layout Standard
+Dies können wir korrigieren, indem wir eine so genannte Lookaround-Expression
+ (zu Deutsch etwa: Schau-dich-um-Ausdruck) verwenden.
+ Es gibt zwei Arten von Lookaround-Expressions: die Lookbehind-Expression
+ (sie sucht nach Zeichenfolgen vor dem Wort) und die Lookahead-Expression
+ (für Zeichenfolgen nach dem Wort).
+ Ausserdem können Lookaround-Expressions positiv (= die Zeichenfolge muss
+ vorkommen) oder negativ (= die Zeichenfolge darf nicht vorkommen) sein.
+ Im Folgenden verwenden wir eine negative Lookbehind-Expression.
+ Diese steht in einer runden Klammer vor dem Wort und beginnt mit ?<!:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+(?<![Ss]c)[Hh]ab
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diese Regel bedeutet also: Ersetze 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ - egal ob mit Gross- oder Kleinbuchstaben beginnend - an einer beliebigen
+ Stelle des Wortes durch {HAB}, sofern nicht 
+\begin_inset Quotes eld
+\end_inset
+
+sc
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+Sc
+\begin_inset Quotes erd
+\end_inset
+
+ vorausgeht.
+ Oder anders formuliert: Ersetze 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ nur dann, wenn das H nicht Teil von SCH ist.
+ Diese Regel löst also das Problem von 
+\begin_inset Quotes eld
+\end_inset
+
+schaben
+\begin_inset Quotes erd
+\end_inset
+
+, nicht aber jenes von 
+\begin_inset Quotes eld
+\end_inset
+
+Haber
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Wir könnten natürlich auch hier eine negative Lookahead-Expression verwenden:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+[Hh]ab(?=!er)
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Allerdings würde dann das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Inhaber
+\begin_inset Quotes erd
+\end_inset
+
+ ebenfalls nicht mehr in 
+\begin_inset Quotes eld
+\end_inset
+
+In{HAB}er
+\begin_inset Quotes erd
+\end_inset
+
+ umgewandelt.
+\end_layout
+
+\begin_layout Standard
+Man sieht also: Das Formulieren von präzisen linguitischen Regeln - die
+ wirklich nur auf jene Wörter angewandt wird, auf die die Regel wirklich
+ zutrifft - ist zum Teil recht anspruchsvoll.
+ Es lohnt sich aber, hier Zeit zu investieren, denn je präziser die Regel
+ ist, umso weniger 
+\begin_inset Quotes eld
+\end_inset
+
+Ausnahmen
+\begin_inset Quotes erd
+\end_inset
+
+ müssen später zusätzlich (in einem Wörterbuch beispielsweise) definiert
+ werden.
+\end_layout
+
+\begin_layout Subsection*
+Klammern, Quantoren und Variablen
+\end_layout
+
+\begin_layout Standard
+Quantoren sind Zeichen, welche angeben, wie oft ein Zeichen vorkommen muss.
+ REGEX kennt hier z.B.
+ die Zeichen ? (= 0 oder 1 Mal vorkommend), + (= mindestens 1 Mal vorkommen),
+ * beliebig oft vorkommend.
+ Diese können auf einzelne Zeichen angewandt werden oder es können mehrere
+ Zeichen zu einer Gruppe zusammengefasst werden, für die der Quantor gilt.
+ Als Beispiel betrachten wir folgende Regel:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+^([Uu]n)?[Zz]uver
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+$1{ZU}{VER}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hier wurde also der Ausdruck [Uu]n durch die Klammern () zu einer Gruppe
+ zusammengefasst.
+ Der Quantor ? nach ([Uu]n) bedeutet, dass die Vorsilbe un- (die am Anfang
+ des Wortes - markiert durch das Zeichen ^ - gross oder klein geschrieben
+ werden kann) 0 oder 1 Mal vorkommen kann.
+ Dieses 
+\begin_inset Quotes eld
+\end_inset
+
+Muster
+\begin_inset Quotes erd
+\end_inset
+
+ (oder pattern, wie es auf Englisch genannt wird) trifft z.B.
+ auf Wörter wie 
+\begin_inset Quotes eld
+\end_inset
+
+unzuverlässig
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Unzuverlässigkeit
+\begin_inset Quotes erd
+\end_inset
+
+ zu (hier kommt un- 1 Mal vor), aber auch auf Wörter wie 
+\begin_inset Quotes eld
+\end_inset
+
+zuverlässig
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Zuversichtlichkeit
+\begin_inset Quotes erd
+\end_inset
+
+ usw.
+ 
+\end_layout
+
+\begin_layout Standard
+Auf der rechten Seite (der Folge-Seite der Regel) steht der Ausdruck $1
+ für die 
+\begin_inset Quotes eld
+\end_inset
+
+Variable in der ersten Position
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Mit Position ist gemeint: 
+\begin_inset Quotes eld
+\end_inset
+
+Der x-te Klammerausdruck von links beginnend
+\begin_inset Quotes erd
+\end_inset
+
+, in unserem Fall also ([Uu]n).
+ 
+\end_layout
+
+\begin_layout Standard
+Diese Regel nimmt somit folgende Ersetzungen vor: 
+\begin_inset Quotes eld
+\end_inset
+
+unzuverlässig
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+un{ZU}{VER}lässig
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Unzuverlässigkeit
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+Un{ZU}{VER}lässigkeit
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Zuversicht
+\begin_inset Quotes erd
+\end_inset
+
+ => {ZU}{VER}sicht, 
+\begin_inset Quotes eld
+\end_inset
+
+zuverlässig
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{ZU}{VER}lässig.
+ Beachten Sie hierbei, dass die Variable $1 den Klammerausdruck exakt so
+ wiedergibt, wie er im Wort vorgefunden wird, als 
+\begin_inset Quotes eld
+\end_inset
+
+Un
+\begin_inset Quotes erd
+\end_inset
+
+ (mit grossem Anfangsbuchstaben) im Substantiv 
+\begin_inset Quotes eld
+\end_inset
+
+Unzuverlässigkeit
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+un
+\begin_inset Quotes erd
+\end_inset
+
+ (mit Kleinbuchstaben) im Adjektiv 
+\begin_inset Quotes eld
+\end_inset
+
+unzuverlässig
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Nicht so hingegen beim Ausdruck 
+\begin_inset Quotes eld
+\end_inset
+
+[Zz]u
+\begin_inset Quotes erd
+\end_inset
+
+ (wo wir keine Variable verwenden): Hier wird also sowohl 
+\begin_inset Quotes eld
+\end_inset
+
+Zu
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+zu
+\begin_inset Quotes erd
+\end_inset
+
+ durch 
+\begin_inset Quotes eld
+\end_inset
+
+{ZU}
+\begin_inset Quotes erd
+\end_inset
+
+ ersetzt.
+\end_layout
+
+\begin_layout Standard
+Da Variablen nummeriert sind, kann man auch mehrere hintereinander verwenden:
+ 
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+^([Uu]n)?([Zz]u)ver
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+$1$2{VER}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In dieser Regel z.B.
+ wird nur das Präfix ver- durch {VER} ersetzt.
+ Wie bei un- weiter oben wird nun auch in diesem Beispiel die zweite Vorsilbe
+ 
+\begin_inset Quotes eld
+\end_inset
+
+zu
+\begin_inset Quotes erd
+\end_inset
+
+ exakt so übertragen, wie sie im Wort steht (also 
+\begin_inset Quotes eld
+\end_inset
+
+Zu
+\begin_inset Quotes erd
+\end_inset
+
+ bei einem Substantiv, 
+\begin_inset Quotes eld
+\end_inset
+
+zu
+\begin_inset Quotes erd
+\end_inset
+
+ bei klein geschriebenen Wörtern).
+ 
+\end_layout
+
+\begin_layout Standard
+Im Unterschied zu ? bezeichnet der Quantor + einen Ausdruck der mindestens
+ 1 Mal (oder mehr) vorkommen muss.
+ Die Regel
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+^([Zz]u)+
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+$1|
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Trennt eine oder mehrere Vorsilben zu- durch einen vertikalen Strich vom
+ Rest des Wortes ab: 
+\begin_inset Quotes eld
+\end_inset
+
+zugeben
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+zu|geben
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+zuzugeben
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+zuzu|geben
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Bitte beachten Sie, dass dies wiederum eine linguistisch zu unpräzis formuliert
+e Regel ist, da sie auch auf Wörter wie 
+\begin_inset Quotes eld
+\end_inset
+
+Zuzug
+\begin_inset Quotes erd
+\end_inset
+
+ zutrifft (hier findet die Regel 2 Vorsilben zu-, dabei enthält das Wort
+ nur 1 Vorsilbe - der zweite Teil gehört zum Stamm des Wortes).
+ Auch trifft die Regel theoretisch auf inexistente Wörter zu wie 
+\begin_inset Quotes eld
+\end_inset
+
+zuzuzukumi
+\begin_inset Quotes erd
+\end_inset
+
+ (hier fände die Regel 3 Vorsilben).
+ 
+\end_layout
+
+\begin_layout Subsection*
+Wildcards und Greediness
+\end_layout
+
+\begin_layout Standard
+REGEX definiert den Punkt .
+ als so genannte Wildcard
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wir auch Joker genannt.
+\end_layout
+
+\end_inset
+
+: Dieses Zeichen kann also für 
+\begin_inset Quotes eld
+\end_inset
+
+irgend ein
+\begin_inset Quotes erd
+\end_inset
+
+ Zeichen stehen.
+ Auch den Punkt können wir mit Quantoren kombinieren, wobei hier ein neuer
+ Aspekt ins Spiel kommt: die so genannte greediness (zu Deutsch in etwa:
+ Gefrässigkeit).
+ Quantoren können also 
+\begin_inset Quotes eld
+\end_inset
+
+greedy
+\begin_inset Quotes erd
+\end_inset
+
+ (gefrässig) oder non-greedy (ungefrässig oder genügsam) sein.
+ Im ersten Fall versucht REGEX den Ausdruck auf die grösstmögliche Zeichenfolge
+ anzuwenden, im letzten Fall hingegen wird der kürzeste Ausdruck gesucht,
+ der auf das Muster zutrifft.
+\end_layout
+
+\begin_layout LyX-Code
+[1] Bett(.*)en => Bett$1{EN}
+\end_layout
+
+\begin_layout LyX-Code
+[2] Bett(.*?)en => Bett$1{EN}
+\end_layout
+
+\begin_layout Standard
+Im Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Bettenkapazitäten
+\begin_inset Quotes erd
+\end_inset
+
+ (welches 2 x die Endung -en enthält), findet die erste Regel (mit dem 
+\begin_inset Quotes eld
+\end_inset
+
+gefrässigen
+\begin_inset Quotes erd
+\end_inset
+
+ Ausdruck *) die LETZTE Endung und ersetzt das Wort somit durch 
+\begin_inset Quotes eld
+\end_inset
+
+Bettenkapazität{EN}
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In der zweiten Regel (mit dem 
+\begin_inset Quotes eld
+\end_inset
+
+genügsamen
+\begin_inset Quotes erd
+\end_inset
+
+ Ausdruck *?) findet REGEX hingegen der ERSTEN Ausdruck, sodass das Resultat
+ hier 
+\begin_inset Quotes eld
+\end_inset
+
+Bett{EN}kapazitäten
+\begin_inset Quotes erd
+\end_inset
+
+ lautet.
+\end_layout
+
+\begin_layout Standard
+Passen Sie deshalb mit Quantoren besonders auf: Sie können eine total andere
+ Bedeutung haben als man - von einer intuitiven, sprachlichen Logik her
+ denkend - glauben würde ...
+\end_layout
+
+\begin_layout Subsection*
+Logisches Oder
+\end_layout
+
+\begin_layout Standard
+Wir haben bereits die eckigen Klammern [] kennengelernt, welche eine Reihe
+ von Zeichen zusammenfasst, von denen wenigtens eines zutreffen muss.
+ In der Logik entspricht dieses einem Oder: Im Ausdruck [abcd] muss also
+ entweder a oder b oder c oder d vorkommen.
+ Ein weiterer Ausdruck um ein logisches Oder wiederzugeben ist der vertikale
+ Strich:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+(ck|kk)
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[CK]
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diese Regel bedeutet also, dass 
+\begin_inset Quotes eld
+\end_inset
+
+Zucker
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+Zu[CK]er
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+Mokka
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+Mo[CK]a
+\begin_inset Quotes erd
+\end_inset
+
+ wird.
+ Beachten Sie in diesem Zusammenhang unbedingt, dass die eckige Klammer
+ auf der linken Seite (Bedingung) der Regel nicht die gleiche Bedeutung
+ hat wie auf der rechten Seite (Folge):
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+[Ää]
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[Ä]
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+(Ä|ä)
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[Ä]
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diese beiden Regeln sind gleichbedeutend!
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+...
+ theoretisch.
+ Aus irgendeinem unerfindlichen Grund - vermutlich hat es mit dem Sonderzeichen
+ Ä zu tun - funktioniert, zumindest in meiner Systemkonfiguration, nur die
+ Variante (Ä|ä).
+ Dasselbe gilt auch für Üü, Öö, ÄU ...
+ Ich empfehle deshalb, für diese Sonderzeichen, die Variante in runden Klammern
+ zu verwenden.
+\end_layout
+
+\end_inset
+
+ Die eckige Klammer auf der linken Seite bedeutet also wie erwähnt 
+\begin_inset Quotes eld
+\end_inset
+
+eines dieser Zeichen
+\begin_inset Quotes erd
+\end_inset
+
+ (also Ä oder ä) auf der rechten Seite bedeutet es jedoch 
+\begin_inset Quotes eld
+\end_inset
+
+ersetzen durch das Klammerzeichen
+\begin_inset Quotes erd
+\end_inset
+
+ (offen oder geschlossen).
+ Diese Regel transformiert die Wörter 
+\begin_inset Quotes eld
+\end_inset
+
+Kläger
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+KlÄger
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+Kl[Ä]ger
+\begin_inset Quotes erd
+\end_inset
+
+!
+\end_layout
+
+\begin_layout Standard
+Wenn Sie auf der linken Seite nach einer eckigen Klammer suchen möchten,
+ dann müssen Sie das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+escapen
+\begin_inset Quotes erd
+\end_inset
+
+ (wir übersetzen mal frei: 
+\begin_inset Quotes eld
+\end_inset
+
+seiner REGEX-Bedeutung entheben
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Dies geschieht indem der Backslash 
+\backslash
+ vorangestellt wird:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+[Ää
+\backslash
+]
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{Ää}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diese Regel würde die Zeichenfolge 
+\begin_inset Quotes eld
+\end_inset
+
+ABC[Ää]XYZ
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+ABC{Ää}XYZ
+\begin_inset Quotes erd
+\end_inset
+
+ umschreiben!
+\end_layout
+
+\begin_layout Standard
+Auch hier: Passen Sie bei Zeichen, die in REGEX eine spezielle Bedeutung
+ haben, sehr gut auf, ob Sie sie wörtlich (als Literal oder Buchstabe) oder
+ in der Bedeutung von Regex verwenden wollen.
+ Dies trifft prinzipiell auf alle Zeichen zu, die in REGEX eine spezielle
+ Bedeutung haben.
+ Sicherheitshalber listen wir die wichtigsten im Folgenden noch einmal auf.
+\end_layout
+
+\begin_layout Subsection*
+Escaping
+\end_layout
+
+\begin_layout Standard
+Folgende Zeichen MÜSSEN in PHP-Regex 
+\begin_inset Quotes eld
+\end_inset
+
+escaped
+\begin_inset Quotes erd
+\end_inset
+
+ werden, wenn Sie 
+\begin_inset Quotes eld
+\end_inset
+
+wörtlich
+\begin_inset Quotes erd
+\end_inset
+
+ (= als genau dieses Zeichen) verwendet werden sollen: 
+\end_layout
+
+\begin_layout LyX-Code
+.
+ als 
+\backslash
+.
+\end_layout
+
+\begin_layout LyX-Code
+^ als 
+\backslash
+^
+\end_layout
+
+\begin_layout LyX-Code
+$ als 
+\backslash
+$
+\end_layout
+
+\begin_layout LyX-Code
+* als 
+\backslash
+*
+\end_layout
+
+\begin_layout LyX-Code
++ als 
+\backslash
++
+\end_layout
+
+\begin_layout LyX-Code
+? als 
+\backslash
+?
+\end_layout
+
+\begin_layout LyX-Code
+( als 
+\backslash
+(
+\end_layout
+
+\begin_layout LyX-Code
+) als 
+\backslash
+)
+\end_layout
+
+\begin_layout LyX-Code
+[ als 
+\backslash
+[
+\end_layout
+
+\begin_layout LyX-Code
+
+\backslash
+ als 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout LyX-Code
+| als 
+\backslash
+|
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout Standard
+Die geschwungenen Klammern {} KÖNNEN in PHP-REGEX 
+\begin_inset Quotes eld
+\end_inset
+
+escaped
+\begin_inset Quotes erd
+\end_inset
+
+ werden (oder nicht)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Ich empfehle sie nicht zu escapen, da die Regeln dadurch etwas übersichtlicher
+ werden.
+\end_layout
+
+\end_inset
+
+.
+ Speziell weisen wir auch auf das Zeichen ^ hin.
+ Es hat innerhalb der eckigen Klammern die Bedeutung von 
+\begin_inset Quotes eld
+\end_inset
+
+nicht
+\begin_inset Quotes erd
+\end_inset
+
+ (logische Negation):
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+^[Zz]u([^m])
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{ZU}$1
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dieses Regelbeispiel bedeutet also: Ersetze die Vorsilbe zu- am Anfang eines
+ Wortes durch {ZU}, sofern das darauffolgende Zeichen kein m ist (in Stolze-Schr
+ey wird in diesem Fall keine Kürzung verwendet).
+ Beachten Sie, dass hier die beiden Zeichen ^ verschiedene Bedeutungen haben:
+ Das erste bedeutet 
+\begin_inset Quotes eld
+\end_inset
+
+Wortanfang
+\begin_inset Quotes erd
+\end_inset
+
+, das zweite bedeutet 
+\begin_inset Quotes eld
+\end_inset
+
+nicht m
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Wenn Sie das Zeichen ^wortwörtlich (also als Zeichen) suchen möchten, müssen
+ Sie es 
+\begin_inset Quotes eld
+\end_inset
+
+escapen
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+ABC
+\backslash
+^XYZ
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+ABC{circonflex}XYZ
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wandelt die Zeichenkette 
+\begin_inset Quotes eld
+\end_inset
+
+ABC^XYZ
+\begin_inset Quotes erd
+\end_inset
+
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+ABC{circonflex}XYZ
+\begin_inset Quotes erd
+\end_inset
+
+ um!
+\end_layout
+
+\begin_layout Standard
+Es kann nicht genug betont werden, wie wichtig diese unscheinbaren Unterschiede
+ sind: REGEX ist deshalb so 
+\begin_inset Quotes eld
+\end_inset
+
+kompliziert
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+tricky
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+kryptisch
+\begin_inset Quotes erd
+\end_inset
+
+ - oder wie immer Sie es bezeichnen möchten - weil ein einziges Zeichen
+ je nach Art und Weise, wie es verwendet wird, eine total andere Bedeutung
+ haben kann! Verwenden Sie in diesem Fall den erwähnten REGEX-Tester und
+ vergewissern Sie sich, dass Ihre Regel auch wirklich das heisst, was Sie
+ meinen ...
+ 
+\end_layout
+
+\begin_layout Subsection*
+Regeln in VSTENO
+\end_layout
+
+\begin_layout Standard
+Die Regeln, die wir uns bis jetzt angesehen haben, entsprachen dem Standard-Sche
+ma der REGEX-Replace-Funktion, nämlich: Wenn A, dann (ersetze durch) B.
+ VSTENO erweitert den Regelformalismus um eine weitere Möglichkeit: Wenn
+ A, dann B, ausser C (oder D):
+\end_layout
+
+\begin_layout LyX-Code
+A => B                       normale REGEX-Regel
+\end_layout
+
+\begin_layout LyX-Code
+A => { B, C, D ..., X }      erweiterte Regel
+\end_layout
+
+\begin_layout Standard
+In PHP wird dieser Regeltyp umgesetzt, indem anstelle der Folge (B) ein
+ Array (also eine Liste an Werten bzw.
+ Wörtern) gesetzt wird.
+ Wir werden später noch genauer auf die Notation in PHP eingehen, aber hier
+ vorweg schon einmal ein Beispiel als PHP-Code.
+ Wir verwenden noch einmal die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+HAB
+\begin_inset Quotes erd
+\end_inset
+
+, die wir bereits weiter oben gesehen haben:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+(?<![Ss]c)[Hh]ab
+\begin_inset Quotes erd
+\end_inset
+
+ => array( 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+^Haber
+\begin_inset Quotes erd
+\end_inset
+
+ )
+\end_layout
+
+\begin_layout Standard
+Diese Regel bedeutet also: Ersetz die Zeichenfolge 
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ (oder 
+\begin_inset Quotes eld
+\end_inset
+
+Hab
+\begin_inset Quotes erd
+\end_inset
+
+) an einer beliebigen Stelle des Wortes durch 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+, AUSSER das Muster 
+\begin_inset Quotes eld
+\end_inset
+
+Haber
+\begin_inset Quotes erd
+\end_inset
+
+ (mit Grossbuchstaben) steht am Anfang des Wortes.
+ Diese Regel nimmt in den folgenden Beispielwörtern folgende Transformationen
+ vor:
+\end_layout
+
+\begin_layout LyX-Code
+Inhaber => In{HAB}er
+\end_layout
+
+\begin_layout LyX-Code
+haben => {HAB}en
+\end_layout
+
+\begin_layout LyX-Code
+habt => {HAB}t
+\end_layout
+
+\begin_layout LyX-Code
+schaben => schaben
+\end_layout
+
+\begin_layout LyX-Code
+Haber => Haber
+\end_layout
+
+\begin_layout LyX-Code
+Habermacher => Habermacher
+\end_layout
+
+\begin_layout Standard
+Beachten Sie, dass das zweite Element des Folgearrays 
+\begin_inset Quotes eld
+\end_inset
+
+^Haber
+\begin_inset Quotes erd
+\end_inset
+
+ von VSTENO ebenfalls als REGEX-Muster interpretiert wird, weshalb es auch
+ auf 
+\begin_inset Quotes eld
+\end_inset
+
+Habermacher
+\begin_inset Quotes erd
+\end_inset
+
+ zutrifft (sonst müsste dort 
+\begin_inset Quotes eld
+\end_inset
+
+^Haber$
+\begin_inset Quotes erd
+\end_inset
+
+ stehen).
+\end_layout
+
+\begin_layout Standard
+Auch diese Kürzungsregel für 
+\begin_inset Quotes eld
+\end_inset
+
+HAB
+\begin_inset Quotes erd
+\end_inset
+
+ ist nicht perfekt, da z.B.
+ das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Habicht
+\begin_inset Quotes erd
+\end_inset
+
+ ebenfalls zu 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}icht
+\begin_inset Quotes erd
+\end_inset
+
+ gekürzt wird.
+ Mit dem erweiterten Regelformalismus von VSTENO können wir weitere Ausnahmen
+ aber sehr einfach im Folge-Array hinzufügen:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+(?<![Ss]c)[Hh]ab
+\begin_inset Quotes erd
+\end_inset
+
+ => array( 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+^Haber
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Habicht
+\begin_inset Quotes erd
+\end_inset
+
+ )
+\end_layout
+
+\begin_layout Standard
+Auch hier hat die REGEX-Notation wieder den Vorteil, dass sämtliche Fälle
+ (z.B.
+ Genetiv 
+\begin_inset Quotes eld
+\end_inset
+
+Habichts
+\begin_inset Quotes erd
+\end_inset
+
+) erfasst werden.
+\end_layout
+
+\begin_layout Section*
+PHP-Code
+\end_layout
+
+\begin_layout Standard
+Nach all diesen Ausführungen zur Regelnotation widmen wir uns nun - analog
+ zum Kapitel Zeichen - der Implementierung der Regeln in PHP.
+ Genau wie die Zeichen müssen die Regeln innerhalb der Datei data.php definiert
+ werden.
+ Bevor wir jedoch die entsprechenden PHP-Variablen setzen können, müssen
+ wir wissen, wie der Parser funktioniert.
+ Der Parser ist nämlich jener Teil, welcher die Regeln liest und verarbeitet.
+ Um die Sache einigermassen übersichtlich zu halten, wurde der Pars-Prozess
+ in verschiedene, linguistisch sinnvolle Unterschritte unterteilt.
+\end_layout
+
+\begin_layout Subsection*
+Funktionsweise des Parsers
+\end_layout
+
+\begin_layout Standard
+Um zu verstehen, wie der Parser funktioniert, betrachten wir die Debug-Ausgabe
+ des Wortes 
+\begin_inset Quotes eld
+\end_inset
+
+kannten
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+ORIGINAL: kannten 
+\end_layout
+
+\begin_layout LyX-Code
+[1] WORD: kannt{EN} FROM: rule: (?<!(^[Ww])|i)en$ => {EN}
+\end_layout
+
+\begin_layout LyX-Code
+[2] WORD: ka[NN]t{EN} FROM: rule: nn => [NN] 
+\end_layout
+
+\begin_layout LyX-Code
+[3] WORD: ka[NN][&T]{EN} FROM: rule: ([BCDFGHJKLMNPQRVWXYZS])
+\backslash
+]t => $1][&T] 
+\end_layout
+
+\begin_layout LyX-Code
+[4] WORD: ka[NN][&T][&E][EN] FROM: rule: 
+\backslash
+[&T
+\backslash
+]{EN}$ => [&T][&E][EN] 
+\end_layout
+
+\begin_layout LyX-Code
+[5] WORD: kA[NN][&T][&E][EN] FROM: rule: a => A 
+\end_layout
+
+\begin_layout LyX-Code
+[6] WORD: KA[NN][&T][&E][EN] FROM: rule: k => K 
+\end_layout
+
+\begin_layout LyX-Code
+[7] WORD: KA[NN][&T&E][EN] FROM: rule: 
+\backslash
+[&T
+\backslash
+]
+\backslash
+[?&E
+\backslash
+]? => [&T&E] 
+\end_layout
+
+\begin_layout LyX-Code
+NUMBER OF RULES APPLIED: 7
+\end_layout
+
+\begin_layout Standard
+Zunächst einmal halten wir fest, dass wir immer von einem Ursprungswort
+ ausgehen (hier: 
+\begin_inset Quotes eld
+\end_inset
+
+kannten
+\begin_inset Quotes erd
+\end_inset
+
+), das VSTENO dem Parser 
+\begin_inset Quotes eld
+\end_inset
+
+übergibt
+\begin_inset Quotes erd
+\end_inset
+
+.
+ VSTENO nimmt diese Wörter - eins nach dem anderen - aus dem Text, den wir
+ via Webformular eingeben.
+\end_layout
+
+\begin_layout Standard
+Anschliessend beginnt der Parser, ausgehend vom Ursprungswort, die verschiedenen
+ Regeln anzuwenden.
+ Jedes Mal, wenn eine Regel zutrifft, modifiziert der Parser das Wort gemäss
+ der Regel und verwendet danach das Resultat als neues Wort.
+\end_layout
+
+\begin_layout Standard
+Sobald der Parser alle Regeln abgearbeitet hat, nimmt er das letzte Resultat
+ (das wir als PrintShorthand oder 
+\begin_inset Quotes eld
+\end_inset
+
+DruckSteno
+\begin_inset Quotes erd
+\end_inset
+
+ bezeichnen) - in unserem Fall 
+\begin_inset Quotes eld
+\end_inset
+
+KA[NN][&T&E][EN]
+\begin_inset Quotes erd
+\end_inset
+
+ - und sendet dieses der TokenEngine (
+\begin_inset Quotes eld
+\end_inset
+
+Zeichenmaschine
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Die TokenEngine wiederum tut nichts anderes, als links (also mit dem Zeichen
+ 
+\begin_inset Quotes eld
+\end_inset
+
+K
+\begin_inset Quotes erd
+\end_inset
+
+) beginnend für jedes einzelne Zeichen die entsprechenden grafischen Vektordaten
+ einzusetzen und diese zu verbinden.
+ Die TokenEngine kennt dabei nur zwei Arten von Zeichen: einzelne Zeichen
+ (die aus nur 1 Buchstaben bestehen) und so genannte bundled (gebündelte)
+ Zeichen (die aus mehreren Buchstaben bestehen und in eckigen oder geschweiften
+ Klammern stehen).
+ In unserem Beispiel enhält das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+KA[NN][&T&E][EN]
+\begin_inset Quotes erd
+\end_inset
+
+ 5 Stenozeichen: K-A-NN-&T&E-EN.
+\end_layout
+
+\begin_layout Standard
+Die meisten Zeichen der DruckSteno-Form (z.B.
+ K, A und NN) sind sicher intuitiv verständlich.
+ Die Zeichen &T&E und EN sind vielleicht etwas ungewohnter und bedeuten
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Aufstrich-T mit Häkchen
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+Endkürzung EN
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Im Grunde ist es egal, wie Sie Ihre Stenozeichen 
+\begin_inset Quotes eld
+\end_inset
+
+taufen
+\begin_inset Quotes erd
+\end_inset
+
+: einem 
+\begin_inset Quotes eld
+\end_inset
+
+Aufstrich-T mit Häkchen
+\begin_inset Quotes erd
+\end_inset
+
+ könnte man auch den Namen 
+\begin_inset Quotes eld
+\end_inset
+
+/T&E
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+/E
+\begin_inset Quotes erd
+\end_inset
+
+ (oder was auch immer) geben.
+ Wichtig ist nur, dass das Endresultat des Parsers (also die DruckSteno-Form)
+ Zeichennamen enthält, die Sie tatsächlich (und in dieser Form) definiert
+ haben! Im vorliegenden Beispiel wurde das Zeichen &T&E mit dem TokenShifter
+ aus dem Zeichen &E (Häkchen auf Grundstufe) erstellt.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Unterteilung des Parsers
+\end_layout
+
+\begin_layout Standard
+Wenn wir uns den Weg vom Ursprungswort zur DruckSteno-Form im obigen Beispiel
+ anschauen, dann scheint es, als würden die 7 Regeln alle aus dem gleichen
+ Regel-Pool stammen.
+ Dem ist aber nicht so: Wie bereits erwähnt, unterteilt VSTENO den Pars-Prozess
+ in verschiedene Unterschritte, die linguistisch logischen Operationen entsprech
+en.
+ Chronologisch durchläuft ein Wort parserintern die folgenden Schritte:
+\end_layout
+
+\begin_layout Enumerate
+Filter & Globalizer: In diesem Teilen können Sonderzeichen umgeschrieben
+ werden (z.B.
+ können hier verschiedene Arten von Anführungszeichen oder Umlaute so umgeschrie
+ben werden, dass sie Zeichen in der TokenEngine entsprechen).
+ In unserem Beispiel kommen Globalizer und Filter nicht zum Zug.
+\end_layout
+
+\begin_layout Enumerate
+Shortener: In diesem Teil, werden Kürzungen und Präfixe erkannt und markiert.
+ Im obigen Beispiel stammt die erste Transformation (Endkürzung -en) aus
+ dem Shortener.
+ Beachten Sie, dass wir Kürzungen innerhalb geschweifter Klammern markieren.
+\end_layout
+
+\begin_layout Enumerate
+Normalizer: Hier werden ortografische Vereinfachungen vorgenommen (z.B.
+ th => t, ie => i, ah => a etc.).
+ In unserem Beispiel kommt der Normalizer nicht zum Zug.
+\end_layout
+
+\begin_layout Enumerate
+Bundler: Hier werden Stenozeichen, die aus mehreren Buchstaben in der Langschrif
+t bestehen erkannt und innerhalb eckiger Klammern 
+\begin_inset Quotes eld
+\end_inset
+
+gebündelt
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Im obigen Beispiel trifft dies auf die zweite Transformation (nn => [NN])
+ zu.
+\end_layout
+
+\begin_layout Enumerate
+Transcriptor: Hier alle Stenozeichen so umgeschrieben, dass Sie direkt von
+ der TokenEngine verarbeitet werden können.
+ Im obigen Beispiel sind dies die Schritte 3-7.
+ Beachten Sie, dass die Zeichen der TokenEngine Grossbuchstaben verwenden.
+ In den meisten Fällen werden deshalb Kleinbuchstaben in Grossbuchstaben
+ umgeschrieben (a => A, k => K).
+ Der Transcriptor erkennt hier aber auch, dass das T nach einem Doppel-N
+ als Aufstrich-T geschrieben werden muss und dass dieses Aufstrich-T zusätzlich
+ ein Häkchen benötigt, weil daran die Endung -en angeschlossen wird.
+ Beachten Sie, dass der Transkriptor hier die geschweiften Klammern der
+ Kürzung in eckige Klammern umschreibt.
+\end_layout
+
+\begin_layout Enumerate
+Substituter: Ersetzt Kürzungen (in geschweifter Klammer) durch entsprechende
+ Stenozeichen (in eckiger Klammer, falls nötig).
+ In unserem Beispiel kommt der Substituter nicht zum Zug, da die Endung
+ -en bereits durch den Transcriptor umgeschrieben wurde.
+\end_layout
+
+\begin_layout Standard
+Da der Parser diese Teile einzeln nacheinander wie die Glieder einer Kette
+ durchläuft, nennen wir diese Abfolge auch ParserChain (ParserKette).
+ Wichtig ist nun zu wissen, dass jedem dieser Teile eine PHP-Variable mit
+ dem Beinamen 
+\begin_inset Quotes eld
+\end_inset
+
+table
+\begin_inset Quotes erd
+\end_inset
+
+ (Tabelle) entspricht.
+ Die Variablen heissen also:
+\end_layout
+
+\begin_layout LyX-Code
+Globalizer = $globalizer_table
+\end_layout
+
+\begin_layout LyX-Code
+Filter = $filter_table
+\end_layout
+
+\begin_layout LyX-Code
+Shortener = $shortener_table
+\end_layout
+
+\begin_layout LyX-Code
+Normalizer = $normalizer_table
+\end_layout
+
+\begin_layout LyX-Code
+Bundler = $bundler_tabler
+\end_layout
+
+\begin_layout LyX-Code
+Transcriptor = $transcriptor_table
+\end_layout
+
+\begin_layout LyX-Code
+Substituter = $substituter_table
+\end_layout
+
+\begin_layout Standard
+In diese 
+\begin_inset Quotes eld
+\end_inset
+
+Tables
+\begin_inset Quotes erd
+\end_inset
+
+ werden wir jetzt dann gleich unsere Regeln füllen.
+ Aber zunächst müssen wir noch zwei, drei weitere Besonderheiten des Parsers
+ erklären.
+\end_layout
+
+\begin_layout Subsection*
+Gross- und Kleinbuchstaben
+\end_layout
+
+\begin_layout Standard
+Dieses Thema sind wir bis jetzt stillschweigend übergangen bzw.
+ haben es nur hie und da kurz angedeutet.
+ Es geht um die Frage, wie Klein- und Grossbuchstaben in VSTENO verwendet
+ werden.
+\end_layout
+
+\begin_layout Standard
+Tatsache ist, dass Gross- und Kleinschreibung durchaus einen Unterschied
+ machen können: das Substantiv 
+\begin_inset Quotes eld
+\end_inset
+
+Waren
+\begin_inset Quotes erd
+\end_inset
+
+ und das Verb 
+\begin_inset Quotes eld
+\end_inset
+
+waren
+\begin_inset Quotes erd
+\end_inset
+
+ werden in Stolze-Schrey z.B.
+ völlig unterschiedlich geschrieben.
+ Dies ist der Grund, warum VSTENO zu Beginn der ParserChain die Gross- und
+ Kleinschreibung beibehält - und zwar bis und mit Shortener.
+ Wenn Sie also im Shortener die Regel:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+war
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{WAR}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+definieren, so wird diese nur auf das Verb 
+\begin_inset Quotes eld
+\end_inset
+
+waren
+\begin_inset Quotes erd
+\end_inset
+
+ (ergibt 
+\begin_inset Quotes eld
+\end_inset
+
+{WAR}en
+\begin_inset Quotes erd
+\end_inset
+
+) nicht aber auf 
+\begin_inset Quotes eld
+\end_inset
+
+Waren
+\begin_inset Quotes erd
+\end_inset
+
+ (bleibt 
+\begin_inset Quotes eld
+\end_inset
+
+Waren
+\begin_inset Quotes erd
+\end_inset
+
+) angewendet
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Eine andere Sache ist natürlich, wenn das Verb 
+\begin_inset Quotes eld
+\end_inset
+
+Waren
+\begin_inset Quotes erd
+\end_inset
+
+ dummerweise am Satzanfang steht und ebenfalls gross geschrieben wird ...
+ ;-)
+\end_layout
+
+\end_inset
+
+.
+ Da es bei den meisten Wörtern jedoch keinen Unterschied macht, ob sie gross
+ oder klein geschrieben werden - und es mühsam wäre, in den Regeln jedesmal
+ sämtliche Varianten in eckigen Klammern anzugeben - wandelt VSTENO nach
+ dem Shortener sämtliche Gross- in Kleinbuchstaben um! Alle nachfolgenden
+ Schritte (Normalizer, Bundler, Transcriptor, Substituter) arbeiten somit
+ mit Kleinbuchstaben.
+ Ausgenommen von der Umwandlung in Kleinbuchstaben sind allerdings Veränderungen
+, die der Shortener selbst vornimmt: Wenn der Shortener im Wort 
+\begin_inset Quotes eld
+\end_inset
+
+wahrhaftig
+\begin_inset Quotes erd
+\end_inset
+
+ also die Kürzung -haft zu 
+\begin_inset Quotes eld
+\end_inset
+
+wahr{HAFT}ig
+\begin_inset Quotes erd
+\end_inset
+
+ ersetzt, so verbleibt der Teil 
+\begin_inset Quotes eld
+\end_inset
+
+{HAFT}
+\begin_inset Quotes erd
+\end_inset
+
+ auch nach dem Shortener in Grossbuchstaben.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wir weisen hier - en passant - noch auf einen weiteren Aspekt hin: Wichtig
+ ist in diesem Beispiel auch, dass der Normalizer (der den Vokal 
+\begin_inset Quotes eld
+\end_inset
+
+ah
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+a
+\begin_inset Quotes erd
+\end_inset
+
+ umschreibt) erst NACH dem Shortener abgearbeitet wird, da sonst die Kürzung
+ 
+\begin_inset Quotes eld
+\end_inset
+
+war
+\begin_inset Quotes erd
+\end_inset
+
+ auch auf das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+wa(h)rhaftig
+\begin_inset Quotes erd
+\end_inset
+
+ angewandt würde.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die konsequente Kleinschreibung - mit Ausnahme der vom Shortener eingesetzten
+ Teile, wie gesagt - hat den Vorteil, dass wir Grossbuchstaben nun dazu
+ benutzen können, jene Teile des Wortes zu markieren, die von bestimmten
+ Regeln bereits umgeschrieben wurden.
+ Wenn also der Shortener im Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Andenken
+\begin_inset Quotes erd
+\end_inset
+
+ das Prefix an- erkennt und gross markiert (also 
+\begin_inset Quotes eld
+\end_inset
+
+ANdenken
+\begin_inset Quotes erd
+\end_inset
+
+), dann 
+\begin_inset Quotes eld
+\end_inset
+
+weiss
+\begin_inset Quotes erd
+\end_inset
+
+ der Bundler später, dass er 
+\begin_inset Quotes eld
+\end_inset
+
+gross N
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+klein d
+\begin_inset Quotes erd
+\end_inset
+
+ nicht zum Zeichen [ND] zusammenfassen darf.
+ Die Regel für den Bundler lautet nämlich:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+nd
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[ND]
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der Bundler soll also nur die unbearbeitete (d.h.
+ klein geschriebene) Zeichenfolge 
+\begin_inset Quotes eld
+\end_inset
+
+nd
+\begin_inset Quotes erd
+\end_inset
+
+ bündeln.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Dictionary und Trickster
+\end_layout
+
+\begin_layout Standard
+Zusätzlich zu den bereits vorgestellten Parserteilen gibt es noch einen
+ Wörterbuch und einen sogenannten 
+\begin_inset Quotes eld
+\end_inset
+
+Trickster
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Beide verwenden entsprechende Tables als PHP-Variablen:
+\end_layout
+
+\begin_layout LyX-Code
+Dictionary = $dictionary_table
+\end_layout
+
+\begin_layout LyX-Code
+Trickster = $trickster_table
+\end_layout
+
+\begin_layout Standard
+Um es gleich zu sagen: Sie sollten diese Tables im Prinzip nicht verwenden!
+ Der Grund hierfür: Die $dictionary_table wird in künftigen Versionen verschwind
+en und durch eine Datenbank ersetzt.
+ Und was den Trickster anbelangt: Er ist innerhalb eines geordneten Systems
+ - wie es linguistische Regeln sein sollten - ein etwas ungemütlicher und
+ fast furchteinflössender Zeitgenosse, weil er nämlich die Macht hat, gewisse
+ Regeln zu überlisten ...
+ 
+\end_layout
+
+\begin_layout Standard
+Da beide jedoch (noch) Teil der jetzigen Version sind - und man (solange
+ noch keine Datenbankfunktionen bestehen) vielleicht doch Bedarf hat, eine
+ Art Wörterbuch zur Verfügung zu haben, werde ich die Funktionen kurz dokumentie
+ren:
+\end_layout
+
+\begin_layout Itemize
+Dicionary: Ist im Grunde ein Array mit Einträgen, wobei jeder Eintrag zwei
+ Informationen enthält: Das Ursprungswort (wie es dem Parser von VSTENO
+ übergeben wird) und das Endresultat (also die PrintSteno-Form, die von
+ der TokenEngine direkt verarbeitet werden kann).
+ Der Dictionary ist der ParserChain vorgeschaltet und unterscheidet zwischen
+ Gross- und Kleinbuchstaben.
+ Findet VSTENO im Dictionary einen Eintrag, der dem Ursprungswort entspricht,
+ dann verzichtet das Programm auf die Abarbeitung der ParserChain.
+ Stattdessen wird die DruckSteno-Form aus dem Wörterbuch direkt an die TokenEngi
+ne geschickt.
+ Ebenfalls wichtig: Der Wörterbucheintrag muss exakt mit dem Ursprungswort
+ übereinstimmen: Enthält das Wörterbuch z.B.
+ einen Eintrag für das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Haus
+\begin_inset Quotes erd
+\end_inset
+
+, dann gilt dieser nur für 
+\begin_inset Quotes eld
+\end_inset
+
+Haus
+\begin_inset Quotes erd
+\end_inset
+
+ (und nicht für andere Forme des gleichen Wortes wie 
+\begin_inset Quotes eld
+\end_inset
+
+Hauses
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Hause
+\begin_inset Quotes erd
+\end_inset
+
+ etc.).
+ Die Einträge im Wörterbuch werden also nicht als REGEX-Muster behandelt!
+\end_layout
+
+\begin_layout Itemize
+Trickster: Ein unangenehmer Zeitgenosse, wie gesagt, der sich an keine Regeln
+ hält ...
+ Wenn Sie z.B.
+ feststellen, dass ein Wort von den Regeln falsch umgeschrieben wird (sagen
+ wir z.B.
+ die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+ET
+\begin_inset Quotes erd
+\end_inset
+
+ wird versehentlich auf das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+beten
+\begin_inset Quotes erd
+\end_inset
+
+ angewandt), dann können sie den Trickster dazu veranlassen, z.B.
+ den Vokal E in 
+\begin_inset Quotes eld
+\end_inset
+
+beten
+\begin_inset Quotes erd
+\end_inset
+
+ gross zu schreiben.
+ Dies wiederum bewirkt, dass der Shortener die Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+ET
+\begin_inset Quotes erd
+\end_inset
+
+ nicht anwenden wird, weil das E als 
+\begin_inset Quotes eld
+\end_inset
+
+bereits bearbeitet
+\begin_inset Quotes erd
+\end_inset
+
+ markiert ist (auch der Trickster umgeht also - wie der Shortener - die
+ Umwandlung in Kleinbuchstaben).
+ Sagen wir es so: Ich dachte anfänglich, der Trickster sei ein spannende
+ und sogar brauchbare Idee ...
+ Aber leider bringt er sehr viel Unordnung in die Regeln, was schliesslich
+ der Grund war, den Regel-Formalismus um die Form 
+\begin_inset Quotes eld
+\end_inset
+
+Wenn A, dann B - AUSSER ...
+\begin_inset Quotes erd
+\end_inset
+
+ zu erweitern.
+ Mit andern Worten: Es ist besser die Ausnahme von der Regel gleich bei
+ der Regel zu notieren als 
+\begin_inset Quotes eld
+\end_inset
+
+irgendwo anders
+\begin_inset Quotes erd
+\end_inset
+
+ (i.e.
+ im Trickster), wo sie dann ihr Unwesen treibt ...
+ Letzte Anmerkung: Es ist geplant, den Parser komplett umzuschreiben - und
+ ich denke nicht, dass ich dem Trickster in der neuen Version eine Daseinsberech
+tigung einräumen werde ...
+ ;-)
+\end_layout
+
+\begin_layout Subsection*
+Programmcode
+\end_layout
+
+\begin_layout Standard
+Damit sind wir nun aber definitiv reif für den letzten Schritt: Das Schreiben
+ der Regeln als PHP-Code.
+ Da der Parser in 
+\begin_inset Quotes eld
+\end_inset
+
+linguistische Unterschritte
+\begin_inset Quotes erd
+\end_inset
+
+ unterteilt ist, beginnen Sie am besten mit dem Shortener (also den Kürzungen).
+ Öffnen Sie also die Datei data.php und setzen sie dort die Variable $shortener_t
+able.
+ Wie bei den Zeichen ist diese Variable eine 
+\begin_inset Quotes eld
+\end_inset
+
+Sammlung
+\begin_inset Quotes erd
+\end_inset
+
+ (Array) an Regeln
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die Regeln sind natürlich stark vereinfacht und können so in der Praxis
+ nicht verwendet werden, es geht hier aber nur darum zu zeigen, wie die
+ Regeln als Array notiert werden.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+$shortener_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+war
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{WAR}
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+hab
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+      
+\begin_inset Quotes eld
+\end_inset
+
+vielleicht
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{VIELLEICHT}
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Beachten Sie - wie bei den Zeichendefinitionen - dass die Variablendefinition
+ mit einem Strichpunkt (Semikolon) abgeschlossen und die einzelnen Regeln
+ durch Kommas abgetrennt werden müssen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Auch hier gilt: Im Zweifelsfall lieber ein Komma zu viel - weitere Details
+ hierzu finden Sie bei den Zeichendefinitionen
+\end_layout
+
+\end_inset
+
+.
+ Wichtig: Alle 
+\begin_inset Quotes eld
+\end_inset
+
+Kürzungen
+\begin_inset Quotes erd
+\end_inset
+
+, die sie hier verwenden, müssen entweder als einzelne Stenozeichen definiert
+ sein (z.B.
+ kann in der Grundschrift Stolze-Schrey das lange Wort 
+\begin_inset Quotes eld
+\end_inset
+
+vielleicht
+\begin_inset Quotes erd
+\end_inset
+
+ tatsächlich durch ein einzelnes Zeichen wiedergegeben werden) oder die
+ markierten Kürzungen müssen später vom Substituter so umgeschrieben werden,
+ dass es sich um Zeichen handelt, die von der TokenEngine verarbeitet werden
+ können.
+\end_layout
+
+\begin_layout Standard
+Nach den Kürzungen werden Sie vermutlich den Normalizer und dann den Bundler
+ definieren.
+ Hier ein paar Beispiele für den Bundler:
+\end_layout
+
+\begin_layout LyX-Code
+$bundler_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+  
+\begin_inset Quotes eld
+\end_inset
+
+nn
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[NN]
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+  
+\begin_inset Quotes eld
+\end_inset
+
+nk
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[NK]
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+  
+\begin_inset Quotes eld
+\end_inset
+
+sp
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[SP]
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Später geht es dann zum Transcriptor:
+\end_layout
+
+\begin_layout LyX-Code
+$transcriptor_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+a
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+A
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+b
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+m
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+M
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Und schliesslich zum Substituter:
+\end_layout
+
+\begin_layout LyX-Code
+$substituer_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+{MIT}
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+M
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+{ZU}
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+Z
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[HAB]
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+{VIELLEICHT} => 
+\begin_inset Quotes eld
+\end_inset
+
+[VIELLEICHT]
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+{HIN}
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+HN
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Wie bereits erwähnt können Sie auch Gebrauch vom erweiterten Formalismus
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Wenn A, dann B - ausser C oder D etc.
+\begin_inset Quotes erd
+\end_inset
+
+ machen.
+ Das Beispiel hatten wir schon früher gegeben, fügen es hier aber noch einmal
+ vollständig ein:
+\end_layout
+
+\begin_layout LyX-Code
+$shortener_table = array(
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+(?<![Ss]c)[Hh]ab
+\begin_inset Quotes erd
+\end_inset
+
+ => array( 
+\begin_inset Quotes eld
+\end_inset
+
+{HAB}
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+^Haber
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Habicht
+\begin_inset Quotes erd
+\end_inset
+
+ )
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Kurz gesagt bedeutet diese Regel: Kürze 
+\begin_inset Quotes eld
+\end_inset
+
+HAB
+\begin_inset Quotes erd
+\end_inset
+
+, ausser in 
+\begin_inset Quotes eld
+\end_inset
+
+Haber
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+Habicht
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Wie Sie sehen definieren wir hier die Regel als Array im Array: Es handelt
+ sich also um eine rekursive Struktur - was ja bekanntlich erst die die
+ Magie eines jeden Formalismus ausmacht ...
+ ;-)
+\end_layout
+
+\begin_layout Subsection*
+VSTENO lokal installieren
+\end_layout
+
+\begin_layout Standard
+Damit Sie Ihre neuen Zeichen und Regeln ausprobieren können, müssen Sie
+ VSTENO lokal installieren und die Datei data.php durch Ihre eigene ersetzen.
+ Es wird empfohlen, hierfür eine freie Linux-Distribution (z.B.
+ Trisquel oder Debian) zu verwenden, da diese die Philosophie der Freien
+ Software unterstützen und von Hause aus einen Webserver (z.B.
+ Apache) mit sich bringen.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Der Apache-Webserver kann in Trisquel oder Debian installiert werden mit:
+ sudo apt-get install apache2.
+ Der Apache-Server ist bereits vorkonfiguriert und das home-Verzeichnis
+ von localhost befindet sich in /var/www/html/.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Installieren Sie nun PHP mit: sudo apt-get install php5
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Verwenden Sie PHP in der Version 7, falls Ihre Distribution ein entsprechendes
+ Paket anbieten: Die Version ist gegenüber der Version 5 ca.
+ 80% schneller und verbraucht weniger Speicher.
+\end_layout
+
+\end_inset
+
+ (anschliessend sollten Sie Ihren Webserver neu starten; falls dies nicht
+ automatisch geschieht, können Sie es manuell tun mit: sudo service apache2
+ restart).
+\end_layout
+
+\begin_layout Enumerate
+Wechseln Sie ins Verzeichnis /var/www/html und “klonen” Sie VSTENO mit:
+ git clone https://github.com/marcelmaci/vsteno.
+\end_layout
+
+\begin_layout Enumerate
+Ersetzen Sie nun die Datei /var/www/html/vsteno/php/data.php durch ihre eigenen
+ Zeichen und Regeln!
+\end_layout
+
+\begin_layout Enumerate
+Öffnen Sie Ihren Webbrowser und geben Sie die Adresse localhost/vsteno/php/input.
+php ein - that’s it!
+\end_layout
+
+\begin_layout Subsection*
+Zum Schluss
+\end_layout
+
+\begin_layout Standard
+Damit sind wir am Ende dieses 
+\begin_inset Quotes eld
+\end_inset
+
+linguistischen Tutorials
+\begin_inset Quotes erd
+\end_inset
+
+, welches mit einem einigermassen knappen Zeitbudget erstellt wurde.
+ Ich hoffe, dass trotzdem die wesentlichsten Aspekt abgedeckt werden konnte.
+ Bei Unklarheiten stehe ich gerne zur Verfügung (m.maci@gmx.ch).
+ 
+\end_layout
+
+\end_body
+\end_document

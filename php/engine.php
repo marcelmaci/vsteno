@@ -790,7 +790,7 @@ function CalculateInlineSVG( $text_array ) {
         $original_word = $bare_word;
         $result_after_last_rule = $bare_word;
         
-       // echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
+       //echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
         
         if (mb_strlen($bare_word)>0) {
             $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
