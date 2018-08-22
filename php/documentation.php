@@ -1,12 +1,20 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Dokumentation</h1>
-<p>Die Dokumentation richten sich an 3 Zielgruppen:</p>
-<ul>
-<li><b>Anwender/innen:</b> Wer VSTENO dazu nutzen möchte, Texte in die Grundschrift Stolze-Schrey zu übertragen (um sie z.B. auf einem E-Reader zu lesen),
-der finden entsprechende Informationen in diesem <a href="../docs/vsteno_tutorial.pdf">Kurztutorial</a>.</li>
-<li><b>Linguist/innen:</b> Wer VSTENO dazu nutzen möchte, eigene Stenografie-System umzusetzen, der findet relative ausführliche Informationen in diesem 
-<a href="../docs/tutorial_linguistinnen.pdf">Tutorial für Linguist/innen</a>.</li>
-<li><b>Programmierer/innen:</b></h2> Wer VSTENO erweitern, abändern, "forken" (oder was auch immer;-) möchte, findet im Moment leider noch keine
-entsprechende Dokumentation ... Die obigen beiden Dokumentationen, diese ältere <a href="../docs/documentation.txt">technische Dokumentation</a> 
-sowie die relativ zahlreichen und ausführlichen Anmerkungen im Quelltext sollten jedoch genügen, um sich im Programm zurecht zu finden ... ;-)</p>
+<p>VSTENO kann von verschiedenen Zielgruppen und zu verschiedenen Zwecken genutzt werden. </p>
+<h2>(1) "Leseratten"</h2>
+<p>Wer VSTENO dazu nutzen möchte, Texte in die Grundschrift Stolze-Schrey zu übertragen  (um sie z.B. auf einem E-Reader zu lesen),
+der findet entsprechende Informationen in diesem <a href="../docs/vsteno_tutorial.pdf">Kurztutorial</a>.</p>
+<h2>(2) Linguist/innen</h2>
+<p>Wenn Sie "der Hafer sticht" und Sie VSTENO dazu nutzen möchte, selber eigene Stenografie-System umzusetzen, dann finden
+Sie die hierzu notwendigen technischen Informationen im  <a href="../docs/tutorial_linguistinnen.pdf">Tutorial für Linguist/innen</a>.</p>
+<h2>(3) Programmierer/innen</h2> 
+<p>Falls Sie VSTENO abändern oder um eigene Funktionalitäten erweitern möchten, können Sie sich den Quelltext von 
+<a href="http://www.github.com/marcelmaci/vsteno">www.github.com/marcelmaci/vsteno</a> herunterladen. </p>
+<p>Im Moment ist leider noch keine Dokumentation verfügbar, welche den Programmcode von VSTENO näher beschreibt. Der Quellcode ist 
+jedoch reichlich mit Kommentaren versehen. Wenn Sie also über PHP-Kenntnisse verfügen, dann sollten Sie das Programm anhand
+dieser Anmerkungen und der vorgängig erwähnten Tutorials erschliessen können.</p>
+<p>Falls es hilft, können Sie zusätzlich auch diese 
+<a href="../docs/documentation.txt">ältere Dokumentation</a> 
+konsultieren (das meiste darin ist zwar wirklich veraltet, aber einige interessante Informationen - z.B. wie VSTENO die Stenozeichen neigt 
+und wie VSTENO den Quellcode grundsätzlich aufgeteilt und einbindet - sind nach wie vor gültig).</p>
 <?php require "vsteno_template_bottom.php"; ?>

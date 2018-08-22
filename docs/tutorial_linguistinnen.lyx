@@ -102,10 +102,10 @@ Wenn Sie das Programm VSTENO einfach zur Übertragung von deutschen Texten
  mit den vordefinierten Zeichen und Regeln verwenden.
  Wenn Sie aber ein eigenes Stenografie-System umsetzen möchten - z.B.
  die Eilschrift von Stolze-Schrey oder auch andere Sprachen wie Spanisch,
- Französisch, Italienisch, Englisch oder auch ein System, das nicht von
- Stolze-Schrey ist, aber ähnlich funktioniert (wie z.B.
- DEK) - dann benötigen Sie das folgenden Tutorial, um zu verstehen, wie
- man selber Zeichen und Regeln formuliert, um Langschrift- in Kurzschrifttexte
+ Französisch, Italienisch, Englisch oder ein System, das nicht von Stolze-Schrey
+ ist, aber ähnlich funktioniert (wie z.B.
+ DEK) - dann benötigen Sie das folgende Tutorial, um zu verstehen, wie man
+ selber Zeichen und Regeln formuliert, um Langschrift- in Kurzschrifttexte
  umzuwandeln.
 \end_layout
 
@@ -123,7 +123,7 @@ ig über Programmierkenntnisse verfügen (oder zumindest wenig erpicht sind,
  Ein separator Editor für linguistische Daten ist selbstverständlich geplant.
  Die Implementierung desselben wir jedoch einige Zeit in Anspruch nehmen,
  weshalb es mir ein Anliegen ist, die linguistischen Funktionen bereits
- jetzt zu erklären und dokumentieren.
+ jetzt zu erklären und zu dokumentieren.
  Es ist übrigens zu betonen, dass sich an der Funktionalität von VSTENO
  nichts ändert: Ob mit oder ohne Editor - die Möglichkeiten des Programmes
  bleiben genau die gleichen.
@@ -168,7 +168,7 @@ sanft
 \begin_inset Quotes erd
 \end_inset
 
- oder möglichst 
+ oder 
 \begin_inset Quotes eld
 \end_inset
 
@@ -246,18 +246,10 @@ unteren
 
 \begin_layout Standard
 Wenn Sie noch nie programmiert haben, dann sieht dies vermutlich reichlich
- verwirrend aus, deshalb vereinfachen wir die Sache noch etwas.
- Ausserdem: Informationen zwischen /* und */ haben für das Programm selber
- keine Bedeutung.
- Die beiden Zeichen markieren nämlich einen 
-\begin_inset Quotes eld
-\end_inset
-
-Kommentar
-\begin_inset Quotes erd
-\end_inset
-
-
+ verwirrend aus, deshalb vereinfachen wir die Sache gleich noch etwas.
+ Ausserdem können Sie alles zwischen den Zeichen /* und */ ignorieren: Hierbei
+ handelt es sich um Kommentare, die für den Programmcode bzw.
+ das Programm selber keine Bedeutung haben
 \begin_inset Foot
 status open
 
@@ -268,10 +260,11 @@ Eine weitere Möglichkeit sind Kommentare mit //: diese sind im Unterschied
 
 \end_inset
 
+.
  In diesem Fall weisen die Kommentare /*header*/ und /*data*/ darauf hin,
  dass es sich bei den folgenden Zahlen um Header-Informationen (= allgemeine
- Angaben zum Zeichen) und um Daten-Werte (= Punkte, die das Zeichen definieren)
- handelt.
+ Angaben zum Zeichen) und um eigentliche Daten (hier: Punkte, die das Zeichen
+ definieren) handelt.
  Der Übersicht halber lassen wir den Header vorerst mal weg:
 \end_layout
 
@@ -286,9 +279,8 @@ Eine weitere Möglichkeit sind Kommentare mit //: diese sind im Unterschied
 \begin_layout Standard
 Damit verbleiben also zwei Datentupel - eines nach /*data*/ und eines nach
  /**/, die je aus 8 Werten bestehen.
- Das 1.
- Datentupelm welches dem ersten Punkt entspricht, enthält die folgenden
- Werte:
+ Das erste Datentupel, welches dem ersten Punkt entspricht, enthält die
+ folgenden Werte:
 \end_layout
 
 \begin_layout LyX-Code
@@ -382,8 +374,8 @@ dr: Der so genannte draw-Wert (Zeichnungswert), der bestimmt, ob der Punkt
 \begin_layout Standard
 Es mag sein, dass die vielen Informationen im Moment etwas verwirrlich sind,
  aber wie bereits erwähnt geht es im Moment nur um die x- und y-Koordinaten.
- Wie man sehen kann wird im ersten Datentuplet der Punkt 1=(0,20) und im
- zweiten Datentuplet der Punkt 2=(0,0) definiert.
+ Wie man sehen kann wird im ersten Datentupel der Punkt 1=(0,20) und im
+ zweiten Datentupel der Punkt 2=(0,0) definiert.
  Dies bedeutet nichts anderes als die Umsetzung dessen, was wir weiter oben
  vermerkt haben: Das Zeichen 
 \begin_inset Quotes eld
@@ -601,7 +593,23 @@ target "http://scaledinnovation.com/analytics/splines/aboutSplines.html"
 \begin_layout Standard
 Vereinfacht gesagt ergibt die Spannung mit dem Wert 0 eine spitze Verbindung,
  die Spannung mit dem Wert 0.5 eine runde Verbindung (es sind natürlich auch
- andere Werte möglich).
+ andere Werte - also 
+\begin_inset Quotes eld
+\end_inset
+
+stärkere
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+schwächere
+\begin_inset Quotes erd
+\end_inset
+
+ Spannungen - möglich).
  Wichtig zu wissen ist, dass die Kurve zwischen zwei Punkten P1 zu P2 durch
  zwei Spannungen definiert wird: Die Spannung p1t1 gibt die Spannung nach
  dem Punkt P1 (Richtung P2) an, die Spannung p1t2 gibt die Spannung vor
@@ -670,7 +678,7 @@ B
 
 \begin_layout Standard
 Der ganze mathematische Hokuspokus - bzw.
- wie Magie ;-) - liegt nun in den Tensions.
+ die Magie ;-) - liegt nun in den Tensions.
  Sie betragen für die Punkte 1-4: T1(0,0.5), T2(0.5,0.5), T3(0.5,0.5), T4(0.5,0).
  Das bedeutet, dass beim Zeichen 
 \begin_inset Quotes eld
@@ -888,16 +896,16 @@ Intermediate shadow points
 \begin_layout Standard
 Die soeben dargestellte Abstufung der Schattierungen funktioniert relativ
  gut, wenn das Zeichen selbst bereits aus mehreren Punkten besteht, die
- eine abgestufte Schattierung zulassen.
- Schwieriger wird es, wenn zu wenige Punkte vorhanden sind, um eine optisch
- einigermassen gelungene Abstufung zu erreichen.
- In einem solchen Fall besteht zwar die Möglichkeit, zusätzliche Punkte
- in die Zeichendefinition einzufügen, um mehr Zwischenschritte in der Schattieru
-ng zu erreichen.
+ eine abgestufte Definition der Schattierung zulassen.
+ Schwieriger wird es, wenn das Zeichen als solches zu wenige Punkte enthält,
+ um eine optisch einigermassen gelungene Abstufung zu erreichen.
+ In diesem Fall besteht zwar die Möglichkeit, zusätzliche Punkte in die
+ Zeichendefinition einzufügen, um mehr Zwischenschritte in der Schattierung
+ zu erhalten.
  Diese Zwischenpunkte können jedoch den Nachteil haben, dass sie das optische
  Bild in der unschattierten Variante stören, da der kontinuierliche Lauf
  der Bezier-Kurve unterbrochen wird.
- Die Lösung besteht in diesem Fall in so genannten 
+ Die von VSTENO verwendete Lösung besteht heir in so genannten 
 \begin_inset Quotes eld
 \end_inset
 
@@ -909,7 +917,7 @@ intermediate shadow points
  Dies sind Zwischenpunkte, die nur dann gezeichnet werden, wenn das Zeichen
  schattiert dargestellt werden soll.
  In der normalen Zeichendarstellung werden diese Punkte ignoriert.
- Als Beispiel zeigen wir hier das Zeichen 
+ Als Beispiel zeigen wir das Zeichen 
 \begin_inset Quotes eld
 \end_inset
 
@@ -997,13 +1005,21 @@ vokalische R
 \end_layout
 
 \begin_layout Standard
-Der Einfachheit halber wurden hier die Punkte 1-9 innerhalb von Kommentaren
- nummeriert.
- Für die Definition des nicht schattierten Zeichens reichen hier im Prinzip
- die folgenden Punkte aus: 1=(2.5,5), 3=(5,2.5), 6=(2.5,0), 7=(0,2.5), 8=(2.5,5).
+Der Einfachheit halber wurden die Punkte 1-9 innerhalb von Kommentaren nummerier
+t.
+ Für die Definition des nicht schattierten Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+R
+\begin_inset Quotes erd
+\end_inset
+
+ reichen im Prinzip die folgenden Punkte aus: 1=(2.5,5), 3=(5,2.5), 6=(2.5,0),
+ 7=(0,2.5), 8=(2.5,5).
  Wie man sehen kann, markieren diese 5 Punkte, die Eckpunkte eines geschlossenen
  Kreises, die jeweils rund - d.h.
- mit Tensions zwischen 0.5 - 0.7 - verbunden werden.
+ mit Tensions zwischen 0.5-0.7 - verbunden werden.
  Würde man allerdings nur diese 5 Punkte für das schattierte Zeichen verwenden,
  so stünden für die Schattierung lediglich die Strecken von Punkt 1 - 3
  und von Punkt 3 - 6 zur Verfügung.
@@ -1011,7 +1027,7 @@ Der Einfachheit halber wurden hier die Punkte 1-9 innerhalb von Kommentaren
  shadow points eingefügt.
  Erkennbar ist dies am Wert 5 an der 4.
  Stelle im Datatupel.
- Wie wir weiter oben schon angedeutet hatte, steht der Wert in der 4.
+ Wie wir weiter oben schon angedeutet hatten, steht der Wert in der 4.
  Position für den 
 \begin_inset Quotes eld
 \end_inset
@@ -1081,8 +1097,7 @@ x1, y1, t1, d1,  th, dr, d2, t2
 \end_layout
 
 \begin_layout Standard
-Das Feld d1 steht hier für die Eingangs-Information (entry information),
- d.h.
+Das Feld d1 steht für die Eingangs-Information (entry information), d.h.
  die Information, die angibt, wie das Zeichen verbunden wird.
  Es kann folgende Werte annehmen:
 \end_layout
@@ -1283,7 +1298,7 @@ beendet
 \end_inset
 
  wird.
- Die Werte hier sind ähnlich wie bei d1, aber mit einigen kleinen Unterschieden:
+ Die Werte sind ähnlich wie bei d1, aber mit einigen kleinen Unterschieden:
 \end_layout
 
 \begin_layout Standard
@@ -1869,7 +1884,7 @@ NS
 Einen ähnlichen Fall gibt es bei Zeichen, die mit einer Rundung beginnen
  und wo in Verbindung mit anderen Zeichen ein Teil der Rundung zweimal gezeichne
 t wird.
- Nehmen wir hier als Beispiel das Zeichen 
+ Nehmen wir als Beispiel das Zeichen 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3665,7 +3680,7 @@ VR
 
 .
  Die Definition einer x-Koordinate ist nicht nötig, da diese automatisch
- beim aneinanderfügen der Zeichen errechnet wird.
+ beim Aneinanderfügen der Zeichen errechnet wird.
  
 \end_layout
 
@@ -5768,13 +5783,9 @@ Ein guter Start, um einen Überblick zu REGEX zu erhalten, sind die beiden
 
 \begin_layout Itemize
 Deutsch: 
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-https://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "https://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck"
 
 \end_inset
 
@@ -5783,13 +5794,9 @@ https://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck
 
 \begin_layout Itemize
 Englisch: 
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-https://en.wikipedia.org/wiki/Regular_expression
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "https://en.wikipedia.org/wiki/Regular_expression"
 
 \end_inset
 
@@ -5802,13 +5809,9 @@ Ebenfalls sehr zu empfehlen ist der folgende REGEX-Tester:
 
 \begin_layout Itemize
 Online-REGEX-Tester: 
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-https://regex101.com/
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "https://regex101.com/"
 
 \end_inset
 
@@ -8841,7 +8844,7 @@ linguistischen Tutorials
 \end_inset
 
 , welches mit einem einigermassen knappen Zeitbudget erstellt wurde.
- Ich hoffe, dass trotzdem die wesentlichsten Aspekt abgedeckt werden konnte.
+ Ich hoffe, dass trotzdem die wesentlichsten Aspekte abgedeckt werden konnten.
  Bei Unklarheiten stehe ich gerne zur Verfügung (m.maci@gmx.ch).
  
 \end_layout
