@@ -559,7 +559,7 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         // first tilt and then smoothen for better quality!!!
         $splines = TiltWordInSplines( $angle, $splines );
         $splines = SmoothenEntryAndExitPoints( $splines );
-        list( $splines, $width) = TrimSplines( $splines );        
+        list( $splines, $width) = TrimSplines( $splines ); 
         $splines = CalculateWord( $splines );
         $svg_string = CreateSVG( $splines, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
@@ -1282,6 +1282,64 @@ function CalculateLayoutedSVG( $text_array ) {
     return $svg_string;
 }
 
+function CalculateTrainingSVG( $text_array ) {
+    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied, $std_form, $prt_form;
+    $output = "";
+    
+    $output .= "<div id=\"order\"><table>";
+    $i = 0;
+    foreach ( $text_array as $this_word ) {
+        $global_debug_string = "";
+        $global_number_of_rules_applied = 0;
+        $bare_word = GetWordSetPreAndPostTags( $this_word );
+         
+        //$html_pretags = ParseAndSetInlineOptions( $combined_pretags );
+        $original_word = $bare_word;
+        $result_after_last_rule = $bare_word;
+        
+       //echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
+        
+        
+        
+        if (mb_strlen($bare_word)>0) {
+            $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
+            // echo "CalculateInlineSVG()1111: bare_word: $bare_word<br>";
+            $output .= "<tr><td><center><i>$bare_word</i><br>";
+            $output .= SingleWord2SVG( $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+            $output .= "</center></td>";
+            $std_form_upper = mb_strtoupper($std_form );
+            $output .= "<td>
+                <input type='radio' name='text_format_metayesno' value='radiocorrect$i'> r
+                <input type='radio' name='text_format_metayesno' value='radiowrong$i'> f
+                <br>
+
+                <input type='checkbox' name='chkstd$i' value='chkstdyes$i'> STD: 
+                <input type='text' name='txtstd$i'  size='30' value='$std_form_upper'>
+                <br>
+                <input type='checkbox' name='chkprt$i' value='chkprtyes$i'> PRT: 
+                <input type='text' name='txtprt$i'  size='30' value='$prt_form'>
+                <br>
+                <input type='checkbox' name='chkcut$i' value='chkcutyes$i'> Trennung: 
+                <input type='text' name='txtcut$i'  size='24' value='$bare_word'>
+                <br>
+            </td>
+                <td>
+                    Anmerkung:<br>
+                    <textarea id='comment$i' name='comment$i' rows='4' cols='40'>
+                    </textarea>
+                </td>
+            </tr>";
+            
+            $debug_information = GetDebugInformation( /*$SingleWord->Original*/ $bare_word );       // revert back to procedural-only version
+        }
+        $i++;
+    }
+    $output .= "</table></div>";
+    
+    return $output;
+}
+
+
 function NormalText2SVG( $text ) {
     
     $text = PreProcessNormalText( $text );
@@ -1290,6 +1348,7 @@ function NormalText2SVG( $text ) {
     
     switch ($_SESSION['output_format']) {
             case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;
+            case "train" : $svg = CalculateTrainingSVG( $text_array ); break;
             default : $svg = CalculateInlineSVG( $text_array );
     }
     echo "$svg";

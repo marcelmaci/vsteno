@@ -12,6 +12,13 @@
                 <li><A href="input.php">Vollversion</A></li>
                 <li><A href="web.php">Webversion</A></li>
                 </ul>
+                <p><b>Konto</b></p>
+                <ul>
+                <li><A href="create_account.php">Anlegen</A></li>
+                <li><A href="login.php">Einloggen</A></li>
+                <li><A href="logout.php">Ausloggen</A></li>
+                <li><A href="delete_account.php">Löschen</A></li>
+                </ul>
                 <p><b>Stenografie</b></p>
                 <ul>
                 <li><A href="thoughts.php">Gedanken</A></li>

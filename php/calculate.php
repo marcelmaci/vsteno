@@ -1,4 +1,13 @@
 <?php 
+// include external data and code
+require_once "constants.php";
+require_once "data.php";
+require_once "parser.php";
+require_once "engine.php";
+require_once "session.php";
+//require_once "words.php";     // revert back to procedural-only version
+
+
 function InsertHTMLHeader() {
     if ($_SESSION['output_integratedyesno']) {
         require "vsteno_template_top.php";
@@ -43,8 +52,16 @@ function InsertIntroduction() {
 
 function InsertReturnButton() {
     if (!$_SESSION['output_without_button_yesno']) {
-        echo '<a href="' . $_SESSION['return_address'] . '"><br><button>"zurück"</button></a><br><br>';   
+        echo '<a href="' . $_SESSION['return_address'] . '"><br><button>zurück</button></a><br><br>';   
     }
+}
+
+function InsertReturnAndDatabaseButton() {
+    echo '<center><a href="' . $_SESSION['return_address'] . '"><br><button>zurück</button></a>';   
+    //echo '<a href="purgatorium.php"><br><button>"=> Datenbank"</button></a><br><br>';    
+    
+    echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ODER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="=> DATENBANK"></center><br>';
+
 }
 
 function CalculateStenoPage() {
@@ -73,28 +90,28 @@ function CalculateStenoPage() {
             // add this at beginning of original text
             //echo "title_to_add: $title_to_add<br>";
             $text = $title_to_add . $text;
+        } elseif ($_SESSION['output_format'] === "train") {
+            echo "<h1>Training</h1><br>";
+            echo "<form action='../php/purgatorium.php' method='post'>";
+            NormalText2SVG( $text ); // NormalText2SVG will call CalculateTrainingSVG
+            InsertReturnAndDatabaseButton();
+            echo "</form>";
         } else {
             InsertTitle();
             InsertIntroduction();
+            NormalText2SVG( $text );
+            InsertReturnButton();
         }
         //echo "\nText aus CalculateStenoPage()<br>$text<br>\n";
-        NormalText2SVG( $text ); // do not escape entered text (will be done in parser: pre/postprocessnormaltext())
+        //NormalText2SVG( $text ); // do not escape entered text (will be done in parser: pre/postprocessnormaltext())
        
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
    
     
     //echo '<a href="input.php"><br><button>"Nochmals!"</button></a>';
-    InsertReturnButton();
+   
     InsertHTMLFooter();
 }
-
-// include external data and code
-require_once "constants.php";
-require_once "data.php";
-require_once "parser.php";
-require_once "engine.php";
-require_once "session.php";
-//require_once "words.php";     // revert back to procedural-only version
 
 // main
 

@@ -116,6 +116,9 @@ function Helvetizer( $word ) {
 */
 
 // decapitalizer: can't be replaced with GenericParser! (?)
+// Can be replaced: REGEX: ([A-Z]) => \L$1 IN PHP: ???
+// Idem for strtoupper: REGEX: ([a-z]) => \U$1 IN PHP: ???
+// must be refined for special characters (äöü etc.)
 function Decapitalizer( $word ) {
     $output = mb_strtolower($word);
     return $output;
@@ -211,7 +214,7 @@ function Lookuper( $word ) {
 // metaparser: combines all the above parsers
 function ParserChain( $text ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-            $bundler_table, $transcriptor_table, $substituter_table;
+            $bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
         $result = Lookuper( $text ); // can't be replaced with GenericParser => will be database-function
         
@@ -227,15 +230,17 @@ function ParserChain( $text ) {
         
         if ( mb_strlen($result) > 0 ) {
             
-            $result = GenericParser( $substituter_table, GenericParser( $transcriptor_table, GenericParser( $bundler_table, GenericParser( 
-                $normalizer_table, GenericParser( $shortener_table, GenericParser( $filter_table, $result))))));
+            $std_form = GenericParser( $bundler_table, GenericParser( $normalizer_table, GenericParser( $shortener_table, GenericParser( $filter_table, $result))));
+            $prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form ));
+            $result = $prt_form;
             return $result;
             // return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Filter( $result )))))); // don't apply decapitalizer
         
         } else {
             
-            $result = GenericParser( $substituter_table, GenericParser( $transcriptor_table, GenericParser( $bundler_table, GenericParser( 
-                $normalizer_table, GenericParser( $shortener_table, Decapitalizer( GenericParser( $filter_table, $text)))))));
+            $std_form = GenericParser( $bundler_table, GenericParser( $normalizer_table, GenericParser( $shortener_table, Decapitalizer( GenericParser( $filter_table, $text)))));
+            $prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form ));
+            $result = $prt_form;
             return $result;
             
             //return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Decapitalizer( Filter(( $text )))))))); // apply normal parserchain on original word

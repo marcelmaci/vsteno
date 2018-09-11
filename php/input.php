@@ -110,6 +110,7 @@ Fenster:
 <br>
 <input type="radio" name="output_format" value="inline" <?php echo ($_SESSION['output_format'] === "inline") ? "checked" : "";?>> Inline 
 <input type="checkbox" name="output_text_tags" value="text_tags_yes" <?php echo ($_SESSION['output_texttagsyesno']) ? "checked" : "";?>> Langschrift-Tags
+<input type="radio" name="output_format" value="train" <?php echo ($_SESSION['output_format'] === "train") ? "checked" : "";?>> Training
 <input type="radio" name="output_format" value="metaform" <?php echo ($_SESSION['output_format'] === "metaform") ? "checked" : "";?>> Metaform
 <input type="radio" name="output_format" value="debug" <?php echo ($_SESSION['output_format'] === "debug") ? "checked" : "";?>> Debug<br>
 

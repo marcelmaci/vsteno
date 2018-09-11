@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "120bb9e2998e42a82d46818285f98e017dbecc77";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "21. August 2018";                                  // idem
+const version_commit_id = "f209b211d21197c3820d67ebb90cc6f704018e5c";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "22. August 2018";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -160,6 +160,8 @@ $html_pretags = "";
 $html_posttags = "";
 $global_debug_string = "";
 $global_number_of_rules_applied = 0;
+$std_form = "";
+$prt_form = "";
 
 // declarations
 $splines = array();                             // not really necessary in php
