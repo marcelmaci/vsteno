@@ -1309,8 +1309,10 @@ function CalculateTrainingSVG( $text_array ) {
             $output .= "</center></td>";
             $std_form_upper = mb_strtoupper($std_form );
             $output .= "<td>
-                <input type='radio' name='text_format_metayesno' value='radiocorrect$i'> r
-                <input type='radio' name='text_format_metayesno' value='radiowrong$i'> f
+                <input type='hidden' name='original$i' value='$bare_word'>
+            
+                <input type='radio' name='result$i' value='correct$i'> r
+                <input type='radio' name='result$i' value='wrong$i'> f
                 <br>
 
                 <input type='checkbox' name='chkstd$i' value='chkstdyes$i'> STD: 

@@ -31,3 +31,10 @@
                 <li><A href="feedback.php">Fehler</A></li>
                 <li><A href="mailto:m.maci@gmx.ch"><img src="../web/email_icon_grau_transparent.png" height="13" width="23"> Mail</A></li>
                 </ul>
+                <?php require_once "session.php";
+                      if ($_SESSION['user_logged_in']) {
+                        echo "<p><b>User</b></p><ul><li><a href='show_account_information.php'>" . $_SESSION['user_username'] . "(" . $_SESSION['user_privilege'] . ")</a></li>";
+                        if ($_SESSION['user_privilege'] > 1) echo "<li><a href='aleph.php'>=> aleph</a></li>";
+                        echo "</ul>";
+                      }
+                ?>

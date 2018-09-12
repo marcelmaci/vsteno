@@ -56,12 +56,8 @@ function InsertReturnButton() {
     }
 }
 
-function InsertReturnAndDatabaseButton() {
-    echo '<center><a href="' . $_SESSION['return_address'] . '"><br><button>zurück</button></a>';   
-    //echo '<a href="purgatorium.php"><br><button>"=> Datenbank"</button></a><br><br>';    
-    
-    echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ODER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="=> DATENBANK"></center><br>';
-
+function InsertDatabaseButton() {
+    echo '<center><input type="submit" name="action" value="speichern"></center><br>';
 }
 
 function CalculateStenoPage() {
@@ -91,10 +87,19 @@ function CalculateStenoPage() {
             //echo "title_to_add: $title_to_add<br>";
             $text = $title_to_add . $text;
         } elseif ($_SESSION['output_format'] === "train") {
-            echo "<h1>Training</h1><br>";
+            echo "<h1>Training</h1>";
+            if (!$_SESSION['user_logged_in']) echo "<p><b>Sie müssen eingeloggt sein, um Datenbankfunktionen nutzen zu können!</b></p>";
+            else {
+                switch ($_SESSION['user_privilege']) {
+                    case 1 : $privilege_text = "Purgatorium"; break;
+                    case 2 : $privilege_text = "Purgatorium & Elysium"; break;
+                    default : $privilege_text = "(Fehler)";
+                }
+                echo "<p>Nutzer <b>" . $_SESSION['user_username'] . " (user_id: " . $_SESSION['user_id'] . ")</b> mit Schreibrechten für <b>$privilege_text</b>.<p>";
+            }
             echo "<form action='../php/purgatorium.php' method='post'>";
             NormalText2SVG( $text ); // NormalText2SVG will call CalculateTrainingSVG
-            InsertReturnAndDatabaseButton();
+            InsertDatabaseButton();
             echo "</form>";
         } else {
             InsertTitle();

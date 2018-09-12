@@ -83,7 +83,10 @@ function InitializeSessionVariables() {
     $_SESSION['show_margins'] = false;
     $_SESSION['show_distances'] = false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
-    
+    $_SESSION['user_logged_in'] = false;
+    $_SESSION['user_username'] = "";
+    $_SESSION['user_privilege'] = 0;
+    $_SESSION['user_id'] = 0;
     
 }
 

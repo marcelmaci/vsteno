@@ -34,17 +34,19 @@ Captcha:<br>
 E-Mail*:
 </td>
 
-<td> <input type="text" name="username"  size="20" value="<?php echo RandomString(8); ?>"><br>
-<input type="text" name="password"  size="20" value="<?php echo RandomString(8); ?>"><br>
-<input type="text" name="captcha"  size="20" value="<?php $temp = GetShorthandCaptcha(4); echo $_SESSION['captcha']; ?>"><br>
-<input type="text" name="email"  size="20" value="">
+<td> <input type="text" name="username"  size="30" value="<?php echo RandomString(8); ?>"><br>
+<input type="text" name="password"  size="30" value="<?php echo RandomString(8); ?>"><br>
+<input type="text" name="captcha"  size="30" value="<?php $temp = GetShorthandCaptcha(4); /*echo $_SESSION['captcha'];*/ ?>"><br>
+<input type="text" name="email"  size="30" value="">
 </td> 
 <td>
-Captcha:<br>
+Captcha:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 <?php echo $temp; ?>
 
 </td>
-
+<td>
+<b>Tipp:</b><br>Schalten Sie die <a href="input.php">Hilfslinien</a> ein. Das Captcha wird dann besser lesbar!<br>=> <a href="create_account.php">anderes Captcha</a>
+</td>
 </tr>
 </table>
 <input type="submit" name="action" value="anlegen">
@@ -53,6 +55,6 @@ Captcha:<br>
 <h2>Datenschutz</h2>
 <p>Aus Datenschutzgründen empfehlen wir zufällige Benutzernamen und Passwörter zu wählen (ein Vorschlag wird automatisch generiert und angezeigt). 
 </p><p>(*) Die Angabe einer E-Mail-Adresse ist freiwillig (sie wird nur für Rückfragen zu Einträgen oder
-zur Mitteilung von Änderungen betreffend VSTENO verwendet).</p>
+zur Mitteilung von Änderungen betreffend VSTENO verwendet). Empfohlen wird das Format: beispiel at domainname dot ch</p>
 
 <?php require "vsteno_template_bottom.php"; ?>

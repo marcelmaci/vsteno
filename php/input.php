@@ -2,11 +2,7 @@
 <br>
 <center>
 <?php require_once "constants.php"; echo "<i>Commit: " . version_commit_id . " (" . version_date . ")</i><br>"; ?>
-<b>HINWEIS: Es sind noch nicht alle Optionen implementiert.<br>
-Im Moment funktionieren: Textfeld (Langschrift), Titel, Einleitung (ohne Grösse),<br>
-Zeichen (Grösse, Dicke, Neigung), Textfarbe, Hilfslinien, Ausgabe (Fenster integriert,<br>
-Vollseite; mit/ohne Button), Inline (mit/ohne Langschrift-Tags).<br><br>
-</b>
+<b>HINWEIS: VSTENO ist alpha - sind noch nicht alle Optionen implementiert!<br><br></b>
 <div id="order">
 <form action="../php/calculate.php" method="post">
 <table>
