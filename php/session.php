@@ -83,12 +83,14 @@ function InitializeSessionVariables() {
     $_SESSION['show_margins'] = false;
     $_SESSION['show_distances'] = false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
-    $_SESSION['user_logged_in'] = false;
-    $_SESSION['user_username'] = "";
-    $_SESSION['user_privilege'] = 0;
-    $_SESSION['user_id'] = 0;
-    
+    if (!isset($_SESSION['user_logged_in'])) {       // don't logout user when resetting session variables
+        $_SESSION['user_logged_in'] = false;
+        $_SESSION['user_username'] = "";
+        $_SESSION['user_privilege'] = 0;
+        $_SESSION['user_id'] = 0;
+    }
 }
+
 
 function CopyFormToSessionVariablesMaxi() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide; // probably superfluous .. ?!

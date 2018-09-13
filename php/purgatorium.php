@@ -70,7 +70,7 @@ while (isset($_POST["txtstd$i"])) {
         VALUES ( '$safe_original', '$safe_txtstd', '$safe_txtprt', '$safe_txtcut', '$safe_result', '$safe_user_id', '$safe_comment')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "Word $safe_original written to PURGATORIUM (query: $sql)<br>";
+            echo "Word $safe_original written to PURGATORIUM<br>"; // (query: $sql)<br>";
         } else {
             die_more_elegantly("Fehler: " . $sql . "<br>" . $conn->error . "<br>");
         }

@@ -214,11 +214,16 @@ function Lookuper( $word ) {
 // metaparser: combines all the above parsers
 function ParserChain( $text ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-            $bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form;
+            $bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
+        $processing_in_parser = "R"; // suppose word will been obtained by processing the rules
         $result = Lookuper( $text ); // can't be replaced with GenericParser => will be database-function
         
-        if ( mb_strlen($result) > 0 ) return $result;
+        if ( mb_strlen($result) > 0 ) {
+            $processing_in_parser = "D";  // mark word as taken from dictionary (will be replaced with database functions later)
+            $prt_form = $result;
+            return $result;
+        }
         // if there is no entry in the dictionary: try trickster first (befory applying parserchain)
         // if trickster returns a result, then avoid decapitalizer (trickster needs capital letter to distinguish between certain words, avoiding decapitalizing
         // gives the trickster the possibility to mark certain parts of the words as capitals (so they won't get treated by certain rules of the parser chain))
@@ -277,7 +282,18 @@ function GetPreAndPostTokens( $text ) {
 }
 
 function MetaParser( $text ) {          // $text is a single word!
+global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
+$bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
+       
         global $punctuation, $combined_pretags, $combined_posttags, $globalizer_table, $helvetizer_table;
+//////// metaparser should distinguish between normal text and metaform (that doesn't need - or only partial - parsing)! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+if ($_SESSION['original_text_format'] === "prt") return $text; // no parsing
+elseif ($_SESSION['original_text_format'] === "std") { // partial parsing: std => prt
+       $std_form = $text;
+       $prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form )); 
+
+       return $prt_form;
+} else {
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
         //echo "GenericParser: text before: $text<br>";
         $text1 = GenericParser( $globalizer_table, $text ); // Globalizer( $word );
@@ -301,6 +317,8 @@ function MetaParser( $text ) {          // $text is a single word!
                 $separated_word_parts_array = explode( "\\", GenericParser( $helvetizer_table, $word ));  // Helvetizer($word) );
                 //var_dump($separated_word_parts_array);echo"<br";
                 $output = ""; 
+                $separated_std_form = "";
+                $separated_prt_form = "";
                 foreach ($separated_word_parts_array as $word_part ) {
                     //echo "Metaparser(): Wordpart: $word_part<br>";
                     $subword_array = explode( "|", $word_part ); // problem with this method is, that certain shortings (e.g. -en) will be applied at the end of a subword, while the shouldn't ... Workaround: add | at the end (that will be eliminated later shortly before transformation into token_list) ... (?!) seems to work for the moment, but keep an eye on that! Sideeffect: shortenings at the end won't be applied (this was intended at the beginning...) => rules must be rewritten with $ and | to mark end of words and subwords
@@ -309,11 +327,17 @@ function MetaParser( $text ) {          // $text is a single word!
                         if ($subword !== end($subword_array)) $subword .= "|";
                         // echo "Metaparser(): subword: $subword<br>";
                         $output .= ParserChain( $subword ); 
+                        $separated_std_form .= $std_form;
+                        $separated_prt_form .= $prt_form;
                         //echo "subword: $subword output: $output<br>";
                         //if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
                         //echo "Metaparser() inner-foreach: output: $output<br>";
                     }
-                    if ( $word_part !== end($separated_word_parts_array)) { /*echo "adding \\<br>";*/ $output .= "\\";}  // shouldn't be hardcoded?!
+                    if ( $word_part !== end($separated_word_parts_array)) { 
+                        $output .= "\\";  // shouldn't be hardcoded?!
+                        $separated_std_form .= "\\";        // eh oui ... l'horreur continue ... ;-)
+                        $separated_prt_form .= "\\";
+                    }
                 //echo "Metaparser() outer-foreach: output: $output<br>";
                 }
                 //if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
@@ -339,6 +363,7 @@ function MetaParser( $text ) {          // $text is a single word!
                 break; // break necessary? 
 */
         }
+}
 }
 
 

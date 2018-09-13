@@ -747,6 +747,7 @@ $transcriptor_table = array(
                     "([BCDFGHJKLMNPQRVWXYZS])\]t" => "$1][&T]",
                      
                     "([bcdfghjklmnpqrvwxyz])t" => "$1[&T]",
+                    "([BCDFGHJKLMNPQRVWXYZ])T" => "$1[&T]",     // extra rules for words coming from std-form (upper case!)
                     "\[&T\]{ER}" => "[&T][VR]",
                     "\[&T\]{ALL}" => "[TALL]",
                     "\[&T\]e\$" => "[&T][&E][-E]",
@@ -791,6 +792,8 @@ $transcriptor_table = array(
                     //"er$" => "[#N][VR]",                // wrong: only shorten in monosillabic words!
                     "eres$" => "[VR][E][S]",
                     "([aeiouäöü])r" => "$1[VR]",
+                    "([AEIOUÄÖÜ])R(?!})" => "$1[VR]",            // extra rule for words coming from std-form (upper case!)
+                    
                     "(\[^@\])r" => "\$1[AR]",
                     "}r" => "}[AR]",
                     "^s" => "[0n-][S]",

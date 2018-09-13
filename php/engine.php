@@ -1321,14 +1321,12 @@ function CalculateTrainingSVG( $text_array ) {
                 <input type='checkbox' name='chkprt$i' value='chkprtyes$i'> PRT: 
                 <input type='text' name='txtprt$i'  size='30' value='$prt_form'>
                 <br>
-                <input type='checkbox' name='chkcut$i' value='chkcutyes$i'> Trennung: 
-                <input type='text' name='txtcut$i'  size='24' value='$bare_word'>
+                <input type='checkbox' name='chkcut$i' value='chkcutyes$i'> CMP: 
+                <input type='text' name='txtcut$i'  size='30' value='$bare_word'>
                 <br>
             </td>
                 <td>
-                    Anmerkung:<br>
-                    <textarea id='comment$i' name='comment$i' rows='4' cols='40'>
-                    </textarea>
+                    Anmerkung:<br><textarea id='comment$i' name='comment$i' rows='4' cols='40'></textarea>
                 </td>
             </tr>";
             

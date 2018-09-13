@@ -17,18 +17,25 @@ require_once "dbpw.php";
 
 function die_more_elegantly( $text ) {
         echo "$text";
-        echo '<a href="input.php"><br><button>zurück</button></a><br><br>';   
+        echo '<a href="aleph.php"><br><button>zurück</button></a><br><br>';   
         require_once "vsteno_template_bottom.php";
         die();
 }
 
+function prepare_aleph() {
+        $_SESSION['original_text_format'] = "normal";       // must be in normal mode for work with aleph (otherwise a part of the parsing process won't be executed!)
+        $_SESSION['output_format'] = "inline";              // can mess up database tables if "debug" is selected (set it to inline to be safe)
+}
+
 if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
 
+    prepare_aleph();
+    
     echo "
     <h1>Aleph</h1>
     <p>Hier wird entschieden, welche Vorschläge aus dem Purgatorium definitiv ins
-    Wörterbuch (Elysium) aufgenommen werden und welche unwiderbringlich ins Nirvana befördert werden ...</p>
-    <h2>Purgatorium</h2>";
+    Wörterbuch (Elysium) aufgenommen werden und welche unwiderbringlich ins Nirvana befördert werden ...</p><p>Wählen Sie einen der untenstehenden Einträge aus, um ihn zu bearbeiten.</p>
+    <h1>Purgatorium</h1>";
 
     // Create connection
     $conn = Connect2DB();
@@ -47,8 +54,17 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
 
     if ($result->num_rows > 0) {
        
-        echo "Einträge: " . $result->num_rows . "<br><br>";
+        echo "<p>Einträge: " . $result->num_rows . "<br>Wörter: ";
         $row = $result->fetch_assoc(); 
+        
+        while ($row != null) {
+                echo "<a href='aleph_execute1.php?word_id=" . $row['word_id'] . "'>" . $row['word'] . "</a> ";
+                $row = $result->fetch_assoc();
+            
+        }
+        echo "</p>";
+        
+        /*
         echo "<table>";
         echo "<tr><td><u>Eintrag</u></td><td><u>Vorschlag</u></td><td><u>Korrektur</u></td></tr>";
         
@@ -62,17 +78,18 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         echo "<td>felder für korrektur</td></tr>";
       
         echo "</table>";
+        */
     
     } else {
         die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
     }
-    echo '<a href="input.php"><br><button>zurück</button></a><br><br>';   
+    echo '<br><a href="aleph.php"><br><button>zurück</button></a><br><br>';   
    
     require_once "vsteno_template_bottom.php";
     $conn->close();
 
 } else {
     echo "<p>Sie benötigen Superuser-Rechte und müssen eingeloggt sein, um Aleph zu benutzen.</p>";
-    echo '<a href="input.php"><br><button>zurück</button></a><br><br>';   
+    echo '<a href="aleph.php"><br><button>zurück</button></a><br><br>';   
 }    
 ?>
