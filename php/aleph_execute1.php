@@ -82,7 +82,7 @@ function show_general_info() {
 }
 
 function get_single_word_data_fields() {
-    global $safe_word, $safe_std, $safe_prt, $safe_result, $safe_cmp, $elysium_base_word, $prt_form, $std_form;
+    global $safe_word, $safe_std, $safe_prt, $safe_result, $safe_cmp, $elysium_base_word, $prt_form, $std_form, $separated_std_form, $separated_prt_form;
     $std_form_upper = mb_strtoupper( $safe_std );
     $restxt = ($safe_result === 'u') ? "(undefiniert)" : "";
     // check by default checkboxes of information that has been entered by the user
@@ -91,8 +91,9 @@ function get_single_word_data_fields() {
     $chkprt_yn = (mb_strlen($safe_prt)>0) ? "checked" : "";
     // if one of the fields is empty => fill it with calculated values (without checking checkbox)
     $nil = SingleWord2SVG( $elysium_base_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
-    $std_form_upper = (mb_strlen($std_form_upper) > 0) ? $std_form_upper : mb_strtoupper($std_form); 
-    $safe_prt = (mb_strlen($safe_prt) > 0) ? $safe_prt : mb_strtoupper($prt_form); 
+    //echo "std_form_upper: $std_form_upper sep_std_form: $separated_std_form<br>";
+    $std_form_upper = (mb_strlen($std_form_upper) > 0) ? $std_form_upper : mb_strtoupper($separated_std_form);
+    $safe_prt = (mb_strlen($safe_prt) > 0) ? $safe_prt : mb_strtoupper($separated_prt_form); 
     $output = "";
     $output .= "<input type='hidden' name='single_original' value='$safe_word'>
                 <input type='checkbox' name='single_chkcmp' value='single_chkcmpyes' $chkcmp_yn> BAS: 
@@ -172,6 +173,8 @@ function prepare_and_show_composed_table() {
                 <td>Handlung<br>$decision_checkboxes_and_text</td>
             </tr>
         </table>";    
+        echo "Empfohlene Form: <input type='radio' name='recommended_form' value='single' checked> Single 
+            <input type='radio' name='recommended_form' value='separated'> Separated<br>";
 }
 
 function offer_elysium_options() {

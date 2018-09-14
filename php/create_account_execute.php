@@ -21,10 +21,10 @@ if ($conn->connect_error) {
 }
 
 // prepare data
-$safe_username = htmlspecialchars($_POST['username']);
-$safe_password = htmlspecialchars($_POST['password']);
-$safe_email = htmlspecialchars($_POST['email']);
-$safe_captcha = htmlspecialchars( mb_strtolower($_POST['captcha']));
+$safe_username = $conn->real_escape_string($_POST['username']);
+$safe_password = $_POST['password'];  // don't escape pw here, because numbers will be escaped
+$safe_email = $conn->real_escape_string($_POST['email']);
+$safe_captcha = mb_strtolower($_POST['captcha']);
 
 // check length of username and password
 $lg_length = mb_strlen($safe_username);
@@ -57,7 +57,7 @@ if ($result->num_rows > 0) {
 
 // insert new account in db
 $account_privilege = normal_user;
-$account_pwhash = hash('sha256', $_POST['password']);
+$account_pwhash = $conn->real_escape_string(hash('sha256', $_POST['password']));
 $sql = "INSERT INTO users (username, email, pwhash, privilege)
 VALUES ( '$safe_username', '$safe_email', '$account_pwhash', '$account_privilege')";
 

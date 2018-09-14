@@ -1283,7 +1283,8 @@ function CalculateLayoutedSVG( $text_array ) {
 }
 
 function CalculateTrainingSVG( $text_array ) {
-    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied, $std_form, $prt_form;
+    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied, $std_form, $prt_form, 
+        $separated_std_form, $separated_prt_form;
     $output = "";
     
     $output .= "<div id=\"order\"><table>";
@@ -1307,7 +1308,7 @@ function CalculateTrainingSVG( $text_array ) {
             $output .= "<tr><td><center><i>$bare_word</i><br>";
             $output .= SingleWord2SVG( $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
             $output .= "</center></td>";
-            $std_form_upper = mb_strtoupper($std_form );
+            $std_form_upper = mb_strtoupper($separated_std_form );
             $output .= "<td>
                 <input type='hidden' name='original$i' value='$bare_word'>
             
@@ -1319,7 +1320,7 @@ function CalculateTrainingSVG( $text_array ) {
                 <input type='text' name='txtstd$i'  size='30' value='$std_form_upper'>
                 <br>
                 <input type='checkbox' name='chkprt$i' value='chkprtyes$i'> PRT: 
-                <input type='text' name='txtprt$i'  size='30' value='$prt_form'>
+                <input type='text' name='txtprt$i'  size='30' value='$separated_prt_form'>
                 <br>
                 <input type='checkbox' name='chkcut$i' value='chkcutyes$i'> CMP: 
                 <input type='text' name='txtcut$i'  size='30' value='$bare_word'>

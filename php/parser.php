@@ -18,6 +18,7 @@
  */
 
 require_once "options.php"; 
+require_once "dbpw.php";
 
 function replace_all( $pattern, $replacement, $string ) {
     do {
@@ -201,6 +202,7 @@ function Transcriptor( $word ) {
 */
 
 // lookuper (checks if word is in dictionary)
+/* old version
 function Lookuper( $word ) {
     global $dictionary_table;
     $original_result =  $dictionary_table[ $word ];
@@ -209,6 +211,27 @@ function Lookuper( $word ) {
         $lower_result = $dictionary_table[ mb_strtolower($word)];
         if (mb_strlen( $lower_result ) > 0) return $lower_result; // empty string is returned automatically if no entry is found // good idea to convert to lower case ... ?!?
     }
+}
+*/
+
+function Lookuper( $word ) {
+    $conn = Connect2DB();
+    // Check connection
+    if ($conn->connect_error) {
+        die("Verbindung nicht möglich: " . $conn->connect_error . "<br>");
+    }
+    // prepare data
+    $safe_word = $conn->real_escape_string( $word );
+    $sql = "SELECT * FROM elysium WHERE word='$safe_word'";
+    //echo "Elysium: query = $sql<br>";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
+        // BUG: when word is found in dictionary, no combined/shifted-tokens are displayed => WHY???
+        return $row['single_prt'];
+    } else return "";    
 }
 
 // metaparser: combines all the above parsers
@@ -326,9 +349,12 @@ elseif ($_SESSION['original_text_format'] === "std") { // partial parsing: std =
                     foreach ($subword_array as $subword) { 
                         if ($subword !== end($subword_array)) $subword .= "|";
                         // echo "Metaparser(): subword: $subword<br>";
-                        $output .= ParserChain( $subword ); 
+                        $output .= ParserChain( $subword );
+                        //echo "BEFORE: std: $std_form prt: $prt_form sep_std: $separated_std_form sep_prt: $separated_prt_form<br>";
                         $separated_std_form .= $std_form;
                         $separated_prt_form .= $prt_form;
+                        //echo "AFTER: std: $std_form prt: $prt_form sep_std: $separated_std_form sep_prt: $separated_prt_form<br>";
+                       
                         //echo "subword: $subword output: $output<br>";
                         //if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
                         //echo "Metaparser() inner-foreach: output: $output<br>";
@@ -348,6 +374,8 @@ elseif ($_SESSION['original_text_format'] === "std") { // partial parsing: std =
                 //echo "Metaparser(): output: $output<br>";
                 // return array( $pre, $output, $post );//break; // donnow if break is necessary?!
                 //echo "output: $output<br>";
+                 //echo "BEFORE RETURN: std: $std_form prt: $prt_form sep_std: $separated_std_form sep_prt: $separated_prt_form<br>";
+                       
                 return $output;
             case "handwriting":
                 $output = $word;

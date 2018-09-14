@@ -33,9 +33,17 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     $safe_separated_bas = $conn->real_escape_string($_POST['composed_txtcmp']);
     $safe_separated_std = $conn->real_escape_string($_POST['composed_txtstd']);
     $safe_separated_prt = $conn->real_escape_string($_POST['composed_txtprt']);
-    
-    $sql = "INSERT INTO elysium (word, submitted_by, reviewed_by, single_bas, single_std, single_prt, separated_bas, separated_std, separated_prt)
-    VALUES ( '$safe_word', '$safe_submitted_by', '$safe_reviewed_by', '$safe_single_bas', '$safe_single_std', '$safe_single_prt', '$safe_separated_bas',
+    if (isset($_POST['recommended_form'])) {
+        $temp = ($_POST['recommended_form'] === "single") ? "1" : "2";
+        $safe_recommended_form = $conn->real_escape_string($temp);
+        $safe_number_forms = $conn->real_escape_string("2");
+    } else {
+        $safe_recommended_form = $conn->real_escape_string("1");
+        $safe_number_forms = $conn->real_escape_string("1");
+    }
+
+    $sql = "INSERT INTO elysium (word, number_forms, recommended_form, submitted_by, reviewed_by, single_bas, single_std, single_prt, separated_bas, separated_std, separated_prt)
+    VALUES ( '$safe_word', '$safe_number_forms', '$safe_recommended_form', '$safe_submitted_by', '$safe_reviewed_by', '$safe_single_bas', '$safe_single_std', '$safe_single_prt', '$safe_separated_bas',
     '$safe_separated_std', '$safe_separated_prt')";
     $result = $conn->query($sql);
     

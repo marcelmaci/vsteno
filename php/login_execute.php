@@ -20,9 +20,9 @@ if ($conn->connect_error) {
 }
 
 // prepare data
-$safe_username = htmlspecialchars($_POST['username']);
-$safe_password = htmlspecialchars($_POST['password']);
-$safe_pwhash = hash( 'sha256', $safe_password );
+$safe_username = $conn->real_escape_string($_POST['username']);
+$safe_password = $_POST['password'];
+$safe_pwhash = $conn->real_escape_string(hash( 'sha256', $safe_password ));
 
 // check if account exists already
 $sql = "SELECT * FROM users WHERE username='$safe_username'";
@@ -39,6 +39,12 @@ if ($result->num_rows > 0) {
         $_SESSION['user_username'] = $safe_username;
         $_SESSION['user_privilege'] = $row['privilege'];
         $_SESSION['user_id'] = $row['user_id'];
+
+        // write last_activity date
+        $timestamp = date('Y-m-d G:i:s');
+        $sql = "INSERT INTO users (last_activity) WHERE username='$safe_username'
+        VALUES ( '$timestamp')"; // query doesn't work
+        $result = $conn->query($sql);   // test if error!
 
     } else {
         die_more_elegantly("Falsche Login-Daten.<br>");
