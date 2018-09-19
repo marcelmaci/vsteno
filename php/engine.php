@@ -715,7 +715,8 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
 
 function GetDebugInformation( $word ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-            $bundler_table, $transcriptor_table, $substituter_table, $global_debug_string, $global_number_of_rules_applied;
+            $bundler_table, $transcriptor_table, $substituter_table, $global_debug_string, $global_number_of_rules_applied,
+            $processing_in_parser;
             
 /*
         $original = $word;
@@ -1282,6 +1283,16 @@ function CalculateLayoutedSVG( $text_array ) {
     return $svg_string;
 }
 
+function StripOutPunctuation( $word ) {
+    global $punctuation;
+    $output = "";
+    for ($i=0; $i<mb_strlen($word); $i++) {
+            $character = mb_substr( $word, $i, 1);
+            if (mb_strpos($punctuation, $character) === false) $output .= $character; // caution: automatic type cast in php: first position = 0 (is equal to false = character not found if == is used instead of ===!)
+    }
+    return $output;
+}
+
 function CalculateTrainingSVG( $text_array ) {
     global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied, $std_form, $prt_form, 
         $separated_std_form, $separated_prt_form;
@@ -1293,7 +1304,8 @@ function CalculateTrainingSVG( $text_array ) {
         $global_debug_string = "";
         $global_number_of_rules_applied = 0;
         $bare_word = GetWordSetPreAndPostTags( $this_word );
-         
+        $bare_word = StripOutPunctuation( $bare_word );
+        
         //$html_pretags = ParseAndSetInlineOptions( $combined_pretags );
         $original_word = $bare_word;
         $result_after_last_rule = $bare_word;

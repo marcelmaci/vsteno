@@ -34,7 +34,7 @@
                 <?php require_once "session.php";
                       if ($_SESSION['user_logged_in']) {
                         echo "<p><b>User</b></p><ul><li><a href='show_account_information.php'>" . $_SESSION['user_username'] . "(" . $_SESSION['user_privilege'] . ")</a></li>";
-                        if ($_SESSION['user_privilege'] > 1) echo "<li><a href='aleph.php'>=> aleph</a></li>";
+                        if ($_SESSION['user_privilege'] > 1) echo "<li><a href='purgatorium.php'>Purgatorium</a></li>";
                         echo "</ul>";
                       }
                 ?>

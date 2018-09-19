@@ -97,7 +97,7 @@ function CalculateStenoPage() {
                 }
                 echo "<p>Nutzer <b>" . $_SESSION['user_username'] . " (user_id: " . $_SESSION['user_id'] . ")</b> mit Schreibrechten für <b>$privilege_text</b>.<p>";
             }
-            echo "<form action='../php/purgatorium.php' method='post'>";
+            echo "<form action='../php/training_execute.php' method='post'>";
             NormalText2SVG( $text ); // NormalText2SVG will call CalculateTrainingSVG
             InsertDatabaseButton();
             echo "</form>";

@@ -19,6 +19,12 @@
 
 require_once "options.php"; 
 require_once "dbpw.php";
+/*
+require_once "data.php";
+require_once "engine.php";
+require_once "constants.php";
+require_once "session.php";
+*/
 
 function replace_all( $pattern, $replacement, $string ) {
     do {
@@ -202,10 +208,12 @@ function Transcriptor( $word ) {
 */
 
 // lookuper (checks if word is in dictionary)
-/* old version
+// old version
+/*
 function Lookuper( $word ) {
     global $dictionary_table;
     $original_result =  $dictionary_table[ $word ];
+    echo "Result: $original_result<br>";
     if (mb_strlen( $original_result ) > 0) return $original_result;
     else {
         $lower_result = $dictionary_table[ mb_strtolower($word)];
@@ -228,24 +236,27 @@ function Lookuper( $word ) {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
-        // BUG: when word is found in dictionary, no combined/shifted-tokens are displayed => WHY???
-        return $row['single_prt'];
+        // echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
+        return array($row['single_std'], $row['single_prt']);   // return both: std and prt
     } else return "";    
 }
 
 // metaparser: combines all the above parsers
 function ParserChain( $text ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-            $bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser;
+            $bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
         $processing_in_parser = "R"; // suppose word will been obtained by processing the rules
-        $result = Lookuper( $text ); // can't be replaced with GenericParser => will be database-function
+        list($res_std, $res_prt) = Lookuper( $text ); // can't be replaced with GenericParser => will be database-function
+        //echo "res_std: $res_std res_prt: $res_prt<br>";
         
-        if ( mb_strlen($result) > 0 ) {
+        if ((mb_strlen($res_std) > 0) || ((mb_strlen($res_prt)>0))) {
             $processing_in_parser = "D";  // mark word as taken from dictionary (will be replaced with database functions later)
-            $prt_form = $result;
-            return $result;
+            $std_form = $res_std;
+            $prt_form = $res_prt;
+            $separated_std_form = ""; // must be "", otherwise result will be "doubled" (i.e. 2x std, 2x prt) => why?!
+            $separated_prt_form = "";
+            return $res_prt;
         }
         // if there is no entry in the dictionary: try trickster first (befory applying parserchain)
         // if trickster returns a result, then avoid decapitalizer (trickster needs capital letter to distinguish between certain words, avoiding decapitalizing
@@ -306,7 +317,8 @@ function GetPreAndPostTokens( $text ) {
 
 function MetaParser( $text ) {          // $text is a single word!
 global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-$bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
+$bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form,
+$global_debug_string;
        
         global $punctuation, $combined_pretags, $combined_posttags, $globalizer_table, $helvetizer_table;
 //////// metaparser should distinguish between normal text and metaform (that doesn't need - or only partial - parsing)! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -375,7 +387,7 @@ elseif ($_SESSION['original_text_format'] === "std") { // partial parsing: std =
                 // return array( $pre, $output, $post );//break; // donnow if break is necessary?!
                 //echo "output: $output<br>";
                  //echo "BEFORE RETURN: std: $std_form prt: $prt_form sep_std: $separated_std_form sep_prt: $separated_prt_form<br>";
-                       
+                $global_debug_string .= "STD-FORM: " . mb_strtoupper($separated_std_form) . "<br>PRT-FORM: $separated_prt_form<br>PROCESSING IN PARSER: " . $processing_in_parser . "<br>";
                 return $output;
             case "handwriting":
                 $output = $word;

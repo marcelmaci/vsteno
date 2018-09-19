@@ -16,8 +16,9 @@ require_once "session.php";
 require_once "parser.php";
 require_once "engine.php";
 require_once "data.php";
-
 require_once "dbpw.php";
+
+$options = "";
 
 function die_more_elegantly( $text ) {
         echo "$text";
@@ -37,21 +38,21 @@ function connect_or_die() {
 }
 
 function prepare_and_execute_query( $conn ) {
-    global $safe_word_id;
-    $safe_word_id = htmlspecialchars($_GET['word_id']);
+    global $safe_word_id, $conn;
+    $safe_word_id = $conn->real_escape_string($_GET['word_id']);
     $sql = "SELECT * FROM purgatorium WHERE word_id='$safe_word_id'";
     $result = $conn->query($sql);
     return $result;
 }
 
-function escape_data() {
-        global $row, $safe_word, $safe_std, $safe_prt, $safe_cmp, $safe_result, $safe_user_id, $safe_comment;
-        $safe_word = htmlspecialchars($row['word']);
-        $safe_std = htmlspecialchars($row['std']);
-        $safe_prt = htmlspecialchars($row['prt']);
-        $safe_cmp = htmlspecialchars($row['composed']);
-        $safe_result = htmlspecialchars($row['result']);
-        $safe_user_id = htmlspecialchars($row['user_id']);
+function escape_data() { // disable escaping for the moment
+        global $row, $safe_word, $safe_std, $safe_prt, $safe_cmp, $safe_result, $safe_user_id, $safe_comment, $conn;
+        $safe_word = $row['word'];
+        $safe_std = $row['std'];
+        $safe_prt = $row['prt'];
+        $safe_cmp = $row['composed'];
+        $safe_result = $row['result'];
+        $safe_user_id = $row['user_id'];
         $safe_comment = htmlspecialchars($row['comment']);    
 }
 
@@ -73,7 +74,7 @@ function prepare_output_strings_and_variables() {
 
 function show_general_info() {
         global $safe_word, $safe_word_id, $safe_user_id, $safe_result, $restxt, $safe_composed, $safe_std, $safe_prt, $composed_out, $safe_std_out, $safe_prt_out;
-        echo "<h2>Info</h2>";
+        echo "<h1>Info</h1>";
         echo "<table><tr><td>Wort:<br>Autor/in:<br>Resultat:<br>Mehrere:</td>
         <td>$safe_word ($safe_word_id)<br>$safe_user_id<br>$restxt<br>$composed_out</td></tr></table>";
         if (mb_strlen($safe_comment)>0) {
@@ -96,13 +97,13 @@ function get_single_word_data_fields() {
     $safe_prt = (mb_strlen($safe_prt) > 0) ? $safe_prt : mb_strtoupper($separated_prt_form); 
     $output = "";
     $output .= "<input type='hidden' name='single_original' value='$safe_word'>
-                <input type='checkbox' name='single_chkcmp' value='single_chkcmpyes' $chkcmp_yn> BAS: 
+                <input type='checkbox' name='single_chkcmp' value='1' $chkcmp_yn> BAS: 
                 <input type='text' name='single_txtcmp'  size='30' value='$elysium_base_word'>
                 <br>
-                <input type='checkbox' name='single_chkstd' value='single_chkstdyes' $chkstd_yn> STD: 
+                <input type='checkbox' name='single_chkstd' value='1' $chkstd_yn> STD: 
                 <input type='text' name='single_txtstd'  size='30' value='$std_form_upper'>
                 <br>
-                <input type='checkbox' name='single_chkprt' value='single_chkprtyes' $chkprt_yn> PRT: 
+                <input type='checkbox' name='single_chkprt' value='1' $chkprt_yn> PRT: 
                 <input type='text' name='single_txtprt'  size='30' value='$safe_prt'>
                 ";
     return $output;
@@ -112,7 +113,7 @@ function get_decision_checkboxes_and_text( $text ) {
         $output = "";
         $output .= "<input type='checkbox' name='$text" . "_decision_elysium' value='$text" . "_decision_elysium_yes' checked> Elysium<br>
         <input type='checkbox' name='$text" . "_decision_nirvana' value='$text" . "_decision_nirvana_yes' checked> Nirvana<br>
-        <input type='checkbox' name='$text" . "_decision_analysis' value='$text" . "_decision_analysis_yes'> Analyse<br>";
+        <input type='checkbox' name='$text" . "_decision_analysis' value='$text" . "_decision_analysis_yes'> Analyse";
         return $output;
 }
 
@@ -146,20 +147,33 @@ function get_composed_word_data_fields() {
     
     $output = "";
     $output .= "
-                <input type='checkbox' name='composed_chkcmp' value='single_chkcmpyes' $chkcmp_yn> BAS: 
+                <input type='checkbox' name='composed_chkcmp' value='1' $chkcmp_yn> BAS: 
                 <input type='text' name='composed_txtcmp'  size='30' value='$elysium_composed_word'>
                 <br>
-                <input type='checkbox' name='composed_chkstd' value='single_chkstdyes'> STD: 
+                <input type='checkbox' name='composed_chkstd' value='1'> STD: 
                 <input type='text' name='composed_txtstd'  size='30' value='$std_form_upper'>
                 <br>
-                <input type='checkbox' name='composed_chkprt' value='single_chkprtyes'> PRT: 
+                <input type='checkbox' name='composed_chkprt' value='1'> PRT: 
                 <input type='text' name='composed_txtprt'  size='30' value='$safe_prt'>
                 ";
     return $output;
 }
 
+function offer_elysium_options() {
+    $output = "Schreiben: ";
+    $output .= "<input type='radio' name='elysium_write_method' value='update' checked> Update "; 
+    $output .= "<input type='radio' name='elysium_write_method' value='replace'> Replace"; 
+    return $output;    
+}
+
+function offer_preference_options() {
+    $output = "Bevorzugen: <input type='radio' name='recommended_form' value='single' checked> Single"; 
+    $output .= "<input type='radio' name='recommended_form' value='separated'> Separated ";
+    return $output;
+}
+
 function prepare_and_show_composed_table() {
-        global $safe_word, $safe_cmp, $elysium_composed_word, $processing_in_parser;
+        global $safe_word, $safe_cmp, $elysium_composed_word, $processing_in_parser, $options;
         echo "<h2>(2) Separated</h2>";
         $original_word_svg = SingleWord2SVG( $safe_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
         $proposition_composed_svg = SingleWord2SVG( $elysium_composed_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);   
@@ -172,25 +186,43 @@ function prepare_and_show_composed_table() {
                 <td>Daten<br>$composed_word_data_fields</td>
                 <td>Handlung<br>$decision_checkboxes_and_text</td>
             </tr>
-        </table>";    
-        echo "Empfohlene Form: <input type='radio' name='recommended_form' value='single' checked> Single 
-            <input type='radio' name='recommended_form' value='separated'> Separated<br>";
-}
-
-function offer_elysium_options() {
-        echo "<input type='checkbox' name='single_chkcmp' value='single_chkcmpyes'> Eintrag in Elysium löschen."; 
+        </table>";  
+        $options .= offer_preference_options();
 }
 
 function show_title_and_form() {
-        global $safe_cmp, $processing_in_parser;
+        global $safe_cmp, $processing_in_parser, $options;
         echo "<h1>Änderungen</h1>";
-        echo "<form action='aleph_execute2.php' method='post'>";
+        echo "<form action='purgatorium2.php' method='post'>";
         prepare_and_show_single_table();
         if (mb_strlen($safe_cmp)>0) prepare_and_show_composed_table();
-        if ($processing_in_parser === "D") offer_elysium_options();
-        echo '<input type="submit" name="action" value="speichern">';
+        /*if ($processing_in_parser === "D")*/ $options .= "<br>" . offer_elysium_options();
+        echo "<table><tr><td>$options</td><td><br><input type='submit' name='action' value='speichern'></td></tr></table>";
         echo "</form>";
 }
+/*
+show_entry_in_elysium_if_it_exists() {
+    global $safe_word, $conn;
+    $sql = "SELECT * FROM elysium WHERE word='$safe_word'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        echo "<h2>Existing</h2>";
+        $existing_base = conn->real_escape_string(row['base'])
+        $original_word_svg = SingleWord2SVG( $safe_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+        $proposition_composed_svg = SingleWord2SVG( $elysium_composed_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);   
+        $composed_word_data_fields = get_composed_word_data_fields();
+        $decision_checkboxes_and_text = get_decision_checkboxes_and_text( "composed1" );
+        echo "<table>
+            <tr>
+                <td>Aktuell ($processing_in_parser)<br>$original_word_svg</td>
+                <td>Vorschlag<br>$proposition_composed_svg</td>
+                <td>Daten<br>$composed_word_data_fields</td>
+                <td>Handlung<br>$decision_checkboxes_and_text</td>
+            </tr>
+        </table>";    
+    }
+}
+*/
 
 // main
 // just create combined/shifted-tokens once per call of calculate.php (performace)
@@ -199,7 +231,7 @@ CreateShiftedTokens();
         
 if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     
-    echo "<h1>Elysium</h1>";
+    echo "<h1>Purgatorium</h1>";
     echo "<p>Entscheiden Sie, was mit dem folgenden Eintrag aus dem Purgatorium geschehen soll.</p>";
     $conn = connect_or_die();
     $result = prepare_and_execute_query( $conn );
@@ -211,17 +243,18 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         prepare_output_strings_and_variables();
         show_general_info();
         show_title_and_form();
+        //show_entry_in_elysium_if_it_exists();
     
     } else {
         die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
     }
-    echo '<a href="aleph.php"><br><button>zurück</button></a><br><br>';   
+    echo '<a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
    
     require_once "vsteno_template_bottom.php";
     $conn->close();
 
 } else {
     echo "<p>Sie benötigen Superuser-Rechte und müssen eingeloggt sein, um Aleph zu benutzen.</p>";
-    echo '<a href="aleph.php"><br><button>zurück</button></a><br><br>';   
+    echo '<a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
 }    
 ?>

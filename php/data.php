@@ -206,7 +206,8 @@ $trickster_table = array(
 
 // define lexical entries in dictionary
 $dictionary_table = array (  
-                        
+                        // db: LEBE[NS]|PA[VR][&TN][#N][VR]
+                       "Lebenspartner" => "LEBE[NS]|PA[VR][&TN][#N][VR]", 
                        "Athen" => "[0N-][A][T][H][E][N]",
                        "Athens" => "[0N-][A][T][H][E][NS]",
                        "Zuge" => "ZUG[-E]",
