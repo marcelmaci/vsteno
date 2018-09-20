@@ -113,6 +113,7 @@ const draw_no_connection = 5;
 
 // parser
 $punctuation = ".,:;!?";                        // metaparser recognizes these tokens as punctuation and treats them differently 
+$upper_case_punctuation = ".:!?";
 $numbers = "01234567890";
 $only_pretokens = "(\[{\"\'";
 $only_posttokens = ")\]}\"\'";
@@ -165,6 +166,9 @@ $prt_form = "";
 $separated_std_form = "";
 $separated_prt_form = "";
 $processing_in_parser = "";                        // variable that indicates if word has been generated from rules or taken from dictionary: R = rules, D = dictionary
+$sentence_start = true;                            // variable needed for training mode to offer lower case checkbox
+$last_word_punctuation = false;
+$this_word_punctuation = true;
 
 // declarations
 $splines = array();                             // not really necessary in php

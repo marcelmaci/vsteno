@@ -1282,7 +1282,7 @@ function CalculateLayoutedSVG( $text_array ) {
     $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
     return $svg_string;
 }
-
+/*
 function StripOutPunctuation( $word ) {
     global $punctuation;
     $output = "";
@@ -1293,10 +1293,23 @@ function StripOutPunctuation( $word ) {
     return $output;
 }
 
+// necessary to distinguish between normal punctuation (which includes , and ; for example) and punctuation followed by uppercase (like .!?)
+function StripOutUpperCasePunctuation( $word ) {
+    global $upper_case_punctuation;
+    $output = "";
+    for ($i=0; $i<mb_strlen($word); $i++) {
+            $character = mb_substr( $word, $i, 1);
+            if (mb_strpos($punctuation, $character) === false) $output .= $character; // caution: automatic type cast in php: first position = 0 (is equal to false = character not found if == is used instead of ===!)
+    }
+    return $output;    
+}
+*/
+
 function CalculateTrainingSVG( $text_array ) {
     global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied, $std_form, $prt_form, 
-        $separated_std_form, $separated_prt_form;
+        $separated_std_form, $separated_prt_form, $this_word_punctuation, $last_word_punctuation, $sentence_start, $upper_case_punctuation;
     $output = "";
+    $sentence_start = true;
     
     $output .= "<div id=\"order\"><table>";
     $i = 0;
@@ -1304,7 +1317,17 @@ function CalculateTrainingSVG( $text_array ) {
         $global_debug_string = "";
         $global_number_of_rules_applied = 0;
         $bare_word = GetWordSetPreAndPostTags( $this_word );
-        $bare_word = StripOutPunctuation( $bare_word );
+        $before = $bare_word;
+        //$bare_word_without_punctuation = StripOutPunctuation( $bare_word );
+        list($pre, $bare_word, $post) = GetPreAndPostTokens( $bare_word );
+        //echo "bare_word: $bare_word<br>";
+        
+        // handle lower/upper-case at beginning of a sentence
+        if ($sentence_start) $checkbox_kleinschreibung = "<input type='checkbox' name='lowercase$i' value='1'> Kleinschreibung";
+        else $checkbox_kleinschreibung = "";
+        $last_char = mb_substr($post, mb_strlen($post)-1, 1);
+        if (mb_strpos($upper_case_punctuation, $last_char) !== false) $sentence_start = true;
+        else $sentence_start = false;
         
         //$html_pretags = ParseAndSetInlineOptions( $combined_pretags );
         $original_word = $bare_word;
@@ -1312,20 +1335,31 @@ function CalculateTrainingSVG( $text_array ) {
         
        //echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
         
-        
-        
         if (mb_strlen($bare_word)>0) {
             $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
             // echo "CalculateInlineSVG()1111: bare_word: $bare_word<br>";
             $output .= "<tr><td><center><i>$bare_word</i><br>";
             $output .= SingleWord2SVG( $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+            // since SingleWord2SVG is given a bare word (i.e. without punctuation), training_execute must handle global punctuation variables by itself
+            // (when SingleWord2SVG is given a full word (i.e. with punctuation) it handles these variables automatically via GetPreAndPostTokens() - welcome to procedural programming ... ! ;-)
+            // (actually training_execute must CORRECT these variables: GetPreAntPostTokens() is set anyway and sets them to wrong values!
+            if ($sentence_start) {
+                $this_word_punctuation = true;  
+                $last_word_punctuation = false;
+            } else { 
+                $this_word_punctuation = false; 
+                $last_word_punctuation = false; 
+            }
+            
             $output .= "</center></td>";
             $std_form_upper = mb_strtoupper($separated_std_form );
+            
             $output .= "<td>
                 <input type='hidden' name='original$i' value='$bare_word'>
             
                 <input type='radio' name='result$i' value='correct$i'> r
                 <input type='radio' name='result$i' value='wrong$i'> f
+                $checkbox_kleinschreibung
                 <br>
 
                 <input type='checkbox' name='chkstd$i' value='chkstdyes$i'> STD: 

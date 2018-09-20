@@ -51,6 +51,7 @@ while (isset($_POST["txtstd$i"])) {
     // insert word $i from form to db
     // read & escape data
     $safe_original = $conn->real_escape_string(StripOutWordSeparators($_POST["original$i"]));
+    if (isset($_POST["lowercase$i"]) && ($_POST["lowercase$i"]) == "1") $safe_original = mb_strtolower($safe_original);
     $safe_txtstd = $conn->real_escape_string($_POST["txtstd$i"]);
     $safe_chkstd = $_POST["chkstd$i"];
     $safe_txtprt = $conn->real_escape_string($_POST["txtprt$i"]);

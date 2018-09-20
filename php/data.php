@@ -1031,6 +1031,7 @@ $substituter_table = array(
                             "{LICH}" => "[H]",
                             "{ALS}" => "[L]",
                             "{CON}" => "[C]",
+                            "{ES}" => "[0N-][#N][-E]",
                             "{WENN}" => "[NN]",
                             "{WIR}" => "[W]",
                             "{ZU}" => "[Z]",

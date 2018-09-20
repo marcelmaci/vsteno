@@ -223,11 +223,13 @@ function Lookuper( $word ) {
 */
 
 function Lookuper( $word ) {
+    global $this_word_punctuation, $last_word_punctuation;
     $conn = Connect2DB();
     // Check connection
     if ($conn->connect_error) {
         die("Verbindung nicht möglich: " . $conn->connect_error . "<br>");
     }
+    //echo "in Lookuper: $word<br>";
     // prepare data
     $safe_word = $conn->real_escape_string( $word );
     $sql = "SELECT * FROM elysium WHERE word='$safe_word'";
@@ -238,6 +240,18 @@ function Lookuper( $word ) {
         $row = $result->fetch_assoc();
         // echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
         return array($row['single_std'], $row['single_prt']);   // return both: std and prt
+    } elseif ($last_word_punctuation) {
+        $safe_word = mb_strtolower( $safe_word );   // if word is at beginning of text or after a punctuation, seek also for lower case wordwrap
+        //echo "$safe_word => check lowercase PUNCTUATION:  #$last_word_punctuation#$this_word_punctuation# (lookuper)<br>";
+        $sql = "SELECT * FROM elysium WHERE word='$safe_word'";
+        //echo "Elysium: query = $sql<br>";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            // echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
+            return array($row['single_std'], $row['single_prt']);   // return both: std and prt
+       }
     } else return "";    
 }
 
@@ -290,7 +304,7 @@ function GetPreAndPostTokens( $text ) {
         // Separates pre- und posttokens, $text must be middle part of "word", i.e. original word without pre- and posttags (must be separated
         // by GetPreAndPostTags() first
         // Returns: array($pretokens, $pureword, $posttokens) 
-        global $pretokenlist, $posttokenlist;
+        global $pretokenlist, $posttokenlist, $last_word_punctuation, $this_word_punctuation, $upper_case_punctuation;
         //$text_decoded = htmlspecialchars_decode( $text );
         preg_match( "/^[$pretokenlist]*/", $text, $pretokens);
         preg_match( "/[$posttokenlist]*$/", $text, $posttokens);
@@ -312,6 +326,17 @@ function GetPreAndPostTokens( $text ) {
         }
         //return array( $pretokens[0], $word_array[0], $posttokens[0] );
         //echo "pretokens: $ret_pre word: $ret_word post_tokens: $ret_post<br>";
+        $last_char = mb_substr($ret_post, mb_strlen($ret_post)-1, 1);
+        if (mb_strpos($upper_case_punctuation, $last_char) !== false) {
+            $last_word_punctuation = $this_word_punctuation;
+            $this_word_punctuation = true;
+            //echo "$text last: $last_char  SET PUNCTUATION:  #$last_word_punctuation#$this_word_punctuation#<br>";
+            
+        } else {
+            $last_word_punctuation = $this_word_punctuation;
+            $this_word_punctuation = false;
+            //echo "$text last: $last_char  PUNCTUATION:  #$last_word_punctuation#$this_word_punctuation#<br>";
+        }
         return array( $ret_pre, $ret_word, $ret_post );
 }
 

@@ -117,11 +117,35 @@ function get_decision_checkboxes_and_text( $text ) {
         return $output;
 }
 
+function GetSinglePropositionSVG() {
+        global $safe_prt, $safe_std, $safe_bas, $elysium_base_word;
+        if (mb_strlen($safe_prt)>0) {
+            echo "start from prt-form: $safe_prt";
+            $tl = MetaForm2TokenList( $safe_prt );
+            //echo var_dump($tl);
+            $svg = TokenList2SVG( $tl, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+        } elseif (mb_strlen($safe_std)>0) {
+            // prepare engine
+            $temp = $_SESSION["original_text_format"];
+            $_SESSION["original_text_format"] = "std";
+            // calculate prt
+            $safe_prt = MetaParser($safe_std);
+            // calculate svg from prt
+            $tl = MetaForm2TokenList( $safe_prt );
+            //echo var_dump($tl);
+            $svg = TokenList2SVG( $tl, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+            // restore engine
+            $_SESSION["original_text_format"] = $temp;
+        } else $svg = SingleWord2SVG( $elysium_base_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+        return $svg;
+}
+
 function prepare_and_show_single_table() {
         global $safe_word, $safe_cmp, $elysium_base_word, $processing_in_parser;
         echo "<h2>(1) Single</h2>";
         $original_word_svg = SingleWord2SVG( $safe_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
-        $proposition_single_svg = SingleWord2SVG( $elysium_base_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);   
+        //$proposition_single_svg = SingleWord2SVG( $elysium_base_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);   
+        $proposition_single_svg = GetSinglePropositionSVG();
         $single_word_data_fields = get_single_word_data_fields();
         $decision_checkboxes_and_text = get_decision_checkboxes_and_text( "single" );
         echo "<table>
