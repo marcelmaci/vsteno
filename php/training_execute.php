@@ -81,7 +81,7 @@ while (isset($_POST["txtstd$i"])) {
         //echo "query: $sql";
         
         if ($conn->query($sql) === TRUE) {
-            echo "Word $safe_original written to PURGATORIUM<br>"; // (query: $sql)<br>";
+            echo "Word <b>$safe_original</b> written to PURGATORIUM<br>"; // (query: $sql)<br>";
         } else {
             die_more_elegantly("Fehler: " . $sql . "<br>" . $conn->error . "<br>");
         }

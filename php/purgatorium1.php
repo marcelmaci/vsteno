@@ -97,6 +97,7 @@ function get_single_word_data_fields() {
     $safe_prt = (mb_strlen($safe_prt) > 0) ? $safe_prt : mb_strtoupper($separated_prt_form); 
     $output = "";
     $output .= "<input type='hidden' name='single_original' value='$safe_word'>
+                <input type='hidden' name='word_id' value='" . $_GET['word_id'] . "'>
                 <input type='checkbox' name='single_chkcmp' value='1' $chkcmp_yn> BAS: 
                 <input type='text' name='single_txtcmp'  size='30' value='$elysium_base_word'>
                 <br>
@@ -111,16 +112,16 @@ function get_single_word_data_fields() {
 
 function get_decision_checkboxes_and_text( $text ) {
         $output = "";
-        $output .= "<input type='checkbox' name='$text" . "_decision_elysium' value='$text" . "_decision_elysium_yes' checked> Elysium<br>
-        <input type='checkbox' name='$text" . "_decision_nirvana' value='$text" . "_decision_nirvana_yes' checked> Nirvana<br>
-        <input type='checkbox' name='$text" . "_decision_analysis' value='$text" . "_decision_analysis_yes'> Analyse";
+        $output .= "<input type='checkbox' name='$text" . "decision_elysium' value='1' checked> Elysium<br>
+        <input type='checkbox' name='$text" . "decision_nirvana' value='1' checked> Nirvana<br>
+        <input type='checkbox' name='$text" . "decision_analysis' value='1'> Analyse";
         return $output;
 }
 
 function GetSinglePropositionSVG() {
         global $safe_prt, $safe_std, $safe_bas, $elysium_base_word;
         if (mb_strlen($safe_prt)>0) {
-            echo "start from prt-form: $safe_prt";
+            //echo "start from prt-form: $safe_prt";
             $tl = MetaForm2TokenList( $safe_prt );
             //echo var_dump($tl);
             $svg = TokenList2SVG( $tl, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
@@ -147,7 +148,7 @@ function prepare_and_show_single_table() {
         //$proposition_single_svg = SingleWord2SVG( $elysium_base_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);   
         $proposition_single_svg = GetSinglePropositionSVG();
         $single_word_data_fields = get_single_word_data_fields();
-        $decision_checkboxes_and_text = get_decision_checkboxes_and_text( "single" );
+        $decision_checkboxes_and_text = get_decision_checkboxes_and_text( "" ); // we only need that 1x actually ... fix it later: for the moment show it ohnly in single table
         echo "<table>
             <tr>
                 <td>Aktuell ($processing_in_parser)<br>$original_word_svg</td>
@@ -202,13 +203,13 @@ function prepare_and_show_composed_table() {
         $original_word_svg = SingleWord2SVG( $safe_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
         $proposition_composed_svg = SingleWord2SVG( $elysium_composed_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);   
         $composed_word_data_fields = get_composed_word_data_fields();
-        $decision_checkboxes_and_text = get_decision_checkboxes_and_text( "composed1" );
+        $decision_checkboxes_and_text = ""; //get_decision_checkboxes_and_text( "composed1" );
         echo "<table>
             <tr>
                 <td>Aktuell ($processing_in_parser)<br>$original_word_svg</td>
                 <td>Vorschlag<br>$proposition_composed_svg</td>
                 <td>Daten<br>$composed_word_data_fields</td>
-                <td>Handlung<br>$decision_checkboxes_and_text</td>
+                <td>$decision_checkboxes_and_text</td>
             </tr>
         </table>";  
         $options .= offer_preference_options();

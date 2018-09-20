@@ -11,5 +11,6 @@ Demoversion is available at:
 
 http://www.vsteno.ch/php/introduction.php
 
-(Click on link "Vollversion" at the left to use the pro-
-gram.)
+New (20.09.2019): Experimental Version under:
+
+http://www.vsteno.ch/unstable/php/introduction.php
