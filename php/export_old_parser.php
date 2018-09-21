@@ -58,6 +58,11 @@ $system_as_text_rules_section = "";
 
 /////////////////////// token section ///////////////////////////////////////////////////
 
+function AddQuotes($data) {
+    if (gettype($data) == "string") return "\"$data\"";
+    else return $data;
+}
+
 function GetTokenDataSeparator( $offset ) {
     switch ($offset) {
         case 0 : return "/*header*/"; break;
@@ -71,11 +76,13 @@ function GenerateBaseSubsection() {
     $output = "\t#BeginSubSection(base)\n";
     $definition = "";
     foreach($steno_tokens_master as $key => $value) {
-        $definition = "\t\t$key => { ";
+        $quotes_key = AddQuotes($key);
+        $definition = "\t\t$quotes_key => { ";
         $i = 0;
         $length = count($value);
         foreach($value as $element) {
-            $write = (mb_strlen($element)==0) ? "0" : $element;
+            $quotes_element = AddQuotes($element);
+            $write = (mb_strlen($quotes_element)==0) ? "0" : $quotes_element;
             $separator = " " . GetTokenDataSeparator( $i++ );
             $comma = ($i == $length) ? "" : ",";
             $definition .= "$separator $write" . "$comma";
@@ -92,8 +99,8 @@ function GenerateCombinerSubsection() {
     $output = "\t#BeginSubSection(combiner)\n";
     $definition = "";
     foreach($combiner_table as $data_array) {
-        $first = $data_array[0];
-        $second = $data_array[1];
+        $first = AddQuotes($data_array[0]);
+        $second = AddQuotes($data_array[1]);
         $delta_x = $data_array[2];
         $delta_y = $data_array[3];
         $definition = "\t\t$first => { $second, /*delta*/ $delta_x, $delta_y }";
@@ -108,8 +115,8 @@ function GenerateShifterSubsection() {
     $output = "\t#BeginSubSection(shifter)\n";
     $definition = "";
     foreach($shifter_table as $data_array) {
-        $original = $data_array[0];
-        $new = $data_array[1];
+        $original = AddQuotes($data_array[0]);
+        $new = AddQuotes($data_array[1]);
         $shift_x = $data_array[2];
         $shift_y = $data_array[3];
         $delta_x = $data_array[4];
@@ -130,10 +137,11 @@ function GenerateTokenSubsections() {
 }
 
 function GenerateTokenSection() {
-    global $steno_tokens_master, $system_as_text_token_section;            // variable containing token definitions in old parser
-    $system_as_text_token_section = "#BeginSection(tokens)\n";
-    $system_as_text_token_section .= GenerateTokenSubsections();
-    $system_as_text_token_section .= "#EndSection(tokens)\n";
+    global $steno_tokens_master;            // variable containing token definitions in old parser
+    $output = "#BeginSection(tokens)\n";
+    $output .= GenerateTokenSubsections();
+    $output .= "#EndSection(tokens)\n";
+    return $output;
 }
 
 //////////////////////// rules section /////////////////////////////////////////////////////
@@ -141,15 +149,18 @@ function GenerateTokenSection() {
 function GenerateGenericRulesSubsection( $name, $table, $options ) {
     $output = "\t#BeginSubSection($name)\n";
     foreach ($table as $key => $value) {
+        $quotes_key = AddQuotes($key);
+        $quotes_value = AddQuotes($value);
         if (gettype($value) === "array") {
-                $definition = "\t\t\"$key\" => {";
+                $definition = "\t\t$quotes_key => {";
                 $i=1; $length=count($value);
                 foreach ($value as $element) {
+                    $quotes_element = AddQuotes($element);
                     $comma = ($i++ == $length) ? "" : ",";
-                    $definition .= " \"$element\"" . "$comma";
+                    $definition .= " $quotes_element" . "$comma";
                 }
-                $definition .= " }\n";
-        } else $definition = "\t\t\"$key\" => \"$value\",\n";
+                $definition .= " };\n";
+        } else $definition = "\t\t$quotes_key => $quotes_value;\n";
         $output .= $definition;
     }
     $output .= "\t#EndSubSection($name" . "$options)\n";
@@ -157,7 +168,7 @@ function GenerateGenericRulesSubsection( $name, $table, $options ) {
 }
 
 function AddSpecialCapitalizerSections() {
-    $output = "\t#BeginSubSection(capitalizer)\n\t\t\"[a-z]\" => \"strtoupper()\",\n\t#EndSubSection(capitalizer)\n";
+    $output = "\t#BeginSubSection(capitalizer)\n\t\t\"[a-z]\" => \"strtoupper()\",\n\t#EndSubSection(capitalizer) // dies ist ein Kommentar\n";
     $output .= "\t#BeginSubSection(decapitalizer)\n\t\t\"[A-Z]\" => \"strtolower()\",\n\t#EndSubSection(decapitalizer)\n";
     return $output;
 }
@@ -178,19 +189,27 @@ function GenerateRulesSubsections() {
 }
 
 function GenerateRulesSection() {
-    global $system_as_text_rules_section;
-    $system_as_text_rules_section = "#BeginSection(rules)\n";
-    $system_as_text_rules_section .= GenerateRulesSubsections();
-    $system_as_text_rules_section .= "#EndSection(rules)\n";
+    $output = "#BeginSection(rules)\n";
+    $output .= GenerateRulesSubsections();
+    $output .= "#EndSection(rules)\n";
+    return $output;
 }
-// main
-GenerateTokenSection();
-GenerateRulesSection();
 
-$system_as_text_complete = $system_as_text_token_section . $system_as_text_rules_section;
+function GenerateCompleteSystemAsText() {
+    global $system_as_text_token_section, $system_as_text_rules_section;
+    $system_as_text_token_section = GenerateTokenSection();
+    $system_as_text_rules_section = GenerateRulesSection();
+    return $system_as_text_token_section . $system_as_text_rules_section;
+}
+
+// main
+/*
+$system_as_text_complete = GenerateCompleteSystemAsText();
 
 echo "Generated text:<br><br><textarea id='system_as_text' name='system_as_text' rows='55' cols='230'>" . htmlspecialchars($system_as_text_complete) . "</textarea><br>";
 
 
 require_once "vsteno_fullpage_template_bottom.php";
+*/
+
 ?>
