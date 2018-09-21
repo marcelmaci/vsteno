@@ -1,8 +1,25 @@
-<?php require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return_address'] = "input.php"; ?>
+<?php 
+/* VSTENO - Vector Steno Tool with Enhanced Notational Options
+ * (c) 2018 - Marcel Maci (m.maci@gmx.ch)
+ 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return_address'] = "input.php"; ?>
 <br>
 <center>
 <?php require_once "constants.php"; echo "<i>Commit: " . version_commit_id . " (" . version_date . ")</i><br>"; ?>
-<b>HINWEIS: VSTENO ist alpha - sind noch nicht alle Optionen implementiert!<br><br></b>
+<b>HINWEIS: VSTENO ist alpha - es sind noch nicht alle Optionen implementiert!<br><br></b>
 <div id="order">
 <form action="../php/calculate.php" method="post">
 <table>

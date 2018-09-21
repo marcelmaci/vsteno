@@ -131,6 +131,32 @@ function Decapitalizer( $word ) {
     return $output;
 }
 
+// after almost hours (and hours) of searching I come to the conclusion that there is no out-of-the-box-solution to do an upper/lower-case conversion in php-regex ... :-/
+// the only solution would be to substitute character by character (individually)
+// of course: in php you can do that - still quite elegantly - with an array
+// but VSTENO-users won't have this possibility ...
+// finally, i came up with the following workaround: the function extended_preg_replace() uses the preg_replace_callback()-function in php, which offers the possibility
+// to call a php-function depending on whether a pattern matches or not (and sending the part that matches to that function)
+// extended_preg_replace() uses this to call the function mb_strtolower() and mb_strtoupper()
+//
+// so, finally the user has 2 possibilities:
+// (1) write a "normal" regex expression, e.g.:                         "convert this" => "convert that"
+// (2) use "strtolower()" or "strtoupper()" as replacement string:      "[a-z]" => "strtoupper()"     or "[A-Z]" => "strtolower()"
+//
+// works like a charm ... ! ;-)
+//
+// nonetheless, it would have been much simpler, if php offered a regex-syntax like: "([A-Z])" => "\L$1" ...
+
+function extended_preg_replace( $pattern, $replacement, $string) {
+        switch ($replacement) {
+                case "strtolower()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtolower($word[1]); }, $string); break;
+                case "strtoupper()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtoupper($word[1]); }, $string); break;
+                default : $result = preg_replace( $pattern, $replacement, $string);
+        }
+        return $result;
+};
+
+
 /*
 function Substituter( $word ) {
     global $substituter_table;
