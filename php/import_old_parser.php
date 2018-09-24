@@ -69,6 +69,7 @@ $insertion_key = "";        // key that identifies inserted models (several mode
                             // data will be addressed by: $rules[$key][data] (example for rules: $key identifies array of data)
 $actual_key = "";
 $functions_table = array();  // values for linguistical functions (start, end)
+$actual_function = "";
 
 require_once "vsteno_fullpage_template_top.php";
 require_once "dbpw.php";
@@ -257,7 +258,6 @@ function GetNextRulesSubSection() {
         return array( $matches[1], $matches[2], $matches[3] );
     } else return null;
 }
-
 /*
 function GetNextRuleAndShrink() {
     global $shrinking_generic_subsection;
@@ -273,13 +273,14 @@ function ImportRulesFromSubSection() {
     $rule = GetNextRuleAndShrink();
 }
 */
-
 function ImportRulesFromGenericSubSection() {
     global $shrinking_generic_subsection, $rules, $rules_pointer, $insertion_key;
     //$result = preg_match( "/^[ ]*?\"(.*?)\"[ ]*?=>(.*?)[,;](.*)/", $shrinking_generic_subsection, $matches);
   //$result = preg_match( "/\"(.)\"[ ]*?=>[ ]*?(.*?)[,;](.*)/", $shrinking_generic_subsection, $matches);
   while ($shrinking_generic_section !== "") {
-    $result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?=>[ ]*(.*?)[,;](.*)/", $shrinking_generic_subsection, $matches); // use greedy [ ]* after => so that spaces that follow get cut out
+    //$result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?=>[ ]*(.*?[\"}]);(.*)/", $shrinking_generic_subsection, $matches); // use greedy [ ]* after => so that spaces that follow get cut out
+    //$result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?=>(([ ]*?{.*?}[ ]*?;)|([ ]*?\".*?\"[ ]*?;))/", $shrinking_generic_subsection, $matches); // use greedy [ ]* after => so that spaces that follow get cut out
+    $result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?=>[ ]*?({?[ ]*?\".*?\"[ ]*?}?)[ ]*?;(.*)/", $shrinking_generic_subsection, $matches);
     
     //echo "shrinking: $shrinking_generic_subsection result: $result<br>";
     
@@ -289,16 +290,19 @@ function ImportRulesFromGenericSubSection() {
         $consequence = $matches[2];
         //echo "consequence: $consequence<br>";
         $shrinking_generic_subsection = $matches[3];
-        $result1 = preg_match( "/^{[ ]*?\"(.*)\"[ ]*?}$/", $consequence, $matches1); // use greedy [ ]* after => so that spaces that follow get cut out
+        $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
+        if ($rules_pointer == 42) echo "rule 42: consequence = $consequence<br>";
         switch ($result1) {
+            //$nil = preg_match( "/^{(.*)}$/", $consequence, $matches1); // $nil should always be true ... ! ;-) 
             case "1" : 
                 // multiple consequences
-                //echo "multiple: #" . $matches1[1] . "#<br>";
+                $rules["$insertion_key"][$rules_pointer][] = $condition;
+                echo "multiple: #" . $matches1[1] . "#<br>";
                 $consequence_list = explode( ",", $matches1[1] );
                 foreach ($consequence_list as $element) {
-                    $bare_element = preg_replace("/[ ].*?\"(.*?)\"[ ]*?/", "$1", $element);
-                    //echo "bare_element: $bare_element<br>";
-                    $rules["$insertion_key"][] = $rules_pointer;
+                    $bare_element = preg_replace("/^[ ]*?\"(.*?)\"[ ]*?/", "$1", $element);
+                    echo "element: #$element# => bare_element: #$bare_element#<br>";
+                    //$rules["$insertion_key"][] = $rules_pointer;
                 
                     $rules["$insertion_key"][$rules_pointer][] = $bare_element;
                 }
@@ -318,20 +322,52 @@ function ImportRulesFromGenericSubSection() {
     } else return null;
   }
 }
-/*
+
 function SetValuesBeginFunction( $parameters ) {
-    global $functions_table, $rules_pointer, $insertion_key;
+    global $functions_table, $rules_pointer, $insertion_key, $actual_function;
     $param_list = explode( ",", $parameters);
     $key = $param_list[0];
+    $actual_function = $key;
     $functions_table["$insertion_key"][] = $key;
-    $function_table["$insertion_key"]["$key"][0] = $rules_pointer;  // rule at which function starts
-    $function_table["$insertion_key"]["$key"][1] = 99999;           // rule at which function ends
+    $functions_table["$insertion_key"]["$key"][] = $rules_pointer;   // rule at which function starts
+    echo "Function=$actual_function Start: $rules_pointer<br>";
 }
 
 function SetValuesEndFunction( $parameters ) {
+    global $functions_table, $rules_pointer, $insertion_key, $actual_function, $rules;
+    $param_list = explode( ",", $parameters);
+    $key = $param_list[0];    
+    $rules["$insertion_key"][] = array("branch()");
+    $rules_pointer++;
     
+    foreach ($param_list as $element) {
+        
+        $result = preg_match("/^[ ]*?>>(.*?)[ ]*?$/", $element, $matches);
+        if ($result == 1) { $branch_if_equal = $matches[1]; $branch_if_not_equal = $matches[1]; }    
+        $result = preg_match("/^[ ]*?=>(.*?)[ ]*?$/", $element, $matches);
+        if ($result == 1) $branch_if_equal = $matches[1];     
+        $result = preg_match("/^[ ]*?!>(.*?)[ ]*?$/", $element, $matches);
+        if ($result == 1) $branch_if_not_equal = $matches[1];
+        $result = preg_match("/^[ ]*=([^>].*?)[ ]*?$/", $element, $matches);
+        if ($result == 1) $save_to = $matches[1];
+        $result = preg_match("/^[ ]*+(.*?)[ ]*?$/", $element, $matches);
+        if ($result == 1) $transform = "upper";
+        $result = preg_match("/^[ ]*-(.*?)[ ]*?$/", $element, $matches);
+        if ($result == 1) $transform = "lower";
+        //$result = preg_match("/^[ ]*([^>^=^-^+^!]*?)[ ]*?$/", $element, $matches);
+        //if ($result == 1) $transform = "lower";
+        
+        $function_start = $functions_table["$insertion_key"]["$key"][0];
+        $function_end = $rules_pointer;
+        echo "ParamList: $actual_function($function_start,$function_end,$branch_if_equal,$branch_if_not_equal,$save_to,$transform)<br>";
+        $functions_table["$insertion_key"]["$key"][] = $function_end;
+        $functions_table["$insertion_key"]["$key"][] = $branch_if_equal;
+        $functions_table["$insertion_key"]["$key"][] = $branch_if_not_equal;
+        $functions_table["$insertion_key"]["$key"][] = $save_to;
+        $functions_table["$insertion_key"]["$key"][] = $transform;
+        
+    }
 }
-*/
 
 function ImportRules() {
     global $rules_section, $shrinking_rules_section, $shrinking_generic_subsection, $rules, $rules_pointer;
@@ -343,9 +379,9 @@ function ImportRules() {
         echo "SubSectionParams1: $parameters1<br>";
         echo "SubSectionParams2: $parameters2<br>";
         //echo "SubSectionContent: #$shrinking_generic_subsection#<br>";
-        //SetValuesBeginFunction( $parameters1 );
+        SetValuesBeginFunction( $parameters1 );
         ImportRulesFromGenericSubSection();
-        //SetValuesEndFunction( $parameters2 );
+        SetValuesEndFunction( $parameters2 );
     }
     /*
     list( $parameters1, $shrinking_generic_subsection, $parameters2) = GetNextRulesSubSection();
@@ -422,19 +458,33 @@ $i = 0;
 foreach ($rules["$insertion_key"] as $single_rule) {
     $element1 = htmlspecialchars($single_rule[0]);
     $element2 = htmlspecialchars($single_rule[1]);
-    echo "Rules $i: \"$element1\" => \"$element2\"<br>";
+    if (isset($single_rule[2])) {
+        $element3 = htmlspecialchars($single_rule[2]);
+        echo "Rules $i: #$element1# => #$element2#, #$element3#<br>";
+    } elseif (!isset($single_rule[1])) {
+        echo "Rules $i: =====> $element1<br>";
+    } else echo "Rules $i: #$element1# => #$element2#<br>";
     $i++;
+}
+
+echo "<br><br>FUNCTIONS:<br><br>";
+foreach ($functions_table["$insertion_key"] as $function => $values) {
+    $start = $values[0];
+    $end = $values[1];
+    $bre = $values[2];
+    $brne = $values[3];
+    $store = $values[4];
+    $trans = $values[5];
+    
+    echo "$function($start,$end,$bre,$brne,$store,$trans)<br>";
 }
 
 //$element1 = htmlspecialchars($rules["$insertion_key"][$rule_number][0]);
 //$element2 = htmlspecialchars($rules["$insertion_key"][$rule_number][1]);
 
-echo "Rules 0: \"$element1\" => \"$element2\"<br>";
-
 //echo var_dump($combiner);
 
 //echo /*"Tokens: $font_section<br><br><br>*/"Base: $base_subsection<br><br>Combiner: $combiner_subsection<br><br>Shifter: $shifter_subsection<br><br>";
-
 
 require_once "vsteno_fullpage_template_bottom.php";
 ?>
