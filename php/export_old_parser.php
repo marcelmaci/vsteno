@@ -22,9 +22,9 @@
 // the generated text file can then be imported into the new parser
 //
 // text file that contains all definitions necessary to define a shorthand
-// system (tokens & rules) will be called "system"
+// system (tokens & rules) will be called "Model"
 //
-// Structure for system file:
+// Structure for Model file:
 //
 // Keywords: #BeginPART(), #EndPART() - PART can be: "Section" or "SubSection"; 
 //           () contains parameters, separated by commas if more than one
@@ -50,10 +50,11 @@
 
 require_once "vsteno_fullpage_template_top.php";
 require_once "data.php";
+require_once "dbpw.php";
 
-$system_as_text_complete = "";
-$system_as_text_token_section = "";
-$system_as_text_rules_section = "";
+$model_as_text_complete = "";
+$model_as_text_token_section = "";
+$model_as_text_rules_section = "";
 
 
 /////////////////////// token section ///////////////////////////////////////////////////
@@ -138,9 +139,9 @@ function GenerateTokenSubsections() {
 
 function GenerateTokenSection() {
     global $steno_tokens_master;            // variable containing token definitions in old parser
-    $output = "#BeginSection(tokens)\n";
+    $output = "#BeginSection(font)\n";
     $output .= GenerateTokenSubsections();
-    $output .= "#EndSection(tokens)\n";
+    $output .= "#EndSection(font)\n";
     return $output;
 }
 
@@ -195,21 +196,58 @@ function GenerateRulesSection() {
     return $output;
 }
 
-function GenerateCompleteSystemAsText() {
-    global $system_as_text_token_section, $system_as_text_rules_section;
-    $system_as_text_token_section = GenerateTokenSection();
-    $system_as_text_rules_section = GenerateRulesSection();
-    return $system_as_text_token_section . $system_as_text_rules_section;
+function GenerateCompleteModelAsText() {
+    global $model_as_text_token_section, $model_as_text_rules_section;
+    $model_as_text_token_section = GenerateTokenSection();
+    $model_as_text_rules_section = GenerateRulesSection();
+    return $model_as_text_token_section . $model_as_text_rules_section;
 }
 
+function die_more_elegantly( $text ) {
+    echo "$text";
+    echo '<a href="create_account.php"><br><button>zurück</button></a><br><br>';   
+    require_once "vsteno_template_bottom.php";
+    die();
+}
+
+function WriteDataToDatabase() {
+    global $model_as_text_complete, $model_as_text_token_section, $model_as_text_rules_section, $conn;
+    
+    echo "<h1>Exportieren</h1><br>";
+    // Create connection
+    $conn = Connect2DB();
+
+    // Check connection
+    if ($conn->connect_error) {
+        die_more_elegantly("Verbindung nicht möglich: " . $conn->connect_error . "<br>");
+    }
+
+    // prepare data
+    $user_id = "99999";
+    $name = $conn->real_escape_string("$user_id" . "_default");
+    $header = "#BeginSection(header)\n\t/* this file was automatically generated as export from old parser */\n#EndSection(header)\n";
+    $font = $conn->real_escape_string($model_as_text_token_section);
+    $rules = $conn->real_escape_string($model_as_text_rules_section);
+    
+    $sql = "INSERT INTO models (user_id, name, header, font, rules)
+    VALUES ( '$user_id', '$name', '$header', '$font', '$rules')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Model in Datenbank geschrieben.<br>";
+    } else {
+        die_more_elegantly("Fehler: " . $sql . "<br>" . $conn->error . "<br>");
+    }
+
+}
 // main
-/*
-$system_as_text_complete = GenerateCompleteSystemAsText();
 
-echo "Generated text:<br><br><textarea id='system_as_text' name='system_as_text' rows='55' cols='230'>" . htmlspecialchars($system_as_text_complete) . "</textarea><br>";
+$model_as_text_complete = GenerateCompleteModelAsText();
+WriteDataToDatabase();
 
+
+//echo "Generated text:<br><br><textarea id='model_as_text' name='Model_as_text' rows='55' cols='230'>" . htmlspecialchars($model_as_text_complete) . "</textarea><br>";
 
 require_once "vsteno_fullpage_template_bottom.php";
-*/
+
 
 ?>

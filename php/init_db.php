@@ -32,6 +32,7 @@ function create_tables() {
     }
 
     // sql to create purgatorium table
+    // add entry for trickster (= REGEX entry that checks for declined or conjugated forms like: Zelt => Zelte, Zelten, Zeltes, Zelts etc.
     $sql = "CREATE TABLE IF NOT EXISTS purgatorium (
     word_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     word VARCHAR(30) NOT NULL,
@@ -51,6 +52,7 @@ function create_tables() {
     }
 
     // sql to create elysium table
+    // add entry for trickster (= REGEX entry that checks for declined or conjugated forms like: Zelt => Zelte, Zelten, Zeltes, Zelts etc.
     $sql = "CREATE TABLE IF NOT EXISTS elysium (
     word_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     word VARCHAR(30) NOT NULL,
@@ -69,6 +71,22 @@ function create_tables() {
 
     if ($conn->query($sql) === TRUE) {
         echo "Table elysium created successfully<br>";
+    } else {
+        echo "Error creating table: " . $conn->error . "<br>";
+    }
+
+    $sql = "CREATE TABLE IF NOT EXISTS models (
+    model_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(6),
+    name VARCHAR(50),
+    header MEDIUMTEXT,
+    font MEDIUMTEXT,
+    rules MEDIUMTEXT,
+    modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Table models created successfully<br>";
     } else {
         echo "Error creating table: " . $conn->error . "<br>";
     }
