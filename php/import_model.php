@@ -71,9 +71,9 @@ $actual_key = "";
 $functions_table = array();  // values for linguistical functions (start, end)
 $actual_function = "";
 
-require_once "vsteno_fullpage_template_top.php";
+//require_once "vsteno_fullpage_template_top.php";
 require_once "dbpw.php";
-require_once "data.php";
+//require_once "data.php";
 
 //////////////////////////////////////// load from database ///////////////////////////////////////////////
 function connect_or_die() {
@@ -417,6 +417,8 @@ function ImportModelFromText($text) {
     return $output;
 }
 
+
+/*
 // main
 
 $text_to_parse = LoadModelFromDatabase("99999_default");
@@ -484,7 +486,7 @@ foreach ($functions_table["$insertion_key"] as $function => $values) {
 
 //echo var_dump($combiner);
 
-//echo /*"Tokens: $font_section<br><br><br>*/"Base: $base_subsection<br><br>Combiner: $combiner_subsection<br><br>Shifter: $shifter_subsection<br><br>";
 
 require_once "vsteno_fullpage_template_bottom.php";
+*/
 ?>

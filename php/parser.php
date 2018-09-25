@@ -19,8 +19,10 @@
 
 require_once "options.php"; 
 require_once "dbpw.php";
-/*
 require_once "data.php";
+require_once "session.php"; // add this temporarily for debugging
+
+/*
 require_once "engine.php";
 require_once "constants.php";
 require_once "session.php";
@@ -281,49 +283,105 @@ function Lookuper( $word ) {
     } else return "";    
 }
 
-// metaparser: combines all the above parsers
+// ExecuteRule replaces GenericParser from old parser
+function ExecuteRule( $word ) {
+
+    global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
+    global $rules, $rules_pointer;
+    //echo "is word set?: $word";
+    $output = $word;
+    $actual_model = $_SESSION['actual_model'];
+    $condition = $rules["$actual_model"][$rules_pointer][0];
+    switch ($condition) {
+        case "EndFunction()" : /* end function (do additional stuff) */ /* ignore those rules for the moment */ break;
+        case "branch()" : /* same as above */ break;
+        default : // normal condition
+            $length = count($rules["$actual_model"][$rules_pointer]);
+            if ($length == 2) {
+                // normal rule: 1 condition => 1 consequence
+                $preceeding_result = $output;
+                $temp = $output;
+                $pattern = $rules["$actual_model"][$rules_pointer][0];
+                $replacement = $rules["$actual_model"][$rules_pointer][1];
+                $output = extended_preg_replace( "/$pattern/", $replacement, $output );
+                echo "\nStandardProcedureForRule: pattern: #$pattern# => replacement: #$replacement#<br>word: $preceeding_result result: $output last: $result_after_last_rule<br>";
+            
+                if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
+                    $result_after_last_rule = $output;
+                    $global_number_of_rules_applied++;
+                    $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>"; 
+                }
+                //echo "GDS: $global_debug_string<br>";
+                //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
+            
+            } else {
+                // special rule: 1 condition => several consequences
+                if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
+                $pattern = $rules["$actual_model"][$rules_pointer][0];
+                //$replacement = $rules["$actual_model"][$rules_pointer][1];
+                $extra_replacement = $rules["$actual_model"][$rules_pointer][1];
+                $output = extended_preg_replace( "/$pattern/", $extra_replacement, $output );
+                echo "word: $word output: $output replaced: $replaced FROM: rule: $pattern => $replacement <br>";
+                if ($output !== $word) {   // rule has been applied => test, if there are exceptions
+                    echo "Rule applied: word: $word output: $output FROM: rule: $pattern => $extra_replacement <br>";
+                    $length = count($rules["$actual_model"][$rules_pointer]); // number of elements as consequence + 1 (condition is counted)
+                    $there_is_a_match = false;
+                    for ($i=2; $i<$length; $i++) {  // element 2 = first exception
+                        $extra_pattern = $rules["$actual_model"][$rules_pointer][$i];
+                        //$original_word = "Pflicht"; // must be the original word without any modifications! => take it from constants before rewrite as OOP
+                        echo "TEST: pattern: $extra_pattern in Original: $original_word<br>";
+                       
+                        if (mb_strlen($extra_pattern)>0) $result = preg_match( "/$extra_pattern/", $original_word );
+                        if ($result == 1) {  // exception matches
+                            $there_is_a_match = true;
+                            $matching_pattern = $extra_pattern;
+                            echo "Match with: $extra_pattern in Original: $original_word result_after_last_rule: $result_after_last_rule<br>";
+                        }
+                    }
+                    if ($there_is_a_match) {
+                        //echo "Don't apply rule!<br>";
+                        $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
+                        $global_debug_string .= "NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . " REASON: pattern: $matching_pattern matches in $original_word<br>";
+                    } else {
+                        $global_number_of_rules_applied++;
+                        $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>";
+                    }
+                }
+            
+            }
+    }
+    return $output;
+
+}
+
 function ParserChain( $text ) {
-        global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-            $bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
+        global $font, $combiner, $shifter, $rules, $functions_table, $rules_pointer;
+        global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
+        global $original_word, $result_after_last_rule;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
         $processing_in_parser = "R"; // suppose word will been obtained by processing the rules
-        list($res_std, $res_prt) = Lookuper( $text ); // can't be replaced with GenericParser => will be database-function
-        //echo "res_std: $res_std res_prt: $res_prt<br>";
+        list($res_std, $res_prt) = Lookuper( $text ); // database-function
         
         if ((mb_strlen($res_std) > 0) || ((mb_strlen($res_prt)>0))) {
-            $processing_in_parser = "D";  // mark word as taken from dictionary (will be replaced with database functions later)
+            $processing_in_parser = "D";  // mark word as taken from dictionary
             $std_form = $res_std;
             $prt_form = $res_prt;
             $separated_std_form = ""; // must be "", otherwise result will be "doubled" (i.e. 2x std, 2x prt) => why?!
             $separated_prt_form = "";
             return $res_prt;
         }
-        // if there is no entry in the dictionary: try trickster first (befory applying parserchain)
-        // if trickster returns a result, then avoid decapitalizer (trickster needs capital letter to distinguish between certain words, avoiding decapitalizing
-        // gives the trickster the possibility to mark certain parts of the words as capitals (so they won't get treated by certain rules of the parser chain))
-        $result = Trickster( $text ); // can't be replaced with GenericParser! (?)
-        /* old version
-        if ( mb_strlen($result) > 0 ) return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Filter( $result )))))); // don't apply decapitalizer
-        else return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Decapitalizer( Filter(( $text )))))))); // apply normal parserchain on original word
-        */
+        $rules_pointer = 0; // use rules pointer as instruction pointer (ip)
+        $actual_model = $_SESSION['actual_model'];
+        $act_word = $text;
         
-        if ( mb_strlen($result) > 0 ) {
-            
-            $std_form = GenericParser( $bundler_table, GenericParser( $normalizer_table, GenericParser( $shortener_table, GenericParser( $filter_table, $result))));
-            $prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form ));
-            $result = $prt_form;
-            return $result;
-            // return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Filter( $result )))))); // don't apply decapitalizer
+        $original_word = $text;
+        $result_after_last_rule = $text;
         
-        } else {
-            
-            $std_form = GenericParser( $bundler_table, GenericParser( $normalizer_table, GenericParser( $shortener_table, Decapitalizer( GenericParser( $filter_table, $text)))));
-            $prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form ));
-            $result = $prt_form;
-            return $result;
-            
-            //return Substituter( Transcriptor( Bundler( Normalizer( Shortener( Decapitalizer( Filter(( $text )))))))); // apply normal parserchain on original word
+        while ($rules_pointer < 45) { // only apply 45 rules for test // (isset($rules[$actual_model][$rules_pointer])) {
+            $act_word = ExecuteRule( $act_word );
+            $rules_pointer++;
         }
+        return $act_word;
 }
 
 function GetPreAndPostTokens( $text ) {
@@ -367,77 +425,51 @@ function GetPreAndPostTokens( $text ) {
 }
 
 function MetaParser( $text ) {          // $text is a single word!
-global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
-$bundler_table, $transcriptor_table, $substituter_table, $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form,
-$global_debug_string;
-       
-        global $punctuation, $combined_pretags, $combined_posttags, $globalizer_table, $helvetizer_table;
-//////// metaparser should distinguish between normal text and metaform (that doesn't need - or only partial - parsing)! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-if ($_SESSION['original_text_format'] === "prt") return $text; // no parsing
-elseif ($_SESSION['original_text_format'] === "std") { // partial parsing: std => prt
+    global $font, $combiner, $shifter, $rules, $functions_table;
+    global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
+    global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
+     //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
+     $text_format = $_SESSION['original_text_format'];
+     $text_format = 'original';
+    //$original_word = $text;
+    if ($text_format === "prt") return $text; // no parsing
+    elseif ($text_format === "std") { // partial parsing: std => prt
        $std_form = $text;
-       $prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form )); 
-
+       //$prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form )); // must be replaced
        return $prt_form;
-} else {
+    } else { // full parsing
+       
         $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
-        //echo "GenericParser: text before: $text<br>";
-        $text1 = GenericParser( $globalizer_table, $text ); // Globalizer( $word );
-        //echo "GenericParser: text after: $text1<br>";
-        
-        //echo "EntityDecode: text before: $text1<br>";
-        $text1 = html_entity_decode( $text1 );    // do it here the hardcoded way
-        //echo "EntityDecode: text after: $text1<br>";
-        
-        //echo "text: #$text#<br>";
+        //$text1 = GenericParser( $globalizer_table, $text ); // must be replaced!?
+        $text1 = html_entity_decode( $text );    // do it here the hardcoded way
         $text2 = GetWordSetPreAndPostTags( $text1 );
-        //echo "Metaparser(): Word: $word<br>";
-        //$text2 = GenericParser( $globalizer_table, $text1 ); // Globalizer( $word );
-        
-        //echo "\nText aus Metaparser() nach Globalizer: $text1 <br>nach Getwordsetpreandposttags: $text2<br>\n";
+       // $original_word = $text2;
+        //echo "text: $text text1: $text1 text2: $text2<br>";
         list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
-        //echo "Metaparser: pretokens: $pretokens posttokens: $posttokens<br>";
         
         switch ($_SESSION['token_type']) {
             case "shorthand": 
-                $separated_word_parts_array = explode( "\\", GenericParser( $helvetizer_table, $word ));  // Helvetizer($word) );
+                $separated_word_parts_array = explode( "\\", /*GenericParser( $helvetizer_table, */ $word ); // helvetizer must be replaced 
                 //var_dump($separated_word_parts_array);echo"<br";
                 $output = ""; 
                 $separated_std_form = "";
                 $separated_prt_form = "";
                 foreach ($separated_word_parts_array as $word_part ) {
-                    //echo "Metaparser(): Wordpart: $word_part<br>";
                     $subword_array = explode( "|", $word_part ); // problem with this method is, that certain shortings (e.g. -en) will be applied at the end of a subword, while the shouldn't ... Workaround: add | at the end (that will be eliminated later shortly before transformation into token_list) ... (?!) seems to work for the moment, but keep an eye on that! Sideeffect: shortenings at the end won't be applied (this was intended at the beginning...) => rules must be rewritten with $ and | to mark end of words and subwords
-                    //var_dump($subword_array);echo"<br>"; 
                     foreach ($subword_array as $subword) { 
                         if ($subword !== end($subword_array)) $subword .= "|";
-                        // echo "Metaparser(): subword: $subword<br>";
                         $output .= ParserChain( $subword );
-                        //echo "BEFORE: std: $std_form prt: $prt_form sep_std: $separated_std_form sep_prt: $separated_prt_form<br>";
                         $separated_std_form .= $std_form;
                         $separated_prt_form .= $prt_form;
-                        //echo "AFTER: std: $std_form prt: $prt_form sep_std: $separated_std_form sep_prt: $separated_prt_form<br>";
-                       
-                        //echo "subword: $subword output: $output<br>";
-                        //if ( $subword !== end($subword_array)) { /*echo "adding |<br>";*/ $output .= "|";}  // shouldn't be hardcoded?!
-                        //echo "Metaparser() inner-foreach: output: $output<br>";
                     }
                     if ( $word_part !== end($separated_word_parts_array)) { 
                         $output .= "\\";  // shouldn't be hardcoded?!
                         $separated_std_form .= "\\";        // eh oui ... l'horreur continue ... ;-)
                         $separated_prt_form .= "\\";
                     }
-                //echo "Metaparser() outer-foreach: output: $output<br>";
                 }
-                //if (mb_strlen($actual_punctuation) > 0) $output .= "[$actual_punctuation]";
-                //echo "Metaparser(): output: $output<br>";
                 if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
                 if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
-                //$output = "$pretokens\\" . "$output" . "\\$posttokens";
-                //echo "Metaparser(): output: $output<br>";
-                // return array( $pre, $output, $post );//break; // donnow if break is necessary?!
-                //echo "output: $output<br>";
-                 //echo "BEFORE RETURN: std: $std_form prt: $prt_form sep_std: $separated_std_form sep_prt: $separated_prt_form<br>";
                 $global_debug_string .= "STD-FORM: " . mb_strtoupper($separated_std_form) . "<br>PRT-FORM: $separated_prt_form<br>PROCESSING IN PARSER: " . $processing_in_parser . "<br>";
                 return $output;
             case "handwriting":
@@ -445,7 +477,6 @@ elseif ($_SESSION['original_text_format'] === "std") { // partial parsing: std =
                 $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+]", $output ); // upper case
                 $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-]", $output ); // lower case
                 $output = mb_strtoupper( $output );
-                // return array( $pre, $output, $post ); break; // break necessary?!
                 return $output;
 /*
             case "htmlcode":
@@ -454,7 +485,8 @@ elseif ($_SESSION['original_text_format'] === "std") { // partial parsing: std =
                 break; // break necessary? 
 */
         }
-}
+    }
+
 }
 
 

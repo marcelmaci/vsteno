@@ -89,6 +89,7 @@ function InitializeSessionVariables() {
         $_SESSION['user_privilege'] = 0;
         $_SESSION['user_id'] = 0;
     }
+    $_SESSION['actual_model'] = "99999_default";
 }
 
 
@@ -168,7 +169,7 @@ function CopyFormToSessionVariablesMaxi() {
     $_SESSION['show_margins'] = (htmlspecialchars($_POST['show_margins']) === "yes") ? true : false;
     $_SESSION['show_distances'] = (htmlspecialchars($_POST['show_distances']) === "yes") ? true : false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
-        
+    //$_SESSION['actual_model'] = "99999_default";
 }
 
 function CopyFormToSessionVariablesMini() {
