@@ -149,7 +149,7 @@ function GenerateGenericRulesSubsection( $name, $table, $options_begin, $options
 function AddSpecialCapitalizerSections() {
     //$output = "\t#BeginSubSection(capitalizer)\n\t\t\"[a-z]\" => \"strtoupper()\";\n\t#EndSubSection(capitalizer) // dies ist ein Kommentar\n";
     $output = "";
-    $output .= "\t#BeginSubSection(decapitalizer)\n\t\t\"[A-Z]\" => \"strtolower()\";\n\t#EndSubSection(decapitalizer)\n";
+    $output .= "\t#BeginSubSection(decapitalizer)\n\t\t\"([A-Z])\" => \"strtolower()\";\n\t#EndSubSection(decapitalizer)\n";
     return $output;
 }
 

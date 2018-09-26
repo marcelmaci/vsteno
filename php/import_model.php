@@ -113,9 +113,9 @@ function LoadModelFromDatabase($name) {
         $row = $result->fetch_assoc(); 
         $output = $row['header'] . $row['font'] . $row['rules'];
         $insertion_key = $name;
-        $font[] = $insertion_key;       // add insertion key to $font
-        $combiner[] = $insertion_key;   // idem for $combiner (maybe kind of an overkill: combiner will only be used 1x to create complete font table, but to avoid confusion in case of loading different models create different combiner and shifter variables ...)
-        $shifter[] = $insertion_key;    // idem for $shifter
+        //$font[] = $insertion_key;       // add insertion key to $font
+        //$combiner[] = $insertion_key;   // idem for $combiner (maybe kind of an overkill: combiner will only be used 1x to create complete font table, but to avoid confusion in case of loading different models create different combiner and shifter variables ...)
+       // $shifter[] = $insertion_key;    // idem for $shifter
         $rules[] = $insertion_key;      // idem for $rules
         $functions_table[] = $insertion_key; // semper idem
         return $output;
@@ -172,7 +172,29 @@ function GetNextTokenDefinitionKeyAndShrink() {
     }
     //echo "Key: $key => ";
     $actual_key = $key;
-    $font["$insertion_key"][] = $key;      // add token key to $font (actual model: $font["$insertion_key"])
+   // $font[$insertion_key][] = $key;      // add token key to $font (actual model: $font["$insertion_key"])
+}
+
+function StripOutSpaces( $text ) {
+    $output = preg_replace( "/ /", "", $text);
+    return $output;
+}
+
+function StripOutQuotesAndCast( $element ) {
+    $stripped = preg_replace( "/[\"\']/", "", $element );
+    // automatic type cast is no 100% accurate: some elements that should be float appear as int
+    // (because they have no fraction part). This should be no problem: the variable will be 
+    // automatically casted to float later in the calculation.
+    if ($stripped !== $element) return (string)$stripped;
+    else {
+            if ((int)$element == $element) return (int)$element;
+            elseif ((float)$element == $element) return (float)$element;
+            else return $element;
+    }
+}
+
+function PurifyData( $data ) {
+    return StripOutQuotesAndCast( StripOutSpaces( $data ));
 }
 
 function ImportBase() { 
@@ -183,7 +205,7 @@ function ImportBase() {
         do {
             list($element, $last) = GetNextTokenDefinitionElementAndShrink();
             //if ($element !== null) if ($last !== true) echo "$element,"; else echo "$element";
-            $font["$insertion_key"]["$actual_key"][] = $element;    // add definition data to actual token (symbolically: font["model"]["token"])
+            $font[$insertion_key][$actual_key][] = StripOutQuotesAndCast( StripOutSpaces($element));    // add definition data to actual token (symbolically: font["model"]["token"])
         } while ($last !== true);
         //echo "}<br><br>";
     }
@@ -199,7 +221,7 @@ function GetNextCombinerDefinitionKeyAndShrink() {
     }
     //echo "Key: $key => ";
     $actual_key = $key;
-    $combiner["$insertion_key"][] = $key; 
+    //$combiner[$insertion_key][$actual_key][] = $key; 
 }
 
 // "D" => { "@R", /*delta*/ 0, 0 }
@@ -209,9 +231,11 @@ function GetNextCombinerDefinitionAndShrink() {
     if ($result == 1) {
         $shrinking_combiner_subsection = $matches[4];
         //echo "REST: " . $matches[4] . "<br>";
-        $combiner["$insertion_key"]["$actual_key"][] = $matches[1]; 
-        $combiner["$insertion_key"]["$actual_key"][] = $matches[2];
-        $combiner["$insertion_key"]["$actual_key"][] = $matches[3];
+        $combiner[$insertion_key][] = array( $actual_key, $matches[1], PurifyData($matches[2]), PurifyData($matches[3]) ); 
+        
+        //$combiner[$insertion_key][$actual_key][] = $matches[1]; 
+        //$combiner[$insertion_key][$actual_key][] = $matches[2];
+        //$combiner[$insertion_key][$actual_key][] = $matches[3];
         return array( $matches[1], $matches[2], $matches[3] );
     } else return null;
 }
@@ -237,7 +261,7 @@ function GetNextShifterDefinitionKeyAndShrink() {
     }
     //echo "Key: $key => ";
     $actual_key = $key;
-    $shifter["$insertion_key"][] = $key;
+    //$shifter["$insertion_key"][] = $key;
 }
 
 function GetNextShifterDefinitionAndShrink() {
@@ -246,11 +270,14 @@ function GetNextShifterDefinitionAndShrink() {
     if ($result == 1) {
         $shrinking_shifter_subsection = $matches[6];
         //echo "Gesamt-Match: " . $matches[0] . "<br>";
-        $shifter["$insertion_key"]["$actual_key"][] = $matches[1];     
-        $shifter["$insertion_key"]["$actual_key"][] = $matches[2];
-        $shifter["$insertion_key"]["$actual_key"][] = $matches[3];
-        $shifter["$insertion_key"]["$actual_key"][] = $matches[4];
-        $shifter["$insertion_key"]["$actual_key"][] = $matches[5];
+        $shifter[$insertion_key][] = array ( $actual_key, $matches[1], PurifyData($matches[2]), PurifyData($matches[3]), PurifyData($matches[4]), PurifyData($matches[5]) );     
+        
+        //$shifter[$insertion_key][] = $actual_key;     
+        //$shifter[$insertion_key][] = $matches[1];     
+        //$shifter[$insertion_key][] = $matches[2];
+        //$shifter[$insertion_key][] = $matches[3];
+        //$shifter[$insertion_key][] = $matches[4];
+        //$shifter[$insertion_key][] = $matches[5];
         return array( $matches[1], $matches[2], $matches[3], $matches[4], $matches[5] );
     } else return null;
 }
