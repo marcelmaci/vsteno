@@ -34,17 +34,34 @@
 // Special characters: #    marks keyword
 //                     >>   go to that subsection (inconditional branch)
 //                     =>   if equal go to that subsection 
-//                     !=>  if not equal go to that subsection
-//                     =    write actual value to that variable
-//                     +    transform to uppercase (e.g. +=std or =+ std)
-//                     -    transform to lowercase (e.g. -=std or =- std)
+//                     !>   if not equal go to that subsection
+//                     =:   write actual value to that variable (e.g. =:std)
+//                     @@   connect to dictionary (e.g. @@dic)
+//                          or connect to or get source (e.g. @@wrd, @@tag)
+//                     +    transform variable to uppercase (e.g. +std)
+//                     -    transform variable to lowercase (e.g. -std)
 //                     //   comment
 //                     /*   begin comment
 //                     */   end comment
 //
-// Variables:          std  standard shorthand form
+// 3-Letter-Keywords:  std  standard shorthand form
 //                     prt  print shorthand form
 //                     act  actual form
+//                     dic  dictionary
+//                     tag  complete text with tags
+//                     txt  text without tags
+//                     wrd (default)
+//
+// 3-Letter-Keywords are used for variables (std, prt, act), sources (dic, tag, txt, word). 
+// Variables are read/write. Sources are read-only.
+//
+// @@ can be placed at beginning or at the end of a function. In both cases it means
+// that the dictionary will be consulted an that the execution of the rules either:
+// (1) stops completely (if prt-form is found)
+// (2) starts at function with "=:prt" at beginning (if only std-form is found)
+//
+// - in BeginFunction(): get value from source (e.g. @@dic = load result from dictionary)
+// - in EndFunction(): send value to source (e.g. @@dic = send word to dictionary)
 //
 // Apart from //, /*, */ (that can be used anywhere), special characters and variables 
 // can only be used inside ()
@@ -291,17 +308,17 @@ function ImportRulesFromGenericSubSection() {
         //echo "consequence: $consequence<br>";
         $shrinking_generic_subsection = $matches[3];
         $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
-        if ($rules_pointer == 42) echo "rule 42: consequence = $consequence<br>";
+        //if ($rules_pointer == 42) echo "rule 42: consequence = $consequence<br>";
         switch ($result1) {
             //$nil = preg_match( "/^{(.*)}$/", $consequence, $matches1); // $nil should always be true ... ! ;-) 
             case "1" : 
                 // multiple consequences
                 $rules["$insertion_key"][$rules_pointer][] = $condition;
-                echo "multiple: #" . $matches1[1] . "#<br>";
+                //echo "multiple: #" . $matches1[1] . "#<br>";
                 $consequence_list = explode( ",", $matches1[1] );
                 foreach ($consequence_list as $element) {
                     $bare_element = preg_replace("/^[ ]*?\"(.*?)\"[ ]*?/", "$1", $element);
-                    echo "element: #$element# => bare_element: #$bare_element#<br>";
+                    //echo "element: #$element# => bare_element: #$bare_element#<br>";
                     //$rules["$insertion_key"][] = $rules_pointer;
                 
                     $rules["$insertion_key"][$rules_pointer][] = $bare_element;
@@ -323,23 +340,47 @@ function ImportRulesFromGenericSubSection() {
   }
 }
 
+function WriteParamListToRulesArray( $type, $param_list ) {
+    global $rules, $insertion_key, $rules_pointer;
+    $rules["$insertion_key"][$rules_pointer][] = $type;
+    foreach( $param_list as $parameter ) {
+        $rules["$insertion_key"][$rules_pointer][] = $parameter;
+    }
+    $rules_pointer++;
+}
+
+function WriteEntryPointToFunctionTable ($param_list) {
+    global $functions_table;
+    $key = $param_list[0];
+    foreach( $param_list as $parameter ) {
+        switch ($parameter) {
+            case "=:std" : $functions_table["$insertion_key"]["$key"][] = "=:std"; break;
+        }
+    }
+}
+
 function SetValuesBeginFunction( $parameters ) {
     global $functions_table, $rules_pointer, $insertion_key, $actual_function;
     $param_list = explode( ",", $parameters);
+    // write values to functions table
     $key = $param_list[0];
     $actual_function = $key;
     $functions_table["$insertion_key"][] = $key;
-    $functions_table["$insertion_key"]["$key"][] = $rules_pointer;   // rule at which function starts
-    echo "Function=$actual_function Start: $rules_pointer<br>";
+    $functions_table["$insertion_key"]["$key"][] = $rules_pointer;   // rule at which function starts (number)
+    // write instructions that have to be executed at beginning of function to rules[]
+    WriteParamListToRulesArray( "BeginFunction()", $param_list );
+    WriteEntryPointToFunctionTable( $param_list );
+    //echo "Function=$actual_function Start: $rules_pointer<br>";
 }
 
 function SetValuesEndFunction( $parameters ) {
     global $functions_table, $rules_pointer, $insertion_key, $actual_function, $rules;
     $param_list = explode( ",", $parameters);
     $key = $param_list[0];    
-    $rules["$insertion_key"][] = array("branch()");
-    $rules_pointer++;
+    WriteParamListToRulesArray( "EndFunction()", $param_list );
+    $functions_table["$insertion_key"]["$key"][] = $rules_pointer - 1;
     
+    /*
     foreach ($param_list as $element) {
         
         $result = preg_match("/^[ ]*?>>(.*?)[ ]*?$/", $element, $matches);
@@ -367,6 +408,7 @@ function SetValuesEndFunction( $parameters ) {
         $functions_table["$insertion_key"]["$key"][] = $transform;
         
     }
+    */
 }
 
 function ImportRules() {
@@ -376,8 +418,8 @@ function ImportRules() {
     while ($shrinking_rules_section !== "") {
         //echo "rulessection: $shrinking_rules_section<br>";
         list( $parameters1, $shrinking_generic_subsection, $parameters2) = GetNextRulesSubSection();
-        echo "SubSectionParams1: $parameters1<br>";
-        echo "SubSectionParams2: $parameters2<br>";
+        //echo "SubSectionParams1: $parameters1<br>";
+        //echo "SubSectionParams2: $parameters2<br>";
         //echo "SubSectionContent: #$shrinking_generic_subsection#<br>";
         SetValuesBeginFunction( $parameters1 );
         ImportRulesFromGenericSubSection();

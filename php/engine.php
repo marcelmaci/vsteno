@@ -17,6 +17,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
  
+require_once "data.php";
+require_once "constants.php";
+
 ///////////////////////////////////////////// calculation ///////////////////////////////////////////////
 
 function SetGlobalScalingVariables( $factor ) {
@@ -63,6 +66,7 @@ function TiltWordInSplines( $angle, $splines ) {
 function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
     global $standard_height, $svg_height, $height_above_baseline, $half_upordown, $one_upordown, 
     $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
+    //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
     foreach( $steno_tokens_temp as $token => $definition ) {    
         // scale informations in header
         $steno_tokens_temp[$token][0] *= $factor;
@@ -73,6 +77,8 @@ function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
     }
     // scale values for output in svg
     SetGlobalScalingVariables( $factor );
+    //echo "stenotokens (dump): ";
+    //var_dump($steno_tokens_temp);
     return $steno_tokens_temp/*_master*/;
 }
 
@@ -288,6 +294,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         global $steno_tokens, $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $half_upordown, $one_upordown, 
         $standard_height, $baseline_y, $dont_connect;
         $token_definition_length = count( $steno_tokens[$token] );           // continue splines-list
+        //echo "stenotokens($token) - DUMP: ";
+       // var_dump($steno_tokens["IST"]);
+        
         //$old_dont_connect = $dont_connect;
         $late_entry_position = GetLateEntryPoint( $steno_tokens[$token] );
         //echo "Token: $token - LateEntry: $late_entry_position<br>";
@@ -295,6 +304,8 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         if (($late_entry_position) && ($position === "first")) $start_position = $late_entry_position;
         else $start_position = 0;
         //echo "token: $token position: $position startposition: $start_position<br>";
+        //echo "InserTokenInSplinesList(): $token<br>";
+        //var_dump($steno_tokens);
         
     if ( count( $steno_tokens[$token] > 0)) { ///????
         // ********************** header operations *************************************
@@ -344,9 +355,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
             $splines[$initial_splines_length - 1] = $steno_tokens[$token][$i+offs_tension_before];
         }
         //for ($i = header_length /* + $late_entry_position * tuplet_length */; $i < $token_definition_length; $i += tuplet_length) {
+       
         for ($i = header_length+$start_position * tuplet_length; $i < $token_definition_length; $i += tuplet_length) {
-        
-            $insert_this_point = TRUE;
+              $insert_this_point = TRUE;
             //$pt_type_entry = $steno_tokens[$token][$i+offs_d1];
             $pt_type_entry = ($steno_tokens[$token][$i+offs_d1] == 98) ? 1 : $steno_tokens[$token][$i+offs_d1]; // not sure if this is correct ... ?! maybe distinguish: if token is first position => transform 98 to 1; if token is inside or last position => transform 98 to 0 (!?)
             $pt_type_exit = $steno_tokens[$token][$i+offs_d2];
@@ -420,7 +431,10 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         
         // restore original baseline => add inconditional deltay to token if specified in token_list
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_after] * $standard_height;
-    }
+}
+//echo "InsertTokenInSplinesList(): SPLINES<br>";
+//var_dump($splines);
+
     return array( $splines, $actual_x, $actual_y );
 }
 
@@ -527,6 +541,8 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         $actual_y = $baseline_y;            // start position y
         $splines = array();                 // contains all information for later drawing routine
         $steno_tokens = ScaleTokens( $steno_tokens_master, $scaling );        
+        //echo "stenotokens(dump): "; var_dump($steno_tokens);
+        
         $vertical = "no"; $distance = "none"; $shadowed = "no";
       
         $LastToken = ""; $length_tokenlist = count($TokenList); $position = "first";
@@ -557,6 +573,11 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
             $position = "inside";
         }
         // first tilt and then smoothen for better quality!!!
+        //echo "SPLINES:<br>";
+        //var_dump($splines);
+        //echo "TokenList:<br>";
+        //var_dump($TokenList);
+        
         $splines = TiltWordInSplines( $angle, $splines );
         $splines = SmoothenEntryAndExitPoints( $splines );
         list( $splines, $width) = TrimSplines( $splines ); 
@@ -645,7 +666,9 @@ function NormalText2TokenList( $text ) {
 
 function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $combined_pretags, $combined_posttags, $html_pretags, $html_posttags;
+   
     $tokenlist = NormalText2TokenList( $text );
+    //echo "SingleWord2SVG(): tokenlist dump: "; var_dump($tokenlist);
     $pre = $combined_pretags;
     $post = $combined_posttags;
     if (mb_strlen($pre)>0) $pre_html_tag_list = ParseAndSetInlineOptions( $pre );        // set inline options
@@ -694,7 +717,6 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
             //if ($tokenlist !== null) {
             if (count($tokenlist)>0) {
                 $svg .= TokenList2SVG( $tokenlist, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
-               
                 if (mb_strlen($post)>0) {
                     $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
                     $html_posttags = $post_html_tag_list; // set global variable
@@ -791,11 +813,11 @@ function CalculateInlineSVG( $text_array ) {
         $original_word = $bare_word;
         $result_after_last_rule = $bare_word;
         
-       //echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
+        //echo "CalculateInlineSVG(): this_word: $this_word bare_word: $bare_word html_pretags: $html_pretags<br>";
         
         if (mb_strlen($bare_word)>0) {
             $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
-            // echo "CalculateInlineSVG()1111: bare_word: $bare_word<br>";
+            //echo "CalculateInlineSVG()1111: bare_word: $bare_word<br>";
             $output .= $html_pretags . SingleWord2SVG( /*$SingleWord->Original*/ $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
             
             $debug_information = GetDebugInformation( /*$SingleWord->Original*/ $bare_word );       // revert back to procedural-only version

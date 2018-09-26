@@ -22,34 +22,12 @@
 // the generated text file can then be imported into the new parser
 //
 // text file that contains all definitions necessary to define a shorthand
-// system (tokens & rules) will be called "Model"
+// system (tokens & rules) will be called "model"
 //
-// Structure for Model file:
-//
-// Keywords: #BeginPART(), #EndPART() - PART can be: "Section" or "SubSection"; 
-//           () contains parameters, separated by commas if more than one
-//           e.g. #EndSubSection(shortener) or #EndSubSection(=>transcriptor,=std)
-//
-// Special characters: #    marks keyword
-//                     >>   go to that subsection (inconditional branch)
-//                     =>   if equal go to that subsection 
-//                     !=>  if not equal go to that subsection
-//                     =    write actual value to that variable
-//                     +    transform to uppercase (e.g. +=std or =+ std)
-//                     -    transform to lowercase (e.g. -=std or =- std)
-//                     //   comment
-//                     /*   begin comment
-//                     */   end comment
-//
-// Variables:          std  standard shorthand form
-//                     prt  print shorthand form
-//                     act  actual form
-//
-// Apart from //, /*, */ (that can be used anywhere), special characters and variables 
-// can only be used inside ()
+// Structure for model file: see import_model.php
 
 require_once "vsteno_fullpage_template_top.php";
-require_once "data.php";
+require_once "data_bak.php";
 require_once "dbpw.php";
 
 $model_as_text_complete = "";
@@ -147,8 +125,8 @@ function GenerateTokenSection() {
 
 //////////////////////// rules section /////////////////////////////////////////////////////
 
-function GenerateGenericRulesSubsection( $name, $table, $options ) {
-    $output = "\t#BeginSubSection($name)\n";
+function GenerateGenericRulesSubsection( $name, $table, $options_begin, $options_end ) {
+    $output = "\t#BeginSubSection($name" . "$options_begin)\n";
     foreach ($table as $key => $value) {
         $quotes_key = AddQuotes($key);
         $quotes_value = AddQuotes($value);
@@ -164,12 +142,13 @@ function GenerateGenericRulesSubsection( $name, $table, $options ) {
         } else $definition = "\t\t$quotes_key => $quotes_value;\n";
         $output .= $definition;
     }
-    $output .= "\t#EndSubSection($name" . "$options)\n";
+    $output .= "\t#EndSubSection($name" . "$options_end)\n";
     return $output;
 }
 
 function AddSpecialCapitalizerSections() {
-    $output = "\t#BeginSubSection(capitalizer)\n\t\t\"[a-z]\" => \"strtoupper()\";\n\t#EndSubSection(capitalizer) // dies ist ein Kommentar\n";
+    //$output = "\t#BeginSubSection(capitalizer)\n\t\t\"[a-z]\" => \"strtoupper()\";\n\t#EndSubSection(capitalizer) // dies ist ein Kommentar\n";
+    $output = "";
     $output .= "\t#BeginSubSection(decapitalizer)\n\t\t\"[A-Z]\" => \"strtolower()\";\n\t#EndSubSection(decapitalizer)\n";
     return $output;
 }
@@ -177,15 +156,15 @@ function AddSpecialCapitalizerSections() {
 function GenerateRulesSubsections() {
     global $helvetizer_table, $trickster_table, $filter_table, $shortener_table, $normalizer_table, $bundler_table, $transcriptor_table, $substituter_table;
     $output = "";
-    $output .= GenerateGenericRulesSubsection( "helvetizer", $helvetizer_table);
-    $output .= GenerateGenericRulesSubsection( "trickster", $trickster_table, ",=>decapitalizer,!=>filter" );
+    $output .= GenerateGenericRulesSubsection( "helvetizer", $helvetizer_table, ",@@wrd", ",@@dic");
+    $output .= GenerateGenericRulesSubsection( "trickster", $trickster_table, "", ",=>decapitalizer,!>filter" );
     $output .= AddSpecialCapitalizerSections();
     $output .= GenerateGenericRulesSubsection( "filter", $filter_table );
     $output .= GenerateGenericRulesSubsection( "shortener", $shortener_table );
     $output .= GenerateGenericRulesSubsection( "normalizer", $normalizer_table );
-    $output .= GenerateGenericRulesSubsection( "bundler", $bundler_table, ",=std" );
+    $output .= GenerateGenericRulesSubsection( "bundler", $bundler_table, "", ",=:std" );
     $output .= GenerateGenericRulesSubsection( "transcriptor", $transcriptor_table );
-    $output .= GenerateGenericRulesSubsection( "substituter", $substituter_table, ",=prt" );
+    $output .= GenerateGenericRulesSubsection( "substituter", $substituter_table, "", ",=:prt" );
     return $output;
 }
 

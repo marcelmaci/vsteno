@@ -283,6 +283,19 @@ function Lookuper( $word ) {
     } else return "";    
 }
 
+function ExecuteEndParameters() {
+    global $rules, $rules_pointer;
+    global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule;
+    $actual_model = $_SESSION['actual_model'];
+    $length = count($rules["$actual_model"][$rules_pointer]);
+    for ($i=1; $i<$length; $i++) {
+        switch ($rules["$actual_model"][$rules_pointer][$i]) {
+            case "=:std" : /*echo "=:std: #$result_after_last_rule#<br>";*/ $std_form = $result_after_last_rule; break;
+            case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
+        }
+    }
+}
+
 // ExecuteRule replaces GenericParser from old parser
 function ExecuteRule( $word ) {
 
@@ -292,9 +305,10 @@ function ExecuteRule( $word ) {
     $output = $word;
     $actual_model = $_SESSION['actual_model'];
     $condition = $rules["$actual_model"][$rules_pointer][0];
+    //echo "ExecuteRule(): condition=#$condition#<br>";
     switch ($condition) {
-        case "EndFunction()" : /* end function (do additional stuff) */ /* ignore those rules for the moment */ break;
-        case "branch()" : /* same as above */ break;
+        case "BeginFunction()" : break;
+        case "EndFunction()" : ExecuteEndParameters(); break;
         default : // normal condition
             $length = count($rules["$actual_model"][$rules_pointer]);
             if ($length == 2) {
@@ -304,7 +318,7 @@ function ExecuteRule( $word ) {
                 $pattern = $rules["$actual_model"][$rules_pointer][0];
                 $replacement = $rules["$actual_model"][$rules_pointer][1];
                 $output = extended_preg_replace( "/$pattern/", $replacement, $output );
-                echo "\nStandardProcedureForRule: pattern: #$pattern# => replacement: #$replacement#<br>word: $preceeding_result result: $output last: $result_after_last_rule<br>";
+                //echo "\nStandardProcedureForRule: pattern: #$pattern# => replacement: #$replacement#<br>word: $preceeding_result result: $output last: $result_after_last_rule<br>";
             
                 if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                     $result_after_last_rule = $output;
@@ -316,26 +330,26 @@ function ExecuteRule( $word ) {
             
             } else {
                 // special rule: 1 condition => several consequences
-                if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
+                //if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
                 $pattern = $rules["$actual_model"][$rules_pointer][0];
                 //$replacement = $rules["$actual_model"][$rules_pointer][1];
                 $extra_replacement = $rules["$actual_model"][$rules_pointer][1];
                 $output = extended_preg_replace( "/$pattern/", $extra_replacement, $output );
-                echo "word: $word output: $output replaced: $replaced FROM: rule: $pattern => $replacement <br>";
+                //echo "word: $word output: $output replaced: $replaced FROM: rule: $pattern => $replacement <br>";
                 if ($output !== $word) {   // rule has been applied => test, if there are exceptions
-                    echo "Rule applied: word: $word output: $output FROM: rule: $pattern => $extra_replacement <br>";
+                    //echo "Rule applied: word: $word output: $output FROM: rule: $pattern => $extra_replacement <br>";
                     $length = count($rules["$actual_model"][$rules_pointer]); // number of elements as consequence + 1 (condition is counted)
                     $there_is_a_match = false;
                     for ($i=2; $i<$length; $i++) {  // element 2 = first exception
                         $extra_pattern = $rules["$actual_model"][$rules_pointer][$i];
                         //$original_word = "Pflicht"; // must be the original word without any modifications! => take it from constants before rewrite as OOP
-                        echo "TEST: pattern: $extra_pattern in Original: $original_word<br>";
+                        //echo "TEST: pattern: $extra_pattern in Original: $original_word<br>";
                        
                         if (mb_strlen($extra_pattern)>0) $result = preg_match( "/$extra_pattern/", $original_word );
                         if ($result == 1) {  // exception matches
                             $there_is_a_match = true;
                             $matching_pattern = $extra_pattern;
-                            echo "Match with: $extra_pattern in Original: $original_word result_after_last_rule: $result_after_last_rule<br>";
+                            //echo "Match with: $extra_pattern in Original: $original_word result_after_last_rule: $result_after_last_rule<br>";
                         }
                     }
                     if ($there_is_a_match) {
@@ -351,6 +365,8 @@ function ExecuteRule( $word ) {
             }
     }
     return $output;
+  
+    //return $word;
 
 }
 
@@ -359,6 +375,7 @@ function ParserChain( $text ) {
         global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
         global $original_word, $result_after_last_rule;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
+        
         $processing_in_parser = "R"; // suppose word will been obtained by processing the rules
         list($res_std, $res_prt) = Lookuper( $text ); // database-function
         
@@ -377,8 +394,15 @@ function ParserChain( $text ) {
         $original_word = $text;
         $result_after_last_rule = $text;
         
-        while ($rules_pointer < 45) { // only apply 45 rules for test // (isset($rules[$actual_model][$rules_pointer])) {
+        $temp = isset($rules[$actual_model][$rules_pointer]);
+        //echo "actual_model: $actual_model";
+        //var_dump($rules);
+        $number_of_rules = count($rules[$actual_model]);
+        //echo "number of rules: $number_of_rules<br>";
+        while ($rules_pointer < $number_of_rules) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
+            //echo "before executerule: $rules_pointer<br>";
             $act_word = ExecuteRule( $act_word );
+            //echo "after execute";
             $rules_pointer++;
         }
         return $act_word;
@@ -428,7 +452,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $font, $combiner, $shifter, $rules, $functions_table;
     global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
-     //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
+    //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
      $text_format = $_SESSION['original_text_format'];
      $text_format = 'original';
     //$original_word = $text;
