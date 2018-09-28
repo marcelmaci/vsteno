@@ -112,6 +112,7 @@ function LoadModelFromDatabase($name) {
         return $output;
     } else {
         die_more_elegantly("<p>Kein Eintrag in models.</p>");
+        return null;
     }
 }
 
@@ -286,10 +287,14 @@ function ImportShifter() {
 
 //////////////////////////////////////////// import rules ////////////////////////////////////////////////////////////////////
 function GetNextRulesSubSection() {
-    global $shrinking_rules_section;
+    global $shrinking_rules_section, $global_rules_pointer;
+    //echo "TEST: $shrinking_rules_section<br>";
+    // there's a bug in the following regex: no subsections found if model is modified ... no idea ... 
     $result = preg_match( "/^[ ]*?#BeginSubSection\((.*?)\)(.*?)#EndSubSection\((.*?)\)(.*)/", $shrinking_rules_section, $matches );
+    //echo "result: #$result#<br>";
     if ($result == 1) {
         $shrinking_rules_section = $matches[4];
+        //if ($rules_pointer < 20) echo "matches[2] = " . $matches[2] . "<br>";
         return array( $matches[1], $matches[2], $matches[3] );
     } else return null;
 }
@@ -326,7 +331,7 @@ function ImportRulesFromGenericSubSection() {
         //echo "consequence: $consequence<br>";
         $shrinking_generic_subsection = $matches[3];
         $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
-        //if ($rules_pointer == 42) echo "rule 42: consequence = $consequence<br>";
+        //echo "rule $rules_pointer: $condition => $consequence<br>";
         switch ($result1) {
             //$nil = preg_match( "/^{(.*)}$/", $consequence, $matches1); // $nil should always be true ... ! ;-) 
             case "1" : 
@@ -433,12 +438,13 @@ function ImportRules() {
     global $rules_section, $shrinking_rules_section, $shrinking_generic_subsection, $rules, $rules_pointer;
     $shrinking_rules_section = $rules_section;
     $rules_pointer = 0;
-    while ($shrinking_rules_section !== "") {
+    
+    while /*($rules_pointer < 5) { */ ($shrinking_rules_section !== "") {
         //echo "rulessection: $shrinking_rules_section<br>";
         list( $parameters1, $shrinking_generic_subsection, $parameters2) = GetNextRulesSubSection();
         //echo "SubSectionParams1: $parameters1<br>";
         //echo "SubSectionParams2: $parameters2<br>";
-        //echo "SubSectionContent: #$shrinking_generic_subsection#<br>";
+        // if ($rules_pointer < 5) echo "SubSectionContent: #$shrinking_generic_subsection#<br>";
         SetValuesBeginFunction( $parameters1 );
         ImportRulesFromGenericSubSection();
         SetValuesEndFunction( $parameters2 );

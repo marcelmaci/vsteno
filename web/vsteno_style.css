@@ -110,7 +110,8 @@ float: left;
 
 #navigation li a {
     list-style-type: none;
-    display: block;
+    display: inline-block;
+    
     background: #eee;
     color: #000;
     padding: 4px 8px;
@@ -303,6 +304,10 @@ float: left;
     left: 0px;
     float: left;
     width: 140px;
+}
+
+#footer_left button {
+ font-size: 10px;
 }
 
 #footer p {

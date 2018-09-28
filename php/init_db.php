@@ -85,8 +85,8 @@ function create_tables() {
     user_id INT(6),
     name VARCHAR(50),
     header MEDIUMTEXT,
-    font MEDIUMTEXT,
-    rules MEDIUMTEXT,
+    font LONGTEXT,
+    rules LONGTEXT,
     modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
 

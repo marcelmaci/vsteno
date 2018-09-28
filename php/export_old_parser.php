@@ -44,8 +44,8 @@ function AddQuotes($data) {
 
 function GetTokenDataSeparator( $offset ) {
     switch ($offset) {
-        case 0 : return "/*header*/"; break;
-        case 24 : return "/*data*/"; break;
+        case 0 : return "/*h*/"; break;                     // strip out more comment to get below 65522 chars mark ...
+        case 24 : return "/*d*/"; break;                    // idem (what the hell is this bug ... is it a regex limitation?!?)
         default : return (($offset % 8) == 0) ? "/**/" : ""; break;
     }
 }
@@ -82,7 +82,7 @@ function GenerateCombinerSubsection() {
         $second = AddQuotes($data_array[1]);
         $delta_x = $data_array[2];
         $delta_y = $data_array[3];
-        $definition = "\t\t$first => { $second, /*delta*/ $delta_x, $delta_y }";
+        $definition = "\t\t$first => { $second, $delta_x, $delta_y }";
         $output .= "$definition\n";
     }
     $output .= "\t#EndSubSection(combiner)\n";
@@ -100,8 +100,8 @@ function GenerateShifterSubsection() {
         $shift_y = $data_array[3];
         $delta_x = $data_array[4];
         $delta_y = $data_array[5];
-        $definition = "\t\t$original => { $new, /*shift*/ $shift_x, $shift_y, /*delta*/ $delta_x, $delta_y }";
-        $output .= "$definition\n";
+        $definition = "\t\t$original => { $new, $shift_x, $shift_y, $delta_x, $delta_y }"; // string gets truncated after 65522 chars ... no idea why ... 
+        $output .= "$definition\n";                                                                            // temporary solution: strip out comments in order to get below that limit ...
     }
     $output .= "\t#EndSubSection(shifter)\n";
     return $output;

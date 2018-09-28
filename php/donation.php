@@ -10,7 +10,7 @@ Name:   Marcel Maci
         Avenue du Guintzet 15
         1700 Fribourg
 </pre>
-<p>Möglich sind auch anonyme Spenden in bar.
+<p>Möglich sind auch Spenden in bar.
 </p>
 <p>Besten Dank, dass Sie VSTENO und die Entwicklung Freier Software unterstützen!</p>
 <?php require "vsteno_template_bottom.php"; ?>

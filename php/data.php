@@ -58,12 +58,15 @@ global $insertion_key;
 /*
 require_once "vsteno_fullpage_template_top.php";
 */
-$text_to_parse = LoadModelFromDatabase("99999_default");
+$text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+//echo "text: $text_to_parse<br><br>";
 /*
 
 echo "Importiert: <textarea id='Model_as_text' name='Model_as_text' rows='30' cols='230'>" . htmlspecialchars($text_to_parse) . "</textarea><br>";
 */
 $test = ImportModelFromText($text_to_parse);
+//echo "test = $test<br>";
+
 
 // connect old variables
 // note: this is the easy (or should i say "quick and dirty";-) method to reuse old parser functions with new data
@@ -114,6 +117,8 @@ echo "Shifter $entry: { $element1, $element2, $element3, $element4, $element5 }<
 
 
 //echo var_dump($rules);
+*/
+/*
 $i = 0;
 foreach ($rules["$insertion_key"] as $single_rule) {
     $element1 = htmlspecialchars($single_rule[0]);
@@ -171,7 +176,7 @@ $test_word = "Spendenaufruf";
 $result = MetaParser( $test_word );
 echo "test_word: #$test_word# result: #$result#<br><br>";
 
-require_once "vsteno_fullpage_template_bottom.php";
+//require_once "vsteno_fullpage_template_bottom.php";
 */
 
 ?>

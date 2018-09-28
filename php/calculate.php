@@ -16,12 +16,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
  
+require_once "session.php";
+if ($_SESSION['user_logged_in']) {
+    if ($_POST['model'] === "custom") $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); 
+    else $_SESSION['actual_model'] = "99999_default";
+    //echo "Model = " . $_SESSION['actual_model'] . "<br>";
+}
+
 // include external data and code
 require_once "constants.php";
 require_once "data.php";
 require_once "parser.php";
 require_once "engine.php";
-require_once "session.php";
 //require_once "words.php";     // revert back to procedural-only version
 
 
@@ -140,11 +146,12 @@ function CalculateStenoPage() {
 // just create combined/shifted-tokens once per call of calculate.php (performace)
 CreateCombinedTokens();
 CreateShiftedTokens();
-        
+
+/*
 if ($_POST['action'] === "abschicken") {
     CalculateStenoPage();
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();
 }
-
+*/
 ?>

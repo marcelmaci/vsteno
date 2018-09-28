@@ -20,8 +20,9 @@ Password:
 </td> 
 </tr>
 </table>
-<p><b>ACHTUNG:<br>Wenn Sie auf den Button klicken, wird der Account ohne Rückfrage und unwiderruflich gelöscht!</b></p>
-<input type="submit" name="action" value="einloggen">
+<p><b>ACHTUNG:</b><br>
+<i>Wenn Sie auf den Button klicken, wird der <b>Account, Ihr Custom-Model und <u>alle</u> Wörterbücher</b>, die damit verbunden sind (Purgatorium und Elysium) <b>ohne Rückfrage und unwiderruflich</b> gelöscht!</b></i></p>
+<input type="submit" name="action" value="löschen">
 </form>
 <?php
 }

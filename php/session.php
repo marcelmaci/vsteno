@@ -90,6 +90,7 @@ function InitializeSessionVariables() {
         $_SESSION['user_id'] = 0;
     }
     $_SESSION['actual_model'] = "99999_default";
+    $_SESSION['model_custom_or_standard'] = "standard";
 }
 
 
@@ -170,6 +171,7 @@ function CopyFormToSessionVariablesMaxi() {
     $_SESSION['show_distances'] = (htmlspecialchars($_POST['show_distances']) === "yes") ? true : false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
     //$_SESSION['actual_model'] = "99999_default";
+    $_SESSION['model_custom_or_standard'] = (htmlspecialchars($_POST['model']) === "standard") ? "standard" : "custom";
 }
 
 function CopyFormToSessionVariablesMini() {

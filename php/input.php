@@ -27,7 +27,10 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <tr><td>
 <input type="radio" name="text_format_metayesno" value="normal" <?php echo ($_SESSION['original_text_format'] === "normal") ? "checked" : "";?>> Langschrift 
 <input type="radio" name="text_format_metayesno" value="std" <?php echo ($_SESSION['original_text_format'] === "std") ? "checked" : "";?>> Metaform (STD)
-<input type="radio" name="text_format_metayesno" value="prt" <?php echo ($_SESSION['original_text_format'] === "prt") ? "checked" : "";?>> Metaform (PRT)<br>
+<input type="radio" name="text_format_metayesno" value="prt" <?php echo ($_SESSION['original_text_format'] === "prt") ? "checked" : "";?>> Metaform (PRT)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_custom_or_standard'] === "standard") ? "checked" : "";?>> standard
+<input type="radio" name="model" value="custom" <?php echo ($_SESSION['model_custom_or_standard'] === "custom") ? "checked" : "";?>> custom<br>
+
 <textarea id="original_text" name="original_text" rows="10" cols="100"><?php echo $_SESSION['original_text_content']; ?>
 </textarea>
 </td></tr>
