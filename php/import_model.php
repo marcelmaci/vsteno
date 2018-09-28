@@ -119,13 +119,14 @@ function LoadModelFromDatabase($name) {
 //////////////////////////////////////// import functions /////////////////////////////////////////////////
 function StripOutComments($text) {
     $output = preg_replace("/\/\*.*?\*\//", "", $text);     // replace /* ... */ comments by empty string
-    $output = preg_replace("/\/\/.*?\n/", "\n", $output);     // replace // ... \n comments by \n
+    $output = preg_replace("/\/\/.*?\n/", "[\n\r]", $output);     // replace // ... \n comments by \n
     return $output;
 }
 
 function StripOutTabsAndNewlines($text) {
     $output = preg_replace("/\t/", "", $text);     // replace /* ... */ comments by empty string
     $output = preg_replace("/\n/", "", $output);     // replace // ... \n comments by \n
+    $output = preg_replace("/\r/", "", $output); 
     return $output;
 }
 
@@ -438,7 +439,7 @@ function ImportRules() {
     global $rules_section, $shrinking_rules_section, $shrinking_generic_subsection, $rules, $rules_pointer;
     $shrinking_rules_section = $rules_section;
     $rules_pointer = 0;
-    
+    //echo "rules_section: " . htmlspecialchars($rules_section) . "<br>";
     while /*($rules_pointer < 5) { */ ($shrinking_rules_section !== "") {
         //echo "rulessection: $shrinking_rules_section<br>";
         list( $parameters1, $shrinking_generic_subsection, $parameters2) = GetNextRulesSubSection();

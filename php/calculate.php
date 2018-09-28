@@ -147,11 +147,11 @@ function CalculateStenoPage() {
 CreateCombinedTokens();
 CreateShiftedTokens();
 
-/*
+
 if ($_POST['action'] === "abschicken") {
     CalculateStenoPage();
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();
 }
-*/
+
 ?>
