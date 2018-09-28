@@ -22,7 +22,6 @@ if ($conn->connect_error) {
 // prepare data
 $safe_username = htmlspecialchars($_POST['username']);
 $safe_password = htmlspecialchars($_POST['password']);
-$safe_pwhash = hash( 'sha256', $safe_password );
 
 // check if account exists already
 $sql = "SELECT * FROM users WHERE username='$safe_username'";
@@ -33,6 +32,8 @@ if ($result->num_rows > 0) {
     //echo "Username: " . $row['username'] . "<br>";
     //echo "PWHash: " . $row['pwhash'] . "<br>";
     //echo "Entered: " . $safe_pwhash . "<br>";
+    $salt = $row['salt'];
+    $safe_pwhash = hash( 'sha256', $safe_password . $salt );
     
     if (($safe_username === $row['username']) && ($safe_pwhash === $row['pwhash'])) {
         $userid_to_delete = $row['user_id'];

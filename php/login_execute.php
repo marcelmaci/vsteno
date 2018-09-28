@@ -22,7 +22,6 @@ if ($conn->connect_error) {
 // prepare data
 $safe_username = $conn->real_escape_string($_POST['username']);
 $safe_password = $_POST['password'];
-$safe_pwhash = $conn->real_escape_string(hash( 'sha256', $safe_password ));
 
 // check if account exists already
 $sql = "SELECT * FROM users WHERE username='$safe_username'";
@@ -30,9 +29,11 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
+    $salt = $row['salt'];
     //echo "Username: " . $row['username'] . "<br>";
     //echo "PWHash: " . $row['pwhash'] . "<br>";
     //echo "Entered: " . $safe_pwhash . "<br>";
+    $safe_pwhash = $conn->real_escape_string(hash( 'sha256', $safe_password . $salt ));
     
     if (($safe_username === $row['username']) && ($safe_pwhash === $row['pwhash'])) {
         $_SESSION['user_logged_in'] = true;

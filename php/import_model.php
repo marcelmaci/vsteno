@@ -93,15 +93,6 @@ require_once "dbpw.php";
 //require_once "data.php";
 
 //////////////////////////////////////// load from database ///////////////////////////////////////////////
-function connect_or_die() {
-        // Create connection
-        $conn = Connect2DB();
-        // Check connection
-        if ($conn->connect_error) {
-            die_more_elegantly("Verbindung nicht möglich: " . $conn->connect_error . "<br>");
-        }
-        return $conn;
-}
 
 function LoadModelFromDatabase($name) {
     global $conn, $insertion_key, $font, $combiner, $shifter, $rules, $functions_table;

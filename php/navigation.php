@@ -35,6 +35,8 @@
                       if ($_SESSION['user_logged_in']) {
                         echo "<p><b>User</b></p><ul><li><a href='show_account_information.php'>" . $_SESSION['user_username'] . "(" . $_SESSION['user_privilege'] . ")</a></li>";
                         if ($_SESSION['user_privilege'] > 1) echo "<li><a href='purgatorium.php'>Purgatorium</a></li>";
+                        echo "<li><a href='edit_font.php'>->Zeichen</a></li>";
+                        echo "<li><a href='edit_rules.php'>->Regeln</a></li>";
                         echo "</ul>";
                       }
                 ?>

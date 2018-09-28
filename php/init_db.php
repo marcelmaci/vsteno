@@ -1,8 +1,8 @@
 <?php 
 /* this file can be used to create the tables necessary for vsteno database */
 require_once "dbpw.php";
-require_once "session.php";
-
+//require_once "session.php";
+/*
 function connect_or_die() {
     global $conn;
     $conn = Connect2DB();
@@ -11,7 +11,7 @@ function connect_or_die() {
         die("Connection failed: " . $conn->connect_error . "<br>");
     }
 }
-
+*/
 function create_tables() {
   global $conn;
     // sql to create users table
@@ -19,8 +19,13 @@ function create_tables() {
     user_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(30) NOT NULL,
     email VARCHAR(30),
+    realname VARCHAR(30),
+    newsletter INT(1),
+    salt VARCHAR(10),
     pwhash VARCHAR(80),
     privilege INT(1),
+    visibility_model INT(1),
+    visibility_database INT(1),
     last_activity DATE,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
@@ -96,9 +101,8 @@ function create_tables() {
 if (isset($_POST["mpw"])) {
     if (isset($_POST['mpw'])) $temphash = hash( "sha256", $_POST['mpw']);
     if ($temphash === master_pwhash) {
-        connect_or_die();
+        $conn = connect_or_die();
         create_tables();
-        $conn->close();
     } 
 } else {
         echo "<h1>Password</h1>";

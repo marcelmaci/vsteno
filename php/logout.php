@@ -8,7 +8,7 @@ $_SESSION['user_privilege'] = 0;
 ?>
 <h1>Ausloggen</h1>
 <p>Sie haben sich ausgeloggt.</p>
-<a href="input.php"><button>zum Programm</button></a><br><br>   
+<a href="input.php"><button>zurück</button></a><br><br>   
 
 <?php
 require_once "vsteno_template_bottom.php";

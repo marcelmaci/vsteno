@@ -35,6 +35,14 @@ if ($result->num_rows > 0) {
     echo "E-Mail: " . $row['email'] . "<br>";
     echo "Registrierung: " . $row['reg_date'] . "<br>";
     
+    $model = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+    $purgatorium = "XP" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+    $elysium = "XE" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+    
+    echo "<h2>Datenbanken</h2>";
+    echo "<p>Model: $model (privat)<br>
+          Purgatorium: $purgatorium (privat)<br>
+          Elysium: $elysium<br></p>";
 } else {
     die_more_elegantly("<p>Kein Eintrag für User $safe_username.</p>");
 }

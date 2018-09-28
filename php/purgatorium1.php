@@ -42,9 +42,10 @@ function die_more_elegantly( $text ) {
         require_once "vsteno_template_bottom.php";
         die();
 }
-
+/*
 function connect_or_die() {
-        // Create connection
+       // Create connection
+        echo "hier";
         $conn = Connect2DB();
         // Check connection
         if ($conn->connect_error) {
@@ -52,6 +53,7 @@ function connect_or_die() {
         }
         return $conn;
 }
+*/
 
 function prepare_and_execute_query( $conn ) {
     global $safe_word_id, $conn;
@@ -237,7 +239,8 @@ function show_title_and_form() {
         echo "<form action='purgatorium2.php' method='post'>";
         prepare_and_show_single_table();
         if (mb_strlen($safe_cmp)>0) prepare_and_show_composed_table();
-        /*if ($processing_in_parser === "D")*/ $options .= "<br>" . offer_elysium_options();
+        //if ($processing_in_parser === "D")
+        $options .= "<br>" . offer_elysium_options();
         echo "<table><tr><td>$options</td><td><br><input type='submit' name='action' value='speichern'></td></tr></table>";
         echo "</form>";
 }
@@ -267,8 +270,8 @@ show_entry_in_elysium_if_it_exists() {
 
 // main
 // just create combined/shifted-tokens once per call of calculate.php (performace)
-CreateCombinedTokens();
-CreateShiftedTokens();
+//CreateCombinedTokens();
+//CreateShiftedTokens();
         
 if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     
@@ -284,10 +287,10 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         prepare_output_strings_and_variables();
         show_general_info();
         show_title_and_form();
-        //show_entry_in_elysium_if_it_exists();
+        show_entry_in_elysium_if_it_exists();
     
     } else {
-        die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
+        //die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
     }
     echo '<a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
    
