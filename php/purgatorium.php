@@ -63,9 +63,10 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
 
     // prepare data
     //$safe_username = htmlspecialchars($_SESSION['user_username']);
-
+    $purgatorium = GetPurgatoriumDBName();
+    
     // check if account exists already
-    $sql = "SELECT * FROM purgatorium";
+    $sql = "SELECT * FROM $purgatorium";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {

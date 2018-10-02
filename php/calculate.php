@@ -142,13 +142,14 @@ function CalculateStenoPage() {
 }
 
 // main
-
+global $global_error_string;
 // just create combined/shifted-tokens once per call of calculate.php (performace)
 CreateCombinedTokens();
 CreateShiftedTokens();
 
 
 if ($_POST['action'] === "abschicken") {
+    $global_error_string = "";
     CalculateStenoPage();
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();

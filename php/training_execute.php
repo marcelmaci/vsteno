@@ -93,7 +93,8 @@ while (isset($_POST["txtstd$i"])) {
                 default : $safe_result = "u"; break;
         }
         $safe_user_id = htmlspecialchars($_SESSION['user_id']);
-        $sql = "INSERT INTO purgatorium (word, std, prt, composed, result, user_id, comment)
+        $purgatorium = GetPurgatoriumDBName();
+        $sql = "INSERT INTO $purgatorium (word, std, prt, composed, result, user_id, comment)
         VALUES ( '$safe_original', '$safe_txtstd', '$safe_txtprt', '$safe_txtcut', '$safe_result', '$safe_user_id', '$safe_comment')";
         //echo "query: $sql";
         

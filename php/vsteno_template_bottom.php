@@ -5,7 +5,8 @@
             <div id="footer_left">
             <?php require_once "session.php"; $link_toggle_model = ($_SESSION['model_standard_or_custom'] === 'standard') ? "<a href='toggle_model.php'><button>standard</button></a>" : "<a href='toggle_model.php'><button>custom</button></a>";
                         //echo "$link_toggle_model";
-            echo "<p>&nbsp;&nbsp;&nbsp;&nbsp;$link_toggle_model</p>";            
+            if ($_SESSION['user_logged_in']) echo "<p>&nbsp;&nbsp;&nbsp;&nbsp;$link_toggle_model</p>";  
+            else echo "<p>&nbsp;&nbsp;</p>";
             ?>
                 
             </div>

@@ -90,7 +90,7 @@ function InitializeSessionVariables() {
         $_SESSION['user_id'] = 0;
     }
     $_SESSION['actual_model'] = "99999_default";
-    $_SESSION['model_custom_or_standard'] = "standard";
+    $_SESSION['model_standard_or_custom'] = "standard";
 }
 
 

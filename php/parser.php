@@ -27,11 +27,12 @@ require_once "engine.php";
 require_once "constants.php";
 require_once "session.php";
 */
+$act_word = "";
 
 function replace_all( $pattern, $replacement, $string ) {
     do {
         $old_string = $string;
-        $string = preg_replace( $pattern, $replacement, $string );
+        $string = extended_preg_replace( $pattern, $replacement, $string );
     } while ($old_string !== $string );
     return $string;
 }
@@ -98,41 +99,6 @@ function GenericParser( $table, $word ) {
 
 ///////////////////////////////////////////// parser functions ////////////////////////////////////////////////
 
-// general philosophy for parser:
-// (1) divide et impera! Divide parsing task into different subtasks corresponding to linguisticly logical steps
-// (e.g. mark affixes, correct different representation of same phonetics etc.)
-// (2) KISS (keep it stupid, simple): one function = one (simple and basic) task!
-/*
-// globalizer (= full text scanner, applied before any other operation)
-function Globalizer( $word ) {
-    global $globalizer_table;
-    $output = $word;
-    foreach ( $globalizer_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-
-// helvetizer
-function Helvetizer( $word ) {
-    global $helvetizer_table;
-    $output = $word;
-    foreach ( $helvetizer_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-*/
-
-// decapitalizer: can't be replaced with GenericParser! (?)
-// Can be replaced: REGEX: ([A-Z]) => \L$1 IN PHP: ???
-// Idem for strtoupper: REGEX: ([a-z]) => \U$1 IN PHP: ???
-// must be refined for special characters (äöü etc.)
-function Decapitalizer( $word ) {
-    $output = mb_strtolower($word);
-    return $output;
-}
-
 // after almost hours (and hours) of searching I come to the conclusion that there is no out-of-the-box-solution to do an upper/lower-case conversion in php-regex ... :-/
 // the only solution would be to substitute character by character (individually)
 // of course: in php you can do that - still quite elegantly - with an array
@@ -157,98 +123,6 @@ function extended_preg_replace( $pattern, $replacement, $string) {
         }
         return $result;
 };
-
-
-/*
-function Substituter( $word ) {
-    global $substituter_table;
-    $output = $word;
-    foreach ( $substituter_table as $pattern => $replacement ) {
-       $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-
-// normalizer
-function Normalizer( $word ) {
-    global $normalizer_table;
-    $output = $word;
-    foreach ( $normalizer_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-
-// bundler
-function Bundler( $word ) {
-    global $bundler_table;
-    $output = $word;
-    foreach ( $bundler_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-
-// shortener
-function Shortener( $word ) {
-    global $shortener_table;
-    $output = $word;
-    foreach ( $shortener_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-*/
-
-// trickster: functions like dictionary, but word goes to parserchain afterwards
-function Trickster( $word ) {
-    global $trickster_table;
-    $output = $word;
-    foreach ( $trickster_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output ); //echo "trickster-pattern: $pattern word: $word output: $output<br>";
-    }
-    if (strcmp($word, $output) == 0) return ""; // if no trickster rule was applied return "" to tell metaparser to apply normal parserchain
-    else return $output; // if there was a match in trickster return it in order to tell metaparser to apply reduced parserchain (i.e. without decapitalizer)
-}
-
-/*
-// filter
-function Filter( $word ) {
-    global $filter_table;
-    $output = $word;
-   // $word = str_replace('»', "", $string);
-   // $word = str_replace('«', "", $string);
-    foreach ( $filter_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-
-// transcriptor
-function Transcriptor( $word ) {
-    global $transcriptor_table;
-    $output = $word;
-    foreach ( $transcriptor_table as $pattern => $replacement ) {
-        $output = preg_replace( "/$pattern/", $replacement, $output );
-    }
-    return $output;
-}
-*/
-
-// lookuper (checks if word is in dictionary)
-// old version
-/*
-function Lookuper( $word ) {
-    global $dictionary_table;
-    $original_result =  $dictionary_table[ $word ];
-    echo "Result: $original_result<br>";
-    if (mb_strlen( $original_result ) > 0) return $original_result;
-    else {
-        $lower_result = $dictionary_table[ mb_strtolower($word)];
-        if (mb_strlen( $lower_result ) > 0) return $lower_result; // empty string is returned automatically if no entry is found // good idea to convert to lower case ... ?!?
-    }
-}
-*/
 
 function Lookuper( $word ) {
     global $this_word_punctuation, $last_word_punctuation;
@@ -296,20 +170,40 @@ function ExecuteEndParameters() {
     }
 }
 
+function ExecuteBeginParameters() {
+    global $rules, $rules_pointer;
+    global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule;
+    global $original_word, $act_word;
+    //echo "execute begin<br>";
+    $result = "";
+    $actual_model = $_SESSION['actual_model'];
+    $length = count($rules["$actual_model"][$rules_pointer]);
+    for ($i=1; $i<$length; $i++) {
+        //echo "argument($i) length=$length: " . $rules["$actual_model"][$rules_pointer][$i] . "<br>";
+        switch ($rules["$actual_model"][$rules_pointer][$i]) {
+            case "@@wrd" : $act_word = $original_word; break;
+            //case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
+        }
+    }
+}
+
 // ExecuteRule replaces GenericParser from old parser
-function ExecuteRule( $word ) {
+function ExecuteRule( /*$word*/ ) {
 
     global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
     global $rules, $rules_pointer;
+    global $act_word, $original_word;
     //echo "is word set?: $word";
-    $output = $word;
+    //$output = $word;
     $actual_model = $_SESSION['actual_model'];
     $condition = $rules["$actual_model"][$rules_pointer][0];
     //echo "ExecuteRule(): condition=#$condition#<br>";
     switch ($condition) {
-        case "BeginFunction()" : break;
-        case "EndFunction()" : ExecuteEndParameters(); break;
+        case "BeginFunction()" : ExecuteBeginParameters(); $output = $act_word; break;
+        case "EndFunction()" : ExecuteEndParameters(); $output = $act_word; break;
         default : // normal condition
+            //echo "in default: act_word = $act_word<br>";
+            $output = $act_word;
             $length = count($rules["$actual_model"][$rules_pointer]);
             if ($length == 2) {
                 // normal rule: 1 condition => 1 consequence
@@ -364,8 +258,10 @@ function ExecuteRule( $word ) {
             
             }
     }
-    return $output;
-  
+    $act_word = $output;
+    //if ($result === "") {echo "return output: $output"; return $output;}
+    //else { echo "return result $result"; return $result; }
+   // return $output;
     //return $word;
 
 }
@@ -373,12 +269,12 @@ function ExecuteRule( $word ) {
 function ParserChain( $text ) {
         global $font, $combiner, $shifter, $rules, $functions_table, $rules_pointer;
         global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
-        global $original_word, $result_after_last_rule;
+        global $original_word, $result_after_last_rule, $act_word;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
         
         $processing_in_parser = "R"; // suppose word will been obtained by processing the rules
-        list($res_std, $res_prt) = Lookuper( $text ); // database-function
-        
+        //list($res_std, $res_prt) = Lookuper( $text ); // database-function
+      /*  
         if ((mb_strlen($res_std) > 0) || ((mb_strlen($res_prt)>0))) {
             $processing_in_parser = "D";  // mark word as taken from dictionary
             $std_form = $res_std;
@@ -387,21 +283,26 @@ function ParserChain( $text ) {
             $separated_prt_form = "";
             return $res_prt;
         }
+        */
         $rules_pointer = 0; // use rules pointer as instruction pointer (ip)
         $actual_model = $_SESSION['actual_model'];
-        $act_word = $text;
+        //$act_word = $text;
         
         $original_word = $text;
-        $result_after_last_rule = $text;
+        $result_after_last_rule = $act_word;
         
-        $temp = isset($rules[$actual_model][$rules_pointer]);
+        //$temp = isset($rules[$actual_model][$rules_pointer]);
         //echo "actual_model: $actual_model";
         //var_dump($rules);
         $number_of_rules = count($rules[$actual_model]);
         //echo "number of rules: $number_of_rules<br>";
         while ($rules_pointer < $number_of_rules) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
             //echo "before executerule: $rules_pointer<br>";
-            $act_word = ExecuteRule( $act_word );
+            //$act_word = ExecuteRule( $act_word );
+            //echo "rule($rules_pointer) actword = $act_word<br>";
+            
+            ExecuteRule();
+            //echo "rule($rules_pointer) actword = $act_word<br>";
             //echo "after execute";
             $rules_pointer++;
         }
@@ -452,6 +353,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $font, $combiner, $shifter, $rules, $functions_table;
     global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
+    
     //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
      $text_format = $_SESSION['original_text_format'];
      $text_format = 'original';

@@ -170,6 +170,9 @@ $sentence_start = true;                            // variable needed for traini
 $last_word_punctuation = false;
 $this_word_punctuation = true;
 
+// error handling
+$global_error_string = "";
+
 // declarations
 $splines = array();                             // not really necessary in php
 

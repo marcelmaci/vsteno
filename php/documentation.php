@@ -1,10 +1,12 @@
 <?php require "vsteno_template_top.php"; ?>
-<h1>Dokumentation</h1>
-<p>VSTENO kann von verschiedenen Zielgruppen und zu verschiedenen Zwecken genutzt werden. </p>
-<h2>(1) "Leseratten"</h2>
+<h1>Tutorials</h1>
+<p>Diese Seite enthält Tutorials und Dokumentationen zu VSTENO. Aus unserer Sicht kann das Programm von 3 Zielgruppen genutzt werden: 
+(1) Leseratten,  (2) Stenograf/innen, (3) Programmierer/innen</p>
+<h2>(1) Leseratten</h2>
 <p>Wer VSTENO dazu nutzen möchte, Texte in die Grundschrift Stolze-Schrey zu übertragen  (um sie z.B. auf einem E-Reader zu lesen),
-der findet entsprechende Informationen in diesem <a href="../docs/vsteno_tutorial.pdf">Kurztutorial</a>.</p>
-<h2>(2) Linguist/innen</h2>
+der findet entsprechende Informationen in diesem <a href="../docs/vsteno_tutorial.pdf">Kurztutorial</a>. 
+Noch kürzer - im Sinne eines "get started" ist <A href="hints.php">dieses Tutorial</a>.</p>
+<h2>(2) Stenograf/innen</h2>
 <p>Wenn Sie "der Hafer sticht" und Sie VSTENO dazu nutzen möchte, selber eigene Stenografie-System umzusetzen, dann finden
 Sie die hierzu notwendigen technischen Informationen im  <a href="../docs/tutorial_linguistinnen.pdf">Tutorial für Linguist/innen</a>.</p>
 <h2>(3) Programmierer/innen</h2> 

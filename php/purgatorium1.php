@@ -57,8 +57,9 @@ function connect_or_die() {
 
 function prepare_and_execute_query( $conn ) {
     global $safe_word_id, $conn;
+    $purgatorium = GetPurgatoriumDBName();
     $safe_word_id = $conn->real_escape_string($_GET['word_id']);
-    $sql = "SELECT * FROM purgatorium WHERE word_id='$safe_word_id'";
+    $sql = "SELECT * FROM $purgatorium WHERE word_id='$safe_word_id'";
     $result = $conn->query($sql);
     return $result;
 }

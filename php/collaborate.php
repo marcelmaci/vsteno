@@ -1,16 +1,20 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Gemeinschaftsprojekt</h1>
-<p>VSTENO ist ein etwas grösseres Projekt, das provisorisch mal auf etwa 1-2 Jahre angelegt ist (Grundversion, danach weitere Anpassungen und Updates nach Bedarf). Erste Ideen entstanden 
-im April 2018. Mit Stand August 2018 umfasst das Git-Repository rund 6000 Zeilen Daten (wovon etwa 3500 Zeilen Code und der Rest Webseite und Dokumentation).</p>
+<p>VSTENO begann als privates Projekt im April 2018.</p><p>Im Mai 2018 gelangte eine erste lauffähige Version auf <a href="http://www.github.com/marcelmaci/vsteno">GitHub</a>. Das Ziel: 
+(1) Das Projekt publik zu machen, (2) sauber zu versionieren und (3) gegen aussen zu öffnen.</p>
+<p>Mit Stand Oktober 2018 umfasst das Projekt nun rund 16500 Zeilen (wovon ca. 3700 Zeilen Code, 1000 Zeilen linguitische Daten und der Rest Webseite und Dokumentation). Trotzdem
+steht das Projekt nach wie vor am Anfang und wird vermutlich etwa 1-2 Jahre Entwicklungsarbeit benötigen (Grundversion, danach regelmässige Updates).</p>
+<p><i>=> Da es sich bei VSTENO um ein komplexes und aufwändiges Projekt mit vielen Bereichen handelt, soll diese Seite dazu dienen, ganz offiziell zur Mitarbeit aufzurufen.</i></p>
+<h1>Warum mitmachen bei VSTENO?</h1>
 <h2>Spannend!</h2>
 <p>VSTENO ist ein sehr abwechslungsreiches und spannendes Projekt, welches sich weit über die Informatik und die Stenografie in weitere (Lebens-)Bereiche hineinerstreckt. Anbei ein kleiner 
-Überblick über die Themenbereiche, die VSTENO direkt oder indirekt betreffen und tangieren:</p>
+Überblick über die Themenbereiche, die VSTENO direkt oder indirekt betrifft oder tangiert:</p>
 <ul>
     <li><b>Linguistik:</b> Lösungen (und Formeln/Regeln) in den Bereichen Phonetik, Morphologie und Lexika.</li>
     <li><b>Stenografie:</b> Umsetzung weiterer Systeme (andere Sprachen, Eilschrift, DEK etc.)</li>
-    <li><b>Programmierung:</b> LAMP-Entwicklung (Linux, Apache, MySQL, PHP). Ebenfalls gefragt: Kenntnisse in git, REGEX, CSS, HTML 
+    <li><b>Programmierung:</b> LAMP-Entwicklung (Linux, Apache, MySQL, PHP). Ferner: Kenntnisse in git, REGEX, CSS, HTML 
     und JavaScript (Entwicklung eines interaktiven Zeicheneditors).</li>
-    <li><b>Grafik:</b> Stenozeichen als Vektorgrafiken (idealerweise auch Mitentwicklung des Zeicheneditors) und Webdesign</li>
+    <li><b>Grafik:</b> Stenozeichen als Vektorgrafiken (Zeicheneditor) und Webdesign</li>
     <li><b>Mathematik:</b> Algorithmen rund um Bezier-Kurven (z.B. Zeichenverbindungen, Schattierungen von Zeichen)</li>
     <li><b>Übersetzung:</b> Verfassen, Aktualisieren und Übersetzen von Dokumentationen.</li>
     <li><b>Testing:</b> Erstellen und Durchführen von Test-Suiten (Wortlisten und Texte).</li>
@@ -18,14 +22,14 @@ im April 2018. Mit Stand August 2018 umfasst das Git-Repository rund 6000 Zeilen
     <li><b>Rechtliches:</b> Abklärung von Rechten (Autoren, Texte u.a.).</li>
 </ul>
 <h2>Interessiert?</h2>
-<p>Es ist unschwer zu erkennen, dass eine gute Version von VSTENO eine Menge Arbeit verlangt! In diesem Sinne möchte ich alle Interessierten einladen, Teil dieses Projektes zu werden. Das
-Wort "Teil" verstehe ich wohlgemerkt ganz im Sinne des Community-Gedankens Freier Software: Das Projekt VSTENO gehört Ihnen genauso wie mir, d.h. obwohl ich der Initiator der Idee bin, soll 
+<p>Haben Sie Kenntnisse in einem dieser Bereich und sind interessiert, an VSTENO mitzuarbeiten? Dann werden Sie Teil der "Community" bzw. helfen Sie mit, diese zu begründen! Wie bereits
+erwähnt ist VSTENO Freie Software, d.h. das Projekt gehört Ihnen genauso wie mir. Mit anderen Worten: Obwohl zwangsläufig jemand Initiator und Koordinator der Idee ist, soll 
 das Projekt am Schluss ein Gesamtwerk sein, für das ein Kollektiv zeichnet (und das auch dem besagten Kollektiv gehört).</p>
 <h2>Ich kann aber gar nicht programmieren ...</h2>
 <p>
-Falls Sie sich nun diesen Satz sagen - dann lassen Sie mich darauf gleich antworten: Sie müssen ausdrücklich NICHT programmieren können, um bei diesem Projekt mitzuwirken. Im Gegenteil: 
-Programmierer gibt es heutzutage genug, jedenfalls sicher mehr als Stenograf/innen! Insofern: Falls Sie in irgend einem der obgenannten Bereiche (insbesondere Stenografie) irgend welche 
-Kenntnisse und Fähigkeiten haben, dann sind Sie dabei - und ich würde mich über ein <A href="mailto:m.maci@gmx.ch">Mail</a> freuen, in dem wir weitere Details diskutieren können!
+Falls Sie sich nun diesen Satz sagen - dann lassen Sie mich darauf gleich antworten: Sie müssen ausdrücklich NICHT programmieren können, um bei diesem Projekt mitzuwirken! Im Gegenteil: 
+Programmierer gibt es heute vermutlich mehr als Stenograf/innen! Insofern: Falls Sie irgend ein stenografisches System (Stolze-Schrey, DEK, Gregg, Duployé etc. auf Deutsch, Französisch,
+Englisch etc.) beherrschen, dann setzen Sie sich bitte per <A href="mailto:m.maci@gmx.ch">Mail</a> mit mir in Verbindung!
 </p>
 <h1>Ziele</h1>
 <p>VSTENO setzt sich für die nächsten Monate folgende Ziele (ungefähre Prioritätenangabe falls mehrere):</p>

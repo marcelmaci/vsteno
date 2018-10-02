@@ -42,6 +42,15 @@
 // The HTML-tags can stand at any position (before or after inline tags or mixed), but not inside words (like inline-option-tags)
 // HTML-tags will be inserted into HTML-page without modifications when stenograms are generated. Any HTML-tag is allowed (it's up to the user
 // to provide correct and working tags).
+$whitelist_variables = " original_text_format title_yesno title_text title_size title_color introduction_yesno introduction_text introduction_size introduction_color token_size ";
+$whitelist_variables .= "token_type token_thickness token_inclination token_shadow token_distance_none token_distance_narrow token_distance_wide token_style_type token_style_custom_value ";
+$whitelist_variables .= " token_color color_nounsyesno color_nouns color_beginningsyesno color_beginnings color_backgroundyesno color_background auxiliary_color_general ";
+$whitelist_variables .= " auxiliary_thickness_general auxiliary_baselineyesno auxiliary_upper12yesno auxiliary_loweryesno auxiliary_upper3yesno auxiliary_baseline_color ";
+$whitelist_variables .= " auxiliary_upper12_color auxiliary_lower_color auxiliary_upper3_color auxiliary_baseline_thickness auxiliary_upper12_thickness auxiliary_lower_thickness ";
+$whitelist_variables .= " auxiliary_upper3_thickness output_texttagsyesno output_width output_height output_style output_page_numberyesno output_page_start_value ";
+$whitelist_variables .= " output_page_start_at mark_wordlist distance_words space_before_word style_nouns style_beginnings baseline_style upper12_style upper3_style lower_style ";
+$whitelist_variables .= " auxiliary_style_general left_margin right_margin top_margin bottom_margin num_system_lines baseline show_margins show_distances svgtext_size ";
+$whitelist_variables .= " actual_model model_custom_or_standard ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
@@ -132,6 +141,7 @@ function GetTagVariableAndValue( $tag ) {
 
 // INCREDIBLE: Pattern "/<@.*?[>]/": "?" . ">", must be written as ?[>] otherwhise PHP-Parser thinks it's the end of PHP-code (even inside comments) ... ?!?!
 function ParseAndSetInlineOptions( $tags ) {
+       global $global_error_string;
        //echo "ParseAndSetInlineOptions(): tags: $tags<br>";
        // preg_match_all( "/<@.*?[>]/", $tags, $matches );                        // .*? makes expression non greedy // old version with @ (= no html-tags)
        preg_match_all( "/<[^>]+[>]/", $tags, $matches );                         // .*? makes expression non greedy; parse all tags of both types (inline- and html-)
@@ -145,7 +155,11 @@ function ParseAndSetInlineOptions( $tags ) {
             else {                                                              // match is inline-tag => set values
                 list( $variable, $value ) = GetTagVariableAndValue($match);
                 //echo "Match: " . htmlspecialchars($match) . " => Variable: $variable Value: $value<br>";
-                if (isset($_SESSION[$variable])) $_SESSION[$variable] = $value;     // check if variable has been set before
+                if (isset($_SESSION[$variable])) {
+                    if (strpos($whitelist, " $variable ") !== FALSE) {
+                        $_SESSION[$variable] = $value;     // check if variable has been set before
+                    } else $global_error_string .= "ERROR: you are not allowed to set variable '$variable'!";
+                }
             }
        }
        //$esc_html_tag_list = htmlspecialchars( $html_tag_list );
