@@ -654,7 +654,7 @@ function NormalText2TokenList( $text ) {
     //list( $pre, $word, $post ) = GetPreAndPostTags( $text );
     $text = htmlspecialchars_decode( $text );
     $metaform = MetaParser( $text );
-        
+    //echo "NormalText2tokenlist(): text = $text metaform = $metaform<br>";
     //echo "Metaform: $metaform<br>";
     if (mb_strlen($metaform)>0) {
         $tokenlist = MetaForm2TokenList( $metaform );     // somehow idiot to pass $pre and $post through this function without changing anything - but do it like that for the moment
@@ -666,8 +666,11 @@ function NormalText2TokenList( $text ) {
 
 function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $combined_pretags, $combined_posttags, $html_pretags, $html_posttags;
-   
+    //echo "Singleword2svg(): text = $text<br>";
+    
     $tokenlist = NormalText2TokenList( $text );
+    //echo "Singleword2svg(): tokenlist = $tokenlist<br>";
+    
     //echo "SingleWord2SVG(): tokenlist dump: "; var_dump($tokenlist);
     $pre = $combined_pretags;
     $post = $combined_posttags;
@@ -805,10 +808,11 @@ function CalculateInlineSVG( $text_array ) {
     $output = "";
     
     foreach ( $text_array as $this_word ) {
+        //echo "in calculateinline..(): this_word = $this_word<br>";
         $global_debug_string = "";
         $global_number_of_rules_applied = 0;
         $bare_word = /*html_entity_decode(*/GetWordSetPreAndPostTags( $this_word )/*)*/;           // decode html manually ...
-         
+        // echo "in calculateinline..(): bare_word = $bare_word<br>";
         $html_pretags = ParseAndSetInlineOptions( $combined_pretags );
         $original_word = $bare_word;
         $result_after_last_rule = $bare_word;

@@ -21,13 +21,17 @@ if ($conn->connect_error) {
 
 echo "<h1>Zeichen</h1>";
     
-$model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
-if ($_SESSION['model_standard_or_custom'] === 'standard') {
+if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Modell auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
     echo "<p>Zum Ändern des Models verwenden Sie den Button links unten oder wählen Sie <a href='toggle_model.php'><button>ändern</button></a>.</p>";
     echo '<a href="input.php"><br><button>zurück</button></a><br><br>';   
   
 } else { 
+    switch ($_SESSION['model_standard_or_custom']) {
+        case "standard" : $model_name = "99999_default"; break; 
+        case "custom" : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
+    }
+
     if ($_POST['action'] == 'speichern') {
         $update_font = $conn->real_escape_string($_POST['font_as_text']);
         $sql = "UPDATE models

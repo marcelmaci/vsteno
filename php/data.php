@@ -79,6 +79,10 @@ $steno_tokens_master = $font[$actual_model];
 $combiner_table = $combiner[$actual_model];
 $shifter_table = $shifter[$actual_model];
 
+//CreateCombinedTokens();
+//CreateShiftedTokens();
+
+
 //var_dump($steno_tokens_master);
 //echo "--------------------------------------------------------------";
 //var_dump($steno_tokens_master);

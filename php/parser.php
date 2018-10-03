@@ -126,6 +126,7 @@ function extended_preg_replace( $pattern, $replacement, $string) {
 
 function Lookuper( $word ) {
     global $this_word_punctuation, $last_word_punctuation;
+    //echo "in Lookuper()";
     $conn = Connect2DB();
     // Check connection
     if ($conn->connect_error) {
@@ -134,38 +135,59 @@ function Lookuper( $word ) {
     //echo "in Lookuper: $word<br>";
     // prepare data
     $safe_word = $conn->real_escape_string( $word );
-    $sql = "SELECT * FROM elysium WHERE word='$safe_word'";
+    $elysium = GetElysiumDBName();
+    $sql = "SELECT * FROM $elysium WHERE word='$safe_word'";
     //echo "Elysium: query = $sql<br>";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        // echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
-        return array($row['single_std'], $row['single_prt']);   // return both: std and prt
+        //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
+        
+        return GetOptimalStdPrtForm( $row );   // return both: std and prt
+        
     } elseif ($last_word_punctuation) {
         $safe_word = mb_strtolower( $safe_word );   // if word is at beginning of text or after a punctuation, seek also for lower case wordwrap
         //echo "$safe_word => check lowercase PUNCTUATION:  #$last_word_punctuation#$this_word_punctuation# (lookuper)<br>";
-        $sql = "SELECT * FROM elysium WHERE word='$safe_word'";
+        $sql = "SELECT * FROM $elysium WHERE word='$safe_word'";
         //echo "Elysium: query = $sql<br>";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            // echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
-            return array($row['single_std'], $row['single_prt']);   // return both: std and prt
+            //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
+            
+            return GetOptimalStdPrtForm( $row );   // return both: std and prt
        }
-    } else return "";    
+    } else return null;    
 }
 
 function ExecuteEndParameters() {
     global $rules, $rules_pointer;
-    global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule;
+    global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule, $act_word;
     $actual_model = $_SESSION['actual_model'];
     $length = count($rules["$actual_model"][$rules_pointer]);
     for ($i=1; $i<$length; $i++) {
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
             case "=:std" : /*echo "=:std: #$result_after_last_rule#<br>";*/ $std_form = $result_after_last_rule; break;
             case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
+            case "@@dic" : 
+                list($temp_std, $temp_prt) = Lookuper($act_word);
+                //echo "result lookuper: temp_std = #$temp_std# temp_prt = #$temp_prt#<br>";
+                if (($temp_std !== null) || ($temp_prt !== null)) {
+                    // there was a result in the dictionary
+                    $std_form = $temp_std;
+                    $prt_form = $temp_prt;
+                    $result_after_last_rule = $prt_form;
+                //echo "act_word = $act_word (in Lookuper 1) $temp_prt $temp_std<br>";
+                
+                    $act_word = $prt_form;
+                //echo "act_word = $act_word (in Lookuper 2)<br>";
+                
+            $rules_pointer = count($rules["$actual_model"]);    // set rules pointer to end (= dont execute more rules)
+                    //echo "rules_pointer = $rules_pointer std_form = $std_form prt_form = $prt_form<br>";
+                }
+                break;
         }
     }
 }
@@ -181,7 +203,7 @@ function ExecuteBeginParameters() {
     for ($i=1; $i<$length; $i++) {
         //echo "argument($i) length=$length: " . $rules["$actual_model"][$rules_pointer][$i] . "<br>";
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
-            case "@@wrd" : $act_word = $original_word; break;
+            case "@@wrd" : $act_word = $original_word; $result_after_last_rule = $original_word; break;
             //case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
         }
     }
@@ -192,7 +214,7 @@ function ExecuteRule( /*$word*/ ) {
 
     global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
     global $rules, $rules_pointer;
-    global $act_word, $original_word;
+    global $act_word, $original_word, $result_after_last_rule;
     //echo "is word set?: $word";
     //$output = $word;
     $actual_model = $_SESSION['actual_model'];
@@ -258,6 +280,7 @@ function ExecuteRule( /*$word*/ ) {
             
             }
     }
+    if ($output === "") echo "output = null / rule = $rules_pointer<br>";
     $act_word = $output;
     //if ($result === "") {echo "return output: $output"; return $output;}
     //else { echo "return result $result"; return $result; }
@@ -300,8 +323,10 @@ function ParserChain( $text ) {
             //echo "before executerule: $rules_pointer<br>";
             //$act_word = ExecuteRule( $act_word );
             //echo "rule($rules_pointer) actword = $act_word<br>";
-            
+            //echo "ParserChain: act_word = $act_word (before)<br>";
             ExecuteRule();
+            //echo "ParserChain: act_word = $act_word (after executerule())<br>";
+            
             //echo "rule($rules_pointer) actword = $act_word<br>";
             //echo "after execute";
             $rules_pointer++;
@@ -356,7 +381,7 @@ function MetaParser( $text ) {          // $text is a single word!
     
     //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
      $text_format = $_SESSION['original_text_format'];
-     $text_format = 'original';
+     //$text_format = 'original';
     //$original_word = $text;
     if ($text_format === "prt") return $text; // no parsing
     elseif ($text_format === "std") { // partial parsing: std => prt
@@ -369,7 +394,7 @@ function MetaParser( $text ) {          // $text is a single word!
         //$text1 = GenericParser( $globalizer_table, $text ); // must be replaced!?
         $text1 = html_entity_decode( $text );    // do it here the hardcoded way
         $text2 = GetWordSetPreAndPostTags( $text1 );
-       // $original_word = $text2;
+        // $original_word = $text2;
         //echo "text: $text text1: $text1 text2: $text2<br>";
         list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
         
@@ -384,7 +409,10 @@ function MetaParser( $text ) {          // $text is a single word!
                     $subword_array = explode( "|", $word_part ); // problem with this method is, that certain shortings (e.g. -en) will be applied at the end of a subword, while the shouldn't ... Workaround: add | at the end (that will be eliminated later shortly before transformation into token_list) ... (?!) seems to work for the moment, but keep an eye on that! Sideeffect: shortenings at the end won't be applied (this was intended at the beginning...) => rules must be rewritten with $ and | to mark end of words and subwords
                     foreach ($subword_array as $subword) { 
                         if ($subword !== end($subword_array)) $subword .= "|";
+                        //echo "Metaparser(): subword = $subword<br>";
                         $output .= ParserChain( $subword );
+                        //echo "Metaparser(): output = $output<br>";
+                       
                         $separated_std_form .= $std_form;
                         $separated_prt_form .= $prt_form;
                     }

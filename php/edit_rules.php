@@ -22,13 +22,16 @@ if ($conn->connect_error) {
 echo "<h1>Regeln</h1>";
 //echo "model: " . $_SESSION['model_standard_or_custom'] . "<br>";
     
-if ($_SESSION['model_standard_or_custom'] === 'standard') {
+if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Model auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
     echo "<p>Zum Ändern des Models verwenden Sie den Button links unten oder wählen Sie <a href='toggle_model.php'><button>ändern</button></a>.</p>";
     echo '<a href="input.php"><br><button>zurück</button></a><br><br>';   
   
 } else {
-    $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+    switch ($_SESSION['model_standard_or_custom']) {
+        case "standard" : $model_name = "99999_default"; break; 
+        case "custom" : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
+    }
 
     if ($_POST['action'] == 'speichern') {
         $update_rules = $conn->real_escape_string($_POST['rules_as_text']);

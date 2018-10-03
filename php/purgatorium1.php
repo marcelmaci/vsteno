@@ -282,7 +282,10 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     $result = prepare_and_execute_query( $conn );
 
     if ($result->num_rows > 0) {
-       
+        // test
+        CreateCombinedTokens();
+        CreateShiftedTokens();
+        
         $row = $result->fetch_assoc(); 
         escape_data();
         prepare_output_strings_and_variables();

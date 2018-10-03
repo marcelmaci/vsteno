@@ -55,12 +55,23 @@ function GetPurgatoriumDBName() {
 
 function GetElysiumDBName() {
     switch ($_SESSION['model_standard_or_custom']) {
-        case "standard" : return "elysium"; breakt;
+        case "standard" : return "elysium"; break;
         case "custom" : 
             $elysium = "XE" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
-            return $elysium;
+            //echo "elysium = $elysium<br>";
+            return $elysium; break;
         default : return "error"; break;
     }
+}
+
+function GetOptimalStdPrtForm( $row ) {
+    // $row is a fetched row from elysium
+    // check whether there are multiple forms (i.e. single and composed) and choose the recommended one
+    // (adapt later for preference of user)
+    if ($row['number_forms'] == 2) {
+        if ($row['recommended_form'] == 1) return array($row['single_std'], $row['single_prt']);
+        else return array($row['separated_std'], $row['separated_prt']);
+    } else return array($row['single_std'], $row['single_prt']); 
 }
 
 ?>

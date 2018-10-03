@@ -44,67 +44,72 @@ function prepare_aleph() {
 }
 
 if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
+    if (($_SESSION['user_privilege'] > 1) || (($_SESSION['user_privilege'] == 1) && ($_SESSION['model_standard_or_custom'] === "custom"))) {
 
-    prepare_aleph();
+        prepare_aleph();
+        $purgatorium = GetPurgatoriumDBName();
     
-    echo "
-    <h1>Purgatorium</h1>
-    <p>Hier wird entschieden, welche Vorschläge aus dem Purgatorium definitiv ins
-    Wörterbuch (Elysium) aufgenommen werden und welche unwiderbringlich ins Nirvana befördert werden ...</p><p>Wählen Sie einen der untenstehenden Einträge aus, um ihn zu bearbeiten.</p>
-    <h1>Einträge</h1>";
+        echo "
+        <h1>Purgatorium</h1>
+        <p>Hier wird entschieden, welche Vorschläge aus dem Purgatorium definitiv ins
+        Wörterbuch (Elysium) aufgenommen werden und welche unwiderbringlich ins Nirvana befördert werden ...</p><p>Wählen Sie einen der untenstehenden Einträge aus, um ihn zu bearbeiten.</p>
+        <h1>Einträge ($purgatorium)</h1>";
 
-    // Create connection
-    $conn = Connect2DB();
+        // Create connection
+        $conn = Connect2DB();
 
-    // Check connection
-    if ($conn->connect_error) {
-        die_more_elegantly("Verbindung nicht möglich: " . $conn->connect_error . "<br>");
-    }
+        // Check connection
+        if ($conn->connect_error) {
+            die_more_elegantly("Verbindung nicht möglich: " . $conn->connect_error . "<br>");
+        }
 
-    // prepare data
-    //$safe_username = htmlspecialchars($_SESSION['user_username']);
-    $purgatorium = GetPurgatoriumDBName();
-    
-    // check if account exists already
-    $sql = "SELECT * FROM $purgatorium";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-       
-        echo "<p>Anzahl: " . $result->num_rows . "<br>Wörter: ";
-        $row = $result->fetch_assoc(); 
+        // prepare data
+        //$safe_username = htmlspecialchars($_SESSION['user_username']);
         
-        while ($row != null) {
+        // check if account exists already
+        $sql = "SELECT * FROM $purgatorium";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+       
+            echo "<p>Anzahl: " . $result->num_rows . "<br>Wörter: ";
+            $row = $result->fetch_assoc(); 
+        
+            while ($row != null) {
                 echo "<a href='purgatorium1.php?word_id=" . $row['word_id'] . "'>" . $row['word'] . "</a> ";
                 $row = $result->fetch_assoc();
             
-        }
-        echo "</p>";
+            }
+            echo "</p>";
         
-        /*
-        echo "<table>";
-        echo "<tr><td><u>Eintrag</u></td><td><u>Vorschlag</u></td><td><u>Korrektur</u></td></tr>";
+            /*
+            echo "<table>";
+            echo "<tr><td><u>Eintrag</u></td><td><u>Vorschlag</u></td><td><u>Korrektur</u></td></tr>";
         
-        echo "<tr><td>Wort:<br>STD:<br>PRT:<br>CMP:<br></td>";
-        $temp_word = $row['word'];
-        $temp_std = $row['std'];
-        $temp_prt = $row['prt'];
-        $temp_cmp = $row['composed'];
+            echo "<tr><td>Wort:<br>STD:<br>PRT:<br>CMP:<br></td>";
+            $temp_word = $row['word'];
+            $temp_std = $row['std'];
+            $temp_prt = $row['prt'];
+            $temp_cmp = $row['composed'];
         
-        echo "<td>$temp_word<br>$temp_std<br>$temp_prt<br>$temp_cmp</td>";
-        echo "<td>felder für korrektur</td></tr>";
+            echo "<td>$temp_word<br>$temp_std<br>$temp_prt<br>$temp_cmp</td>";
+            echo "<td>felder für korrektur</td></tr>";
       
-        echo "</table>";
-        */
+            echo "</table>";
+            */
     
-    } else {
-        die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
-    }
-    echo '<br><a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
+        } else {
+            die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
+        }
+        echo '<br><a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
    
+        
+        $conn->close();
+    } else {
+            echo "<h1>Fehler</h1><p>Sie haben keine Verwaltungsrechte für Purgatorium</p><p>Grund: Model = standard (ändern Sie es auf custom)</p>";
+            echo "<p><a href='toggle_model.php'><button>&auml;ndern</button></a></p>";
+    }
     require_once "vsteno_template_bottom.php";
-    $conn->close();
-
 } else {
     echo "<p>Sie benötigen Superuser-Rechte und müssen eingeloggt sein, um Aleph zu benutzen.</p>";
     echo '<a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   

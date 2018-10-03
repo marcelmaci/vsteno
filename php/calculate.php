@@ -146,7 +146,7 @@ global $global_error_string;
 // just create combined/shifted-tokens once per call of calculate.php (performace)
 CreateCombinedTokens();
 CreateShiftedTokens();
-
+// do it in data.php?
 
 if ($_POST['action'] === "abschicken") {
     $global_error_string = "";
