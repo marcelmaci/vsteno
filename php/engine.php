@@ -1121,7 +1121,7 @@ function CalculateLayoutedSVG( $text_array ) {
             $temp_pre = $combined_pretags;
             $temp_post = $combined_posttags;
             $result_after_last_rule = $bare_word;
-            //echo "=> single_word: $single_word pre: $temp_pre bare_word: $bare_word post: $temp_post<br>";
+            //echo "CalculateLayouted(): bare_word = $bare_word pretags: $temp_pre posttags: $temp_post<br>";
             /*
             $bare_word = GetWordSetPreAndPostTags( $single_word );
             $temp_pre = $combined_pretags;
@@ -1165,10 +1165,10 @@ function CalculateLayoutedSVG( $text_array ) {
                 } else {
                     if (mb_strlen($bare_word)>0) {
                         
-                        // BUG: all session-variables don't work in this part of code!!! REASON: no tokenlist is created, word is not draw => this will only be done by 
+                        // BUG: all session-variables don't work in this part of code!!! REASON: no tokenlist is created, word is not drawn => this will only be done by 
                         // DrawOneLineInLayouted ... so either the whole line gets the color (if the line is full) or the line is drawn with old color, for example)
                         // Solution: 
-                        // (1) Process pre/post-tags ohnly inside DrawOneLineInLayouted ...
+                        // (1) Process pre/post-tags only inside DrawOneLineInLayouted ...
                         // (2) check Session-Variables inside DrawOneLineInLayouted SVG...
                         // => fix this later
                         

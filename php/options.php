@@ -141,7 +141,7 @@ function GetTagVariableAndValue( $tag ) {
 
 // INCREDIBLE: Pattern "/<@.*?[>]/": "?" . ">", must be written as ?[>] otherwhise PHP-Parser thinks it's the end of PHP-code (even inside comments) ... ?!?!
 function ParseAndSetInlineOptions( $tags ) {
-       global $global_error_string;
+       global $global_error_string, $whitelist_variables;
        //echo "ParseAndSetInlineOptions(): tags: $tags<br>";
        // preg_match_all( "/<@.*?[>]/", $tags, $matches );                        // .*? makes expression non greedy // old version with @ (= no html-tags)
        preg_match_all( "/<[^>]+[>]/", $tags, $matches );                         // .*? makes expression non greedy; parse all tags of both types (inline- and html-)
@@ -154,11 +154,15 @@ function ParseAndSetInlineOptions( $tags ) {
             }
             else {                                                              // match is inline-tag => set values
                 list( $variable, $value ) = GetTagVariableAndValue($match);
-                //echo "Match: " . htmlspecialchars($match) . " => Variable: $variable Value: $value<br>";
-                if (isset($_SESSION[$variable])) {
-                    if (strpos($whitelist, " $variable ") !== FALSE) {
-                        $_SESSION[$variable] = $value;     // check if variable has been set before
-                    } else $global_error_string .= "ERROR: you are not allowed to set variable '$variable'!";
+                //echo "Match: " . htmlspecialchars($match) . " => Variable: #$variable# Value: #$value#<br>";
+                //if (isset($_SESSION[$variable])) $_SESSION[$variable] = $value; 
+                if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
+                    if (mb_strpos($whitelist_variables, " $variable ") === FALSE) {
+                        $global_error_string .= "ERROR: you are not allowed to set variable '$variable'!";
+                    } else {
+                        //echo "Session($variable) = $value<br>";
+                        $_SESSION[$variable] = $value; 
+                    } 
                 }
             }
        }

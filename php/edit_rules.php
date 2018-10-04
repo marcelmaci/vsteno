@@ -24,9 +24,7 @@ echo "<h1>Regeln</h1>";
     
 if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Model auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
-    echo "<p>Zum Ändern des Models verwenden Sie den Button links unten oder wählen Sie <a href='toggle_model.php'><button>ändern</button></a>.</p>";
-    echo '<a href="input.php"><br><button>zurück</button></a><br><br>';   
-  
+    echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
 } else {
     switch ($_SESSION['model_standard_or_custom']) {
         case "standard" : $model_name = "99999_default"; break; 
@@ -64,7 +62,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
 
     // use javascript for textarea in order to prevent predefined function of tab to change focus (use it for indentation instead)
     echo "<form action='edit_rules.php' method='post'>
-        <textarea id='rules_as_text' name='rules_as_text' rows='45' cols='120'
+        <textarea id='rules_as_text' name='rules_as_text' rows='35' cols='120'
         onkeydown=\"if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}\"
         >" . htmlspecialchars($rules) . "</textarea><br>
         <input type='submit' name='action' value='speichern'>

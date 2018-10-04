@@ -280,7 +280,7 @@ function ExecuteRule( /*$word*/ ) {
             
             }
     }
-    if ($output === "") echo "output = null / rule = $rules_pointer<br>";
+    //if ($output === "") echo "output = null / rule = $rules_pointer<br>";
     $act_word = $output;
     //if ($result === "") {echo "return output: $output"; return $output;}
     //else { echo "return result $result"; return $result; }

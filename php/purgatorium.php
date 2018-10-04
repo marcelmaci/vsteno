@@ -51,8 +51,8 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     
         echo "
         <h1>Purgatorium</h1>
-        <p>Hier wird entschieden, welche Vorschläge aus dem Purgatorium definitiv ins
-        Wörterbuch (Elysium) aufgenommen werden und welche unwiderbringlich ins Nirvana befördert werden ...</p><p>Wählen Sie einen der untenstehenden Einträge aus, um ihn zu bearbeiten.</p>
+        <p>Hier entscheiden Sie, welche Vorschläge aus dem Purgatorium definitiv ins
+        Wörterbuch (Elysium) aufgenommen und welche unwiderbringlich ins Nirvana befördert werden ...</p><p>Wählen Sie einen der untenstehenden Einträge aus, um ihn zu bearbeiten.</p>
         <h1>Einträge ($purgatorium)</h1>";
 
         // Create connection
@@ -101,12 +101,13 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         } else {
             die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
         }
-        echo '<br><a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
+        echo '<a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
    
         
         $conn->close();
     } else {
-            echo "<h1>Fehler</h1><p>Sie haben keine Verwaltungsrechte für Purgatorium</p><p>Grund: Model = standard (ändern Sie es auf custom)</p>";
+            echo "<h1>Purgatorium</h1><p>Sie arbeiten zur Zeit mit dem Modell <b>standard</b>, das Sie nicht bearbeiten können. Ändern Sie das Modell auf <b>custom</b> um mit Ihrem
+            eigenen Purgatorium zu arbeiten.</p>";
             echo "<p><a href='toggle_model.php'><button>&auml;ndern</button></a></p>";
     }
     require_once "vsteno_template_bottom.php";

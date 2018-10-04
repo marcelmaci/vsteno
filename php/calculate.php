@@ -109,6 +109,8 @@ function CalculateStenoPage() {
             // add this at beginning of original text
             //echo "title_to_add: $title_to_add<br>";
             $text = $title_to_add . $text;
+            NormalText2SVG( $text ); 
+            InsertReturnButton();
         } elseif ($_SESSION['output_format'] === "train") {
             echo "<h1>Training</h1>";
             if (!$_SESSION['user_logged_in']) echo "<p><b>Sie müssen eingeloggt sein, um Datenbankfunktionen nutzen zu können!</b></p>";
