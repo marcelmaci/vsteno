@@ -115,7 +115,7 @@ function get_single_word_data_fields() {
     $std_form_upper = (mb_strlen($std_form_upper) > 0) ? $std_form_upper : mb_strtoupper($separated_std_form);
     $safe_prt = (mb_strlen($safe_prt) > 0) ? $safe_prt : mb_strtoupper($separated_prt_form); 
     $submitted_by = $_GET['submit_id'];
-    echo "submit_id = $submitted_by<br>"; 
+    //echo "submit_id = $submitted_by<br>"; 
     $output = "";
     $output .= "<input type='hidden' name='single_original' value='$safe_word'>
                 <input type='hidden' name='submitted_by' value='$submitted_by'>

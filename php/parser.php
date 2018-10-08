@@ -28,6 +28,9 @@ require_once "constants.php";
 require_once "session.php";
 */
 $act_word = "";
+$word_at_beginning_of_function = "";
+$actual_function = "";
+
 
 function replace_all( $pattern, $replacement, $string ) {
     do {
@@ -36,7 +39,7 @@ function replace_all( $pattern, $replacement, $string ) {
     } while ($old_string !== $string );
     return $string;
 }
-
+/*
 function GenericParser( $table, $word ) {
     global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
     //echo "GenericParser(): word: $word table: $table ";
@@ -71,7 +74,7 @@ function GenericParser( $table, $word ) {
                 if ($there_is_a_match) {
                     //echo "Don't apply rule!<br>";
                     $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
-                    $global_debug_string .= "<tr><td>NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . " </td><td>REASON: pattern: $matching_pattern matches in $original_word</td></tr>";
+                    $global_debug_string .= "<tr><td>[X] $output</td><td>RULE($rules_pointer): " . htmlspecialchars($pattern) . " => { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern MATCHES IN $original_word</td></tr>";
                 } else {
                     $global_number_of_rules_applied++;
                     $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] WORD: $output </td><td>FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td></tr>";
@@ -86,7 +89,7 @@ function GenericParser( $table, $word ) {
             if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                 $result_after_last_rule = $output;
                 $global_number_of_rules_applied++;
-                $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] WORD: $output</td><td>FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td></tr>"; 
+                $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] $output</td><td>RULE($rules_pointer): " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td></tr>"; 
                 
                 //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
@@ -96,7 +99,7 @@ function GenericParser( $table, $word ) {
     
      return $output;
 }
-
+*/
 ///////////////////////////////////////////// parser functions ////////////////////////////////////////////////
 
 // after almost hours (and hours) of searching I come to the conclusion that there is no out-of-the-box-solution to do an upper/lower-case conversion in php-regex ... :-/
@@ -165,6 +168,7 @@ function Lookuper( $word ) {
 function ExecuteEndParameters() {
     global $rules, $rules_pointer;
     global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule, $act_word;
+    global $functions_table, $word_at_beginning_of_function, $global_debug_string, $actual_function;
     $actual_model = $_SESSION['actual_model'];
     $length = count($rules["$actual_model"][$rules_pointer]);
     for ($i=1; $i<$length; $i++) {
@@ -188,6 +192,32 @@ function ExecuteEndParameters() {
                     //echo "rules_pointer = $rules_pointer std_form = $std_form prt_form = $prt_form<br>";
                 }
                 break;
+            default :
+                $temp_element = $rules["$actual_model"][$rules_pointer][$i];
+                //$temp_element = ">>test";
+                $first_two_chars = mb_substr($temp_element, 0, 2);
+                $length = mb_strlen($temp_element);
+                $argument = mb_substr($temp_element, 2, $length-2);
+                //echo "first_two = $first_two_chars length = $length argument = $argument<br>";
+                
+                switch ($first_two_chars) {
+                    case ">>" : $rules_pointer = $functions_table[$actual_model][$argument][0]; 
+                                $global_debug_string .= "<tr><td></td><td>BRANCH: $temp_element($rules_pointer)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                $actual_function = $argument;
+                                break;  // inconditional branch
+                    case "=>" : if ($word_at_beginning_of_function === $act_word) {                     // branch if equal
+                                    $rules_pointer = $functions_table[$actual_model][$argument][0];
+                                    $global_debug_string .= "<tr><td></td><td>BRANCH: $temp_element($rules_pointer)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                    $actual_function = $argument;
+                                }
+                                break;
+                    case "!>" : if ($word_at_beginning_of_function !== $act_word) {                     // branch if not equal
+                                    $rules_pointer = $functions_table[$actual_model][$argument][0];
+                                    $global_debug_string .= "<tr><td></td><td>BRANCH: $temp_element($rules_pointer)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                    $actual_function = $argument;
+                                }
+                                break;
+                }
         }
     }
 }
@@ -195,13 +225,16 @@ function ExecuteEndParameters() {
 function ExecuteBeginParameters() {
     global $rules, $rules_pointer;
     global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule;
-    global $original_word, $act_word;
-    global $safe_std;                   // this global variable comes from database (in purgatorium1.php)
+    global $original_word, $act_word, $word_at_beginning_of_function;
+    global $safe_std, $actual_function;                   // this global variable comes from database (in purgatorium1.php)
     
     //echo "execute begin<br>";
     $result = "";
     $actual_model = $_SESSION['actual_model'];
     $length = count($rules["$actual_model"][$rules_pointer]);
+    $word_at_beginning_of_function = $act_word;
+    $actual_function = $rules["$actual_model"][$rules_pointer][1]; // name of function must be first argument!
+    
     for ($i=1; $i<$length; $i++) {
         //echo "argument($i) length=$length: " . $rules["$actual_model"][$rules_pointer][$i] . "<br>";
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
@@ -228,7 +261,7 @@ function ExecuteBeginParameters() {
 function ExecuteRule( /*$word*/ ) {
 
     global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
-    global $rules, $rules_pointer;
+    global $rules, $rules_pointer, $actual_function;
     global $act_word, $original_word, $result_after_last_rule;
     //echo "is word set?: $word";
     //$output = $word;
@@ -254,7 +287,7 @@ function ExecuteRule( /*$word*/ ) {
                 if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                     $result_after_last_rule = $output;
                     $global_number_of_rules_applied++;
-                    $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] $output </td><td>RULE($rules_pointer): " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td>"; 
+                    $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
                 }
                 //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
@@ -263,10 +296,11 @@ function ExecuteRule( /*$word*/ ) {
                 // special rule: 1 condition => several consequences
                 //if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
                 $pattern = $rules["$actual_model"][$rules_pointer][0];
-                //$replacement = $rules["$actual_model"][$rules_pointer][1];
-                $extra_replacement = $rules["$actual_model"][$rules_pointer][1];
-                $output = extended_preg_replace( "/$pattern/", $extra_replacement, $output );
-                //echo "word: $word output: $output replaced: $replaced FROM: rule: $pattern => $replacement <br>";
+                $replacement = $rules["$actual_model"][$rules_pointer][1];
+                //$extra_replacement = $rules["$actual_model"][$rules_pointer][1];
+                $word = $act_word;
+                $output = extended_preg_replace( "/$pattern/", $replacement, $output );
+                //echo "word: $word output: $output FROM: rule: $pattern => $replacement <br>";
                 if ($output !== $word) {   // rule has been applied => test, if there are exceptions
                     //echo "Rule applied: word: $word output: $output FROM: rule: $pattern => $extra_replacement <br>";
                     $length = count($rules["$actual_model"][$rules_pointer]); // number of elements as consequence + 1 (condition is counted)
@@ -286,10 +320,10 @@ function ExecuteRule( /*$word*/ ) {
                     if ($there_is_a_match) {
                         //echo "Don't apply rule!<br>";
                         $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
-                        $global_debug_string .= "<tr><td>NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . "</td><td> REASON: pattern: $matching_pattern matches in $original_word</td></tr>";
+                        $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     } else {
                         $global_number_of_rules_applied++;
-                        $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] $output </td><td>RULE($rules_pointer): " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td></tr>";
+                        $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     }
                 }
             
@@ -401,8 +435,15 @@ function MetaParser( $text ) {          // $text is a single word!
     //$original_word = $text;
     if ($text_format === "prt") return $text; // no parsing
     elseif ($text_format === "std") { // partial parsing: std => prt
-       //echo "prt muss von std ($safe_std) berechnet werden<br>";
-       $prt_form = ParserChain( $safe_std );  // must be replaced
+       // if text format is "standard" (std), then the variable $safe_std has to be set to std_form
+       // $safe_std is either (1) set via database in purgatorium1.php1
+       // or (2) - if the calculation is initiated from the maxi-form - 
+       // it is the variable text (so in the latter case, set $safe_std = $text;
+       $safe_std = (mb_strlen($safe_std) > 0) ? $safe_std : mb_strtoupper($text);
+       //echo "prt muss von std (#$safe_std#) berechnet werden<br>";
+       $prt_form = ParserChain( $temp_std ); 
+       $safe_std = "";
+       //echo "prt: $prt_form<br>";
        
        return $prt_form;
     } else { // full parsing
@@ -441,7 +482,7 @@ function MetaParser( $text ) {          // $text is a single word!
                 }
                 if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
                 if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
-                $global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
+                //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
                 return $output;
             case "handwriting":
                 $output = $word;

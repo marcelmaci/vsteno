@@ -153,7 +153,7 @@ $dont_connect = 0;
 // variables for procedural approach
 $original_word = "";
 $result_after_last_rule = "";
-$combined_pretags = "testtag";
+$combined_pretags = "";
 $combined_posttags = "";
 //$inline_options_pretags = "";                    // better: leave procedural approach as it is
 //$inline_options_posttags = "";                   // add oop on top of functions

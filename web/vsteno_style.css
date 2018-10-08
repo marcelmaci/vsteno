@@ -238,7 +238,7 @@ float: left;
 #debug_table table {
         /*border: 1px solid white;*/
        border-collapse: collapse;
-        border-width: 2px;
+        border-width: 1px;
         border-style: solid;
         border-color: gray;
        /* padding: -20px; */
@@ -246,7 +246,7 @@ float: left;
 #debug_table tr {
     /* border: 1px solid black; */
     border-collapse: collapse;
-        border-width: 2px;
+        border-width: 1px;
         border-style: solid;
         border-color: gray;
        /* padding: -20px; */

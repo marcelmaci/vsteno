@@ -126,9 +126,10 @@ Fenster:
 <input type="checkbox" name="output_without_button_yesno" value="output_without_button_yes" <?php echo ($_SESSION['output_without_button_yesno']) ? "checked" : "";?>>ohne Button
 <br>
 <input type="radio" name="output_format" value="inline" <?php echo ($_SESSION['output_format'] === "inline") ? "checked" : "";?>> Inline 
-<input type="checkbox" name="output_text_tags" value="text_tags_yes" <?php echo ($_SESSION['output_texttagsyesno']) ? "checked" : "";?>> Langschrift-Tags
+(<input type="checkbox" name="output_text_tags" value="text_tags_yes" <?php echo ($_SESSION['output_texttagsyesno']) ? "checked" : "";?>> Tags)
+<input type="radio" name="output_format" value="meta_std" <?php echo ($_SESSION['output_format'] === "meta_std") ? "checked" : "";?>> STD
+<input type="radio" name="output_format" value="meta_prt" <?php echo ($_SESSION['output_format'] === "meta_prt") ? "checked" : "";?>> PRT
 <input type="radio" name="output_format" value="train" <?php echo ($_SESSION['output_format'] === "train") ? "checked" : "";?>> Training
-<input type="radio" name="output_format" value="metaform" <?php echo ($_SESSION['output_format'] === "metaform") ? "checked" : "";?>> Metaform
 <input type="radio" name="output_format" value="debug" <?php echo ($_SESSION['output_format'] === "debug") ? "checked" : "";?>> Debug<br>
 
 <input type="radio" name="output_format" value="layout" <?php echo ($_SESSION['output_format']) === "layout" ? "checked" : "";?>> Layout 

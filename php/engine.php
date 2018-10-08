@@ -741,7 +741,7 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
 function GetDebugInformation( $word ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
             $bundler_table, $transcriptor_table, $substituter_table, $global_debug_string, $global_number_of_rules_applied,
-            $processing_in_parser;
+            $processing_in_parser, $separated_std_form, $separated_prt_form;
             
 /*
         $original = $word;
@@ -758,7 +758,7 @@ function GetDebugInformation( $word ) {
         $alternative_text = $original;
         $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
 */
-        $debug_text .= "<br>ORG: $word<br><div id='debug_table'><table>$global_debug_string</table></div>" . "PROCESSING: $processing_in_parser<br>RULES: $global_number_of_rules_applied<br>";
+        $debug_text .= "<p>WORD: $word</p><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
         $global_number_of_rules_applied = 0; // suppose, this function is called at the end of the calculation (not before ... since this will give false information then ... ;-)
         return $debug_text;        
     
@@ -1412,7 +1412,60 @@ function CalculateTrainingSVG( $text_array ) {
     return $output;
 }
 
+function CalculateInlineSTD( $text_array ) {
+    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied;
+    global $std_form, $separated_std_form, $combined_posttags;
+    $output = "";
+    
+    foreach ( $text_array as $this_word ) {
+        //echo "this word: $this_word<br>";
+        $global_debug_string = "";
+        $global_number_of_rules_applied = 0;
+        $bare_word = /*html_entity_decode(*/GetWordSetPreAndPostTags( $this_word )/*)*/;           // decode html manually ...
+        $html_pretags = ParseAndSetInlineOptions( $combined_pretags );
+        $original_word = $bare_word;
+        $result_after_last_rule = $bare_word;
+        //echo "bare_word: $bare_word<br>";
+        if (mb_strlen($bare_word)>0) {
+            $nil = MetaParser( $bare_word );
+            //echo "nil: " . htmlspecialchars($nil) . "<br>";
+            //echo "std_form: " . htmlspecialchars($std_form) . "<br>";
+            
+            $output .= $combined_pretags . mb_strtoupper($std_form) . $combined_posttags . " ";
+        } else {
+            $output .= $combined_pretags . $combined_posttags . " ";
+        }
+    }
+    return $output;
+}
 
+function CalculateInlinePRT( $text_array ) {
+    global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied;
+    global $prt_form, $std_form, $separated_std_form, $combined_posttags;
+    $output = "";
+    
+    foreach ( $text_array as $this_word ) {
+        //echo "this word: $this_word<br>";
+        $global_debug_string = "";
+        $global_number_of_rules_applied = 0;
+        $bare_word = /*html_entity_decode(*/GetWordSetPreAndPostTags( $this_word )/*)*/;           // decode html manually ...
+        $html_pretags = ParseAndSetInlineOptions( $combined_pretags );
+        $original_word = $bare_word;
+        $result_after_last_rule = $bare_word;
+        //echo "bare_word: $bare_word SESSION(original_text_format): " . $_SESSION['original_text_format'] . "<br>";
+        if (mb_strlen($bare_word)>0) {
+            $nil = MetaParser( $bare_word );
+            //echo "nil: " . htmlspecialchars($nil) . "<br>";
+            //echo "prt_form: " . htmlspecialchars($prt_form) . "<br>";
+            
+            $output .= $combined_pretags . mb_strtoupper($prt_form) . $combined_posttags . " ";
+        } else {
+            $output .= $combined_pretags . $combined_posttags . " ";
+        }
+    }
+    return $output;
+}
+            
 function NormalText2SVG( $text ) {
     
     $text = PreProcessNormalText( $text );
@@ -1422,6 +1475,8 @@ function NormalText2SVG( $text ) {
     switch ($_SESSION['output_format']) {
             case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;
             case "train" : $svg = CalculateTrainingSVG( $text_array ); break;
+            case "meta_std" : $svg = htmlspecialchars(CalculateInlineSTD( $text_array )); break;    // abuse svg variable for std and prt also ...
+            case "meta_prt" : $svg = htmlspecialchars(CalculateInlinePRT( $text_array )); break;
             default : $svg = CalculateInlineSVG( $text_array );
     }
     echo "$svg";
