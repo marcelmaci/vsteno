@@ -76,7 +76,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
             $row = $result->fetch_assoc(); 
         
             while ($row != null) {
-                echo "<a href='purgatorium1.php?word_id=" . $row['word_id'] . "'>" . $row['word'] . "</a> ";
+                echo "<a href='purgatorium1.php?word_id=" . $row['word_id'] . "&submit_id=" . $row['user_id'] . "'>" . $row['word']  . "</a> ";
                 $row = $result->fetch_assoc();
             
             }

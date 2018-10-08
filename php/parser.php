@@ -71,10 +71,10 @@ function GenericParser( $table, $word ) {
                 if ($there_is_a_match) {
                     //echo "Don't apply rule!<br>";
                     $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
-                    $global_debug_string .= "NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . " REASON: pattern: $matching_pattern matches in $original_word<br>";
+                    $global_debug_string .= "<tr><td>NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . " </td><td>REASON: pattern: $matching_pattern matches in $original_word</td></tr>";
                 } else {
                     $global_number_of_rules_applied++;
-                    $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>";
+                    $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] WORD: $output </td><td>FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td></tr>";
                 }
             }
         } else {
@@ -86,7 +86,7 @@ function GenericParser( $table, $word ) {
             if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                 $result_after_last_rule = $output;
                 $global_number_of_rules_applied++;
-                $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>"; 
+                $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] WORD: $output</td><td>FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td></tr>"; 
                 
                 //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
@@ -125,7 +125,7 @@ function extended_preg_replace( $pattern, $replacement, $string) {
 };
 
 function Lookuper( $word ) {
-    global $this_word_punctuation, $last_word_punctuation;
+    global $this_word_punctuation, $last_word_punctuation, $processing_in_parser;
     //echo "in Lookuper()";
     $conn = Connect2DB();
     // Check connection
@@ -143,7 +143,7 @@ function Lookuper( $word ) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
-        
+        $processing_in_parser = "D";
         return GetOptimalStdPrtForm( $row );   // return both: std and prt
         
     } elseif ($last_word_punctuation) {
@@ -156,7 +156,7 @@ function Lookuper( $word ) {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
-            
+            $processing_in_parser = "D";
             return GetOptimalStdPrtForm( $row );   // return both: std and prt
        }
     } else return null;    
@@ -196,6 +196,8 @@ function ExecuteBeginParameters() {
     global $rules, $rules_pointer;
     global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule;
     global $original_word, $act_word;
+    global $safe_std;                   // this global variable comes from database (in purgatorium1.php)
+    
     //echo "execute begin<br>";
     $result = "";
     $actual_model = $_SESSION['actual_model'];
@@ -203,7 +205,20 @@ function ExecuteBeginParameters() {
     for ($i=1; $i<$length; $i++) {
         //echo "argument($i) length=$length: " . $rules["$actual_model"][$rules_pointer][$i] . "<br>";
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
-            case "@@wrd" : $act_word = $original_word; $result_after_last_rule = $original_word; break;
+            case "@@wrd" : if ($_SESSION['original_text_format'] === "normal") {
+                                $act_word = $original_word; 
+                                $result_after_last_rule = $original_word; 
+                            } else {
+                                $act_word = ""; 
+                                $result_after_last_rule = ""; 
+                            }
+                            break;
+            case "@@std" :  //echo "hier sollte standard gesetzt werden (safe_std = $safe_std)<br>";
+                            if ($_SESSION['original_text_format'] === "std") {
+                                $act_word = $safe_std; 
+                                $result_after_last_rule = $safe_std; 
+                            }
+                            break;
             //case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
         }
     }
@@ -239,7 +254,7 @@ function ExecuteRule( /*$word*/ ) {
                 if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                     $result_after_last_rule = $output;
                     $global_number_of_rules_applied++;
-                    $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>"; 
+                    $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] $output </td><td>RULE($rules_pointer): " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td>"; 
                 }
                 //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
@@ -271,10 +286,10 @@ function ExecuteRule( /*$word*/ ) {
                     if ($there_is_a_match) {
                         //echo "Don't apply rule!<br>";
                         $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
-                        $global_debug_string .= "NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . " REASON: pattern: $matching_pattern matches in $original_word<br>";
+                        $global_debug_string .= "<tr><td>NOT APPLIED: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($table[$pattern][0]) . "</td><td> REASON: pattern: $matching_pattern matches in $original_word</td></tr>";
                     } else {
                         $global_number_of_rules_applied++;
-                        $global_debug_string .= "[$global_number_of_rules_applied] WORD: $output FROM: rule: " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "<br>";
+                        $global_debug_string .= "<tr><td>[$global_number_of_rules_applied] $output </td><td>RULE($rules_pointer): " . htmlspecialchars($pattern) . " => " . htmlspecialchars($replacement) . "</td></tr>";
                     }
                 }
             
@@ -378,6 +393,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $font, $combiner, $shifter, $rules, $functions_table;
     global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
+    global $safe_std;       // this global variable comes from database (in purgatorium1.php)
     
     //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
      $text_format = $_SESSION['original_text_format'];
@@ -385,8 +401,9 @@ function MetaParser( $text ) {          // $text is a single word!
     //$original_word = $text;
     if ($text_format === "prt") return $text; // no parsing
     elseif ($text_format === "std") { // partial parsing: std => prt
-       $std_form = $text;
-       //$prt_form = GenericParser( $substituter_table, GenericParser( $transcriptor_table, $std_form )); // must be replaced
+       //echo "prt muss von std ($safe_std) berechnet werden<br>";
+       $prt_form = ParserChain( $safe_std );  // must be replaced
+       
        return $prt_form;
     } else { // full parsing
        
@@ -424,7 +441,7 @@ function MetaParser( $text ) {          // $text is a single word!
                 }
                 if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
                 if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
-                $global_debug_string .= "STD-FORM: " . mb_strtoupper($separated_std_form) . "<br>PRT-FORM: $separated_prt_form<br>PROCESSING IN PARSER: " . $processing_in_parser . "<br>";
+                $global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
                 return $output;
             case "handwriting":
                 $output = $word;

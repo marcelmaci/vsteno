@@ -114,8 +114,11 @@ function get_single_word_data_fields() {
     //echo "std_form_upper: $std_form_upper sep_std_form: $separated_std_form<br>";
     $std_form_upper = (mb_strlen($std_form_upper) > 0) ? $std_form_upper : mb_strtoupper($separated_std_form);
     $safe_prt = (mb_strlen($safe_prt) > 0) ? $safe_prt : mb_strtoupper($separated_prt_form); 
+    $submitted_by = $_GET['submit_id'];
+    echo "submit_id = $submitted_by<br>"; 
     $output = "";
     $output .= "<input type='hidden' name='single_original' value='$safe_word'>
+                <input type='hidden' name='submitted_by' value='$submitted_by'>
                 <input type='hidden' name='word_id' value='" . $_GET['word_id'] . "'>
                 <input type='checkbox' name='single_chkcmp' value='1' $chkcmp_yn> BAS: 
                 <input type='text' name='single_txtcmp'  size='30' value='$elysium_base_word'>
@@ -131,9 +134,9 @@ function get_single_word_data_fields() {
 
 function get_decision_checkboxes_and_text( $text ) {
         $output = "";
-        $output .= "<input type='checkbox' name='$text" . "decision_elysium' value='1' checked> Elysium<br>
-        <input type='checkbox' name='$text" . "decision_nirvana' value='1' checked> Nirvana<br>
-        <input type='checkbox' name='$text" . "decision_analysis' value='1'> Analyse";
+        $output .= "<input type='checkbox' name='$text" . "decision_elysium' value='1' checked> ➟Elysium
+        <input type='checkbox' name='$text" . "decision_nirvana' value='1' checked> ➟Nirvana
+        ";
         return $output;
 }
 
@@ -167,13 +170,12 @@ function prepare_and_show_single_table() {
         //$proposition_single_svg = SingleWord2SVG( $elysium_base_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);   
         $proposition_single_svg = GetSinglePropositionSVG();
         $single_word_data_fields = get_single_word_data_fields();
-        $decision_checkboxes_and_text = get_decision_checkboxes_and_text( "" ); // we only need that 1x actually ... fix it later: for the moment show it ohnly in single table
+        //$decision_checkboxes_and_text = get_decision_checkboxes_and_text( "" ); // we only need that 1x actually ... fix it later: for the moment show it ohnly in single table
         echo "<table>
             <tr>
                 <td>Aktuell ($processing_in_parser)<br>$original_word_svg</td>
                 <td>Vorschlag<br>$proposition_single_svg</td>
                 <td>Daten<br>$single_word_data_fields</td>
-                <td>Handlung<br>$decision_checkboxes_and_text</td>
             </tr>
         </table>";    
 }
@@ -204,14 +206,16 @@ function get_composed_word_data_fields() {
 }
 
 function offer_elysium_options() {
-    $output = "Schreiben: ";
+    $decision_checkboxes_and_text = get_decision_checkboxes_and_text( "" );
+    $output = "Aktion: $decision_checkboxes_and_text<br>";
+    $output .= "Modus: ";
     $output .= "<input type='radio' name='elysium_write_method' value='update' checked> Update "; 
     $output .= "<input type='radio' name='elysium_write_method' value='replace'> Replace"; 
     return $output;    
 }
 
 function offer_preference_options() {
-    $output = "Bevorzugen: <input type='radio' name='recommended_form' value='single' checked> Single"; 
+    $output = "<br>Vorzug: <input type='radio' name='recommended_form' value='single' checked> Single"; 
     $output .= "<input type='radio' name='recommended_form' value='separated'> Separated ";
     return $output;
 }
@@ -231,7 +235,7 @@ function prepare_and_show_composed_table() {
                 <td>$decision_checkboxes_and_text</td>
             </tr>
         </table>";  
-        $options .= offer_preference_options();
+        // $options .= offer_preference_options();
 }
 
 function show_title_and_form() {
@@ -241,8 +245,8 @@ function show_title_and_form() {
         prepare_and_show_single_table();
         if (mb_strlen($safe_cmp)>0) prepare_and_show_composed_table();
         //if ($processing_in_parser === "D")
-        $options .= "<br>" . offer_elysium_options();
-        echo "<table><tr><td>$options</td><td><br><input type='submit' name='action' value='speichern'></td></tr></table>";
+        $options .= "<br>" . offer_elysium_options() . offer_preference_options() ;
+        echo "<table><tr><td>$options</td><td><br><br><br><input type='submit' name='action' value='ausführen'></td></tr></table>";
         echo "</form>";
 }
 /*
@@ -291,7 +295,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         prepare_output_strings_and_variables();
         show_general_info();
         show_title_and_form();
-        show_entry_in_elysium_if_it_exists();
+        //show_entry_in_elysium_if_it_exists();
     
     } else {
         //die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");

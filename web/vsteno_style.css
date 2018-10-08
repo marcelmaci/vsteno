@@ -195,7 +195,7 @@ float: left;
 #specifications tr:nth-child(even){background-color: #ddd}
 #specifications table {
     border: 1px solid black;
-        border-collapse: collapse;
+    border-collapse: collapse;
        /* padding: -20px; */
 }
 #specifications tr {
@@ -213,7 +213,7 @@ float: left;
 #order tr:nth-child(odd){background-color: #ddd}
 #order table {
         /*border: 1px solid white;*/
-        border-collapse: collapse;
+                border-collapse: collapse;
         border-width: 2px;
         border-style: solid;
         border-color: gray;
@@ -230,7 +230,31 @@ float: left;
 
 #order td {
     border: 1px solid black; 
-        border-collapse: collapse;
+    border-collapse: collapse;
+       /* padding: -20px; */
+}
+
+#debug_table tr:nth-child(odd){background-color: #ddd}
+#debug_table table {
+        /*border: 1px solid white;*/
+       border-collapse: collapse;
+        border-width: 2px;
+        border-style: solid;
+        border-color: gray;
+       /* padding: -20px; */
+}
+#debug_table tr {
+    /* border: 1px solid black; */
+    border-collapse: collapse;
+        border-width: 2px;
+        border-style: solid;
+        border-color: gray;
+       /* padding: -20px; */
+}
+
+#debug_table td {
+    border: 1px solid black; 
+       border-collapse: collapse;
        /* padding: -20px; */
 }
 

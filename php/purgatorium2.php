@@ -84,7 +84,8 @@ function PrepareData() {
     // prepare data
     $safe_word = $conn->real_escape_string(StripOutWordSeparators($_POST['single_original']));
     //echo "Strippedout: $safe_word<br>";
-    $safe_submitted_by = 0; // htmlspecialchars($_POST['single_original']);
+    $safe_submitted_by = $_POST['submitted_by']; // htmlspecialchars($_POST['single_original']);
+    echo "safe_submitted_by = $safe_submitted_by<br>";
     $safe_reviewed_by = $conn->real_escape_string($_SESSION['user_id']);
     $safe_single_bas = ($_POST['single_chkcmp'] == "1") ? $conn->real_escape_string($_POST['single_txtcmp']) : "";
     $safe_single_std = ($_POST['single_chkstd'] == "1") ? $conn->real_escape_string($_POST['single_txtstd']) : "";
@@ -129,8 +130,8 @@ function WriteDataToElysium() {
             '$safe_separated_std', '$safe_separated_prt')";
         }
         $result = $conn->query($sql);
-        echo "<p>Der Eintrag mit <b>id=$word_id</b> (<b>$safe_word</b>) wurde in Elysium geschrieben.</p>";
-        echo "<p>Query: $sql</p>";
+        echo "<p>Das Wort <b>$safe_word</b> wurde in Elysium (<b>➟$elysium</b>) geschrieben.</p>";
+        echo "<h2>Query:</h2><p><i>$sql</i></p>";
     } else echo "<p>Kein Eintrag in Elysium vorgenommen.</p>";
 }
 
@@ -146,8 +147,8 @@ function DeletePurgatoriumEntry() {
             $sql = "DELETE FROM $purgatorium WHERE word_id='$word_id';"; 
         }
         $result = $conn->query($sql);
-        echo "<p>Eintrag mit <b>id=$word_id</b> (<b>$safe_word</b>) wurde aus Purgatorium gelöscht.</p>";
-        echo "<p>Query: $sql</p>";
+        echo "<p>Eintrag mit <b>id=$word_id</b> (<b>$safe_word</b>) wurde aus Purgatorium (<b>$purgatorium</b>) gelöscht.</p>";
+        echo "<h2>Query:</h2><p><i>$sql</i></p>";
     } else echo "<p>Eintrag in Purgatorium nicht gelöscht.</p>";
 }
 

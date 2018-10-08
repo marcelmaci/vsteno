@@ -1,4 +1,4 @@
-<?php require "vsteno_template_top.php"; require_once "session.php"; require_once "captcha.php"; $_SESSION['return_address'] = "input.php"; 
+<?php require "vsteno_template_top.php"; require_once "session.php"; require_once "captcha.php"; $_SESSION['return_address'] = "input.php"; $_SESSION['output_format'] = "inline";
 
 function RandomString( $length ) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

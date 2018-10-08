@@ -35,7 +35,7 @@ function StripOutWordSeparators( $word ) {
         return $stripped;
 }
 
-echo "<h1>Datenbank</h1><br>";
+echo "<h1>Datenbank</h1>";
 
 if ((!$_SESSION['user_logged_in']) || ($_SESSION['user_privilege']) < 1) {
    die_more_elegantly("<p>Sie müssen über einen User- oder Superuser-Account verfügen und eingeloggt sein, um Schreibrechte für die Datenbank zu haben.</p>");
@@ -99,7 +99,7 @@ while (isset($_POST["txtstd$i"])) {
         //echo "query: $sql";
         
         if ($conn->query($sql) === TRUE) {
-            echo "Word <b>$safe_original</b> written to PURGATORIUM<br>"; // (query: $sql)<br>";
+            echo "<p>Wort <b>$safe_original</b> wurde in PURGATORIUM (<b>➟$purgatorium</b>) geschrieben.</p>"; // (query: $sql)<br>";
         } else {
             die_more_elegantly("Fehler: " . $sql . "<br>" . $conn->error . "<br>");
         }

@@ -758,7 +758,7 @@ function GetDebugInformation( $word ) {
         $alternative_text = $original;
         $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
 */
-        $debug_text .= "<br>ORIGINAL: $word<br>$global_debug_string" . "NUMBER OF RULES APPLIED: $global_number_of_rules_applied<br>";
+        $debug_text .= "<br>ORG: $word<br><div id='debug_table'><table>$global_debug_string</table></div>" . "PROCESSING: $processing_in_parser<br>RULES: $global_number_of_rules_applied<br>";
         $global_number_of_rules_applied = 0; // suppose, this function is called at the end of the calculation (not before ... since this will give false information then ... ;-)
         return $debug_text;        
     
@@ -1349,7 +1349,7 @@ function CalculateTrainingSVG( $text_array ) {
         //echo "bare_word: $bare_word<br>";
         
         // handle lower/upper-case at beginning of a sentence
-        if ($sentence_start) $checkbox_kleinschreibung = "<input type='checkbox' name='lowercase$i' value='1'> Kleinschreibung";
+        if ($sentence_start) $checkbox_kleinschreibung = "<input type='checkbox' name='lowercase$i' value='1'> klein";
         else $checkbox_kleinschreibung = "";
         $last_char = mb_substr($post, mb_strlen($post)-1, 1);
         if (mb_strpos($upper_case_punctuation, $last_char) !== false) $sentence_start = true;
@@ -1382,10 +1382,10 @@ function CalculateTrainingSVG( $text_array ) {
             
             $output .= "<td>
                 <input type='hidden' name='original$i' value='$bare_word'>
-            
+            $checkbox_kleinschreibung
                 <input type='radio' name='result$i' value='correct$i'> r
                 <input type='radio' name='result$i' value='wrong$i'> f
-                $checkbox_kleinschreibung
+                
                 <br>
 
                 <input type='checkbox' name='chkstd$i' value='chkstdyes$i'> STD: 

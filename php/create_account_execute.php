@@ -206,18 +206,7 @@ echo "<p>Für Ihr eigenes Stenografie-System (falls Sie eines definieren) entsch
     aufnehmen.</p>";
 echo '<a href="input.php"><button>zurück</button></a><br><br>';   
 echo "<h2>Post Scriptum</h2><p>Wir stellen uns hier übrigens auf den Standpunkt, dass das Purgatorium nicht die 'Vor-Hölle', sondern der 'Vor-Himmel' ist ... ;-)</p>";
-echo "<h2>Spende</h2><p>Wenn Ihnen VSTENO gefällt, bin ich Ihnen für eine Spende dankbar.</p>";
-echo "<p>Via Banküberweisung:</p>
-<pre>
-Bank:   Raiffeisenbank Küssnacht am Rigi
-IBAN:   CH44 8135 1000 0048 9219 6
-Name:   Marcel Maci
-        Avenue du Guintzet 15
-        1700 Fribourg
-</pre>
-<p>Möglich sind auch Spenden in bar.
-</p>
-<p>Besten Dank, dass Sie VSTENO und die Entwicklung Freier Software unterstützen!</p>";
+echo "<h2>Spende</h2><p>Wenn Ihnen VSTENO gefällt, dann ziehen Sie doch eine <a href='donation.php'>Spende</a> in Betracht.</p>";
 
 $conn->close();
 
