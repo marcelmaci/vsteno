@@ -85,7 +85,7 @@ function PrepareData() {
     $safe_word = $conn->real_escape_string(StripOutWordSeparators($_POST['single_original']));
     //echo "Strippedout: $safe_word<br>";
     $safe_submitted_by = $_POST['submitted_by']; // htmlspecialchars($_POST['single_original']);
-    echo "safe_submitted_by = $safe_submitted_by<br>";
+    //echo "safe_submitted_by = $safe_submitted_by<br>";
     $safe_reviewed_by = $conn->real_escape_string($_SESSION['user_id']);
     $safe_single_bas = ($_POST['single_chkcmp'] == "1") ? $conn->real_escape_string($_POST['single_txtcmp']) : "";
     $safe_single_std = ($_POST['single_chkstd'] == "1") ? $conn->real_escape_string($_POST['single_txtstd']) : "";
@@ -111,6 +111,8 @@ function WriteDataToElysium() {
      global $safe_word, $conn, $safe_submitted_by, $safe_reviewed_by, $safe_single_bas, $safe_single_std, $safe_single_prt, $safe_separated_bas, $safe_separated_std, $safe_separated_prt,
            $safe_recommended_form, $safe_number_forms;
     echo "<h1>Speichern</h1>";
+    echo "safe_reviewed_by = $safe_reviewed_by<br>";
+    
     if ($_POST['decision_elysium'] == "1") {
         $word_id = GetWordID( $safe_word );
         if ($word_id != 0) {
