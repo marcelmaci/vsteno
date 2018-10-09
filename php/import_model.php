@@ -87,6 +87,7 @@ $insertion_key = "";        // key that identifies inserted models (several mode
 $actual_key = "";
 $functions_table = array();  // values for linguistical functions (start, end)
 $actual_function = "";
+$start_word_parser = 0;     // contains rules pointer to first rule that has to be applied to a word only (before: global parser that has to be applied to whole text)
 
 //require_once "vsteno_fullpage_template_top.php";
 require_once "dbpw.php";

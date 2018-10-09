@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "6a409b5c21c8b5cfee790c194ab409bf73006e3b";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "4. Oktober 2018";                                  // idem
+const version_commit_id = "d142bdf34d412205f5293be072faa04a1cbecba4";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "8. Oktober 2018";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -155,11 +155,14 @@ $original_word = "";
 $result_after_last_rule = "";
 $combined_pretags = "";
 $combined_posttags = "";
+$last_pretoken_list = "";
+$last_posttoken_list = "";
 //$inline_options_pretags = "";                    // better: leave procedural approach as it is
 //$inline_options_posttags = "";                   // add oop on top of functions
 $html_pretags = ""; 
 $html_posttags = "";
 $global_debug_string = "";
+$global_textparser_debug_string = "";
 $global_number_of_rules_applied = 0;
 $std_form = "";
 $prt_form = "";

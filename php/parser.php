@@ -341,7 +341,7 @@ function ExecuteRule( /*$word*/ ) {
 function ParserChain( $text ) {
         global $font, $combiner, $shifter, $rules, $functions_table, $rules_pointer;
         global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
-        global $original_word, $result_after_last_rule, $act_word;
+        global $original_word, $result_after_last_rule, $act_word, $start_word_parser;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
         
         $processing_in_parser = "R"; // suppose word will been obtained by processing the rules
@@ -356,7 +356,8 @@ function ParserChain( $text ) {
             return $res_prt;
         }
         */
-        $rules_pointer = 0; // use rules pointer as instruction pointer (ip)
+        $rules_pointer = $start_word_parser; // use rules pointer as instruction pointer (ip) // set it to $start_word_parser (= first rule that has to be applyied to 1 single word after global text parser)
+        //echo "set rules_pointer to $start_word_parser<br>";
         $actual_model = $_SESSION['actual_model'];
         //$act_word = $text;
         
@@ -423,11 +424,55 @@ function GetPreAndPostTokens( $text ) {
         return array( $ret_pre, $ret_word, $ret_post );
 }
 
+function IsAnyOfAllArguments( $argument ) {
+    global $rules, $actual_model, $rules_pointer;
+    $length = count($rules["$actual_model"][$rules_pointer]);
+    $output = false;
+    for ($i=0; $i<$length; $i++) {
+        if ($rules["$actual_model"][$rules_pointer][$i] === $argument) $output = TRUE;
+    }
+    return $output;
+}
+
+function PreProcessGlobalParserFunctions( $text ) {
+        global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string;
+        $rules_pointer = 0;
+        $global_textparser_debug_string = "";
+        if (IsAnyOfAllArguments("@@txt")) {
+            $temp_function = $rules["$actual_model"][$rules_pointer][1];
+            while ($rules["$actual_model"][$rules_pointer][0] !== "EndFunction()") {
+                $pattern = $rules["$actual_model"][$rules_pointer][0];
+                $replacement = $rules["$actual_model"][$rules_pointer][1]; // only simple replacements are allowed for global parser ... 
+                $temp_text = $text;
+                $text = preg_replace( "/$pattern/", "$replacement", $text); // use only preg_replace (i.e. not extended_preg_replace)
+                if ($temp_text !== $text) {
+                    $nil = preg_match( "/$pattern/", $temp_text, $matches);
+                    $matching_section = $matches[0];
+                    $esc_pattern = htmlspecialchars($pattern);
+                    $esc_replacement = htmlspecialchars($replacement);
+                    $global_textparser_debug_string .= "<tr><td>(..)$matching_section(..)</td><td><b>R$rules_pointer</b> $esc_pattern <b>⇨</b> $esc_replacement</td><td>" . mb_strtoupper($temp_function) . "</td></tr>";
+                }
+                $rules_pointer++;
+            //$text = preg_replace("/ es ist /", " [XEX] ", $text);
+            //echo "TExt = $text<br>";
+            //echo "first rule: " . $rules["$actual_model"][0][2] . "<br>";
+            }
+            // we are at the end of the global parser
+            // to simplify: don't execute end of function arguments (just ignore them)
+            // set $start_word_parser to rules_pointer++;
+            $rules_pointer++;
+            $start_word_parser = $rules_pointer;
+        } else $start_word_parser = 0;
+        //echo "start_word_parser = $start_word_parser<br>";
+        return $text;
+}
+
 function MetaParser( $text ) {          // $text is a single word!
     global $font, $combiner, $shifter, $rules, $functions_table;
     global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
     global $safe_std;       // this global variable comes from database (in purgatorium1.php)
+    global $last_pretoken_list, $last_posttoken_list;
     
     //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
      $text_format = $_SESSION['original_text_format'];
@@ -455,6 +500,9 @@ function MetaParser( $text ) {          // $text is a single word!
         // $original_word = $text2;
         //echo "text: $text text1: $text1 text2: $text2<br>";
         list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
+        // write pre/posttokens to global varables in order to use them from global parser
+        $last_pretoken_list = $pretokens;
+        $last_posttoken_list = $posttokens;
         
         switch ($_SESSION['token_type']) {
             case "shorthand": 
@@ -480,8 +528,21 @@ function MetaParser( $text ) {          // $text is a single word!
                         $separated_prt_form .= "\\";
                     }
                 }
-                if (mb_strlen($pretokens) > 0) $output = "$pretokens\\" . "$output";
-                if (mb_strlen($posttokens) > 0) $output .= "\\$posttokens";
+                if (mb_strlen($pretokens) > 0) { 
+                    if (($pretokens === "{") || ($pretokens === "[")) {
+                        $output = $pretokens . $output; // add { and [ without \\
+                        $separated_std_form = $pretokens . $separated_std_form;     // do the same for std and prt form
+                        $separated_prt_form = $pretokens . $separated_prt_form;
+                    } else $output = "$pretokens\\" . "$output";    // not sure whether this is correct (needs same correction for std and prt as above?!?)
+                }
+                if (mb_strlen($posttokens) > 0) {
+                    if ((mb_substr($posttokens, 0, 1) === "}") || (mb_substr($posttokens,0,1) === "]")) { // check only first char of posttokens, since there may be . ? ! afterwards (et l'horreur sous forme de greffes aléatoires continue ...;-))
+                        $output .= $posttokens; // add } and ] without \\
+                        $separated_std_form .= $posttokens;     // do the same for std and prt form
+                        $separated_prt_form .= $posttokens;
+                   
+                    } else $output .= "\\$posttokens";
+                }
                 //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
                 return $output;
             case "handwriting":

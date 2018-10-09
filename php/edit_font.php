@@ -61,7 +61,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
 
     // use javascript for textarea in order to prevent predefined function of tab to change focus (use it for indentation instead)
     echo "<form action='edit_font.php' method='post'>
-        <textarea id='font_as_text' name='font_as_text' rows='35' cols='120' 
+        <textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'  
         onkeydown=\"if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}\"
         >" . htmlspecialchars($font) . "</textarea><br>
         <input type='submit' name='action' value='speichern'>
