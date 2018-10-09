@@ -19,7 +19,7 @@
                 </ul>
                 <p><b>Kontakt</b></p>
                 <ul>
-                <li><A href="collaborate.php">GitHub</A></li>
+                <li><A href="collaborate.php">Mitmachen!</A></li>
                 <li><A href="mailto:m.maci@gmx.ch"><img src="../web/email_icon_grau_transparent.png" height="13" width="23"> Mail</A></li>
                 </ul>
                 <p><b>Start</b></p>
