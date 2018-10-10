@@ -1,5 +1,6 @@
 #BeginSection(header)
 	/* this file was automatically generated as export from old parser */
+	/* with later manual additions */
 #EndSection(header)
 #BeginSection(font)
 	#BeginSubSection(base)
@@ -316,10 +317,20 @@
 #EndSection(font)
 #BeginSection(rules)
 	#BeginSubSection(helvetizer,@@wrd)
+		"…" => "...";
 		"ß" => "ss";
 	#EndSubSection(helvetizer,@@dic)
+	#BeginSubSection(packer)
+		// some shorthand tokens use special chars (like -#+=/ etc.) in their definition
+		// this can lead to confusions in the transcriptor: e.g. - might be the character - 
+		// (which has to be drawn as such) or a part of a token definition (like [0N-]
+		// in order to avoid that, "packer" bundles those characters adding brackets []
+		// later the transcriptor converts them back into normal characters
+		"-" => "[-]";
+	#EndSubSection(packer)
 	#BeginSubSection(trickster)
 		"([Dd])ahinter" => "{DA}[H][N][&TVR]";
+		//"Athen" => "[0N-][A][T][H][E][N]";
 		"([Dd])urchaus" => "{DURCH}{AUS}";
 		"([Jj])edem" => "$1e[D]{EM}";
 		"([Gg])eradem" => "$1era[D]{EM}";
@@ -376,6 +387,83 @@
 		"([Vv]or)dem" => "{VOR}{EM}";
 		"([tr])los$" => "$1[L]os";
 		"([aeiouäöü])ther$" => "$1t[H]er";
+
+		// the following come from the old $dictionary_table
+		// "(ab)use" trickster as temporary replacement for dictionary/database
+		// priority 1 = create good rules
+		// priority 2 = feed the database (but it should be as small as possible ... hence priority 1)
+
+		"^Lebenspartner$" => "LEBE[NS]|PA[VR][&TN][#N][VR]"; 
+                "^Athen$" => "[0N-][A][T][H][E][N]";
+                "^Athens$" => "[0N-][A][T][H][E][NS]";
+                "^Zuge$" => "ZUG[-E]";
+                "^Anton$" => "[0N-][A][N][&T][&E][O][N]";
+                "^eins$" => "[0D-][EI][NS]";
+                "^Familie$" => "FAMIL[#N][&I][-E]";
+                "^Familien$" => "FAMIL[#N][&I][EN]";          
+             	"^[Uu]ngern$" => "[#NS][&U][G][E][VR]N";
+                "^[Ss]ofort$" => "[0N-][SS][FORT]";
+                "^[Ww]odurch$" => "[WO][DURCH]";
+                "^[Ww]ofür$" => "[WO][F]";
+                "^[Ww]ogegen$" => "[WO][GEGEN]";
+                "^[Ss]eitdem$" => "[0N-][S][HEIT][&E][EM]";
+                "^[Ww]ozu$" => "[WO][Z]";
+                "^[Ww]o$" => "[WO]";
+                "^[Ee]r$" => "[0N-][E][VR]";
+                "^[Ee]twas$" => "[0N-][#W][T][WAS]";
+                "^[Ee]twa$" => "[0N-][#W][T][W][A][&A]";
+                "^[Ww]ir$" => "[W]";
+                "^[Uu]nion$" => "[0N-][U][N][ION]";
+                "^[Dd]enen$" => "[0N-][EN][O][&E][0N-][EN]";
+                "^[Ww]as$" => "[WAS]";
+                "^[Gg]egend$" => "[G][E][G][E][ND]";
+                "^[Uu]mso$" => "[0N-][U][M][0N-][#N][SS]";
+                "^[Kk]arriere$" => "[K][A][RR][&I][E][VR][-E]";
+                "^[Bb]este$" => "[B][E][ST][-E]";
+                "^[Oo]der$" => "[0N-][O][D][#N][VR]";
+                "^[Ss]omit$" => "[0N-][#N][SS][#N][M]";
+                "^[Aa]ll$" => "[ALL]";
+                "^[Aa]llein$" => "[ALL][EI][N]";
+                "^[Aa]lleine$" => "[ALL][EI][N][-E]";
+                "^[Ii]hn$" => "[0D-][I][N]";
+                "^[Ii]hm$" => "[0D-][I][M]";
+                "^[Ss]o$" => "[0N-][SS]";
+                "^[Ss]ogar$" => "[0N-][#N][SS][G][A][VR]";
+                "^[Aa]lso$" => "[0N-][A][L][SS]";
+                "^[Bb]eret$" => "[B][E][VR][E][T]"; // béret doesn't work as key ...
+                "^[Ee]benso$" => "[0N-][E][B][E][N][SS]";
+                "^[Ss]ogleich$" => "[0N-][SS][G@L3][EI][^CH]";
+                //"sozusagen" => "{so}zsagen";
+                //"soweit" => "{so}w{heit}";
+                //"solange" => "{so}lange";
+                //"worauf" => "{wor}{auf}";
+                //"wonach" => "{wo}nach";
+                //"wohin" => "{wo}hn";
+                "^[Dd]araus$" => "[DA@R][AUS]";
+                "^[Dd]arin$" => "[DA@R][IN]";
+                "^(Ü|ü)beraus$" => "[0N-][#WS][&U][AUS]";
+                "^Schaft$" => "[SCH][A][F][&T]";
+                "^[Bb]eim$" => "[B][EI][M]";
+                "^[Dd]abei$" => "[DA][BEI]";
+                "^[Ss]albei$" => "[0N-][S][A][L][B][-EI]";
+                "^[Dd]essen$" => "[D][E][SS][EN]";
+                "^[Ee]s$" => "[0N-][#N][-E]";      
+                "^[Pp]forte$" => "[PF][O][R][&T][&E][-E]";
+                "^[Dd]afür$" => "[DA]F";
+                "^[Dd]agegen$" => "[DA][GEGEN]";
+                "^[Dd]ahin$" => "[DA]HN";
+                "^[Ii]nsofern$" => "[IN][SS][F][E][VR][N]";
+                "^[Ii]ns$" => "[0D-]I[NS]";
+                "^[Ss]ich$" => "[SICH]";
+                "^[Dd]aselbst$" => "[DA][SELB][ST]";
+                "^[Bb]evorzugen$" => "[B][VOR][Z]UG[EN]";
+                "^[Zz]ug$" => "ZUG";
+                "^[Dd]a$" => "[DA]";
+                "^Wien$" => "[W][&I][E][N]";
+                "^[Hh]ier$" => "[H][I][VR]";
+                "^[Bb]eissen$" => "[B][EI][SS][EN]";
+                "^[Bb]ellen$" => "[B][E][LL][EN]";
+                "^[Zz]u$" => "[Z]";
 	#EndSubSection(trickster,=>decapitalizer,!>filter)
 	#BeginSubSection(decapitalizer)
 		"([A-Z])" => "strtolower()";
@@ -574,11 +662,13 @@
 	#BeginSubSection(normalizer)
 		"ç" => "c";
 		"[Aa]eo" => "äo";
-		"-\]" => "=]";
+		//"-\]" => "=]";
+		//"\[-" => "[=";
 		"-(i|au|eu|äu|ei)" => "|[-]\[0D-]$1";
 		"-(a|e|o|u)" => "|[-]\[0N-]$1";
-		"-" => "|[-]\";
-		"=\]" => "-]";
+		"\[-\]" => "|[-]\";
+		//"=\]" => "-]";
+		//"\[=" => "[-";
 		"'(i|au|eu|äu|ei)" => "|[']\[0D-]$1";
 		"'(a|e|o|u)" => "|[']\[0N-]$1";
 		"'" => "|[']\";
@@ -673,7 +763,7 @@
 		"sr" => "[SR]";
 		"tt" => "[TT]";
 		"tr" => "[TR]";
-		"vr" => "[VR]";
+		"vr" => "[#VR]"; // use special name vor v+r, since [VR] can be confused with "vocal r"
 		"wr" => "[WR]";
 		"xr" => "[XR]";
 		"yr" => "[YR]";
@@ -752,7 +842,7 @@
 		"\[MR\]" => "[M@R6]";
 		"\[SPR\]" => "[SP@R6]";
 		"{TUM}\[VR\]" => "{TUM}{VR}";
-		"\[VR\]" => "[V@R6]";
+		"\[#VR\]" => "[V@R6]";
 		"{TUM}{VR}" => "{TUM}[VR]";
 		"\[PR\]" => "[P@R6]";
 		"\[PFR\]" => "[PF@R6]";
@@ -764,14 +854,14 @@
 		"\[STL\]" => "[ST@L3]";
 		"\[SL\]" => "s[@L]";
 		"R}t" => "R}[&T]";
-		"\{ANT\}" => "[0N-][#N]{ANT}";
+		"^\{ANT\}" => "[0N-][#N]{ANT}";
 		"{HEIT}{ET}" => "{HEIT}[&E][ET3/4]";
 		"{ET}(e[^s]|{EN}|{EM})" => "{ET}[&E]$1";
 		"^\{ER\}" => "[0N-][#N][VR]";
 		"\[EI\]t" => "[EI]T";
 		"([BCDFGHJKLMNPQRVWXYZS])\]t" => "$1][&T]";
 		"([bcdfghjklmnpqrvwxyz])t" => "$1[&T]";
-		//"(?<!{.*?)([BCDFGHJKLMNPQRVWXYZ])T" => "$1$2[&T]";
+		"([BCDFGHJKLMNPQRVWXYZ])T(?!})" => "$1[&T]";
 		"\[&T\]{ER}" => "[&T][VR]";
 		"\[&T\]{ALL}" => "{&TALL}";
 		"\[&T\]e$" => "[&T][&E][-E]";
@@ -808,7 +898,7 @@
 		"erer$" => "[VR][#N][VR]";
 		"eres$" => "[VR][E][S]";
 		"([aeiouäöü])r" => "$1[VR]";
-		//"([AEIOUÄÖÜ])R(?!})" => "$1[VR]";
+		"([AEIOUÄÖÜ])R(?!})" => "$1[VR]";
 		"(\[^@\])r" => "$1[AR]";
 		"}r" => "}[AR]";
 		"^s" => "[0n-][S]";

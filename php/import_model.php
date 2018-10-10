@@ -330,7 +330,7 @@ function ImportRulesFromGenericSubSection() {
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
         $condition = $matches[1];
         $consequence = $matches[2];
-        //echo "consequence: $consequence<br>";
+        //echo "condition => consequence: $condition => $consequence<br>";
         $shrinking_generic_subsection = $matches[3];
         $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
         //echo "rule $rules_pointer: $condition => $consequence<br>";
