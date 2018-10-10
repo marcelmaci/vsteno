@@ -43,7 +43,7 @@ body {
 #purelab_title { 
     background-color: #ddd;
     /*background-color: red;*/
-    width: 781px;
+    width: 444px;   /* original value: 784px */
     height: 120px;
     /*border-radius: 0px 20px 0px 0px;*/
     float: left; 
@@ -71,12 +71,12 @@ body {
           position: relative;
      top: 0px;
      left: 0px;
-     height: 120px;
+     height: 120px; 
      /*margin: auto;*/
-     width: 120px;
+     width: 460px;              /* original value: 120px */
      background-color: #ddd;
      border-radius: 0px 20px 0px 0px;
-     float: left;
+     float: left;   // left
 }
 
 #main { 

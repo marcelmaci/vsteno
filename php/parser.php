@@ -128,7 +128,7 @@ function extended_preg_replace( $pattern, $replacement, $string) {
 };
 
 function Lookuper( $word ) {
-    global $this_word_punctuation, $last_word_punctuation, $processing_in_parser;
+    global $this_word_punctuation, $last_word_punctuation, $processing_in_parser, $global_debug_string, $actual_function;
     //echo "in Lookuper()";
     $conn = Connect2DB();
     // Check connection
@@ -146,6 +146,8 @@ function Lookuper( $word ) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
+        $global_debug_string .= "<tr><td></td><td>ELYSIUM ($elysium): MATCH FOUND</td><td>" . mb_strtoupper($actual_function) . "</td></tr>";
+            
         $processing_in_parser = "D";
         return GetOptimalStdPrtForm( $row );   // return both: std and prt
         
@@ -159,6 +161,7 @@ function Lookuper( $word ) {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             //echo "Wort: " . $row['word'] . " in Datenbank gefunden. Rückgabe: " . $row['single_prt'] . "<br>";
+            $global_debug_string .= "<tr><td></td><td>ELYSIUM ($elysium): MATCH FOUND</td><td>" . mb_strtoupper($actual_function) . "</td></tr>";
             $processing_in_parser = "D";
             return GetOptimalStdPrtForm( $row );   // return both: std and prt
        }

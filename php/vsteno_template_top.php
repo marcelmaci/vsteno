@@ -11,17 +11,18 @@
 	<div id="container">
 		<div id="title">
             <div id="purelab_banner">
-                <a href="pen_black_and_white.php"><img src="../web/pen_black_and_white_120px.jpg" height="120"></a>
+                <a href="pen_black_and_white.php"><img src="../web/pen_black_and_white_120px_1.jpg" height="120"></a>
             </div>
             <div id="purelab_title">
                 <h1>VSTENO</h1>
                 <h2>Vector Shorthand Tool with Enhanced Notational Options</h2>
             </div>
            <div id="purelab_texts">
-<!--
-                <img src="purelab_text_animated_single_frames.gif" height="64">
--->
-            </div>
+                <?php 
+                    require_once "fortune.php";
+                    echo "<center>" . fortune() . "</center>";
+                ?>
+           </div>
             
 		</div>
 		<div id="main">

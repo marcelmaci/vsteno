@@ -44,6 +44,7 @@ where:     a is the original B (i.e. replacement for REGEX)
 // 25. September 2018: read data from database
 
 require_once "import_model.php";
+require_once "engine.php";
 require_once "parser.php";
 
 global $font, $combiner, $shifter;
@@ -79,8 +80,8 @@ $steno_tokens_master = $font[$actual_model];
 $combiner_table = $combiner[$actual_model];
 $shifter_table = $shifter[$actual_model];
 
-//CreateCombinedTokens();
-//CreateShiftedTokens();
+CreateCombinedTokens();
+CreateShiftedTokens();
 
 
 //var_dump($steno_tokens_master);

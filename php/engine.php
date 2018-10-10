@@ -1485,7 +1485,8 @@ function NormalText2SVG( $text ) {
             case "meta_prt" : $svg = "<p>" .htmlspecialchars(CalculateInlinePRT( $text_array )) . "</p>"; break;
             default : $svg = CalculateInlineSVG( $text_array );
     }
-    echo "$svg";
+    //echo var_dump($svg);
+    return $svg;
 }
 
 

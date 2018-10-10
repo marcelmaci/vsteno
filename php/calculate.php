@@ -109,7 +109,7 @@ function CalculateStenoPage() {
             // add this at beginning of original text
             //echo "title_to_add: $title_to_add<br>";
             $text = $title_to_add . $text;
-            NormalText2SVG( $text ); 
+            echo NormalText2SVG( $text ); 
             InsertReturnButton();
         } elseif ($_SESSION['output_format'] === "train") {
             echo "<h1>Training</h1>";
@@ -123,13 +123,13 @@ function CalculateStenoPage() {
                 echo "<p>Nutzer <b>" . $_SESSION['user_username'] . " (user_id: " . $_SESSION['user_id'] . ")</b> mit Schreibrechten für <b>$privilege_text</b>.<p>";
             }
             echo "<form action='../php/training_execute.php' method='post'>";
-            NormalText2SVG( $text ); // NormalText2SVG will call CalculateTrainingSVG
+            echo NormalText2SVG( $text ); // NormalText2SVG will call CalculateTrainingSVG
             InsertDatabaseButton();
             echo "</form>";
         } else {
             InsertTitle();
             InsertIntroduction();
-            NormalText2SVG( $text );
+            echo NormalText2SVG( $text );
             InsertReturnButton();
         }
         //echo "\nText aus CalculateStenoPage()<br>$text<br>\n";
@@ -146,8 +146,10 @@ function CalculateStenoPage() {
 // main
 global $global_error_string;
 // just create combined/shifted-tokens once per call of calculate.php (performace)
-CreateCombinedTokens();
-CreateShiftedTokens();
+
+// dont know if this is correct .................................................... should be done in data.php now .................................. !!!!!!!!!!!!!!!!!!!!!!!!
+//CreateCombinedTokens();
+//CreateShiftedTokens();
 // do it in data.php?
 
 if ($_POST['action'] === "abschicken") {
