@@ -120,8 +120,10 @@ function GenericParser( $table, $word ) {
 
 function extended_preg_replace( $pattern, $replacement, $string) {
         switch ($replacement) {
-                case "strtolower()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtolower($word[1]); }, $string); break;
-                case "strtoupper()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtoupper($word[1]); }, $string); break;
+                case "strtolower()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtolower($word[1]); }, $string); 
+                                      break;
+                case "strtoupper()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtoupper($word[1]); }, $string); 
+                                      break;
                 default : $result = preg_replace( $pattern, $replacement, $string);
         }
         return $result;
@@ -237,7 +239,7 @@ function ExecuteBeginParameters() {
     $length = count($rules["$actual_model"][$rules_pointer]);
     $word_at_beginning_of_function = $act_word;
     $actual_function = $rules["$actual_model"][$rules_pointer][1]; // name of function must be first argument!
-    
+
     for ($i=1; $i<$length; $i++) {
         //echo "argument($i) length=$length: " . $rules["$actual_model"][$rules_pointer][$i] . "<br>";
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
