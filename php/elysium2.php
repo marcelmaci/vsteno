@@ -115,8 +115,8 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         }
         //echo '<a href="elysium.php"><br><button>zurück</button></a><br><br>';   
         // calculate shorthand svgs
-        CreateCombinedTokens();
-        CreateShiftedTokens();
+        //CreateCombinedTokens();
+        //CreateShiftedTokens();
         $single_tl = Metaform2TokenList( $single_prt );
         $single_svg = TokenList2SVG( $single_tl, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
         $separate_tl = Metaform2TokenList( $separate_prt );

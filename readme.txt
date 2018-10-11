@@ -10,7 +10,3 @@ The program is early stage and under heavy development.
 Demoversion is available at:
 
 http://www.vsteno.ch/php/introduction.php
-
-New (20.09.2019): Experimental Version under:
-
-http://www.vsteno.ch/unstable/php/introduction.php

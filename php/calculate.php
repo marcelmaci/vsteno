@@ -133,8 +133,7 @@ function CalculateStenoPage() {
             InsertReturnButton();
         }
         //echo "\nText aus CalculateStenoPage()<br>$text<br>\n";
-        //NormalText2SVG( $text ); // do not escape entered text (will be done in parser: pre/postprocessnormaltext())
-       
+        
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
    
     

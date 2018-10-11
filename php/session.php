@@ -185,7 +185,34 @@ function CopyFormToSessionVariables() {
     else CopyFormToSessionVariablesMini();
 }
 
+// backup all session variables except some specific ones
+// namely (no backup):
+// - original_text_content (too much text)
+// - all user* variables (too risky to mess up with those)
+// this function is needed if the engine has to be used for other purposes than the main calculations
+function push_session() {
+    global $session_backup; // use this variable to backup session (session must be restored before script finishes)
+    //echo "backup session<br>";
+    foreach ($_SESSION as $key => $value) {
+        if (($key !== "original_text_content") && (mb_substr($key,0,4) !== "user")) {
+            //echo "session_backup($key) = $value<br>";
+            $session_backup[$key] = $value;
+        }
 
+    }
+}
+
+// restore original session variables from backup in $session_backup
+function pop_session() {
+    global $session_backup;
+    //echo "restore session<br>";
+    foreach ($session_backup as $key => $value) {
+        //echo "session($key) = $value<br>";
+        $_SESSION[$key] = $value;
+    }
+}
+
+// main
     session_start();
     if (!isset($_SESSION['initialized'])) {
         InitializeSessionVariables();

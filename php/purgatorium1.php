@@ -287,8 +287,8 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
 
     if ($result->num_rows > 0) {
         // test
-        CreateCombinedTokens();
-        CreateShiftedTokens();
+        //CreateCombinedTokens();
+        //CreateShiftedTokens();
         
         $row = $result->fetch_assoc(); 
         escape_data();

@@ -531,7 +531,8 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         // initialize variables
         global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
         SetGlobalScalingVariables( $scaling );
-      
+        //echo "TokenList2SVG(): tokenlist dump: "; var_dump($TokenList);
+    
         //call the following function only once per text (performance)
         //CreateCombinedTokens();
         //CreateShiftedTokens();
@@ -719,6 +720,8 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
         default:
             //if ($tokenlist !== null) {
             if (count($tokenlist)>0) {
+                //echo "SingleWord2SVG(): tokenlist dump: "; var_dump($tokenlist);
+    
                 $svg .= TokenList2SVG( $tokenlist, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text );
                 if (mb_strlen($post)>0) {
                     $post_html_tag_list = ParseAndSetInlineOptions( $post );        // set inline options
@@ -1073,8 +1076,11 @@ function CalculateLayoutedSVG( $text_array ) {
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
     $system_line_height = $standard_height * $_SESSION['token_size'];
+    //echo "calculatlay: sys_lin_hght = $system_line_height<br>std_height=$standard_height<br>token_size=" . $_SESSION['token_size'] . "<br>";
     $num_system_lines = $_SESSION['num_system_lines'];
-    $line_height = $system_line_height * $num_system_lines;
+    $line_height = $system_line_height * $num_system_lines;   // these abandoned variables cause problems with fortune cookie (?) ... => checked: it's not the variables (they seem to be fine)
+   // $line_height = $system_line_height * $_SESSION['num_system_lines'];
+    //echo "line_height = $line_height (sys_lin_height = $system_line_height / num_sys_lin = $num_system_lines<br>";
     $token_size = $_SESSION['token_size'];
     $session_baseline = $_SESSION['baseline'];
     $top_margin = $_SESSION['top_margin'];
@@ -1101,7 +1107,10 @@ function CalculateLayoutedSVG( $text_array ) {
         $svg_string .= "<rect x=\"$mx\" y=\"$my\" width=\"$mwidth\" height=\"$mheight\" style=\"fill:white;stroke:green;stroke-width:1;opacity:0.5\" />";
     }
     
+    //echo "before<br>";
+    // the following line causes troubles with fortune cookies !!!!!!
     $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $word_position_y, $system_line_height, $line_height);
+    //echo "after<br>";
     //echo "standard_height: $standard_height line_height: $line_height starty: $starty token_size: $token_size session_baseline: $session_baseline top_margin: $top_margin num_system_lines: $num_system_lines word_position_y: $word_position_y<br>";
     //echo "auxiliary: " . htmlspecialchars(InsertAuxiliaryLinesInLayoutedSVG()) . "<br>";
             
@@ -1471,7 +1480,7 @@ function CalculateInlinePRT( $text_array ) {
 }
             
 function NormalText2SVG( $text ) {
-    
+   
     $text = PreProcessNormalText( $text );
     // first apply rules to whole text (if there are any)
     $text = PreProcessGlobalParserFunctions( $text );

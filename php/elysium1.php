@@ -78,8 +78,8 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
             $act_insertion_date = $row['insertion_date'];
             
             // calculate shorthand svgs
-            CreateCombinedTokens();
-            CreateShiftedTokens();
+            //CreateCombinedTokens();
+            //CreateShiftedTokens();
             $single_tl = Metaform2TokenList( $act_single_prt );
             $single_svg = TokenList2SVG( $single_tl, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
             $separate_tl = Metaform2TokenList( $act_separate_prt );
