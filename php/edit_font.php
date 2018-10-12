@@ -1,5 +1,6 @@
 <?php
 
+require_once "constants.php";
 require_once "vsteno_template_top.php";
 require_once "session.php";
 require_once "dbpw.php";
@@ -26,7 +27,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
     echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
 } else { 
     switch ($_SESSION['model_standard_or_custom']) {
-        case "standard" : $model_name = "99999_default"; break; 
+        case "standard" : $model_name = $_SESSION['actual_model']; break; 
         case "custom" : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
     }
 

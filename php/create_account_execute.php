@@ -1,5 +1,6 @@
 <?php
 
+require_once "constants.php";
 require_once "vsteno_template_top.php";
 require_once "session.php";
 require_once "dbpw.php";
@@ -142,13 +143,38 @@ $_SESSION['user_id'] = $db_user_id;
         echo "Error creating table: " . $conn->error . "<br>";
     }
 
+    // sql to create olympus table
+    // add entry for trickster (= REGEX entry that checks for declined or conjugated forms like: Zelt => Zelte, Zelten, Zeltes, Zelts etc.
+    $olympus = "XO" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+    $sql = "CREATE TABLE IF NOT EXISTS $olympus (
+    word_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    word VARCHAR(30) NOT NULL,
+    number_forms INT(1),
+    recommended_form INT(1),
+    submitted_by INT(6),
+    reviewed_by INT(6),
+    single_bas VARCHAR(50),
+    single_std VARCHAR(50),
+    single_prt VARCHAR(50),
+    separated_bas VARCHAR(50),
+    separated_std VARCHAR(50),
+    separated_prt VARCHAR(50),
+    insertion_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Olympus ($olympus) angelegt.<br>";
+    } else {
+        echo "Error creating table: " . $conn->error . "<br>";
+    }
+
 // copy standard model or create empty model
 if ($_POST['model'] === 'standard') {
     $user_id = $_SESSION['user_id'];
     $model_name = "XM" . str_pad($user_id, 7, '0', STR_PAD_LEFT);
    
    // read data
-    $sql = "SELECT * FROM models WHERE name='99999_default'";
+    $sql = "SELECT * FROM models WHERE name='$default_model'";
     $result = $conn->query($sql);
     
     if ($result->num_rows > 0) {

@@ -64,6 +64,33 @@ function GetElysiumDBName() {
     }
 }
 
+// generic function to get database names (for "standard" or "custom" databases)
+// $database: "purgatorium", "elysium" or "olympus"
+function GetDBName( $type ) {
+        $type_char = "";
+        $model_char = "";
+        $identifier = "";
+        switch ($type) {
+            case "purgatorium" : $type_char = "P"; break;
+            case "elysium" : $type_char = "E"; break;
+            case "olympus" : $type_char = "O"; break;
+            default : $type_char = NULL; break;
+        }
+        switch ($_SESSION['model_standard_or_custom']) {
+            case "standard" : $model_char = "Z"; 
+                              $identifier = $_SESSION['actual_model'];
+                              break;
+            case "custom" : $model_char = "X"; 
+                            $identifier = str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+                            break;
+            default : $model_char = NULL; $identifier = NULL; break;
+        }
+        $complete_name = $model_char . $type_char . $identifier;
+        return $complete_name;  // is NULL if something didn't match
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+
 function GetOptimalStdPrtForm( $row ) {
     // $row is a fetched row from elysium
     // check whether there are multiple forms (i.e. single and composed) and choose the recommended one
@@ -73,5 +100,6 @@ function GetOptimalStdPrtForm( $row ) {
         else return array($row['separated_std'], $row['separated_prt']);
     } else return array($row['single_std'], $row['single_prt']); 
 }
+
 
 ?>

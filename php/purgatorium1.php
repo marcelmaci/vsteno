@@ -57,7 +57,7 @@ function connect_or_die() {
 
 function prepare_and_execute_query( $conn ) {
     global $safe_word_id, $conn;
-    $purgatorium = GetPurgatoriumDBName();
+    $purgatorium = GetDBName( "purgatorium" );
     $safe_word_id = $conn->real_escape_string($_GET['word_id']);
     $sql = "SELECT * FROM $purgatorium WHERE word_id='$safe_word_id'";
     $result = $conn->query($sql);
@@ -133,8 +133,13 @@ function get_single_word_data_fields() {
 }
 
 function get_decision_checkboxes_and_text( $text ) {
+        switch ($_GET['dest']) {
+            case "olympus" : $destination = "Olympus"; break;
+            case "elysium" : $destination = "Elysium"; break;
+            default : $destination = "none"; break;
+        }
         $output = "";
-        $output .= "<input type='checkbox' name='$text" . "decision_elysium' value='1' checked> ➟Elysium
+        $output .= "<input type='checkbox' name='$text" . "decision_elysium' value='1' checked> ➟$destination
         <input type='checkbox' name='$text" . "decision_nirvana' value='1' checked> ➟Nirvana
         ";
         return $output;

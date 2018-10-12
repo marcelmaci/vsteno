@@ -15,11 +15,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+global $default_model;
 require_once "session.php";
 if ($_SESSION['user_logged_in']) {
     if ($_POST['model'] === "custom") $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); 
-    else $_SESSION['actual_model'] = "99999_default";
+    else $_SESSION['actual_model'] = $default_model;
     //echo "Model = " . $_SESSION['actual_model'] . "<br>";
 }
 

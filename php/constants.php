@@ -178,5 +178,7 @@ $global_error_string = "";
 
 // declarations
 $splines = array();                             // not really necessary in php
+$default_model = "DESSBAS";
+//$default_model = "99999_default";
 
 ?>

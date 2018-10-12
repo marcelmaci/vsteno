@@ -52,7 +52,7 @@ function StripOutWordSeparators( $word ) {
 
 function GetWordID( $word ) {
     global $conn;
-    $elysium = GetElysiumDBName();
+    $elysium = GetDBName( "elysium" );
    
     // check if word-entry exists already
     $sql = "SELECT * FROM $elysium WHERE word='$word'";
@@ -117,7 +117,7 @@ function WriteDataToElysium() {
         $word_id = GetWordID( $safe_word );
         if ($word_id != 0) {
             // update existing entry
-            $elysium = GetElysiumDBName();
+            $elysium = GetDBName( "elysium" );
             //echo "elysium = $elysium (nach return)<br>";
             $sql = "UPDATE $elysium 
             SET word='$safe_word', number_forms='$safe_number_forms', recommended_form='$safe_recommended_form', submitted_by='$safe_submitted_by', reviewed_by='$safe_reviewed_by', 
@@ -126,7 +126,7 @@ function WriteDataToElysium() {
             WHERE word_id='$word_id';";
         } else {
         // create new entry
-            $elysium = GetElysiumDBName();
+            $elysium = GetDBName( "elysium" );
             $sql = "INSERT INTO $elysium (word, number_forms, recommended_form, submitted_by, reviewed_by, single_bas, single_std, single_prt, separated_bas, separated_std, separated_prt)
             VALUES ( '$safe_word', '$safe_number_forms', '$safe_recommended_form', '$safe_submitted_by', '$safe_reviewed_by', '$safe_single_bas', '$safe_single_std', '$safe_single_prt', '$safe_separated_bas',
             '$safe_separated_std', '$safe_separated_prt')";
@@ -145,7 +145,7 @@ function DeletePurgatoriumEntry() {
         //echo "id = $word_id<br>";
         if ($word_id != 0) {
             // update existing entry
-            $purgatorium = GetPurgatoriumDBName();
+            $purgatorium = GetDBName( "purgatorium" );
             $sql = "DELETE FROM $purgatorium WHERE word_id='$word_id';"; 
         }
         $result = $conn->query($sql);

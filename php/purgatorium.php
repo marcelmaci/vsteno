@@ -47,14 +47,57 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     if (($_SESSION['user_privilege'] > 1) || (($_SESSION['user_privilege'] == 1) && ($_SESSION['model_standard_or_custom'] === "custom"))) {
 
         prepare_aleph();
-        $purgatorium = GetPurgatoriumDBName();
+        $purgatorium = GetDBName( "purgatorium" );
     
+        //Sie können entweder in ➟Elysium oder ➟Olympus aufgenommen oder gelöscht werden (➟Nirvana).
         echo "
         <h1>Purgatorium</h1>
-        <p>Hier entscheiden Sie, welche Vorschläge aus dem Purgatorium definitiv ins
-        Wörterbuch (Elysium) aufgenommen und welche unwiderbringlich ins Nirvana befördert werden ...</p><p>Wählen Sie einen der untenstehenden Einträge aus, um ihn zu bearbeiten.</p>
+        <p>Hier entscheiden Sie, was mit den Vorschlägen in Purgatorium geschehen soll.</p>
         <h1>Einträge ($purgatorium)</h1>";
-
+        
+        // buttons for right / wrong / undefined
+        $css_style_button = "
+                             input[type=submit] {
+                             font-family: Helvetica, sans-serif;
+                             font-size:20px;
+                             /* padding:5px 15px; */
+                             background-color:#eee; 
+                             border:2px solid #333;
+                             cursor:pointer;
+                             /* -webkit-border-radius: 5px;
+                             border-radius: 5px; */ 
+                             color:#333;
+                             } 
+                             
+                             input[type=submit]:hover {
+                             background-color:#fff; 
+                             /* border:2px solid #333; */
+                             cursor:pointer;
+                             /*
+                             -webkit-border-radius: 5px;
+                             border-radius: 5px; 
+                             */
+                             }";
+        
+        $css_style_selected = "style='background-color:#777;color:white;'";
+        
+        $correct_css = "";
+        $wrong_css = "";
+        $undefined_css = "";
+        
+        switch ($_POST['entry_type']) {
+            case "richtig" : $correct_css = $css_style_selected; $selection = "c"; $txt = "'<b>richtig</b>'"; $destination = "olympus"; break;
+            case "falsch" : $wrong_css = $css_style_selected; $selection = "w"; $txt = "'<b>falsch</b>'"; $destination = "elysium"; break;
+            case "undefiniert" : $undefined_css = $css_style_selected; $selection = "u"; $txt = "'<b>undefiniert</b>'"; $destination = "none"; break;
+            default : $wrong_css = $css_style_selected; $selection = "w"; $selection = "w"; $txt = "'<b>falsch</b>'"; $destination = "elysium"; break;
+        }
+        
+        echo "<style>$css_style_button</style><form action='purgatorium.php' method='post'>
+                <p>
+                    <input type='submit' name='entry_type' value='richtig' $correct_css> <input type='submit' name='entry_type' value='falsch' $wrong_css> <input type='submit' name='entry_type' value='undefiniert' $undefined_css></p>
+              </form>";
+              
+              // <button>richtig</button> <button style='background-color:#222;color:#eee'>falsch</button> <button>undefiniert</button>
         // Create connection
         $conn = Connect2DB();
 
@@ -67,7 +110,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         //$safe_username = htmlspecialchars($_SESSION['user_username']);
         
         // check if account exists already
-        $sql = "SELECT * FROM $purgatorium";
+        $sql = "SELECT * FROM $purgatorium WHERE result='$selection'";       // select only "wrong" entries (w)
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -76,7 +119,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
             $row = $result->fetch_assoc(); 
         
             while ($row != null) {
-                echo "<a href='purgatorium1.php?word_id=" . $row['word_id'] . "&submit_id=" . $row['user_id'] . "'>" . $row['word']  . "</a> ";
+                echo "<a href='purgatorium1.php?word_id=" . $row['word_id'] . "&submit_id=" . $row['user_id'] . "&dest=" . $destination . "'>" . $row['word']  . "</a> ";
                 $row = $result->fetch_assoc();
             
             }
@@ -99,8 +142,16 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
             */
     
         } else {
-            die_more_elegantly("<p>Kein Eintrag in Purgatorium.</p>");
+            /*
+            switch ($selection) {
+                case "u" : $txt = "'<b>undefiniert</b>'"; break;
+                case "w" : $txt = "'<b>falsch</b>'"; break;
+                case "c" : $txt = "'<b>richtig</b>'"; break;
+            }
+            */
+            die_more_elegantly("<p>Kein Eintrag in Purgatorium für $txt.</p>");
         }
+        //echo '<a href="purgatorium.php"><br><button style="background-color: #e70000; color: red;">zurück</button></a><br><br>';   
         echo '<a href="purgatorium.php"><br><button>zurück</button></a><br><br>';   
    
         

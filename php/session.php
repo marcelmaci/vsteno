@@ -4,7 +4,7 @@ require_once "constants.php";
 
 function InitializeSessionVariables() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
-    $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height;
+    $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model;
     // set standard values for use in session
     $_SESSION['initialized'] = true;
     $_SESSION['original_text_format'] = "normal";
@@ -89,7 +89,7 @@ function InitializeSessionVariables() {
         $_SESSION['user_privilege'] = 0;
         $_SESSION['user_id'] = 0;
     }
-    $_SESSION['actual_model'] = "99999_default";
+    $_SESSION['actual_model'] = $default_model;
     $_SESSION['model_standard_or_custom'] = "standard";
 }
 

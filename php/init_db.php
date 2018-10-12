@@ -1,17 +1,7 @@
 <?php 
 /* this file can be used to create the tables necessary for vsteno database */
 require_once "dbpw.php";
-//require_once "session.php";
-/*
-function connect_or_die() {
-    global $conn;
-    $conn = Connect2DB();
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error . "<br>");
-    }
-}
-*/
+
 function create_tables() {
   global $conn;
     // sql to create users table
@@ -38,7 +28,7 @@ function create_tables() {
 
     // sql to create purgatorium table
     // add entry for trickster (= REGEX entry that checks for declined or conjugated forms like: Zelt => Zelte, Zelten, Zeltes, Zelts etc.
-    $sql = "CREATE TABLE IF NOT EXISTS purgatorium (
+    $sql = "CREATE TABLE IF NOT EXISTS ZPDESSBAS (
     word_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     word VARCHAR(30) NOT NULL,
     std VARCHAR(50),
@@ -58,7 +48,7 @@ function create_tables() {
 
     // sql to create elysium table
     // add entry for trickster (= REGEX entry that checks for declined or conjugated forms like: Zelt => Zelte, Zelten, Zeltes, Zelts etc.
-    $sql = "CREATE TABLE IF NOT EXISTS elysium (
+    $sql = "CREATE TABLE IF NOT EXISTS ZEDESSBAS (
     word_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     word VARCHAR(30) NOT NULL,
     number_forms INT(1),
@@ -80,6 +70,30 @@ function create_tables() {
         echo "Error creating table: " . $conn->error . "<br>";
     }
 
+    // sql to create olympus table
+    $sql = "CREATE TABLE IF NOT EXISTS ZODESSBAS (
+    word_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    word VARCHAR(30) NOT NULL,
+    number_forms INT(1),
+    recommended_form INT(1),
+    submitted_by INT(6),
+    reviewed_by INT(6),
+    single_bas VARCHAR(50),
+    single_std VARCHAR(50),
+    single_prt VARCHAR(50),
+    separated_bas VARCHAR(50),
+    separated_std VARCHAR(50),
+    separated_prt VARCHAR(50),
+    insertion_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Table elysium created successfully<br>";
+    } else {
+        echo "Error creating table: " . $conn->error . "<br>";
+    }
+
+    // sql to create models table
     $sql = "CREATE TABLE IF NOT EXISTS models (
     model_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT(6),

@@ -83,6 +83,17 @@ if ($result->num_rows > 0) {
         } else {
             die_more_elegantly("Fehler beim Löschen von Elysium ($elysium).<br>");
         }
+        
+         // delete olympus
+        $olympus = "XO" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+        $sql = "DROP TABLE $olympus";
+        $result = $conn->query($sql);
+        if ($result == TRUE) {
+            echo "Olympus ($olympus) gelöscht.<br>";
+        } else {
+            die_more_elegantly("Fehler beim Löschen von Elysium ($olympus).<br>");
+        }
+    
     } else {
         die_more_elegantly("Falsche Login-Daten.<br>");
     }

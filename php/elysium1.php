@@ -40,7 +40,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     if (($_SESSION['user_privilege'] > 1) || (($_SESSION['user_privilege'] == 1) && ($_SESSION['model_standard_or_custom'] === "custom"))) {
     
         prepare_aleph();
-        $elysium = GetElysiumDBName();
+        $elysium = GetDBName( "elysium" );
     
         echo "<h1>Elysium</h1><p>Hier können Sie den folgenden Eintrag aus Elysium ($elysium) bearbeiten.</p>";
       

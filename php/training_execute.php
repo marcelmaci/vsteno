@@ -78,7 +78,9 @@ while (isset($_POST["txtstd$i"])) {
     $safe_result = $conn->real_escape_string($_POST["result$i"]);
     $safe_comment = $conn->real_escape_string($_POST["comment$i"]);
     
-    $something_to_write = (($safe_result === "wrong$i") || ($safe_chkstd) || ($safe_chkprt) || ($safe_chkcut)); // write only wrong results / corrections to database
+    // write wrong and correct results / corrections to database
+    // IMPORTANT: if none of the two radio buttons is selected, nothing will be written to the database (it's up to the user if he/she wants to mark something for each entry or not)
+    $something_to_write = (($safe_result === "wrong$i") || ($safe_result === "correct$i") || ($safe_chkstd) || ($safe_chkprt) || ($safe_chkcut)); 
 
     if ($something_to_write) {   
     
