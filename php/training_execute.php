@@ -79,15 +79,23 @@ while (isset($_POST["txtstd$i"])) {
     $safe_comment = $conn->real_escape_string($_POST["comment$i"]);
     
     // write wrong and correct results / corrections to database
-    // IMPORTANT: if none of the two radio buttons is selected, nothing will be written to the database (it's up to the user if he/she wants to mark something for each entry or not)
+    // IMPORTANT: if none of the of R or W is selected and no checkbox is checked, nothing will be written to the database
     $something_to_write = (($safe_result === "wrong$i") || ($safe_result === "correct$i") || ($safe_chkstd) || ($safe_chkprt) || ($safe_chkcut)); 
 
     if ($something_to_write) {   
     
         // prepare data
-        $safe_txtstd = ($safe_chkstd) ? $safe_txtstd : "";
-        $safe_txtprt = ($safe_chkprt) ? $safe_txtprt : "";
-        $safe_txtcut = ($safe_chkcut) ? $safe_txtcut : "";
+        // assign variables for selection "wrong" (F)
+        if ($safe_result === "wrong$i") {
+            $safe_txtstd = ($safe_chkstd) ? $safe_txtstd : "";
+            $safe_txtprt = ($safe_chkprt) ? $safe_txtprt : "";
+            $safe_txtcut = ($safe_chkcut) ? $safe_txtcut : "";
+        } else {
+            // if selection is "correct" (F) => suppose that std and prt are correct (and assign the to variables by default)
+            // assign "" to $safe_txtcut if checkbox is not checked
+            $safe_txtcut = ($safe_chkcut) ? $safe_txtcut : "";
+        }
+        
         //echo "result: $safe_result<br>";
         switch ($safe_result) {
                 case "correct$i" : $safe_result = "c"; break;
@@ -95,10 +103,10 @@ while (isset($_POST["txtstd$i"])) {
                 default : $safe_result = "u"; break;
         }
         $safe_user_id = htmlspecialchars($_SESSION['user_id']);
-        $purgatorium = GetPurgatoriumDBName();
+        $purgatorium = GetDBName( "purgatorium" );
         $sql = "INSERT INTO $purgatorium (word, std, prt, composed, result, user_id, comment)
         VALUES ( '$safe_original', '$safe_txtstd', '$safe_txtprt', '$safe_txtcut', '$safe_result', '$safe_user_id', '$safe_comment')";
-        //echo "query: $sql";
+        echo "<p>QUERY: $sql</p>";
         
         if ($conn->query($sql) === TRUE) {
             echo "<p>Wort <b>$safe_original</b> wurde in PURGATORIUM (<b>➟$purgatorium</b>) geschrieben.</p>"; // (query: $sql)<br>";

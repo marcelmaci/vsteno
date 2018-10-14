@@ -107,34 +107,37 @@ function PrepareData() {
     // echo "number: $safe_number_forms<br>";
 }
 
-function WriteDataToElysium() {
+function WriteDataToElysiumOrOlympus() {
      global $safe_word, $conn, $safe_submitted_by, $safe_reviewed_by, $safe_single_bas, $safe_single_std, $safe_single_prt, $safe_separated_bas, $safe_separated_std, $safe_separated_prt,
            $safe_recommended_form, $safe_number_forms;
     echo "<h1>Speichern</h1>";
-    echo "safe_reviewed_by = $safe_reviewed_by<br>";
+    //echo "safe_reviewed_by = $safe_reviewed_by<br>";
     
-    if ($_POST['decision_elysium'] == "1") {
+    if ($_POST['decision_write_to_database'] == "1") {
         $word_id = GetWordID( $safe_word );
+        $database_name = null;
+        switch ($_POST['dest']) {
+            case "elysium" : $database_name = GetDBName( "elysium" ); $destination = "Elysium"; break;
+            case "olympus" : $database_name = GetDBName( "olympus" ); $destination = "Olympus"; break;
+        }
+        echo "Database_name: $database_name<br>";
         if ($word_id != 0) {
             // update existing entry
-            $elysium = GetDBName( "elysium" );
-            //echo "elysium = $elysium (nach return)<br>";
-            $sql = "UPDATE $elysium 
+            $sql = "UPDATE $database_name 
             SET word='$safe_word', number_forms='$safe_number_forms', recommended_form='$safe_recommended_form', submitted_by='$safe_submitted_by', reviewed_by='$safe_reviewed_by', 
             single_bas='$safe_single_bas', single_std='$safe_single_std', single_prt='$safe_single_prt', separated_bas='$safe_separated_bas',
             separated_std='$safe_separated_std', separated_prt='$safe_separated_prt'
             WHERE word_id='$word_id';";
         } else {
         // create new entry
-            $elysium = GetDBName( "elysium" );
-            $sql = "INSERT INTO $elysium (word, number_forms, recommended_form, submitted_by, reviewed_by, single_bas, single_std, single_prt, separated_bas, separated_std, separated_prt)
+            $sql = "INSERT INTO $database_name (word, number_forms, recommended_form, submitted_by, reviewed_by, single_bas, single_std, single_prt, separated_bas, separated_std, separated_prt)
             VALUES ( '$safe_word', '$safe_number_forms', '$safe_recommended_form', '$safe_submitted_by', '$safe_reviewed_by', '$safe_single_bas', '$safe_single_std', '$safe_single_prt', '$safe_separated_bas',
             '$safe_separated_std', '$safe_separated_prt')";
         }
         $result = $conn->query($sql);
-        echo "<p>Das Wort <b>$safe_word</b> wurde in Elysium (<b>➟$elysium</b>) geschrieben.</p>";
+        echo "<p>Das Wort <b>$safe_word</b> wurde in $destination (<b>➟$database_name</b>) geschrieben.</p>";
         echo "<h2>Query:</h2><p><i>$sql</i></p>";
-    } else echo "<p>Kein Eintrag in Elysium vorgenommen.</p>";
+    } else echo "<p>Kein Eintrag in $destination vorgenommen.</p>";
 }
 
 function DeletePurgatoriumEntry() {
@@ -161,7 +164,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
          
     ConnectOrDie();
     PrepareData();
-    WriteDataToElysium();
+    WriteDataToElysiumOrOlympus();
     DeletePurgatoriumEntry();
     
     $conn->close();

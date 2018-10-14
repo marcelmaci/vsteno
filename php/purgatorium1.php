@@ -139,7 +139,8 @@ function get_decision_checkboxes_and_text( $text ) {
             default : $destination = "none"; break;
         }
         $output = "";
-        $output .= "<input type='checkbox' name='$text" . "decision_elysium' value='1' checked> ➟$destination
+        $output .= "<input type='checkbox' name='$text" . "decision_write_to_database' value='1' checked> ➟$destination
+        <input type='hidden' name='dest' value='" . mb_strtolower($destination) . "'>
         <input type='checkbox' name='$text" . "decision_nirvana' value='1' checked> ➟Nirvana
         ";
         return $output;

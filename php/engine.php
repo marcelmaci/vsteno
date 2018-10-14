@@ -1358,7 +1358,7 @@ function CalculateTrainingSVG( $text_array ) {
         //echo "bare_word: $bare_word<br>";
         
         // handle lower/upper-case at beginning of a sentence
-        if ($sentence_start) $checkbox_kleinschreibung = "<input type='checkbox' name='lowercase$i' value='1'> klein";
+        if ($sentence_start) $checkbox_kleinschreibung = "<input type='checkbox' name='lowercase$i' value='1'> Kleinschreibung";
         else $checkbox_kleinschreibung = "";
         $last_char = mb_substr($post, mb_strlen($post)-1, 1);
         if (mb_strpos($upper_case_punctuation, $last_char) !== false) $sentence_start = true;
@@ -1391,9 +1391,9 @@ function CalculateTrainingSVG( $text_array ) {
             
             $output .= "<td>
                 <input type='hidden' name='original$i' value='$bare_word'>
-            $checkbox_kleinschreibung
-                <input type='radio' name='result$i' value='correct$i'> r
-                <input type='radio' name='result$i' value='wrong$i'> f
+                <input type='radio' name='result$i' value='wrong$i'>F
+                <input type='radio' name='result$i' value='correct$i'>R
+                <input type='radio' name='result$i' value='undefined$i' checked>U $checkbox_kleinschreibung
                 
                 <br>
 

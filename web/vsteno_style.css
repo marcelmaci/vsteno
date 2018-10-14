@@ -7,7 +7,7 @@ html {
 }
 
 body { 
-    background: #aaa; 
+    background: #aaa;
     color: black; 
 }
 
@@ -42,7 +42,9 @@ body {
 
 #purelab_title { 
     background-color: #ddd;
-    /*background-color: red;*/
+    /*background-color: blue;*/
+    /*border: 0px solid red;*/
+    border: none;
     width: 444px;   /* original value: 784px */
     height: 120px;
     /*border-radius: 0px 20px 0px 0px;*/
@@ -59,30 +61,38 @@ body {
     font-size: 70px;
 }
 
+#purelab_title html {   /* test */
+    font-size: 0px;
+}
+
 #purelab_title h2 {
     margin-left: 14px;
     margin-top: -55px;
     font-size: 16px;
     font-style: italic;
     font-weight: normal;
+    border: none; /* test */
 }
 
 #purelab_texts {
           position: relative;
      top: 0px;
-     left: 0px;
+     left: -1px;    /* to avoid fine line between divs on samsung tablet / safari */
      height: 120px; 
      /*margin: auto;*/
      width: 460px;              /* original value: 120px */
-     background-color: #ddd;
+     background-color: #ddd; /* #ddd; */
+     /*border: 2px solid red;*/
      border-radius: 0px 20px 0px 0px;
-     float: left;   // left
+     float: left;   /* left */
+     border : none; /*none; /* test */
+     font-size: 0px;
 }
 
 #main { 
     list-style-type: none;
     background: #eee;
-    width:1024px; 
+    width:1023px; /* to avoid fine line between divs on samsung / safari */
     clear: both;
     margin-left: auto ;
     margin-right: auto ;
@@ -300,7 +310,7 @@ float: left;
 }
 
 #footer {
-    width: 100%;
+    width: 1023;  /* to avoid fine line between divs on samsung / safari */
     float: left;
     background: #ddd;
     border-radius: 0px 0px 10px 10px;
