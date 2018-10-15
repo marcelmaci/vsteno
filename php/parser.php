@@ -140,7 +140,7 @@ function Lookuper( $word ) {
     //echo "in Lookuper: $word<br>";
     // prepare data
     $safe_word = $conn->real_escape_string( $word );
-    $elysium = GetElysiumDBName();
+    $elysium = GetDBName( "elysium" );
     $sql = "SELECT * FROM $elysium WHERE word='$safe_word'";
     //echo "Elysium: query = $sql<br>";
     $result = $conn->query($sql);
@@ -178,7 +178,7 @@ function ExecuteEndParameters() {
     $length = count($rules["$actual_model"][$rules_pointer]);
     for ($i=1; $i<$length; $i++) {
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
-            case "=:std" : /*echo "=:std: #$result_after_last_rule#<br>";*/ $std_form = $result_after_last_rule; break;
+            case "=:std" : /*echo "=:std: #$result_after_last_rule# act_word = $act_word act_function: $actual_function rules_pointer=$rules_pointer<br>";*/ $std_form = $result_after_last_rule; break;
             case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
             case "@@dic" : 
                 list($temp_std, $temp_prt) = Lookuper($act_word);
@@ -549,6 +549,7 @@ function MetaParser( $text ) {          // $text is a single word!
                     } else $output .= "\\$posttokens";
                 }
                 //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
+                //echo "metaparser: separated_std_form = $separated_std_form<br>";
                 return $output;
             case "handwriting":
                 $output = $word;
@@ -564,7 +565,7 @@ function MetaParser( $text ) {          // $text is a single word!
 */
         }
     }
-
+    
 }
 
 

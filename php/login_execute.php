@@ -6,7 +6,7 @@ require_once "dbpw.php";
 
 function die_more_elegantly( $text ) {
     echo "$text";
-    echo '<a href="create_account.php"><br><button>zurück</button></a><br><br>';   
+    echo '<a href="' . $_SERVER['HTTP_REFERER'] . '"><br><button>zurück</button></a><br><br>';   
     require_once "vsteno_template_bottom.php";
     die();
 }

@@ -100,7 +100,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
         } else {
             die_more_elegantly("<p>Kein Eintrag in Olympus ($olympus).</p>");
         }
-        echo '<a href="olympus.php"><br><button>zurück</button></a><br><br>';   
+        echo '<p><a href="olympus.php"><button>zurück</button></a> <a href="testmodel.php"><button>testen</button></a></p><br>';   
    
         
         $conn->close();

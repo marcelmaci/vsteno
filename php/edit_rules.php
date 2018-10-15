@@ -21,17 +21,20 @@ if ($conn->connect_error) {
 }
 
 echo "<h1>Regeln</h1>";
-//echo "model: " . $_SESSION['model_standard_or_custom'] . "<br>";
+
+//echo "model: " . $_SESSION['actual_model'] . " std/custom: #" . $_SESSION['model_standard_or_custom'] . "# model_name: $model_name<br>";
     
 if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Model auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
     echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
 } else {
+    
     switch ($_SESSION['model_standard_or_custom']) {
-        case "standard" : $model_name = $_SESSION['$actual_model']; break; 
-        case "custom" : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
+        case 'standard' : $model_name = $_SESSION['actual_model']; break; 
+        case 'custom' : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
     }
-
+    //echo "model_name: $model_name<br>";
+    
     if ($_POST['action'] == 'speichern') {
         $update_rules = $conn->real_escape_string($_POST['rules_as_text']);
         $sql = "UPDATE models
@@ -58,6 +61,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
         $row = $result->fetch_assoc();
         $rules = $row['rules'];
     } else {
+        echo "<p>QUERY: $sql</p>";
         die_more_elegantly("Keine Regeln vorhanden.<br>");
     }
 
