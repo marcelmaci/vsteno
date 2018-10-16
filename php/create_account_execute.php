@@ -42,8 +42,8 @@ $safe_infos = ($_POST['info'] === 'infono') ? 0 : 1;
 $lg_length = mb_strlen($safe_username);
 $pw_length = mb_strlen($safe_password);
 
-if (($lg_length < 8) || ($lg_length > 10)) {
-    die_more_elegantly("Benutzername muss 8-10 Zeichen lang sein.<br>");
+if ($lg_length < 8) {
+    die_more_elegantly("Benutzername muss mindestens 8 Zeichen lang sein.<br>");
 }
 
 if ($pw_length < 8) {
@@ -96,6 +96,7 @@ $_SESSION['user_logged_in'] = true;
 $_SESSION['user_privilege'] = normal_user;
 $_SESSION['user_username'] = $safe_username;
 $_SESSION['user_id'] = $db_user_id;    
+$model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
 
 // create custom databases
 // sql to create purgatorium table
@@ -168,41 +169,99 @@ $_SESSION['user_id'] = $db_user_id;
         echo "Error creating table: " . $conn->error . "<br>";
     }
 
-// copy standard model or create empty model
-if ($_POST['model'] === 'standard') {
-    $user_id = $_SESSION['user_id'];
-    $model_name = "XM" . str_pad($user_id, 7, '0', STR_PAD_LEFT);
+$user_id = $_SESSION['user_id'];
+
+switch ($_POST['model']) {
+    case 'standard' : 
+        // copy standard model or create empty model
+        //$model_name = "XM" . str_pad($user_id, 7, '0', STR_PAD_LEFT);
    
-   // read data
-    $sql = "SELECT * FROM models WHERE name='$default_model'";
-    $result = $conn->query($sql);
+        // read data
+        $sql = "SELECT * FROM models WHERE name='$default_model'";
+        $result = $conn->query($sql);
     
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $header = $conn->real_escape_string($row['header']);
-        $font = $conn->real_escape_string($row['font']);
-        $rules = $conn->real_escape_string($row['rules']);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $header = $conn->real_escape_string($row['header']);
+            $font = $conn->real_escape_string($row['font']);
+            $rules = $conn->real_escape_string($row['rules']);
+            $sql = "INSERT INTO models(user_id, name, header, font, rules)
+                    VALUES  ( '$user_id', '$model_name', '$header', '$font', '$rules');";
+            $result = $conn->query($sql);
+            echo "standard...";
+            if ($result === TRUE) {
+                echo "Standard-Model angelegt.<br>";
+            } else {
+                die_more_elegantly("Fehler: " . $sql . "<br>" . $conn->error . "<br>");
+            }
+        } else {
+            die_more_elegantly("Standard-Model nicht gefunden.<br>");
+        }
+        break;
+    case 'template' :
+        // create template model
+        // define variables
+    
+        $header = $conn->real_escape_string("
+#BeginSection(header)
+    /* enter your comments here */
+#EndSection(header)");
+        $font = $conn->real_escape_string("
+#BeginSection(font)
+    // the font section has three subsections: base (base tokens), combined (combined tokens), shifted (shifted tokens)
+    #BeginSubSection(base)
+        // enter your base tokens here, for example:
+        // \"T\" => {  /*h*/ 0,  0.5,  0,  0,  4,  2.5,  0,  \"\", /**/ \"\",  \"\",  \"\",  \"\",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  20,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+    #EndSubSection(base)
+    #BeginSubSection(combiner)
+        // enter your combined tokens here, for example:
+        \"T\" => { \"@R\", 0, 0 }\n\t#EndSubSection(combiner)
+    #BeginSubSection(shifter)\n\t\t// enter your shifted tokens here, for example:
+        // \"G\" => { \"&TG\", 4, 10, 0, 1 }
+    #EndSubSection(shifter)
+EndSection(font)");
+        $rules = $conn->real_escape_string("
+#BeginSection(rules)
+    // the rules section can have various subsections
+    // the first subsection (with argument '@@txt') can define rules applied to the whole text
+    // all other sections are applied to single words
+    // the first arguments in the subsections MUST be the name of the subsections (beginning and end)
+    // arguments at beginning: @@txt (get entire text), @@wrd (get word), @@dic (get entry from dictionary, i.e. Elysium)
+    // arguments at end: @@dic (send word to dictionary), =:std (save word as std-form), =:prt (safe word as prt-form)
+    // rules must be ended with a semicolon
+    #BeginSubSection(global,@@txt)
+        // global replacements in the whole text
+        // \"…\" => \"...\";
+        // \"–\" => \"-\";
+    #EndSubSection(global)
+    #BeginSubSection(helvetizer,@@wrd)
+        // replacement in one word
+        // \"ß\" => \"ss\";
+    #EndSubSection(helvetizer,@@dic)
+#EndSection(rules)");
+        
         $sql = "INSERT INTO models(user_id, name, header, font, rules)
                 VALUES  ( '$user_id', '$model_name', '$header', '$font', '$rules');";
-        $result = $conn->query($sql);
-        if ($result === TRUE) {
-            echo "Standard-Model angelegt.<br>";
+        //$conn->query($sql);
+        //echo "template...";
+        if ($conn->query($sql) === TRUE) {
+                echo "Template für neues Modell ($model_name) angelegt.<br>";
         } else {
             die_more_elegantly("Fehler: " . $sql . "<br>" . $conn->error . "<br>");
         }
-    } else {
-        die_more_elegantly("Standard-Model nicht gefunden.<br>");
-    }
-} else {
-    $user_id = $_SESSION['user_userid'];
-    $sql = "INSERT INTO models(user_id, name, header, font, rules)
-            VALUES  ( '$user_id', '', '', '');";
-    $conn->query($sql);
-    if ($conn->query($sql) === TRUE) {
-            echo "Leeres Model angelegt.<br>";
+        break;
+    case 'empty' :  
+        // create empty model
+        $sql = "INSERT INTO models(user_id, name, header, font, rules)
+                VALUES  ( '$user_id', '$model_name', '', '', '');";
+        //$conn->query($sql);
+        //echo "empty...";
+        if ($conn->query($sql) === TRUE) {
+            echo "Leeres Modell ($model_name) angelegt.<br>";
         } else {
             die_more_elegantly("Fehler: " . $sql . "<br>" . $conn->error . "<br>");
         }
+        break;
 }
 
 // show account info to user
@@ -225,13 +284,14 @@ echo "<p><b>Purgatorium:</b> Lese- und Schreibrecht<br><b>Elysium:</b> Lese-/Sch
 */
 
 echo "<h2>Purgatorium</h2>";
-echo "<p>Sie können nun den Trainingsmodus benützen, um falsche Stenogramme zu markieren. Sämtliche Vorschläge werden zunächst provisorisch im 
-    <a href='https://de.wiktionary.org/wiki/purgatorium' target='_blank'>Purgatorium</a> (nomen est omen) aufgenommen. Die Vorschläge werden periodisch begutachtet und - falls berechtigt und 
-    richtig - ins <a href='https://de.wiktionary.org/wiki/Elysium' target='_blank'>Elysium</a> (das definitive Wörterbuch) aufgenommen.<p>";
+echo "<p>Sie können nun den Trainingsmodus benützen, um richtige und falsche Stenogramme zu markieren. Markierte Wörter werden zunächst in die Datenbank 
+    <a href='https://de.wiktionary.org/wiki/purgatorium' target='_blank'>Purgatorium</a> (nomen est omen) aufgenommen. Einträge in Purgatorium können anschliessend noch einmal
+    begutachtet werden. Danach gelangen Sie entweder in die Datenbanken <a href='https://de.wikipedia.org/wiki/Olymp'>Olympus</a> (regelmässige, richtige Wörter), 
+    <a href='https://de.wiktionary.org/wiki/Elysium' target='_blank'>Elysium</a> (unregelmässige, korrigierte Wörter) oder werden gelöscht 
+    (<a href='https://de.wikipedia.org/wiki/Nirwana'>Nirvana)</a>.<p>";
 echo "<p>Für Ihr eigenes Stenografie-System (falls Sie eines definieren) entscheiden Sie selber, welche Vorschläge (die von Ihnen oder anderen Nutzer/innen stammen) Sie in Elysium
     aufnehmen.</p>";
 echo '<a href="input.php"><button>zurück</button></a><br><br>';   
-echo "<h2>Post Scriptum</h2><p>Wir stellen uns hier übrigens auf den Standpunkt, dass das Purgatorium nicht die 'Vor-Hölle', sondern der 'Vor-Himmel' ist ... ;-)</p>";
 echo "<h2>Spende</h2><p>Wenn Ihnen VSTENO gefällt, dann ziehen Sie doch eine <a href='donation.php'>Spende</a> in Betracht.</p>";
 
 $conn->close();

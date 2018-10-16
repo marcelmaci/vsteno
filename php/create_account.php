@@ -40,12 +40,13 @@ Infos*:
 <td> <input type="text" name="username"  size="30" value="<?php echo RandomString(8); ?>"><br>
 <input type="text" name="password"  size="30" value="<?php echo RandomString(8); ?>"><br>
 <input type="text" name="captcha"  size="30" value="<?php $temp = GetShorthandCaptcha(4); /*echo $_SESSION['captcha'];*/ ?>"><br>
-<input type="radio" name="model" value="standard" checked> Standard
-<input type="radio" name="model" value="empty"> leer<br>
+<input type="radio" name="model" value="standard" checked>std
+<input type="radio" name="model" value="template">template
+<input type="radio" name="model" value="empty">leer<br>
 <input type="text" name="realname"  size="30" value=""><br>
 <input type="text" name="email"  size="30" value=""><br>
-<input type="radio" name="info" value="infono" checked> nein
-<input type="radio" name="info" value="infoyes"> ja<br>
+<input type="radio" name="info" value="infono" checked>nein
+<input type="radio" name="info" value="infoyes">ja<br>
 </td> 
 <td>
 Captcha:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>

@@ -57,7 +57,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
         $row = $result->fetch_assoc();
         $header = $row['header'];
     } else {
-        die_more_elegantly("Keine Zeichen (Font) vorhanden.<br>");  
+        die_more_elegantly("Keine Zeichen (Font) vorhanden.<p>QUERY: $sql<p>");  
     }
 
     // use javascript for textarea in order to prevent predefined function of tab to change focus (use it for indentation instead)
