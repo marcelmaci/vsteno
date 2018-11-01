@@ -130,53 +130,168 @@ function TEAuxiliaryVerticalLines(a, color) {
 	return this.allVerticalLines;
 }
 
+// class TERotatingAxisTokenPoint
+function TERotatingAxisTokenPoint( position, t1, t2, type, rotatingAxis ) {
+	this.parent = rotatingAxis;
+	this.absolute = position;			// type point
+	this.tensions = [t1, t2];
+	this.type = type;					// orthogonal or horizontal
+	this.calculateRelativeCoordinates();
+}
+TERotatingAxisTokenPoint.prototype.calculateHorizontalIntersectionX = function() {
+	var dx = this.parent.centerRotatingAxis.x - this.parent.controlCircle.position.x,
+		dy = this.parent.centerRotatingAxis.y - this.parent.controlCircle.position.y;
+	//console.log("dx/dy: ", dx, dy);
+	//console.log("RotatingAxis: ", this.parent.centerRotatingAxis.x, this.parent.centerRotatingAxis);
+	//console.log("absolute: ", this.absolute.x, this.absolute.y);
+	if (dx == 0) horX = this.parent.centerRotatingAxis.x;		// avoid division by 0
+	else {
+		var m = dy / dx,
+			horX = (this.absolute.y - this.parent.centerRotatingAxis.y) / m + this.parent.centerRotatingAxis.x;
+	}
+	//console.log("horX: ", horX);
+	return horX;
+}
+TERotatingAxisTokenPoint.prototype.calculateHorizontalIntersectionRelativeX = function() {
+	var relX = this.calculateHorizontalIntersectionX() - this.absolute.x;
+	return relX;
+}
+TERotatingAxisTokenPoint.prototype.calculateRelativeCoordinates = function() {
+	switch (this.type) {
+		case "ortogonal" : break;
+		case "horizontal" : 
+				relX = this.absolute.x - this.calculateHorizontalIntersectionRelativeX() - this.absolute.x;
+				//console.log("relX / abs.x: ", relX, this.absolute.x);
+				downScaledX = relX / this.parent.parent.scaleFactor;
+				downScaledY = -(this.absolute.y - this.parent.centerRotatingAxis.y) / this.parent.parent.scaleFactor;
+				this.relative = [downScaledX, downScaledY];
+				//console.log("Inserted: ", this.relative);
+			break;
+	}
+}
+
+// class TERotatingAxisTokenData
+function TERotatingAxisTokenData() {
+	this.middle = [];		// array of TERotatingAxisTokenPoint
+	this.left = [];
+	this.right = [];
+}
+
 // class TERotatingAxis
 function TERotatingAxis(drawingArea, color) {
 	this.parent = drawingArea;
 	this.absBasePosition = this.parent.lowerY - (this.parent.basePosition * this.parent.lineHeight * this.parent.scaleFactor);
 	this.centerRotatingAxis = new Point((this.parent.rightX - this.parent.leftX)/2+this.parent.leftX, this.absBasePosition);
 	this.inclinationRotatingAxis = 90; // default = 90° = vertical
+	//this.m = null; 
 	this.tempColor = null;
 	this.line = new Path.Line([this.centerRotatingAxis.x, this.parent.lowerY], [this.centerRotatingAxis.x, this.parent.upperY]);
 	this.line.strokeColor = color;
 	this.controlCircle = new Path.Circle( new Point(this.centerRotatingAxis.x, this.parent.upperY), 5);
 	this.controlCircle.fillColor = color;
+	
+	// token data
+	this.token = new TERotatingAxisTokenData();
+}
+TERotatingAxis.prototype.recalculateFreehandPoints = function() {
+	var numberPoints = this.token.middle.length,
+		dy = this.controlCircle.position.y - this.centerRotatingAxis.y,
+		dx = this.controlCircle.position.x - this.centerRotatingAxis.x;
+	if (dx == 0) {
+		// calculate horizontal
+	} else {
+		var m = dy / dx;
+		for (var i=0; i<numberPoints; i++) {
+			var horX = this.token.middle[i].calculateHorizontalIntersectionX();
+			
+			this.token.middle[i].absolute.x = horX + (this.token.middle[i].relative[0] * this.parent.scaleFactor);
+			this.token.middle[i].absolute.y = this.centerRotatingAxis.y - (this.token.middle[i].relative[1] * this.parent.scaleFactor);
+			// copy values to freehand path
+			// circles
+			this.parent.fhCircleList[i].position.x = this.token.middle[i].absolute.x;
+			this.parent.fhCircleList[i].position.y = this.token.middle[i].absolute.y;
+			// segments
+			this.parent.fhToken.segments[i].point.x = this.token.middle[i].absolute.x;
+			this.parent.fhToken.segments[i].point.y = this.token.middle[i].absolute.y;
+			//console.log("Position: ", this.token.middle[i].absolute);
+			//console.log("this.parent: ", this.parent);
+			this.parent.calculateFreehandHandles(); // recalculate bezier curve
+		}
+	}
+}
+TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
+	var dx = event.point.x - this.centerRotatingAxis.x,
+		dy = event.point.y - this.centerRotatingAxis.y;
+	
+	if (dx == 0) return [[this.centerRotatingAxis.x,this.parent.lowerY],[this.centerRotatingAxis.x, this.parent.upperY]];	// avoid division by 0
+	else {
+		this.m = dy / dx;
+		var	startY = this.parent.lowerY,
+			startX = (startY - this.centerRotatingAxis.y) / this.m + this.centerRotatingAxis.x,
+			endY = this.parent.upperY,
+			endX = (endY - this.centerRotatingAxis.y) / this.m + this.centerRotatingAxis.x;
+			
+		if (endX > this.parent.rightX) {
+			//console.log("apply end-mod");
+			endX = this.parent.rightX;
+			endY = (endX - this.centerRotatingAxis.x) * this.m + this.centerRotatingAxis.y;
+		} else if (endX < this.parent.leftX) {
+			//console.log("apply end-mod");
+			endX = this.parent.leftX;
+			endY = (endX - this.centerRotatingAxis.x) * this.m + this.centerRotatingAxis.y;
+		}
+	
+		if (startX < this.parent.leftX) {
+			//console.log("apply start-mod");
+			startX = this.parent.leftX;
+			startY = (startX - this.centerRotatingAxis.x) * this.m + this.centerRotatingAxis.y;
+		} else if (startX > this.parent.rightX) {
+			//console.log("apply start-mod");
+			startX = this.parent.rightX;
+			startY = (startX - this.centerRotatingAxis.x) * this.m + this.centerRotatingAxis.y;
+		}
+		return [[startX, startY],[endX, endY]];
+	}
 }
 TERotatingAxis.prototype.isRotatingAxisControlCircle = function( item ) {
 	if (item == this.controlCircle) return true;
 	else return false;
 }
 TERotatingAxis.prototype.handleMouseDown = function(event) {
-	console.log("rotatingAxis.mousedown");	
+	//console.log("rotatingAxis.mousedown");	
 	this.tempColor = this.controlCircle.fillColor;
 	this.controlCircle.fillColor = "#aaa";
 	this.controlCircle.position = event.point;
 	console.log(this.rotatingAxis);
 }
 TERotatingAxis.prototype.handleMouseUp = function(event) {
-	console.log("rotatingAxis.mouseup");
-	this.line.segments[0].point = [this.centerRotatingAxis.x, this.centerRotatingAxis.y];
-	this.line.segments[1].point = event.point;
-	
+	//console.log("rotatingAxis.mouseup");
+	var startAndEndPoints = this.getStraightLineStartAndEndPoints(event);
+
+	this.line.segments[0].point = startAndEndPoints[0];
+	this.line.segments[1].point = startAndEndPoints[1];	
+
 	this.controlCircle.fillColor = this.tempColor;
 	this.controlCircle.position = event.point;
 	this.parent.itemSelected = this.parent;
 	this.parent.fhCircleSelected = null;
 }
 TERotatingAxis.prototype.handleMouseDrag = function(event) {
-	console.log("rotatingAxis.mousedrag");
-	console.log(this);
-	this.line.segments[0].point = [this.centerRotatingAxis.x, this.centerRotatingAxis.y];
-	this.line.segments[1].point = event.point;
+	//console.log("rotatingAxis.mousedrag");
+	//console.log(this);
+	var startAndEndPoints = this.getStraightLineStartAndEndPoints(event);
+	this.line.segments[0].point = startAndEndPoints[0];
+	this.line.segments[1].point = startAndEndPoints[1];	
 	this.controlCircle.position = event.point;
+	// adjust token points
+	this.recalculateFreehandPoints();
 }
 TERotatingAxis.prototype.handleEvent = function( event ) {
-	console.log("rotatingAxis.handleEvent()");
+	//console.log("rotatingAxis.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
-
 	}
 	this.controlCircle.position = event.point;
 	return;
@@ -186,7 +301,7 @@ TERotatingAxis.prototype.handleEvent = function( event ) {
 // constructor and properties
 function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFactor) {
 	
-	console.log(lowerLeft, totalLines, basePosition, lineHeight, scaleFactor);
+	// console.log(lowerLeft, totalLines, basePosition, lineHeight, scaleFactor);
 	// class properties
 	// borders
 	this.leftX = lowerLeft.x;
@@ -223,7 +338,7 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 }
 // class TEDrawingArea: methods
 TEDrawingArea.prototype.calculateFreehandHandles = function() { // a = TEDrawingArea
-	console.log(this.fhToken);
+	// console.log(this.fhToken);
 	numberOfPoints = this.fhToken.segments.length;
 	for (var i = 1; i < numberOfPoints-1; i++) { // dont calculate 1st and last
 			var absHandles = getControlPoints( this.fhToken.segments[i-1].point, this.fhToken.segments[i].point, this.fhToken.segments[i+1].point, 0.5 );
@@ -238,7 +353,7 @@ TEDrawingArea.prototype.whichCircle = function(circle) {
 	index = null;
 	for (var i = 0; i<this.fhCircleList.length; i++) {
 			if (this.fhCircleList[i] == circle) index = i;
-			console.log("search for circle: fhCircleList[" + i + "] = " + this.fhCircleList[i] + "<=?=>" + circle + "=> " + index);
+			// console.log("search for circle: fhCircleList[" + i + "] = " + this.fhCircleList[i] + "<=?=>" + circle + "=> " + index);
 	}
 	return index;
 }
@@ -251,7 +366,7 @@ TEDrawingArea.prototype.isPartOfFreehandOrRotatingAxis = function( item ) {
 	else return false;
 }
 TEDrawingArea.prototype.handleMouseDown = function( event ) {
-	console.log("In onMouseDown");
+	//console.log("In onMouseDown");
 	//console.log(event.item,this.isPartOfFreehandOrRotatingAxis(this.fhCircleSelected));
 	if ((event.item != null) && (this.isPartOfFreehandOrRotatingAxis(this.fhCircleSelected))) {
 		//this.itemSelected = (event.item == this.rotatingAxis.controlCircle) ? this.rotatingAxis : this;
@@ -264,19 +379,19 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 				radius: 5,
 				fillColor: '#f00'	
 			});
-			console.log(this.fhCircleList);
-			
 		this.fhCircleList.push( path );
-		console.log("CircleList", this.fhCircleList);
 		this.fhCircleSelected = path;
 		this.fhCircleColor = this.fhCircleSelected.fillColor;
+		// add token data (relative to rotating axis)
+		this.rotatingAxis.token.middle.push( new TERotatingAxisTokenPoint( event.point, 0.5, 0.5, "horizontal", this.rotatingAxis ));
+		//console.log("Editor: ", this);
 		// add bezier to freehand path
 		this.fhToken.add( event.point );
 		this.calculateFreehandHandles();	
 	}
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
-	console.log("In onMouseUp");
+	//console.log("In onMouseUp");
 	if (this.fhCircleSelected != null) {
 		this.fhCircleSelected.fillColor = this.fhCircleColor;
 		this.fhCircleSelected = null;
@@ -284,7 +399,7 @@ TEDrawingArea.prototype.handleMouseUp = function( event ) {
 	}
 }
 TEDrawingArea.prototype.handleMouseDrag = function( event ) {
-	console.log("In onMouseDrag");
+	//console.log("In onMouseDrag");
 	if (editor.fhCircleSelected != null) {
 		index = this.whichCircle( this.fhCircleSelected );
 		this.fhCircleSelected.position = event.point; //new Point(1,1); //event.delta;
@@ -293,25 +408,26 @@ TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 	}
 }
 TEDrawingArea.prototype.handleEvent = function( event ) {
-	console.log("TEDrawingArea.handleEvent()");
-	console.log(event.item);
+	//console.log("TEDrawingArea.handleEvent()");
+	//console.log(event.item);
 	if ((this.fhCircleSelected == null) && (event.item != null) && (this.isPartOfFreehandOrRotatingAxis(event.item))) {
 		this.itemSelected = (event.item == this.rotatingAxis.controlCircle) ? this.rotatingAxis : this;
 		this.fhCircleSelected = event.item;	
 	}
 	
 	if ((this.isInsideBorders(event)) || (event.type == "mouseup")) { 
-		console.log("Ok, it's my business");
+		//console.log("Ok, it's my business");
 		switch (event.type) {
 			case "mousedown" :this.itemSelected.handleMouseDown(event); break;
 			case "mouseup" : this.itemSelected.handleMouseUp(event); break;
 			case "mousedrag" : this.itemSelected.handleMouseDrag(event); break;
 		}
 	} else {
-		console.log("Thx, but it's not my business");
+		//console.log("Thx, but it's not my business");
 	}
 }
 
+// main
 var editor = new TEDrawingArea(new Point(100, 500), 4, 1, 10, 10);
 
 // global event handlers
@@ -325,4 +441,4 @@ tool.onMouseUp = function( event ) {
 	editor.handleEvent( event );
 }
 
-console.log(editor);
+//console.log(editor);
