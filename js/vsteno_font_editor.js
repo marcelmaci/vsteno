@@ -225,6 +225,117 @@ TERotatingAxisTokenPoint.prototype.calculateRelativeCoordinates = function() {
 	}
 }
 
+
+// class TEConnectionPoint
+function TEConnectionPoint(drawingArea, x, y ) {
+	this.parent = drawingArea;
+	this.tempColor = '#000';
+	//var position = new Point(x, y);
+	this.circle = new Path.Circle(new Point(x, y), 5);
+	this.circle.fillColor = '#000';
+	this.line = this.line = new Path.Line( this.position, this.position ); // initialize line as point inside circle
+	this.line.strokeColor = '#000';
+}
+TEConnectionPoint.prototype.handleMouseDown = function(event) {
+	console.log("TEConnectionPoint.handleMouseDown");	
+	this.tempColor = this.circle.fillColor;
+	this.circle.fillColor = "#aaa";
+	this.circle.position = event.point;
+}
+TEConnectionPoint.prototype.handleMouseUp = function(event) {
+	//console.log("rotatingAxis.mouseup");
+	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.parent.lowerY) && (event.point.y > this.parent.upperY)) {
+		this.circle.position = event.point;
+		this.circle.fillColor = this.tempColor;
+		this.parent.itemSelected = this.parent;
+		this.parent.fhCircleSelected = null;
+	} else {
+		// just "release" connecting point (and leave point as it is)
+		this.circle.fillColor = this.tempColor; 
+		//if (this.circle.fillColor == null) this.controlCircle.fillColor = "#ff0"; // workaround for the moment ... mark circle as yellow when the error occurs
+		this.parent.itemSelected = this.parent;
+		this.parent.fhCircleSelected = null;	
+	}
+}
+TEConnectionPoint.prototype.handleMouseDrag = function(event) {
+	//console.log("rotatingAxis.mousedrag");
+	//console.log(this);
+	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.parent.lowerY) && (event.point.y > this.parent.upperY)) {
+		this.circle.position = event.point;
+	}
+}
+TEConnectionPoint.prototype.handleEvent = function( event ) {
+	//console.log("rotatingAxis.handleEvent()");
+	switch (event.type) {
+		case "mousedown" : this.handleMouseDown(event); break;
+		case "mouseup" : this.handleMouseUp(event); break;
+		case "mousedrag" : this.handleMouseDrag(event); break;
+	}
+	//this.controlCircle.position = event.point;
+	//return;
+}
+
+// class TEConnectionPointPreceeding extends TEConnectionPoint
+function TEConnectionPointPreceeding(drawingArea, x, y) {
+	TEConnectionPoint.call( this, drawingArea, x, y );
+}
+TEConnectionPointPreceeding.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
+TEConnectionPointPreceeding.prototype.connect = function() {
+	if (this.parent.fhCircleList.length != 0) {
+		//console.log(this.parent.fhCircleList[0].position);
+		var entryPoint = this.parent.fhCircleList[0];
+		this.line.segments[0].point = this.circle.position;
+		this.line.segments[1].point = entryPoint.position;
+		//console.log(this.line);
+	}
+}
+TEConnectionPointPreceeding.prototype.handleMouseDown = function(event) { // overload parent method
+	console.log("TEConnectionPointPreceeding");
+	TEConnectionPoint.prototype.handleMouseDown.call(this, event); // call parent's method
+	this.connect(); // overload
+}
+TEConnectionPointPreceeding.prototype.handleMouseUp = function(event) { // overload parent method
+	console.log("TEConnectionPointPreceeding");
+	TEConnectionPoint.prototype.handleMouseUp.call(this, event); // call parent's method
+	this.connect(); // overload
+}
+TEConnectionPointPreceeding.prototype.handleMouseDrag = function(event) { // overload parent method
+	console.log("TEConnectionPointPreceeding");
+	TEConnectionPoint.prototype.handleMouseDrag.call(this, event); // call parent's method
+	this.connect(); // overload
+}
+
+// class TEConnectionPointFollowing extends TEConnectionPoint
+function TEConnectionPointFollowing(drawingArea, x, y) {
+	TEConnectionPoint.call( this, drawingArea, x, y );
+}
+TEConnectionPointFollowing.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
+TEConnectionPointFollowing.prototype.connect = function() {
+	if (this.parent.fhCircleList.length != 0) {
+		//console.log(this.parent.fhCircleList[0].position);
+		var exitPoint = this.parent.fhCircleList[this.parent.fhCircleList.length-1];
+		this.line.segments[0].point = this.circle.position;
+		this.line.segments[1].point = exitPoint.position;
+		//console.log(this.line);
+	}
+}
+TEConnectionPointFollowing.prototype.handleMouseDown = function(event) { // overload parent method
+	console.log("TEConnectionPointPreceeding");
+	TEConnectionPoint.prototype.handleMouseDown.call(this, event); // call parent's method
+	this.connect(); // overload
+}
+TEConnectionPointFollowing.prototype.handleMouseUp = function(event) { // overload parent method
+	console.log("TEConnectionPointPreceeding");
+	TEConnectionPoint.prototype.handleMouseUp.call(this, event); // call parent's method
+	this.connect(); // overload
+}
+TEConnectionPointFollowing.prototype.handleMouseDrag = function(event) { // overload parent method
+	console.log("TEConnectionPointPreceeding");
+	TEConnectionPoint.prototype.handleMouseDrag.call(this, event); // call parent's method
+	this.connect(); // overload
+}
+
+
 // class TERotatingAxisTokenData
 function TERotatingAxisTokenData() {
 	this.middle = [];		// array of TERotatingAxisTokenPoint
@@ -281,6 +392,8 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 			this.parent.calculateFreehandHandles(); // recalculate bezier curve
 		}
 	}
+	this.parent.preceeding.connect(); // update connecting point also
+	this.parent.following.connect(); // update connecting point also
 }
 TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
 	var dx = event.point.x - this.centerRotatingAxis.x,
@@ -411,6 +524,8 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	this.auxiliaryVerticalLines = new TEAuxiliaryVerticalLines(this, '#000');
 	this.rotatingAxis = new TERotatingAxis(this, '#0f0');
 	this.coordinateLabels = new TECoordinatesLabels(this);
+	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX, this.rotatingAxis.centerRotatingAxis.y);
+	this.following =  new TEConnectionPointFollowing(this, this.rightX, this.rotatingAxis.centerRotatingAxis.y);
 	
 	// actual selected item
 	this.itemSelected = this;		// can be TERotatingAxis e.g.
@@ -456,6 +571,10 @@ TEDrawingArea.prototype.isPartOfFreehandOrRotatingAxis = function( item ) {
 	if ((this.isPartOfFreehand(item) != null) || (item == this.rotatingAxis.controlCircle)) return true;
 	else return false;
 }
+TEDrawingArea.prototype.isDragableCircle = function(item) {
+	if ((this.isPartOfFreehandOrRotatingAxis(item)) || (item == this.preceeding ) || (item = this.following)) return true;
+	else return false;
+}
 TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	//console.log("In onMouseDown");
 	//console.log(event.item,this.isPartOfFreehandOrRotatingAxis(event.item));
@@ -482,6 +601,8 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		this.fhToken.add( event.point );
 		this.calculateFreehandHandles();	
 	}
+	this.preceeding.connect();
+	this.following.connect();
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
 	//console.log("In onMouseUp");
@@ -504,13 +625,22 @@ TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 		this.itemSelected = this;
 		
 		this.calculateFreehandHandles();
+		this.preceeding.connect(); // update connecting point also
+		this.following.connect(); // update connecting point also
 	}
 }
 TEDrawingArea.prototype.handleEvent = function( event ) {
 	//console.log("TEDrawingArea.handleEvent()");
 	//console.log(event.item);
-	if ((this.fhCircleSelected == null) && (event.item != null) && (this.isPartOfFreehandOrRotatingAxis(event.item))) {
-		this.itemSelected = (event.item == this.rotatingAxis.controlCircle) ? this.rotatingAxis : this;
+	//if ((this.fhCircleSelected == null) && (event.item != null) && (this.isPartOfFreehandOrRotatingAxis(event.item))) {
+	if ((this.fhCircleSelected == null) && (event.item != null) && (this.isDragableCircle(event.item))) {
+		switch (event.item) {
+			case this.rotatingAxis.controlCircle : this.itemSelected = this.rotatingAxis; break;
+			case this.preceeding.circle : this.itemSelected = this.preceeding; break;
+			case this.following.circle : this.itemSelected = this.following; break;
+			default : this.itemSelected = this;
+		}
+		//this.itemSelected = (event.item == this.rotatingAxis.controlCircle) ? this.rotatingAxis : this;
 		this.fhCircleSelected = event.item;	
 	}
 	
@@ -540,4 +670,4 @@ tool.onMouseUp = function( event ) {
 	editor.handleEvent( event );
 }
 
-//console.log(editor);
+//console.log(editor.preceeding);
