@@ -25,25 +25,43 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	this.auxiliarySystemLines = new TEAuxiliarySystemLines(this, '#000');
 	this.auxiliaryVerticalLines = new TEAuxiliaryVerticalLines(this, '#000');
 	this.rotatingAxis = new TERotatingAxis(this, '#0f0');
-	this.coordinateLabels = new TECoordinatesLabels(this);
-	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX, this.rotatingAxis.centerRotatingAxis.y);
-	this.following =  new TEConnectionPointFollowing(this, this.rightX, this.rotatingAxis.centerRotatingAxis.y);
+	this.coordinateLabels = new TECoordinatesLabels(this); // coordinateLabels depends on rotatingAxis!
+	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
+	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
+	
+	// mouse events
+	this.mouseDown = false;
+	this.mouseDownItem = null;
+	this.handlingParent = null;
+	
+	// token that is edited
+	this.actualToken = new TEEditableToken();
 	
 	// actual selected items
 	this.itemSelected = this;		// main item selected (parent object), can be TERotatingAxis e.g.
-	this.markedCircle = null;
+	this.markedCircle = null;		// type TEVisuallyModifiableCircle
+	this.setMarkedCircle(this.preceeding);
 	this.markedIndex = 0;			// 0 = preceeding connection point; 1,2,3 ... n = freehand circles; 99999 = following connection point
-	
+
 	// freehand path
 	this.fhCircleSelected = null;
 	this.fhCircleColor = null;
-	this.fhToken = new Path();
+	this.editableToken = new TEEditableToken(this);
+/*	this.fhToken = new Path();
 	this.fhToken.strokeColor = '#000';
 	this.fhCircleList = [];
 
 	return this;
+*/
 }
 // class TEDrawingArea: methods
+TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyModifiableCircle
+	if (this.markedCircle != null) {
+		this.markedCircle.unmark();
+	}
+	this.markedCircle = circle;
+	this.markedCircle.mark();
+}
 TEDrawingArea.prototype.calculateFreehandHandles = function() { // a = TEDrawingArea
 	// console.log(this.fhToken);
 	numberOfPoints = this.fhToken.segments.length;
@@ -59,7 +77,7 @@ TEDrawingArea.prototype.isPartOfFreehand = function(test) {
 TEDrawingArea.prototype.whichCircle = function(circle) {
 	var index = null, i = 0;
 	for (i = 0; i<this.fhCircleList.length; i++) {
-		if (this.fhCircleList[i] == circle) {
+		if (this.fhCircleList[i].circle == circle) {
 			index = i;
 			//console.log("Match for circle: fhCircleList[" + i + "] = " + this.fhCircleList[i] + "<=?=>" + circle + "=> " + index);
 			break;
@@ -87,42 +105,60 @@ TEDrawingArea.prototype.markFreehandCircle = function(circle) {
 	this.markedCircle.strokeWidth = 2;
 }
 TEDrawingArea.prototype.unmarkFreehandCircle = function() {
-	console.log("Unmark circle", this.markedCircle);
+	//console.log("Unmark circle", this.markedCircle);
 	if (this.markedCircle != null) {
 		if (this.markedCircle.circle == undefined) this.markedCircle.strokeWidth = 0;		// freehand circle should be defined as an object also ...
 		else this.markedCircle.unmarkCircle();		
 	}
 }
 TEDrawingArea.prototype.handleMouseDown = function( event ) {
-	//console.log("In onMouseDown");
-	this.unmarkFreehandCircle();
+	//console.log("Handling parent: ", this.handlingParent);
+	//console.log("mousedown => set variables");
+	this.mouseDown = true;
+	this.mouseItem = event.item;
+	this.handlingParent = this.getTEDrawingAreaObject(event.item);	
+	//console.log("Handling parent: ", this.handlingParent);
+	
+	if ((event.item != null) && (this.handlingParent != null)) {
+		//console.log("Handle event ......");
+		this.handlingParent.handleEvent(event);
+	} else {
+		this.editableToken.insertNewKnot(event.point);
+	}
+/*
 	if ((event.item != null) && (this.isPartOfFreehandOrRotatingAxis(event.item))) { //(this.fhCircleSelected))) {
 		this.fhCircleSelected = event.item;
 		this.fhCircleColor = this.fhCircleSelected.fillColor;
 		this.fhCircleSelected.fillColor = '#aaa';
 		this.markFreehandCircle(this.fhCircleSelected);		
 	} else {
-		var path = new Path.Circle( {
-				center: event.point,
-				radius: 5,
-				fillColor: '#f00'	
-			});
-		this.fhCircleList.push( path );
-		//console.log(this.fhCircleList);
+		
+		var path = new TEVisuallyModifiableCircle(event.point, 5, '#f00', '#aaa', '#00f');
+		this.fhCircleList.push(path);
 		this.fhCircleSelected = path;
-		this.fhCircleColor = this.fhCircleSelected.fillColor;
+		//this.fhCircleColor = this.fhCircleSelected.fillColor;
 		// add token data (relative to rotating axis)
 		this.rotatingAxis.token.middle.push( new TERotatingAxisTokenPoint( event.point, 0.5, 0.5, "horizontal", this.rotatingAxis ));
 		//console.log("Editor: ", this);
 		// add bezier to freehand path
 		this.fhToken.add( event.point );
 		this.calculateFreehandHandles();
-		this.markFreehandCircle(this.fhCircleSelected);	
+		//this.markFreehandCircle(this.fhCircleSelected);
+		this.fhCircleSelected.mark();	
 	}
 	this.preceeding.connect();
 	this.following.connect();
+*/
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
+	if (this.handlingParent != null) {
+		this.handlingParent.handleEvent(event);
+	}
+	//console.log("mouseup => set variables");
+	this.mouseDown = false;
+	this.mouseDownItem = null;
+	this.handlingParent = null;
+/*
 	//console.log("In onMouseUp");
 	if (this.fhCircleSelected != null) {
 		this.fhCircleSelected.fillColor = this.fhCircleColor;
@@ -130,12 +166,19 @@ TEDrawingArea.prototype.handleMouseUp = function( event ) {
 		this.itemSelected = this;
 	}
 	//console.log(this);
+*/
 }
 TEDrawingArea.prototype.handleMouseDrag = function( event ) {
+	if (this.handlingParent != null) {
+		//console.log("Handling parent: ", this.handlingParent);
+		this.handlingParent.handleEvent(event);
+	}
+/*
 	//console.log("In onMouseDrag");
 	if (editor.fhCircleSelected != null) {
 		index = this.whichCircle( this.fhCircleSelected );
 		this.fhCircleSelected.position = event.point; 
+		//console.log(this.fhToken, this.fhCircleSelected);
 		this.fhToken.segments[index].point = this.fhCircleSelected.position;
 		// update token data
 		this.rotatingAxis.token.middle[index].absolute = event.point;
@@ -146,30 +189,99 @@ TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 		this.preceeding.connect(); // update connecting point also
 		this.following.connect(); // update connecting point also
 	}
+*/
 }
-TEDrawingArea.prototype.handleEvent = function( event ) {
-	//console.log("TEDrawingArea.handleEvent()");
-	//console.log(event.item);
-	//if ((this.fhCircleSelected == null) && (event.item != null) && (this.isPartOfFreehandOrRotatingAxis(event.item))) {
-	if ((this.fhCircleSelected == null) && (event.item != null) && (this.isDragableCircle(event.item))) {
-		switch (event.item) {
-			case this.rotatingAxis.controlCircle : this.itemSelected = this.rotatingAxis; break;
-			case this.preceeding.circle : this.itemSelected = this.preceeding; break;
-			case this.following.circle : this.itemSelected = this.following; break;
-			default : this.itemSelected = this;
+TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {
+	var value = this.preceeding.identify(item);
+	if (!value) {
+		value = this.following.identify(item);
+		if (!value) {
+			value = this.editableToken.identify(item);
+			if (!value) {
+				value = null;
+			}
 		}
-		//this.itemSelected = (event.item == this.rotatingAxis.controlCircle) ? this.rotatingAxis : this;
-		this.fhCircleSelected = event.item;	
 	}
+	return value;
+}
+TEDrawingArea.prototype.isDynamic = function(item) {
 	
-	if ((this.isInsideBorders(event)) || (event.type == "mouseup")) { 
-		//console.log("Ok, it's my business");
-		switch (event.type) {
-			case "mousedown" :this.itemSelected.handleMouseDown(event); break;
-			case "mouseup" : this.itemSelected.handleMouseUp(event); break;
-			case "mousedrag" : this.itemSelected.handleMouseDrag(event); break;
-		}
-	} else {
-		//console.log("Thx, but it's not my business");
+}
+TEDrawingArea.prototype.isStatic = function(item) {
+}
+
+TEDrawingArea.prototype.handleEvent = function(event) {
+	//console.log("TEDrawingArea.handleEvent()", event.item);
+	
+	switch (event.type) {
+		case "mousedown" : this.handleMouseDown(event); break;
+		case "mouseup" : this.handleMouseUp(event); break;
+		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
+
+/*	
+	if ((event.item != null) || (this.mouseItem != null)) {
+		//console.log("GetTDrawingAreaObjet: ", this.getTEDrawingAreaObject(event.item));
+		
+		if (event.type == "mousedown") { 
+			console.log("Handling parent: ", this.handlingParent);
+			//console.log("mousedown => set variables");
+			this.mouseDown = true;
+			this.mouseItem = event.item;
+			this.handlingParent = this.getTEDrawingAreaObject(event.item);
+			//console.log("event.item: ", event.item);
+			//console.log("Handling parent: ", this.handlingParent);
+		} else if (event.type == "mouseup") {
+			console.log("Handling parent: ", this.handlingParent);
+			if (this.handlingParent != null) {
+				this.handlingParent.handleEvent(event);
+			}
+			//console.log("mouseup => set variables");
+			this.mouseDown = false;
+			this.mouseDownItem = null;
+			this.handlingParent = null;
+		} 
+		//console.log("Handling parent: ", this.handlingParent);
+		//console.log("TEDrawingArea.mouseDown: ", this.mouseDown);
+		//if (this.mouseDown) {	
+			//console.log("Handle this event: ", this.mouseDownItem, "toType: ", toType(this.mouseDownItem));
+			if (this.handlingParent != null) {
+				//console.log("Handling parent: ", this.handlingParent);
+				this.handlingParent.handleEvent(event);
+			}
+			
+			//this.mouseDownItem.handleEvent(event);
+			
+			/*
+			if ((this.fhCircleSelected == null) && (event.item != null) && (this.isDragableCircle(event.item))) {
+				switch (event.item) {
+					case this.rotatingAxis.controlCircle : this.itemSelected = this.rotatingAxis; break;
+					case this.preceeding.circle : this.itemSelected = this.preceeding; break;
+					case this.following.circle : this.itemSelected = this.following; break;
+					default : this.itemSelected = this;
+				}
+				this.fhCircleSelected = event.item;	
+			}
+	
+			if ((this.isInsideBorders(event)) || (event.type == "mouseup")) { 
+				//console.log("Ok, it's my business");
+				switch (event.type) {
+					case "mousedown" :this.itemSelected.handleMouseDown(event); break;
+					case "mouseup" : this.itemSelected.handleMouseUp(event); break;
+					case "mousedrag" : this.itemSelected.handleMouseDrag(event); break;
+				}
+			} else {
+				//console.log("Thx, but it's not my business");
+			}*/
+		//} else {
+			//console.log("Don't react to mouse events if mouseDown == false");
+		//}
+/*	} else {
+		if ((event.item != null) || (event.item.isStatic())) { // hoping that JS evaluates or expressions sequentially ... otherwise the second expression might throw and error ...
+			console.log("Insert new point");
+		
+			this.editableToken.insertNewKnot(event.point);
+		}
+	}
+*/
 }

@@ -13,12 +13,20 @@ function getControlPoints( p0, p1, p2, t) {
 }
 
 // trigonometric functions
-// degrees to radians.
+// degrees to radians
 Math.radians = function(degrees) {
   return degrees * Math.PI / 180;
 };
  
-// radians to degrees.
+// radians to degrees
 Math.degrees = function(radians) {
   return radians * 180 / Math.PI;
 };
+
+// fixing the JS typeof operator ... (again: very weak and neary useless concept in JS, in my opinion...)
+function toType(obj) {
+    if(obj && obj.constructor && obj.constructor.name) {
+        return obj.constructor.name;
+    }
+    return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+}

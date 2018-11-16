@@ -7,6 +7,12 @@ function TEBorders(a, color) { // a = TEDrawingArea
 	this.borders.strokeWidth = 0.5;
 	return this.borders;
 }
+TEBorders.prototype.isStatic = function() {
+	return true;
+}
+TEBorders.prototype.isDynamic = function() {
+	return false;
+}
 
 // class TEDottedGrid
 function TEDottedGrid(a, color) {
@@ -34,6 +40,13 @@ function TEDottedGrid(a, color) {
 	}
 	return this.allDottedLines;
 }
+TEDottedGrid.prototype.isStatic = function() {
+	return true;
+}
+TEDottedGrid.prototype.isDynamic = function() {
+	return false;
+}
+
 
 // class TEAuxiliarySystemLines
 function TEAuxiliarySystemLines(a, color) { // a = TEDrawingArea
@@ -53,6 +66,13 @@ function TEAuxiliarySystemLines(a, color) { // a = TEDrawingArea
 	}
 	return this.allSystemLines;
 }
+TEAuxiliarySystemLines.prototype.isStatic = function() {
+	return true;
+}
+TEAuxiliarySystemLines.prototype.isDynamic = function() {
+	return false;
+}
+
 
 // class TEAuxiliaryVerticalLines
 function TEAuxiliaryVerticalLines(a, color) {
@@ -66,6 +86,12 @@ function TEAuxiliaryVerticalLines(a, color) {
 		index++;
 	}
 	return this.allVerticalLines;
+}
+TEAuxiliaryVerticalLines.prototype.isStatic = function() {
+	return true;
+}
+TEAuxiliaryVerticalLines.prototype.isDynamic = function() {
+	return false;
 }
 
 // class TECoordinatesLabels
@@ -108,4 +134,10 @@ function TECoordinatesLabels(parent) {
 		posY += this.parent.lineHeight * this.parent.scaleFactor;
 	}
 	
+}
+TECoordinatesLabels.prototype.isStatic = function() {
+	return true;
+}
+TECoordinatesLabels.prototype.isDynamic = function() {
+	return false;
 }

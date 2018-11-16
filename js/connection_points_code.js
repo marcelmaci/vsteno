@@ -1,52 +1,89 @@
 
-// class TEConnectionPoint
+// class TEVisuallyModifiableCircle
+function TEVisuallyModifiableCircle(position, radius, color, selectColor, strokeColor ) {
+	//console.log("TEVisuallyModifiableCircle.constructor");
+	this.circle = new Path.Circle(position, radius);
+	this.circle.fillColor = color;
+	this.circle.strokeWidth = 0;
+	this.circle.strokeColor = strokeColor;
+	this.originalColor = color;
+	this.selectColor = selectColor;
+}
+TEVisuallyModifiableCircle.prototype.mark = function() { // mark <=> set strokeWidth = 2 and strokeColor to a predefined value
+	this.circle.strokeWidth = 2;
+}
+TEVisuallyModifiableCircle.prototype.unmark = function() { // unmark <=> show full circle again
+	this.circle.strokeWidth = 0;
+}
+TEVisuallyModifiableCircle.prototype.select = function() { // select <=> modify fillColor of circle
+	this.circle.fillColor = this.selectColor;
+}
+TEVisuallyModifiableCircle.prototype.unselect = function() { // unselect <=> restore original fillColor
+	this.circle.fillColor = this.originalColor;
+}
+TEVisuallyModifiableCircle.prototype.handleMouseDown = function(event) {
+	//console.log("TEVisuallyModifiableCircle.handleMouseDown");
+	this.mark();
+	this.select();
+	this.circle.position = event.point;
+}
+TEVisuallyModifiableCircle.prototype.handleMouseDrag = function(event) {
+	this.circle.position = event.point;
+}
+TEVisuallyModifiableCircle.prototype.handleMouseUp = function(event) {
+	console.log("TEVisuallyModifiableCircle.handleMouseUp()");
+	this.unselect();	// unselect, but leave it marked
+}
+TEVisuallyModifiableCircle.prototype.isStatic = function() {
+	return true;
+}
+TEVisuallyModifiableCircle.prototype.isDynamic = function() {
+	return false;
+}
+
+
+// class TEConnectionPoint extends TEVisuallyModifiableCircle
 function TEConnectionPoint(drawingArea, x, y ) {
+	// call parent constructor
+	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), 5, '#000', '#aaa', '#00f');
+	// handle own stuff
 	this.parent = drawingArea;
-	this.tempColor = '#000';
-	//var position = new Point(x, y);
-	this.circle = new Path.Circle(new Point(x, y), 5);
-	this.circle.fillColor = '#000';
 	this.line = this.line = new Path.Line( this.position, this.position ); // initialize line as point inside circle
 	this.line.strokeColor = '#000';
 }
+TEConnectionPoint.prototype = new TEVisuallyModifiableCircle(); 	// inherit
 TEConnectionPoint.prototype.handleMouseDown = function(event) {
-	//console.log("TEConnectionPoint.handleMouseDown");	
-	this.tempColor = this.circle.fillColor;
-	this.circle.fillColor = "#aaa";
-	this.circle.position = event.point;
-	this.markCircle();
+	if (this.circle == event.item) {
+		console.log("Set new markedCircle in parent", event.item);
+		this.parent.setMarkedCircle(this);
+	}
+	TEVisuallyModifiableCircle.prototype.handleMouseUp.call(this, event); // call parent's method	
 }
 TEConnectionPoint.prototype.handleMouseUp = function(event) {
-	//console.log("rotatingAxis.mouseup");
+	console.log("TEConnectionPoint.handleMouseUp()");
 	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.parent.lowerY) && (event.point.y > this.parent.upperY)) {
 		this.circle.position = event.point;
-		this.circle.fillColor = this.tempColor;
 		this.parent.itemSelected = this.parent;
 		this.parent.fhCircleSelected = null;
 	} else {
-		// just "release" connecting point (and leave point as it is)
-		this.circle.fillColor = this.tempColor; 
-		//if (this.circle.fillColor == null) this.controlCircle.fillColor = "#ff0"; // workaround for the moment ... mark circle as yellow when the error occurs
+		// just "release" connecting point (and leave point where it is)
 		this.parent.itemSelected = this.parent;
 		this.parent.fhCircleSelected = null;	
 	}
+	TEVisuallyModifiableCircle.prototype.handleMouseUp.call(this, event); // call parent's method
 }
 TEConnectionPoint.prototype.handleMouseDrag = function(event) {
-	//console.log("rotatingAxis.mousedrag");
-	//console.log(this);
 	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.parent.lowerY) && (event.point.y > this.parent.upperY)) {
 		this.circle.position = event.point;
 	}
 }
-TEConnectionPoint.prototype.handleEvent = function( event ) {
-	//console.log("rotatingAxis.handleEvent()");
+TEConnectionPoint.prototype.handleEvent = function(event) {
+	console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
-	//this.controlCircle.position = event.point;
-	//return;
 }
 TEConnectionPoint.prototype.markCircle = function() {
 	//console.log("markCircle");
@@ -67,26 +104,36 @@ function TEConnectionPointPreceeding(drawingArea, x, y) {
 }
 TEConnectionPointPreceeding.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
 TEConnectionPointPreceeding.prototype.connect = function() {
-	if (this.parent.fhCircleList.length != 0) {
+/*	if (this.parent.fhCircleList.length != 0) {
 		//console.log(this.parent.fhCircleList[0].position);
 		var entryPoint = this.parent.fhCircleList[0];
 		this.line.segments[0].point = this.circle.position;
 		this.line.segments[1].point = entryPoint.position;
 		//console.log(this.line);
-	}
+	}*/
 }
+/*
+TEConnectionPointPreceeding.prototype.handleEvent = function(event) { // overload parent method
+	console.log("TEConnectionPointPreceeding.handleEvent()", event.type);
+	switch (event.type) {
+		case "mousedown" : this.handleMouseDown(event); break;
+		case "mouseup" : this.handleMouseUp(event); break;
+		case "mousedrag" : console.log("mousedrag"); this.handleMouseDrag(event); break;
+	}
+} 
+*/
 TEConnectionPointPreceeding.prototype.handleMouseDown = function(event) { // overload parent method
 	//console.log("TEConnectionPointPreceeding");
 	TEConnectionPoint.prototype.handleMouseDown.call(this, event); // call parent's method
 	this.connect(); // overload
 }
 TEConnectionPointPreceeding.prototype.handleMouseUp = function(event) { // overload parent method
-	//console.log("TEConnectionPointPreceeding");
+	//console.log("TEConnectionPointPreceeding.handleMouseUp()");
 	TEConnectionPoint.prototype.handleMouseUp.call(this, event); // call parent's method
 	this.connect(); // overload
 }
 TEConnectionPointPreceeding.prototype.handleMouseDrag = function(event) { // overload parent method
-	//console.log("TEConnectionPointPreceeding");
+	//console.log("TEConnectionPointPreceeding.handleMouseDrag()");
 	TEConnectionPoint.prototype.handleMouseDrag.call(this, event); // call parent's method
 	this.connect(); // overload
 }
@@ -95,6 +142,11 @@ TEConnectionPointPreceeding.prototype.markCircle = function() {
 	this.parent.markedCircle = this;
 	this.parent.markedIndex = 0;
 }
+TEConnectionPointPreceeding.prototype.identify = function(item) {
+	//console.log("TEConnectionPointPreceeding.identify() - circle vs item: ", this.circle, item);
+	if (item == this.circle) return this;
+	else return false;
+}
 
 // class TEConnectionPointFollowing extends TEConnectionPoint
 function TEConnectionPointFollowing(drawingArea, x, y) {
@@ -102,26 +154,23 @@ function TEConnectionPointFollowing(drawingArea, x, y) {
 }
 TEConnectionPointFollowing.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
 TEConnectionPointFollowing.prototype.connect = function() {
-	if (this.parent.fhCircleList.length != 0) {
+/*	if (this.parent.fhCircleList.length != 0) {
 		//console.log(this.parent.fhCircleList[0].position);
 		var exitPoint = this.parent.fhCircleList[this.parent.fhCircleList.length-1];
 		this.line.segments[0].point = this.circle.position;
 		this.line.segments[1].point = exitPoint.position;
 		//console.log(this.line);
-	}
+	}*/
 }
 TEConnectionPointFollowing.prototype.handleMouseDown = function(event) { // overload parent method
-	//console.log("TEConnectionPointPreceeding");
 	TEConnectionPoint.prototype.handleMouseDown.call(this, event); // call parent's method
 	this.connect(); // overload
 }
 TEConnectionPointFollowing.prototype.handleMouseUp = function(event) { // overload parent method
-	//console.log("TEConnectionPointPreceeding");
 	TEConnectionPoint.prototype.handleMouseUp.call(this, event); // call parent's method
 	this.connect(); // overload
 }
 TEConnectionPointFollowing.prototype.handleMouseDrag = function(event) { // overload parent method
-	//console.log("TEConnectionPointPreceeding");
 	TEConnectionPoint.prototype.handleMouseDrag.call(this, event); // call parent's method
 	this.connect(); // overload
 }
@@ -130,3 +179,9 @@ TEConnectionPointFollowing.prototype.markCircle = function() {
 	this.parent.markedCircle = this;
 	this.parent.markedIndex = 99999;
 }
+TEConnectionPointFollowing.prototype.identify = function(item) {
+	//console.log("TEConnectionPointFollowing.identify()");
+	if (item == this.circle) return this;
+	else return false;
+}
+
