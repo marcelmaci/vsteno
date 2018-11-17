@@ -31,14 +31,14 @@ TEVisuallyModifiableCircle.prototype.handleMouseDrag = function(event) {
 	this.circle.position = event.point;
 }
 TEVisuallyModifiableCircle.prototype.handleMouseUp = function(event) {
-	console.log("TEVisuallyModifiableCircle.handleMouseUp()");
+	//console.log("TEVisuallyModifiableCircle.handleMouseUp()");
 	this.unselect();	// unselect, but leave it marked
 }
 TEVisuallyModifiableCircle.prototype.isStatic = function() {
-	return true;
+	return false;
 }
 TEVisuallyModifiableCircle.prototype.isDynamic = function() {
-	return false;
+	return true;
 }
 
 

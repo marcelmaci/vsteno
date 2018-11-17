@@ -2,8 +2,7 @@
 
 // class TEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
 function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor) {
-    this.t1 = t1;
-    this.t2 = t2;
+    this.tensions = [t1, t2];
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
 TEVisuallyModifiableKnot.prototype = new TEVisuallyModifiableCircle(); 	// inherit
@@ -28,6 +27,8 @@ function TEEditableToken(drawingArea) {
 	this.mouseDown = false;
 	this.selectedKnot = null;
 	this.markedKnot = null;
+	// index (is updated whenever identify-method is called)
+	this.index = null;
 }
 TEEditableToken.prototype.identify = function(item) {
 	//console.log("TEEditableToken: item: ", item);
@@ -35,6 +36,7 @@ TEEditableToken.prototype.identify = function(item) {
 	for (var i=0; i<this.knotsList.length; i++) {
 		//console.log("TEEditableToken(i): ", i, this.knotsList[i]);
 		if (item == this.knotsList[i].circle) {
+			this.index = i;
 			value = this;
 			break;
 		}
@@ -75,20 +77,23 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEEditableToken.prototype.handleEvent = function(event) {
-	//this.identifyAndSelectKnot(event.item);
-	//console.log("TEEditabletoken.handleEvent - item/activeKnot.circle: ", event.item, this.activeKnot.circle);
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
+	//console.log("We're here");
+	this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index);
 }
+
 TEEditableToken.prototype.insertNewKnot = function(point) {
 	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, '#f00', '#aaa', '#00f');
 	this.knotsList.push(newKnot);
+	this.index = this.knotsList.length;
 	this.mouseDown = true;
 	this.selectedKnot = newKnot;
 	this.markedKnot = newKnot; // maybe superfluous
 	this.parent.setMarkedCircle(newKnot);
 	this.parent.handlingParent = this;
+	this.parent.rotatingAxis.relativeToken.pushNewRelativeKnot(point.x, point.y, "horizontal");
 }

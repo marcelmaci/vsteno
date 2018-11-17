@@ -1,10 +1,7 @@
 
 // class TEDrawingArea 	
-// constructor and properties
 function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFactor) {
 	
-	// console.log(lowerLeft, totalLines, basePosition, lineHeight, scaleFactor);
-	// class properties
 	// borders
 	this.leftX = lowerLeft.x;
 	this.rightX = lowerLeft.x + (totalLines * lineHeight * scaleFactor);
@@ -47,13 +44,10 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	this.fhCircleSelected = null;
 	this.fhCircleColor = null;
 	this.editableToken = new TEEditableToken(this);
-/*	this.fhToken = new Path();
+	this.fhToken = new Path();
 	this.fhToken.strokeColor = '#000';
-	this.fhCircleList = [];
-
-	return this;
-*/
 }
+
 // class TEDrawingArea: methods
 TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyModifiableCircle
 	if (this.markedCircle != null) {
@@ -62,8 +56,7 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 	this.markedCircle = circle;
 	this.markedCircle.mark();
 }
-TEDrawingArea.prototype.calculateFreehandHandles = function() { // a = TEDrawingArea
-	// console.log(this.fhToken);
+TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	numberOfPoints = this.fhToken.segments.length;
 	for (var i = 1; i < numberOfPoints-1; i++) { // dont calculate 1st and last
 			var absHandles = getControlPoints( this.fhToken.segments[i-1].point, this.fhToken.segments[i].point, this.fhToken.segments[i+1].point, 0.5 );
@@ -71,81 +64,32 @@ TEDrawingArea.prototype.calculateFreehandHandles = function() { // a = TEDrawing
 			this.fhToken.segments[i].handleOut = absHandles[1] - this.fhToken.segments[i].point;
 	}
 }
-TEDrawingArea.prototype.isPartOfFreehand = function(test) {
-	return this.whichCircle(test);
-}
-TEDrawingArea.prototype.whichCircle = function(circle) {
-	var index = null, i = 0;
-	for (i = 0; i<this.fhCircleList.length; i++) {
-		if (this.fhCircleList[i].circle == circle) {
-			index = i;
-			//console.log("Match for circle: fhCircleList[" + i + "] = " + this.fhCircleList[i] + "<=?=>" + circle + "=> " + index);
-			break;
-		} //else console.log("search for circle: fhCircleList[" + i + "] = " + this.fhCircleList[i] + "<=?=>" + circle + "=> " + index);		    
+TEDrawingArea.prototype.copyKnotsToFreehandPath = function() {
+	for (var i=0; i<this.editableToken.knotsList.length; i++) {
+			this.fhToken.segments[i].point = this.editableToken.knotsList[i].circle.position;
 	}
-	return index;
+}
+TEDrawingArea.prototype.updateFreehandPath = function() {
+	this.copyKnotsToFreehandPath();
+	this.calculateFreehandHandles();
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	if ((this.leftX <= event.point.x) && (this.rightX >= event.point.x) && (this.lowerY >= event.point.y) && (this.upperY <= event.point.y)) return true;
 	else return false;
 }
-TEDrawingArea.prototype.isPartOfFreehandOrRotatingAxis = function( item ) {
-	if ((this.isPartOfFreehand(item) != null) || (item == this.rotatingAxis.controlCircle)) return true;
-	else return false;
-}
-TEDrawingArea.prototype.isDragableCircle = function(item) {
-	if ((this.isPartOfFreehandOrRotatingAxis(item)) || (item == this.preceeding ) || (item = this.following)) return true;
-	else return false;
-}
-TEDrawingArea.prototype.markFreehandCircle = function(circle) {
-	//this.unmarkFreehandCircle();
-	this.markedCircle = circle;
-	this.markedIndex = this.whichCircle(this.markedCircle);
-	this.markedCircle.strokeColor = '#00f';
-	this.markedCircle.strokeWidth = 2;
-}
-TEDrawingArea.prototype.unmarkFreehandCircle = function() {
-	//console.log("Unmark circle", this.markedCircle);
-	if (this.markedCircle != null) {
-		if (this.markedCircle.circle == undefined) this.markedCircle.strokeWidth = 0;		// freehand circle should be defined as an object also ...
-		else this.markedCircle.unmarkCircle();		
-	}
-}
 TEDrawingArea.prototype.handleMouseDown = function( event ) {
-	//console.log("Handling parent: ", this.handlingParent);
-	//console.log("mousedown => set variables");
 	this.mouseDown = true;
 	this.mouseItem = event.item;
 	this.handlingParent = this.getTEDrawingAreaObject(event.item);	
-	//console.log("Handling parent: ", this.handlingParent);
-	
 	if ((event.item != null) && (this.handlingParent != null)) {
-		//console.log("Handle event ......");
 		this.handlingParent.handleEvent(event);
 	} else {
+		this.fhToken.add( event.point );
 		this.editableToken.insertNewKnot(event.point);
+		//var length = this.rotatingAxis.relativeToken.knotsList.length;
+		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);		
 	}
 /*
-	if ((event.item != null) && (this.isPartOfFreehandOrRotatingAxis(event.item))) { //(this.fhCircleSelected))) {
-		this.fhCircleSelected = event.item;
-		this.fhCircleColor = this.fhCircleSelected.fillColor;
-		this.fhCircleSelected.fillColor = '#aaa';
-		this.markFreehandCircle(this.fhCircleSelected);		
-	} else {
-		
-		var path = new TEVisuallyModifiableCircle(event.point, 5, '#f00', '#aaa', '#00f');
-		this.fhCircleList.push(path);
-		this.fhCircleSelected = path;
-		//this.fhCircleColor = this.fhCircleSelected.fillColor;
-		// add token data (relative to rotating axis)
-		this.rotatingAxis.token.middle.push( new TERotatingAxisTokenPoint( event.point, 0.5, 0.5, "horizontal", this.rotatingAxis ));
-		//console.log("Editor: ", this);
-		// add bezier to freehand path
-		this.fhToken.add( event.point );
-		this.calculateFreehandHandles();
-		//this.markFreehandCircle(this.fhCircleSelected);
-		this.fhCircleSelected.mark();	
-	}
 	this.preceeding.connect();
 	this.following.connect();
 */
@@ -154,41 +98,20 @@ TEDrawingArea.prototype.handleMouseUp = function( event ) {
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);
 	}
-	//console.log("mouseup => set variables");
 	this.mouseDown = false;
 	this.mouseDownItem = null;
 	this.handlingParent = null;
-/*
-	//console.log("In onMouseUp");
-	if (this.fhCircleSelected != null) {
-		this.fhCircleSelected.fillColor = this.fhCircleColor;
-		this.fhCircleSelected = null;
-		this.itemSelected = this;
-	}
-	//console.log(this);
-*/
 }
 TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 	if (this.handlingParent != null) {
-		//console.log("Handling parent: ", this.handlingParent);
-		this.handlingParent.handleEvent(event);
+		this.handlingParent.handleEvent(event);	
+		//var length = this.rotatingAxis.relativeToken.knotsList.length;
+		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);
+		
 	}
 /*
-	//console.log("In onMouseDrag");
-	if (editor.fhCircleSelected != null) {
-		index = this.whichCircle( this.fhCircleSelected );
-		this.fhCircleSelected.position = event.point; 
-		//console.log(this.fhToken, this.fhCircleSelected);
-		this.fhToken.segments[index].point = this.fhCircleSelected.position;
-		// update token data
-		this.rotatingAxis.token.middle[index].absolute = event.point;
-		this.rotatingAxis.token.middle[index].calculateRelativeCoordinates();
-		this.itemSelected = this;
-		
-		this.calculateFreehandHandles();
 		this.preceeding.connect(); // update connecting point also
 		this.following.connect(); // update connecting point also
-	}
 */
 }
 TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {
@@ -198,7 +121,10 @@ TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {
 		if (!value) {
 			value = this.editableToken.identify(item);
 			if (!value) {
-				value = null;
+				value = this.rotatingAxis.identify(item);
+				if (!value) {
+					value = null;
+				}
 			}
 		}
 	}
@@ -218,7 +144,9 @@ TEDrawingArea.prototype.handleEvent = function(event) {
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
-
+	//var index = this.rotatingAxis.relativeToken.index;
+	//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
+	this.updateFreehandPath();
 /*	
 	if ((event.item != null) || (this.mouseItem != null)) {
 		//console.log("GetTDrawingAreaObjet: ", this.getTEDrawingAreaObject(event.item));
