@@ -23,11 +23,20 @@ function TERotatingAxisRelativeToken(rotatingAxis) {
 	this.parent = rotatingAxis;
 	this.knotsList = []; 	// array of TERotatingAxisRelativeKnot
 } 
+/*
 TERotatingAxisRelativeToken.prototype.pushNewRelativeKnot = function(x, y, type) {
 	//console.log("TERotatingAxis.pushNewRelativeKnot()");
 	var relative = this.parent.getRelativeCoordinates(x, y, type);
 	//console.log("relative = ", relative);
 	this.knotsList.push(new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
+}
+*/
+TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(x, y, type, index) {
+	//console.log("TERotatingAxis.pushNewRelativeKnot()");
+	var relative = this.parent.getRelativeCoordinates(x, y, type);
+	//console.log("relative = ", relative);
+	//this.knotsList.push(new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
+	this.knotsList.splice(index, 0, new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
 }
 TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y, index) {
 	if (this.knotsList[index] != undefined) {

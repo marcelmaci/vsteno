@@ -37,7 +37,6 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	// actual selected items
 	this.itemSelected = this;		// main item selected (parent object), can be TERotatingAxis e.g.
 	this.markedCircle = null;		// type TEVisuallyModifiableCircle
-	this.setMarkedCircle(this.preceeding);
 	this.markedIndex = 0;			// 0 = preceeding connection point; 1,2,3 ... n = freehand circles; 99999 = following connection point
 
 	// freehand path
@@ -46,6 +45,9 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	this.editableToken = new TEEditableToken(this);
 	this.fhToken = new Path();
 	this.fhToken.strokeColor = '#000';
+
+	// initialize marked circle and index
+	this.setMarkedCircle(this.preceeding);
 }
 
 // class TEDrawingArea: methods
@@ -55,6 +57,17 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 	}
 	this.markedCircle = circle;
 	this.markedCircle.mark();
+	// set index
+	if (this.markedCircle.identify() == false) {
+		console.log("markedCircle: ", this.markedCircle, " Identify: ", this.markedCircle.identify());
+		switch (this.markedCircle.circle) {
+			case this.preceeding.circle : this.editableToken.index = 0; break;
+			case this.following.circle : this.editableToken.index = this.editableToken.knotsList.length+1; break;
+			// default is not needed: if this.markedCircle is part of editableToken, index is set automatically
+			// via the identify method (which is called in the if statement)
+		}
+	}
+	console.log("index set to: ", this.editableToken.index);
 }
 TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	numberOfPoints = this.fhToken.segments.length;
@@ -83,9 +96,17 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	this.handlingParent = this.getTEDrawingAreaObject(event.item);	
 	if ((event.item != null) && (this.handlingParent != null)) {
 		this.handlingParent.handleEvent(event);
+		//if (doubleClick) console.log("This was a DOUBLECLICK;-)");
 	} else {
-		this.fhToken.add( event.point );
+		// at this point (since TEEditableToken.identify() has been called beforehand) index can be used to insert 
+		// new knot at a specific point (i.e. after marked knot)
+		console.log("Insert new at: ", this.editableToken.index);
+		
+		this.fhToken.insert(this.editableToken.index, event.point) // path doesn't have slice method - use insert method instead (same functionality)
+		//this.fhToken.add( event.point ); // add point at the end for the moment ...
 		this.editableToken.insertNewKnot(event.point);
+		//this.editableToken.index += 1; // point to the newly inserted element
+		
 		//var length = this.rotatingAxis.relativeToken.knotsList.length;
 		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);		
 	}
