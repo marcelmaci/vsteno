@@ -25,6 +25,7 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	this.coordinateLabels = new TECoordinatesLabels(this); // coordinateLabels depends on rotatingAxis!
 	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
 	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
+	this.knotLabel = new TEKnotLabel(this);
 	
 	// mouse events
 	this.mouseDown = false;
@@ -59,7 +60,7 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 	this.markedCircle.mark();
 	// set index
 	if (this.markedCircle.identify() == false) {
-		console.log("markedCircle: ", this.markedCircle, " Identify: ", this.markedCircle.identify());
+		//console.log("markedCircle: ", this.markedCircle, " Identify: ", this.markedCircle.identify());
 		switch (this.markedCircle.circle) {
 			case this.preceeding.circle : this.editableToken.index = 0; break;
 			case this.following.circle : this.editableToken.index = this.editableToken.knotsList.length+1; break;
@@ -67,12 +68,14 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 			// via the identify method (which is called in the if statement)
 		}
 	}
-	console.log("index set to: ", this.editableToken.index);
+	//console.log("index set to: ", this.editableToken.index);
 }
 TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	numberOfPoints = this.fhToken.segments.length;
 	for (var i = 1; i < numberOfPoints-1; i++) { // dont calculate 1st and last
-			var absHandles = getControlPoints( this.fhToken.segments[i-1].point, this.fhToken.segments[i].point, this.fhToken.segments[i+1].point, 0.5 );
+			var t1 = this.editableToken.knotsList[i].tensions[0];
+			var t2 = this.editableToken.knotsList[i].tensions[1];
+			var absHandles = getControlPoints( this.fhToken.segments[i-1].point, this.fhToken.segments[i].point, this.fhToken.segments[i+1].point, t1, t2 );
 			this.fhToken.segments[i].handleIn = absHandles[0] - this.fhToken.segments[i].point;
 			this.fhToken.segments[i].handleOut = absHandles[1] - this.fhToken.segments[i].point;
 	}
@@ -100,7 +103,7 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	} else {
 		// at this point (since TEEditableToken.identify() has been called beforehand) index can be used to insert 
 		// new knot at a specific point (i.e. after marked knot)
-		console.log("Insert new at: ", this.editableToken.index);
+		//console.log("Insert new at: ", this.editableToken.index);
 		
 		this.fhToken.insert(this.editableToken.index, event.point) // path doesn't have slice method - use insert method instead (same functionality)
 		//this.fhToken.add( event.point ); // add point at the end for the moment ...
@@ -168,6 +171,7 @@ TEDrawingArea.prototype.handleEvent = function(event) {
 	//var index = this.rotatingAxis.relativeToken.index;
 	//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
 	this.updateFreehandPath();
+	this.knotLabel.updateLabel();
 /*	
 	if ((event.item != null) || (this.mouseItem != null)) {
 		//console.log("GetTDrawingAreaObjet: ", this.getTEDrawingAreaObject(event.item));

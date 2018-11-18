@@ -54,13 +54,13 @@ function TEConnectionPoint(drawingArea, x, y ) {
 TEConnectionPoint.prototype = new TEVisuallyModifiableCircle(); 	// inherit
 TEConnectionPoint.prototype.handleMouseDown = function(event) {
 	if (this.circle == event.item) {
-		console.log("Set new markedCircle in parent", event.item);
+		//console.log("Set new markedCircle in parent", event.item);
 		this.parent.setMarkedCircle(this);
 	}
 	TEVisuallyModifiableCircle.prototype.handleMouseUp.call(this, event); // call parent's method	
 }
 TEConnectionPoint.prototype.handleMouseUp = function(event) {
-	console.log("TEConnectionPoint.handleMouseUp()");
+	//console.log("TEConnectionPoint.handleMouseUp()");
 	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.parent.lowerY) && (event.point.y > this.parent.upperY)) {
 		this.circle.position = event.point;
 		this.parent.itemSelected = this.parent;
@@ -78,7 +78,7 @@ TEConnectionPoint.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEConnectionPoint.prototype.handleEvent = function(event) {
-	console.log("TEConnectionPoint.handleEvent()");
+	//console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
@@ -185,3 +185,48 @@ TEConnectionPointFollowing.prototype.identify = function(item) {
 	else return false;
 }
 
+
+// class TEPointLabel
+function TEKnotLabel(drawingArea) {
+	this.parent = drawingArea;
+	// coordinates
+	this.coordinates = new PointText(new Point(100, 100));
+	this.coordinates.justification = "center";
+	this.coordinates.fillcolor = '#000';
+	this.coordinates.content = 'empty coordinates';
+	this.coordinates.visible = false;
+	
+	// tensions
+	this.tensions = new PointText(new Point(100, 120));
+	this.tensions.justification = "center";
+	this.tensions.fillcolor = '#000';
+	this.tensions.content = 'empty tensions';
+	this.tensions.visible = false;
+	
+		//console.log("posxy: ", posX, this.parent.lowerY+20);
+		//text.justification = 'right';
+		//text.fillColor = '#000';
+}
+TEKnotLabel.prototype.updateLabel = function() { // TEVisuallyModifiableKnot
+	//this.parent.markedCircle;
+	var drawingAreaObject = this.parent.getTEDrawingAreaObject(this.parent.markedCircle);
+	//console.log("markedCircle: ", this.parent.markedCircle, " drawingAreaObject: ", drawingAreaObject, " parent.editableToken: ", this.parent.editableToken);
+	if (drawingAreaObject == this.parent.editableToken) {
+		var valuesXY = this.parent.markedCircle.circle.position,
+			valuesT = this.parent.markedCircle.tensions
+			rescaledX = ((this.parent.rotatingAxis.centerRotatingAxis.x - valuesXY.x) / this.parent.scaleFactor).toFixed(1),
+			rescaledY = (-(this.parent.rotatingAxis.centerRotatingAxis.y - valuesXY.y) / this.parent.scaleFactor).toFixed(1);
+			
+		this.coordinates.position = valuesXY - [0,12];	
+		this.coordinates.content = "P(" + rescaledX + "," + rescaledY + ")";
+		this.tensions.content = "T(" + valuesT[0] + "," + valuesT[1] + ")";
+		this.tensions.position = valuesXY + [0,12];
+		//console.log("coordinates: ", this.coordinates.content, " tensions: ", this.tensions.content);
+		this.coordinates.visible = true;
+		this.tensions.visible = true;
+	} else {
+		this.tensions.visible = false;
+		this.coordinates.visible = false;
+	}
+	//console.log("Show label");
+}

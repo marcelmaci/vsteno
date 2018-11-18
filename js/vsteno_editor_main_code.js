@@ -9,7 +9,7 @@ var doubleClickInterval = 500; // milliseconds
 var doubleClick = false;
 tool.onMouseDown = function(event) {
 	var newClick = (new Date).getTime();
-	console.log("lastclick: ", lastClick, " newClick: ", newClick, " delta: ", newClick-lastClick);
+	//console.log("lastclick: ", lastClick, " newClick: ", newClick, " delta: ", newClick-lastClick);
 	if ((newClick-lastClick) < doubleClickInterval) doubleClick = true;
 	else doubleClick = false;
 	

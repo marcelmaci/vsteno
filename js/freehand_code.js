@@ -35,7 +35,7 @@ TEEditableToken.prototype.identify = function(item) {
 	var value = null;
 	for (var i=0; i<this.knotsList.length; i++) {
 		//console.log("TEEditableToken(i): ", i, this.knotsList[i]);
-		if (item == this.knotsList[i].circle) {
+		if ((item == this.knotsList[i].circle) || (item == this.knotsList[i])) { // item can be TEVisuallyModifiableCircle or TEVisuallyModifiableKnot ?!
 			this.index = i+1;
 			value = this;
 			break;
@@ -59,7 +59,7 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
-	console.log("marked knot: ", this.markedKnot, " index: ", this.index);
+	//console.log("marked knot: ", this.markedKnot, " index: ", this.index);
 	// set new selected / marked knot before deleting the actual knot
 	end = this.knotsList.length;
 	switch (this.index) {
@@ -68,13 +68,17 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 		default : this.selectedKnot = this.knotsList[this.index]; this.markedKnot = this.selectedKnot; break;
 	}
 	this.parent.setMarkedCircle(this.selectedKnot);
+	//console.log("BEFORE: length: ", this.knotsList.length);
 	
 	//this.knotsList[this.index-1].circle = null; // delete control circle
-	this.knotsList[this.index-1].circle.visible = false; // make control circle invisible (should be deleted)
-	
+	//this.knotsList[this.index-1].circle.visible = false; // make control circle invisible (should be deleted)
+	this.knotsList[this.index-1].circle.remove(); // make control circle invisible (should be deleted)
 	this.knotsList.splice(this.index-1, 1); // deletes 1 element at index and reindexes array
 	this.parent.rotatingAxis.relativeToken.knotsList.splice(this.index-1,1); // do the same with relative token
 	this.parent.fhToken.removeSegment(this.index-1); // do the same with path
+	this.parent.updateFreehandPath();
+	//console.log("AFTER: length: ", this.knotsList.length);
+	
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
 	this.mouseDown = true;
@@ -99,7 +103,7 @@ TEEditableToken.prototype.handleEvent = function(event) {
 	switch (event.type) {
 		case "mousedown" : if (doubleClick) {
 								//this.handleMouseDown(event);
-								console.log("delete this point: ", event.item);
+								//console.log("delete this point: ", event.item);
 								this.deleteMarkedKnotFromArray();
 						   } else this.handleMouseDown(event); 
 						   break;
@@ -112,7 +116,7 @@ TEEditableToken.prototype.handleEvent = function(event) {
 
 TEEditableToken.prototype.insertNewKnot = function(point) {
 	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, '#f00', '#aaa', '#00f');
-	console.log("splice at: ", this.index);
+	//console.log("splice at: ", this.index);
 	this.knotsList.splice(this.index, 0, newKnot);
 	//this.index = this.knotsList.length;
 	this.mouseDown = true;
@@ -123,5 +127,5 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	//this.parent.rotatingAxis.relativeToken.pushNewRelativeKnot(point.x, point.y, "horizontal");
 	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
 	this.index += 1; // point to the newly inserted element
-	console.log("incremented index = ", this.index);
+	//console.log("incremented index = ", this.index);
 }
