@@ -214,8 +214,8 @@ TEKnotLabel.prototype.updateLabel = function() { // TEVisuallyModifiableKnot
 	if (drawingAreaObject == this.parent.editableToken) {
 		var valuesXY = this.parent.markedCircle.circle.position,
 			valuesT = this.parent.markedCircle.tensions
-			rescaledX = ((this.parent.rotatingAxis.centerRotatingAxis.x - valuesXY.x) / this.parent.scaleFactor).toFixed(1),
-			rescaledY = (-(this.parent.rotatingAxis.centerRotatingAxis.y - valuesXY.y) / this.parent.scaleFactor).toFixed(1);
+			rescaledX = (-(this.parent.rotatingAxis.centerRotatingAxis.x - valuesXY.x) / this.parent.scaleFactor).toFixed(1),
+			rescaledY = ((this.parent.rotatingAxis.centerRotatingAxis.y - valuesXY.y) / this.parent.scaleFactor).toFixed(1);
 			
 		this.coordinates.position = valuesXY - [0,12];	
 		this.coordinates.content = "P(" + rescaledX + "," + rescaledY + ")";

@@ -48,7 +48,8 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	this.fhToken.strokeColor = '#000';
 
 	// initialize marked circle and index
-	this.setMarkedCircle(this.preceeding);
+	// following line throws an error => why?!?!?!?!?
+    this.setMarkedCircle(this.preceeding);
 }
 
 // class TEDrawingArea: methods
