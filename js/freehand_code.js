@@ -10,6 +10,9 @@ TEVisuallyModifiableKnot.prototype.identify = function(item) {
 	if (this.circle == item) return this;
 	else return null;
 }
+TEVisuallyModifiableKnot.prototype.setTensions = function(t1, t2) {
+	this.tensions = [t1, t2];
+}
 
 // class TEEditableToken
 function TEEditableToken(drawingArea) {
@@ -24,7 +27,7 @@ function TEEditableToken(drawingArea) {
 	this.leftPath = null;
 	this.rightPath = null;
 	// mouse events
-	this.mouseDown = false;
+	//this.mouseDown = false;
 	this.selectedKnot = null;
 	this.markedKnot = null;
 	// index (is updated whenever identify-method is called)
@@ -56,6 +59,9 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.selectedKnot = value;
 	this.markedKnot = value; // maybe pleonastic (should be handled by parent => see following line)
 	this.parent.setMarkedCircle(this.markedKnot);
+	// update sliders
+	//console.log(this
+	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[0], this.selectedKnot.tensions[1]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
@@ -81,19 +87,20 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
-	this.mouseDown = true;
+	///*this.*/mouseDown = true;
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
+		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
 	}
 }
 TEEditableToken.prototype.handleMouseUp = function(event) {
-	this.mouseDown = false;
+	///*this.*/mouseDown = false;
 	if (this.selectedKnot != null) this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
 	this.selectedKnot = null;	// leave markedKnot
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
-	if (this.mouseDown) {
+	if (/*this.*/mouseDown) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
 		}
@@ -119,8 +126,9 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	//console.log("splice at: ", this.index);
 	this.knotsList.splice(this.index, 0, newKnot);
 	//this.index = this.knotsList.length;
-	this.mouseDown = true;
+	///*this.*/mouseDown = true;
 	this.selectedKnot = newKnot;
+	this.parent.parent.tensionSliders.link(this.selectedKnot);
 	this.markedKnot = newKnot; // maybe superfluous
 	this.parent.setMarkedCircle(newKnot);
 	this.parent.handlingParent = this;

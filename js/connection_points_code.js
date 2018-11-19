@@ -78,6 +78,8 @@ TEConnectionPoint.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEConnectionPoint.prototype.handleEvent = function(event) {
+	console.log("unlink sliders:", this.parent.parent.tensionSliders);
+	this.parent.parent.tensionSliders.hideVerticalSliders();
 	//console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
@@ -197,15 +199,13 @@ function TEKnotLabel(drawingArea) {
 	this.coordinates.visible = false;
 	
 	// tensions
+	/*
 	this.tensions = new PointText(new Point(100, 120));
 	this.tensions.justification = "center";
 	this.tensions.fillcolor = '#000';
 	this.tensions.content = 'empty tensions';
 	this.tensions.visible = false;
-	
-		//console.log("posxy: ", posX, this.parent.lowerY+20);
-		//text.justification = 'right';
-		//text.fillColor = '#000';
+	*/
 }
 TEKnotLabel.prototype.updateLabel = function() { // TEVisuallyModifiableKnot
 	//this.parent.markedCircle;
@@ -217,15 +217,15 @@ TEKnotLabel.prototype.updateLabel = function() { // TEVisuallyModifiableKnot
 			rescaledX = (-(this.parent.rotatingAxis.centerRotatingAxis.x - valuesXY.x) / this.parent.scaleFactor).toFixed(1),
 			rescaledY = ((this.parent.rotatingAxis.centerRotatingAxis.y - valuesXY.y) / this.parent.scaleFactor).toFixed(1);
 			
-		this.coordinates.position = valuesXY - [0,12];	
-		this.coordinates.content = "P(" + rescaledX + "," + rescaledY + ")";
-		this.tensions.content = "T(" + valuesT[0] + "," + valuesT[1] + ")";
-		this.tensions.position = valuesXY + [0,12];
+		this.coordinates.position = valuesXY + [0,12];	
+		this.coordinates.content = "[" + rescaledX + "," + rescaledY + "]";
+		//this.tensions.content = "T(" + valuesT[0] + "," + valuesT[1] + ")";
+		//this.tensions.position = valuesXY + [0,12];
 		//console.log("coordinates: ", this.coordinates.content, " tensions: ", this.tensions.content);
 		this.coordinates.visible = true;
-		this.tensions.visible = true;
+		//this.tensions.visible = true;
 	} else {
-		this.tensions.visible = false;
+		//this.tensions.visible = false;
 		this.coordinates.visible = false;
 	}
 	//console.log("Show label");

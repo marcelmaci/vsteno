@@ -1,7 +1,8 @@
 
 // class TEDrawingArea 	
-function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFactor) {
-	
+function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, scaleFactor) {
+	// parent
+	this.parent = parent;	// TECanvas
 	// borders
 	this.leftX = lowerLeft.x;
 	this.rightX = lowerLeft.x + (totalLines * lineHeight * scaleFactor);
@@ -28,7 +29,7 @@ function TEDrawingArea(lowerLeft, totalLines, basePosition, lineHeight, scaleFac
 	this.knotLabel = new TEKnotLabel(this);
 	
 	// mouse events
-	this.mouseDown = false;
+	//this.mouseDown = false;
 	this.mouseDownItem = null;
 	this.handlingParent = null;
 	
@@ -95,7 +96,7 @@ TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	else return false;
 }
 TEDrawingArea.prototype.handleMouseDown = function( event ) {
-	this.mouseDown = true;
+	///*this.*/mouseDown = true;
 	this.mouseItem = event.item;
 	this.handlingParent = this.getTEDrawingAreaObject(event.item);	
 	if ((event.item != null) && (this.handlingParent != null)) {
@@ -123,7 +124,7 @@ TEDrawingArea.prototype.handleMouseUp = function( event ) {
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);
 	}
-	this.mouseDown = false;
+	///*this.*/mouseDown = false;
 	this.mouseDownItem = null;
 	this.handlingParent = null;
 }
@@ -163,16 +164,16 @@ TEDrawingArea.prototype.isStatic = function(item) {
 
 TEDrawingArea.prototype.handleEvent = function(event) {
 	//console.log("TEDrawingArea.handleEvent()", event.item);
-	
-	switch (event.type) {
-		case "mousedown" : this.handleMouseDown(event); break;
-		case "mouseup" : this.handleMouseUp(event); break;
-		case "mousedrag" : this.handleMouseDrag(event); break;
-	}
-	//var index = this.rotatingAxis.relativeToken.index;
-	//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
-	this.updateFreehandPath();
-	this.knotLabel.updateLabel();
+	if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
+		switch (event.type) {
+			case "mousedown" : this.handleMouseDown(event); break;
+			case "mouseup" : this.handleMouseUp(event); break;
+			case "mousedrag" : this.handleMouseDrag(event); break;
+		}
+		//var index = this.rotatingAxis.relativeToken.index;
+		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
+		this.updateFreehandPath();
+		this.knotLabel.updateLabel();
 /*	
 	if ((event.item != null) || (this.mouseItem != null)) {
 		//console.log("GetTDrawingAreaObjet: ", this.getTEDrawingAreaObject(event.item));
@@ -238,4 +239,5 @@ TEDrawingArea.prototype.handleEvent = function(event) {
 		}
 	}
 */
+	}
 }
