@@ -36,9 +36,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	// token that is edited
 	this.actualToken = new TEEditableToken();
 	
-	// actual selected items
-	this.itemSelected = this;		// main item selected (parent object), can be TERotatingAxis e.g.
-	this.markedCircle = null;		// type TEVisuallyModifiableCircle
+// actual selected itemsModifiableCircle
 	this.markedIndex = 0;			// 0 = preceeding connection point; 1,2,3 ... n = freehand circles; 99999 = following connection point
 
 	// freehand path
@@ -74,12 +72,32 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 }
 TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	numberOfPoints = this.fhToken.segments.length;
+	//console.log("calculateFreehandHandles");
+	// do first knot separately (add "virtual" 3rd knot at beginning which is identical with 1st knot)
+	if (numberOfPoints > 1) { // only if there are at least 2 knots
+		//console.log("calculate 1st");
+		var t1 = this.editableToken.knotsList[0].tensions[0];
+		var t2 = this.editableToken.knotsList[0].tensions[1];
+		var absHandles = getControlPoints(this.fhToken.segments[0].point, this.fhToken.segments[0], this.fhToken.segments[1], t1, t2);
+		this.fhToken.segments[0].handleIn = absHandles[0] - this.fhToken.segments[0].point;
+		this.fhToken.segments[0].handleOut = absHandles[1] - this.fhToken.segments[0].point;
+	}
 	for (var i = 1; i < numberOfPoints-1; i++) { // dont calculate 1st and last
 			var t1 = this.editableToken.knotsList[i].tensions[0];
 			var t2 = this.editableToken.knotsList[i].tensions[1];
 			var absHandles = getControlPoints( this.fhToken.segments[i-1].point, this.fhToken.segments[i].point, this.fhToken.segments[i+1].point, t1, t2 );
 			this.fhToken.segments[i].handleIn = absHandles[0] - this.fhToken.segments[i].point;
 			this.fhToken.segments[i].handleOut = absHandles[1] - this.fhToken.segments[i].point;
+	}
+	// do last knot separately (add "virtual" 3rd knot at end which is identical with last knot)
+	if (numberOfPoints > 1) { // only if there are at least 2 knots
+		//console.log("calculate last");
+		var last = this.editableToken.knotsList.length-1;
+		var t1 = this.editableToken.knotsList[last].tensions[0];
+		var t2 = this.editableToken.knotsList[last].tensions[1];
+		var absHandles = getControlPoints(this.fhToken.segments[last-1].point, this.fhToken.segments[last], this.fhToken.segments[last], t1, t2);
+		this.fhToken.segments[last].handleIn = absHandles[0] - this.fhToken.segments[last].point;
+		this.fhToken.segments[last].handleOut = absHandles[1] - this.fhToken.segments[last].point;
 	}
 }
 TEDrawingArea.prototype.copyKnotsToFreehandPath = function() {

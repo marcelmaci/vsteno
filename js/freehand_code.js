@@ -49,8 +49,8 @@ TEEditableToken.prototype.updateIndex = function() {
 	// returns index
 	if (this.markedKnot != null) this.markedKnot.identify(this.markedKnot.circle);
 	return index;
-*/
 }
+*/
 TEEditableToken.prototype.identify = function(item) {
 	//console.log("TEEditableToken: item: ", item);
 	var value = null;
@@ -138,32 +138,32 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 }
 TEEditableToken.prototype.getNewKnotTypeColor = function() {
 	// knot will be inserted after this.index
-	console.log("new knot: index/length: ", index, this.knotsList.length);
+	//console.log("new knot: index/length: ", index, this.knotsList.length);
 	var index = this.index;
 	var length = this.knotsList.length;
 	var value = null;
-	if (index == length) { console.log("exitKnot"); return colorExitKnot; }
-	else if (index == 0) { console.log("entryKnot"); return colorEntryKnot; }
-	else if (index == 1) { console.log("pivot1Knot"); return colorPivot1; }
-	else if (index == length-1) {console.log("pivot2Knot"); return colorPivot2; }
-	else { console.log("normalKnot"); return colorNormalKnot; }
+	if (index == length) { /*console.log("exitKnot");*/ return colorExitKnot; }
+	else if (index == 0) { /*console.log("entryKnot");*/ return colorEntryKnot; }
+	else if (index == 1) { /*console.log("pivot1Knot");*/ return colorPivot1; }
+	else if (index == length-1) { /*console.log("pivot2Knot");*/ return colorPivot2; }
+	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	// knot will be deleted at this.index
 	var index = this.index;
 	var length = this.knotsList.length;
 	var value = null;
-	console.log("delete knot: index/length: ", index, this.knotsList.length);
-	if (index == length) { console.log("exitKnot"); return colorExitKnot; }
-	else if (index == 1) { console.log("entryKnot"); return colorEntryKnot; }
-	else if (index == 2) { console.log("pivot1Knot"); return colorPivot1; }
-	else if (index == length-1) {console.log("exitKnot"); return colorExitKnot; }
-	else { console.log("normalKnot"); return colorNormalKnot; }
+	//console.log("delete knot: index/length: ", index, this.knotsList.length);
+	if (index == length) { /*console.log("exitKnot");*/ return colorExitKnot; }
+	else if (index == 1) { /*console.log("entryKnot");*/ return colorEntryKnot; }
+	else if (index == 2) { /*console.log("pivot1Knot");*/ return colorPivot1; }
+	else if (index == length-1) { /*console.log("exitKnot");*/ return colorExitKnot; }
+	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.insertNewKnot = function(point) {
 	//write a function that determines the color of the knot before inserting it!!!
 	var test = this.getNewKnotTypeColor();
-	console.log("index/color: ", this.index, test);
+	//console.log("index/color: ", this.index, test);
 	
 	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, test, colorSelectedKnot, colorMarkedKnot);
 	//console.log("splice at: ", this.index);
