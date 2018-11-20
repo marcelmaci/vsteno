@@ -62,14 +62,14 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 	this.markedCircle.mark();
 	// set index
 	if (this.markedCircle.identify() == false) {
-		//console.log("markedCircle: ", this.markedCircle, " Identify: ", this.markedCircle.identify());
+		// marked circle is preceeding or following (because identify returns false?!)
 		switch (this.markedCircle.circle) {
 			case this.preceeding.circle : this.editableToken.index = 0; break;
 			case this.following.circle : this.editableToken.index = this.editableToken.knotsList.length+1; break;
 			// default is not needed: if this.markedCircle is part of editableToken, index is set automatically
 			// via the identify method (which is called in the if statement)
 		}
-	}
+	} //else this
 	//console.log("index set to: ", this.editableToken.index);
 }
 TEDrawingArea.prototype.calculateFreehandHandles = function() {

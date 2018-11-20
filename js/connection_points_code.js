@@ -16,6 +16,7 @@ TEVisuallyModifiableCircle.prototype.unmark = function() { // unmark <=> show fu
 	this.circle.strokeWidth = 0;
 }
 TEVisuallyModifiableCircle.prototype.select = function() { // select <=> modify fillColor of circle
+	this.originalColor = this.circle.fillColor;
 	this.circle.fillColor = this.selectColor;
 }
 TEVisuallyModifiableCircle.prototype.unselect = function() { // unselect <=> restore original fillColor

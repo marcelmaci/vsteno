@@ -36,6 +36,17 @@ var lastClick = null,
 	doubleClick = false,
 	mouseDown = false;
 
+// global variables
+var knotTypeAutoDefine = true,
+	colorEntryKnot = '#00f',
+	colorExitKnot = colorEntryKnot,
+	colorPivot1 = '#f0f',
+	colorPivot2 = colorPivot1,
+	colorNormalKnot = '#f00',
+	colorSelectedKnot = '#aaa',
+	colorMarkedKnot = '#FFFC00';
+
+
 tool.onMouseDown = function(event) {
 	var newClick = (new Date).getTime();
 	mouseDown = true;
