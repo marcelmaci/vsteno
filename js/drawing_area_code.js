@@ -44,6 +44,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.fhCircleColor = null;
 	this.editableToken = new TEEditableToken(this);
 	this.fhToken = new Path();
+	//this.fhToken.fullySelected = true;
 	this.fhToken.strokeColor = '#000';
 
 	// initialize marked circle and index
@@ -133,9 +134,9 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		//var length = this.rotatingAxis.relativeToken.knotsList.length;
 		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);		
 	}
-/*
+
 	this.preceeding.connect();
-	this.following.connect();
+/*	this.following.connect();
 */
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
@@ -153,9 +154,8 @@ TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);
 		
 	}
-/*
 		this.preceeding.connect(); // update connecting point also
-		this.following.connect(); // update connecting point also
+/*		this.following.connect(); // update connecting point also
 */
 }
 TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {

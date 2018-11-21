@@ -182,6 +182,7 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	//this.parent.rotatingAxis.relativeToken.pushNewRelativeKnot(point.x, point.y, "horizontal");
 	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
 	this.index += 1; // point to the newly inserted element
+	this.parent.preceeding.connect();
 	//console.log("incremented index = ", this.index);
 	// automatically define knot type with autodefine
 	//if (knotTypeAutoDefine) this.defineKnotTypesAndSetColors();
@@ -214,6 +215,7 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
 	
 	this.parent.updateFreehandPath();
+	this.parent.preceeding.connect();
 	//console.log("AFTER: length: ", this.knotsList.length);
 	
 }

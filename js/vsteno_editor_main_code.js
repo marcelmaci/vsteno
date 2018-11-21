@@ -27,6 +27,11 @@ TECanvas.prototype.handleEvent = function(event) {
 //}
 
 // main
+// auxiliary lines to test bezier curves
+var outerLines = new Path();
+var innerLines = new Path();
+var tangent = new Path();
+
 //var editor = new TEDrawingArea(new Point(100, 500), 4, 1, 10, 10);
 var mainCanvas = new TECanvas(0,0,800,600);
 	

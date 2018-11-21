@@ -79,7 +79,7 @@ TEConnectionPoint.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEConnectionPoint.prototype.handleEvent = function(event) {
-	console.log("unlink sliders:", this.parent.parent.tensionSliders);
+	//console.log("unlink sliders:", this.parent.parent.tensionSliders);
 	this.parent.parent.tensionSliders.hideVerticalSliders();
 	//console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
@@ -107,6 +107,24 @@ function TEConnectionPointPreceeding(drawingArea, x, y) {
 }
 TEConnectionPointPreceeding.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
 TEConnectionPointPreceeding.prototype.connect = function() {
+	if (this.parent.editableToken.knotsList.length > 2) {
+		var p1 = this.parent.editableToken.knotsList[1].circle.position,
+			c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
+			p2 = this.parent.editableToken.knotsList[2].circle.position,
+			c2 = p2 + this.parent.fhToken.segments[2].handleIn;
+		var result = calculateBezierPoint(p1, c1, p2, c2, 50);
+			
+		var bezierPoint = new Point(result[0], result[1]);
+		//console.log("bezierPoint = ", bezierPoint);
+		
+		this.line.removeSegments();
+		this.line.add( this.circle.position, new Point(result[0], result[1]));
+		//this.line.segments[0].point = this.circle.position;
+		//this.line.segments[1].point = [result[0], result[1]];
+		//console.log(this.line.segments[1]);
+		
+		//this.line.segments[1].point = this.parent.editableToken.knotsList[0].circle.position;
+	}
 /*	if (this.parent.fhCircleList.length != 0) {
 		//console.log(this.parent.fhCircleList[0].position);
 		var entryPoint = this.parent.fhCircleList[0];
@@ -157,6 +175,10 @@ function TEConnectionPointFollowing(drawingArea, x, y) {
 }
 TEConnectionPointFollowing.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
 TEConnectionPointFollowing.prototype.connect = function() {
+	if (this.parent.editableToken.knotsList.length > 0) {
+		this.line.segments[0].point = this.circle.position;
+		this.line.segments[1].point = this.parent.editableToken.knotsList[0].circle.position;
+	}
 /*	if (this.parent.fhCircleList.length != 0) {
 		//console.log(this.parent.fhCircleList[0].position);
 		var exitPoint = this.parent.fhCircleList[this.parent.fhCircleList.length-1];
