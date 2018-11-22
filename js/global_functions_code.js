@@ -28,10 +28,10 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		//m1 = dx1 / dy1,
 		//m2 = dx2 / dy2,
 		//m3 = dx3 / dy3;
-	outerLines.removeSegments();
+	/*outerLines.removeSegments();
 	outerLines.add(p1, c1, c2, p2);
 	outerLines.strokeColor = '#f00';
-	
+	*/
 	// calculate 2 inner lines
 	// coordinates
 	var factor = 1 / 100 * percent;
@@ -43,10 +43,10 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		ix3 = c2.x + dx3 * factor,
 		iy3 = c2.y + dy3 * factor;
 	//console.log("inner lines (ix123, iy123): (("+ix1+","+iy1+"), ("+ix2+","+iy2+"), ("+ix3+","+iy3+")");
-	innerLines.removeSegments(); 
+	/*innerLines.removeSegments(); 
 	innerLines.add(new Point(ix1, iy1), new Point(ix2, iy2), new Point(ix3, iy3));
 	innerLines.strokeColor = '#00f';
-	
+	*/
 	// deltas
 	var dix1 = ix2 - ix1,
 		diy1 = iy2 - iy1,
@@ -59,13 +59,13 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		tx2 = ix2 + dix2 * factor,
 		ty2 = iy2 + diy2 * factor;
 	//console.log("tangent line (tx12, ty12): (("+tx1+","+ty1+"), ("+tx2+","+ty2+")");
-	tangent.removeSegments();
+	/*tangent.removeSegments();
 	tangent.add(new Point(tx1, ty1), new Point(tx2, ty2));
 	tangent.strokeColor = '#000';
-	
+	*/
 	// deltas
 	var dtx = tx2 - tx1,
-		dty = ty2 - ty1;
+		dty = ty2 - ty1; // avoid division by 0 for bm!?
 	// calculate bezier point (coordinates and m)
 	//console.log("Tangent data: tx1, ty1, tx2, ty2: ", tx1, ty1, tx2, ty2);
 	var bx = tx1 + dtx * factor,
@@ -73,6 +73,7 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		bm = dtx / dty;
 	//console.log("bezierPoint (bx, by, m): (("+bx+","+by+","+bm+")");
 	// return values as array
+	//bm = isNaN(bm) ? 9999999999999999 : bm;	// sanitize NaN resulting from division by zero above
 	return [bx, by, bm];
 }
 

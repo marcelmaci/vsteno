@@ -106,6 +106,84 @@ function TEConnectionPointPreceeding(drawingArea, x, y) {
 	TEConnectionPoint.call( this, drawingArea, x, y );
 }
 TEConnectionPointPreceeding.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
+/////// test new method for tangent calculation with preceeding point
+/////// test 2nd bezier segment for the moment
+/////// (should be applied to following point and several segments later)
+TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint = function(epsilon) {
+	// define the 3 points:
+	// - the middle one separates the bezier curve (or the actual segment of it) into two halves
+	// - left and right points define start and end of the two segments (halves)
+	// the points are defined as percentages (= relative location) on the bezier curve
+	// epsilon stands for the precision: delta of straight lines going from connection point
+	// to calculated tangent point should be < epsilon (numerical aproximation) 
+	this.leftPercentage = 0.001;			// 0% <=> leftPoint
+	this.rightPercentage = 99.999;		// 100% <=> rightPoint
+	this.middlePercentage = 50;		// 50% <=> middlePoint
+	var leftPoint = undefined,		// declare point variables
+		rightPoint = undefined,
+		middlePoint = undefined; 
+	// for the moment use fix segment (2nd segment <=> indexes 1 and 2)
+	var p1 = this.parent.editableToken.knotsList[1].circle.position,
+		c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
+		p2 = this.parent.editableToken.knotsList[2].circle.position,
+		c2 = p2 + this.parent.fhToken.segments[2].handleIn;	
+	var avoidInfinityLoop = 0;
+	do {
+		//console.log("Starting loop number "+avoidInfinityLoop+"........................................");
+		leftPoint = calculateBezierPoint(p1, c1, p2, c2, this.leftPercentage);
+		middlePoint = calculateBezierPoint(p1, c1, p2, c2, this.middlePercentage);
+		rightPoint = calculateBezierPoint(p1, c1, p2, c2, this.rightPercentage);
+		// the xPoint[] arrays now contain the point and m (= inclination) of the bezier tangent
+		// calculate m for straight line from connecting point to tangent point
+		var cx = this.circle.position.x,
+			cy = this.circle.position.y,
+			dx = middlePoint[0] - cx,
+			dy = middlePoint[1] - cy,
+			cm = dx / dy;
+		/*console.log("Percentages: ", this.leftPercentage, this.middlePercentage, this.rightPercentage);
+		console.log("leftPoint = ("+leftPoint[0]+","+leftPoint[1]+") with m=", leftPoint[2]);
+		console.log("middlePoint = ("+middlePoint[0]+","+middlePoint[1]+") with m=", middlePoint[2]);
+		console.log("rightPoint = ("+rightPoint[0]+","+rightPoint[1]+") with m=", rightPoint[2]);
+		console.log("connectionPoint = ("+cx+","+cy+") with m=", cm);
+		*/
+		// find out in which interval (left or right) the tangent point is
+		// leftInterval <=> (leftM < connectionM < middleM) or (leftM > connectionM > middleM)
+		// in other words: m must be BETWEEN the two other values
+		// and same for right interval 
+		var whichInterval = undefined;
+		if (((leftPoint[2] < cm) && (cm < middlePoint[2])) || ((leftPoint[2] > cm)  && (cm > middlePoint[2]))) whichInterval = "left";
+		else if (((rightPoint[2] < cm) && (cm < middlePoint[2])) || ((rightPoint[2] > cm)  && (cm > middlePoint[2]))) whichInterval = "right";
+		else whichInterval = "noidea"; // not sure about that one ... //whichInterval = "sorry, dude, something seems to be wrong ...";
+		//console.log("whichInterval: ", whichInterval);
+		// calculate actual epsilon
+		var actualEpsilon = Math.abs(Math.abs(cm) - Math.abs(middlePoint[2]));
+		//console.log("actualEpsilon = ", actualEpsilon);
+		// set new points to test
+		switch (whichInterval) {
+			case "left" : this.rightPercentage = this.middlePercentage; this.middlePercentage = (this.leftPercentage + this.rightPercentage) / 2;
+						  break;
+			case "right": this.leftPercentage = this.middlePercentage; this.middlePercentage = (this.leftPercentage + this.rightPercentage) / 2; 
+					      break;
+			case "noidea" : 
+							//console.log("compare left: "+leftPoint[2].toFixed(2)+" <?> "+cm.toFixed(2)+" <?> "+middlePoint[2].toFixed(2));
+							//console.log("compare right: "+middlePoint[2].toFixed(2)+" <?> "+cm.toFixed(2)+" <?> "+rightPoint[2].toFixed(2));
+							this.middlePercentage = (this.middlePercentage + this.rightPercentage) / 2; // shift middle point instead
+			
+			
+							break;
+			default : avoidInfinity = 1000000000; break;
+		}
+		avoidInfinityLoop++;
+	} while ((actualEpsilon > epsilon) && (avoidInfinityLoop < 10)); // do max 10 loops
+	if (actualEpsilon <= epsilon) {
+		//console.log("Point found: ", middlePoint);
+		return middlePoint;
+	} else { 
+		console.log("No point found.");
+		return false;
+	}
+}
+/////////////////////// end of experimental function
 TEConnectionPointPreceeding.prototype.connect = function() {
 	if (this.parent.editableToken.knotsList.length > 2) {
 		var p1 = this.parent.editableToken.knotsList[1].circle.position,
@@ -114,15 +192,17 @@ TEConnectionPointPreceeding.prototype.connect = function() {
 			c2 = p2 + this.parent.fhToken.segments[2].handleIn;
 		var result = calculateBezierPoint(p1, c1, p2, c2, 50);
 			
-		var bezierPoint = new Point(result[0], result[1]);
+		//var bezierPoint = new Point(result[0], result[1]);
 		//console.log("bezierPoint = ", bezierPoint);
+		var result2 = this.findTangentPointRelativeToConnectionPoint(0.1);
 		
 		this.line.removeSegments();
-		this.line.add( this.circle.position, new Point(result[0], result[1]));
+		this.line.add( this.circle.position, new Point(result2[0], result2[1]));
 		//this.line.segments[0].point = this.circle.position;
 		//this.line.segments[1].point = [result[0], result[1]];
 		//console.log(this.line.segments[1]);
 		
+		//var result2 = this.findTangentPointRelativeToConnectionPoint(0.1);
 		//this.line.segments[1].point = this.parent.editableToken.knotsList[0].circle.position;
 	}
 /*	if (this.parent.fhCircleList.length != 0) {
