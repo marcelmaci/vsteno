@@ -134,10 +134,10 @@ TEConnectionPointPreceeding.prototype.findTangentPointsBetweenCurves2And6 = func
 		curve2C2 = curve2P2 + this.parent.fhToken.segments[6].handleIn;	
 	
 	// start with fixpoints at 50% on both curves
-	//var curve1ActualFixPoint = calculateBezierPoint(curve1P1, curve1C1, curve1P2, curve1C2, curve1MiddlePercentage); 
-	//var curve2ActualFixPoint = calculateBezierPoint(curve2P1, curve2C1, curve2P2, curve2C2, curve2MiddlePercentage); 
-	curve1ActualFixPoint = [curve1P1.x, curve1P1.y, 0];
-	curve2ActualFixPoint = [curve2P2.x, curve2P2.y, 0];
+	var curve1ActualFixPoint = calculateBezierPoint(curve1P1, curve1C1, curve1P2, curve1C2, curve1MiddlePercentage); 
+	var curve2ActualFixPoint = calculateBezierPoint(curve2P1, curve2C1, curve2P2, curve2C2, curve2MiddlePercentage); 
+	//curve1ActualFixPoint = [curve1P1.x, curve1P1.y, 0];
+	//curve2ActualFixPoint = [curve2P2.x, curve2P2.y, 0];
 	
 	var numberIterations = 0;
 	var curve2NewTangentPoint = undefined;
@@ -147,26 +147,26 @@ TEConnectionPointPreceeding.prototype.findTangentPointsBetweenCurves2And6 = func
 	
 	do {
 		// calculate tangent point on curve2
-		curve2NewTangentPoint = findTangentPointRelativeToFixPoint(new Point(curve1ActualFixPoint[0], curve1ActualFixPoint[1]), curve2P1, curve2C1, curve2P2, curve2C2, 0.00000001 ); // use global function
-		curve2Distance = new Point(curve2NewTangentPoint[0], curve2NewTangentPoint[1]).getDistance(new Point(curve2ActualFixPoint[0], curve2ActualFixPoint[1]));
+		curve2NewTangentPoint = findTangentPointRelativeToFixPoint(new Point(curve1ActualFixPoint[0], curve1ActualFixPoint[1]), curve2P1, curve2C1, curve2P2, curve2C2, 0.0001 ); // use global function
+		//curve2Distance = new Point(curve2NewTangentPoint[0], curve2NewTangentPoint[1]).getDistance(new Point(curve2ActualFixPoint[0], curve2ActualFixPoint[1]));
 		
 		// use tangent point on curve2 as new fix point and calculate tangent for curve1
-		curve1NewTangentPoint = findTangentPointRelativeToFixPoint(new Point(curve2NewTangentPoint[0], curve2NewTangentPoint[1]), curve1P1, curve1C1, curve1P2, curve1C2, 0.00000001 );
-		curve1Distance = new Point(curve1NewTangentPoint[0], curve1NewTangentPoint[1]).getDistance(new Point(curve1ActualFixPoint[0], curve1ActualFixPoint[1]));
+		curve1NewTangentPoint = findTangentPointRelativeToFixPoint(new Point(curve2NewTangentPoint[0], curve2NewTangentPoint[1]), curve1P1, curve1C1, curve1P2, curve1C2, 0.0001 );
+		//curve1Distance = new Point(curve1NewTangentPoint[0], curve1NewTangentPoint[1]).getDistance(new Point(curve1ActualFixPoint[0], curve1ActualFixPoint[1]));
 				
-		console.log("ActualFixPoints: ", curve1ActualFixPoint, curve2ActualFixPoint);
-		console.log("NewFixPoints: ", curve1NewTangentPoint, curve2NewTangentPoint);
+		//console.log("ActualFixPoints: ", curve1ActualFixPoint, curve2ActualFixPoint);
+		//console.log("NewFixPoints: ", curve1NewTangentPoint, curve2NewTangentPoint);
 		
-		curve1ActualFixPoint = curve1NewTangentPoint;
-		curve2ActualFixPoint = curve2NewTangentPoint;
+		curve1ActualFixPoint = curve1NewTangentPoint; // (curve1NewTangentPoint != false) ? curve1NewTangentPoint : curve1ActualFixPoint;
+		curve2ActualFixPoint = curve2NewTangentPoint; //(curve2NewTangentPoint != false) ? curve2NewTangentPoint : curve2ActualFixPoint;
 		
 		// calculate epsilon
-		actualEpsilon = curve1Distance + curve2Distance;
+		//actualEpsilon = curve1Distance + curve2Distance;
 		//console.log("Iteration ", numberIterations, "Distances: ", curve1Distance, curve2Distance, "Epsilon: ", actualEpsilon);
 		
 		numberIterations++;
 		
-	} while (/*(actualEpsilon > epsilon) &&*/ (numberIterations < 10));
+	} while (/*(actualEpsilon > epsilon) &&*/ (numberIterations < tangentBetweenCurvesMaxIterations));
 	
 	// show result
 	tangent.removeSegments();
@@ -178,113 +178,15 @@ TEConnectionPointPreceeding.prototype.findTangentPointsBetweenCurves2And6 = func
 /////// test 2nd bezier segment for the moment
 /////// (should be applied to following point and several segments later)
 TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint = function(epsilon) {
+	//console.log("findTangentPointRelativeToConnectionPoint - epsilon: ", epsilon);
 	var p1 = this.parent.editableToken.knotsList[1].circle.position,
 		c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
 		p2 = this.parent.editableToken.knotsList[2].circle.position,
 		c2 = p2 + this.parent.fhToken.segments[2].handleIn;	
 	var cx = this.circle.position.x,
 		cy = this.circle.position.y;
+	//console.log("Hi there1.");
 	return findTangentPointRelativeToFixPoint(new Point(cx, cy), p1, c1, p2, c2, epsilon);
-	
-	// known issues and caveats with following algorithm:
-	// 1) when connecting point is exactly orthogonal to bezier curve, the function will return orthogonal point 
-	//    => screenshot_tangentpoint_bug1a.jpb / ... bug1b.jpg
-	// 2) when connecting point is "inside rectangle" the function will return the opposite tangent point (left
-	//    or right => screenshot.tangentpoint_bug2a.jpg / ... bug2b.jpg
-	// 3) vertical tangents are possible (screenshot_tangentpoint_bug3a), but horizontal tangents are NOT
-	//    => screenshot_tangenpoint_bug3b.jpg / .. bug3c.jpg
-	// there might also be erroneous results if tensions are 0 (in general 0 is a difficult number ... ;-)
-	//
-	// implications for VSTENO:
-	// 1) and 2) maybe not really a problem?!
-	// 3) unfortunately, there are many shorthand tokens that connect horizontally ... Keep this bug in mind and see
-	// what happens.
-	// POSSIBLE SOLUTION: define m as dy / dx (instead of dx / dy) => this will probably allow horizontal connections
-	// (and produce false results for vertical connections which would have less impact on VSTENO
-	// => keep it like that for the moment, change it later if necessary!
-	//
-	// FURTHER INVESTIGATIONS
-	// "bugs" 1-3 seem to be related to precision: increasing precision (to epsilon = 0.00000005 instead of 0.1) 
-	// and iterations (500 instead of 10) improves results significantly ("bug" 1 almost impossible to reproduce,
-	// "bug" 3: nearly horizontal connections possible
-	// => increase precision to the max (will have an impact on speed, of course ...)
-	// => define a tolerance for horizontal connections when connecting tokens (and "round" values in drawing routine
-	// later)
-	//
-	// DESCRIPTION OF ALGORITHM
-	// define the 3 points:
-	// - the middle one separates the bezier curve (or the actual segment of it) into two halves
-	// - left and right points define start and end of the two segments (halves)
-	// the points are defined as percentages (= relative location) on the bezier curve
-	// epsilon stands for the precision: delta of straight lines going from connection point
-	// to calculated tangent point should be < epsilon (numerical aproximation) 
-/*	this.leftPercentage = 0.001;			// 0% <=> leftPoint
-	this.rightPercentage = 99.999;		// 100% <=> rightPoint
-	this.middlePercentage = 50;		// 50% <=> middlePoint
-	var leftPoint = undefined,		// declare point variables
-		rightPoint = undefined,
-		middlePoint = undefined; 
-	// for the moment use fix segment (2nd segment <=> indexes 1 and 2)
-	var p1 = this.parent.editableToken.knotsList[1].circle.position,
-		c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
-		p2 = this.parent.editableToken.knotsList[2].circle.position,
-		c2 = p2 + this.parent.fhToken.segments[2].handleIn;	
-	var avoidInfinityLoop = 0;
-	do {
-		//console.log("Starting loop number "+avoidInfinityLoop+"........................................");
-		leftPoint = calculateBezierPoint(p1, c1, p2, c2, this.leftPercentage);
-		middlePoint = calculateBezierPoint(p1, c1, p2, c2, this.middlePercentage);
-		rightPoint = calculateBezierPoint(p1, c1, p2, c2, this.rightPercentage);
-		// the xPoint[] arrays now contain the point and m (= inclination) of the bezier tangent
-		// calculate m for straight line from connecting point to tangent point
-		var cx = this.circle.position.x,
-			cy = this.circle.position.y,
-			dx = middlePoint[0] - cx,
-			dy = middlePoint[1] - cy,
-			cm = dx / dy;
-		/*console.log("Percentages: ", this.leftPercentage, this.middlePercentage, this.rightPercentage);
-		console.log("leftPoint = ("+leftPoint[0]+","+leftPoint[1]+") with m=", leftPoint[2]);
-		console.log("middlePoint = ("+middlePoint[0]+","+middlePoint[1]+") with m=", middlePoint[2]);
-		console.log("rightPoint = ("+rightPoint[0]+","+rightPoint[1]+") with m=", rightPoint[2]);
-		console.log("connectionPoint = ("+cx+","+cy+") with m=", cm);
-		*/
-		// find out in which interval (left or right) the tangent point is
-		// leftInterval <=> (leftM < connectionM < middleM) or (leftM > connectionM > middleM)
-		// in other words: m must be BETWEEN the two other values
-		// and same for right interval 
-/*		var whichInterval = undefined;
-		if (((leftPoint[2] < cm) && (cm < middlePoint[2])) || ((leftPoint[2] > cm)  && (cm > middlePoint[2]))) whichInterval = "left";
-		else if (((rightPoint[2] < cm) && (cm < middlePoint[2])) || ((rightPoint[2] > cm)  && (cm > middlePoint[2]))) whichInterval = "right";
-		else whichInterval = "noidea"; // not sure about that one ... //whichInterval = "sorry, dude, something seems to be wrong ...";
-		//console.log("whichInterval: ", whichInterval);
-		// calculate actual epsilon
-		var actualEpsilon = Math.abs(Math.abs(cm) - Math.abs(middlePoint[2]));
-		//console.log("actualEpsilon = ", actualEpsilon);
-		// set new points to test
-		switch (whichInterval) {
-			case "left" : this.rightPercentage = this.middlePercentage; this.middlePercentage = (this.leftPercentage + this.rightPercentage) / 2;
-						  break;
-			case "right": this.leftPercentage = this.middlePercentage; this.middlePercentage = (this.leftPercentage + this.rightPercentage) / 2; 
-					      break;
-			case "noidea" : 
-							//console.log("compare left: "+leftPoint[2].toFixed(2)+" <?> "+cm.toFixed(2)+" <?> "+middlePoint[2].toFixed(2));
-							//console.log("compare right: "+middlePoint[2].toFixed(2)+" <?> "+cm.toFixed(2)+" <?> "+rightPoint[2].toFixed(2));
-							this.middlePercentage = (this.middlePercentage + this.rightPercentage) / 2; // shift middle point instead
-			
-			
-							break;
-			default : avoidInfinity = 1000000000; break;
-		}
-		avoidInfinityLoop++;
-	} while ((actualEpsilon > epsilon) && (avoidInfinityLoop < 500)); // do max 10 loops
-	if (actualEpsilon <= epsilon) {
-		//console.log("Point found: ", middlePoint);
-		return middlePoint;
-	} else { 
-		console.log("No point found.");
-		return false;
-	}
-*/
 }
 /////////////////////// end of experimental function
 TEConnectionPointPreceeding.prototype.connect = function() {
@@ -293,11 +195,12 @@ TEConnectionPointPreceeding.prototype.connect = function() {
 			c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
 			p2 = this.parent.editableToken.knotsList[2].circle.position,
 			c2 = p2 + this.parent.fhToken.segments[2].handleIn;
-		var result = calculateBezierPoint(p1, c1, p2, c2, 50);
+		//var result = calculateBezierPoint(p1, c1, p2, c2, 50);
 			
 		//var bezierPoint = new Point(result[0], result[1]);
-		//console.log("bezierPoint = ", bezierPoint);
-		var result2 = this.findTangentPointRelativeToConnectionPoint(0.0000000001);
+		//console.log("tangentPrecision = ", tangentPrecision);
+		var result2 = this.findTangentPointRelativeToConnectionPoint(tangentPrecision);
+		//console.log("result2: ",result2);
 		
 		if (result2 != false) {
 			this.line.removeSegments();
@@ -317,7 +220,7 @@ TEConnectionPointPreceeding.prototype.connect = function() {
 	}
 	// for test purposes: calculate tangents between to bezier segments (choose segments 2 and 6 from freehand curve)
 	if (this.parent.editableToken.knotsList.length > 6) {
-		var result3 = this.findTangentPointsBetweenCurves2And6(0.1);
+		var result3 = this.findTangentPointsBetweenCurves2And6(tangentPrecision);
 	
 	}
 	

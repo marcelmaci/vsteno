@@ -70,7 +70,7 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 	//console.log("Tangent data: tx1, ty1, tx2, ty2: ", tx1, ty1, tx2, ty2);
 	var bx = tx1 + dtx * factor,
 		by = ty1 + dty * factor,
-		bm = dtx / dty;
+		bm = dtx / Math.avoidDivisionBy0(dty);
 	//console.log("bezierPoint (bx, by, m): (("+bx+","+by+","+bm+")");
 	// return values as array
 	//bm = isNaN(bm) ? 9999999999999999 : bm;	// sanitize NaN resulting from division by zero above
@@ -78,31 +78,7 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 }
 
 function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
-	// known issues and caveats with following algorithm:
-	// 1) when connecting point is exactly orthogonal to bezier curve, the function will return orthogonal point 
-	//    => screenshot_tangentpoint_bug1a.jpb / ... bug1b.jpg
-	// 2) when connecting point is "inside rectangle" the function will return the opposite tangent point (left
-	//    or right => screenshot.tangentpoint_bug2a.jpg / ... bug2b.jpg
-	// 3) vertical tangents are possible (screenshot_tangentpoint_bug3a), but horizontal tangents are NOT
-	//    => screenshot_tangenpoint_bug3b.jpg / .. bug3c.jpg
-	// there might also be erroneous results if tensions are 0 (in general 0 is a difficult number ... ;-)
-	//
-	// implications for VSTENO:
-	// 1) and 2) maybe not really a problem?!
-	// 3) unfortunately, there are many shorthand tokens that connect horizontally ... Keep this bug in mind and see
-	// what happens.
-	// POSSIBLE SOLUTION: define m as dy / dx (instead of dx / dy) => this will probably allow horizontal connections
-	// (and produce false results for vertical connections which would have less impact on VSTENO
-	// => keep it like that for the moment, change it later if necessary!
-	//
-	// FURTHER INVESTIGATIONS
-	// "bugs" 1-3 seem to be related to precision: increasing precision (to epsilon = 0.00000005 instead of 0.1) 
-	// and iterations (500 instead of 10) improves results significantly ("bug" 1 almost impossible to reproduce,
-	// "bug" 3: nearly horizontal connections possible
-	// => increase precision to the max (will have an impact on speed, of course ...)
-	// => define a tolerance for horizontal connections when connecting tokens (and "round" values in drawing routine
-	// later)
-	//
+	//epsilon = 0.001; // change it temporarily
 	// DESCRIPTION OF ALGORITHM
 	// define the 3 points:
 	// - the middle one separates the bezier curve (or the actual segment of it) into two halves
@@ -110,147 +86,96 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 	// the points are defined as percentages (= relative location) on the bezier curve
 	// epsilon stands for the precision: delta of straight lines going from connection point
 	// to calculated tangent point should be < epsilon (numerical aproximation) 
-	this.leftPercentage = 0.001;			// 0% <=> leftPoint
-	this.rightPercentage = 99.999;		// 100% <=> rightPoint
-	this.middlePercentage = 50;		// 50% <=> middlePoint
+	//console.log("epsilon: ",epsilon, "tangentFixPointMaxIteration: ", tangentFixPointMaxIteration);
+	var leftPercentage = 0.001;			// 0% <=> leftPoint
+	var rightPercentage = 99.999;		// 100% <=> rightPoint
+	var middlePercentage = 50;		// 50% <=> middlePoint
 	var leftPoint = undefined,		// declare point variables
 		rightPoint = undefined,
 		middlePoint = undefined; 
-	// for the moment use fix segment (2nd segment <=> indexes 1 and 2)
-	/*
-	var p1 = this.parent.editableToken.knotsList[1].circle.position,
-		c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
-		p2 = this.parent.editableToken.knotsList[2].circle.position,
-		c2 = p2 + this.parent.fhToken.segments[2].handleIn;	
-	*/
+	
 	var avoidInfinityLoop = 0;
 	var whichInterval = "start";
 	var actualEpsilon = 100;
+	leftPoint = calculateBezierPoint(p1, c1, p2, c2, leftPercentage);
+	rightPoint = calculateBezierPoint(p1, c1, p2, c2, rightPercentage);
+	var cx = fixPoint.x,
+		cy = fixPoint.y;
+	var cm = undefined,			// declare all variales outside loop = speed optimization?!
+		angleLeft = undefined,
+		angleRight = undefined,
+		angleMiddle = undefined,
+		angleConnectionPoint = undefined,
+		deltaAngleLeft = undefined,
+		deltaAngleMiddle = undefined,
+		deltaAngleRight = undefined; 
+	var actualPercentageEpsilon = undefined,
+	    lastPercentageEpsilon = 100;
+		
 	do {
 		//console.log("Starting loop number "+avoidInfinityLoop+"........................................");
-		leftPoint = calculateBezierPoint(p1, c1, p2, c2, this.leftPercentage);
-		middlePoint = calculateBezierPoint(p1, c1, p2, c2, this.middlePercentage);
-		rightPoint = calculateBezierPoint(p1, c1, p2, c2, this.rightPercentage);
-		// the xPoint[] arrays now contain the point and m (= inclination) of the bezier tangent
+		middlePoint = calculateBezierPoint(p1, c1, p2, c2, middlePercentage);
+	
 		// calculate m for straight line from connecting point to tangent point
-		var cx = fixPoint.x,
-			cy = fixPoint.y,
-			dx = middlePoint[0] - cx,
-			dy = middlePoint[1] - cy,
-			cm = dx / dy;
-		// work with angles (easier)
+		/* var dx = middlePoint[0] - cx, dy = middlePoint[1] - cy, cm = dx / dy; */
+		cm = (middlePoint[0]-cx) / Math.avoidDivisionBy0(middlePoint[1]-cy);
 		
-		var angleLeft = Math.atan(leftPoint[2]); 
-		//console.log(angleLeft.toFixed(2));
-		var angleMiddle = Math.atan(middlePoint[2]); 
-		var angleRight = Math.atan(rightPoint[2]); 
-		var angleConnetionPoint = Math.atan(cm); 
-		var degLeft = Math.degrees(angleLeft);
-		var degMiddle = Math.degrees(angleMiddle);
-		var degRight = Math.degrees(angleRight);
-		var degCP = Math.degrees(angleConnetionPoint);
-		
-		//console.log(angleMiddle.toFixed(2));
-		//console.log(angleRight.toFixed(2));
-		//console.log(angleConnetionPoint.toFixed(2));
-		
-
-/*		console.log("---------------------- loop "+avoidInfinityLoop+" -------------------------------------------")
-		console.log("Epsilon: ", actualEpsilon.toFixed(2),"Decision: ", whichInterval, "Percentages: ", this.leftPercentage, this.middlePercentage, this.rightPercentage);
-/*		console.log("leftPoint = ("+leftPoint[0].toFixed(2)+","+leftPoint[1].toFixed(2)+") with m=", leftPoint[2].toFixed(2));
-		console.log("connectionPoint = ("+cx.toFixed(2)+","+cy.toFixed(2)+") with m=", cm.toFixed(2));
-*///		console.log("middlePoint = ("+middlePoint[0].toFixed(2)+","+middlePoint[1].toFixed(2)+") with m=", middlePoint[2].toFixed(2));
-/*		console.log("-------------------------------------------------------------------------------------");
-		console.log("middlePoint = ("+middlePoint[0].toFixed(2)+","+middlePoint[1].toFixed(2)+") with m=", middlePoint[2].toFixed(2));
-		console.log("connectionPoint = ("+cx.toFixed(2)+","+cy.toFixed(2)+") with m=", cm.toFixed(2));
-		console.log("rightPoint = ("+rightPoint[0].toFixed(2)+","+rightPoint[1].toFixed(2)+") with m=", rightPoint[2].toFixed(2));
-*/
-/*		console.log("Angles: left: ", angleLeft.toFixed(2), "middle: ", angleMiddle.toFixed(2), "right: ", angleRight.toFixed(2), " | connection point: ", angleConnetionPoint.toFixed(2));
-		console.log("Degrees: left: ", degLeft.toFixed(2), "middle: ", degMiddle.toFixed(2), "right: ", degRight.toFixed(2), " | connection point: ", degCP.toFixed(2));
-		
-							
+		// work with rad angles (easier, but slower)	
+		angleLeft = Math.atan(leftPoint[2]); 
+		angleMiddle = Math.atan(middlePoint[2]); 
+		angleRight = Math.atan(rightPoint[2]); 
+		angleConnectionPoint = Math.atan(cm); 
+					
 		// find out in which interval (left or right) the tangent point is
-		// leftInterval <=> (leftM < connectionM < middleM) or (leftM > connectionM > middleM)
-		// in other words: m must be BETWEEN the two other values
-		// and same for right interval 
-		
-		/*
-		if (((leftPoint[2] < cm) && (cm < middlePoint[2])) || ((leftPoint[2] > cm)  && (cm > middlePoint[2]))) whichInterval = "left";
-		else if (((rightPoint[2] < cm) && (cm < middlePoint[2])) || ((rightPoint[2] > cm)  && (cm > middlePoint[2]))) whichInterval = "right";
-		else whichInterval = "noidea"; // not sure about that one ... //whichInterval = "sorry, dude, something seems to be wrong ...";
-		*/
-		
-		// base decision about interval on angles
-	 /*
-		if (((angleLeft < angleConnetionPoint) && (angleConnetionPoint < angleMiddle))
-			|| ((angleLeft > angleConnetionPoint) && (angleConnetionPoint > angleMiddle))) whichInterval = "left";
-		else if (((angleRight < angleConnetionPoint) && (angleConnetionPoint < angleMiddle))
-			|| ((angleRight > angleConnetionPoint) && (angleConnetionPoint > angleMiddle))) whichInterval = "right";
-		else {
-				// this is the former "noidea" section
-				// try one thing: invert connection point value and do the above comparison again!
-/*			angleMiddle = -angleMiddle;
-			if (((angleLeft < angleConnetionPoint) && (angleConnetionPoint < angleMiddle))
-				|| ((angleLeft > angleConnetionPoint) && (angleConnetionPoint > angleMiddle))) whichInterval = "left";
-			else if (((angleRight < angleConnetionPoint) && (angleConnetionPoint < angleMiddle))
-				|| ((angleRight > angleConnetionPoint) && (angleConnetionPoint > angleMiddle))) whichInterval = "right";
-			else whichInterval = "noidea";	
-*/
-/*			whichInterval = "noidea";
-		}
-*/
-		var deltaAngleLeft = Math.abs(angleConnetionPoint - angleLeft);
-		var deltaAngleRight = Math.abs(angleConnetionPoint - angleRight);
+		deltaAngleLeft = Math.abs(angleConnectionPoint - angleLeft);
+		deltaAngleRight = /*Math.abs(angleRight - angleConnectionPoint); */ Math.abs(angleConnectionPoint - angleRight);
 //		console.log("delta: left: ", deltaAngleLeft, "right: ", deltaAngleRight);
 		if (deltaAngleLeft <= deltaAngleRight) { 
 			whichInterval = "left"; 
-			actualEpsilon =  middlePercentage - leftPercentage; 
+			//actualEpsilon =  middlePercentage - leftPercentage; // problem: a point is always found! (angle is not taken into consideration)
+			deltaAngleMiddle = Math.abs(angleMiddle - angleConnectionPoint);
+			
+			//actualEpsilon = Math.abs(angleMiddle - angleLeft);
+			actualEpsilon = Math.min(deltaAngleLeft, deltaAngleMiddle); //(deltaAngleLeft > deltaAngleMiddle) ? deltaAngleLeft : deltaAngleMiddle;
 		} else if (deltaAngleRight < deltaAngleLeft) { 
 			whichInterval = "right"; 
-			actualEpsilon = rightPercentage - middlePercentage; //deltaAngleRight; 
+			deltaAngleMiddle = Math.abs(angleConnectionPoint - angleMiddle);
+			//actualEpsilon = rightPercentage - middlePercentage; //deltaAngleRight; 
+			//actualEpsilon = Math.abs(angleRight - angleMiddle);
+			actualEpsilon = Math.min(deltaAngleRight, deltaAngleMiddle); // (deltaAngleRight > deltaAngleMiddle) ? deltaAngleRight : deltaAngleMiddle;
 		} else { 
 			console.log("noidea"); 
 			whichInterval = "noidea";
 		}
 		
-		
-		
-		// base decision about interval on angles
-		//if ((angleLeft < angleConnetionPoint) && (angleConnetionPoint < angleMiddle)) whichInterval = "left";
-		//else if ((angleMiddle < angleConnetionPoint) && (angleConnetionPoint < angleRight)) whichInterval = "right";
-		//else whichInterval = "noidea";
-		 
-		//console.log("whichInterval: ", whichInterval);
-		// calculate actual epsilon
-		
-		//actualEpsilon = Math.abs(Math.abs(cm) - Math.abs(middlePoint[2]));
-		
-		//console.log("actualEpsilon = ", actualEpsilon);
-		// set new points to test
-		
+		//console.log("Deltas: left: ", deltaAngleLeft, "middle: ", deltaAngleMiddle, "right: ", deltaAngleRight);
+
 		switch (whichInterval) {
-			case "left" : this.rightPercentage = this.middlePercentage; this.middlePercentage = (this.leftPercentage + this.rightPercentage) / 2;
+			case "left" : rightPercentage = middlePercentage; middlePercentage = (leftPercentage + rightPercentage) / 2;
+						  rightPoint = middlePoint;
 						  break;
-			case "right": this.leftPercentage = this.middlePercentage; this.middlePercentage = (this.leftPercentage + this.rightPercentage) / 2; 
+			case "right": leftPercentage = middlePercentage; middlePercentage = (leftPercentage + rightPercentage) / 2; 
+					      leftPoint = middlePoint;
 					      break;
 			case "noidea" : //console.log("noidea");
 							//console.log("compare left: "+leftPoint[2].toFixed(2)+" <?> "+cm.toFixed(2)+" <?> "+middlePoint[2].toFixed(2));
 							//console.log("compare right: "+middlePoint[2].toFixed(2)+" <?> "+cm.toFixed(2)+" <?> "+rightPoint[2].toFixed(2));
-							this.middlePercentage = (this.middlePercentage + this.rightPercentage) / 2; // shift middle point instead
-			
-			
+							middlePercentage = (middlePercentage + rightPercentage) / 2; // shift middle point instead	
 							break;
 			default : avoidInfinity = 1000000000; break;
 		}
 		avoidInfinityLoop++;
-	} while ((actualEpsilon > epsilon) && (avoidInfinityLoop < 1000)); // do max 10 loops
-	if (actualEpsilon <= epsilon) {
-		//console.log("Point found: ", middlePoint);
+		actualPercentageEpsilon = rightPercentage - leftPercentage;
+		
+	} while (/*(actualEpsilon > epsilon)*/ /*(actualPercentageEpsilon > 0.1) &&*/ (avoidInfinityLoop < tangentFixPointMaxIterations)); 
+	if ((/*actualEpsilon <= epsilon*/actualPercentageEpsilon <=0.1) && (actualEpsilon < 0.1)) {
+		//console.log("Point found: ", middlePoint, "Epsilon: ", actualEpsilon);
 		return middlePoint;
 	} else { 
-		//console.log("No point found: ", actualEpsilon, avoidInfinityLoop);
+		//console.log("No point found: Epsilon:", actualEpsilon, avoidInfinityLoop);
 		return false;
-		//return middlePoint;
+		//if (actualEpsilon < 0.5) return middlePoint;
+		//else return false;
 	}
 }
 
@@ -265,6 +190,11 @@ Math.degrees = function(radians) {
   return radians * 180 / Math.PI;
 };
 
+Math.avoidDivisionBy0 = function(value) {
+	// mathematically horrible ..., but it does the trick ...
+	if (value == 0) return 0.000000000000000001;
+	else return value;
+}
 // fixing the JS typeof operator ... (again: very weak and neary useless concept in JS, in my opinion...)
 function toType(obj) {
     if(obj && obj.constructor && obj.constructor.name) {

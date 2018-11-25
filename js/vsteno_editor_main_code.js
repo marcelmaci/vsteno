@@ -50,7 +50,10 @@ var knotTypeAutoDefine = true,
 	colorNormalKnot = '#f00',
 	colorSelectedKnot = '#aaa',
 	colorMarkedKnot = '#FFFC00';
-
+	
+var tangentPrecision = 0.001,
+	tangentFixPointMaxIterations = 200,
+	tangentBetweenCurvesMaxIterations = 4;
 
 tool.onMouseDown = function(event) {
 	var newClick = (new Date).getTime();
