@@ -106,8 +106,59 @@ TEDrawingArea.prototype.copyKnotsToFreehandPath = function() {
 			this.fhToken.segments[i].point = this.editableToken.knotsList[i].circle.position;
 	}
 }
+TEDrawingArea.prototype.calculateLeftRightVectors = function() {
+	// start with left vectors
+	var length = this.editableToken.knotsList.length;
+	for (var i=1; i<length-1; i++) {
+		var tempPosition = this.editableToken.knotsList[i].circle.position;
+		this.editableToken.leftVectors[i].line.removeSegments();
+		// calculate vector and coordinates
+		// get point and relative control point
+		var p1 = this.editableToken.knotsList[i].circle.position;
+		var rc1 = this.fhToken.segments[i].handleOut;
+		// define vector
+		var vectorX = rc1.x;
+		var vectorY = rc1.y; 
+		// turn by 90 degrees <=> swap x, y and negate x
+		var tempX = vectorX;
+		vectorX = vectorY;
+		vectorY = tempX;
+		vectorY = -vectorY;
+		// normalize vector
+		var vectorLength = Math.sqrt(vectorX * vectorX + vectorY * vectorY);	// squareLength
+		vectorX = vectorX / Math.avoidDivisionBy0(vectorLength);
+		vectorY = vectorY / Math.avoidDivisionBy0(vectorLength);
+		// calculate new coordinates for left shape
+		// vector endpoint
+		var newLength = 20; // 10 pixels
+		var endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
+		// vector startpoint (outside circle)
+		newLength = 6;
+		var startPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
+		// draw left vector
+		this.editableToken.leftVectors[i].line.add( startPoint, endPoint); //[newX,newY]);
+		this.editableToken.leftVectors[i].line.strokeColor = '#000';
+		this.editableToken.leftVectors[i].line.visible = true;
+		// calculate new coordinates for right shape
+		// flip vector by 180 degrees <=> negate x and y
+		vectorY = -vectorY;
+		vectorX = -vectorX;
+		// vector endpoint
+		newLength = 20; // 10 pixels
+		endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
+		// vector startpoint (outside circle)
+		newLength = 6;
+		startPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
+		// draw right vector
+		this.editableToken.rightVectors[i].line.removeSegments();
+		this.editableToken.rightVectors[i].line.add( startPoint, endPoint); //[newX,newY]);
+		this.editableToken.rightVectors[i].line.strokeColor = '#000';
+		this.editableToken.rightVectors[i].line.visible = true;
+	}
+}
 TEDrawingArea.prototype.updateFreehandPath = function() {
 	this.copyKnotsToFreehandPath();
+	this.calculateLeftRightVectors();
 	this.calculateFreehandHandles();
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {
@@ -134,8 +185,8 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		//var length = this.rotatingAxis.relativeToken.knotsList.length;
 		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);		
 	}
-
-	this.preceeding.connect();
+	this.connectPreceedingAndFollowing();
+	//this.preceeding.connect();
 /*	this.following.connect();
 */
 }
@@ -154,7 +205,9 @@ TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);
 		
 	}
-		this.preceeding.connect(); // update connecting point also
+	this.connectPreceedingAndFollowing();
+	
+		//this.preceeding.connect(); // update connecting point also
 /*		this.following.connect(); // update connecting point also
 */
 }
@@ -259,3 +312,8 @@ TEDrawingArea.prototype.handleEvent = function(event) {
 */
 	}
 }
+TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
+	this.preceeding.connect();
+	this.following.connect();	
+}
+

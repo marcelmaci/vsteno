@@ -1,4 +1,13 @@
 
+// class TEKnotVector
+function TEKnotVector(distance, type) {
+	this.type = "orthogonal"; // make it fix for the moment (change it to type later)
+	this.distance = distance;
+	this.line = Path.Line(new Point(0,0), new Point(100,100));
+	this.line.strokeColor = '#000';
+	this.line.visible = false;
+}
+
 // class TEKnotType
 function TEKnotType() {
 	this.entry = false;
@@ -27,12 +36,12 @@ function TEEditableToken(drawingArea) {
 	// parent
 	this.parent = drawingArea;
 	// token data
-	this.knotsList = []; // type: TEVisuallyModifiableKnot
-	this.vectorsLeft = [];
-	this.vectorsRight = [];
+	this.knotsList = []; 	// type: TEVisuallyModifiableKnot
+	this.leftVectors = []; 	// type: TEKnotVector
+	this.rightVectors = [];
 	// paths
-	this.middlePath = null;
 	this.leftPath = null;
+	this.middlePath = null; 	// for the moment: fhToken in TEDrawingArea
 	this.rightPath = null;
 	// mouse events
 	//this.mouseDown = false;
@@ -111,8 +120,7 @@ TEEditableToken.prototype.handleEvent = function(event) {
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
-	//console.log("We're here");
-	this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+	//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 }
 TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	// reset all knot types
@@ -161,61 +169,63 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.insertNewKnot = function(point) {
-	//write a function that determines the color of the knot before inserting it!!!
-	var test = this.getNewKnotTypeColor();
-	//console.log("index/color: ", this.index, test);
-	
-	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, test, colorSelectedKnot, colorMarkedKnot);
-	//console.log("splice at: ", this.index);
+	// get color of new knot before inserting it
+	var newColor = this.getNewKnotTypeColor();
+	// insert knot
+	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot);
 	this.knotsList.splice(this.index, 0, newKnot);
-	// automatically define knot type with autodefine
+	// insert vectors for outer shape
+	var distance = (this.index == 0) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	var leftVector = new TEKnotVector(distance, "orthogonal");
+	var rightVector = new TEKnotVector(distance, "orthogonal");
+	this.leftVectors.splice(this.index,0, leftVector);
+	this.rightVectors.splice(this.index,0, rightVector);
+	// automatically define knot type if autodefine is set
 	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
-	//this.knotsList[this.index+1].originalColor = this.knotsList[this.index+1].fillColor; // "color hack" ... should be implemented properly ...
-	
-	//this.index = this.knotsList.length;
-	///*this.*/mouseDown = true;
+	// select new knot as actual knot
 	this.selectedKnot = newKnot;
+	// link tension slider to new knot
 	this.parent.parent.tensionSliders.link(this.selectedKnot);
+	// set marked knot and handling parent
 	this.markedKnot = newKnot; // maybe superfluous
 	this.parent.setMarkedCircle(newKnot);
 	this.parent.handlingParent = this;
-	//this.parent.rotatingAxis.relativeToken.pushNewRelativeKnot(point.x, point.y, "horizontal");
+	// insert relative knot in rotating axis relativeToken
 	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
+	// make index point to new knot
 	this.index += 1; // point to the newly inserted element
-	this.parent.preceeding.connect();
-	//console.log("incremented index = ", this.index);
-	// automatically define knot type with autodefine
-	//if (knotTypeAutoDefine) this.defineKnotTypesAndSetColors();
+	// update connections from preceeding and following connection point
+	this.connectPreceedingAndFollowing();
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
-	//console.log("marked knot: ", this.markedKnot, " index: ", this.index);
 	// set new selected / marked knot before deleting the actual knot
 	var end = this.knotsList.length;
 	switch (this.index) {
-		//case 1 : this.selectedKnot = this.knotsList[this.index]; this.markedKnot = this.selectedKnot; break;
 		case end : this.selectedKnot = this.knotsList[end-2]; this.markedKnot = this.selectedKnot; break;
 		default : this.selectedKnot = this.knotsList[this.index]; this.markedKnot = this.selectedKnot; break;
 	}
+	// get color of knot that will be deleted, assure colors are set correctly and mark knot
 	var color = this.getDeleteKnotTypeColor();
 	this.selectedKnot.originalColor = color;
 	this.selectedKnot.circle.fillColor = color;
-	
 	this.parent.setMarkedCircle(this.selectedKnot);
-	//console.log("BEFORE: length: ", this.knotsList.length);
-	
-	//this.knotsList[this.index-1].circle = null; // delete control circle
-	//this.knotsList[this.index-1].circle.visible = false; // make control circle invisible (should be deleted)
+	// remove: circle, knot and vectors
+	//debugger;
 	this.knotsList[this.index-1].circle.remove(); // make control circle invisible (should be deleted)
 	this.knotsList.splice(this.index-1, 1); // deletes 1 element at index and reindexes array
-	
+	//console.log("leftVector: ", this.leftVector);
+	this.leftVectors.splice(this.index-1, 1);
+	this.rightVectors.splice(this.index-1, 1);
+	// remove also relative knot in relative token (rotating axis)
 	this.parent.rotatingAxis.relativeToken.knotsList.splice(this.index-1,1); // do the same with relative token
 	this.parent.fhToken.removeSegment(this.index-1); // do the same with path
 	// automatically define knot type with autodefine
 	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
-	
+	// update
 	this.parent.updateFreehandPath();
-	this.parent.preceeding.connect();
-	//console.log("AFTER: length: ", this.knotsList.length);
-	
+	this.connectPreceedingAndFollowing();
+}
+TEEditableToken.prototype.connectPreceedingAndFollowing = function() {
+	this.parent.connectPreceedingAndFollowing();	
 }

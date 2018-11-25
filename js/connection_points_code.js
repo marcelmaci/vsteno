@@ -177,12 +177,13 @@ TEConnectionPointPreceeding.prototype.findTangentPointsBetweenCurves2And6 = func
 /////// test new method for tangent calculation with preceeding point
 /////// test 2nd bezier segment for the moment
 /////// (should be applied to following point and several segments later)
-TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint = function(epsilon) {
+TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint = function(p1, c1, p2, c2, epsilon) {
 	//console.log("findTangentPointRelativeToConnectionPoint - epsilon: ", epsilon);
-	var p1 = this.parent.editableToken.knotsList[1].circle.position,
+	/*var p1 = this.parent.editableToken.knotsList[1].circle.position,
 		c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
 		p2 = this.parent.editableToken.knotsList[2].circle.position,
 		c2 = p2 + this.parent.fhToken.segments[2].handleIn;	
+	*/
 	var cx = this.circle.position.x,
 		cy = this.circle.position.y;
 	//console.log("Hi there1.");
@@ -190,16 +191,18 @@ TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint 
 }
 /////////////////////// end of experimental function
 TEConnectionPointPreceeding.prototype.connect = function() {
-	if (this.parent.editableToken.knotsList.length > 2) {
-		var p1 = this.parent.editableToken.knotsList[1].circle.position,
-			c1 = p1 + this.parent.fhToken.segments[1].handleOut,     // control points are RELATIVE coordinates
-			p2 = this.parent.editableToken.knotsList[2].circle.position,
-			c2 = p2 + this.parent.fhToken.segments[2].handleIn;
+	
+	/* // disable this code for the moment
+	if (this.parent.editableToken.knotsList.length > 1) {
+		var p1 = this.parent.editableToken.knotsList[0].circle.position,
+			c1 = p1 + this.parent.fhToken.segments[0].handleOut,     // control points are RELATIVE coordinates
+			p2 = this.parent.editableToken.knotsList[1].circle.position,
+			c2 = p2 + this.parent.fhToken.segments[1].handleIn;
 		//var result = calculateBezierPoint(p1, c1, p2, c2, 50);
 			
 		//var bezierPoint = new Point(result[0], result[1]);
 		//console.log("tangentPrecision = ", tangentPrecision);
-		var result2 = this.findTangentPointRelativeToConnectionPoint(tangentPrecision);
+		var result2 = this.findTangentPointRelativeToConnectionPoint(p1, c1, p2, c1, tangentPrecision);
 		//console.log("result2: ",result2);
 		
 		if (result2 != false) {
@@ -207,30 +210,21 @@ TEConnectionPointPreceeding.prototype.connect = function() {
 			this.line.add( this.circle.position, new Point(result2[0], result2[1]));
 			this.line.visible = true;
 		} else this.line.visible = false;
-		
-	/*	if (this.circle.position.x > result2[0]) {
-			console.log("error: ", result2);
-		}*/
-		//this.line.segments[0].point = this.circle.position;
-		//this.line.segments[1].point = [result[0], result[1]];
-		//console.log(this.line.segments[1]);
-		
-		//var result2 = this.findTangentPointRelativeToConnectionPoint(0.1);
-		//this.line.segments[1].point = this.parent.editableToken.knotsList[0].circle.position;
 	}
+	*/
+	
 	// for test purposes: calculate tangents between to bezier segments (choose segments 2 and 6 from freehand curve)
+	/* // disable this code for the moment
 	if (this.parent.editableToken.knotsList.length > 6) {
 		var result3 = this.findTangentPointsBetweenCurves2And6(tangentPrecision);
 	
 	}
-	
-/*	if (this.parent.fhCircleList.length != 0) {
-		//console.log(this.parent.fhCircleList[0].position);
-		var entryPoint = this.parent.fhCircleList[0];
+	*/
+	// use this code for the moment: connect to first point of freehand path
+	if (this.parent.editableToken.knotsList.length > 0) {
 		this.line.segments[0].point = this.circle.position;
-		this.line.segments[1].point = entryPoint.position;
-		//console.log(this.line);
-	}*/
+		this.line.segments[1].point = this.parent.editableToken.knotsList[0].circle.position;
+	}
 }
 /*
 TEConnectionPointPreceeding.prototype.handleEvent = function(event) { // overload parent method
@@ -274,9 +268,10 @@ function TEConnectionPointFollowing(drawingArea, x, y) {
 }
 TEConnectionPointFollowing.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
 TEConnectionPointFollowing.prototype.connect = function() {
-	if (this.parent.editableToken.knotsList.length > 0) {
+	var length = this.parent.editableToken.knotsList.length;
+	if (length > 0) {
 		this.line.segments[0].point = this.circle.position;
-		this.line.segments[1].point = this.parent.editableToken.knotsList[0].circle.position;
+		this.line.segments[1].point = this.parent.editableToken.knotsList[length-1].circle.position;
 	}
 /*	if (this.parent.fhCircleList.length != 0) {
 		//console.log(this.parent.fhCircleList[0].position);

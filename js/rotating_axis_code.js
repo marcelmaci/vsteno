@@ -10,6 +10,19 @@ the rotating axis (and viceversa). The conversion (calculation) of
 the coordinates is done by TERotatingAxis methods
 TERotatingAxisRelativeKnot is invisible (only internal data)
 */
+// class TERotatingAxisOuterKnot
+function TERotatingAxisOuterKnot(distance, x, y) {
+	this.position = new Point(x,y);
+	this.distance();
+}
+
+// class TEKnotType
+function TEKnotType() {
+	this.entry = false;
+	this.exit = false;
+	this.pivot1 = false;
+	this.pivot2 = false;
+}
 
 function TERotatingAxisRelativeKnot(x, y, type) {
 	// TERotatingAxisRelativeKnot doesn't include tensions (these are stored in TEVisuallyModifiableCircle)
@@ -206,6 +219,8 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 		}
 
 	}
-	//this.parent.preceeding.connect(); // update connecting point also
-	//this.parent.following.connect(); // update connecting point also
+	//this.parent.connectPreceedingAndFollowing();
+	
+	this.parent.preceeding.connect(); // update connecting point also
+	this.parent.following.connect(); // update connecting point also
 }
