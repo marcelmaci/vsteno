@@ -156,9 +156,43 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		this.editableToken.rightVectors[i].line.visible = true;
 	}
 }
+TEDrawingArea.prototype.calculateOuterShape = function() {
+	var length = this.editableToken.knotsList.length;
+	this.editableToken.outerShape.removeSegments();
+	// add first segment = entry point
+	this.editableToken.outerShape.add(this.editableToken.knotsList[0].circle.position);
+	// add points of left shape
+	var tempPoint, handleIn, handleOut;
+	for (var i=1; i<length-1; i++) {
+		tempPoint = this.editableToken.leftVectors[i].line.segments[1].point;
+		handleIn = this.fhToken.segments[i].handleIn;
+		handleOut = this.fhToken.segments[i].handleOut;
+		this.editableToken.outerShape.add(new Segment(tempPoint, handleIn, handleOut));
+	//console.log("object: ",i,  this.editableToken.leftVectors[i].line.segments[1].point);
+	}
+	
+	// add end point
+	this.editableToken.outerShape.add(this.editableToken.knotsList[length-1].circle.position);
+	// add right shape backwards
+	var tempPoint, handleIn, handleOut;
+	for (var i=length-2; i>0; i--) {
+		tempPoint = this.editableToken.rightVectors[i].line.segments[1].point;
+		// inverse handleIn / handleOut (since elements are inserted backwards)
+		handleOut = this.fhToken.segments[i].handleIn;
+		handleIn = this.fhToken.segments[i].handleOut;
+		this.editableToken.outerShape.add(new Segment(tempPoint, handleIn, handleOut));			
+	}
+	// no need to add starting point again => just close path
+	this.editableToken.outerShape.closePath();
+
+	// set color
+	this.editableToken.outerShape.strokeColor = '#000';
+
+}
 TEDrawingArea.prototype.updateFreehandPath = function() {
 	this.copyKnotsToFreehandPath();
 	this.calculateLeftRightVectors();
+	this.calculateOuterShape();
 	this.calculateFreehandHandles();
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {

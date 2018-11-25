@@ -22,6 +22,14 @@ TEVisuallyModifiableCircle.prototype.select = function() { // select <=> modify 
 TEVisuallyModifiableCircle.prototype.unselect = function() { // unselect <=> restore original fillColor
 	this.circle.fillColor = this.originalColor;
 }
+/*
+TEVisuallyModifiableCircle.prototype.handleEvent = function(event) {
+switch (event.type) {
+		case "mousedown" : this.handleMouseDown(event); break;
+		case "mouseup" : this.handleMouseUp(event); break;
+		case "mousedrag" : this.handleMouseDrag(event); break;
+	}	
+}*/
 TEVisuallyModifiableCircle.prototype.handleMouseDown = function(event) {
 	//console.log("TEVisuallyModifiableCircle.handleMouseDown");
 	this.mark();
@@ -29,10 +37,12 @@ TEVisuallyModifiableCircle.prototype.handleMouseDown = function(event) {
 	this.circle.position = event.point;
 }
 TEVisuallyModifiableCircle.prototype.handleMouseDrag = function(event) {
+	//console.log("mousedrag");
 	this.circle.position = event.point;
 }
 TEVisuallyModifiableCircle.prototype.handleMouseUp = function(event) {
 	//console.log("TEVisuallyModifiableCircle.handleMouseUp()");
+	this.circle.position = event.point;
 	this.unselect();	// unselect, but leave it marked
 }
 TEVisuallyModifiableCircle.prototype.isStatic = function() {

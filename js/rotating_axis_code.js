@@ -150,6 +150,7 @@ TERotatingAxis.prototype.handleMouseDown = function(event) {
 	this.controlCircle.position = event.point;
 }
 TERotatingAxis.prototype.handleMouseUp = function(event) {
+	//this.controlCircle.position = event.point;
 	this.controlCircle.unselect();
 }
 TERotatingAxis.prototype.handleMouseDrag = function(event) {

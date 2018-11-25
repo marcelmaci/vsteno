@@ -40,9 +40,9 @@ function TEEditableToken(drawingArea) {
 	this.leftVectors = []; 	// type: TEKnotVector
 	this.rightVectors = [];
 	// paths
-	this.leftPath = null;
-	this.middlePath = null; 	// for the moment: fhToken in TEDrawingArea
-	this.rightPath = null;
+	this.middlePath = null; 			// for the moment: fhToken in TEDrawingArea
+	this.outerShape = new Path();		// closed path: starting point - leftPath - endPoint - rightPath - starting point
+	
 	// mouse events
 	//this.mouseDown = false;
 	this.selectedKnot = null;
@@ -95,17 +95,22 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 	if (this.selectedKnot != null) {
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
+		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	}
 }
 TEEditableToken.prototype.handleMouseUp = function(event) {
 	///*this.*/mouseDown = false;
-	if (this.selectedKnot != null) this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
-	this.selectedKnot = null;	// leave markedKnot
+	if (this.selectedKnot != null) {
+		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
+		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+	} this.selectedKnot = null;	// leave markedKnot
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
 	if (/*this.*/mouseDown) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
+			// update of relative coordinates not necessary (will be called by handleMouseUp-event)
+			//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 		}
 	}
 }
@@ -210,12 +215,13 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	this.selectedKnot.originalColor = color;
 	this.selectedKnot.circle.fillColor = color;
 	this.parent.setMarkedCircle(this.selectedKnot);
-	// remove: circle, knot and vectors
-	//debugger;
+	// remove: circle, knot, lines and vectors
+	// bug: there's something wrong with the lines (they remain on drawing area as zombies ... ;-)
 	this.knotsList[this.index-1].circle.remove(); // make control circle invisible (should be deleted)
 	this.knotsList.splice(this.index-1, 1); // deletes 1 element at index and reindexes array
-	//console.log("leftVector: ", this.leftVector);
+	this.leftVectors[this.index-1].line.removeSegments();
 	this.leftVectors.splice(this.index-1, 1);
+	this.rightVectors[this.index-1].line.removeSegments();
 	this.rightVectors.splice(this.index-1, 1);
 	// remove also relative knot in relative token (rotating axis)
 	this.parent.rotatingAxis.relativeToken.knotsList.splice(this.index-1,1); // do the same with relative token
