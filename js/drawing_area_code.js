@@ -156,6 +156,61 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		this.editableToken.rightVectors[i].line.visible = true;
 	}
 }
+TEDrawingArea.prototype.calculateOuterShapeHandles = function() {
+	var length = this.editableToken.knotsList.length;
+	// set control points of entry knot to (0,0)
+	this.editableToken.outerShape.segments[0].handleIn = 0;
+	this.editableToken.outerShape.segments[0].handleOut = 0;
+	//console.log("Starting point: ", this.editableToken.outerShape.segments[0].point);
+	// recalculate handles of left shape
+	var p0, p1, p2, t1, t2, controlPoints, rc1, rc2;
+	for (var i=1; i<length-1; i++) {
+		// get 3 points for control point calculation (preceeding, actual, following)
+		p0 = this.editableToken.outerShape.segments[i-1].point;
+		p1 = this.editableToken.leftVectors[i].line.segments[1].point;
+		p2 = this.editableToken.outerShape.segments[i+1].point;
+		// get tensions
+		t1 = this.editableToken.knotsList[i].tensions[0];
+		t2 = this.editableToken.knotsList[i].tensions[1];
+		// calculate control points
+		controlPoints = getControlPoints(p0, p1, p2, t1, t2);
+		//console.log("getControlPoints: ", p0, p1, p2, t1, t2);
+		// values are absolute => make them relative and copy them to segment
+		rc1 = controlPoints[0]-p1;
+		rc2 = controlPoints[1]-p1;
+		this.editableToken.outerShape.segments[i].handleIn = rc1;
+		this.editableToken.outerShape.segments[i].handleOut = rc2;
+		//console.log("object: ",i,  this.editableToken.leftVectors[i].line.segments[1].point);
+	}
+	
+	// set control points of exit knot to (0,0)
+	this.editableToken.outerShape.segments[length-1].handleIn = 0;
+	this.editableToken.outerShape.segments[length-1].handleOut = 0;
+	
+	// calculate right shape control points (backwards)
+	//console.log("End point: ", this.editableToken.outerShape.segments[length-1].point);
+	var continueIndex = length;
+	for (var i=length-2; i>0; i--) {
+		// get 3 points for control point calculation (preceeding, actual, following)
+		p0 = this.editableToken.outerShape.segments[continueIndex-1].point;  
+		p1 = this.editableToken.outerShape.segments[continueIndex].point;
+		// modulo = wrap around at the end (lenght of outerShape = 2*length - 2, because start/end points are only inserted 1x)
+		p2 = this.editableToken.outerShape.segments[(continueIndex+1)%(2*length-2)].point;
+		// get tensions
+		t1 = this.editableToken.knotsList[i].tensions[1];	// tensions have to be inversed 
+		t2 = this.editableToken.knotsList[i].tensions[0];	// due to backwards calculation
+		// calculate control points
+		controlPoints = getControlPoints(p0, p1, p2, t1, t2);
+		//console.log("getControlPoints: ", continueIndex, p0, p1, p2, t1, t2);
+		// values are absolute => make them relative and copy them to segment
+		rc1 = controlPoints[0]-p1;
+		rc2 = controlPoints[1]-p1;
+		this.editableToken.outerShape.segments[continueIndex].handleIn = rc1;
+		this.editableToken.outerShape.segments[continueIndex].handleOut = rc2;		
+		continueIndex++;
+	}
+	// starting point control point values have already been written
+}
 TEDrawingArea.prototype.calculateOuterShape = function() {
 	var length = this.editableToken.knotsList.length;
 	this.editableToken.outerShape.removeSegments();
@@ -165,8 +220,8 @@ TEDrawingArea.prototype.calculateOuterShape = function() {
 	var tempPoint, handleIn, handleOut;
 	for (var i=1; i<length-1; i++) {
 		tempPoint = this.editableToken.leftVectors[i].line.segments[1].point;
-		handleIn = this.fhToken.segments[i].handleIn;
-		handleOut = this.fhToken.segments[i].handleOut;
+		handleIn = this.fhToken.segments[i].handleIn;	// not correct
+		handleOut = this.fhToken.segments[i].handleOut;	// not correct
 		this.editableToken.outerShape.add(new Segment(tempPoint, handleIn, handleOut));
 	//console.log("object: ",i,  this.editableToken.leftVectors[i].line.segments[1].point);
 	}
@@ -178,8 +233,8 @@ TEDrawingArea.prototype.calculateOuterShape = function() {
 	for (var i=length-2; i>0; i--) {
 		tempPoint = this.editableToken.rightVectors[i].line.segments[1].point;
 		// inverse handleIn / handleOut (since elements are inserted backwards)
-		handleOut = this.fhToken.segments[i].handleIn;
-		handleIn = this.fhToken.segments[i].handleOut;
+		handleOut = this.fhToken.segments[i].handleIn; // not correct
+		handleIn = this.fhToken.segments[i].handleOut; // not correct
 		this.editableToken.outerShape.add(new Segment(tempPoint, handleIn, handleOut));			
 	}
 	// no need to add starting point again => just close path
@@ -188,6 +243,12 @@ TEDrawingArea.prototype.calculateOuterShape = function() {
 	// set color
 	this.editableToken.outerShape.strokeColor = '#000';
 
+	// it's not correct to copy the control points (handles) from the middle path,
+	// outer paths are different (only tensions are equal)!
+	// Therefore: take the TENSIONS of the middle path and recalculate the handles
+	// Do this in 2 steps for the moment (in order to be able to compare differences,
+	// later this calculation can be integrated inside the for-loops above
+	this.calculateOuterShapeHandles();
 }
 TEDrawingArea.prototype.updateFreehandPath = function() {
 	this.copyKnotsToFreehandPath();

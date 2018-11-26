@@ -16,14 +16,6 @@ function TERotatingAxisOuterKnot(distance, x, y) {
 	this.distance();
 }
 
-// class TEKnotType
-function TEKnotType() {
-	this.entry = false;
-	this.exit = false;
-	this.pivot1 = false;
-	this.pivot2 = false;
-}
-
 function TERotatingAxisRelativeKnot(x, y, type) {
 	// TERotatingAxisRelativeKnot doesn't include tensions (these are stored in TEVisuallyModifiableCircle)
 	this.type = type;			// orthogonal or horizontal
