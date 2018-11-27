@@ -90,17 +90,53 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	//console.log(this
 	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[0], this.selectedKnot.tensions[1]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
+TEEditableToken.prototype.getRelativeToken = function() {
+	console.log("this.index: ", this.index);
+	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
+}
+TEEditableToken.prototype.setKnotType = function(type) {
+	var relativeToken = this.getRelativeToken();
+	relativeToken.setType(type);
+	//console.log("settype");
+	switch (type) {
+		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
+							var x = this.selectedKnot.circle.position.x,
+								y = this.selectedKnot.circle.position.y;
+							this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							break;
+		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); break;
+	}
+}
 TEEditableToken.prototype.handleMouseDown = function(event) {
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
+	  	console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
+		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+
+		switch (keyPressed) {
+			case "o" : this.setKnotType("orthogonal"); break;
+			case "h" : this.setKnotType("horizontal"); break;
+		}
+		console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
+		
+		//this.parent.parent.tensionSliders.link(this.selectedKnot);
+		//this.selectedKnot.handleMouseDown(event);
+		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	}
 }
 TEEditableToken.prototype.handleMouseUp = function(event) {
 	///*this.*/mouseDown = false;
 	if (this.selectedKnot != null) {
+		//console.log("change rectangle to circle");
+		//console.log("MouseUp: rightclick: ", rightClick);
+		if (keyPressed == "o") {
+		//	var relativeToken = this.getRelativeToken();
+	//		relativeToken.setType("horizontal");	
+	//		this.selectedKnot.changeRectangleToCircle();
+		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	} this.selectedKnot = null;	// leave markedKnot
@@ -115,6 +151,7 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEEditableToken.prototype.handleEvent = function(event) {
+	console.log("TEEditableToken.handleEvent");
 	switch (event.type) {
 		case "mousedown" : if (doubleClick) {
 								//this.handleMouseDown(event);

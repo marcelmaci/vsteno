@@ -3,6 +3,8 @@
 function TEVisuallyModifiableCircle(position, radius, color, selectColor, strokeColor ) {
 	//console.log("TEVisuallyModifiableCircle.constructor");
 	this.circle = new Path.Circle(position, radius);
+	//this.center = position;
+	this.radius = radius;
 	this.circle.fillColor = color;
 	this.circle.strokeWidth = 0;
 	this.circle.strokeColor = strokeColor;
@@ -32,9 +34,10 @@ switch (event.type) {
 }*/
 TEVisuallyModifiableCircle.prototype.handleMouseDown = function(event) {
 	//console.log("TEVisuallyModifiableCircle.handleMouseDown");
+	this.circle.position = event.point;
 	this.mark();
 	this.select();
-	this.circle.position = event.point;
+	//this.circle.position = event.point;
 }
 TEVisuallyModifiableCircle.prototype.handleMouseDrag = function(event) {
 	//console.log("mousedrag");
@@ -51,7 +54,49 @@ TEVisuallyModifiableCircle.prototype.isStatic = function() {
 TEVisuallyModifiableCircle.prototype.isDynamic = function() {
 	return true;
 }
-
+TEVisuallyModifiableCircle.prototype.changeCircleToRectangle = function() {
+	// changes circle to rectangle
+	// function needed by TEVisuallyModifiableKnot (which inherits from TEVisuallyModifiableCircle)
+	// implement it here, so that other classes can use the function as well if they need to
+	// the property "circle" will keep the same name for the moment
+	// (can be changed in the whole code later)
+	
+	var center = this.circle.position,
+		leftX = center.x - this.radius,
+		topY = center.y - this.radius,
+		rightX = center.x + this.radius,
+		bottomY = center.y + this.radius,
+		strokeColor = this.circle.strokeColor,
+		strokeWidth = this.circle.strokeWidth,
+		fillColor = this.circle.fillColor;
+		
+	// delete circle path completely
+	this.center = center; // store center for rectangle (so that the circle can be restored later) - USE THIS ONLY FOR THIS PURPOSE!!!
+	this.circle.removeSegments();
+	
+	// create a new rectangle object with same properties
+	this.circle = new Path.Rectangle(new Point(leftX, topY), new Point(rightX, bottomY));
+	this.circle.strokeColor = strokeColor;
+	this.circle.strokeWidth = strokeWidth;
+	this.circle.fillColor = fillColor;
+}
+TEVisuallyModifiableCircle.prototype.changeRectangleToCircle = function() {
+	// changes rectangle to rectangle
+	// same comments as for changeCircleToRectangle
+	var strokeColor = this.circle.strokeColor,
+		strokeWidth = this.circle.strokeWidth,
+		fillColor = this.circle.fillColor;
+	var center = this.circle.position; // get position of rectangle => use it for circle
+		
+	// delete circle path completely
+	this.circle.removeSegments();
+	
+	// create a new rectangle object with same properties
+	this.circle = new Path.Circle(center, this.radius);
+	this.circle.strokeColor = strokeColor;
+	this.circle.strokeWidth = strokeWidth;
+	this.circle.fillColor = fillColor;
+}
 
 // class TEConnectionPoint extends TEVisuallyModifiableCircle
 function TEConnectionPoint(drawingArea, x, y ) {
@@ -91,7 +136,7 @@ TEConnectionPoint.prototype.handleMouseDrag = function(event) {
 TEConnectionPoint.prototype.handleEvent = function(event) {
 	//console.log("unlink sliders:", this.parent.parent.tensionSliders);
 	this.parent.parent.tensionSliders.hideVerticalSliders();
-	//console.log("TEConnectionPoint.handleEvent()");
+	console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;

@@ -251,10 +251,12 @@ TEDrawingArea.prototype.calculateOuterShape = function() {
 	this.calculateOuterShapeHandles();
 }
 TEDrawingArea.prototype.updateFreehandPath = function() {
-	this.copyKnotsToFreehandPath();
-	this.calculateLeftRightVectors();
-	this.calculateOuterShape();
-	this.calculateFreehandHandles();
+	if (this.editableToken.knotsList.length > 0) {
+		this.copyKnotsToFreehandPath();
+		this.calculateLeftRightVectors();
+		this.calculateOuterShape();
+		this.calculateFreehandHandles();
+	}
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	if ((this.leftX <= event.point.x) && (this.rightX >= event.point.x) && (this.lowerY >= event.point.y) && (this.upperY <= event.point.y)) return true;
@@ -329,83 +331,20 @@ TEDrawingArea.prototype.isStatic = function(item) {
 }
 
 TEDrawingArea.prototype.handleEvent = function(event) {
-	//console.log("TEDrawingArea.handleEvent()", event.item);
-	if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
-		switch (event.type) {
-			case "mousedown" : this.handleMouseDown(event); break;
-			case "mouseup" : this.handleMouseUp(event); break;
-			case "mousedrag" : this.handleMouseDrag(event); break;
+	console.log("TEDrawingArea.handleEvent()", event.item);
+	//if (event.item != null) {
+		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
+			switch (event.type) {
+				case "mousedown" : this.handleMouseDown(event); break;
+				case "mouseup" : this.handleMouseUp(event); break;
+				case "mousedrag" : this.handleMouseDrag(event); break;
+			}
+			//var index = this.rotatingAxis.relativeToken.index;
+			//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
+			this.updateFreehandPath();
+			this.knotLabel.updateLabel();
 		}
-		//var index = this.rotatingAxis.relativeToken.index;
-		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
-		this.updateFreehandPath();
-		this.knotLabel.updateLabel();
-/*	
-	if ((event.item != null) || (this.mouseItem != null)) {
-		//console.log("GetTDrawingAreaObjet: ", this.getTEDrawingAreaObject(event.item));
-		
-		if (event.type == "mousedown") { 
-			console.log("Handling parent: ", this.handlingParent);
-			//console.log("mousedown => set variables");
-			this.mouseDown = true;
-			this.mouseItem = event.item;
-			this.handlingParent = this.getTEDrawingAreaObject(event.item);
-			//console.log("event.item: ", event.item);
-			//console.log("Handling parent: ", this.handlingParent);
-		} else if (event.type == "mouseup") {
-			console.log("Handling parent: ", this.handlingParent);
-			if (this.handlingParent != null) {
-				this.handlingParent.handleEvent(event);
-			}
-			//console.log("mouseup => set variables");
-			this.mouseDown = false;
-			this.mouseDownItem = null;
-			this.handlingParent = null;
-		} 
-		//console.log("Handling parent: ", this.handlingParent);
-		//console.log("TEDrawingArea.mouseDown: ", this.mouseDown);
-		//if (this.mouseDown) {	
-			//console.log("Handle this event: ", this.mouseDownItem, "toType: ", toType(this.mouseDownItem));
-			if (this.handlingParent != null) {
-				//console.log("Handling parent: ", this.handlingParent);
-				this.handlingParent.handleEvent(event);
-			}
-			
-			//this.mouseDownItem.handleEvent(event);
-			
-			/*
-			if ((this.fhCircleSelected == null) && (event.item != null) && (this.isDragableCircle(event.item))) {
-				switch (event.item) {
-					case this.rotatingAxis.controlCircle : this.itemSelected = this.rotatingAxis; break;
-					case this.preceeding.circle : this.itemSelected = this.preceeding; break;
-					case this.following.circle : this.itemSelected = this.following; break;
-					default : this.itemSelected = this;
-				}
-				this.fhCircleSelected = event.item;	
-			}
-	
-			if ((this.isInsideBorders(event)) || (event.type == "mouseup")) { 
-				//console.log("Ok, it's my business");
-				switch (event.type) {
-					case "mousedown" :this.itemSelected.handleMouseDown(event); break;
-					case "mouseup" : this.itemSelected.handleMouseUp(event); break;
-					case "mousedrag" : this.itemSelected.handleMouseDrag(event); break;
-				}
-			} else {
-				//console.log("Thx, but it's not my business");
-			}*/
-		//} else {
-			//console.log("Don't react to mouse events if mouseDown == false");
-		//}
-/*	} else {
-		if ((event.item != null) || (event.item.isStatic())) { // hoping that JS evaluates or expressions sequentially ... otherwise the second expression might throw and error ...
-			console.log("Insert new point");
-		
-			this.editableToken.insertNewKnot(event.point);
-		}
-	}
-*/
-	}
+	//}
 }
 TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();

@@ -55,13 +55,44 @@ var tangentPrecision = 0.001,
 	tangentFixPointMaxIterations = 200,
 	tangentBetweenCurvesMaxIterations = 4;
 
+// enable right clicks
+/* doesn't work: unfortunately the oncontextmenu-method is called after the tool.nomouse-methods ...
+// which means that you only will know that a right click was made when it is released 
+// (and that doesn't seem very helpful ... ;-)
+// try to use the button-property of paper.js-event: it's not documented, but wenn inspecting
+// the event object in the debugger, the property is clearly there ... !? 
+// work with global variables for the buttons
+// By the way: there's also information about ALT- and CTRL-Key (could be used in combination
+// with mouse events)
+// window.oncontextmenu: still needed in order to avoid pop-up menu!
+*/
+// doesn't work: button property is not set
+window.oncontextmenu = function(event) {
+	//console.log("rightclick: ", event);
+	return false; // avoid popping up of context menu
+}
+
+// work with keyboard events instead
+
+var keyPressed = "";
+
+tool.onKeyDown = function(event) {
+	keyPressed = event.key;
+	//console.log("KeyEvent: ", event);
+}
+tool.onKeyUp = function(event) {
+	//console.log("KeyEvent: ", event);
+	keyPressed = "";
+}
+
+
 tool.onMouseDown = function(event) {
 	var newClick = (new Date).getTime();
 	mouseDown = true;
+	//console.log("mousedown: event: ", event);
 	//console.log("lastclick: ", lastClick, " newClick: ", newClick, " delta: ", newClick-lastClick);
 	if ((newClick-lastClick) < doubleClickInterval) doubleClick = true;
 	else doubleClick = false;
-	
 	mainCanvas.handleEvent(event);
 	lastClick = newClick;
 }
@@ -71,4 +102,5 @@ tool.onMouseDrag = function(event) {
 tool.onMouseUp = function(event) {
 	mainCanvas.handleEvent(event);
 	mouseDown = false;
+    mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
 }

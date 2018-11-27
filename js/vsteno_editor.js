@@ -487,17 +487,53 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	//console.log(this
 	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[0], this.selectedKnot.tensions[1]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
+TEEditableToken.prototype.getRelativeToken = function() {
+	console.log("this.index: ", this.index);
+	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
+}
+TEEditableToken.prototype.setKnotType = function(type) {
+	var relativeToken = this.getRelativeToken();
+	relativeToken.setType(type);
+	//console.log("settype");
+	switch (type) {
+		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
+							var x = this.selectedKnot.circle.position.x,
+								y = this.selectedKnot.circle.position.y;
+							this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							break;
+		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); break;
+	}
+}
 TEEditableToken.prototype.handleMouseDown = function(event) {
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
+	  	console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
+		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+
+		switch (keyPressed) {
+			case "o" : this.setKnotType("orthogonal"); break;
+			case "h" : this.setKnotType("horizontal"); break;
+		}
+		console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
+		
+		//this.parent.parent.tensionSliders.link(this.selectedKnot);
+		//this.selectedKnot.handleMouseDown(event);
+		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	}
 }
 TEEditableToken.prototype.handleMouseUp = function(event) {
 	///*this.*/mouseDown = false;
 	if (this.selectedKnot != null) {
+		//console.log("change rectangle to circle");
+		//console.log("MouseUp: rightclick: ", rightClick);
+		if (keyPressed == "o") {
+		//	var relativeToken = this.getRelativeToken();
+	//		relativeToken.setType("horizontal");	
+	//		this.selectedKnot.changeRectangleToCircle();
+		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	} this.selectedKnot = null;	// leave markedKnot
@@ -512,6 +548,7 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEEditableToken.prototype.handleEvent = function(event) {
+	console.log("TEEditableToken.handleEvent");
 	switch (event.type) {
 		case "mousedown" : if (doubleClick) {
 								//this.handleMouseDown(event);
@@ -645,16 +682,24 @@ the coordinates is done by TERotatingAxis methods
 TERotatingAxisRelativeKnot is invisible (only internal data)
 */
 // class TERotatingAxisOuterKnot
+/*
 function TERotatingAxisOuterKnot(distance, x, y) {
 	this.position = new Point(x,y);
 	this.distance();
 }
+*/
 
 function TERotatingAxisRelativeKnot(x, y, type) {
 	// TERotatingAxisRelativeKnot doesn't include tensions (these are stored in TEVisuallyModifiableCircle)
 	this.type = type;			// orthogonal or horizontal
-	this.rd1 = x;				// relative data 1: x (for horizontal coordinates) - relative length following rotating axis (for orthogonal coordinates)
-	this.rd2 = y;				// relative data 2: y (for horizontal coordinates) - relative distance orthogonal to rotating axis
+	this.rd1 = x;				// relative data 1: x (for horizontal coordinates) - vector1: distance following rotating axis (for orthogonal coordinates)
+	this.rd2 = y;				// relative data 2: y (for horizontal coordinates) - vector2: distance orthogonal to rotating axis
+}
+TERotatingAxisRelativeKnot.prototype.setType = function(type) {
+	this.type = type;
+}
+TERotatingAxisRelativeKnot.prototype.getType = function() {
+	return this.type;
 }
 
 // class TERotatingAxisRelativeToken
@@ -678,11 +723,21 @@ TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(x, y, typ
 	this.knotsList.splice(index, 0, new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
 }
 TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y, index) {
+	console.log("update coordinates ...");
 	if (this.knotsList[index] != undefined) {
-		var relative = this.parent.getRelativeCoordinates(x, y, this.knotsList[index].type);
-		this.knotsList[index].rd1 = relative[0];
-		this.knotsList[index].rd2 = relative[1];
+		console.log("type: ", this.knotsList[index].type);
+		switch (this.knotsList[index].type) {
+			case "horizontal" : var relative = this.parent.getRelativeCoordinates(x, y, this.knotsList[index].type);
+								this.knotsList[index].rd1 = relative[0];
+								this.knotsList[index].rd2 = relative[1];
+								break;
+			case "orthogonal" : var relative = this.parent.getRelativeCoordinates(x, y, /*"horizontal"*/ this.knotsList[index].type);
+								this.knotsList[index].rd1 = relative[0];
+								this.knotsList[index].rd2 = relative[1];
+								break;
+		}
 	}
+	console.log("Updated (new) Values: ", relative);
 }
 
 // class TERotatingAxis
@@ -703,7 +758,7 @@ function TERotatingAxis(drawingArea, color) {
 	this.tempColor = '#0f0'; // try to avoid tempColor == null bug by setting variable from the beginning ...
 	this.line = new Path.Line([this.centerRotatingAxis.x, this.parent.lowerY], [this.centerRotatingAxis.x, this.parent.upperY]);
 	this.line.strokeColor = color;
-	this.controlCircle = new TEVisuallyModifiableCircle(new Point(this.centerRotatingAxis.x,this.parent.upperY), 5, color, '#0a0', '#00f' ); // Path.Circle( new Point(this.centerRotatingAxis.x, this.parent.upperY), 5);
+	this.controlCircle = new TEVisuallyModifiableCircle(new Point(this.centerRotatingAxis.x,this.parent.upperY), 10, color, '#0a0', '#00f' ); // Path.Circle( new Point(this.centerRotatingAxis.x, this.parent.upperY), 5);
 	
 	// token data (relative coordinates)
 	this.relativeToken = new TERotatingAxisRelativeToken(this);	
@@ -743,24 +798,27 @@ TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
 	}
 }
 TERotatingAxis.prototype.updateVisibleKnots = function() {
-	var temp1 = 0, temp2 = 0, horX = 0, newX = 0, newY = 0;
-	for (var i=0; i<this.relativeToken.knotsList.length; i++) {
-		temp1 = this.relativeToken.knotsList[i].rd1 * this.parent.scaleFactor;
-		temp2 = this.centerRotatingAxis.y - (this.relativeToken.knotsList[i].rd2 * this.parent.scaleFactor);
-		horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
-		newX = horX + temp1;
-		newY = /*this.centerRotatingAxis.y -*/ temp2;
-		//console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
-		this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
-	}
-}
+	console.log("TERotatingAxis.updateVisibleKnots");
+	//if (editableToken.knotsList.length > 0) {
+		var temp1 = 0, temp2 = 0, horX = 0, newX = 0, newY = 0;
+		for (var i=0; i<this.relativeToken.knotsList.length; i++) {
+			temp1 = this.relativeToken.knotsList[i].rd1 * this.parent.scaleFactor;
+			temp2 = this.centerRotatingAxis.y - (this.relativeToken.knotsList[i].rd2 * this.parent.scaleFactor);
+			horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
+			newX = horX + temp1;
+			newY = /*this.centerRotatingAxis.y -*/ temp2;
+			//console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
+			this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
+		}
+	//}
+}	
 TERotatingAxis.prototype.identify = function(item) {
 	//console.log("TERotatingAxis.identify()", item, this.controlCircle);
 	if (item == this.controlCircle.circle) return this;
 	else return false;
 }
 TERotatingAxis.prototype.handleEvent = function(event) {
-	//console.log("TERotatingAxis.handleEvent()");
+	console.log("TERotatingAxis.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
@@ -769,15 +827,17 @@ TERotatingAxis.prototype.handleEvent = function(event) {
 	// update visible knots
 	this.updateVisibleKnots();
 	this.parent.updateFreehandPath();
+	this.parent.connectPreceedingAndFollowing();
 }
 TERotatingAxis.prototype.handleMouseDown = function(event) {
 	//console.log("rotatingAxis.mousedown");	
 	this.controlCircle.select();
 	this.controlCircle.position = event.point;
+	//this.recalculateFreehandPoints();
 }
 TERotatingAxis.prototype.handleMouseUp = function(event) {
 	//this.controlCircle.position = event.point;
-	this.controlCircle.unselect();
+	this.controlCircle.unselect(); // works only inside drawing area ... probably superfluous if placed in TECanvas MouseUp-handler
 }
 TERotatingAxis.prototype.handleMouseDrag = function(event) {
 	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.centerRotatingAxis.y) && (event.point.y > this.parent.upperY)) {
@@ -786,15 +846,20 @@ TERotatingAxis.prototype.handleMouseDrag = function(event) {
 		this.line.segments[1].point = startAndEndPoints[1];	
 		this.controlCircle.circle.position = event.point;
 		// adjust token points
-		this.recalculateFreehandPoints();
+		//this.recalculateFreehandPoints(); // since I disabled this, the code works flawlessy ... but NO IDEA WHY ... ! :-) :-) :-)
 		var angleRad = Math.atan((startAndEndPoints[1][1] - startAndEndPoints[0][1]) / (startAndEndPoints[1][0] - startAndEndPoints[0][0]));
 		var angleDeg = Math.degrees(angleRad);
 		// copy values
 		this.inclinationValue = angleDeg;
 		this.inclinationLabel.content = Math.abs(angleDeg.toFixed(0)) + "°"; // show only positive values
+		// update
+		
+		this.updateVisibleKnots();
+		this.parent.updateFreehandPath();
+		this.parent.connectPreceedingAndFollowing();
 	}
 }
-TERotatingAxis.prototype.calculateHorizontalIntersectionX = function(/* x, */ y, type) {
+TERotatingAxis.prototype.calculateHorizontalIntersectionX = function(y, type) {
 	var dx = this.centerRotatingAxis.x - this.controlCircle.circle.position.x,
 		dy = this.centerRotatingAxis.y - this.controlCircle.circle.position.y;
 	if (dx == 0) horX = this.centerRotatingAxis.x;		// avoid division by 0
@@ -805,20 +870,125 @@ TERotatingAxis.prototype.calculateHorizontalIntersectionX = function(/* x, */ y,
 	//console.log("horX: ", horX);
 	return horX;
 }
+TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = function(kx, ky) {
+	// given: a) rotating axis (from origin to center control point)
+	//		  b) knot at actual position
+	// calculate: intersection (x,y) with rotating axis
+	// coordinates are absolute (i.e. inside canvas)
+	var ix, iy, m1, m2, c1, c2, kdx, kdy;
+	// set origin
+	var ox = this.centerRotatingAxis.x,
+		oy = this.centerRotatingAxis.y;
+	// set control point coordinates
+	var cx = this.controlCircle.circle.position.x,
+		cy = this.controlCircle.circle.position.y;
+	// calculate deltas of rotating axis
+	//console.log("hi there: ", this.controlCircle.circle.position, this.centerRotatingAxis);
+	var rdx = cx-ox,
+		rdy = cy-oy;
+	//console.log(rdx, rdy, this.centerRotatingAxis.x);
+	
+	if (rdx == 0) {
+			console.log("is vertical");
+			// avoid division by zero
+			// this case is trivial: iy = y, ix = ox = this.centerRotatingAxis.x
+			ix = ox;
+			iy = ky;
+	} else {
+		// calculate deltas for straight line that passes through knot
+		// must be orthogonal to rotating axis => swap rdx, rdy and negate rdx
+		kdx = rdy;
+		kdy = -rdx;
+		
+		// straight lines are defined like so:
+		// g1: y = x * (rdy/rdx) + c1, with m1 = rdy/rdx and c1 = oy - ox*(rdy/rdx)
+		// g2: y = x * (-rdx/rdy) + c2, with m2 = -rdx/rdy = kdx/kdy and c2 = y - (x*m2)
+	
+		// calculate intersection ix, iy
+		// ix = (c2-c1) / (m1-m2)
+		// iy = ix * m1 + c1
+		m1 = rdy/Math.avoidDivisionBy0(rdx);
+		m2 = kdy/Math.avoidDivisionBy0(kdx);
+		c1 = oy-ox*m1;
+		c2 = ky-kx*m2;
+		ix = (c2-c1) / Math.avoidDivisionBy0(m1-m2);
+		iy = (ix*m1) + c1;
+		
+	}	
+	console.log("Results: ");
+	console.log("m1=rdy/rdx: ", m1, "=", rdy, "/", rdx, "m2=kdx/kdy: ", m2, "=", kdx, "/", kdy);
+	console.log("c1=oy-ox*m1: ", c1, "=", oy, "-", ox, "*", m1);
+	console.log("c2=kx-ky*m2: ", c2, "=", kx, "-", ky, "*", m2);
+	
+	console.log("g1: oy=ox*m1+c1 ", oy, "=", ox, "*", m1, "+", c1);
+	console.log("g2: y=x*m2+c2 ", ky, "=", kx, "*", m2, "+", c2);
+	console.log("Intersection: ", ix, iy);
+	return [ix,iy];
+}
 TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 	var relative = null;
+	console.log("TERotatingAxis.getRelativeCoordinates: ", x, y, type);
+	var intersection, downScaledX, downScaledY, deltaX, deltaY, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
-		case "ortogonal" : break;
+		case "orthogonal" : 
+				intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
+				// calculate distance origin to intersection
+				deltaX = intersection[0] - this.centerRotatingAxis.x;
+				deltaY = intersection[1] - this.centerRotatingAxis.y;
+				distance1 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
+				// calculate distance intersection to knot
+				deltaX = intersection[0] - x;
+				deltaY = intersection[1] - y;
+				distance2 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
+				// scale the down
+				downScaledDistance1 = distance1 / this.parent.scaleFactor;
+				downScaledDistance2 = distance2 / this.parent.scaleFactor;
+				relative = [downScaledDistance1, downScaledDistance2];
+				console.log("calculate orthogonal:", relative);
+		
+		break;
 		case "horizontal" : 
 				relX = -this.calculateHorizontalIntersectionRelativeX(x, y, type);
-				//console.log("relX / abs.x: ", relX, this.absolute.x);
+				console.log("relX:", relX, "From: ", x, y, type);
 				downScaledX = relX / this.parent.scaleFactor;
 				downScaledY = -(y - this.centerRotatingAxis.y) / this.parent.scaleFactor;
 				relative = [downScaledX, downScaledY];
-				//console.log("Inserted: ", this.relative);
+				console.log("calculate horizontal: ", relative);
 			break;
 	}
 	return relative;
+}
+TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
+	var absCoordinates;
+	switch(type) {
+		case "horizontal" : 
+				relX = -this.calculateHorizontalIntersectionRelativeX(x, y, type);
+				//console.log("relX:", relX, "From: ", x, y, type);
+				downScaledX = relX / this.parent.scaleFactor;
+				downScaledY = -(y - this.centerRotatingAxis.y) / this.parent.scaleFactor;
+				absCoordinates = [downScaledX, downScaledY];
+				console.log("calculate absolute horizontal: ", relative);
+			break;
+		case "orthogonal" : absCoordinates = [10,10];
+		/*
+				intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
+				// calculate distance origin to intersection
+				deltaX = intersection[0] - this.centerRotatingAxis.x;
+				deltaY = intersection[1] - this.centerRotatingAxis.y;
+				distance1 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
+				// calculate distance intersection to knot
+				deltaX = intersection[0] - x;
+				deltaY = intersection[1] - y;
+				distance2 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
+				// scale the down
+				downScaledDistance1 = distance1 / this.parent.scaleFactor;
+				downScaledDistance2 = distance2 / this.parent.scaleFactor;
+				relative = [downScaledDistance1, downScaledDistance2];
+				console.log("calculate orthogonal:", relative);
+		*/
+			break;
+	}
+	return absCoordinates;
 }
 TERotatingAxis.prototype.calculateHorizontalIntersectionRelativeX = function(x, y, type) {
 	var relX = this.calculateHorizontalIntersectionX(/*x,*/ y, type) - x;
@@ -834,6 +1004,17 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 	} else {
 		var m = dy / dx;
 		for (var i=0; i<numberPoints; i++) {
+			// read relative values
+			var rd1 = this.relativeToken.knotsList[i].rd1,
+				rd2 = this.relativeToken.knotsList[i].rd1,
+				type = this.relativeToken.knotsList[i].type;
+			// calculate absolute coordinates
+			var absCoordinates = this.getAbsoluteCoordinates(rd1, rd2, type);
+			// copy values to editable token
+			this.parent.editableToken.knotsList[i].x = absCoordinates[0];
+			this.parent.editableToken.knotsList[i].y = absCoordinates[1];
+			
+			/*
 			var horX = this.calculateHorizontalIntersectionX(this.parent.editableToken.knotsList[i].x, this.parent.editableToken.knotsList[i].y, "horizontal" );
 			
 			var tempx = this.parent.editableToken.knotsList[i];
@@ -843,19 +1024,23 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 			
 			this.parent.editableToken.knotsList[i].x = horX + (relative[0] * this.parent.scaleFactor);
 			this.parent.editableToken.knotsList[i].y = this.centerRotatingAxis.y - (relative[1] * this.parent.scaleFactor);
+			*/
 		}
-
 	}
 	//this.parent.connectPreceedingAndFollowing();
+	//this.parent.updateFreehandPath();
+	//this.parent.connectPreceedingAndFollowing();
 	
-	this.parent.preceeding.connect(); // update connecting point also
-	this.parent.following.connect(); // update connecting point also
+	//this.parent.preceeding.connect(); // update connecting point also
+	//this.parent.following.connect(); // update connecting point also
 }
 
 // class TEVisuallyModifiableCircle
 function TEVisuallyModifiableCircle(position, radius, color, selectColor, strokeColor ) {
 	//console.log("TEVisuallyModifiableCircle.constructor");
 	this.circle = new Path.Circle(position, radius);
+	//this.center = position;
+	this.radius = radius;
 	this.circle.fillColor = color;
 	this.circle.strokeWidth = 0;
 	this.circle.strokeColor = strokeColor;
@@ -885,9 +1070,10 @@ switch (event.type) {
 }*/
 TEVisuallyModifiableCircle.prototype.handleMouseDown = function(event) {
 	//console.log("TEVisuallyModifiableCircle.handleMouseDown");
+	this.circle.position = event.point;
 	this.mark();
 	this.select();
-	this.circle.position = event.point;
+	//this.circle.position = event.point;
 }
 TEVisuallyModifiableCircle.prototype.handleMouseDrag = function(event) {
 	//console.log("mousedrag");
@@ -904,7 +1090,49 @@ TEVisuallyModifiableCircle.prototype.isStatic = function() {
 TEVisuallyModifiableCircle.prototype.isDynamic = function() {
 	return true;
 }
-
+TEVisuallyModifiableCircle.prototype.changeCircleToRectangle = function() {
+	// changes circle to rectangle
+	// function needed by TEVisuallyModifiableKnot (which inherits from TEVisuallyModifiableCircle)
+	// implement it here, so that other classes can use the function as well if they need to
+	// the property "circle" will keep the same name for the moment
+	// (can be changed in the whole code later)
+	
+	var center = this.circle.position,
+		leftX = center.x - this.radius,
+		topY = center.y - this.radius,
+		rightX = center.x + this.radius,
+		bottomY = center.y + this.radius,
+		strokeColor = this.circle.strokeColor,
+		strokeWidth = this.circle.strokeWidth,
+		fillColor = this.circle.fillColor;
+		
+	// delete circle path completely
+	this.center = center; // store center for rectangle (so that the circle can be restored later) - USE THIS ONLY FOR THIS PURPOSE!!!
+	this.circle.removeSegments();
+	
+	// create a new rectangle object with same properties
+	this.circle = new Path.Rectangle(new Point(leftX, topY), new Point(rightX, bottomY));
+	this.circle.strokeColor = strokeColor;
+	this.circle.strokeWidth = strokeWidth;
+	this.circle.fillColor = fillColor;
+}
+TEVisuallyModifiableCircle.prototype.changeRectangleToCircle = function() {
+	// changes rectangle to rectangle
+	// same comments as for changeCircleToRectangle
+	var strokeColor = this.circle.strokeColor,
+		strokeWidth = this.circle.strokeWidth,
+		fillColor = this.circle.fillColor;
+	var center = this.circle.position; // get position of rectangle => use it for circle
+		
+	// delete circle path completely
+	this.circle.removeSegments();
+	
+	// create a new rectangle object with same properties
+	this.circle = new Path.Circle(center, this.radius);
+	this.circle.strokeColor = strokeColor;
+	this.circle.strokeWidth = strokeWidth;
+	this.circle.fillColor = fillColor;
+}
 
 // class TEConnectionPoint extends TEVisuallyModifiableCircle
 function TEConnectionPoint(drawingArea, x, y ) {
@@ -944,7 +1172,7 @@ TEConnectionPoint.prototype.handleMouseDrag = function(event) {
 TEConnectionPoint.prototype.handleEvent = function(event) {
 	//console.log("unlink sliders:", this.parent.parent.tensionSliders);
 	this.parent.parent.tensionSliders.hideVerticalSliders();
-	//console.log("TEConnectionPoint.handleEvent()");
+	console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
@@ -1463,10 +1691,12 @@ TEDrawingArea.prototype.calculateOuterShape = function() {
 	this.calculateOuterShapeHandles();
 }
 TEDrawingArea.prototype.updateFreehandPath = function() {
-	this.copyKnotsToFreehandPath();
-	this.calculateLeftRightVectors();
-	this.calculateOuterShape();
-	this.calculateFreehandHandles();
+	if (this.editableToken.knotsList.length > 0) {
+		this.copyKnotsToFreehandPath();
+		this.calculateLeftRightVectors();
+		this.calculateOuterShape();
+		this.calculateFreehandHandles();
+	}
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	if ((this.leftX <= event.point.x) && (this.rightX >= event.point.x) && (this.lowerY >= event.point.y) && (this.upperY <= event.point.y)) return true;
@@ -1541,83 +1771,20 @@ TEDrawingArea.prototype.isStatic = function(item) {
 }
 
 TEDrawingArea.prototype.handleEvent = function(event) {
-	//console.log("TEDrawingArea.handleEvent()", event.item);
-	if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
-		switch (event.type) {
-			case "mousedown" : this.handleMouseDown(event); break;
-			case "mouseup" : this.handleMouseUp(event); break;
-			case "mousedrag" : this.handleMouseDrag(event); break;
+	console.log("TEDrawingArea.handleEvent()", event.item);
+	//if (event.item != null) {
+		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
+			switch (event.type) {
+				case "mousedown" : this.handleMouseDown(event); break;
+				case "mouseup" : this.handleMouseUp(event); break;
+				case "mousedrag" : this.handleMouseDrag(event); break;
+			}
+			//var index = this.rotatingAxis.relativeToken.index;
+			//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
+			this.updateFreehandPath();
+			this.knotLabel.updateLabel();
 		}
-		//var index = this.rotatingAxis.relativeToken.index;
-		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
-		this.updateFreehandPath();
-		this.knotLabel.updateLabel();
-/*	
-	if ((event.item != null) || (this.mouseItem != null)) {
-		//console.log("GetTDrawingAreaObjet: ", this.getTEDrawingAreaObject(event.item));
-		
-		if (event.type == "mousedown") { 
-			console.log("Handling parent: ", this.handlingParent);
-			//console.log("mousedown => set variables");
-			this.mouseDown = true;
-			this.mouseItem = event.item;
-			this.handlingParent = this.getTEDrawingAreaObject(event.item);
-			//console.log("event.item: ", event.item);
-			//console.log("Handling parent: ", this.handlingParent);
-		} else if (event.type == "mouseup") {
-			console.log("Handling parent: ", this.handlingParent);
-			if (this.handlingParent != null) {
-				this.handlingParent.handleEvent(event);
-			}
-			//console.log("mouseup => set variables");
-			this.mouseDown = false;
-			this.mouseDownItem = null;
-			this.handlingParent = null;
-		} 
-		//console.log("Handling parent: ", this.handlingParent);
-		//console.log("TEDrawingArea.mouseDown: ", this.mouseDown);
-		//if (this.mouseDown) {	
-			//console.log("Handle this event: ", this.mouseDownItem, "toType: ", toType(this.mouseDownItem));
-			if (this.handlingParent != null) {
-				//console.log("Handling parent: ", this.handlingParent);
-				this.handlingParent.handleEvent(event);
-			}
-			
-			//this.mouseDownItem.handleEvent(event);
-			
-			/*
-			if ((this.fhCircleSelected == null) && (event.item != null) && (this.isDragableCircle(event.item))) {
-				switch (event.item) {
-					case this.rotatingAxis.controlCircle : this.itemSelected = this.rotatingAxis; break;
-					case this.preceeding.circle : this.itemSelected = this.preceeding; break;
-					case this.following.circle : this.itemSelected = this.following; break;
-					default : this.itemSelected = this;
-				}
-				this.fhCircleSelected = event.item;	
-			}
-	
-			if ((this.isInsideBorders(event)) || (event.type == "mouseup")) { 
-				//console.log("Ok, it's my business");
-				switch (event.type) {
-					case "mousedown" :this.itemSelected.handleMouseDown(event); break;
-					case "mouseup" : this.itemSelected.handleMouseUp(event); break;
-					case "mousedrag" : this.itemSelected.handleMouseDrag(event); break;
-				}
-			} else {
-				//console.log("Thx, but it's not my business");
-			}*/
-		//} else {
-			//console.log("Don't react to mouse events if mouseDown == false");
-		//}
-/*	} else {
-		if ((event.item != null) || (event.item.isStatic())) { // hoping that JS evaluates or expressions sequentially ... otherwise the second expression might throw and error ...
-			console.log("Insert new point");
-		
-			this.editableToken.insertNewKnot(event.point);
-		}
-	}
-*/
-	}
+	//}
 }
 TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();
@@ -1681,13 +1848,44 @@ var tangentPrecision = 0.001,
 	tangentFixPointMaxIterations = 200,
 	tangentBetweenCurvesMaxIterations = 4;
 
+// enable right clicks
+/* doesn't work: unfortunately the oncontextmenu-method is called after the tool.nomouse-methods ...
+// which means that you only will know that a right click was made when it is released 
+// (and that doesn't seem very helpful ... ;-)
+// try to use the button-property of paper.js-event: it's not documented, but wenn inspecting
+// the event object in the debugger, the property is clearly there ... !? 
+// work with global variables for the buttons
+// By the way: there's also information about ALT- and CTRL-Key (could be used in combination
+// with mouse events)
+// window.oncontextmenu: still needed in order to avoid pop-up menu!
+*/
+// doesn't work: button property is not set
+window.oncontextmenu = function(event) {
+	//console.log("rightclick: ", event);
+	return false; // avoid popping up of context menu
+}
+
+// work with keyboard events instead
+
+var keyPressed = "";
+
+tool.onKeyDown = function(event) {
+	keyPressed = event.key;
+	//console.log("KeyEvent: ", event);
+}
+tool.onKeyUp = function(event) {
+	//console.log("KeyEvent: ", event);
+	keyPressed = "";
+}
+
+
 tool.onMouseDown = function(event) {
 	var newClick = (new Date).getTime();
 	mouseDown = true;
+	//console.log("mousedown: event: ", event);
 	//console.log("lastclick: ", lastClick, " newClick: ", newClick, " delta: ", newClick-lastClick);
 	if ((newClick-lastClick) < doubleClickInterval) doubleClick = true;
 	else doubleClick = false;
-	
 	mainCanvas.handleEvent(event);
 	lastClick = newClick;
 }
@@ -1697,6 +1895,7 @@ tool.onMouseDrag = function(event) {
 tool.onMouseUp = function(event) {
 	mainCanvas.handleEvent(event);
 	mouseDown = false;
+    mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
 }
 // class TEMovingVerticalSlider
 function TEMovingVerticalSlider(from, to) {
