@@ -154,7 +154,7 @@ TERotatingAxis.prototype.handleEvent = function(event) {
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
 	// update visible knots
-	this.updateVisibleKnots();
+	//this.updateVisibleKnots();
 	this.parent.updateFreehandPath();
 	this.parent.connectPreceedingAndFollowing();
 }
@@ -183,7 +183,8 @@ TERotatingAxis.prototype.handleMouseDrag = function(event) {
 		this.inclinationLabel.content = Math.abs(angleDeg.toFixed(0)) + "°"; // show only positive values
 		// update
 		
-		this.updateVisibleKnots();
+		//this.updateVisibleKnots();
+		this.recalculateFreehandPoints();
 		this.parent.updateFreehandPath();
 		this.parent.connectPreceedingAndFollowing();
 	}
@@ -257,21 +258,26 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 	var relative = null;
 	console.log("TERotatingAxis.getRelativeCoordinates: ", x, y, type);
-	var intersection, downScaledX, downScaledY, deltaX, deltaY, distance1, distance2, downScaledDistance1, downScaledDistance2;
+	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
 		case "orthogonal" : 
 				intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
-				deltaX = intersection[0] - this.centerRotatingAxis.x;
-				deltaY = intersection[1] - this.centerRotatingAxis.y;
-				distance1 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
+				delta1X = intersection[0] - this.centerRotatingAxis.x;
+				delta1Y = intersection[1] - this.centerRotatingAxis.y;
+				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
+				console.log("lenght vector 1: ", delta1X, delta1Y, distance1);
 				// calculate distance intersection to knot
-				deltaX = intersection[0] - x;
-				deltaY = intersection[1] - y;
-				distance2 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
+				delta2X = intersection[0] - x;
+				delta2Y = intersection[1] - y;
+				distance2 = Math.sqrt(delta2X*delta2X + delta2Y*delta2Y);
 				// scale the down
 				downScaledDistance1 = distance1 / this.parent.scaleFactor;
 				downScaledDistance2 = distance2 / this.parent.scaleFactor;
+				// add direction for distance (positive or negative)
+				if ((x<intersection[0]) && (y<intersection[1])) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
+				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
+				// define return value
 				relative = [downScaledDistance1, downScaledDistance2];
 				console.log("calculate orthogonal:", relative);
 		
@@ -288,33 +294,68 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 	return relative;
 }
 TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
-	var absCoordinates;
-	switch(type) {
+	var absCoordinates, temp1, temp2, horX, newX, newY;
+	switch (type) {
 		case "horizontal" : 
-				relX = -this.calculateHorizontalIntersectionRelativeX(x, y, type);
-				//console.log("relX:", relX, "From: ", x, y, type);
+		
+				temp1 = rd1 * this.parent.scaleFactor;
+				temp2 = this.centerRotatingAxis.y - (rd2 * this.parent.scaleFactor);
+				horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
+				newX = horX + temp1;
+				newY = /*this.centerRotatingAxis.y -*/ temp2;
+				console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
+				console.log("new(x,y):", newX, newY);
+				//this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
+				
+				
+				/*
+				
+				relX = -this.calculateHorizontalIntersectionRelativeX(rd1, rd2, type);
+				console.log("relX:", relX, "From: ", x, y, type);
 				downScaledX = relX / this.parent.scaleFactor;
 				downScaledY = -(y - this.centerRotatingAxis.y) / this.parent.scaleFactor;
-				absCoordinates = [downScaledX, downScaledY];
-				console.log("calculate absolute horizontal: ", relative);
+				absCoordinates = [downScaledX, downScaledY];*/
+				absCoordinates = [newX, newY];
+				//console.log("calculate absolute horizontal: ", absCoordinates);
 			break;
-		case "orthogonal" : absCoordinates = [10,10];
-		/*
-				intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
-				// calculate distance origin to intersection
-				deltaX = intersection[0] - this.centerRotatingAxis.x;
-				deltaY = intersection[1] - this.centerRotatingAxis.y;
-				distance1 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
-				// calculate distance intersection to knot
-				deltaX = intersection[0] - x;
-				deltaY = intersection[1] - y;
-				distance2 = Math.sqrt(deltaX*deltaX + deltaY+deltaY);
-				// scale the down
-				downScaledDistance1 = distance1 / this.parent.scaleFactor;
-				downScaledDistance2 = distance2 / this.parent.scaleFactor;
-				relative = [downScaledDistance1, downScaledDistance2];
-				console.log("calculate orthogonal:", relative);
-		*/
+		case "orthogonal" : //absCoordinates = [300,300];
+		
+				// set origin
+				var ox = this.centerRotatingAxis.x,
+					oy = this.centerRotatingAxis.y;
+				// set control point coordinates
+				var cx = this.controlCircle.circle.position.x,
+					cy = this.controlCircle.circle.position.y;
+				// calculate deltas of rotating axis (vector 1)
+				var rdx = cx-ox,
+					rdy = cy-oy;
+				// define vector 2 (orthogonal)
+				var v2dx = -rdy,
+					v2dy = rdx;
+				// calculate length
+				var rLength = Math.sqrt((rdx*rdx) + (rdy*rdy));
+				var v2Length = Math.sqrt((v2dx*v2dx) + (v2dy * v2dy));
+				// standardize deltas
+					rdx = rdx / rLength;
+					rdy = rdy / rLength;
+					v2dx = v2dx / v2Length;
+					v2dy = v2dy / v2Length;
+				// calculate new point on rotating axis vector
+				var rnx = rdx * rd1 * this.parent.scaleFactor,
+					rny = rdy * rd1 * this.parent.scaleFactor;
+				// define vector 2 (orthogonal)
+				//var v2dx = -rdy,
+				//	v2dy = rdx;
+				// calculate new vector length
+				var v2nx = v2dx * rd2 * this.parent.scaleFactor, // change direction
+					v2ny = v2dy * rd2 * this.parent.scaleFactor;
+				// calculate final absolute point (vector 1 + vector 2) + ox/oy
+				var absx = rnx + v2nx + ox,
+					absy = rny + v2ny + oy;
+				
+				absCoordinates = [absx, absy]
+				console.log("calculate orthogonal:", absCoordinates);
+		
 			break;
 	}
 	return absCoordinates;
@@ -324,7 +365,8 @@ TERotatingAxis.prototype.calculateHorizontalIntersectionRelativeX = function(x, 
 	return relX;
 }
 TERotatingAxis.prototype.recalculateFreehandPoints = function() {
-	
+	console.log("TERotatingAxis.recalculateFreehandPoints");
+	var newX, newY;
 	var numberPoints = this.parent.editableToken.knotsList.length,
 		dy = this.controlCircle.circle.position.y - this.centerRotatingAxis.y,
 		dx = this.controlCircle.circle.position.x - this.centerRotatingAxis.x;
@@ -335,14 +377,18 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 		for (var i=0; i<numberPoints; i++) {
 			// read relative values
 			var rd1 = this.relativeToken.knotsList[i].rd1,
-				rd2 = this.relativeToken.knotsList[i].rd1,
+				rd2 = this.relativeToken.knotsList[i].rd2,
 				type = this.relativeToken.knotsList[i].type;
 			// calculate absolute coordinates
+			console.log("getAbsoluteCoordinates: i: (rd1, rd2, type) ", i, ":", rd1, rd2, type);
 			var absCoordinates = this.getAbsoluteCoordinates(rd1, rd2, type);
+			console.log("absCoordinates: ", absCoordinates);
 			// copy values to editable token
 			this.parent.editableToken.knotsList[i].x = absCoordinates[0];
 			this.parent.editableToken.knotsList[i].y = absCoordinates[1];
-			
+				
+			console.log("newx,y: ", newX, newY);
+			this.parent.editableToken.knotsList[i].circle.position = [absCoordinates[0], absCoordinates[1]];
 			/*
 			var horX = this.calculateHorizontalIntersectionX(this.parent.editableToken.knotsList[i].x, this.parent.editableToken.knotsList[i].y, "horizontal" );
 			
