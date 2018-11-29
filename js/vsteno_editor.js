@@ -416,7 +416,7 @@ function TEKnotType() {
 // class TEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
 function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor) {
     this.type = new TEKnotType();
-    this.tensions = [t1, t2];
+    this.tensions = [t1, t2, t1, t2, t1, t2];	// tensions must be controlled individually for left, middle and right path/outer shape (set them all to the same value to start)
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
 TEVisuallyModifiableKnot.prototype = new TEVisuallyModifiableCircle(); 	// inherit
@@ -425,7 +425,24 @@ TEVisuallyModifiableKnot.prototype.identify = function(item) {
 	else return null;
 }
 TEVisuallyModifiableKnot.prototype.setTensions = function(t1, t2) {
-	this.tensions = [t1, t2];
+	switch (selectedTension) { // for test purposes
+		case "middle" : this.tensions[2] = t1; this.tensions[3] = t2; break;
+		case "left" : this.tensions[0] = t1; this.tensions[1] = t2; break;
+		case "right" : this.tensions[4] = t1; this.tensions[5] = t2; break;	
+	}
+/*
+	this.tensions[2] = t1; 	// write tensions for middle path to offsets 2 and 3
+	this.tensions[3] = t2;
+*/
+}
+TEVisuallyModifiableKnot.prototype.getTensions = function() {
+	var result;
+	switch (selectedTension) { // for test purposes
+		case "middle" : result = [this.tensions[2], this.tensions[3]]; break;
+		case "left" : result = [this.tensions[0], this.tensions[1]]; break;
+		case "right" : result = [this.tensions[4], this.tensions[5]]; break;	
+	}	
+	return result;
 }
 
 // class TEEditableToken
@@ -485,7 +502,7 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.parent.setMarkedCircle(this.markedKnot);
 	// update sliders
 	//console.log(this
-	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[0], this.selectedKnot.tensions[1]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
 TEEditableToken.prototype.getRelativeToken = function() {
 	console.log("this.index: ", this.index);
@@ -1563,15 +1580,15 @@ TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	// do first knot separately (add "virtual" 3rd knot at beginning which is identical with 1st knot)
 	if (numberOfPoints > 1) { // only if there are at least 2 knots
 		//console.log("calculate 1st");
-		var t1 = this.editableToken.knotsList[0].tensions[0];
-		var t2 = this.editableToken.knotsList[0].tensions[1];
+		var t1 = this.editableToken.knotsList[0].tensions[2];
+		var t2 = this.editableToken.knotsList[0].tensions[3];
 		var absHandles = getControlPoints(this.fhToken.segments[0].point, this.fhToken.segments[0], this.fhToken.segments[1], t1, t2);
 		this.fhToken.segments[0].handleIn = absHandles[0] - this.fhToken.segments[0].point;
 		this.fhToken.segments[0].handleOut = absHandles[1] - this.fhToken.segments[0].point;
 	}
 	for (var i = 1; i < numberOfPoints-1; i++) { // dont calculate 1st and last
-			var t1 = this.editableToken.knotsList[i].tensions[0];
-			var t2 = this.editableToken.knotsList[i].tensions[1];
+			var t1 = this.editableToken.knotsList[i].tensions[2];
+			var t2 = this.editableToken.knotsList[i].tensions[3];
 			var absHandles = getControlPoints( this.fhToken.segments[i-1].point, this.fhToken.segments[i].point, this.fhToken.segments[i+1].point, t1, t2 );
 			this.fhToken.segments[i].handleIn = absHandles[0] - this.fhToken.segments[i].point;
 			this.fhToken.segments[i].handleOut = absHandles[1] - this.fhToken.segments[i].point;
@@ -1580,8 +1597,8 @@ TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	if (numberOfPoints > 1) { // only if there are at least 2 knots
 		//console.log("calculate last");
 		var last = this.editableToken.knotsList.length-1;
-		var t1 = this.editableToken.knotsList[last].tensions[0];
-		var t2 = this.editableToken.knotsList[last].tensions[1];
+		var t1 = this.editableToken.knotsList[last].tensions[2];
+		var t2 = this.editableToken.knotsList[last].tensions[3];
 		var absHandles = getControlPoints(this.fhToken.segments[last-1].point, this.fhToken.segments[last], this.fhToken.segments[last], t1, t2);
 		this.fhToken.segments[last].handleIn = absHandles[0] - this.fhToken.segments[last].point;
 		this.fhToken.segments[last].handleOut = absHandles[1] - this.fhToken.segments[last].point;
@@ -1616,7 +1633,7 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		vectorY = vectorY / Math.avoidDivisionBy0(vectorLength);
 		// calculate new coordinates for left shape
 		// vector endpoint
-		var newLength = 20; // 10 pixels
+		var newLength = 10; // 10 pixels
 		var endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
@@ -1630,7 +1647,7 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		vectorY = -vectorY;
 		vectorX = -vectorX;
 		// vector endpoint
-		newLength = 20; // 10 pixels
+		newLength = 10; // 10 pixels
 		endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
@@ -1683,8 +1700,8 @@ TEDrawingArea.prototype.calculateOuterShapeHandles = function() {
 		// modulo = wrap around at the end (lenght of outerShape = 2*length - 2, because start/end points are only inserted 1x)
 		p2 = this.editableToken.outerShape.segments[(continueIndex+1)%(2*length-2)].point;
 		// get tensions
-		t1 = this.editableToken.knotsList[i].tensions[1];	// tensions have to be inversed 
-		t2 = this.editableToken.knotsList[i].tensions[0];	// due to backwards calculation
+		t1 = this.editableToken.knotsList[i].tensions[5];	// tensions have to be inversed 
+		t2 = this.editableToken.knotsList[i].tensions[4];	// due to backwards calculation
 		// calculate control points
 		controlPoints = getControlPoints(p0, p1, p2, t1, t2);
 		//console.log("getControlPoints: ", continueIndex, p0, p1, p2, t1, t2);
@@ -1914,9 +1931,15 @@ window.oncontextmenu = function(event) {
 // work with keyboard events instead
 
 var keyPressed = "";
+var selectedTension = "middle";
 
 tool.onKeyDown = function(event) {
 	keyPressed = event.key;
+	switch (keyPressed) {	// for test purposes 
+		case "m" : selectedTension = "middle"; console.log("tension: middle"); mainCanvas.tensionSliders.updateValues(); break;
+		case "l" : selectedTension = "left"; console.log("tension: left"); mainCanvas.tensionSliders.updateValues(); break;
+		case "r" : selectedTension = "right"; console.log("tension: right"); mainCanvas.tensionSliders.updateValues(); break;
+	}
 	//console.log("KeyEvent: ", event);
 }
 tool.onKeyUp = function(event) {
@@ -2112,6 +2135,7 @@ TETwoGroupedTensionSliders.prototype.handleEvent = function(event) {
 		}
 		//this.parent.editor.editableToken.knotsList[this.parent.editor.editableToken.index].setTensions(t1, t2);
 	}
+	//this.updateValues();
 }
 TETwoGroupedTensionSliders.prototype.setValues = function(t1, t2) {
 	this.tensionSlider1.setValue(t1);
@@ -2127,12 +2151,25 @@ TETwoGroupedTensionSliders.prototype.hideVerticalSliders = function() {
 }
 TETwoGroupedTensionSliders.prototype.link = function(knot) {
 	this.linkedKnot = knot;
-	var t1 = this.linkedKnot.tensions[0]
-		t2 = this.linkedKnot.tensions[1];
+	var temp = this.linkedKnot.getTensions();
+	var t1 = temp[0],
+		t2 = temp[1];
 	this.setValues(t1,t2);
 	this.showVerticalSliders();
 }
 TETwoGroupedTensionSliders.prototype.unlink = function() {
 	this.linkedKnot = null;
 	this.hideVerticalSliders();
+}
+TETwoGroupedTensionSliders.prototype.updateValues = function() {
+	console.log("Update slider values: ", this.linkedKnot);
+	if (this.linkedKnot != null) {
+		var temp = this.linkedKnot.getTensions();
+		var t1 = temp[0],
+			t2 = temp[1];
+		this.setValues(t1,t2);
+		this.showVerticalSliders(); // not sure if this is necessary ...
+		console.log("linkedKnot after Update: ", this.linkedKnot);
+	
+	}
 }

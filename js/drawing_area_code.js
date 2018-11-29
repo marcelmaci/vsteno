@@ -77,15 +77,15 @@ TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	// do first knot separately (add "virtual" 3rd knot at beginning which is identical with 1st knot)
 	if (numberOfPoints > 1) { // only if there are at least 2 knots
 		//console.log("calculate 1st");
-		var t1 = this.editableToken.knotsList[0].tensions[0];
-		var t2 = this.editableToken.knotsList[0].tensions[1];
+		var t1 = this.editableToken.knotsList[0].tensions[2];
+		var t2 = this.editableToken.knotsList[0].tensions[3];
 		var absHandles = getControlPoints(this.fhToken.segments[0].point, this.fhToken.segments[0], this.fhToken.segments[1], t1, t2);
 		this.fhToken.segments[0].handleIn = absHandles[0] - this.fhToken.segments[0].point;
 		this.fhToken.segments[0].handleOut = absHandles[1] - this.fhToken.segments[0].point;
 	}
 	for (var i = 1; i < numberOfPoints-1; i++) { // dont calculate 1st and last
-			var t1 = this.editableToken.knotsList[i].tensions[0];
-			var t2 = this.editableToken.knotsList[i].tensions[1];
+			var t1 = this.editableToken.knotsList[i].tensions[2];
+			var t2 = this.editableToken.knotsList[i].tensions[3];
 			var absHandles = getControlPoints( this.fhToken.segments[i-1].point, this.fhToken.segments[i].point, this.fhToken.segments[i+1].point, t1, t2 );
 			this.fhToken.segments[i].handleIn = absHandles[0] - this.fhToken.segments[i].point;
 			this.fhToken.segments[i].handleOut = absHandles[1] - this.fhToken.segments[i].point;
@@ -94,8 +94,8 @@ TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	if (numberOfPoints > 1) { // only if there are at least 2 knots
 		//console.log("calculate last");
 		var last = this.editableToken.knotsList.length-1;
-		var t1 = this.editableToken.knotsList[last].tensions[0];
-		var t2 = this.editableToken.knotsList[last].tensions[1];
+		var t1 = this.editableToken.knotsList[last].tensions[2];
+		var t2 = this.editableToken.knotsList[last].tensions[3];
 		var absHandles = getControlPoints(this.fhToken.segments[last-1].point, this.fhToken.segments[last], this.fhToken.segments[last], t1, t2);
 		this.fhToken.segments[last].handleIn = absHandles[0] - this.fhToken.segments[last].point;
 		this.fhToken.segments[last].handleOut = absHandles[1] - this.fhToken.segments[last].point;
@@ -130,7 +130,7 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		vectorY = vectorY / Math.avoidDivisionBy0(vectorLength);
 		// calculate new coordinates for left shape
 		// vector endpoint
-		var newLength = 20; // 10 pixels
+		var newLength = 10; // 10 pixels
 		var endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
@@ -144,7 +144,7 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		vectorY = -vectorY;
 		vectorX = -vectorX;
 		// vector endpoint
-		newLength = 20; // 10 pixels
+		newLength = 10; // 10 pixels
 		endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
@@ -197,8 +197,8 @@ TEDrawingArea.prototype.calculateOuterShapeHandles = function() {
 		// modulo = wrap around at the end (lenght of outerShape = 2*length - 2, because start/end points are only inserted 1x)
 		p2 = this.editableToken.outerShape.segments[(continueIndex+1)%(2*length-2)].point;
 		// get tensions
-		t1 = this.editableToken.knotsList[i].tensions[1];	// tensions have to be inversed 
-		t2 = this.editableToken.knotsList[i].tensions[0];	// due to backwards calculation
+		t1 = this.editableToken.knotsList[i].tensions[5];	// tensions have to be inversed 
+		t2 = this.editableToken.knotsList[i].tensions[4];	// due to backwards calculation
 		// calculate control points
 		controlPoints = getControlPoints(p0, p1, p2, t1, t2);
 		//console.log("getControlPoints: ", continueIndex, p0, p1, p2, t1, t2);

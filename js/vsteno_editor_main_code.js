@@ -75,9 +75,15 @@ window.oncontextmenu = function(event) {
 // work with keyboard events instead
 
 var keyPressed = "";
+var selectedTension = "middle";
 
 tool.onKeyDown = function(event) {
 	keyPressed = event.key;
+	switch (keyPressed) {	// for test purposes 
+		case "m" : selectedTension = "middle"; console.log("tension: middle"); mainCanvas.tensionSliders.updateValues(); break;
+		case "l" : selectedTension = "left"; console.log("tension: left"); mainCanvas.tensionSliders.updateValues(); break;
+		case "r" : selectedTension = "right"; console.log("tension: right"); mainCanvas.tensionSliders.updateValues(); break;
+	}
 	//console.log("KeyEvent: ", event);
 }
 tool.onKeyUp = function(event) {

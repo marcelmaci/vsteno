@@ -19,7 +19,7 @@ function TEKnotType() {
 // class TEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
 function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor) {
     this.type = new TEKnotType();
-    this.tensions = [t1, t2];
+    this.tensions = [t1, t2, t1, t2, t1, t2];	// tensions must be controlled individually for left, middle and right path/outer shape (set them all to the same value to start)
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
 TEVisuallyModifiableKnot.prototype = new TEVisuallyModifiableCircle(); 	// inherit
@@ -28,7 +28,24 @@ TEVisuallyModifiableKnot.prototype.identify = function(item) {
 	else return null;
 }
 TEVisuallyModifiableKnot.prototype.setTensions = function(t1, t2) {
-	this.tensions = [t1, t2];
+	switch (selectedTension) { // for test purposes
+		case "middle" : this.tensions[2] = t1; this.tensions[3] = t2; break;
+		case "left" : this.tensions[0] = t1; this.tensions[1] = t2; break;
+		case "right" : this.tensions[4] = t1; this.tensions[5] = t2; break;	
+	}
+/*
+	this.tensions[2] = t1; 	// write tensions for middle path to offsets 2 and 3
+	this.tensions[3] = t2;
+*/
+}
+TEVisuallyModifiableKnot.prototype.getTensions = function() {
+	var result;
+	switch (selectedTension) { // for test purposes
+		case "middle" : result = [this.tensions[2], this.tensions[3]]; break;
+		case "left" : result = [this.tensions[0], this.tensions[1]]; break;
+		case "right" : result = [this.tensions[4], this.tensions[5]]; break;	
+	}	
+	return result;
 }
 
 // class TEEditableToken
@@ -88,7 +105,7 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.parent.setMarkedCircle(this.markedKnot);
 	// update sliders
 	//console.log(this
-	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[0], this.selectedKnot.tensions[1]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
 TEEditableToken.prototype.getRelativeToken = function() {
 	console.log("this.index: ", this.index);

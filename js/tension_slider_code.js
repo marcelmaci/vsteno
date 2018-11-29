@@ -167,6 +167,7 @@ TETwoGroupedTensionSliders.prototype.handleEvent = function(event) {
 		}
 		//this.parent.editor.editableToken.knotsList[this.parent.editor.editableToken.index].setTensions(t1, t2);
 	}
+	//this.updateValues();
 }
 TETwoGroupedTensionSliders.prototype.setValues = function(t1, t2) {
 	this.tensionSlider1.setValue(t1);
@@ -182,12 +183,25 @@ TETwoGroupedTensionSliders.prototype.hideVerticalSliders = function() {
 }
 TETwoGroupedTensionSliders.prototype.link = function(knot) {
 	this.linkedKnot = knot;
-	var t1 = this.linkedKnot.tensions[0]
-		t2 = this.linkedKnot.tensions[1];
+	var temp = this.linkedKnot.getTensions();
+	var t1 = temp[0],
+		t2 = temp[1];
 	this.setValues(t1,t2);
 	this.showVerticalSliders();
 }
 TETwoGroupedTensionSliders.prototype.unlink = function() {
 	this.linkedKnot = null;
 	this.hideVerticalSliders();
+}
+TETwoGroupedTensionSliders.prototype.updateValues = function() {
+	console.log("Update slider values: ", this.linkedKnot);
+	if (this.linkedKnot != null) {
+		var temp = this.linkedKnot.getTensions();
+		var t1 = temp[0],
+			t2 = temp[1];
+		this.setValues(t1,t2);
+		this.showVerticalSliders(); // not sure if this is necessary ...
+		console.log("linkedKnot after Update: ", this.linkedKnot);
+	
+	}
 }
