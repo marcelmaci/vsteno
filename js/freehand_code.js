@@ -138,7 +138,7 @@ TEEditableToken.prototype.handleMouseUp = function(event) {
 	//		this.selectedKnot.changeRectangleToCircle();
 		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
-		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	} this.selectedKnot = null;	// leave markedKnot
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
@@ -146,7 +146,7 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
 			// update of relative coordinates not necessary (will be called by handleMouseUp-event)
-			//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 		}
 	}
 }

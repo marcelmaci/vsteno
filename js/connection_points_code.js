@@ -45,7 +45,7 @@ TEVisuallyModifiableCircle.prototype.handleMouseDrag = function(event) {
 }
 TEVisuallyModifiableCircle.prototype.handleMouseUp = function(event) {
 	//console.log("TEVisuallyModifiableCircle.handleMouseUp()");
-	this.circle.position = event.point;
+	//this.circle.position = event.point;
 	this.unselect();	// unselect, but leave it marked
 }
 TEVisuallyModifiableCircle.prototype.isStatic = function() {

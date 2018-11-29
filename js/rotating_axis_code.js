@@ -275,7 +275,7 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				downScaledDistance1 = distance1 / this.parent.scaleFactor;
 				downScaledDistance2 = distance2 / this.parent.scaleFactor;
 				// add direction for distance (positive or negative)
-				if ((x<intersection[0]) && (y<intersection[1])) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
+				if (x<intersection[0]) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
 				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
 				// define return value
 				relative = [downScaledDistance1, downScaledDistance2];

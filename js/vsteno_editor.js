@@ -535,7 +535,7 @@ TEEditableToken.prototype.handleMouseUp = function(event) {
 	//		this.selectedKnot.changeRectangleToCircle();
 		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
-		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	} this.selectedKnot = null;	// leave markedKnot
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
@@ -543,7 +543,7 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
 			// update of relative coordinates not necessary (will be called by handleMouseUp-event)
-			//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 		}
 	}
 }
@@ -946,7 +946,7 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				downScaledDistance1 = distance1 / this.parent.scaleFactor;
 				downScaledDistance2 = distance2 / this.parent.scaleFactor;
 				// add direction for distance (positive or negative)
-				if ((x<intersection[0]) && (y<intersection[1])) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
+				if (x<intersection[0]) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
 				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
 				// define return value
 				relative = [downScaledDistance1, downScaledDistance2];
@@ -1127,7 +1127,7 @@ TEVisuallyModifiableCircle.prototype.handleMouseDrag = function(event) {
 }
 TEVisuallyModifiableCircle.prototype.handleMouseUp = function(event) {
 	//console.log("TEVisuallyModifiableCircle.handleMouseUp()");
-	this.circle.position = event.point;
+	//this.circle.position = event.point;
 	this.unselect();	// unselect, but leave it marked
 }
 TEVisuallyModifiableCircle.prototype.isStatic = function() {
