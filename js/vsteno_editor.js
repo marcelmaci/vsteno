@@ -429,6 +429,7 @@ TEVisuallyModifiableKnot.prototype.setTensions = function(t1, t2) {
 		case "middle" : this.tensions[2] = t1; this.tensions[3] = t2; break;
 		case "left" : this.tensions[0] = t1; this.tensions[1] = t2; break;
 		case "right" : this.tensions[4] = t1; this.tensions[5] = t2; break;	
+		case "locked" : this.tensions = [t1, t2, t1, t2, t1, t2]; break; // set all tension to the same value
 	}
 /*
 	this.tensions[2] = t1; 	// write tensions for middle path to offsets 2 and 3
@@ -441,6 +442,7 @@ TEVisuallyModifiableKnot.prototype.getTensions = function() {
 		case "middle" : result = [this.tensions[2], this.tensions[3]]; break;
 		case "left" : result = [this.tensions[0], this.tensions[1]]; break;
 		case "right" : result = [this.tensions[4], this.tensions[5]]; break;	
+		case "locked" : result = [this.tensions[2], this.tensions[3]]; break; // return middle tension
 	}	
 	return result;
 }
@@ -504,21 +506,31 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	//console.log(this
 	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
-TEEditableToken.prototype.getRelativeToken = function() {
+TEEditableToken.prototype.getRelativeTokenKnot = function() {
 	console.log("this.index: ", this.index);
 	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
 }
 TEEditableToken.prototype.setKnotType = function(type) {
-	var relativeToken = this.getRelativeToken();
-	relativeToken.setType(type);
-	//console.log("settype");
+	var relativeTokenKnot = this.getRelativeTokenKnot();
+	relativeTokenKnot.setType(type);
+	console.log("setKnotType: ", relativeTokenKnot, type);
 	switch (type) {
 		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
-							this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							relativeTokenKnot.rd1 = relative[0];
+							relativeTokenKnot.rd2 = relative[1];
 							break;
-		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); break;
+		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); 
+							var x = this.selectedKnot.circle.position.x,
+								y = this.selectedKnot.circle.position.y;
+							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							relativeTokenKnot.rd1 = relative[0];
+							relativeTokenKnot.rd2 = relative[1];
+							break;
 	}
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
@@ -534,6 +546,7 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 			case "o" : this.setKnotType("orthogonal"); break;
 			case "h" : this.setKnotType("horizontal"); break;
 		}
+		
 		console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
 		
 		//this.parent.parent.tensionSliders.link(this.selectedKnot);
@@ -949,12 +962,14 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
 		case "orthogonal" : 
-				intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
+				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
 				delta1X = intersection[0] - this.centerRotatingAxis.x;
+				console.log("delta1x: ", delta1X);
 				delta1Y = intersection[1] - this.centerRotatingAxis.y;
+				console.log("delta1y: ", delta1Y);
 				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
-				console.log("lenght vector 1: ", delta1X, delta1Y, distance1);
+				console.log("length vector 1: ", distance1);
 				// calculate distance intersection to knot
 				delta2X = intersection[0] - x;
 				delta2Y = intersection[1] - y;
@@ -1855,34 +1870,7 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 }
 
 
-// main classes
-// class TECanvas (main container for complete drawing area)
-function TECanvas(x, y, width, height) {
-	// properties
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
-	// objects
-	// main editor
-	this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
-	// sliders
-	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
-}
-TECanvas.prototype.handleEvent = function(event) {
-	//console.log("TECanvas.handleEvent()");
-	if ((event.point.x >= this.x) && (event.point.x <= this.x+this.width) && (event.point.y >= this.y) && (event.point.y <= this.y+this.height)) {
-		// instead of identifying object, call all event handlers
-		this.editor.handleEvent(event);
-		this.tensionSliders.handleEvent(event);
-	}
-	//this.crossUpdateSliderAndFreehandCurve();
-}
-//TECanvas.prototype.crossUpdateSliderAndFreehandCurve() {
-	
-//}
-
-// main
+// global variables
 // auxiliary lines to test bezier curves
 var outerLines = new Path();
 var innerLines = new Path();
@@ -1910,6 +1898,38 @@ var knotTypeAutoDefine = true,
 var tangentPrecision = 0.001,
 	tangentFixPointMaxIterations = 200,
 	tangentBetweenCurvesMaxIterations = 4;
+	
+var keyPressed = "";
+var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
+
+
+// main classes
+// class TECanvas (main container for complete drawing area)
+function TECanvas(x, y, width, height) {
+	// properties
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	// objects
+	// main editor
+	this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
+	// sliders
+	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
+}
+TECanvas.prototype.handleEvent = function(event) {
+	//console.log("TECanvas.handleEvent()");
+	if ((event.point.x >= this.x) && (event.point.x <= this.x+this.width) && (event.point.y >= this.y) && (event.point.y <= this.y+this.height)) {
+		// instead of identifying object, call all event handlers
+		this.editor.handleEvent(event);
+		this.tensionSliders.handleEvent(event);
+	}
+	//this.crossUpdateSliderAndFreehandCurve();
+}
+//TECanvas.prototype.crossUpdateSliderAndFreehandCurve() {
+	
+//}
+
 
 // enable right clicks
 /* doesn't work: unfortunately the oncontextmenu-method is called after the tool.nomouse-methods ...
@@ -1929,16 +1949,19 @@ window.oncontextmenu = function(event) {
 }
 
 // work with keyboard events instead
-
-var keyPressed = "";
-var selectedTension = "middle";
-
 tool.onKeyDown = function(event) {
 	keyPressed = event.key;
-	switch (keyPressed) {	// for test purposes 
-		case "m" : selectedTension = "middle"; console.log("tension: middle"); mainCanvas.tensionSliders.updateValues(); break;
-		case "l" : selectedTension = "left"; console.log("tension: left"); mainCanvas.tensionSliders.updateValues(); break;
-		case "r" : selectedTension = "right"; console.log("tension: right"); mainCanvas.tensionSliders.updateValues(); break;
+	if (selectedTension != "locked") {
+		switch (keyPressed) {	
+			case "m" : selectedTension = "middle"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+			case "l" : selectedTension = "left"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+			case "r" : selectedTension = "right"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+		}
+	}
+	switch (keyPressed) {	
+		// use 't' to toggle between locked and unlocked tensions
+		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+			
 	}
 	//console.log("KeyEvent: ", event);
 }
@@ -2041,6 +2064,14 @@ function TETensionSlider(x, y, width, height, label) {
 		this.auxiliaryLines.push(newLine);
 	}
 }
+TETensionSlider.prototype.setNewLabel = function(label) {
+	// title
+	this.title.style.fontSize = 12;
+	this.title.justification = 'center';
+	this.title.strokeColor = '#000';
+	this.title.strokeWidth = 0.5;
+	this.title.content = label;
+}
 TETensionSlider.prototype.handleEvent = function(event) {
 	//console.log("TETensionSlider.handleEvent()");
 	if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.slidingStartY) && (event.point.y <= this.slidingEndY)) {
@@ -2067,7 +2098,17 @@ TETensionSlider.prototype.setValue = function(tension) {
 	this.verticalSlider.label.content = tension.toFixed(2);
 	this.verticalSlider.label.position = new Point(tempX, tempY-8);
 }
-
+/*TETensionSlider.prototype.getLabelChar = function() {
+	var char;
+	switch (selectedTension) { // use global variable
+		case "middle" : char = "M"; break;
+		case "left" : char = "L"; break;
+		case "right" : char = "R"; break;
+		case "locked" : char = "A"; break;
+	}
+	return char;
+}
+*/
 
 function TETwoGroupedTensionSliders(parent, x1, y1, width, height) {
 	// parent and links
@@ -2085,8 +2126,9 @@ function TETwoGroupedTensionSliders(parent, x1, y1, width, height) {
 	this.sliderWidth = this.onePart * 2;
 	
 	// sliders
-	this.tensionSlider1 = new TETensionSlider(x1+this.onePart*2, y1, this.sliderWidth, height, "T1");
-	this.tensionSlider2 = new TETensionSlider(x1+this.sliderWidth+this.onePart*3, y1, this.sliderWidth, height, "T2");
+	// to simplify: just set labels to "A1/2" (instead of calling parent class method)
+	this.tensionSlider1 = new TETensionSlider(x1+this.onePart*2, y1, this.sliderWidth, height, "A1");
+	this.tensionSlider2 = new TETensionSlider(x1+this.sliderWidth+this.onePart*3, y1, this.sliderWidth, height, "A2");
 	
 	// labels
 	this.valueLabels = new Array();
@@ -2172,4 +2214,23 @@ TETwoGroupedTensionSliders.prototype.updateValues = function() {
 		console.log("linkedKnot after Update: ", this.linkedKnot);
 	
 	}
+}
+TETwoGroupedTensionSliders.prototype.setNewLabels = function() {
+	var labels = this.getLabelStrings();
+	console.log("setNewLabels: ", labels);
+	
+	this.tensionSlider1.setNewLabel(labels[0]);
+	this.tensionSlider2.setNewLabel(labels[1]);
+}
+TETwoGroupedTensionSliders.prototype.getLabelStrings = function() {
+	console.log("selectedTension: ", selectedTension);
+	
+	var label1, label2;
+	switch (selectedTension) { // use global variable
+		case "middle" : label1 = "M1"; label2 = "M2"; break;
+		case "left" : label1 = "L1"; label2 = "L2"; break;
+		case "right" : label1 = "R1"; label2 = "R2"; break;
+		case "locked" : label1 = "A1"; label2 = "A2"; break;
+	}
+	return [label1, label2];
 }

@@ -73,6 +73,14 @@ function TETensionSlider(x, y, width, height, label) {
 		this.auxiliaryLines.push(newLine);
 	}
 }
+TETensionSlider.prototype.setNewLabel = function(label) {
+	// title
+	this.title.style.fontSize = 12;
+	this.title.justification = 'center';
+	this.title.strokeColor = '#000';
+	this.title.strokeWidth = 0.5;
+	this.title.content = label;
+}
 TETensionSlider.prototype.handleEvent = function(event) {
 	//console.log("TETensionSlider.handleEvent()");
 	if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.slidingStartY) && (event.point.y <= this.slidingEndY)) {
@@ -99,7 +107,17 @@ TETensionSlider.prototype.setValue = function(tension) {
 	this.verticalSlider.label.content = tension.toFixed(2);
 	this.verticalSlider.label.position = new Point(tempX, tempY-8);
 }
-
+/*TETensionSlider.prototype.getLabelChar = function() {
+	var char;
+	switch (selectedTension) { // use global variable
+		case "middle" : char = "M"; break;
+		case "left" : char = "L"; break;
+		case "right" : char = "R"; break;
+		case "locked" : char = "A"; break;
+	}
+	return char;
+}
+*/
 
 function TETwoGroupedTensionSliders(parent, x1, y1, width, height) {
 	// parent and links
@@ -117,8 +135,9 @@ function TETwoGroupedTensionSliders(parent, x1, y1, width, height) {
 	this.sliderWidth = this.onePart * 2;
 	
 	// sliders
-	this.tensionSlider1 = new TETensionSlider(x1+this.onePart*2, y1, this.sliderWidth, height, "T1");
-	this.tensionSlider2 = new TETensionSlider(x1+this.sliderWidth+this.onePart*3, y1, this.sliderWidth, height, "T2");
+	// to simplify: just set labels to "A1/2" (instead of calling parent class method)
+	this.tensionSlider1 = new TETensionSlider(x1+this.onePart*2, y1, this.sliderWidth, height, "A1");
+	this.tensionSlider2 = new TETensionSlider(x1+this.sliderWidth+this.onePart*3, y1, this.sliderWidth, height, "A2");
 	
 	// labels
 	this.valueLabels = new Array();
@@ -204,4 +223,23 @@ TETwoGroupedTensionSliders.prototype.updateValues = function() {
 		console.log("linkedKnot after Update: ", this.linkedKnot);
 	
 	}
+}
+TETwoGroupedTensionSliders.prototype.setNewLabels = function() {
+	var labels = this.getLabelStrings();
+	console.log("setNewLabels: ", labels);
+	
+	this.tensionSlider1.setNewLabel(labels[0]);
+	this.tensionSlider2.setNewLabel(labels[1]);
+}
+TETwoGroupedTensionSliders.prototype.getLabelStrings = function() {
+	console.log("selectedTension: ", selectedTension);
+	
+	var label1, label2;
+	switch (selectedTension) { // use global variable
+		case "middle" : label1 = "M1"; label2 = "M2"; break;
+		case "left" : label1 = "L1"; label2 = "L2"; break;
+		case "right" : label1 = "R1"; label2 = "R2"; break;
+		case "locked" : label1 = "A1"; label2 = "A2"; break;
+	}
+	return [label1, label2];
 }

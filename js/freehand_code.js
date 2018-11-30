@@ -32,6 +32,7 @@ TEVisuallyModifiableKnot.prototype.setTensions = function(t1, t2) {
 		case "middle" : this.tensions[2] = t1; this.tensions[3] = t2; break;
 		case "left" : this.tensions[0] = t1; this.tensions[1] = t2; break;
 		case "right" : this.tensions[4] = t1; this.tensions[5] = t2; break;	
+		case "locked" : this.tensions = [t1, t2, t1, t2, t1, t2]; break; // set all tension to the same value
 	}
 /*
 	this.tensions[2] = t1; 	// write tensions for middle path to offsets 2 and 3
@@ -44,6 +45,7 @@ TEVisuallyModifiableKnot.prototype.getTensions = function() {
 		case "middle" : result = [this.tensions[2], this.tensions[3]]; break;
 		case "left" : result = [this.tensions[0], this.tensions[1]]; break;
 		case "right" : result = [this.tensions[4], this.tensions[5]]; break;	
+		case "locked" : result = [this.tensions[2], this.tensions[3]]; break; // return middle tension
 	}	
 	return result;
 }
@@ -107,21 +109,31 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	//console.log(this
 	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
-TEEditableToken.prototype.getRelativeToken = function() {
+TEEditableToken.prototype.getRelativeTokenKnot = function() {
 	console.log("this.index: ", this.index);
 	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
 }
 TEEditableToken.prototype.setKnotType = function(type) {
-	var relativeToken = this.getRelativeToken();
-	relativeToken.setType(type);
-	//console.log("settype");
+	var relativeTokenKnot = this.getRelativeTokenKnot();
+	relativeTokenKnot.setType(type);
+	console.log("setKnotType: ", relativeTokenKnot, type);
 	switch (type) {
 		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
-							this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							relativeTokenKnot.rd1 = relative[0];
+							relativeTokenKnot.rd2 = relative[1];
 							break;
-		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); break;
+		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); 
+							var x = this.selectedKnot.circle.position.x,
+								y = this.selectedKnot.circle.position.y;
+							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							relativeTokenKnot.rd1 = relative[0];
+							relativeTokenKnot.rd2 = relative[1];
+							break;
 	}
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
@@ -137,6 +149,7 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 			case "o" : this.setKnotType("orthogonal"); break;
 			case "h" : this.setKnotType("horizontal"); break;
 		}
+		
 		console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
 		
 		//this.parent.parent.tensionSliders.link(this.selectedKnot);

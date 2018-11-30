@@ -1,32 +1,5 @@
 
-// main classes
-// class TECanvas (main container for complete drawing area)
-function TECanvas(x, y, width, height) {
-	// properties
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
-	// objects
-	// main editor
-	this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
-	// sliders
-	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
-}
-TECanvas.prototype.handleEvent = function(event) {
-	//console.log("TECanvas.handleEvent()");
-	if ((event.point.x >= this.x) && (event.point.x <= this.x+this.width) && (event.point.y >= this.y) && (event.point.y <= this.y+this.height)) {
-		// instead of identifying object, call all event handlers
-		this.editor.handleEvent(event);
-		this.tensionSliders.handleEvent(event);
-	}
-	//this.crossUpdateSliderAndFreehandCurve();
-}
-//TECanvas.prototype.crossUpdateSliderAndFreehandCurve() {
-	
-//}
-
-// main
+// global variables
 // auxiliary lines to test bezier curves
 var outerLines = new Path();
 var innerLines = new Path();
@@ -54,6 +27,38 @@ var knotTypeAutoDefine = true,
 var tangentPrecision = 0.001,
 	tangentFixPointMaxIterations = 200,
 	tangentBetweenCurvesMaxIterations = 4;
+	
+var keyPressed = "";
+var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
+
+
+// main classes
+// class TECanvas (main container for complete drawing area)
+function TECanvas(x, y, width, height) {
+	// properties
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	// objects
+	// main editor
+	this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
+	// sliders
+	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
+}
+TECanvas.prototype.handleEvent = function(event) {
+	//console.log("TECanvas.handleEvent()");
+	if ((event.point.x >= this.x) && (event.point.x <= this.x+this.width) && (event.point.y >= this.y) && (event.point.y <= this.y+this.height)) {
+		// instead of identifying object, call all event handlers
+		this.editor.handleEvent(event);
+		this.tensionSliders.handleEvent(event);
+	}
+	//this.crossUpdateSliderAndFreehandCurve();
+}
+//TECanvas.prototype.crossUpdateSliderAndFreehandCurve() {
+	
+//}
+
 
 // enable right clicks
 /* doesn't work: unfortunately the oncontextmenu-method is called after the tool.nomouse-methods ...
@@ -73,16 +78,19 @@ window.oncontextmenu = function(event) {
 }
 
 // work with keyboard events instead
-
-var keyPressed = "";
-var selectedTension = "middle";
-
 tool.onKeyDown = function(event) {
 	keyPressed = event.key;
-	switch (keyPressed) {	// for test purposes 
-		case "m" : selectedTension = "middle"; console.log("tension: middle"); mainCanvas.tensionSliders.updateValues(); break;
-		case "l" : selectedTension = "left"; console.log("tension: left"); mainCanvas.tensionSliders.updateValues(); break;
-		case "r" : selectedTension = "right"; console.log("tension: right"); mainCanvas.tensionSliders.updateValues(); break;
+	if (selectedTension != "locked") {
+		switch (keyPressed) {	
+			case "m" : selectedTension = "middle"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+			case "l" : selectedTension = "left"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+			case "r" : selectedTension = "right"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+		}
+	}
+	switch (keyPressed) {	
+		// use 't' to toggle between locked and unlocked tensions
+		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+			
 	}
 	//console.log("KeyEvent: ", event);
 }

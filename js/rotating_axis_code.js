@@ -261,12 +261,14 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
 		case "orthogonal" : 
-				intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
+				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
 				delta1X = intersection[0] - this.centerRotatingAxis.x;
+				console.log("delta1x: ", delta1X);
 				delta1Y = intersection[1] - this.centerRotatingAxis.y;
+				console.log("delta1y: ", delta1Y);
 				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
-				console.log("lenght vector 1: ", delta1X, delta1Y, distance1);
+				console.log("length vector 1: ", distance1);
 				// calculate distance intersection to knot
 				delta2X = intersection[0] - x;
 				delta2Y = intersection[1] - y;
