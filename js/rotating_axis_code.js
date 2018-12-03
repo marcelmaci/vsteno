@@ -52,9 +52,9 @@ TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(x, y, typ
 	this.knotsList.splice(index, 0, new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
 }
 TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y, index) {
-	console.log("update coordinates ...");
+	//console.log("update coordinates ...");
 	if (this.knotsList[index] != undefined) {
-		console.log("type: ", this.knotsList[index].type);
+		//console.log("type: ", this.knotsList[index].type);
 		switch (this.knotsList[index].type) {
 			case "horizontal" : var relative = this.parent.getRelativeCoordinates(x, y, this.knotsList[index].type);
 								this.knotsList[index].rd1 = relative[0];
@@ -66,7 +66,7 @@ TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y,
 								break;
 		}
 	}
-	console.log("Updated (new) Values: ", relative);
+	//console.log("Updated (new) Values: ", relative);
 }
 
 // class TERotatingAxis
@@ -127,7 +127,7 @@ TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
 	}
 }
 TERotatingAxis.prototype.updateVisibleKnots = function() {
-	console.log("TERotatingAxis.updateVisibleKnots");
+	//console.log("TERotatingAxis.updateVisibleKnots");
 	//if (editableToken.knotsList.length > 0) {
 		var temp1 = 0, temp2 = 0, horX = 0, newX = 0, newY = 0;
 		for (var i=0; i<this.relativeToken.knotsList.length; i++) {
@@ -147,7 +147,7 @@ TERotatingAxis.prototype.identify = function(item) {
 	else return false;
 }
 TERotatingAxis.prototype.handleEvent = function(event) {
-	console.log("TERotatingAxis.handleEvent()");
+	//console.log("TERotatingAxis.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
@@ -219,7 +219,7 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 	//console.log(rdx, rdy, this.centerRotatingAxis.x);
 	
 	if (rdx == 0) {
-			console.log("is vertical");
+			//console.log("is vertical");
 			// avoid division by zero
 			// this case is trivial: iy = y, ix = ox = this.centerRotatingAxis.x
 			ix = ox;
@@ -245,7 +245,7 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 		iy = (ix*m1) + c1;
 		
 	}	
-	console.log("Results: ");
+	/*console.log("Results: ");
 	console.log("m1=rdy/rdx: ", m1, "=", rdy, "/", rdx, "m2=kdx/kdy: ", m2, "=", kdx, "/", kdy);
 	console.log("c1=oy-ox*m1: ", c1, "=", oy, "-", ox, "*", m1);
 	console.log("c2=kx-ky*m2: ", c2, "=", kx, "-", ky, "*", m2);
@@ -253,22 +253,23 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 	console.log("g1: oy=ox*m1+c1 ", oy, "=", ox, "*", m1, "+", c1);
 	console.log("g2: y=x*m2+c2 ", ky, "=", kx, "*", m2, "+", c2);
 	console.log("Intersection: ", ix, iy);
+	*/
 	return [ix,iy];
 }
 TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 	var relative = null;
-	console.log("TERotatingAxis.getRelativeCoordinates: ", x, y, type);
+	//console.log("TERotatingAxis.getRelativeCoordinates: ", x, y, type);
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
 		case "orthogonal" : 
 				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
 				delta1X = intersection[0] - this.centerRotatingAxis.x;
-				console.log("delta1x: ", delta1X);
+				//console.log("delta1x: ", delta1X);
 				delta1Y = intersection[1] - this.centerRotatingAxis.y;
-				console.log("delta1y: ", delta1Y);
+				//console.log("delta1y: ", delta1Y);
 				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
-				console.log("length vector 1: ", distance1);
+				//console.log("length vector 1: ", distance1);
 				// calculate distance intersection to knot
 				delta2X = intersection[0] - x;
 				delta2Y = intersection[1] - y;
@@ -281,16 +282,16 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
 				// define return value
 				relative = [downScaledDistance1, downScaledDistance2];
-				console.log("calculate orthogonal:", relative);
+				//console.log("calculate orthogonal:", relative);
 		
 		break;
 		case "horizontal" : 
 				relX = -this.calculateHorizontalIntersectionRelativeX(x, y, type);
-				console.log("relX:", relX, "From: ", x, y, type);
+				//console.log("relX:", relX, "From: ", x, y, type);
 				downScaledX = relX / this.parent.scaleFactor;
 				downScaledY = -(y - this.centerRotatingAxis.y) / this.parent.scaleFactor;
 				relative = [downScaledX, downScaledY];
-				console.log("calculate horizontal: ", relative);
+				//console.log("calculate horizontal: ", relative);
 			break;
 	}
 	return relative;
@@ -305,8 +306,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 				horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
 				newX = horX + temp1;
 				newY = /*this.centerRotatingAxis.y -*/ temp2;
-				console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
-				console.log("new(x,y):", newX, newY);
+				//console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
+				//console.log("new(x,y):", newX, newY);
 				//this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
 				
 				
@@ -356,7 +357,7 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 					absy = rny + v2ny + oy;
 				
 				absCoordinates = [absx, absy]
-				console.log("calculate orthogonal:", absCoordinates);
+				//console.log("calculate orthogonal:", absCoordinates);
 		
 			break;
 	}
@@ -367,7 +368,7 @@ TERotatingAxis.prototype.calculateHorizontalIntersectionRelativeX = function(x, 
 	return relX;
 }
 TERotatingAxis.prototype.recalculateFreehandPoints = function() {
-	console.log("TERotatingAxis.recalculateFreehandPoints");
+	//console.log("TERotatingAxis.recalculateFreehandPoints");
 	var newX, newY;
 	var numberPoints = this.parent.editableToken.knotsList.length,
 		dy = this.controlCircle.circle.position.y - this.centerRotatingAxis.y,
@@ -382,14 +383,14 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 				rd2 = this.relativeToken.knotsList[i].rd2,
 				type = this.relativeToken.knotsList[i].type;
 			// calculate absolute coordinates
-			console.log("getAbsoluteCoordinates: i: (rd1, rd2, type) ", i, ":", rd1, rd2, type);
+			//console.log("getAbsoluteCoordinates: i: (rd1, rd2, type) ", i, ":", rd1, rd2, type);
 			var absCoordinates = this.getAbsoluteCoordinates(rd1, rd2, type);
-			console.log("absCoordinates: ", absCoordinates);
+			//console.log("absCoordinates: ", absCoordinates);
 			// copy values to editable token
 			this.parent.editableToken.knotsList[i].x = absCoordinates[0];
 			this.parent.editableToken.knotsList[i].y = absCoordinates[1];
 				
-			console.log("newx,y: ", newX, newY);
+			//console.log("newx,y: ", newX, newY);
 			this.parent.editableToken.knotsList[i].circle.position = [absCoordinates[0], absCoordinates[1]];
 			/*
 			var horX = this.calculateHorizontalIntersectionX(this.parent.editableToken.knotsList[i].x, this.parent.editableToken.knotsList[i].y, "horizontal" );

@@ -253,6 +253,11 @@ function toType(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 }
 
+function fract(n) { 
+	return Number(String(n).split('.')[1] || 0); 
+	// I hate JS ...
+}
+
 // classes 
 // class TEBorders (TokenEditBorders)
 function TEBorders(a, color) { // a = TEDrawingArea
@@ -507,13 +512,13 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
 TEEditableToken.prototype.getRelativeTokenKnot = function() {
-	console.log("this.index: ", this.index);
+	//console.log("this.index: ", this.index);
 	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
 }
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
-	console.log("setKnotType: ", relativeTokenKnot, type);
+	//console.log("setKnotType: ", relativeTokenKnot, type);
 	switch (type) {
 		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
 							var x = this.selectedKnot.circle.position.x,
@@ -534,9 +539,10 @@ TEEditableToken.prototype.setKnotType = function(type) {
 	}
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
+	console.log("TEEditableToken.handleMouseDown()");
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
-	  	console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
+	  	//console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
 		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
@@ -546,8 +552,13 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 			case "o" : this.setKnotType("orthogonal"); break;
 			case "h" : this.setKnotType("horizontal"); break;
 		}
+		// link thickness sliders	
+		console.log("linkSliders: ", this);
+		this.parent.parent.thicknessSliders.linkEditableToken(this);
+		this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
+		//this.parent.parent.thicknessSliders.linkEditableToken(this);
 		
-		console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
+		//console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
 		
 		//this.parent.parent.tensionSliders.link(this.selectedKnot);
 		//this.selectedKnot.handleMouseDown(event);
@@ -578,7 +589,7 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEEditableToken.prototype.handleEvent = function(event) {
-	console.log("TEEditableToken.handleEvent");
+	//console.log("TEEditableToken.handleEvent");
 	switch (event.type) {
 		case "mousedown" : if (doubleClick) {
 								//this.handleMouseDown(event);
@@ -589,7 +600,9 @@ TEEditableToken.prototype.handleEvent = function(event) {
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
+	
 	//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+
 }
 TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	// reset all knot types
@@ -753,9 +766,9 @@ TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(x, y, typ
 	this.knotsList.splice(index, 0, new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
 }
 TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y, index) {
-	console.log("update coordinates ...");
+	//console.log("update coordinates ...");
 	if (this.knotsList[index] != undefined) {
-		console.log("type: ", this.knotsList[index].type);
+		//console.log("type: ", this.knotsList[index].type);
 		switch (this.knotsList[index].type) {
 			case "horizontal" : var relative = this.parent.getRelativeCoordinates(x, y, this.knotsList[index].type);
 								this.knotsList[index].rd1 = relative[0];
@@ -767,7 +780,7 @@ TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y,
 								break;
 		}
 	}
-	console.log("Updated (new) Values: ", relative);
+	//console.log("Updated (new) Values: ", relative);
 }
 
 // class TERotatingAxis
@@ -828,7 +841,7 @@ TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
 	}
 }
 TERotatingAxis.prototype.updateVisibleKnots = function() {
-	console.log("TERotatingAxis.updateVisibleKnots");
+	//console.log("TERotatingAxis.updateVisibleKnots");
 	//if (editableToken.knotsList.length > 0) {
 		var temp1 = 0, temp2 = 0, horX = 0, newX = 0, newY = 0;
 		for (var i=0; i<this.relativeToken.knotsList.length; i++) {
@@ -848,7 +861,7 @@ TERotatingAxis.prototype.identify = function(item) {
 	else return false;
 }
 TERotatingAxis.prototype.handleEvent = function(event) {
-	console.log("TERotatingAxis.handleEvent()");
+	//console.log("TERotatingAxis.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
@@ -920,7 +933,7 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 	//console.log(rdx, rdy, this.centerRotatingAxis.x);
 	
 	if (rdx == 0) {
-			console.log("is vertical");
+			//console.log("is vertical");
 			// avoid division by zero
 			// this case is trivial: iy = y, ix = ox = this.centerRotatingAxis.x
 			ix = ox;
@@ -946,7 +959,7 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 		iy = (ix*m1) + c1;
 		
 	}	
-	console.log("Results: ");
+	/*console.log("Results: ");
 	console.log("m1=rdy/rdx: ", m1, "=", rdy, "/", rdx, "m2=kdx/kdy: ", m2, "=", kdx, "/", kdy);
 	console.log("c1=oy-ox*m1: ", c1, "=", oy, "-", ox, "*", m1);
 	console.log("c2=kx-ky*m2: ", c2, "=", kx, "-", ky, "*", m2);
@@ -954,22 +967,23 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 	console.log("g1: oy=ox*m1+c1 ", oy, "=", ox, "*", m1, "+", c1);
 	console.log("g2: y=x*m2+c2 ", ky, "=", kx, "*", m2, "+", c2);
 	console.log("Intersection: ", ix, iy);
+	*/
 	return [ix,iy];
 }
 TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 	var relative = null;
-	console.log("TERotatingAxis.getRelativeCoordinates: ", x, y, type);
+	//console.log("TERotatingAxis.getRelativeCoordinates: ", x, y, type);
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
 		case "orthogonal" : 
 				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
 				delta1X = intersection[0] - this.centerRotatingAxis.x;
-				console.log("delta1x: ", delta1X);
+				//console.log("delta1x: ", delta1X);
 				delta1Y = intersection[1] - this.centerRotatingAxis.y;
-				console.log("delta1y: ", delta1Y);
+				//console.log("delta1y: ", delta1Y);
 				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
-				console.log("length vector 1: ", distance1);
+				//console.log("length vector 1: ", distance1);
 				// calculate distance intersection to knot
 				delta2X = intersection[0] - x;
 				delta2Y = intersection[1] - y;
@@ -982,16 +996,16 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
 				// define return value
 				relative = [downScaledDistance1, downScaledDistance2];
-				console.log("calculate orthogonal:", relative);
+				//console.log("calculate orthogonal:", relative);
 		
 		break;
 		case "horizontal" : 
 				relX = -this.calculateHorizontalIntersectionRelativeX(x, y, type);
-				console.log("relX:", relX, "From: ", x, y, type);
+				//console.log("relX:", relX, "From: ", x, y, type);
 				downScaledX = relX / this.parent.scaleFactor;
 				downScaledY = -(y - this.centerRotatingAxis.y) / this.parent.scaleFactor;
 				relative = [downScaledX, downScaledY];
-				console.log("calculate horizontal: ", relative);
+				//console.log("calculate horizontal: ", relative);
 			break;
 	}
 	return relative;
@@ -1006,8 +1020,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 				horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
 				newX = horX + temp1;
 				newY = /*this.centerRotatingAxis.y -*/ temp2;
-				console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
-				console.log("new(x,y):", newX, newY);
+				//console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
+				//console.log("new(x,y):", newX, newY);
 				//this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
 				
 				
@@ -1057,7 +1071,7 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 					absy = rny + v2ny + oy;
 				
 				absCoordinates = [absx, absy]
-				console.log("calculate orthogonal:", absCoordinates);
+				//console.log("calculate orthogonal:", absCoordinates);
 		
 			break;
 	}
@@ -1068,7 +1082,7 @@ TERotatingAxis.prototype.calculateHorizontalIntersectionRelativeX = function(x, 
 	return relX;
 }
 TERotatingAxis.prototype.recalculateFreehandPoints = function() {
-	console.log("TERotatingAxis.recalculateFreehandPoints");
+	//console.log("TERotatingAxis.recalculateFreehandPoints");
 	var newX, newY;
 	var numberPoints = this.parent.editableToken.knotsList.length,
 		dy = this.controlCircle.circle.position.y - this.centerRotatingAxis.y,
@@ -1083,14 +1097,14 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 				rd2 = this.relativeToken.knotsList[i].rd2,
 				type = this.relativeToken.knotsList[i].type;
 			// calculate absolute coordinates
-			console.log("getAbsoluteCoordinates: i: (rd1, rd2, type) ", i, ":", rd1, rd2, type);
+			//console.log("getAbsoluteCoordinates: i: (rd1, rd2, type) ", i, ":", rd1, rd2, type);
 			var absCoordinates = this.getAbsoluteCoordinates(rd1, rd2, type);
-			console.log("absCoordinates: ", absCoordinates);
+			//console.log("absCoordinates: ", absCoordinates);
 			// copy values to editable token
 			this.parent.editableToken.knotsList[i].x = absCoordinates[0];
 			this.parent.editableToken.knotsList[i].y = absCoordinates[1];
 				
-			console.log("newx,y: ", newX, newY);
+			//console.log("newx,y: ", newX, newY);
 			this.parent.editableToken.knotsList[i].circle.position = [absCoordinates[0], absCoordinates[1]];
 			/*
 			var horX = this.calculateHorizontalIntersectionX(this.parent.editableToken.knotsList[i].x, this.parent.editableToken.knotsList[i].y, "horizontal" );
@@ -1250,7 +1264,7 @@ TEConnectionPoint.prototype.handleMouseDrag = function(event) {
 TEConnectionPoint.prototype.handleEvent = function(event) {
 	//console.log("unlink sliders:", this.parent.parent.tensionSliders);
 	this.parent.parent.tensionSliders.hideVerticalSliders();
-	console.log("TEConnectionPoint.handleEvent()");
+	//console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;
@@ -1849,7 +1863,7 @@ TEDrawingArea.prototype.isStatic = function(item) {
 }
 
 TEDrawingArea.prototype.handleEvent = function(event) {
-	console.log("TEDrawingArea.handleEvent()", event.item);
+	console.log("TEDrawingArea.handleEvent()", event);
 	//if (event.item != null) {
 		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
 			switch (event.type) {
@@ -1877,7 +1891,7 @@ var innerLines = new Path();
 var tangent = new Path();
 
 //var editor = new TEDrawingArea(new Point(100, 500), 4, 1, 10, 10);
-var mainCanvas = new TECanvas(0,0,800,600);
+var mainCanvas = new TECanvas(0,0,800,800);
 	
 // global event handlers and variables
 var lastClick = null,
@@ -1902,6 +1916,8 @@ var tangentPrecision = 0.001,
 var keyPressed = "";
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 
+//var thicknessSlider = new TEThicknessSlider(100, 550, 400, 20, "L");
+//var thicknessSliders = new TETwoGroupedThicknessSliders(null, 100, 500, 400, 70);
 
 // main classes
 // class TECanvas (main container for complete drawing area)
@@ -1913,9 +1929,12 @@ function TECanvas(x, y, width, height) {
 	this.height = height;
 	// objects
 	// main editor
-	this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
+	//this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
+	this.editor = new TEDrawingArea(this, new Point(100, 450), 4, 1, 10, 10);
 	// sliders
 	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
+	this.thicknessSliders = new TETwoGroupedThicknessSliders(this, this.editor.leftX, this.editor.lowerY+30, this.editor.rightX - this.editor.leftX, 70);
+
 }
 TECanvas.prototype.handleEvent = function(event) {
 	//console.log("TECanvas.handleEvent()");
@@ -1923,6 +1942,8 @@ TECanvas.prototype.handleEvent = function(event) {
 		// instead of identifying object, call all event handlers
 		this.editor.handleEvent(event);
 		this.tensionSliders.handleEvent(event);
+		this.thicknessSliders.handleEvent(event);
+		//console.log("thicknessSliders: ", this.thicknessSliders);
 	}
 	//this.crossUpdateSliderAndFreehandCurve();
 }
@@ -2204,26 +2225,26 @@ TETwoGroupedTensionSliders.prototype.unlink = function() {
 	this.hideVerticalSliders();
 }
 TETwoGroupedTensionSliders.prototype.updateValues = function() {
-	console.log("Update slider values: ", this.linkedKnot);
+	//console.log("Update slider values: ", this.linkedKnot);
 	if (this.linkedKnot != null) {
 		var temp = this.linkedKnot.getTensions();
 		var t1 = temp[0],
 			t2 = temp[1];
 		this.setValues(t1,t2);
 		this.showVerticalSliders(); // not sure if this is necessary ...
-		console.log("linkedKnot after Update: ", this.linkedKnot);
+		//console.log("linkedKnot after Update: ", this.linkedKnot);
 	
 	}
 }
 TETwoGroupedTensionSliders.prototype.setNewLabels = function() {
 	var labels = this.getLabelStrings();
-	console.log("setNewLabels: ", labels);
+	//console.log("setNewLabels: ", labels);
 	
 	this.tensionSlider1.setNewLabel(labels[0]);
 	this.tensionSlider2.setNewLabel(labels[1]);
 }
 TETwoGroupedTensionSliders.prototype.getLabelStrings = function() {
-	console.log("selectedTension: ", selectedTension);
+	//console.log("selectedTension: ", selectedTension);
 	
 	var label1, label2;
 	switch (selectedTension) { // use global variable
@@ -2234,3 +2255,289 @@ TETwoGroupedTensionSliders.prototype.getLabelStrings = function() {
 	}
 	return [label1, label2];
 }
+// class TEMovingHorizontalSlider
+function TEMovingHorizontalSlider(from, to) {
+	this.label = new PointText(from-[8,0]);
+	this.label.justification = "center";
+	this.label.fillcolor = '#000';
+	this.label.content = '1';
+	this.label.visible = true;
+	this.label.style.fontSize = 8;
+	
+	this.rectangle = new Path.Rectangle(from, to);
+	this.rectangle.fillColor = '#000';
+	this.rectangle.strokeColor = '#000';
+	this.rectangle.visible = true; // false
+	//this.rectangle.topLeft = from;
+}
+TEMovingHorizontalSlider.prototype.identify = function(item) {
+	//console.log("TEMovingHorizontalSlider.identify()");
+	if (item == this.rectangle) return this;
+	else return false;
+}
+TEMovingHorizontalSlider.prototype.hide = function() {
+	//console.log("TEMovingHorizontalSlider.hide()");	
+	this.rectangle.visible = false;
+	this.label.visible = false;
+}
+TEMovingHorizontalSlider.prototype.show = function() {
+	//console.log("TEMovingHorizontalSlider.show()");
+	this.rectangle.visible = true;
+	this.label.visible = true;
+}
+
+// class TEThicknessSlider
+function TEThicknessSlider(x, y, width, height, label) {
+	this.linkedVector;   // TEEditableToken.leftVectors[] / rightVectors[]
+	// limitations
+	this.leftX = x;
+	this.rightX = x+width;
+	this.upperY = y;
+	this.lowerY = y+height;
+	// original values
+	this.width = width;
+	this.height = height;
+	// properties
+	this.labelWidth = 20;
+	this.sliderThickness = 6;
+	this.sliderThicknessHalf = this.sliderThickness / 2;
+	this.slidingWidth = width-this.labelWidth;
+	this.slidingStartX = x+this.labelWidth;
+	this.slidingEndX = x+width;
+	// borders
+	this.border = new Path.Rectangle(new Point(this.leftX+this.labelWidth, this.upperY), new Point(this.rightX, this.lowerY));
+	this.border.strokeColor = '#000';
+	this.border.strokeWidth = 0.5;
+	
+	// labels
+	// title
+	var fontSize = 12;
+	this.title = new PointText(new Point(x, y+(height+fontSize)/2)-1);
+	this.title.style.fontSize = fontSize;
+	this.title.justification = 'left';
+	this.title.strokeColor = '#000';
+	this.title.strokeWidth = 0.5;
+	this.title.content = label;
+	// slider
+	this.sliderValue = 1;
+	this.actualSliderPosition = this.slidingStartX+(this.slidingWidth/2*this.sliderValue);
+	this.horizontalSlider = new TEMovingHorizontalSlider(new Point(this.actualSliderPosition-this.sliderThickness/2, this.upperY+1), new Point(this.actualSliderPosition+this.sliderThickness/2, this.lowerY-1));
+	//this.setValue(1);
+	
+	// auxiliary lines
+	this.auxiliaryLines = [];
+	for (var t=0.2; t<1.9; t+=0.2) {
+		var tempX = (this.slidingWidth / 2) * t + this.leftX + this.labelWidth;
+		var newLine = new Path.Line(new Point(tempX,this.upperY+1), new Point(tempX,this.lowerY-1));
+		if (Math.abs(t-1) < 0.01) newLine.dashArray = [];
+		else newLine.dashArray = [2,2];
+		newLine.strokeColor = '#000';
+		newLine.strokeWidth = 0.5;
+		this.auxiliaryLines.push(newLine);
+	}
+}
+TEThicknessSlider.prototype.copySliderValueToVector = function() {
+	if (this.linkedVector != null) this.linkedVector.distance = this.sliderValue;
+}
+/*
+TEThicknessSlider.prototype.setNewLabel = function(label) {
+	// title
+	this.title.style.fontSize = 12;
+	this.title.justification = 'center';
+	this.title.strokeColor = '#000';
+	this.title.strokeWidth = 0.5;
+	this.title.content = label;
+}
+*/
+TEThicknessSlider.prototype.handleEvent = function(event) {
+	//console.log("TEThicknessSlider.handleEvent()", event);
+	//console.log("is inside rectangle? ", event.point, this.slidingStartX, this.slidingEndX, this.upperY, this.lowerY);
+	
+	if ((event.point.x >= this.slidingStartX) && (event.point.x <= this.slidingEndX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {
+		//console.log("is inside rectangle: ", event.point, this.slidingStartX, this.slidingEndX, this.upperY, this.lowerY);
+		if ((this.horizontalSlider.identify(event.item) != false) || (mouseDown)) {
+			//console.log("thicknessSlider has received a mouse event");
+			// somehow the value for the new position has to be adapted ... seems as if position of a rectangle has reference point at the CENTER of a retangle ?!?
+			// strangely topLeft property cannot be used ... ?!?!
+			newPosition = new Point(event.point.x, this.upperY + this.height/2);
+			this.sliderValue = (2 / this.slidingWidth) * (event.point.x-this.slidingStartX);
+			//console.log("Slider value: ", this.sliderValue);
+			//console.log("newPosition: ", newPosition);
+			this.horizontalSlider.rectangle.position = newPosition;
+			this.horizontalSlider.label.content = this.sliderValue.toFixed(2);
+			this.horizontalSlider.label.position = newPosition-[14,-2];
+			//this.horizontalSlider.label.visible = true;
+		}
+	}
+	this.copySliderValueToVector();
+	
+}
+TEThicknessSlider.prototype.getValue = function() {
+	return this.sliderValue;
+}
+TEThicknessSlider.prototype.showLinked = function() {
+	//console.log("linkedVector: ", this.linkedVector);
+}
+TEThicknessSlider.prototype.linkVector = function(vector) {
+	this.linkedVector = vector;
+	this.setValue(vector.distance);
+	this.horizontalSlider.show();
+}
+TEThicknessSlider.prototype.unlinkVector = function() {
+	this.linkedVector = null;
+	this.horizontalSlider.hide();
+}
+TEThicknessSlider.prototype.setValue = function(thickness) {
+	this.sliderValue = thickness;
+	var tempX = this.horizontalSlider.rectangle.position.x,
+		tempY = this.slidingEndY-(this.slidingHeight*this.sliderValue);
+	this.horizontalSlider.rectangle.position = new Point(tempX, tempY); 
+	this.horizontalSlider.label.content = thickness.toFixed(2);
+	this.horizontalSlider.label.position = new Point(tempX, tempY-8);
+	this.actualSliderPosition = tempX; // ?
+}
+
+/*TETensionSlider.prototype.getLabelChar = function() {
+	var char;
+	switch (selectedTension) { // use global variable
+		case "middle" : char = "M"; break;
+		case "left" : char = "L"; break;
+		case "right" : char = "R"; break;
+		case "locked" : char = "A"; break;
+	}
+	return char;
+}
+*/
+
+function TETwoGroupedThicknessSliders(parent, x1, y1, width, height) {
+	// parent and links
+	this.parent = parent; 	// TECanvas
+	this.linkedEditableToken = null;
+	
+	// coordinates
+	this.leftX = x1;
+	this.rightX = x1+width;
+	this.upperY = y1;
+	this.lowerY = y1+height;
+	
+	// distances
+	this.onePart = (height) / 7;
+	this.sliderHeight = this.onePart * 2;
+	
+	// sliders
+	this.thicknessSlider1 = new TEThicknessSlider(x1, y1, width, this.sliderHeight, "L");
+	this.thicknessSlider2 = new TEThicknessSlider(x1, y1+this.onePart*3, width, this.sliderHeight, "R");
+	
+	// labels
+	this.valueLabels = new Array();
+	
+	// set labels
+	fontSize = 10;
+	for (var t=0; t<=2.01; t+=0.2) {
+		var tempX = (this.thicknessSlider1.slidingWidth / 2) * t + this.leftX + this.thicknessSlider1.labelWidth;
+		//console.log("t / tempX: ", t, tempX);
+		var newValueLabel = new PointText(new Point(tempX, y1+height-(this.onePart-fontSize/2)));
+		if ((t<0.05) || (t>1.95) || ((t>0.99) && (t<1.01))) newValueLabel.content = t.toFixed(0); // I hate JS ...
+		else newValueLabel.content =  "." + fract(t.toFixed(1));   //t.toFixed(1);
+		newValueLabel.justification = 'center';
+		newValueLabel.style.fontSize = fontSize;
+		this.valueLabels.push(newValueLabel);
+	}
+	//this.tensionSlider1.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
+	//this.tensionSlider2.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
+}
+TETwoGroupedThicknessSliders.prototype.handleEvent = function(event) {
+/*		switch (event.type) {
+			case "mousedown" : this.handleMouseDown(event); break;
+			case "mouseup" : this.handleMouseUp(event); break;
+			case "mousedrag" : this.handleMouseDrag(event); break;
+		}
+*/	
+		//console.log("TETwoGroupedThicknessSliders.handleEvent()");
+		this.thicknessSlider1.handleEvent(event);
+		this.thicknessSlider2.handleEvent(event);
+		//console.log("Slider1: ");
+		//this.thicknessSlider1.showLinked();
+		//console.log("Slider2: ");
+		//this.thicknessSlider2.showLinked();
+		//console.log("Write new values: ", this.thicknessSlider1.getValue(), this.thicknessSlider2.getValue());
+		//this.showHorizontalSliders();
+		//console.log("set visible: ",this.thicknessSlider1.horizontalSlider.rectangle.visible);
+		this.thicknessSlider1.horizontalSlider.rectangle.visible=true;
+		this.thicknessSlider2.horizontalSlider.rectangle.visible=true;
+		
+}
+/*
+TETwoGroupedThicknessSliders.prototype.handleMouseDown = function(event) {
+}
+TETwoGroupedThicknessSliders.prototype.handleMouseUp = function(event) {
+}
+TETwoGroupedThicknessSliders.prototype.handleMouseDrag = function(event) {
+}*/
+
+//////////////////// following methods have not been tested!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+TETwoGroupedThicknessSliders.prototype.setValues = function(t1, t2) {
+	this.thicknessSlider1.setValue(t1);
+	this.thicknessSlider2.setValue(t2);
+}
+TETwoGroupedThicknessSliders.prototype.showHorizontalSliders = function() {
+	console.log("TETwoGroupedThicknessSliders.showHorizontalSliders()", this.thicknessSlider1.horizontalSlider.rectangle.visible);
+	this.thicknessSlider1.horizontalSlider.rectangle.visible = true; //horizontalSlider.show();
+	this.thicknessSlider2.horizontalSlider.show();
+	//console.log("visible = ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
+	//console.log("fillColor = ", this.thicknessSlider1.horizontalSlider.rectangle.fillColor);
+	//console.log("strokeColor = ", this.thicknessSlider1.horizontalSlider.rectangle.strokeColor);
+	
+}
+TETwoGroupedThicknessSliders.prototype.hideHorizontalSliders = function() {
+	this.thicknessSlider1.horizontalSlider.hide();
+	this.thicknessSlider2.horizontalSlider.hide();
+}
+TETwoGroupedThicknessSliders.prototype.updateValues = function() {
+	//console.log("Update slider values: ", this.linkedKnot);
+	if (this.linkedEditableToken != null) {
+		//var temp = this.linkedKnot.getTensions();
+		//var t1 = temp[0],
+			//t2 = temp[1];
+		this.setValues(t1,t2);
+		this.showHorizontalSliders(); // not sure if this is necessary ...
+		//console.log("linkedKnot after Update: ", this.linkedKnot);
+	}
+}
+TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
+	//console.log("TETwoGroupedThicknessSliders.linkEditableToken()", this, this.thicknessSlider1.linkedVector);
+	//console.log("Visible? ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
+	this.linkedEditableToken = token;
+	var index = token.index-1;
+	console.log("Link vector: ", token.leftVectors[index]);
+	this.thicknessSlider1.linkVector(token.leftVectors[index]);
+	this.thicknessSlider2.linkVector(token.rightVectors[index]);
+	this.showHorizontalSliders();
+	//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
+	this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
+}
+TETwoGroupedThicknessSliders.prototype.unlinkEditableToken = function() {
+	this.linkedEditableToken = null;
+	this.hideHorizontalSliders(); 
+}
+/*
+TETwoGroupedThicknessSliders.prototype.setNewLabels = function() {
+	var labels = this.getLabelStrings();
+	//console.log("setNewLabels: ", labels);
+	
+	this.tensionSlider1.setNewLabel(labels[0]);
+	this.tensionSlider2.setNewLabel(labels[1]);
+}
+TETwoGroupedThicknessSliders.prototype.getLabelStrings = function() {
+	//console.log("selectedTension: ", selectedTension);
+	
+	var label1, label2;
+	switch (selectedTension) { // use global variable
+		case "middle" : label1 = "M1"; label2 = "M2"; break;
+		case "left" : label1 = "L1"; label2 = "L2"; break;
+		case "right" : label1 = "R1"; label2 = "R2"; break;
+		case "locked" : label1 = "A1"; label2 = "A2"; break;
+	}
+	return [label1, label2];
+}
+*/

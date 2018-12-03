@@ -202,3 +202,8 @@ function toType(obj) {
     }
     return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 }
+
+function fract(n) { 
+	return Number(String(n).split('.')[1] || 0); 
+	// I hate JS ...
+}

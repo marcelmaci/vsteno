@@ -213,26 +213,26 @@ TETwoGroupedTensionSliders.prototype.unlink = function() {
 	this.hideVerticalSliders();
 }
 TETwoGroupedTensionSliders.prototype.updateValues = function() {
-	console.log("Update slider values: ", this.linkedKnot);
+	//console.log("Update slider values: ", this.linkedKnot);
 	if (this.linkedKnot != null) {
 		var temp = this.linkedKnot.getTensions();
 		var t1 = temp[0],
 			t2 = temp[1];
 		this.setValues(t1,t2);
 		this.showVerticalSliders(); // not sure if this is necessary ...
-		console.log("linkedKnot after Update: ", this.linkedKnot);
+		//console.log("linkedKnot after Update: ", this.linkedKnot);
 	
 	}
 }
 TETwoGroupedTensionSliders.prototype.setNewLabels = function() {
 	var labels = this.getLabelStrings();
-	console.log("setNewLabels: ", labels);
+	//console.log("setNewLabels: ", labels);
 	
 	this.tensionSlider1.setNewLabel(labels[0]);
 	this.tensionSlider2.setNewLabel(labels[1]);
 }
 TETwoGroupedTensionSliders.prototype.getLabelStrings = function() {
-	console.log("selectedTension: ", selectedTension);
+	//console.log("selectedTension: ", selectedTension);
 	
 	var label1, label2;
 	switch (selectedTension) { // use global variable

@@ -11,7 +11,8 @@ cat license.txt connection_points_code.js > connection_points.js
 cat license.txt drawing_area_code.js > drawing_area.js
 cat license.txt vsteno_editor_main_code.js > vsteno_editor_main.js
 cat license.txt tension_slider_code.js > tension_slider.js
+cat license.txt thickness_slider_code.js > thickness_slider.js
 
 # join files into one file containing all the code 
 
-cat license.txt global_functions_code.js static_graphical_elements_code.js freehand_code.js rotating_axis_code.js connection_points_code.js drawing_area_code.js vsteno_editor_main_code.js tension_slider_code.js > vsteno_editor.js
+cat license.txt global_functions_code.js static_graphical_elements_code.js freehand_code.js rotating_axis_code.js connection_points_code.js drawing_area_code.js vsteno_editor_main_code.js tension_slider_code.js thickness_slider_code.js > vsteno_editor.js

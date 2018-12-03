@@ -110,13 +110,13 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 }
 TEEditableToken.prototype.getRelativeTokenKnot = function() {
-	console.log("this.index: ", this.index);
+	//console.log("this.index: ", this.index);
 	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
 }
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
-	console.log("setKnotType: ", relativeTokenKnot, type);
+	//console.log("setKnotType: ", relativeTokenKnot, type);
 	switch (type) {
 		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
 							var x = this.selectedKnot.circle.position.x,
@@ -137,9 +137,10 @@ TEEditableToken.prototype.setKnotType = function(type) {
 	}
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
+	console.log("TEEditableToken.handleMouseDown()");
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
-	  	console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
+	  	//console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
 		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
@@ -149,8 +150,13 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 			case "o" : this.setKnotType("orthogonal"); break;
 			case "h" : this.setKnotType("horizontal"); break;
 		}
+		// link thickness sliders	
+		console.log("linkSliders: ", this);
+		this.parent.parent.thicknessSliders.linkEditableToken(this);
+		this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
+		//this.parent.parent.thicknessSliders.linkEditableToken(this);
 		
-		console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
+		//console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
 		
 		//this.parent.parent.tensionSliders.link(this.selectedKnot);
 		//this.selectedKnot.handleMouseDown(event);
@@ -181,7 +187,7 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 	}
 }
 TEEditableToken.prototype.handleEvent = function(event) {
-	console.log("TEEditableToken.handleEvent");
+	//console.log("TEEditableToken.handleEvent");
 	switch (event.type) {
 		case "mousedown" : if (doubleClick) {
 								//this.handleMouseDown(event);
@@ -192,7 +198,9 @@ TEEditableToken.prototype.handleEvent = function(event) {
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
+	
 	//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+
 }
 TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	// reset all knot types

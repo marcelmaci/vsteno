@@ -136,7 +136,7 @@ TEConnectionPoint.prototype.handleMouseDrag = function(event) {
 TEConnectionPoint.prototype.handleEvent = function(event) {
 	//console.log("unlink sliders:", this.parent.parent.tensionSliders);
 	this.parent.parent.tensionSliders.hideVerticalSliders();
-	console.log("TEConnectionPoint.handleEvent()");
+	//console.log("TEConnectionPoint.handleEvent()");
 	switch (event.type) {
 		case "mousedown" : this.handleMouseDown(event); break;
 		case "mouseup" : this.handleMouseUp(event); break;

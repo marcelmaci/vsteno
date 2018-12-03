@@ -6,7 +6,7 @@ var innerLines = new Path();
 var tangent = new Path();
 
 //var editor = new TEDrawingArea(new Point(100, 500), 4, 1, 10, 10);
-var mainCanvas = new TECanvas(0,0,800,600);
+var mainCanvas = new TECanvas(0,0,800,800);
 	
 // global event handlers and variables
 var lastClick = null,
@@ -31,6 +31,8 @@ var tangentPrecision = 0.001,
 var keyPressed = "";
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 
+//var thicknessSlider = new TEThicknessSlider(100, 550, 400, 20, "L");
+//var thicknessSliders = new TETwoGroupedThicknessSliders(null, 100, 500, 400, 70);
 
 // main classes
 // class TECanvas (main container for complete drawing area)
@@ -42,9 +44,12 @@ function TECanvas(x, y, width, height) {
 	this.height = height;
 	// objects
 	// main editor
-	this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
+	//this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
+	this.editor = new TEDrawingArea(this, new Point(100, 450), 4, 1, 10, 10);
 	// sliders
 	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
+	this.thicknessSliders = new TETwoGroupedThicknessSliders(this, this.editor.leftX, this.editor.lowerY+30, this.editor.rightX - this.editor.leftX, 70);
+
 }
 TECanvas.prototype.handleEvent = function(event) {
 	//console.log("TECanvas.handleEvent()");
@@ -52,6 +57,8 @@ TECanvas.prototype.handleEvent = function(event) {
 		// instead of identifying object, call all event handlers
 		this.editor.handleEvent(event);
 		this.tensionSliders.handleEvent(event);
+		this.thicknessSliders.handleEvent(event);
+		//console.log("thicknessSliders: ", this.thicknessSliders);
 	}
 	//this.crossUpdateSliderAndFreehandCurve();
 }

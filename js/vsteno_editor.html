@@ -9,10 +9,40 @@
     <script src="vsteno_editor.js" type="text/paperscript" canvas="drawingArea"></script>
 </head>
 <body style="background:white">
+<table>
+<tr>
+	<td><p>VSTENO EDITOR: <a href="../docs/editor_classes.pdf">CLASSES</a> (Overview)</p>
+<p>Keyboard and mouse commands:
+<ul>
+<li>leftclick: in drawing area: select knot or insert knot (after selected knot) / on sliders: set tension</li>
+<li>leftclick and drag: move knot or connection point</li>
+<li>doubleclick on point: delete knot</li>
+<li>h/o + leftclick: toggle between horizontal and orthogonal knot</li>
+<li>t: toggle between locked (only 1 tension) und unlocked (separate tensions for left/middle/right)</li>
+<li>l/m/r: select left/middle/right tension for tension sliders (only if tensions are unlocked)</li>
+</ul>
+</p>
+<p>colors and shapes:
+<ul>
+<li>green: rotating axis</li>
+<li>black: connecting points</li>
+<li>blue: entry knots</li>
+<li>purple: pivot knot</li>
+<li>red: normal knot</li>
+<li>yellow border = selected knot/point</li>
+<li>circle: horizontal knot (= stays on horizontal line when rotating axis moves)</li>
+<li>rectangle: orthogonal knot (= follows rotating axis orthogonally)</li>
+</ul>
+</p>
+</td>
+<td>
 <center><br><br><br>
    <canvas id="drawingArea" width="800" height="600" style="background-color:#eee"></canvas>
 </center>
-<p>VSTENO EDITOR: <a href="../docs/editor_classes.pdf">CLASSES</a> (Overview)</p>
+</td>
+</tr>
+</table>
+
 </body>
 </html>
 </html>
