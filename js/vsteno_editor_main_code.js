@@ -49,6 +49,7 @@ function TECanvas(x, y, width, height) {
 	// sliders
 	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
 	this.thicknessSliders = new TETwoGroupedThicknessSliders(this, this.editor.leftX, this.editor.lowerY+30, this.editor.rightX - this.editor.leftX, 70);
+	console.log("TwoGroupedSliders: BEFORE:", this.thicknessSliders);
 
 }
 TECanvas.prototype.handleEvent = function(event) {
@@ -65,7 +66,6 @@ TECanvas.prototype.handleEvent = function(event) {
 //TECanvas.prototype.crossUpdateSliderAndFreehandCurve() {
 	
 //}
-
 
 // enable right clicks
 /* doesn't work: unfortunately the oncontextmenu-method is called after the tool.nomouse-methods ...
@@ -84,6 +84,20 @@ window.oncontextmenu = function(event) {
 	return false; // avoid popping up of context menu
 }
 
+// test
+function makeVisible() {
+	console.log("make visible");
+	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
+	mainCanvas.thicknessSliders.showHorizontalSliders();
+	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
+}
+function makeInvisible() {
+	console.log("make invisible");
+	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
+	mainCanvas.thicknessSliders.hideHorizontalSliders();
+	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
+}
+
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
 	keyPressed = event.key;
@@ -97,7 +111,10 @@ tool.onKeyDown = function(event) {
 	switch (keyPressed) {	
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
-			
+		case "v" : makeVisible(); break; // show thickness slider (test)
+		case "i" : makeInvisible(); break; // hide thickness slider (test)
+		
+	
 	}
 	//console.log("KeyEvent: ", event);
 }

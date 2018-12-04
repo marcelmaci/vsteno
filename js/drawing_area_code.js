@@ -130,7 +130,7 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		vectorY = vectorY / Math.avoidDivisionBy0(vectorLength);
 		// calculate new coordinates for left shape
 		// vector endpoint
-		var newLength = 10; // 10 pixels
+		var newLength = this.editableToken.leftVectors[i].distance * this.scaleFactor; //10; // 10 pixels
 		var endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
@@ -144,7 +144,7 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		vectorY = -vectorY;
 		vectorX = -vectorX;
 		// vector endpoint
-		newLength = 10; // 10 pixels
+		newLength = this.editableToken.rightVectors[i].distance * this.scaleFactor; //10; // 10 pixels
 		endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
@@ -283,6 +283,10 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);		
 	}
 	this.connectPreceedingAndFollowing();
+	// link thickness sliders
+	console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
+	this.parent.thicknessSliders.linkEditableToken(this.editableToken);
+	
 	//this.preceeding.connect();
 /*	this.following.connect();
 */

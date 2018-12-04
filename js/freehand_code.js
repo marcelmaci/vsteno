@@ -1,6 +1,7 @@
 
 // class TEKnotVector
 function TEKnotVector(distance, type) {
+	console.log("TEKnotVector.constructor");
 	this.type = "orthogonal"; // make it fix for the moment (change it to type later)
 	this.distance = distance;
 	this.line = Path.Line(new Point(0,0), new Point(100,100));
@@ -153,7 +154,7 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 		// link thickness sliders	
 		console.log("linkSliders: ", this);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
-		this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
+		//this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
 		//this.parent.parent.thicknessSliders.linkEditableToken(this);
 		
 		//console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
@@ -210,6 +211,9 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		this.knotsList[i].type.pivot1 = false;
 		this.knotsList[i].type.pivot1 = false;
 		this.knotsList[i].circle.fillColor = colorNormalKnot;
+		// set thicknesses to 1
+		this.leftVectors[i].distance = 1;
+		this.rightVectors[i].distance = 1;
 	}
 	// set new types
 	this.knotsList[0].type.entry = true;
@@ -223,6 +227,11 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	this.knotsList[indexP2].circle.fillColor = colorPivot2;
 	this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
 	this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
+	// correct thicknesses of entry and exit knot (set them to 0)
+	this.leftVectors[0].distance = 0;
+	this.rightVectors[0].distance = 0;
+	this.leftVectors[this.leftVectors.length-1].distance = 0;
+	this.rightVectors[this.rightVectors.length-1].distance = 0;
 }
 TEEditableToken.prototype.getNewKnotTypeColor = function() {
 	// knot will be inserted after this.index
@@ -249,17 +258,21 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.insertNewKnot = function(point) {
+	console.log("TEEditableToken.insertNewKnot()");
 	// get color of new knot before inserting it
 	var newColor = this.getNewKnotTypeColor();
 	// insert knot
 	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot);
 	this.knotsList.splice(this.index, 0, newKnot);
-	// insert vectors for outer shape
-	var distance = (this.index == 0) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	//var newLength = this.knotsList.length;
+	// insert knot vectors for outer shape
+	var distance = ((this.index == 0)/* || (this.index == newLength-1)*/) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
 	var leftVector = new TEKnotVector(distance, "orthogonal");
 	var rightVector = new TEKnotVector(distance, "orthogonal");
 	this.leftVectors.splice(this.index,0, leftVector);
 	this.rightVectors.splice(this.index,0, rightVector);
+	console.log("new leftVector: ", leftVector);
+	console.log("array leftVectors: ", this.leftVectors[this.index]);
 	// automatically define knot type if autodefine is set
 	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
 	// select new knot as actual knot
