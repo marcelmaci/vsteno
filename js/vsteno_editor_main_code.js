@@ -33,8 +33,10 @@ var arrowUp = false,			// global variables for arrow keys
 	arrowDown = false,
 	arrowLeft = false,
 	arrowRight = false;
+	
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
-
+var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
+ 
 //var thicknessSlider = new TEThicknessSlider(100, 550, 400, 20, "L");
 //var thicknessSliders = new TETwoGroupedThicknessSliders(null, 100, 500, 400, 70);
 
@@ -144,6 +146,7 @@ tool.onKeyDown = function(event) {
 	switch (keyPressed) {	
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
 		case "v" : makeVisible(); break; // show thickness slider (test)
 		case "i" : makeInvisible(); break; // hide thickness slider (test)
 		

@@ -57,11 +57,18 @@ function TEEditableToken(drawingArea) {
 	this.parent = drawingArea;
 	// token data
 	this.knotsList = []; 	// type: TEVisuallyModifiableKnot
-	this.leftVectors = []; 	// type: TEKnotVector
-	this.rightVectors = [];
+	this.leftVectors = new Array(2);  	// type: TEKnotVector
+	this.rightVectors = new Array(2);
+	for (var i=0; i<2; i++) {			// make 2-dimensional array for vectors (TEKnotVector)
+		this.leftVectors[i] = [];
+		this.rightVectors[i] = [];
+	}
+	
 	// paths
 	this.middlePath = null; 			// for the moment: fhToken in TEDrawingArea
-	this.outerShape = new Path();		// closed path: starting point - leftPath - endPoint - rightPath - starting point
+	this.outerShape = new Array(2);		// closed path: starting point - leftPath - endPoint - rightPath - starting point
+	this.outerShape[0] = new Path();	// reserve 2 pathes (as array): 1 = normal, 2 = shadowed	
+	this.outerShape[1] = new Path(); 	
 	
 	// mouse events
 	//this.mouseDown = false;
@@ -244,8 +251,8 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		this.knotsList[i].type.pivot1 = false;
 		this.knotsList[i].circle.fillColor = colorNormalKnot;
 		// set thicknesses to 1
-		this.leftVectors[i].distance = 1;
-		this.rightVectors[i].distance = 1;
+		this.leftVectors[0][i].distance = 1;
+		this.rightVectors[0][i].distance = 1;
 	}
 	// set new types
 	this.knotsList[0].type.entry = true;
@@ -260,10 +267,10 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
 	this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
 	// correct thicknesses of entry and exit knot (set them to 0)
-	this.leftVectors[0].distance = 0;
-	this.rightVectors[0].distance = 0;
-	this.leftVectors[this.leftVectors.length-1].distance = 0;
-	this.rightVectors[this.rightVectors.length-1].distance = 0;
+	this.leftVectors[0][0].distance = 0;
+	this.rightVectors[0][0].distance = 0;
+	this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
+	this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
 }
 TEEditableToken.prototype.getNewKnotTypeColor = function() {
 	// knot will be inserted after this.index
@@ -301,8 +308,8 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	var distance = ((this.index == 0)/* || (this.index == newLength-1)*/) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
 	var leftVector = new TEKnotVector(distance, "orthogonal");
 	var rightVector = new TEKnotVector(distance, "orthogonal");
-	this.leftVectors.splice(this.index,0, leftVector);
-	this.rightVectors.splice(this.index,0, rightVector);
+	this.leftVectors[0].splice(this.index,0, leftVector);
+	this.rightVectors[0].splice(this.index,0, rightVector);
 	//console.log("new leftVector: ", leftVector);
 	//console.log("array leftVectors: ", this.leftVectors[this.index]);
 	// automatically define knot type if autodefine is set
@@ -339,10 +346,10 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// bug: there's something wrong with the lines (they remain on drawing area as zombies ... ;-)
 	this.knotsList[this.index-1].circle.remove(); // make control circle invisible (should be deleted)
 	this.knotsList.splice(this.index-1, 1); // deletes 1 element at index and reindexes array
-	this.leftVectors[this.index-1].line.removeSegments();
-	this.leftVectors.splice(this.index-1, 1);
-	this.rightVectors[this.index-1].line.removeSegments();
-	this.rightVectors.splice(this.index-1, 1);
+	this.leftVectors[0][this.index-1].line.removeSegments();
+	this.leftVectors[0].splice(this.index-1, 1);
+	this.rightVectors[0][this.index-1].line.removeSegments();
+	this.rightVectors[0].splice(this.index-1, 1);
 	// remove also relative knot in relative token (rotating axis)
 	this.parent.rotatingAxis.relativeToken.knotsList.splice(this.index-1,1); // do the same with relative token
 	this.parent.fhToken.removeSegment(this.index-1); // do the same with path

@@ -192,8 +192,8 @@ function TETwoGroupedThicknessSliders(parent, x1, y1, width, height) {
 	this.sliderHeight = this.onePart * 2;
 	
 	// sliders
-	this.thicknessSlider1 = new TEThicknessSlider(x1, y1, width, this.sliderHeight, "L");
-	this.thicknessSlider2 = new TEThicknessSlider(x1, y1+this.onePart*3, width, this.sliderHeight, "R");
+	this.thicknessSlider1 = new TEThicknessSlider(x1, y1, width, this.sliderHeight, "L1"); // + this.getSelectedShape());
+	this.thicknessSlider2 = new TEThicknessSlider(x1, y1+this.onePart*3, width, this.sliderHeight, "R1"); // + this.getSelectedShape());
 	
 	// labels
 	this.valueLabels = new Array();
@@ -212,6 +212,12 @@ function TETwoGroupedThicknessSliders(parent, x1, y1, width, height) {
 	}
 	//this.tensionSlider1.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
 	//this.tensionSlider2.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
+}
+TETwoGroupedThicknessSliders.prototype.getSelectedShape = function() {
+	switch (selectedShape) {
+		case "normal" : return "1"; break;
+		case "shadowed" : return "2"; break;
+	}
 }
 TETwoGroupedThicknessSliders.prototype.handleEvent = function(event) {
 /*		switch (event.type) {
@@ -278,10 +284,10 @@ TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
 	this.linkedEditableToken = token;
 	var index = token.index-1;
 	//console.log("Link vector: ", index, token, token.leftVectors[index]);
-	this.thicknessSlider1.linkVector(token.leftVectors[index]);
-	this.thicknessSlider2.linkVector(token.rightVectors[index]);
+	this.thicknessSlider1.linkVector(token.leftVectors[0][index]);
+	this.thicknessSlider2.linkVector(token.rightVectors[0][index]);
 	//console.log("Hi there:", token.leftVectors[index]);
-	this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
+	this.setValues(token.leftVectors[0][index].distance, token.rightVectors[0][index].distance);	
 	this.showHorizontalSliders();
 	//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
 	//this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
@@ -289,6 +295,13 @@ TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
 TETwoGroupedThicknessSliders.prototype.unlinkEditableToken = function() {
 	this.linkedEditableToken = null;
 	this.hideHorizontalSliders(); 
+}
+TETwoGroupedThicknessSliders.prototype.updateLabels = function() {
+	//console.log("TETwoGroupedThicknessSliders.updateLabels(): ", selectedShape);
+	var temp = this.getSelectedShape();
+	//console.log("temp = ", temp, this.thicknessSlider1);
+	this.thicknessSlider1.title.content = "L" + temp;
+	this.thicknessSlider2.title.content = "R" + temp;
 }
 /*
 TETwoGroupedThicknessSliders.prototype.setNewLabels = function() {
