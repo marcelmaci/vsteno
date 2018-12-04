@@ -1,7 +1,7 @@
 
 // class TEKnotVector
 function TEKnotVector(distance, type) {
-	console.log("TEKnotVector.constructor");
+	//console.log("TEKnotVector.constructor");
 	this.type = "orthogonal"; // make it fix for the moment (change it to type later)
 	this.distance = distance;
 	this.line = Path.Line(new Point(0,0), new Point(100,100));
@@ -138,7 +138,7 @@ TEEditableToken.prototype.setKnotType = function(type) {
 	}
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
-	console.log("TEEditableToken.handleMouseDown()");
+	//console.log("TEEditableToken.handleMouseDown()");
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
 	  	//console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
@@ -152,7 +152,7 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 			case "h" : this.setKnotType("horizontal"); break;
 		}
 		// link thickness sliders	
-		console.log("linkSliders: ", this);
+		//console.log("linkSliders: ", this);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
 		//this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
 		//this.parent.parent.thicknessSliders.linkEditableToken(this);
@@ -258,7 +258,7 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.insertNewKnot = function(point) {
-	console.log("TEEditableToken.insertNewKnot()");
+	//console.log("TEEditableToken.insertNewKnot()");
 	// get color of new knot before inserting it
 	var newColor = this.getNewKnotTypeColor();
 	// insert knot
@@ -271,8 +271,8 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	var rightVector = new TEKnotVector(distance, "orthogonal");
 	this.leftVectors.splice(this.index,0, leftVector);
 	this.rightVectors.splice(this.index,0, rightVector);
-	console.log("new leftVector: ", leftVector);
-	console.log("array leftVectors: ", this.leftVectors[this.index]);
+	//console.log("new leftVector: ", leftVector);
+	//console.log("array leftVectors: ", this.leftVectors[this.index]);
 	// automatically define knot type if autodefine is set
 	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
 	// select new knot as actual knot

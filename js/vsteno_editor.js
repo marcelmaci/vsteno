@@ -403,7 +403,7 @@ TECoordinatesLabels.prototype.isDynamic = function() {
 
 // class TEKnotVector
 function TEKnotVector(distance, type) {
-	console.log("TEKnotVector.constructor");
+	//console.log("TEKnotVector.constructor");
 	this.type = "orthogonal"; // make it fix for the moment (change it to type later)
 	this.distance = distance;
 	this.line = Path.Line(new Point(0,0), new Point(100,100));
@@ -540,7 +540,7 @@ TEEditableToken.prototype.setKnotType = function(type) {
 	}
 }
 TEEditableToken.prototype.handleMouseDown = function(event) {
-	console.log("TEEditableToken.handleMouseDown()");
+	//console.log("TEEditableToken.handleMouseDown()");
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
 	  	//console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
@@ -554,7 +554,7 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 			case "h" : this.setKnotType("horizontal"); break;
 		}
 		// link thickness sliders	
-		console.log("linkSliders: ", this);
+		//console.log("linkSliders: ", this);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
 		//this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
 		//this.parent.parent.thicknessSliders.linkEditableToken(this);
@@ -660,7 +660,7 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.insertNewKnot = function(point) {
-	console.log("TEEditableToken.insertNewKnot()");
+	//console.log("TEEditableToken.insertNewKnot()");
 	// get color of new knot before inserting it
 	var newColor = this.getNewKnotTypeColor();
 	// insert knot
@@ -673,8 +673,8 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	var rightVector = new TEKnotVector(distance, "orthogonal");
 	this.leftVectors.splice(this.index,0, leftVector);
 	this.rightVectors.splice(this.index,0, rightVector);
-	console.log("new leftVector: ", leftVector);
-	console.log("array leftVectors: ", this.leftVectors[this.index]);
+	//console.log("new leftVector: ", leftVector);
+	//console.log("array leftVectors: ", this.leftVectors[this.index]);
 	// automatically define knot type if autodefine is set
 	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
 	// select new knot as actual knot
@@ -1829,7 +1829,7 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	}
 	this.connectPreceedingAndFollowing();
 	// link thickness sliders
-	console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
+	//console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
 	this.parent.thicknessSliders.linkEditableToken(this.editableToken);
 	
 	//this.preceeding.connect();
@@ -1880,7 +1880,7 @@ TEDrawingArea.prototype.isStatic = function(item) {
 }
 
 TEDrawingArea.prototype.handleEvent = function(event) {
-	console.log("TEDrawingArea.handleEvent()", event);
+	//console.log("TEDrawingArea.handleEvent()", event);
 	//if (event.item != null) {
 		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
 			switch (event.type) {
@@ -1951,7 +1951,7 @@ function TECanvas(x, y, width, height) {
 	// sliders
 	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
 	this.thicknessSliders = new TETwoGroupedThicknessSliders(this, this.editor.leftX, this.editor.lowerY+30, this.editor.rightX - this.editor.leftX, 70);
-	console.log("TwoGroupedSliders: BEFORE:", this.thicknessSliders);
+	//console.log("TwoGroupedSliders: BEFORE:", this.thicknessSliders);
 
 }
 TECanvas.prototype.handleEvent = function(event) {
@@ -2292,7 +2292,7 @@ TETwoGroupedTensionSliders.prototype.getLabelStrings = function() {
 
 // class TEMovingHorizontalSlider
 function TEMovingHorizontalSlider(from, to) {
-	console.log("TEMovingHorizontalSlider()");
+	//console.log("TEMovingHorizontalSlider()");
 	this.label = new PointText( from + [10,2] );
 	this.label.justification = "center";
 	this.label.fillcolor = '#000';
@@ -2432,11 +2432,11 @@ TEThicknessSlider.prototype.unlinkVector = function() {
 	this.horizontalSlider.hide();
 }
 TEThicknessSlider.prototype.setValue = function(thickness) {
-	console.log("TEThicknessSlider.setValue(): ", thickness);
+	//console.log("TEThicknessSlider.setValue(): ", thickness);
 	this.sliderValue = thickness;
 	var tempX = (this.slidingWidth / 2) * thickness + this.slidingStartX;
 		tempY = (this.upperY+this.lowerY) / 2;
-	console.log("coordinates(x,y): ", tempX, tempY);
+	//console.log("coordinates(x,y): ", tempX, tempY);
 	this.horizontalSlider.rectangle.position = new Point(tempX, tempY); 
 	this.horizontalSlider.label.content = thickness.toFixed(2);
 	this.actualSliderPosition = tempX; // ?
@@ -2535,12 +2535,12 @@ TETwoGroupedThicknessSliders.prototype.handleMouseDrag = function(event) {
 
 //////////////////// following methods have not been tested!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 TETwoGroupedThicknessSliders.prototype.setValues = function(t1, t2) {
-	console.log("TETwoGroupedThicknessSliders.setValues(): ",t1,t2);
+	//console.log("TETwoGroupedThicknessSliders.setValues(): ",t1,t2);
 	this.thicknessSlider1.setValue(t1);
 	this.thicknessSlider2.setValue(t2);
 }
 TETwoGroupedThicknessSliders.prototype.showHorizontalSliders = function() {
-	console.log("TETwoGroupedThicknessSliders.showHorizontalSliders()", this.thicknessSlider1.horizontalSlider.rectangle.visible);
+	//console.log("TETwoGroupedThicknessSliders.showHorizontalSliders()", this.thicknessSlider1.horizontalSlider.rectangle.visible);
 	this.thicknessSlider1.horizontalSlider.show(); //horizontalSlider.show();
 	this.thicknessSlider2.horizontalSlider.show();
 	//console.log("visible = ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
@@ -2564,14 +2564,14 @@ TETwoGroupedThicknessSliders.prototype.updateValues = function() {
 	}
 }
 TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
-	console.log("TETwoGroupedThicknessSliders.linkEditableToken()", token);
+	//console.log("TETwoGroupedThicknessSliders.linkEditableToken()", token);
 	//console.log("Visible? ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
 	this.linkedEditableToken = token;
 	var index = token.index-1;
-	console.log("Link vector: ", index, token, token.leftVectors[index]);
+	//console.log("Link vector: ", index, token, token.leftVectors[index]);
 	this.thicknessSlider1.linkVector(token.leftVectors[index]);
 	this.thicknessSlider2.linkVector(token.rightVectors[index]);
-	console.log("Hi there:", token.leftVectors[index]);
+	//console.log("Hi there:", token.leftVectors[index]);
 	this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
 	this.showHorizontalSliders();
 	//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);

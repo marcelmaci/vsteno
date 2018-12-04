@@ -284,7 +284,7 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	}
 	this.connectPreceedingAndFollowing();
 	// link thickness sliders
-	console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
+	//console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
 	this.parent.thicknessSliders.linkEditableToken(this.editableToken);
 	
 	//this.preceeding.connect();
@@ -335,7 +335,7 @@ TEDrawingArea.prototype.isStatic = function(item) {
 }
 
 TEDrawingArea.prototype.handleEvent = function(event) {
-	console.log("TEDrawingArea.handleEvent()", event);
+	//console.log("TEDrawingArea.handleEvent()", event);
 	//if (event.item != null) {
 		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
 			switch (event.type) {

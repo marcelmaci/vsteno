@@ -49,7 +49,7 @@ function TECanvas(x, y, width, height) {
 	// sliders
 	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
 	this.thicknessSliders = new TETwoGroupedThicknessSliders(this, this.editor.leftX, this.editor.lowerY+30, this.editor.rightX - this.editor.leftX, 70);
-	console.log("TwoGroupedSliders: BEFORE:", this.thicknessSliders);
+	//console.log("TwoGroupedSliders: BEFORE:", this.thicknessSliders);
 
 }
 TECanvas.prototype.handleEvent = function(event) {
