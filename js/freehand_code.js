@@ -108,7 +108,39 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.parent.setMarkedCircle(this.markedKnot);
 	// update sliders
 	//console.log(this
-	this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+		this.parent.parent.tensionSliders.link(this.selectedKnot); // this is the correct method, not the following line!
+	
+	//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+}
+TEEditableToken.prototype.selectFollowingKnot = function() {
+	//console.log("Select following knot");
+	// save edited tension values first!!!! => is done automatically by linking
+	var lastKnot = this.knotsList.length;
+	if (this.index >= lastKnot) return;
+	else {
+		this.index += 1;
+		this.selectedKnot = this.knotsList[this.index-1];
+		this.markedKnot = this.selectedKnot;
+		this.parent.setMarkedCircle(this.markedKnot);
+		this.parent.parent.tensionSliders.link(this.selectedKnot);
+		
+		//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+		this.parent.parent.thicknessSliders.linkEditableToken(this);
+	}
+}
+TEEditableToken.prototype.selectPreceedingKnot = function() {
+	//console.log("Select preceeding knot");
+	// save edited tension values first!!!! => is done automatically by linking
+	if (this.index <= 1) return;
+	else {
+		this.index -= 1;
+		this.selectedKnot = this.knotsList[this.index-1];
+		this.markedKnot = this.selectedKnot;
+		this.parent.setMarkedCircle(this.markedKnot);
+		this.parent.parent.tensionSliders.link(this.selectedKnot); // this is the correct method, not the following line!
+		//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+		this.parent.parent.thicknessSliders.linkEditableToken(this);
+	}
 }
 TEEditableToken.prototype.getRelativeTokenKnot = function() {
 	//console.log("this.index: ", this.index);
@@ -190,7 +222,7 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 TEEditableToken.prototype.handleEvent = function(event) {
 	//console.log("TEEditableToken.handleEvent");
 	switch (event.type) {
-		case "mousedown" : if (doubleClick) {
+		case "mousedown" : if (keyPressed == "d") { // if (doubleClick) {
 								//this.handleMouseDown(event);
 								//console.log("delete this point: ", event.item);
 								this.deleteMarkedKnotFromArray();

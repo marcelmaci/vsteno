@@ -29,6 +29,10 @@ var tangentPrecision = 0.001,
 	tangentBetweenCurvesMaxIterations = 4;
 	
 var keyPressed = "";
+var arrowUp = false,			// global variables for arrow keys
+	arrowDown = false,
+	arrowLeft = false,
+	arrowRight = false;
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 
 //var thicknessSlider = new TEThicknessSlider(100, 550, 400, 20, "L");
@@ -83,6 +87,35 @@ window.oncontextmenu = function(event) {
 	//console.log("rightclick: ", event);
 	return false; // avoid popping up of context menu
 }
+document.onkeydown = checkSpecialKeys; 
+function checkSpecialKeys(e) {
+	e = e || window.event;
+	if (e.keyCode == '38') {
+        arrowUp = true; // up arrow
+        //console.log("arrowUP");
+    }
+    else if (e.keyCode == '40') {
+        arrowDown = true; // down arrow
+		//console.log("arrowDown");
+    }
+    else if (e.keyCode == '37') {
+       arrowLeft = true; // left arrow
+	   mainCanvas.editor.editableToken.selectPreceedingKnot();
+	   //console.log("arrowLeft");
+    }
+    else if (e.keyCode == '39') {
+       arrowRight = true; // right arrow
+	   mainCanvas.editor.editableToken.selectFollowingKnot();
+	   //console.log("arrowRight");
+    }
+}
+document.onkeyup = function resetSpecialKeys() {
+	arrowUp = false;
+	arrowDown = false;
+	arrowLeft = false;
+	arrowRight = false;
+}
+
 
 // test
 function makeVisible() {
@@ -116,6 +149,7 @@ tool.onKeyDown = function(event) {
 		
 	
 	}
+	//console.log("Keycode: ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);
 }
 tool.onKeyUp = function(event) {
