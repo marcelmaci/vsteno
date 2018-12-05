@@ -287,14 +287,21 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	//console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
 	this.parent.thicknessSliders.linkEditableToken(this.editableToken);
 	
+	//console.log("TEDrawingArea.handleMouseDown: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 	//this.preceeding.connect();
 /*	this.following.connect();
 */
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
+	//console.log("HandlingParent: ", this.handlingParent);
+	//console.log("TEDrawingArea.handleMouseUp1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);
 	}
+	//console.log("TEDrawingArea.handleMouseUp2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+
 	///*this.*/mouseDown = false;
 	this.mouseDownItem = null;
 	this.handlingParent = null;
@@ -337,18 +344,31 @@ TEDrawingArea.prototype.isStatic = function(item) {
 TEDrawingArea.prototype.handleEvent = function(event) {
 	//console.log("TEDrawingArea.handleEvent()", event);
 	//if (event.item != null) {
+	//console.log("mouseEvent: ", event);
+	//console.log("TEDrawingArea.handleEvent0: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
 			switch (event.type) {
 				case "mousedown" : this.handleMouseDown(event); break;
-				case "mouseup" : this.handleMouseUp(event); break;
+				case "mouseup" : 
+				//console.log("TEDrawingArea.handleEvent0.4: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
+				this.handleMouseUp(event); 
+				//console.log("TEDrawingArea.handleEvent0.6: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
+				break;
 				case "mousedrag" : this.handleMouseDrag(event); break;
 			}
+			//console.log("TEDrawingArea.handleEvent1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 			//var index = this.rotatingAxis.relativeToken.index;
 			//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
 			this.updateFreehandPath();
 			this.knotLabel.updateLabel();
 		}
 	//}
+	//console.log("TEDrawingArea.handleEvent2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 }
 TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();

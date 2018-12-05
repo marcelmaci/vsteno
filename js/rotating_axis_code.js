@@ -64,6 +64,10 @@ TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y,
 								this.knotsList[index].rd1 = relative[0];
 								this.knotsList[index].rd2 = relative[1];
 								break;
+			case "proportional" : var relative = this.parent.getRelativeCoordinates(x, y, /*"horizontal"*/ this.knotsList[index].type);
+								this.knotsList[index].rd1 = relative[0];
+								this.knotsList[index].rd2 = relative[1];
+								break;
 		}
 	}
 	//console.log("Updated (new) Values: ", relative);
@@ -285,6 +289,38 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				//console.log("calculate orthogonal:", relative);
 		
 		break;
+		case "proportional" : 
+				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
+				// calculate distance origin to intersection
+				delta1X = intersection[0] - this.centerRotatingAxis.x;
+				//console.log("delta1x: ", delta1X);
+				delta1Y = intersection[1] - this.centerRotatingAxis.y;
+				//console.log("delta1y: ", delta1Y);
+				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
+				//console.log("length vector 1: ", distance1);
+				// calculate distance intersection to knot
+				delta2X = intersection[0] - x;
+				delta2Y = intersection[1] - y;
+				distance2 = Math.sqrt(delta2X*delta2X + delta2Y*delta2Y);
+				// scale them down
+				//console.log("y/intersection(1)/delta1X/delta1Y/distance1/scaleFactor: ", y/intersection[1], delta1X, delta1Y, distance1, this.parent.scaleFactor);
+				downScaledDistance1 = distance1 / this.parent.scaleFactor;
+				downScaledDistance2 = distance2 / this.parent.scaleFactor;
+				// add direction for distance (positive or negative)
+				if (x<intersection[0]) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
+				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
+				// the only difference between orthogonal and proportional is the relative length of distance1
+				// distance1 depends on the angle of rotating axis
+				var radAngle = Math.radians(this.inclinationValue);
+				var sinAngle = Math.abs(Math.sin(radAngle));
+				var verticalDistance = downScaledDistance1 * sinAngle; // same distance at 90 degree (vertical)
+				//console.log("deg/rad/sin/vert/distance1: ", this.inclinationValue, radAngle, sinAngle, verticalDistance, downScaledDistance1);
+				downScaledDistance1 = verticalDistance;
+				// define return value
+				relative = [downScaledDistance1, downScaledDistance2];
+				//console.log("proportional vector:", relative);
+		
+		break;
 		case "horizontal" : 
 				relX = -this.calculateHorizontalIntersectionRelativeX(x, y, type);
 				//console.log("relX:", relX, "From: ", x, y, type);
@@ -346,6 +382,49 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1 * this.parent.scaleFactor,
 					rny = rdy * rd1 * this.parent.scaleFactor;
+				// define vector 2 (orthogonal)
+				//var v2dx = -rdy,
+				//	v2dy = rdx;
+				// calculate new vector length
+				var v2nx = v2dx * rd2 * this.parent.scaleFactor, // change direction
+					v2ny = v2dy * rd2 * this.parent.scaleFactor;
+				// calculate final absolute point (vector 1 + vector 2) + ox/oy
+				var absx = rnx + v2nx + ox,
+					absy = rny + v2ny + oy;
+				
+				absCoordinates = [absx, absy]
+				//console.log("calculate orthogonal:", absCoordinates);
+		
+			break;
+			case "proportional" : //absCoordinates = [300,300];
+				//console.log("rd1/rd2: ", rd1, rd2);
+				// set origin
+				var ox = this.centerRotatingAxis.x,
+					oy = this.centerRotatingAxis.y;
+				// set control point coordinates
+				var cx = this.controlCircle.circle.position.x,
+					cy = this.controlCircle.circle.position.y;
+				// calculate deltas of rotating axis (vector 1)
+				var rdx = cx-ox,
+					rdy = cy-oy;
+				// define vector 2 (orthogonal)
+				var v2dx = -rdy,
+					v2dy = rdx;
+				// calculate length
+				var rLength = Math.sqrt((rdx*rdx) + (rdy*rdy));
+				var v2Length = Math.sqrt((v2dx*v2dx) + (v2dy * v2dy));
+				// standardize deltas
+					rdx = rdx / rLength;
+					rdy = rdy / rLength;
+					v2dx = v2dx / v2Length;
+					v2dy = v2dy / v2Length;
+				// proportional => adapt length of rd1
+				var	radAngle = Math.radians(this.inclinationValue),
+					sinAngle = Math.abs(Math.sin(radAngle)),
+					rd1Proportional = rd1 / sinAngle;
+				// calculate new point on rotating axis vector
+				var rnx = rdx * rd1Proportional * this.parent.scaleFactor,
+					rny = rdy * rd1Proportional * this.parent.scaleFactor;
 				// define vector 2 (orthogonal)
 				//var v2dx = -rdy,
 				//	v2dy = rdx;

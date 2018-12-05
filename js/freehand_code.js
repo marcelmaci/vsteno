@@ -156,9 +156,35 @@ TEEditableToken.prototype.getRelativeTokenKnot = function() {
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
-	//console.log("setKnotType: ", relativeTokenKnot, type);
+	//console.log("setKnotType: ", type, relativeTokenKnot, this.selectedKnot, this.markedKnot);
+	
+	//this.selectedKnot = this.markedKnot; // just a try ...
+	
+	// ok, the following line is something between a bugfix and a workaround.
+	// the problem is as follows: event handlers were first designed to change
+	// type of a knot when a key ('o', 'h') was pressed and a left mouseclick
+	// ocurred simultaneously. In this case, this.selectedKnot was set to the
+	// actual knot by mouseDown event-handler. 
+	// with the introduction of proportional knots, the way knots are selected
+	// was changed: knots could be selected by mouse or by left/right arrow keys.
+	// Since keys have their own event handles (i.e. they don't pass through
+	// mouseDown event), the actual knot is marked (but not selected).
+	// This leads to the fact, that no event handler is called for the actual
+	// knot (because event handler is selectedKnot.eventHandler). As a consequence
+	// new relative coordinates are not updated ... and the calculation of relative
+	// coordinates goes wrong when type is changed ... 
+	// I think, that with the introduction of keyboard commands, the selectedKnot 
+	// variable has become somewhat obsolete (a part from the event handler)
+	// Therefore I think it is safe to set it to markedKnot (but keep an eye
+	// on that ... in case unpleasant behavours occurs later ...)
+	// MAYBE A CLEAN SOLUTION IS TO SET selectedKnot TO markedKnot DIRECTLY 
+	// IN THE KEYBOARD EVENT HANDLER (IN MAIN PROGRAM) => try that!
+	// Result: doesn't work because if actual knot is selected by default
+	// (e.g. after insertion with mouse), no keyboard action ocurrs ...
+	// OTHER SOLUTION: do not deselect knot in mouseUp event-handler any 
+	// more ... ?!
 	switch (type) {
-		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
+		case "orthogonal" : this.markedKnot.changeCircleToRectangle(); 
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
@@ -166,10 +192,17 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
-		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); 
+		case "horizontal" : this.markedKnot.changeRectangleToCircle(); 
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							relativeTokenKnot.rd1 = relative[0];
+							relativeTokenKnot.rd2 = relative[1];
+							break;
+		case "proportional" : this.markedKnot.changeKnotToProportional();
+							var x = this.selectedKnot.circle.position.x,
+								y = this.selectedKnot.circle.position.y;
 							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
@@ -185,11 +218,14 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-
+/*
+// transfer this functionality to vsteno_editor_main: select knots with mouse or arrow keys
+// pressing of 'o' or 'h' has immediate effect (not in combination with mouseclick)!
 		switch (keyPressed) {
 			case "o" : this.setKnotType("orthogonal"); break;
 			case "h" : this.setKnotType("horizontal"); break;
 		}
+*/
 		// link thickness sliders	
 		//console.log("linkSliders: ", this);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
@@ -215,7 +251,11 @@ TEEditableToken.prototype.handleMouseUp = function(event) {
 		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
 		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-	} this.selectedKnot = null;	// leave markedKnot
+	} 
+	// for following line: see comment in freehand => setKnotType()	
+	// do not deselect knot any more ...
+	//this.selectedKnot = null;	// leave markedKnot
+   
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
 	if (/*this.*/mouseDown) {
@@ -251,8 +291,8 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		this.knotsList[i].type.pivot1 = false;
 		this.knotsList[i].circle.fillColor = colorNormalKnot;
 		// set thicknesses to 1
-		this.leftVectors[0][i].distance = 1;
-		this.rightVectors[0][i].distance = 1;
+		//this.leftVectors[0][i].distance = 1;
+		//this.rightVectors[0][i].distance = 1;
 	}
 	// set new types
 	this.knotsList[0].type.entry = true;
@@ -267,10 +307,10 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
 	this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
 	// correct thicknesses of entry and exit knot (set them to 0)
-	this.leftVectors[0][0].distance = 0;
-	this.rightVectors[0][0].distance = 0;
-	this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
-	this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
+	//this.leftVectors[0][0].distance = 0;
+	//this.rightVectors[0][0].distance = 0;
+	//this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
+	//this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
 }
 TEEditableToken.prototype.getNewKnotTypeColor = function() {
 	// knot will be inserted after this.index
@@ -305,7 +345,8 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.knotsList.splice(this.index, 0, newKnot);
 	//var newLength = this.knotsList.length;
 	// insert knot vectors for outer shape
-	var distance = ((this.index == 0)/* || (this.index == newLength-1)*/) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	//var distance = ((this.index == 0) || (this.index == newLength-1)) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	var distance = 1;
 	var leftVector = new TEKnotVector(distance, "orthogonal");
 	var rightVector = new TEKnotVector(distance, "orthogonal");
 	this.leftVectors[0].splice(this.index,0, leftVector);
@@ -328,6 +369,8 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.index += 1; // point to the newly inserted element
 	// update connections from preceeding and following connection point
 	this.connectPreceedingAndFollowing();
+	//console.log("insertNewKnot: selected/marked:", this.selectedKnot, this.markedKnot);
+	
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token

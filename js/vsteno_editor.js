@@ -558,9 +558,35 @@ TEEditableToken.prototype.getRelativeTokenKnot = function() {
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
-	//console.log("setKnotType: ", relativeTokenKnot, type);
+	//console.log("setKnotType: ", type, relativeTokenKnot, this.selectedKnot, this.markedKnot);
+	
+	//this.selectedKnot = this.markedKnot; // just a try ...
+	
+	// ok, the following line is something between a bugfix and a workaround.
+	// the problem is as follows: event handlers were first designed to change
+	// type of a knot when a key ('o', 'h') was pressed and a left mouseclick
+	// ocurred simultaneously. In this case, this.selectedKnot was set to the
+	// actual knot by mouseDown event-handler. 
+	// with the introduction of proportional knots, the way knots are selected
+	// was changed: knots could be selected by mouse or by left/right arrow keys.
+	// Since keys have their own event handles (i.e. they don't pass through
+	// mouseDown event), the actual knot is marked (but not selected).
+	// This leads to the fact, that no event handler is called for the actual
+	// knot (because event handler is selectedKnot.eventHandler). As a consequence
+	// new relative coordinates are not updated ... and the calculation of relative
+	// coordinates goes wrong when type is changed ... 
+	// I think, that with the introduction of keyboard commands, the selectedKnot 
+	// variable has become somewhat obsolete (a part from the event handler)
+	// Therefore I think it is safe to set it to markedKnot (but keep an eye
+	// on that ... in case unpleasant behavours occurs later ...)
+	// MAYBE A CLEAN SOLUTION IS TO SET selectedKnot TO markedKnot DIRECTLY 
+	// IN THE KEYBOARD EVENT HANDLER (IN MAIN PROGRAM) => try that!
+	// Result: doesn't work because if actual knot is selected by default
+	// (e.g. after insertion with mouse), no keyboard action ocurrs ...
+	// OTHER SOLUTION: do not deselect knot in mouseUp event-handler any 
+	// more ... ?!
 	switch (type) {
-		case "orthogonal" : this.selectedKnot.changeCircleToRectangle(); 
+		case "orthogonal" : this.markedKnot.changeCircleToRectangle(); 
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
@@ -568,10 +594,17 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
-		case "horizontal" : this.selectedKnot.changeRectangleToCircle(); 
+		case "horizontal" : this.markedKnot.changeRectangleToCircle(); 
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							relativeTokenKnot.rd1 = relative[0];
+							relativeTokenKnot.rd2 = relative[1];
+							break;
+		case "proportional" : this.markedKnot.changeKnotToProportional();
+							var x = this.selectedKnot.circle.position.x,
+								y = this.selectedKnot.circle.position.y;
 							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
@@ -587,11 +620,14 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-
+/*
+// transfer this functionality to vsteno_editor_main: select knots with mouse or arrow keys
+// pressing of 'o' or 'h' has immediate effect (not in combination with mouseclick)!
 		switch (keyPressed) {
 			case "o" : this.setKnotType("orthogonal"); break;
 			case "h" : this.setKnotType("horizontal"); break;
 		}
+*/
 		// link thickness sliders	
 		//console.log("linkSliders: ", this);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
@@ -617,7 +653,11 @@ TEEditableToken.prototype.handleMouseUp = function(event) {
 		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
 		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-	} this.selectedKnot = null;	// leave markedKnot
+	} 
+	// for following line: see comment in freehand => setKnotType()	
+	// do not deselect knot any more ...
+	//this.selectedKnot = null;	// leave markedKnot
+   
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
 	if (/*this.*/mouseDown) {
@@ -653,8 +693,8 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		this.knotsList[i].type.pivot1 = false;
 		this.knotsList[i].circle.fillColor = colorNormalKnot;
 		// set thicknesses to 1
-		this.leftVectors[0][i].distance = 1;
-		this.rightVectors[0][i].distance = 1;
+		//this.leftVectors[0][i].distance = 1;
+		//this.rightVectors[0][i].distance = 1;
 	}
 	// set new types
 	this.knotsList[0].type.entry = true;
@@ -669,10 +709,10 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
 	this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
 	// correct thicknesses of entry and exit knot (set them to 0)
-	this.leftVectors[0][0].distance = 0;
-	this.rightVectors[0][0].distance = 0;
-	this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
-	this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
+	//this.leftVectors[0][0].distance = 0;
+	//this.rightVectors[0][0].distance = 0;
+	//this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
+	//this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
 }
 TEEditableToken.prototype.getNewKnotTypeColor = function() {
 	// knot will be inserted after this.index
@@ -707,7 +747,8 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.knotsList.splice(this.index, 0, newKnot);
 	//var newLength = this.knotsList.length;
 	// insert knot vectors for outer shape
-	var distance = ((this.index == 0)/* || (this.index == newLength-1)*/) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	//var distance = ((this.index == 0) || (this.index == newLength-1)) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	var distance = 1;
 	var leftVector = new TEKnotVector(distance, "orthogonal");
 	var rightVector = new TEKnotVector(distance, "orthogonal");
 	this.leftVectors[0].splice(this.index,0, leftVector);
@@ -730,6 +771,8 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.index += 1; // point to the newly inserted element
 	// update connections from preceeding and following connection point
 	this.connectPreceedingAndFollowing();
+	//console.log("insertNewKnot: selected/marked:", this.selectedKnot, this.markedKnot);
+	
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
@@ -827,6 +870,10 @@ TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y,
 								this.knotsList[index].rd2 = relative[1];
 								break;
 			case "orthogonal" : var relative = this.parent.getRelativeCoordinates(x, y, /*"horizontal"*/ this.knotsList[index].type);
+								this.knotsList[index].rd1 = relative[0];
+								this.knotsList[index].rd2 = relative[1];
+								break;
+			case "proportional" : var relative = this.parent.getRelativeCoordinates(x, y, /*"horizontal"*/ this.knotsList[index].type);
 								this.knotsList[index].rd1 = relative[0];
 								this.knotsList[index].rd2 = relative[1];
 								break;
@@ -1051,6 +1098,38 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				//console.log("calculate orthogonal:", relative);
 		
 		break;
+		case "proportional" : 
+				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
+				// calculate distance origin to intersection
+				delta1X = intersection[0] - this.centerRotatingAxis.x;
+				//console.log("delta1x: ", delta1X);
+				delta1Y = intersection[1] - this.centerRotatingAxis.y;
+				//console.log("delta1y: ", delta1Y);
+				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
+				//console.log("length vector 1: ", distance1);
+				// calculate distance intersection to knot
+				delta2X = intersection[0] - x;
+				delta2Y = intersection[1] - y;
+				distance2 = Math.sqrt(delta2X*delta2X + delta2Y*delta2Y);
+				// scale them down
+				//console.log("y/intersection(1)/delta1X/delta1Y/distance1/scaleFactor: ", y/intersection[1], delta1X, delta1Y, distance1, this.parent.scaleFactor);
+				downScaledDistance1 = distance1 / this.parent.scaleFactor;
+				downScaledDistance2 = distance2 / this.parent.scaleFactor;
+				// add direction for distance (positive or negative)
+				if (x<intersection[0]) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
+				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
+				// the only difference between orthogonal and proportional is the relative length of distance1
+				// distance1 depends on the angle of rotating axis
+				var radAngle = Math.radians(this.inclinationValue);
+				var sinAngle = Math.abs(Math.sin(radAngle));
+				var verticalDistance = downScaledDistance1 * sinAngle; // same distance at 90 degree (vertical)
+				//console.log("deg/rad/sin/vert/distance1: ", this.inclinationValue, radAngle, sinAngle, verticalDistance, downScaledDistance1);
+				downScaledDistance1 = verticalDistance;
+				// define return value
+				relative = [downScaledDistance1, downScaledDistance2];
+				//console.log("proportional vector:", relative);
+		
+		break;
 		case "horizontal" : 
 				relX = -this.calculateHorizontalIntersectionRelativeX(x, y, type);
 				//console.log("relX:", relX, "From: ", x, y, type);
@@ -1112,6 +1191,49 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1 * this.parent.scaleFactor,
 					rny = rdy * rd1 * this.parent.scaleFactor;
+				// define vector 2 (orthogonal)
+				//var v2dx = -rdy,
+				//	v2dy = rdx;
+				// calculate new vector length
+				var v2nx = v2dx * rd2 * this.parent.scaleFactor, // change direction
+					v2ny = v2dy * rd2 * this.parent.scaleFactor;
+				// calculate final absolute point (vector 1 + vector 2) + ox/oy
+				var absx = rnx + v2nx + ox,
+					absy = rny + v2ny + oy;
+				
+				absCoordinates = [absx, absy]
+				//console.log("calculate orthogonal:", absCoordinates);
+		
+			break;
+			case "proportional" : //absCoordinates = [300,300];
+				//console.log("rd1/rd2: ", rd1, rd2);
+				// set origin
+				var ox = this.centerRotatingAxis.x,
+					oy = this.centerRotatingAxis.y;
+				// set control point coordinates
+				var cx = this.controlCircle.circle.position.x,
+					cy = this.controlCircle.circle.position.y;
+				// calculate deltas of rotating axis (vector 1)
+				var rdx = cx-ox,
+					rdy = cy-oy;
+				// define vector 2 (orthogonal)
+				var v2dx = -rdy,
+					v2dy = rdx;
+				// calculate length
+				var rLength = Math.sqrt((rdx*rdx) + (rdy*rdy));
+				var v2Length = Math.sqrt((v2dx*v2dx) + (v2dy * v2dy));
+				// standardize deltas
+					rdx = rdx / rLength;
+					rdy = rdy / rLength;
+					v2dx = v2dx / v2Length;
+					v2dy = v2dy / v2Length;
+				// proportional => adapt length of rd1
+				var	radAngle = Math.radians(this.inclinationValue),
+					sinAngle = Math.abs(Math.sin(radAngle)),
+					rd1Proportional = rd1 / sinAngle;
+				// calculate new point on rotating axis vector
+				var rnx = rdx * rd1Proportional * this.parent.scaleFactor,
+					rny = rdy * rd1Proportional * this.parent.scaleFactor;
 				// define vector 2 (orthogonal)
 				//var v2dx = -rdy,
 				//	v2dy = rdx;
@@ -1261,7 +1383,7 @@ TEVisuallyModifiableCircle.prototype.changeCircleToRectangle = function() {
 	this.circle.fillColor = fillColor;
 }
 TEVisuallyModifiableCircle.prototype.changeRectangleToCircle = function() {
-	// changes rectangle to rectangle
+	// changes rectangle to circle
 	// same comments as for changeCircleToRectangle
 	var strokeColor = this.circle.strokeColor,
 		strokeWidth = this.circle.strokeWidth,
@@ -1276,6 +1398,24 @@ TEVisuallyModifiableCircle.prototype.changeRectangleToCircle = function() {
 	this.circle.strokeColor = strokeColor;
 	this.circle.strokeWidth = strokeWidth;
 	this.circle.fillColor = fillColor;
+}
+TEVisuallyModifiableCircle.prototype.changeKnotToProportional = function() {
+	// changes shape to polygon
+	var strokeColor = this.circle.strokeColor,
+		strokeWidth = this.circle.strokeWidth,
+		fillColor = this.circle.fillColor;
+	var center = this.circle.position; // get position of rectangle => use it for circle
+	
+	this.circle.removeSegments();
+	
+	var sides = 3, points = 6; 
+	var radius = 6;
+	//this.circle = new Path.RegularPolygon(center, sides, radius);
+	this.circle = new Path.Star(center, points, radius, radius-2);
+	
+	this.circle.fillColor = fillColor;
+	this.circle.strokeColor = strokeColor;
+	this.circle.strokeWidth = strokeWidth;
 }
 
 // class TEConnectionPoint extends TEVisuallyModifiableCircle
@@ -1871,14 +2011,21 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	//console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
 	this.parent.thicknessSliders.linkEditableToken(this.editableToken);
 	
+	//console.log("TEDrawingArea.handleMouseDown: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 	//this.preceeding.connect();
 /*	this.following.connect();
 */
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
+	//console.log("HandlingParent: ", this.handlingParent);
+	//console.log("TEDrawingArea.handleMouseUp1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);
 	}
+	//console.log("TEDrawingArea.handleMouseUp2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+
 	///*this.*/mouseDown = false;
 	this.mouseDownItem = null;
 	this.handlingParent = null;
@@ -1921,18 +2068,31 @@ TEDrawingArea.prototype.isStatic = function(item) {
 TEDrawingArea.prototype.handleEvent = function(event) {
 	//console.log("TEDrawingArea.handleEvent()", event);
 	//if (event.item != null) {
+	//console.log("mouseEvent: ", event);
+	//console.log("TEDrawingArea.handleEvent0: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
 			switch (event.type) {
 				case "mousedown" : this.handleMouseDown(event); break;
-				case "mouseup" : this.handleMouseUp(event); break;
+				case "mouseup" : 
+				//console.log("TEDrawingArea.handleEvent0.4: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
+				this.handleMouseUp(event); 
+				//console.log("TEDrawingArea.handleEvent0.6: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
+				break;
 				case "mousedrag" : this.handleMouseDrag(event); break;
 			}
+			//console.log("TEDrawingArea.handleEvent1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 			//var index = this.rotatingAxis.relativeToken.index;
 			//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
 			this.updateFreehandPath();
 			this.knotLabel.updateLabel();
 		}
 	//}
+	//console.log("TEDrawingArea.handleEvent2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+	
 }
 TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();
@@ -2044,11 +2204,15 @@ function checkSpecialKeys(e) {
     else if (e.keyCode == '37') {
        arrowLeft = true; // left arrow
 	   mainCanvas.editor.editableToken.selectPreceedingKnot();
+	   // for following line: see comment in freehand => setKnotType()
+	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
 	   //console.log("arrowLeft");
     }
     else if (e.keyCode == '39') {
        arrowRight = true; // right arrow
 	   mainCanvas.editor.editableToken.selectFollowingKnot();
+	   // for following line: see comment in freehand => setKnotType()
+	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
 	   //console.log("arrowRight");
     }
 }
@@ -2061,6 +2225,7 @@ document.onkeyup = function resetSpecialKeys() {
 
 
 // test
+/*
 function makeVisible() {
 	console.log("make visible");
 	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
@@ -2073,6 +2238,7 @@ function makeInvisible() {
 	mainCanvas.thicknessSliders.hideHorizontalSliders();
 	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
 }
+*/
 
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
@@ -2088,8 +2254,11 @@ tool.onKeyDown = function(event) {
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
 		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
-		case "v" : makeVisible(); break; // show thickness slider (test)
-		case "i" : makeInvisible(); break; // hide thickness slider (test)
+		//case "v" : makeVisible(); break; // show thickness slider (test)
+		//case "i" : makeInvisible(); break; // hide thickness slider (test)
+		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
+		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
+		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
 		
 	
 	}

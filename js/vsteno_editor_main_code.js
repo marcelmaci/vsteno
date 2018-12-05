@@ -103,11 +103,15 @@ function checkSpecialKeys(e) {
     else if (e.keyCode == '37') {
        arrowLeft = true; // left arrow
 	   mainCanvas.editor.editableToken.selectPreceedingKnot();
+	   // for following line: see comment in freehand => setKnotType()
+	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
 	   //console.log("arrowLeft");
     }
     else if (e.keyCode == '39') {
        arrowRight = true; // right arrow
 	   mainCanvas.editor.editableToken.selectFollowingKnot();
+	   // for following line: see comment in freehand => setKnotType()
+	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
 	   //console.log("arrowRight");
     }
 }
@@ -120,6 +124,7 @@ document.onkeyup = function resetSpecialKeys() {
 
 
 // test
+/*
 function makeVisible() {
 	console.log("make visible");
 	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
@@ -132,6 +137,7 @@ function makeInvisible() {
 	mainCanvas.thicknessSliders.hideHorizontalSliders();
 	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
 }
+*/
 
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
@@ -147,8 +153,11 @@ tool.onKeyDown = function(event) {
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
 		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
-		case "v" : makeVisible(); break; // show thickness slider (test)
-		case "i" : makeInvisible(); break; // hide thickness slider (test)
+		//case "v" : makeVisible(); break; // show thickness slider (test)
+		//case "i" : makeInvisible(); break; // hide thickness slider (test)
+		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
+		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
+		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
 		
 	
 	}

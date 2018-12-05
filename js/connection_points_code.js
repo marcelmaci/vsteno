@@ -81,7 +81,7 @@ TEVisuallyModifiableCircle.prototype.changeCircleToRectangle = function() {
 	this.circle.fillColor = fillColor;
 }
 TEVisuallyModifiableCircle.prototype.changeRectangleToCircle = function() {
-	// changes rectangle to rectangle
+	// changes rectangle to circle
 	// same comments as for changeCircleToRectangle
 	var strokeColor = this.circle.strokeColor,
 		strokeWidth = this.circle.strokeWidth,
@@ -96,6 +96,24 @@ TEVisuallyModifiableCircle.prototype.changeRectangleToCircle = function() {
 	this.circle.strokeColor = strokeColor;
 	this.circle.strokeWidth = strokeWidth;
 	this.circle.fillColor = fillColor;
+}
+TEVisuallyModifiableCircle.prototype.changeKnotToProportional = function() {
+	// changes shape to polygon
+	var strokeColor = this.circle.strokeColor,
+		strokeWidth = this.circle.strokeWidth,
+		fillColor = this.circle.fillColor;
+	var center = this.circle.position; // get position of rectangle => use it for circle
+	
+	this.circle.removeSegments();
+	
+	var sides = 3, points = 6; 
+	var radius = 6;
+	//this.circle = new Path.RegularPolygon(center, sides, radius);
+	this.circle = new Path.Star(center, points, radius, radius-2);
+	
+	this.circle.fillColor = fillColor;
+	this.circle.strokeColor = strokeColor;
+	this.circle.strokeWidth = strokeWidth;
 }
 
 // class TEConnectionPoint extends TEVisuallyModifiableCircle
