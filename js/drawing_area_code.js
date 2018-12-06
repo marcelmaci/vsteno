@@ -275,8 +275,9 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		//console.log("Insert new at: ", this.editableToken.index);
 		
 		this.fhToken.insert(this.editableToken.index, event.point) // path doesn't have slice method - use insert method instead (same functionality)
-		//this.fhToken.add( event.point ); // add point at the end for the moment ...
+		//console.log("insertNewKnot: ", event.point);
 		this.editableToken.insertNewKnot(event.point);
+		
 		//this.editableToken.index += 1; // point to the newly inserted element
 		
 		//var length = this.rotatingAxis.relativeToken.knotsList.length;

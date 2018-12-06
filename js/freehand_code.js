@@ -17,9 +17,13 @@ function TEKnotType() {
 	this.pivot2 = false;
 }
 
-// class TEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
-function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor) {
+// class TEVisuallyModifiableKnotTEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
+function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor, link) {
+    this.linkToRelativeKnot = link;
     this.type = new TEKnotType();
+    this.shiftX = 0.0;	// shifting values for additional rotating axis
+	this.shiftY = 0.0;  // now, if you believe that this is a constructor that will set shifX/Y to number 0, forget it! ShiftX/Y are reported as NaN ... (I hate JS ...) 
+						// ok, got it: shiftX = 0 leads to NaN, shiftX = 0.0 leads to 0 ... (did I mention that I hate JS ... ?!)
     this.tensions = [t1, t2, t1, t2, t1, t2];	// tensions must be controlled individually for left, middle and right path/outer shape (set them all to the same value to start)
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
@@ -153,6 +157,19 @@ TEEditableToken.prototype.getRelativeTokenKnot = function() {
 	//console.log("this.index: ", this.index);
 	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
 }
+TEEditableToken.prototype.setParallelRotatingAxis = function() {
+	var defaultValue = this.knotsList[this.index-1].shiftX;
+	var shiftX = prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue);
+	//console.log("index: ", this.index);
+	this.knotsList[this.index-1].shiftX = Number(shiftX);
+	//console.log("Parallel rotatingAxis shiftX set: ", this.knotsList);
+	//this.updateRelativeCoordinates(this.selectedKnot);
+	//console.log("Before: selectedKnot: ", this.selectedKnot);
+	var temp = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot);
+	this.selectedKnot.linkToRelativeKnot.rd1 = temp[0];
+	this.selectedKnot.linkToRelativeKnot.rd2 = temp[1];
+	//console.log("After: temp: selectedKnot: ", temp, this.selectedKnot);
+}
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
@@ -188,7 +205,8 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
-							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							//var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "orthogonal");
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
@@ -196,14 +214,14 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
-							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "horizontal");
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
 		case "proportional" : this.markedKnot.changeKnotToProportional();
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
-							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "proportional");
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
@@ -217,7 +235,10 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
-		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+		// I suppose that event.point.x/y are writen to selectedKnot by selectedKnot.handleMouseDown!?!
+		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
+
 /*
 // transfer this functionality to vsteno_editor_main: select knots with mouse or arrow keys
 // pressing of 'o' or 'h' has immediate effect (not in combination with mouseclick)!
@@ -262,7 +283,9 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
 			// update of relative coordinates not necessary (will be called by handleMouseUp-event)
-			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+			//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
+			
 		}
 	}
 }
@@ -337,11 +360,12 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.insertNewKnot = function(point) {
-	//console.log("TEEditableToken.insertNewKnot()");
+	//console.log("TEEditableToken.insertNewKnot(): ", point, this.index);
 	// get color of new knot before inserting it
 	var newColor = this.getNewKnotTypeColor();
 	// insert knot
-	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot);
+	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot, null);
+	//console.log("newKnot: ", newKnot);
 	this.knotsList.splice(this.index, 0, newKnot);
 	//var newLength = this.knotsList.length;
 	// insert knot vectors for outer shape
@@ -364,7 +388,9 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.parent.setMarkedCircle(newKnot);
 	this.parent.handlingParent = this;
 	// insert relative knot in rotating axis relativeToken
-	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
+	//this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
+	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(newKnot);
+	
 	// make index point to new knot
 	this.index += 1; // point to the newly inserted element
 	// update connections from preceeding and following connection point

@@ -1,4 +1,6 @@
 
+var parallelRotatingAxisTest = new Path();
+
 // global variables
 // auxiliary lines to test bezier curves
 var outerLines = new Path();
@@ -158,6 +160,7 @@ tool.onKeyDown = function(event) {
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
+		case "x" : mainCanvas.editor.editableToken.setParallelRotatingAxis(); break;
 		
 	
 	}

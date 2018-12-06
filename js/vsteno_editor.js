@@ -419,9 +419,13 @@ function TEKnotType() {
 	this.pivot2 = false;
 }
 
-// class TEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
-function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor) {
+// class TEVisuallyModifiableKnotTEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
+function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor, link) {
+    this.linkToRelativeKnot = link;
     this.type = new TEKnotType();
+    this.shiftX = 0.0;	// shifting values for additional rotating axis
+	this.shiftY = 0.0;  // now, if you believe that this is a constructor that will set shifX/Y to number 0, forget it! ShiftX/Y are reported as NaN ... (I hate JS ...) 
+						// ok, got it: shiftX = 0 leads to NaN, shiftX = 0.0 leads to 0 ... (did I mention that I hate JS ... ?!)
     this.tensions = [t1, t2, t1, t2, t1, t2];	// tensions must be controlled individually for left, middle and right path/outer shape (set them all to the same value to start)
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
@@ -555,6 +559,19 @@ TEEditableToken.prototype.getRelativeTokenKnot = function() {
 	//console.log("this.index: ", this.index);
 	return this.parent.rotatingAxis.relativeToken.knotsList[this.index-1];
 }
+TEEditableToken.prototype.setParallelRotatingAxis = function() {
+	var defaultValue = this.knotsList[this.index-1].shiftX;
+	var shiftX = prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue);
+	//console.log("index: ", this.index);
+	this.knotsList[this.index-1].shiftX = Number(shiftX);
+	//console.log("Parallel rotatingAxis shiftX set: ", this.knotsList);
+	//this.updateRelativeCoordinates(this.selectedKnot);
+	//console.log("Before: selectedKnot: ", this.selectedKnot);
+	var temp = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot);
+	this.selectedKnot.linkToRelativeKnot.rd1 = temp[0];
+	this.selectedKnot.linkToRelativeKnot.rd2 = temp[1];
+	//console.log("After: temp: selectedKnot: ", temp, this.selectedKnot);
+}
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
@@ -590,7 +607,8 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
-							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							//var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "orthogonal");
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
@@ -598,14 +616,14 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							//this.parent.rotatingAxis.calculateOrthogonalIntersectionWithRotatingAxis(x, y);
-							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "horizontal");
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
 		case "proportional" : this.markedKnot.changeKnotToProportional();
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
-							var relative = this.parent.rotatingAxis.getRelativeCoordinates(x,y, type);
+							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "proportional");
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
@@ -619,7 +637,10 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
-		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+		// I suppose that event.point.x/y are writen to selectedKnot by selectedKnot.handleMouseDown!?!
+		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
+
 /*
 // transfer this functionality to vsteno_editor_main: select knots with mouse or arrow keys
 // pressing of 'o' or 'h' has immediate effect (not in combination with mouseclick)!
@@ -664,7 +685,9 @@ TEEditableToken.prototype.handleMouseDrag = function(event) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
 			// update of relative coordinates not necessary (will be called by handleMouseUp-event)
-			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+			//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
+			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
+			
 		}
 	}
 }
@@ -739,11 +762,12 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
 TEEditableToken.prototype.insertNewKnot = function(point) {
-	//console.log("TEEditableToken.insertNewKnot()");
+	//console.log("TEEditableToken.insertNewKnot(): ", point, this.index);
 	// get color of new knot before inserting it
 	var newColor = this.getNewKnotTypeColor();
 	// insert knot
-	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot);
+	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot, null);
+	//console.log("newKnot: ", newKnot);
 	this.knotsList.splice(this.index, 0, newKnot);
 	//var newLength = this.knotsList.length;
 	// insert knot vectors for outer shape
@@ -766,7 +790,9 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.parent.setMarkedCircle(newKnot);
 	this.parent.handlingParent = this;
 	// insert relative knot in rotating axis relativeToken
-	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
+	//this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
+	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(newKnot);
+	
 	// make index point to new knot
 	this.index += 1; // point to the newly inserted element
 	// update connections from preceeding and following connection point
@@ -827,7 +853,8 @@ function TERotatingAxisOuterKnot(distance, x, y) {
 }
 */
 
-function TERotatingAxisRelativeKnot(x, y, type) {
+function TERotatingAxisRelativeKnot(x, y, type, link) {
+	this.linkToVisuallyModifiableKnot = link;
 	// TERotatingAxisRelativeKnot doesn't include tensions (these are stored in TEVisuallyModifiableCircle)
 	this.type = type;			// orthogonal or horizontal
 	this.rd1 = x;				// relative data 1: x (for horizontal coordinates) - vector1: distance following rotating axis (for orthogonal coordinates)
@@ -853,33 +880,51 @@ TERotatingAxisRelativeToken.prototype.pushNewRelativeKnot = function(x, y, type)
 	this.knotsList.push(new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
 }
 */
-TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(x, y, type, index) {
-	//console.log("TERotatingAxis.pushNewRelativeKnot()");
-	var relative = this.parent.getRelativeCoordinates(x, y, type);
-	//console.log("relative = ", relative);
+//TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(x, y, type, index) {
+TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(newKnot) {
+	//console.log("TERotatingAxis.insertNewRelativeKnot()");
+	//var relative = this.parent.getRelativeCoordinates(x, y, type);
+	//console.log("newKnot (BEFORE) = ", newKnot);
+	
+	var relative = this.parent.getRelativeCoordinates(newKnot);
+	//console.log("newKnot: relative = ", relative);
+	
 	//this.knotsList.push(new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
-	this.knotsList.splice(index, 0, new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
+	var type = "horizontal"; // make it fix for the moment
+	var index = mainCanvas.editor.editableToken.index;
+	var newRelativeKnot = new TERotatingAxisRelativeKnot(relative[0],relative[1], type, null);
+	// link the two knots
+	newKnot.linkToRelativeKnot = newRelativeKnot;
+	newRelativeKnot.linkToVisuallyModifiableKnot = newKnot;
+	//console.log("Link knots: ", newKnot, newRelativeKnot);
+	this.knotsList.splice(index, 0, newRelativeKnot);
 }
-TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y, index) {
+//TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y, index) {
+TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(tempSelectedKnot) {
 	//console.log("update coordinates ...");
+	var x = tempSelectedKnot.circle.position.x,
+		y = tempSelectedKnot.circle.position.y,
+		index = mainCanvas.editor.editableToken.index-1; // holy cow ... ugly, risky ... not good!
+	//console.log("index: ", index);
 	if (this.knotsList[index] != undefined) {
 		//console.log("type: ", this.knotsList[index].type);
-		switch (this.knotsList[index].type) {
-			case "horizontal" : var relative = this.parent.getRelativeCoordinates(x, y, this.knotsList[index].type);
+		switch /*(tempSelectedKnot.type) {*/ (this.knotsList[index].type) { // replace by: tempSelectedKnot.type?!?!
+			case "horizontal" : var relative = this.parent.getRelativeCoordinates(tempSelectedKnot);
 								this.knotsList[index].rd1 = relative[0];
 								this.knotsList[index].rd2 = relative[1];
 								break;
-			case "orthogonal" : var relative = this.parent.getRelativeCoordinates(x, y, /*"horizontal"*/ this.knotsList[index].type);
+			case "orthogonal" : var relative = this.parent.getRelativeCoordinates(tempSelectedKnot);
 								this.knotsList[index].rd1 = relative[0];
 								this.knotsList[index].rd2 = relative[1];
 								break;
-			case "proportional" : var relative = this.parent.getRelativeCoordinates(x, y, /*"horizontal"*/ this.knotsList[index].type);
+			case "proportional" : var relative = this.parent.getRelativeCoordinates(tempSelectedKnot);
 								this.knotsList[index].rd1 = relative[0];
 								this.knotsList[index].rd2 = relative[1];
 								break;
 		}
 	}
 	//console.log("Updated (new) Values: ", relative);
+	
 }
 
 // class TERotatingAxis
@@ -1069,9 +1114,19 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 	*/
 	return [ix,iy];
 }
-TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
+//TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
+TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKnot, type) {
+	// try to work with standard parameter type in the following method (by the way: I hate JS ...)
+	type = typeof type !== 'undefined' ? type : "horizontal";
+	if (visuallyModifiableKnot.linkToRelativeKnot !== null) type = visuallyModifiableKnot.linkToRelativeKnot.type;
+	var x = visuallyModifiableKnot.circle.position.x,
+		y = visuallyModifiableKnot.circle.position.y; //,
+		//index = mainCanvas.editor.editableToken.index,
+		//type = mainCanvas.rotatingAxis.relativeToken.knotsList[index].type; //"horizontal"; //visuallyModifiableKnot.type;
+				
+	
 	var relative = null;
-	//console.log("TERotatingAxis.getRelativeCoordinates: ", x, y, type);
+	//console.log("CHECK: TERotatingAxis.getRelativeCoordinates: ", x, y, type);
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
 		case "orthogonal" : 
@@ -1125,8 +1180,13 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				var verticalDistance = downScaledDistance1 * sinAngle; // same distance at 90 degree (vertical)
 				//console.log("deg/rad/sin/vert/distance1: ", this.inclinationValue, radAngle, sinAngle, verticalDistance, downScaledDistance1);
 				downScaledDistance1 = verticalDistance;
+				// get shiftX value for parallel rotating axis
+				//console.log("visuallyModifiableKnot: ", visuallyModifiableKnot);
+				
+				var shiftX = visuallyModifiableKnot.shiftX;
+				//console.log("shiftX to calculate relative coordinates: ", shiftX);
 				// define return value
-				relative = [downScaledDistance1, downScaledDistance2];
+				relative = [downScaledDistance1, downScaledDistance2 - shiftX];
 				//console.log("proportional vector:", relative);
 		
 		break;
@@ -1139,10 +1199,15 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 				//console.log("calculate horizontal: ", relative);
 			break;
 	}
+	//console.log("relative (inside function) = ", relative
 	return relative;
 }
-TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
+//TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
+TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 	var absCoordinates, temp1, temp2, horX, newX, newY;
+	var rd1 = relativeTokenKnot.rd1,
+		rd2 = relativeTokenKnot.rd2,
+		type = relativeTokenKnot.type;
 	switch (type) {
 		case "horizontal" : 
 		
@@ -1206,7 +1271,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 		
 			break;
 			case "proportional" : //absCoordinates = [300,300];
-				//console.log("rd1/rd2: ", rd1, rd2);
+				//console.log("absoluteCoordinates: BEFORE: rd1/rd2: ", rd1, rd2);
+				//console.log("shiftX: ");
 				// set origin
 				var ox = this.centerRotatingAxis.x,
 					oy = this.centerRotatingAxis.y;
@@ -1231,22 +1297,34 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 				var	radAngle = Math.radians(this.inclinationValue),
 					sinAngle = Math.abs(Math.sin(radAngle)),
 					rd1Proportional = rd1 / sinAngle;
+				var rd2Proportional = rd2 * sinAngle;	
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1Proportional * this.parent.scaleFactor,
 					rny = rdy * rd1Proportional * this.parent.scaleFactor;
 				// define vector 2 (orthogonal)
 				//var v2dx = -rdy,
 				//	v2dy = rdx;
-				// calculate new vector length
-				var v2nx = v2dx * rd2 * this.parent.scaleFactor, // change direction
-					v2ny = v2dy * rd2 * this.parent.scaleFactor;
+				// calculate new vector length // test rd2Proportional
+				var v2nx = v2dx * rd2Proportional * this.parent.scaleFactor, // change direction
+					v2ny = v2dy * rd2Proportional * this.parent.scaleFactor;
+				// get shiftX for parallel rotating axis
+				//var edTok = mainCanvas.editor.editableToken;		// brutally ugly ... change that in a free minute!
+				var shiftX = relativeTokenKnot.linkToVisuallyModifiableKnot.shiftX;
+				//console.log("shiftX from knotsList: ", shiftX);
+				var upscaledShiftX = shiftX * this.parent.scaleFactor;
 				// calculate final absolute point (vector 1 + vector 2) + ox/oy
-				var absx = rnx + v2nx + ox,
+				var absx = rnx + v2nx + ox + upscaledShiftX,
 					absy = rny + v2ny + oy;
+				//console.log("absoluteCoordinates: AFTER: rd1/rd2: ", rd1Proportional, rd2);
 				
 				absCoordinates = [absx, absy]
 				//console.log("calculate orthogonal:", absCoordinates);
-		
+				//console.log("UpscaledShiftX: ", shiftX, upscaledShiftX);
+				// just draw one axis
+				parallelRotatingAxisTest.removeSegments();
+				parallelRotatingAxisTest = new Path.Line(new Point(ox-upscaledShiftX,oy), new Point(cx-upscaledShiftX,cy));
+				parallelRotatingAxisTest.strokeColor = '#0f0';
+				parallelRotatingAxisTest.strokeWidth = 1;
 			break;
 	}
 	return absCoordinates;
@@ -1272,7 +1350,9 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 				type = this.relativeToken.knotsList[i].type;
 			// calculate absolute coordinates
 			//console.log("getAbsoluteCoordinates: i: (rd1, rd2, type) ", i, ":", rd1, rd2, type);
-			var absCoordinates = this.getAbsoluteCoordinates(rd1, rd2, type);
+			//var absCoordinates = this.getAbsoluteCoordinates(rd1, rd2, type);
+			var absCoordinates = this.getAbsoluteCoordinates(this.relativeToken.knotsList[i]);
+			
 			//console.log("absCoordinates: ", absCoordinates);
 			// copy values to editable token
 			this.parent.editableToken.knotsList[i].x = absCoordinates[0];
@@ -1999,8 +2079,9 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		//console.log("Insert new at: ", this.editableToken.index);
 		
 		this.fhToken.insert(this.editableToken.index, event.point) // path doesn't have slice method - use insert method instead (same functionality)
-		//this.fhToken.add( event.point ); // add point at the end for the moment ...
+		//console.log("insertNewKnot: ", event.point);
 		this.editableToken.insertNewKnot(event.point);
+		
 		//this.editableToken.index += 1; // point to the newly inserted element
 		
 		//var length = this.rotatingAxis.relativeToken.knotsList.length;
@@ -2099,6 +2180,8 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.following.connect();	
 }
 
+
+var parallelRotatingAxisTest = new Path();
 
 // global variables
 // auxiliary lines to test bezier curves
@@ -2259,6 +2342,7 @@ tool.onKeyDown = function(event) {
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
+		case "x" : mainCanvas.editor.editableToken.setParallelRotatingAxis(); break;
 		
 	
 	}
