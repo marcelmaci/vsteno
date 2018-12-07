@@ -114,6 +114,9 @@ function TERotatingAxis(drawingArea, color) {
 	
 	// token data (relative coordinates)
 	this.relativeToken = new TERotatingAxisRelativeToken(this);	
+	
+	// parallel rotating axis
+	this.parallelRotatingAxis = new TEParallelRotatingAxisGrouper(this);
 }
 TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
 	var dx = event.point.x - this.centerRotatingAxis.x,
@@ -180,6 +183,7 @@ TERotatingAxis.prototype.handleEvent = function(event) {
 	//this.updateVisibleKnots();
 	this.parent.updateFreehandPath();
 	this.parent.connectPreceedingAndFollowing();
+	this.parallelRotatingAxis.updateAll();
 }
 TERotatingAxis.prototype.handleMouseDown = function(event) {
 	//console.log("rotatingAxis.mousedown");	
@@ -486,10 +490,12 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				//console.log("calculate orthogonal:", absCoordinates);
 				//console.log("UpscaledShiftX: ", shiftX, upscaledShiftX);
 				// just draw one axis
+				/*
 				parallelRotatingAxisTest.removeSegments();
 				parallelRotatingAxisTest = new Path.Line(new Point(ox-upscaledShiftX,oy), new Point(cx-upscaledShiftX,cy));
 				parallelRotatingAxisTest.strokeColor = '#0f0';
 				parallelRotatingAxisTest.strokeWidth = 1;
+				*/
 			break;
 	}
 	return absCoordinates;
