@@ -426,6 +426,7 @@ function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, ma
     this.shiftX = 0.0;	// shifting values for additional rotating axis
 	this.shiftY = 0.0;  // now, if you believe that this is a constructor that will set shifX/Y to number 0, forget it! ShiftX/Y are reported as NaN ... (I hate JS ...) 
 						// ok, got it: shiftX = 0 leads to NaN, shiftX = 0.0 leads to 0 ... (did I mention that I hate JS ... ?!)
+    this.parallelRotatingAxisType = "horizontal"; // horizontal: shiftX is horizontal; orthogonal: shiftX is orthogonal (= compensation for inclination angle)
     this.tensions = [t1, t2, t1, t2, t1, t2];	// tensions must be controlled individually for left, middle and right path/outer shape (set them all to the same value to start)
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
@@ -571,6 +572,12 @@ TEEditableToken.prototype.setParallelRotatingAxis = function() {
 	this.selectedKnot.linkToRelativeKnot.rd1 = temp[0];
 	this.selectedKnot.linkToRelativeKnot.rd2 = temp[1];
 	//console.log("After: temp: selectedKnot: ", temp, this.selectedKnot);
+}
+TEEditableToken.prototype.toggleParallelRotatingAxisType = function() {
+	var actualType = this.selectedKnot.parallelRotatingAxisType;
+	console.log("actual type: ", actualType);
+	this.selectedKnot.parallelRotatingAxisType = (actualType == "horizontal") ? "orthogonal" : "horizontal";
+	console.log("new type: ", this.selectedKnot.parallelRotatingAxisType);
 }
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
@@ -1211,7 +1218,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 	var absCoordinates, temp1, temp2, horX, newX, newY;
 	var rd1 = relativeTokenKnot.rd1,
 		rd2 = relativeTokenKnot.rd2,
-		type = relativeTokenKnot.type;
+		type = relativeTokenKnot.type,
+		parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.parallelRotatingAxisType;
 	switch (type) {
 		case "horizontal" : 
 		
@@ -1301,7 +1309,11 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				var	radAngle = Math.radians(this.inclinationValue),
 					sinAngle = Math.abs(Math.sin(radAngle)),
 					rd1Proportional = rd1 / sinAngle;
-				var rd2Proportional = rd2 * sinAngle;	
+				var rd2Proportional;
+				switch (parallelRotatingAxisType) {
+					case "horizontal" : rd2Proportional = rd2 * sinAngle; break;
+					case "orthogonal" : rd2Proportional = rd2; break;  // keep same distance indepent from inclination
+				}
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1Proportional * this.parent.scaleFactor,
 					rny = rdy * rd1Proportional * this.parent.scaleFactor;
@@ -1317,6 +1329,12 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				//console.log("shiftX from knotsList: ", shiftX);
 				var upscaledShiftX = shiftX * this.parent.scaleFactor;
 				// calculate final absolute point (vector 1 + vector 2) + ox/oy
+				switch (parallelRotatingAxisType) { 
+					case "horizontal" : break;
+					case "orthogonal" : var angle = Math.radians(Math.abs(this.inclinationValue));
+										var hypothenuse = upscaledShiftX / Math.sin(angle);
+										upscaledShiftX = hypothenuse; break;
+				}
 				var absx = rnx + v2nx + ox + upscaledShiftX,
 					absy = rny + v2ny + oy;
 				//console.log("absoluteCoordinates: AFTER: rd1/rd2: ", rd1Proportional, rd2);
@@ -2767,67 +2785,120 @@ function TEParallelRotatingAxisGrouper(parent) {
 							// (internally - i.e. for the knot - the EXACT value is calculated) 
 	this.axisList = []; 	// array of TEParallelRotatingAxis
 }
-TEParallelRotatingAxisGrouper.prototype.addNewAxis = function(shiftX) {
+TEParallelRotatingAxisGrouper.prototype.addNewAxis = function(shiftX, type) {
 	// tests if a new visual axis has to be inserted
 	//console.log("Add new axis: ", shiftX);
-	if (this.getLowestEpsilon(shiftX) > this.epsilon) {
+	var result = this.getLowestEpsilonAndType(shiftX);
+	if ((result[0] > this.epsilon) && (result[1] != type)) {		// add additional rotating axis when type is different (even if shiftX < epsilon)
 		// insert new axis
-		this.axisList.push(new TEParallelRotatingAxis(shiftX));
+		this.axisList.push(new TEParallelRotatingAxis(shiftX, type));
 	}
 }
-TEParallelRotatingAxisGrouper.prototype.getLowestEpsilon = function(shiftX) {
-	var actualEpsilon = 99999999, newEpsilon;
+TEParallelRotatingAxisGrouper.prototype.getLowestEpsilonAndType = function(shiftX) {
+	var actualEpsilon = 99999999, newEpsilon, actualType;
 	for (var i=0; i<this.axisList.length; i++) {
 		newEpsilon = Math.abs(this.axisList[i].shiftX - shiftX);
-		actualEpsilon = (newEpsilon < actualEpsilon) ? newEpsilon : actualEpsilon;
+		if (newEpsilon < actualEpsilon) {
+			//actualEpsilon = (newEpsilon < actualEpsilon) ? newEpsilon : actualEpsilon;
+			actualEpsilon = newEpsilon;
+			actualType = this.axisList[i].type;
+		}
 	}
-	return actualEpsilon;
+	return [actualEpsilon, actualType];
 }
 TEParallelRotatingAxisGrouper.prototype.drawAllAxis = function() {
 	// get drawing area borders & scaling
-	console.log("TEParallelRotatingAxis.drawAllAxis()");
+	//console.log("TEParallelRotatingAxis.drawAllAxis()");
 	var leftX = this.parent.parent.leftX,
 		rightX = this.parent.parent.rightX,
 		upperY = this.parent.parent.upperY,
 		lowerY = this.parent.parent.lowerY,
 		scaleF = this.parent.parent.scaleFactor;
-	console.log("leftX, upperY, rightX, lowerY, scaleF: ", leftX, upperY, rightX, lowerY, scaleF);
+	//console.log("leftX, upperY, rightX, lowerY, scaleF: ", leftX, upperY, rightX, lowerY, scaleF);
 	// get coordinates of main rotating axis
 	var ox = this.parent.centerRotatingAxis.x,		// origin
 		oy = this.parent.centerRotatingAxis.y,
 		cx = this.parent.controlCircle.circle.position.x,	// control circle
 		cy = this.parent.controlCircle.circle.position.y;
-	console.log("ox, oy, cx, cy, this.parent.controlCircle: ", ox, oy, cx, cy, this.parent.controlCircle);	
+	//console.log("ox, oy, cx, cy, this.parent.controlCircle: ", ox, oy, cx, cy, this.parent.controlCircle);	
 	// calculate vector of main rotating axis
 	var	dx = cx - ox,
 		dy = cy - oy;
-	console.log("dx,dy: ", dx, dy);
+	//console.log("dx,dy: ", dx, dy);
 	// declare variables for intersection calculation
-	var ixr, iyr, ixl, iyl, shiftX, upscaledShiftX; 
+	var r1x, r1y, r2x, r2y, l1x, l1y, l2x, l2y, m, c, lx, ly, rx, ry, angle, hypothenuse, shiftX, upscaledShiftX; 
 	
 	// calculate and draw
 	for (var i=0; i<this.axisList.length; i++) {
 		// calculate coordinates inside drawing area (clipping)
 		shiftX = this.axisList[i].shiftX;
+		switch (this.axisList[i].type) {
+			case "horizontal" : break;
+			case "orthogonal" : angle = Math.abs(Math.radians(this.parent.inclinationValue));	// inclination rotating axis
+								hypothenuse = shiftX / Math.sin(angle);
+								//console.log("proportional values: beta/h", angle, hypothenuse);
+								// make rotating axis proportional
+								shiftX = hypothenuse;
+								break;
+		}
 		upscaledShiftX = shiftX * scaleF;
 		
-		// do it the simple way for test purposes
+		// calculate points (y = m*x + c)
+		// calculate m and c
+		m = dy / Math.avoidDivisionBy0(dx);
+		c = oy - (ox + upscaledShiftX) * m;
+		// calculate right points
+		// fix upperY
+		r1y = upperY;
+		r1x = (upperY - c) / m;
+		// fix rightX
+		r2x = rightX;
+		r2y = m * rightX + c;
+		// calculate left points
+		// fix lowerY
+		l1y = lowerY;
+		l1x = (lowerY - c) / m;
+		// fix leftX
+		l2x = leftX;
+		l2y = leftX * m + c;
 		
-		ixl = ox + upscaledShiftX;
-		iyl = oy;
-		ixr = cx + upscaledShiftX;
-		iyr = cy;
+		//console.log("l1x/y, l2x/y, r1x/y, r2x/y: ", l1x, l1y, l2x, l2y, r1x, r1y, r2x, r2y);
 		
-		/*
-		// calculate right point
-		iyr = (rightX + upscaledShiftX) / Math.avoidDivisionBy0(dx) * dy;
-		ixr = (iyr * dx) / dy - upscaledShiftX;
+		// chose 2 points that fit drawing area (= clipping)
+		// left point
+		if (l1x < leftX) {
+			lx = l2x;
+			ly = l2y;
+		} else {
+			if (l1x > rightX) {
+				lx = r2x;
+				ly = r2y;
+			} else {
+				lx = l1x;
+				ly = l1y;
+			}
+		}
+		
+		// right point
+		if (r1x > rightX) {
+			rx = r2x;
+			ry = r2y;
+		} else {
+			if (r1x < leftX) {
+				rx = l2x;
+				ry = l2y;
+			} else {	
+				rx = r1x;
+				ry = r1y;
+			}
+		}
+		
 		// calculate left point
-		iyl = (leftX + upscaledShiftX) / Math.avoidDivisionBy0(dx) * dy;
-		ixl = (iyl * dx) / dy - upscaledShiftX;
-		*/
+		//iyl = (leftX + upscaledShiftX) / Math.avoidDivisionBy0(dx) * dy;
+		//ixl = (iyl * dx) / dy - upscaledShiftX;
+		
 		// redraw line
-		this.axisList[i].redrawLine(new Point(ixl, iyl), new Point(ixr, iyr));
+		this.axisList[i].redrawLine(new Point(lx, ly), new Point(rx, ry));
 	}
 }
 TEParallelRotatingAxisGrouper.prototype.emptyArray = function() {
@@ -2859,9 +2930,10 @@ TEParallelRotatingAxisGrouper.prototype.updateRotatingAxisList = function() {
 	
 	for (var i=0; i<numberKnots; i++) {
 		//console.log("updateRotatingAxisList: i: this.parent.parent.editableToken.knotsList[i]: ", i, this.parent.parent.editableToken.knotsList[i]); 
-		var shiftX = this.parent.parent.editableToken.knotsList[i].shiftX; 
+		var shiftX = this.parent.parent.editableToken.knotsList[i].shiftX;
+		var type = this.parent.parent.editableToken.knotsList[i].parallelRotatingAxisType; 
 		if (shiftX != 0) { // god knows if this comparison to 0 works in JS ... 
-			this.addNewAxis(shiftX);
+			this.addNewAxis(shiftX, type);
 		}
 	}
 }
@@ -2875,11 +2947,12 @@ TEParallelRotatingAxisGrouper.prototype.updateAll = function() {
 }
 
 // class definition
-function TEParallelRotatingAxis(shiftX) {
+function TEParallelRotatingAxis(shiftX, type) {
 	// shiftX: negative = left side; positive = right side from main rotating axis
 	// for the moment no proportional axis are supported (i.e. shiftX is always the
 	// same, independant from inclination)
 	this.shiftX = shiftX;
+	this.type = type;
 	// define line
 	this.line = Path.Line(new Point(0,0), new Point(0,0));
 	this.line.strokeColor = '#0f0';
@@ -2888,11 +2961,11 @@ function TEParallelRotatingAxis(shiftX) {
 	this.line.visible = false;
 }
 TEParallelRotatingAxis.prototype.redrawLine = function(point1, point2) {
-	console.log("TEParalleRotatingAxis.redrawLine(): point1, point2: ", point1, point2);
+	//console.log("TEParalleRotatingAxis.redrawLine(): point1, point2: ", point1, point2);
 	this.line.removeSegments();
 	this.line = new Path.Line(point1, point2);
 	this.line.strokeColor = '#0f0';
-	this.line.dashArray = [1,1];
+	this.line.dashArray = [5,5];
 	this.line.strokeWidth = 1;
 	this.line.visible = true;
 }
@@ -3059,6 +3132,7 @@ tool.onKeyDown = function(event) {
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
 		case "x" : mainCanvas.editor.editableToken.setParallelRotatingAxis(); break;
+		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
 		
 	
 	}

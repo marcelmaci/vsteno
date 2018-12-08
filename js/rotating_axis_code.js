@@ -376,7 +376,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 	var absCoordinates, temp1, temp2, horX, newX, newY;
 	var rd1 = relativeTokenKnot.rd1,
 		rd2 = relativeTokenKnot.rd2,
-		type = relativeTokenKnot.type;
+		type = relativeTokenKnot.type,
+		parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.parallelRotatingAxisType;
 	switch (type) {
 		case "horizontal" : 
 		
@@ -466,7 +467,11 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				var	radAngle = Math.radians(this.inclinationValue),
 					sinAngle = Math.abs(Math.sin(radAngle)),
 					rd1Proportional = rd1 / sinAngle;
-				var rd2Proportional = rd2 * sinAngle;	
+				var rd2Proportional;
+				switch (parallelRotatingAxisType) {
+					case "horizontal" : rd2Proportional = rd2 * sinAngle; break;
+					case "orthogonal" : rd2Proportional = rd2; break;  // keep same distance indepent from inclination
+				}
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1Proportional * this.parent.scaleFactor,
 					rny = rdy * rd1Proportional * this.parent.scaleFactor;
@@ -482,6 +487,12 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				//console.log("shiftX from knotsList: ", shiftX);
 				var upscaledShiftX = shiftX * this.parent.scaleFactor;
 				// calculate final absolute point (vector 1 + vector 2) + ox/oy
+				switch (parallelRotatingAxisType) { 
+					case "horizontal" : break;
+					case "orthogonal" : var angle = Math.radians(Math.abs(this.inclinationValue));
+										var hypothenuse = upscaledShiftX / Math.sin(angle);
+										upscaledShiftX = hypothenuse; break;
+				}
 				var absx = rnx + v2nx + ox + upscaledShiftX,
 					absy = rny + v2ny + oy;
 				//console.log("absoluteCoordinates: AFTER: rd1/rd2: ", rd1Proportional, rd2);

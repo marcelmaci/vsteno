@@ -161,6 +161,7 @@ tool.onKeyDown = function(event) {
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
 		case "x" : mainCanvas.editor.editableToken.setParallelRotatingAxis(); break;
+		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
 		
 	
 	}

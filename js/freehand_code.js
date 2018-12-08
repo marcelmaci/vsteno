@@ -24,6 +24,7 @@ function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, ma
     this.shiftX = 0.0;	// shifting values for additional rotating axis
 	this.shiftY = 0.0;  // now, if you believe that this is a constructor that will set shifX/Y to number 0, forget it! ShiftX/Y are reported as NaN ... (I hate JS ...) 
 						// ok, got it: shiftX = 0 leads to NaN, shiftX = 0.0 leads to 0 ... (did I mention that I hate JS ... ?!)
+    this.parallelRotatingAxisType = "horizontal"; // horizontal: shiftX is horizontal; orthogonal: shiftX is orthogonal (= compensation for inclination angle)
     this.tensions = [t1, t2, t1, t2, t1, t2];	// tensions must be controlled individually for left, middle and right path/outer shape (set them all to the same value to start)
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
@@ -169,6 +170,12 @@ TEEditableToken.prototype.setParallelRotatingAxis = function() {
 	this.selectedKnot.linkToRelativeKnot.rd1 = temp[0];
 	this.selectedKnot.linkToRelativeKnot.rd2 = temp[1];
 	//console.log("After: temp: selectedKnot: ", temp, this.selectedKnot);
+}
+TEEditableToken.prototype.toggleParallelRotatingAxisType = function() {
+	var actualType = this.selectedKnot.parallelRotatingAxisType;
+	console.log("actual type: ", actualType);
+	this.selectedKnot.parallelRotatingAxisType = (actualType == "horizontal") ? "orthogonal" : "horizontal";
+	console.log("new type: ", this.selectedKnot.parallelRotatingAxisType);
 }
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
