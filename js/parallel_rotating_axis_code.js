@@ -7,27 +7,99 @@ function TEParallelRotatingAxisGrouper(parent) {
 	this.epsilon = 0.1; 	// tolerance: if abs(shiftX1 - shiftX2) < epsilon, only 1 axis is drawn 
 							// (internally - i.e. for the knot - the EXACT value is calculated) 
 	this.axisList = []; 	// array of TEParallelRotatingAxis
+	// new variables for manual insertion
+	this.selectedAxis = 0; // select main rotating axis by default
+	this.mainSelected = true;
+	this.newAxisList = [new TEParallelRotatingAxis(0, "main")];	// add "dummy" main axis
 }
-TEParallelRotatingAxisGrouper.prototype.addNewAxis = function(shiftX, type) {
-	// tests if a new visual axis has to be inserted
-	//console.log("Add new axis: ", shiftX);
-	var result = this.getLowestEpsilonAndType(shiftX);
-	if ((result[0] > this.epsilon) && (result[1] != type)) {		// add additional rotating axis when type is different (even if shiftX < epsilon)
-		// insert new axis
-		this.axisList.push(new TEParallelRotatingAxis(shiftX, type));
-	}
-}
-TEParallelRotatingAxisGrouper.prototype.getLowestEpsilonAndType = function(shiftX) {
-	var actualEpsilon = 99999999, newEpsilon, actualType;
-	for (var i=0; i<this.axisList.length; i++) {
-		newEpsilon = Math.abs(this.axisList[i].shiftX - shiftX);
-		if (newEpsilon < actualEpsilon) {
-			//actualEpsilon = (newEpsilon < actualEpsilon) ? newEpsilon : actualEpsilon;
-			actualEpsilon = newEpsilon;
-			actualType = this.axisList[i].type;
+// new method for manual insertion
+TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
+	// add axis from left to right (in order to select them with CTRL-arrow left/right)
+	var defaultValue = 0;
+	var shiftX = Number(prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue));
+	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
+		var i = 0, length = this.newAxisList.length, type = "orthogonal";
+		for (i = 0; i < length; i++) {
+			if ((i == 0) && (shiftX < this.newAxisList[i].shiftX)) break;
+			if (shiftX > this.newAxisList[i]) break;
+			//console.log("i: shiftX/newAxis.shiftX: ", i, shiftX, this.newAxisList[i].shiftX);
 		}
+		//console.log("TEParallelRotatingAxisGrouper.addParallelAxis(): i/shiftX/type: ", i, shiftX, type);
+		var newParallelAxis = new TEParallelRotatingAxis(shiftX, type);
+		newParallelAxis.line.strokeColor = '#00f';
+		this.newAxisList.splice(i, 0, newParallelAxis);
+		this.selectedAxis = i;
+		this.mainSelected = false;
+		this.parent.parent.rotatingAxis.unselect();
 	}
-	return [actualEpsilon, actualType];
+	//console.log("AFTER: newAxisList: ", this.newAxisList);
+	this.updateAll();
+}
+TEParallelRotatingAxisGrouper.prototype.deleteParallelAxis = function() {
+	//console.log("TEParallelRotatingAxis.deleteParallelAxis()");
+	if (this.newAxisList[this.selectedAxis].type != "main") {		// main axis cannot be deleted
+		//console.log("Before: ", this.newAxisList);
+		this.newAxisList[this.selectedAxis].line.removeSegments(); // remove line before deleting object
+		this.newAxisList[this.selectedAxis].line = null;
+		this.newAxisList.splice(this.selectedAxis,1);
+		//console.log("After: ", this.newAxisList);
+		this.selectedAxis -= 1;
+		if (this.selectedAxis < 0) this.selectedAxis = this.newAxisList.length; 
+		if (this.newAxisList[this.selectedAxis].type == "main") {
+			this.mainSelected = true;
+			this.parent.parent.rotatingAxis.select();
+		}
+		this.updateAll();
+	}
+}
+TEParallelRotatingAxisGrouper.prototype.selectFollowingAxis = function() {
+	var length = this.newAxisList.length;
+	//console.log("Select following: length: ", length);
+	if (length > 0) {
+		if (!this.mainSelected) {
+			//console.log("main not selected: this.selectedAxis: ", this.selectedAxis);
+			this.selectedAxis = (this.selectedAxis + 1) % length;	// wrap around
+			//console.log("newAxisList(this.selectedAxis).type: ", this.newAxisList[this.selectedAxis].type);
+			if (this.newAxisList[this.selectedAxis].type == "main") {
+				this.mainSelected = true;
+				//console.log("select main: this.mainSelected: ", this.mainSelected);
+				this.parent.parent.rotatingAxis.select();
+			}
+		} else {
+			//console.log("main selected");
+			//this.selectedAxis = Math.floor(this.selectedAxis);
+			this.selectedAxis = (this.selectedAxis+1) % length;	// wrap around		
+			//console.log("BEFORE: main rotating: selected: ", this.parent.parent.rotatingAxis.selected);
+			this.mainSelected = false;
+			this.parent.parent.rotatingAxis.unselect();
+			//console.log("AFTER: main rotating: selected: ", this.parent.parent.rotatingAxis.selected);
+		
+		}
+		//console.log("this.selectedAxis: ", this.selectedAxis);
+		//console.log("axisList: ", this.newAxisList);
+	}
+	this.updateAll();
+}
+TEParallelRotatingAxisGrouper.prototype.selectPreceedingAxis = function() {
+	var length = this.newAxisList.length;
+	if (length > 0) {
+		if (!this.mainSelected) {		
+			if (this.selectedAxis == 0) this.selectedAxis = length; // wrap around
+			this.selectedAxis = this.selectedAxis - 1;
+			if (this.newAxisList[this.selectedAxis].type == "main") {
+				this.mainSelected = true;
+				//console.log("select main: this.mainSelected: ", this.mainSelected);
+				this.parent.parent.rotatingAxis.select();
+			}
+		} else {
+			if (this.selectedAxis == 0) this.selectedAxis = length; // wrap around
+			this.selectedAxis = this.selectedAxis - 1;
+			this.mainSelected = false;
+			this.parent.parent.rotatingAxis.unselect();
+		}		
+		//console.log("this.selectedAxis: ", this.selectedAxis);
+	}
+	this.updateAll();
 }
 TEParallelRotatingAxisGrouper.prototype.drawAllAxis = function() {
 	// get drawing area borders & scaling
@@ -116,12 +188,106 @@ TEParallelRotatingAxisGrouper.prototype.drawAllAxis = function() {
 			}
 		}
 		
-		// calculate left point
-		//iyl = (leftX + upscaledShiftX) / Math.avoidDivisionBy0(dx) * dy;
-		//ixl = (iyl * dx) / dy - upscaledShiftX;
-		
 		// redraw line
 		this.axisList[i].redrawLine(new Point(lx, ly), new Point(rx, ry));
+	}
+}
+/// experimental
+TEParallelRotatingAxisGrouper.prototype.experimentalDrawAllAxis = function() {
+	// get drawing area borders & scaling
+	//console.log("TEParallelRotatingAxis.experimentalDrawAllAxis()");
+	var leftX = this.parent.parent.leftX,
+		rightX = this.parent.parent.rightX,
+		upperY = this.parent.parent.upperY,
+		lowerY = this.parent.parent.lowerY,
+		scaleF = this.parent.parent.scaleFactor;
+	//console.log("leftX, upperY, rightX, lowerY, scaleF: ", leftX, upperY, rightX, lowerY, scaleF);
+	// get coordinates of main rotating axis
+	var ox = this.parent.centerRotatingAxis.x,		// origin
+		oy = this.parent.centerRotatingAxis.y,
+		cx = this.parent.controlCircle.circle.position.x,	// control circle
+		cy = this.parent.controlCircle.circle.position.y;
+	//console.log("ox, oy, cx, cy, this.parent.controlCircle: ", ox, oy, cx, cy, this.parent.controlCircle);	
+	// calculate vector of main rotating axis
+	var	dx = cx - ox,
+		dy = cy - oy;
+	//console.log("dx,dy: ", dx, dy);
+	// declare variables for intersection calculation
+	var r1x, r1y, r2x, r2y, l1x, l1y, l2x, l2y, m, c, lx, ly, rx, ry, angle, hypothenuse, shiftX, upscaledShiftX; 
+	
+	// calculate and draw
+	for (var i=0; i<this.newAxisList.length; i++) {
+		if (this.newAxisList[i].type != "main") {
+			// calculate coordinates inside drawing area (clipping)
+			shiftX = this.newAxisList[i].shiftX;
+			switch (this.newAxisList[i].type) {
+				case "horizontal" : break;
+				case "orthogonal" : angle = Math.abs(Math.radians(this.parent.inclinationValue));	// inclination rotating axis
+								hypothenuse = shiftX / Math.sin(angle);
+								//console.log("proportional values: beta/h", angle, hypothenuse);
+								// make rotating axis proportional
+								shiftX = hypothenuse;
+								break;
+			}
+			upscaledShiftX = shiftX * scaleF;
+		
+			// calculate points (y = m*x + c)
+			// calculate m and c
+			m = dy / Math.avoidDivisionBy0(dx);
+			c = oy - (ox + upscaledShiftX) * m;
+			// calculate right points
+			// fix upperY
+			r1y = upperY;
+			r1x = (upperY - c) / m;
+			// fix rightX
+			r2x = rightX;
+			r2y = m * rightX + c;
+			// calculate left points
+			// fix lowerY
+			l1y = lowerY;
+			l1x = (lowerY - c) / m;
+			// fix leftX
+			l2x = leftX;
+			l2y = leftX * m + c;
+		
+			//console.log("l1x/y, l2x/y, r1x/y, r2x/y: ", l1x, l1y, l2x, l2y, r1x, r1y, r2x, r2y);
+		
+			// chose 2 points that fit drawing area (= clipping)
+			// left point
+			if (l1x < leftX) {
+				lx = l2x;
+				ly = l2y;
+			} else {
+				if (l1x > rightX) {
+					lx = r2x;
+					ly = r2y;
+				} else {
+					lx = l1x;
+					ly = l1y;
+				}
+			}
+		
+			// right point
+			if (r1x > rightX) {
+				rx = r2x;
+				ry = r2y;
+			} else {
+				if (r1x < leftX) {
+					rx = l2x;
+					ry = l2y;
+				} else {	
+					rx = r1x;
+					ry = r1y;
+				}
+			}
+		
+			// color
+			var color = (this.selectedAxis == i) ? colorParallelRotatingAxisSelected : colorParallelRotatingAxisUnselected; 
+		
+			// redraw line
+			//console.log("redraw: ", lx, ly, rx, ry, this.selectedAxis, color);
+			this.newAxisList[i].redrawLine(new Point(lx, ly), new Point(rx, ry), color);
+		}
 	}
 }
 TEParallelRotatingAxisGrouper.prototype.emptyArray = function() {
@@ -131,7 +297,8 @@ TEParallelRotatingAxisGrouper.prototype.emptyArray = function() {
 		this.shiftX = undefined;
 	}	
 	this.axisList = [];
-} 
+}
+/* 
 TEParallelRotatingAxisGrouper.prototype.updateRotatingAxisList = function() {
 	var numberKnots = this.parent.relativeToken.knotsList.length;
 	// start with an empty array for simplicity (change that later if performance is an issue)
@@ -160,13 +327,9 @@ TEParallelRotatingAxisGrouper.prototype.updateRotatingAxisList = function() {
 		}
 	}
 }
+*/
 TEParallelRotatingAxisGrouper.prototype.updateAll = function() {
-	// this method is called by TERotatingAxis.eventHandler()
-	//console.log("TEParallelRotatingAxisGrouper.updateAll()1: axisList: ", this.axisList);
-	this.updateRotatingAxisList();
-	//console.log("TEParallelRotatingAxisGrouper.updateAll()2: axisList: ", this.axisList);
-	this.drawAllAxis();
-	//console.log("TEParallelRotatingAxisGrouper.updateAll()3: axisList: ", this.axisList);
+	this.experimentalDrawAllAxis();
 }
 
 // class definition
@@ -183,11 +346,12 @@ function TEParallelRotatingAxis(shiftX, type) {
 	this.line.strokeWidth = 1;
 	this.line.visible = false;
 }
-TEParallelRotatingAxis.prototype.redrawLine = function(point1, point2) {
+TEParallelRotatingAxis.prototype.redrawLine = function(point1, point2, color) {
+	color = (typeof color == undefined) ? colorParallelRotatingAxisUnselected : color;
 	//console.log("TEParalleRotatingAxis.redrawLine(): point1, point2: ", point1, point2);
 	this.line.removeSegments();
 	this.line = new Path.Line(point1, point2);
-	this.line.strokeColor = '#0f0';
+	this.line.strokeColor = color;
 	this.line.dashArray = [5,5];
 	this.line.strokeWidth = 1;
 	this.line.visible = true;

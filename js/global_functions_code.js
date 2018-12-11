@@ -17,8 +17,6 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 	// calculates point situated at percent percent of the curve
 	// returns coordinates of point and m of tangent
 	// calculate 3 outer lines 
-	//console.log("-------------------------------------------------------------------------");
-	//console.log("calculateBezierPoint(("+ p1.x +","+p1.y+"), ("+c1.x+","+c1.y+"), ("+p2.x+","+p2.y+"), ("+c2.x+","+c2.y+"), "+percent+"%)");
 	var dx1 = c1.x - p1.x,
 		dy1 = c1.y - p1.y,
 		dx2 = c2.x - c1.x,
@@ -28,10 +26,6 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		//m1 = dx1 / dy1,
 		//m2 = dx2 / dy2,
 		//m3 = dx3 / dy3;
-	/*outerLines.removeSegments();
-	outerLines.add(p1, c1, c2, p2);
-	outerLines.strokeColor = '#f00';
-	*/
 	// calculate 2 inner lines
 	// coordinates
 	var factor = 1 / 100 * percent;
@@ -42,11 +36,6 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		iy2 = c1.y + dy2 * factor,
 		ix3 = c2.x + dx3 * factor,
 		iy3 = c2.y + dy3 * factor;
-	//console.log("inner lines (ix123, iy123): (("+ix1+","+iy1+"), ("+ix2+","+iy2+"), ("+ix3+","+iy3+")");
-	/*innerLines.removeSegments(); 
-	innerLines.add(new Point(ix1, iy1), new Point(ix2, iy2), new Point(ix3, iy3));
-	innerLines.strokeColor = '#00f';
-	*/
 	// deltas
 	var dix1 = ix2 - ix1,
 		diy1 = iy2 - iy1,
@@ -58,27 +47,17 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		ty1 = iy1 + diy1 * factor,
 		tx2 = ix2 + dix2 * factor,
 		ty2 = iy2 + diy2 * factor;
-	//console.log("tangent line (tx12, ty12): (("+tx1+","+ty1+"), ("+tx2+","+ty2+")");
-	/*tangent.removeSegments();
-	tangent.add(new Point(tx1, ty1), new Point(tx2, ty2));
-	tangent.strokeColor = '#000';
-	*/
 	// deltas
 	var dtx = tx2 - tx1,
 		dty = ty2 - ty1; // avoid division by 0 for bm!?
 	// calculate bezier point (coordinates and m)
-	//console.log("Tangent data: tx1, ty1, tx2, ty2: ", tx1, ty1, tx2, ty2);
 	var bx = tx1 + dtx * factor,
 		by = ty1 + dty * factor,
 		bm = dtx / Math.avoidDivisionBy0(dty);
-	//console.log("bezierPoint (bx, by, m): (("+bx+","+by+","+bm+")");
-	// return values as array
-	//bm = isNaN(bm) ? 9999999999999999 : bm;	// sanitize NaN resulting from division by zero above
 	return [bx, by, bm];
 }
 
 function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
-	//epsilon = 0.001; // change it temporarily
 	// DESCRIPTION OF ALGORITHM
 	// define the 3 points:
 	// - the middle one separates the bezier curve (or the actual segment of it) into two halves
@@ -86,7 +65,6 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 	// the points are defined as percentages (= relative location) on the bezier curve
 	// epsilon stands for the precision: delta of straight lines going from connection point
 	// to calculated tangent point should be < epsilon (numerical aproximation) 
-	//console.log("epsilon: ",epsilon, "tangentFixPointMaxIteration: ", tangentFixPointMaxIteration);
 	var leftPercentage = 0.001;			// 0% <=> leftPoint
 	var rightPercentage = 99.999;		// 100% <=> rightPoint
 	var middlePercentage = 50;		// 50% <=> middlePoint
@@ -113,11 +91,9 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 	    lastPercentageEpsilon = 100;
 		
 	do {
-		//console.log("Starting loop number "+avoidInfinityLoop+"........................................");
 		middlePoint = calculateBezierPoint(p1, c1, p2, c2, middlePercentage);
 	
 		// calculate m for straight line from connecting point to tangent point
-		/* var dx = middlePoint[0] - cx, dy = middlePoint[1] - cy, cm = dx / dy; */
 		cm = (middlePoint[0]-cx) / Math.avoidDivisionBy0(middlePoint[1]-cy);
 		
 		// work with rad angles (easier, but slower)	
@@ -195,15 +171,18 @@ Math.avoidDivisionBy0 = function(value) {
 	if (value == 0) return 0.000000000000000001;
 	else return value;
 }
-// fixing the JS typeof operator ... (again: very weak and neary useless concept in JS, in my opinion...)
-function toType(obj) {
-    if(obj && obj.constructor && obj.constructor.name) {
-        return obj.constructor.name;
-    }
-    return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-}
 
 function fract(n) { 
 	return Number(String(n).split('.')[1] || 0); 
-	// I hate JS ...
+	// I hate JS ... (ceterum censeo:)
+	// BTW: I was recommended not to add personal comments in the source code, so I decided to add some more and will do so in 
+	// the future ... ;-)
+	// And no, I won't change my mind: JS is a miserable programming language ... Not only is it poorly designed and full
+	// of absolutely strange things (type coercion as one of the worst) that you don't find in any other language and that 
+	// can cost you hours of debugging, but in addition it is the ONLY language that you can use to run code in a webbrowser 
+	// (which means that you have absolutely no choice).
+	// I also write these lines in defense for PHP (which is the other language VSTENO is written in): Many people say PHP 
+	// is horrible ... Well, that might be, but at least if you don't like it, you can choose from a whole bunch of other
+	// server-side languages.
+	// That's why JS in my opinion fully and entirely deserves the verdict of Cato the Elder ... ;-)
 }

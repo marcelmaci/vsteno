@@ -40,10 +40,6 @@ TEVisuallyModifiableKnot.prototype.setTensions = function(t1, t2) {
 		case "right" : this.tensions[4] = t1; this.tensions[5] = t2; break;	
 		case "locked" : this.tensions = [t1, t2, t1, t2, t1, t2]; break; // set all tension to the same value
 	}
-/*
-	this.tensions[2] = t1; 	// write tensions for middle path to offsets 2 and 3
-	this.tensions[3] = t2;
-*/
 }
 TEVisuallyModifiableKnot.prototype.getTensions = function() {
 	var result;
@@ -76,22 +72,12 @@ function TEEditableToken(drawingArea) {
 	this.outerShape[1] = new Path(); 	
 	
 	// mouse events
-	//this.mouseDown = false;
 	this.selectedKnot = null;
 	this.markedKnot = null;
+
 	// index (is updated whenever identify-method is called)
-	// maybe not a good idea ... index can be undefined or contain obsolete values
-	// => use updateIndex for the moment to solve this problem
 	this.index = 0;
 }
-/* // not sure if this is necessary after all ...
-TEEditableToken.prototype.updateIndex = function() {
-	// uses this.markedKnot to update index
-	// returns index
-	if (this.markedKnot != null) this.markedKnot.identify(this.markedKnot.circle);
-	return index;
-}
-*/
 TEEditableToken.prototype.identify = function(item) {
 	//console.log("TEEditableToken: item: ", item);
 	var value = null;
@@ -119,14 +105,10 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.markedKnot = value; // maybe pleonastic (should be handled by parent => see following line)
 	this.parent.setMarkedCircle(this.markedKnot);
 	// update sliders
-	//console.log(this
-		this.parent.parent.tensionSliders.link(this.selectedKnot); // this is the correct method, not the following line!
-	
-	//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+	this.parent.parent.tensionSliders.link(this.selectedKnot);
 }
 TEEditableToken.prototype.selectFollowingKnot = function() {
 	//console.log("Select following knot");
-	// save edited tension values first!!!! => is done automatically by linking
 	var lastKnot = this.knotsList.length;
 	if (this.index >= lastKnot) return;
 	else {
@@ -135,8 +117,6 @@ TEEditableToken.prototype.selectFollowingKnot = function() {
 		this.markedKnot = this.selectedKnot;
 		this.parent.setMarkedCircle(this.markedKnot);
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
-		
-		//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
 	}
 }
@@ -149,8 +129,7 @@ TEEditableToken.prototype.selectPreceedingKnot = function() {
 		this.selectedKnot = this.knotsList[this.index-1];
 		this.markedKnot = this.selectedKnot;
 		this.parent.setMarkedCircle(this.markedKnot);
-		this.parent.parent.tensionSliders.link(this.selectedKnot); // this is the correct method, not the following line!
-		//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
 	}
 }
@@ -161,15 +140,10 @@ TEEditableToken.prototype.getRelativeTokenKnot = function() {
 TEEditableToken.prototype.setParallelRotatingAxis = function() {
 	var defaultValue = this.knotsList[this.index-1].shiftX;
 	var shiftX = prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue);
-	//console.log("index: ", this.index);
 	this.knotsList[this.index-1].shiftX = Number(shiftX);
-	//console.log("Parallel rotatingAxis shiftX set: ", this.knotsList);
-	//this.updateRelativeCoordinates(this.selectedKnot);
-	//console.log("Before: selectedKnot: ", this.selectedKnot);
 	var temp = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot);
 	this.selectedKnot.linkToRelativeKnot.rd1 = temp[0];
 	this.selectedKnot.linkToRelativeKnot.rd2 = temp[1];
-	//console.log("After: temp: selectedKnot: ", temp, this.selectedKnot);
 }
 TEEditableToken.prototype.toggleParallelRotatingAxisType = function() {
 	var actualType = this.selectedKnot.parallelRotatingAxisType;
@@ -181,9 +155,6 @@ TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
 	//console.log("setKnotType: ", type, relativeTokenKnot, this.selectedKnot, this.markedKnot);
-	
-	//this.selectedKnot = this.markedKnot; // just a try ...
-	
 	// ok, the following line is something between a bugfix and a workaround.
 	// the problem is as follows: event handlers were first designed to change
 	// type of a knot when a key ('o', 'h') was pressed and a left mouseclick
@@ -238,79 +209,38 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 	//console.log("TEEditableToken.handleMouseDown()");
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
-	  	//console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
-		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
-		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-		// I suppose that event.point.x/y are writen to selectedKnot by selectedKnot.handleMouseDown!?!
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
-
-/*
-// transfer this functionality to vsteno_editor_main: select knots with mouse or arrow keys
-// pressing of 'o' or 'h' has immediate effect (not in combination with mouseclick)!
-		switch (keyPressed) {
-			case "o" : this.setKnotType("orthogonal"); break;
-			case "h" : this.setKnotType("horizontal"); break;
-		}
-*/
-		// link thickness sliders	
-		//console.log("linkSliders: ", this);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
-		//this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
-		//this.parent.parent.thicknessSliders.linkEditableToken(this);
-		
-		//console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
-		
-		//this.parent.parent.tensionSliders.link(this.selectedKnot);
-		//this.selectedKnot.handleMouseDown(event);
-		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	}
 }
 TEEditableToken.prototype.handleMouseUp = function(event) {
-	///*this.*/mouseDown = false;
 	if (this.selectedKnot != null) {
-		//console.log("change rectangle to circle");
-		//console.log("MouseUp: rightclick: ", rightClick);
-		if (keyPressed == "o") {
-		//	var relativeToken = this.getRelativeToken();
-	//		relativeToken.setType("horizontal");	
-	//		this.selectedKnot.changeRectangleToCircle();
-		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
-		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	} 
 	// for following line: see comment in freehand => setKnotType()	
-	// do not deselect knot any more ...
-	//this.selectedKnot = null;	// leave markedKnot
-   
+	// do not deselect knot any more ...   
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
-	if (/*this.*/mouseDown) {
+	if (mouseDown) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
 			// update of relative coordinates not necessary (will be called by handleMouseUp-event)
-			//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
-			
 		}
 	}
 }
 TEEditableToken.prototype.handleEvent = function(event) {
 	//console.log("TEEditableToken.handleEvent");
 	switch (event.type) {
-		case "mousedown" : if (keyPressed == "d") { // if (doubleClick) {
-								//this.handleMouseDown(event);
-								//console.log("delete this point: ", event.item);
+		case "mousedown" : if (keyPressed == "d") { 
 								this.deleteMarkedKnotFromArray();
 						   } else this.handleMouseDown(event); 
 						   break;
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
-	
-	//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-
 }
 TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	// reset all knot types

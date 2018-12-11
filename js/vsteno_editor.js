@@ -67,8 +67,6 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 	// calculates point situated at percent percent of the curve
 	// returns coordinates of point and m of tangent
 	// calculate 3 outer lines 
-	//console.log("-------------------------------------------------------------------------");
-	//console.log("calculateBezierPoint(("+ p1.x +","+p1.y+"), ("+c1.x+","+c1.y+"), ("+p2.x+","+p2.y+"), ("+c2.x+","+c2.y+"), "+percent+"%)");
 	var dx1 = c1.x - p1.x,
 		dy1 = c1.y - p1.y,
 		dx2 = c2.x - c1.x,
@@ -78,10 +76,6 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		//m1 = dx1 / dy1,
 		//m2 = dx2 / dy2,
 		//m3 = dx3 / dy3;
-	/*outerLines.removeSegments();
-	outerLines.add(p1, c1, c2, p2);
-	outerLines.strokeColor = '#f00';
-	*/
 	// calculate 2 inner lines
 	// coordinates
 	var factor = 1 / 100 * percent;
@@ -92,11 +86,6 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		iy2 = c1.y + dy2 * factor,
 		ix3 = c2.x + dx3 * factor,
 		iy3 = c2.y + dy3 * factor;
-	//console.log("inner lines (ix123, iy123): (("+ix1+","+iy1+"), ("+ix2+","+iy2+"), ("+ix3+","+iy3+")");
-	/*innerLines.removeSegments(); 
-	innerLines.add(new Point(ix1, iy1), new Point(ix2, iy2), new Point(ix3, iy3));
-	innerLines.strokeColor = '#00f';
-	*/
 	// deltas
 	var dix1 = ix2 - ix1,
 		diy1 = iy2 - iy1,
@@ -108,27 +97,17 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 		ty1 = iy1 + diy1 * factor,
 		tx2 = ix2 + dix2 * factor,
 		ty2 = iy2 + diy2 * factor;
-	//console.log("tangent line (tx12, ty12): (("+tx1+","+ty1+"), ("+tx2+","+ty2+")");
-	/*tangent.removeSegments();
-	tangent.add(new Point(tx1, ty1), new Point(tx2, ty2));
-	tangent.strokeColor = '#000';
-	*/
 	// deltas
 	var dtx = tx2 - tx1,
 		dty = ty2 - ty1; // avoid division by 0 for bm!?
 	// calculate bezier point (coordinates and m)
-	//console.log("Tangent data: tx1, ty1, tx2, ty2: ", tx1, ty1, tx2, ty2);
 	var bx = tx1 + dtx * factor,
 		by = ty1 + dty * factor,
 		bm = dtx / Math.avoidDivisionBy0(dty);
-	//console.log("bezierPoint (bx, by, m): (("+bx+","+by+","+bm+")");
-	// return values as array
-	//bm = isNaN(bm) ? 9999999999999999 : bm;	// sanitize NaN resulting from division by zero above
 	return [bx, by, bm];
 }
 
 function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
-	//epsilon = 0.001; // change it temporarily
 	// DESCRIPTION OF ALGORITHM
 	// define the 3 points:
 	// - the middle one separates the bezier curve (or the actual segment of it) into two halves
@@ -136,7 +115,6 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 	// the points are defined as percentages (= relative location) on the bezier curve
 	// epsilon stands for the precision: delta of straight lines going from connection point
 	// to calculated tangent point should be < epsilon (numerical aproximation) 
-	//console.log("epsilon: ",epsilon, "tangentFixPointMaxIteration: ", tangentFixPointMaxIteration);
 	var leftPercentage = 0.001;			// 0% <=> leftPoint
 	var rightPercentage = 99.999;		// 100% <=> rightPoint
 	var middlePercentage = 50;		// 50% <=> middlePoint
@@ -163,11 +141,9 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 	    lastPercentageEpsilon = 100;
 		
 	do {
-		//console.log("Starting loop number "+avoidInfinityLoop+"........................................");
 		middlePoint = calculateBezierPoint(p1, c1, p2, c2, middlePercentage);
 	
 		// calculate m for straight line from connecting point to tangent point
-		/* var dx = middlePoint[0] - cx, dy = middlePoint[1] - cy, cm = dx / dy; */
 		cm = (middlePoint[0]-cx) / Math.avoidDivisionBy0(middlePoint[1]-cy);
 		
 		// work with rad angles (easier, but slower)	
@@ -245,17 +221,20 @@ Math.avoidDivisionBy0 = function(value) {
 	if (value == 0) return 0.000000000000000001;
 	else return value;
 }
-// fixing the JS typeof operator ... (again: very weak and neary useless concept in JS, in my opinion...)
-function toType(obj) {
-    if(obj && obj.constructor && obj.constructor.name) {
-        return obj.constructor.name;
-    }
-    return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-}
 
 function fract(n) { 
 	return Number(String(n).split('.')[1] || 0); 
-	// I hate JS ...
+	// I hate JS ... (ceterum censeo:)
+	// BTW: I was recommended not to add personal comments in the source code, so I decided to add some more and will do so in 
+	// the future ... ;-)
+	// And no, I won't change my mind: JS is a miserable programming language ... Not only is it poorly designed and full
+	// of absolutely strange things (type coercion as one of the worst) that you don't find in any other language and that 
+	// can cost you hours of debugging, but in addition it is the ONLY language that you can use to run code in a webbrowser 
+	// (which means that you have absolutely no choice).
+	// I also write these lines in defense for PHP (which is the other language VSTENO is written in): Many people say PHP 
+	// is horrible ... Well, that might be, but at least if you don't like it, you can choose from a whole bunch of other
+	// server-side languages.
+	// That's why JS in my opinion fully and entirely deserves the verdict of Cato the Elder ... ;-)
 }
 
 // classes 
@@ -442,10 +421,6 @@ TEVisuallyModifiableKnot.prototype.setTensions = function(t1, t2) {
 		case "right" : this.tensions[4] = t1; this.tensions[5] = t2; break;	
 		case "locked" : this.tensions = [t1, t2, t1, t2, t1, t2]; break; // set all tension to the same value
 	}
-/*
-	this.tensions[2] = t1; 	// write tensions for middle path to offsets 2 and 3
-	this.tensions[3] = t2;
-*/
 }
 TEVisuallyModifiableKnot.prototype.getTensions = function() {
 	var result;
@@ -478,22 +453,12 @@ function TEEditableToken(drawingArea) {
 	this.outerShape[1] = new Path(); 	
 	
 	// mouse events
-	//this.mouseDown = false;
 	this.selectedKnot = null;
 	this.markedKnot = null;
+
 	// index (is updated whenever identify-method is called)
-	// maybe not a good idea ... index can be undefined or contain obsolete values
-	// => use updateIndex for the moment to solve this problem
 	this.index = 0;
 }
-/* // not sure if this is necessary after all ...
-TEEditableToken.prototype.updateIndex = function() {
-	// uses this.markedKnot to update index
-	// returns index
-	if (this.markedKnot != null) this.markedKnot.identify(this.markedKnot.circle);
-	return index;
-}
-*/
 TEEditableToken.prototype.identify = function(item) {
 	//console.log("TEEditableToken: item: ", item);
 	var value = null;
@@ -521,14 +486,10 @@ TEEditableToken.prototype.identifyAndSelectKnot = function(item) {
 	this.markedKnot = value; // maybe pleonastic (should be handled by parent => see following line)
 	this.parent.setMarkedCircle(this.markedKnot);
 	// update sliders
-	//console.log(this
-		this.parent.parent.tensionSliders.link(this.selectedKnot); // this is the correct method, not the following line!
-	
-	//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+	this.parent.parent.tensionSliders.link(this.selectedKnot);
 }
 TEEditableToken.prototype.selectFollowingKnot = function() {
 	//console.log("Select following knot");
-	// save edited tension values first!!!! => is done automatically by linking
 	var lastKnot = this.knotsList.length;
 	if (this.index >= lastKnot) return;
 	else {
@@ -537,8 +498,6 @@ TEEditableToken.prototype.selectFollowingKnot = function() {
 		this.markedKnot = this.selectedKnot;
 		this.parent.setMarkedCircle(this.markedKnot);
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
-		
-		//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
 	}
 }
@@ -551,8 +510,7 @@ TEEditableToken.prototype.selectPreceedingKnot = function() {
 		this.selectedKnot = this.knotsList[this.index-1];
 		this.markedKnot = this.selectedKnot;
 		this.parent.setMarkedCircle(this.markedKnot);
-		this.parent.parent.tensionSliders.link(this.selectedKnot); // this is the correct method, not the following line!
-		//this.parent.parent.tensionSliders.setValues(this.selectedKnot.tensions[2], this.selectedKnot.tensions[3]); // ok, this is a monkey jumping from one tree to another ..., but it works ... ;-)
+		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
 	}
 }
@@ -563,15 +521,10 @@ TEEditableToken.prototype.getRelativeTokenKnot = function() {
 TEEditableToken.prototype.setParallelRotatingAxis = function() {
 	var defaultValue = this.knotsList[this.index-1].shiftX;
 	var shiftX = prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue);
-	//console.log("index: ", this.index);
 	this.knotsList[this.index-1].shiftX = Number(shiftX);
-	//console.log("Parallel rotatingAxis shiftX set: ", this.knotsList);
-	//this.updateRelativeCoordinates(this.selectedKnot);
-	//console.log("Before: selectedKnot: ", this.selectedKnot);
 	var temp = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot);
 	this.selectedKnot.linkToRelativeKnot.rd1 = temp[0];
 	this.selectedKnot.linkToRelativeKnot.rd2 = temp[1];
-	//console.log("After: temp: selectedKnot: ", temp, this.selectedKnot);
 }
 TEEditableToken.prototype.toggleParallelRotatingAxisType = function() {
 	var actualType = this.selectedKnot.parallelRotatingAxisType;
@@ -583,9 +536,6 @@ TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
 	relativeTokenKnot.setType(type);
 	//console.log("setKnotType: ", type, relativeTokenKnot, this.selectedKnot, this.markedKnot);
-	
-	//this.selectedKnot = this.markedKnot; // just a try ...
-	
 	// ok, the following line is something between a bugfix and a workaround.
 	// the problem is as follows: event handlers were first designed to change
 	// type of a knot when a key ('o', 'h') was pressed and a left mouseclick
@@ -640,79 +590,38 @@ TEEditableToken.prototype.handleMouseDown = function(event) {
 	//console.log("TEEditableToken.handleMouseDown()");
 	this.identifyAndSelectKnot(event.item);
 	if (this.selectedKnot != null) {
-	  	//console.log("keypressed+mouse: ", keyPressed, event.point, this.selectedKnot);
-		// placed here from bottom - not sure if this is correct!?!
 		this.parent.parent.tensionSliders.link(this.selectedKnot);
 		this.selectedKnot.handleMouseDown(event);
-		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-		// I suppose that event.point.x/y are writen to selectedKnot by selectedKnot.handleMouseDown!?!
 		this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
-
-/*
-// transfer this functionality to vsteno_editor_main: select knots with mouse or arrow keys
-// pressing of 'o' or 'h' has immediate effect (not in combination with mouseclick)!
-		switch (keyPressed) {
-			case "o" : this.setKnotType("orthogonal"); break;
-			case "h" : this.setKnotType("horizontal"); break;
-		}
-*/
-		// link thickness sliders	
-		//console.log("linkSliders: ", this);
 		this.parent.parent.thicknessSliders.linkEditableToken(this);
-		//this.parent.parent.thicknessSliders.thicknessSlider1.horizontalSlider.rectangle.visible = true;
-		//this.parent.parent.thicknessSliders.linkEditableToken(this);
-		
-		//console.log("Afterwards: ", keyPressed, event.point, this.selectedKnot);
-		
-		//this.parent.parent.tensionSliders.link(this.selectedKnot);
-		//this.selectedKnot.handleMouseDown(event);
-		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	}
 }
 TEEditableToken.prototype.handleMouseUp = function(event) {
-	///*this.*/mouseDown = false;
 	if (this.selectedKnot != null) {
-		//console.log("change rectangle to circle");
-		//console.log("MouseUp: rightclick: ", rightClick);
-		if (keyPressed == "o") {
-		//	var relativeToken = this.getRelativeToken();
-	//		relativeToken.setType("horizontal");	
-	//		this.selectedKnot.changeRectangleToCircle();
-		}
 		this.selectedKnot.handleMouseUp(event); // catch error (selectedKnot can be null when clicking fast)
-		//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 	} 
 	// for following line: see comment in freehand => setKnotType()	
-	// do not deselect knot any more ...
-	//this.selectedKnot = null;	// leave markedKnot
-   
+	// do not deselect knot any more ...   
 }
 TEEditableToken.prototype.handleMouseDrag = function(event) {
-	if (/*this.*/mouseDown) {
+	if (mouseDown) {
 		if (this.selectedKnot != null) {
 			this.selectedKnot.handleMouseDrag(event);
 			// update of relative coordinates not necessary (will be called by handleMouseUp-event)
-			//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
 			this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(this.selectedKnot);
-			
 		}
 	}
 }
 TEEditableToken.prototype.handleEvent = function(event) {
 	//console.log("TEEditableToken.handleEvent");
 	switch (event.type) {
-		case "mousedown" : if (keyPressed == "d") { // if (doubleClick) {
-								//this.handleMouseDown(event);
-								//console.log("delete this point: ", event.item);
+		case "mousedown" : if (keyPressed == "d") { 
 								this.deleteMarkedKnotFromArray();
 						   } else this.handleMouseDown(event); 
 						   break;
 		case "mouseup" : this.handleMouseUp(event); break;
 		case "mousedrag" : this.handleMouseDrag(event); break;
 	}
-	
-	//this.parent.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, this.index-1);
-
 }
 TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 	// reset all knot types
@@ -840,26 +749,8 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 TEEditableToken.prototype.connectPreceedingAndFollowing = function() {
 	this.parent.connectPreceedingAndFollowing();	
 }
-
-
-/* 
-class TERotatingAxisRelativeKnot
-TERotatingAxisRelativeKnot is comparable to TEVisuallyModifiableKnot
-The only difference is that TERotatingAxisRelativeKnot holds relative
-data, i.e. (vetor) data to get from the absolute coordinates (in 
-TEVisuallyModifiableKnot) to relative coordinates with respect to 
-the rotating axis (and viceversa). The conversion (calculation) of
-the coordinates is done by TERotatingAxis methods
-TERotatingAxisRelativeKnot is invisible (only internal data)
-*/
-// class TERotatingAxisOuterKnot
-/*
-function TERotatingAxisOuterKnot(distance, x, y) {
-	this.position = new Point(x,y);
-	this.distance();
-}
-*/
-
+ 
+//class TERotatingAxisRelativeKnot
 function TERotatingAxisRelativeKnot(x, y, type, link) {
 	this.linkToVisuallyModifiableKnot = link;
 	// TERotatingAxisRelativeKnot doesn't include tensions (these are stored in TEVisuallyModifiableCircle)
@@ -879,15 +770,6 @@ function TERotatingAxisRelativeToken(rotatingAxis) {
 	this.parent = rotatingAxis;
 	this.knotsList = []; 	// array of TERotatingAxisRelativeKnot
 } 
-/*
-TERotatingAxisRelativeToken.prototype.pushNewRelativeKnot = function(x, y, type) {
-	//console.log("TERotatingAxis.pushNewRelativeKnot()");
-	var relative = this.parent.getRelativeCoordinates(x, y, type);
-	//console.log("relative = ", relative);
-	this.knotsList.push(new TERotatingAxisRelativeKnot(relative[0],relative[1], type));
-}
-*/
-//TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(x, y, type, index) {
 TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(newKnot) {
 	//console.log("TERotatingAxis.insertNewRelativeKnot()");
 	//var relative = this.parent.getRelativeCoordinates(x, y, type);
@@ -906,7 +788,6 @@ TERotatingAxisRelativeToken.prototype.insertNewRelativeKnot = function(newKnot) 
 	//console.log("Link knots: ", newKnot, newRelativeKnot);
 	this.knotsList.splice(index, 0, newRelativeKnot);
 }
-//TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(x, y, index) {
 TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(tempSelectedKnot) {
 	//console.log("update coordinates ...");
 	var x = tempSelectedKnot.circle.position.x,
@@ -931,12 +812,13 @@ TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(tempS
 		}
 	}
 	//console.log("Updated (new) Values: ", relative);
-	
 }
 
 // class TERotatingAxis
 function TERotatingAxis(drawingArea, color) {
 	this.parent = drawingArea;
+	this.shiftX = 0; // add this property for compatibility with parallel rotating axis
+	this.selected = true; // start with main rotating axis selected
 	this.absBasePosition = this.parent.lowerY - (this.parent.basePosition * this.parent.lineHeight * this.parent.scaleFactor);
 	this.centerRotatingAxis = new Point((this.parent.rightX - this.parent.leftX)/2+this.parent.leftX, this.absBasePosition);
 	this.inclinationValue = 90; // default value = 90° (vertical)
@@ -952,6 +834,8 @@ function TERotatingAxis(drawingArea, color) {
 	this.tempColor = '#0f0'; // try to avoid tempColor == null bug by setting variable from the beginning ...
 	this.line = new Path.Line([this.centerRotatingAxis.x, this.parent.lowerY], [this.centerRotatingAxis.x, this.parent.upperY]);
 	this.line.strokeColor = color;
+	this.line.dasharray = [5,5];
+	
 	this.controlCircle = new TEVisuallyModifiableCircle(new Point(this.centerRotatingAxis.x,this.parent.upperY), 10, color, '#0a0', '#00f' ); // Path.Circle( new Point(this.centerRotatingAxis.x, this.parent.upperY), 5);
 	
 	// token data (relative coordinates)
@@ -960,6 +844,14 @@ function TERotatingAxis(drawingArea, color) {
 	// parallel rotating axis
 	this.parallelRotatingAxis = new TEParallelRotatingAxisGrouper(this);
 }
+TERotatingAxis.prototype.select = function() {
+	this.selected = true;
+	this.updateColor();
+}
+TERotatingAxis.prototype.unselect = function() {
+	this.selected = false;
+	this.updateColor();
+} 
 TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
 	var dx = event.point.x - this.centerRotatingAxis.x,
 		dy = event.point.y - this.centerRotatingAxis.y;
@@ -996,18 +888,16 @@ TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
 }
 TERotatingAxis.prototype.updateVisibleKnots = function() {
 	//console.log("TERotatingAxis.updateVisibleKnots");
-	//if (editableToken.knotsList.length > 0) {
-		var temp1 = 0, temp2 = 0, horX = 0, newX = 0, newY = 0;
-		for (var i=0; i<this.relativeToken.knotsList.length; i++) {
-			temp1 = this.relativeToken.knotsList[i].rd1 * this.parent.scaleFactor;
-			temp2 = this.centerRotatingAxis.y - (this.relativeToken.knotsList[i].rd2 * this.parent.scaleFactor);
-			horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
-			newX = horX + temp1;
-			newY = /*this.centerRotatingAxis.y -*/ temp2;
-			//console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
-			this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
-		}
-	//}
+	var temp1 = 0, temp2 = 0, horX = 0, newX = 0, newY = 0;
+	for (var i=0; i<this.relativeToken.knotsList.length; i++) {
+		temp1 = this.relativeToken.knotsList[i].rd1 * this.parent.scaleFactor;
+		temp2 = this.centerRotatingAxis.y - (this.relativeToken.knotsList[i].rd2 * this.parent.scaleFactor);
+		horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
+		newX = horX + temp1;
+		newY = temp2;
+		//console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
+		this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
+	}
 }	
 TERotatingAxis.prototype.identify = function(item) {
 	//console.log("TERotatingAxis.identify()", item, this.controlCircle);
@@ -1037,21 +927,35 @@ TERotatingAxis.prototype.handleMouseUp = function(event) {
 	//this.controlCircle.position = event.point;
 	this.controlCircle.unselect(); // works only inside drawing area ... probably superfluous if placed in TECanvas MouseUp-handler
 }
+TERotatingAxis.prototype.updateColor = function() {
+	switch (this.selected) {
+		case true : this.line.strokeColor = colorMainRotatingAxisSelected; 
+					this.line.dashArray = [15,5]; 
+					this.controlCircle.circle.strokeColor = colorMainRotatingAxisSelected;
+					this.controlCircle.circle.strokeWidth = 2;
+					break;
+		case false : this.line.strokeColor = colorMainRotatingAxisUnselected; 
+					 this.line.dashArray = null; 
+					 this.controlCircle.circle.strokeColor = colorMainRotatingAxisUnselected; 
+	 		 		 this.controlCircle.circle.strokeWidth = 2;
+					 break;
+	}
+	//console.log("RotatingAxis: ", this);
+}
 TERotatingAxis.prototype.handleMouseDrag = function(event) {
 	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.centerRotatingAxis.y) && (event.point.y > this.parent.upperY)) {
 		var startAndEndPoints = this.getStraightLineStartAndEndPoints(event);
 		this.line.segments[0].point = startAndEndPoints[0];
 		this.line.segments[1].point = startAndEndPoints[1];	
+		this.updateColor();
 		this.controlCircle.circle.position = event.point;
 		// adjust token points
-		//this.recalculateFreehandPoints(); // since I disabled this, the code works flawlessy ... but NO IDEA WHY ... ! :-) :-) :-)
 		var angleRad = Math.atan((startAndEndPoints[1][1] - startAndEndPoints[0][1]) / (startAndEndPoints[1][0] - startAndEndPoints[0][0]));
 		var angleDeg = Math.degrees(angleRad);
 		// copy values
 		this.inclinationValue = angleDeg;
 		this.inclinationLabel.content = Math.abs(angleDeg.toFixed(0)) + "°"; // show only positive values
-		// update
-		
+		// update	
 		//this.updateVisibleKnots();
 		this.recalculateFreehandPoints();
 		this.parent.updateFreehandPath();
@@ -1082,10 +986,8 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 	var cx = this.controlCircle.circle.position.x,
 		cy = this.controlCircle.circle.position.y;
 	// calculate deltas of rotating axis
-	//console.log("hi there: ", this.controlCircle.circle.position, this.centerRotatingAxis);
 	var rdx = cx-ox,
 		rdy = cy-oy;
-	//console.log(rdx, rdy, this.centerRotatingAxis.x);
 	
 	if (rdx == 0) {
 			//console.log("is vertical");
@@ -1114,30 +1016,16 @@ TERotatingAxis.prototype.calculateOrthogonalIntersectionWithRotatingAxis = funct
 		iy = (ix*m1) + c1;
 		
 	}	
-	/*console.log("Results: ");
-	console.log("m1=rdy/rdx: ", m1, "=", rdy, "/", rdx, "m2=kdx/kdy: ", m2, "=", kdx, "/", kdy);
-	console.log("c1=oy-ox*m1: ", c1, "=", oy, "-", ox, "*", m1);
-	console.log("c2=kx-ky*m2: ", c2, "=", kx, "-", ky, "*", m2);
-	
-	console.log("g1: oy=ox*m1+c1 ", oy, "=", ox, "*", m1, "+", c1);
-	console.log("g2: y=x*m2+c2 ", ky, "=", kx, "*", m2, "+", c2);
-	console.log("Intersection: ", ix, iy);
-	*/
 	return [ix,iy];
 }
-//TERotatingAxis.prototype.getRelativeCoordinates = function(x, y, type) {
 TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKnot, type) {
-	// try to work with standard parameter type in the following method (by the way: I hate JS ...)
+	// try to work with standard parameter type in the following method (by the way: I hate JS ... (ceterum censeo:))
 	type = typeof type !== 'undefined' ? type : "horizontal";
 	if (visuallyModifiableKnot.linkToRelativeKnot !== null) type = visuallyModifiableKnot.linkToRelativeKnot.type;
 	var x = visuallyModifiableKnot.circle.position.x,
-		y = visuallyModifiableKnot.circle.position.y; //,
-		//index = mainCanvas.editor.editableToken.index,
-		//type = mainCanvas.rotatingAxis.relativeToken.knotsList[index].type; //"horizontal"; //visuallyModifiableKnot.type;
-				
+		y = visuallyModifiableKnot.circle.position.y; 
 	
 	var relative = null;
-	//console.log("CHECK: TERotatingAxis.getRelativeCoordinates: ", x, y, type);
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
 	switch (type) {
 		case "orthogonal" : 
@@ -1213,7 +1101,6 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 	//console.log("relative (inside function) = ", relative
 	return relative;
 }
-//TERotatingAxis.prototype.getAbsoluteCoordinates = function(rd1, rd2, type) {
 TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 	var absCoordinates, temp1, temp2, horX, newX, newY;
 	var rd1 = relativeTokenKnot.rd1,
@@ -1227,19 +1114,7 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				temp2 = this.centerRotatingAxis.y - (rd2 * this.parent.scaleFactor);
 				horX = this.calculateHorizontalIntersectionX( temp2, "horizontal");
 				newX = horX + temp1;
-				newY = /*this.centerRotatingAxis.y -*/ temp2;
-				//console.log("rel(x,y):", temp1, temp2, "Intersection: ", horX); //, "abs(x,y):", absx,absy);
-				//console.log("new(x,y):", newX, newY);
-				//this.parent.editableToken.knotsList[i].circle.position = [newX, newY];
-				
-				
-				/*
-				
-				relX = -this.calculateHorizontalIntersectionRelativeX(rd1, rd2, type);
-				console.log("relX:", relX, "From: ", x, y, type);
-				downScaledX = relX / this.parent.scaleFactor;
-				downScaledY = -(y - this.centerRotatingAxis.y) / this.parent.scaleFactor;
-				absCoordinates = [downScaledX, downScaledY];*/
+				newY = temp2;
 				absCoordinates = [newX, newY];
 				//console.log("calculate absolute horizontal: ", absCoordinates);
 			break;
@@ -1263,14 +1138,12 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				// standardize deltas
 					rdx = rdx / rLength;
 					rdy = rdy / rLength;
+				// vector 2
 					v2dx = v2dx / v2Length;
 					v2dy = v2dy / v2Length;
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1 * this.parent.scaleFactor,
 					rny = rdy * rd1 * this.parent.scaleFactor;
-				// define vector 2 (orthogonal)
-				//var v2dx = -rdy,
-				//	v2dy = rdx;
 				// calculate new vector length
 				var v2nx = v2dx * rd2 * this.parent.scaleFactor, // change direction
 					v2ny = v2dy * rd2 * this.parent.scaleFactor;
@@ -1303,6 +1176,7 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				// standardize deltas
 					rdx = rdx / rLength;
 					rdy = rdy / rLength;
+				// vector 2
 					v2dx = v2dx / v2Length;
 					v2dy = v2dy / v2Length;
 				// proportional => adapt length of rd1
@@ -1317,9 +1191,6 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1Proportional * this.parent.scaleFactor,
 					rny = rdy * rd1Proportional * this.parent.scaleFactor;
-				// define vector 2 (orthogonal)
-				//var v2dx = -rdy,
-				//	v2dy = rdx;
 				// calculate new vector length // test rd2Proportional
 				var v2nx = v2dx * rd2Proportional * this.parent.scaleFactor, // change direction
 					v2ny = v2dy * rd2Proportional * this.parent.scaleFactor;
@@ -1339,16 +1210,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 					absy = rny + v2ny + oy;
 				//console.log("absoluteCoordinates: AFTER: rd1/rd2: ", rd1Proportional, rd2);
 				
-				absCoordinates = [absx, absy]
-				//console.log("calculate orthogonal:", absCoordinates);
-				//console.log("UpscaledShiftX: ", shiftX, upscaledShiftX);
-				// just draw one axis
-				/*
-				parallelRotatingAxisTest.removeSegments();
-				parallelRotatingAxisTest = new Path.Line(new Point(ox-upscaledShiftX,oy), new Point(cx-upscaledShiftX,cy));
-				parallelRotatingAxisTest.strokeColor = '#0f0';
-				parallelRotatingAxisTest.strokeWidth = 1;
-				*/
+				absCoordinates = [absx, absy];
+				
 			break;
 	}
 	return absCoordinates;
@@ -1373,36 +1236,14 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 				rd2 = this.relativeToken.knotsList[i].rd2,
 				type = this.relativeToken.knotsList[i].type;
 			// calculate absolute coordinates
-			//console.log("getAbsoluteCoordinates: i: (rd1, rd2, type) ", i, ":", rd1, rd2, type);
-			//var absCoordinates = this.getAbsoluteCoordinates(rd1, rd2, type);
 			var absCoordinates = this.getAbsoluteCoordinates(this.relativeToken.knotsList[i]);
-			
-			//console.log("absCoordinates: ", absCoordinates);
 			// copy values to editable token
 			this.parent.editableToken.knotsList[i].x = absCoordinates[0];
-			this.parent.editableToken.knotsList[i].y = absCoordinates[1];
-				
+			this.parent.editableToken.knotsList[i].y = absCoordinates[1];	
 			//console.log("newx,y: ", newX, newY);
 			this.parent.editableToken.knotsList[i].circle.position = [absCoordinates[0], absCoordinates[1]];
-			/*
-			var horX = this.calculateHorizontalIntersectionX(this.parent.editableToken.knotsList[i].x, this.parent.editableToken.knotsList[i].y, "horizontal" );
-			
-			var tempx = this.parent.editableToken.knotsList[i];
-			var tempy = this.parent.editableToken.knotsList[i];
-			
-			var relative = this.getRelativeCoordinates( tempx, tempy, "horizontal");
-			
-			this.parent.editableToken.knotsList[i].x = horX + (relative[0] * this.parent.scaleFactor);
-			this.parent.editableToken.knotsList[i].y = this.centerRotatingAxis.y - (relative[1] * this.parent.scaleFactor);
-			*/
 		}
 	}
-	//this.parent.connectPreceedingAndFollowing();
-	//this.parent.updateFreehandPath();
-	//this.parent.connectPreceedingAndFollowing();
-	
-	//this.parent.preceeding.connect(); // update connecting point also
-	//this.parent.following.connect(); // update connecting point also
 }
 
 // class TEVisuallyModifiableCircle
@@ -1850,7 +1691,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.dottedGrid = new TEDottedGrid(this, '#000');
 	this.auxiliarySystemLines = new TEAuxiliarySystemLines(this, '#000');
 	this.auxiliaryVerticalLines = new TEAuxiliaryVerticalLines(this, '#000');
-	this.rotatingAxis = new TERotatingAxis(this, '#0f0');
+	this.rotatingAxis = new TERotatingAxis(this, '#0f0'); // colorMainRotatingAxisSelected);
 	this.coordinateLabels = new TECoordinatesLabels(this); // coordinateLabels depends on rotatingAxis!
 	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
 	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
@@ -1864,7 +1705,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	// token that is edited
 	this.actualToken = new TEEditableToken();
 	
-// actual selected itemsModifiableCircle
+	// actual selected itemsModifiableCircle
 	this.markedIndex = 0;			// 0 = preceeding connection point; 1,2,3 ... n = freehand circles; 99999 = following connection point
 
 	// freehand path
@@ -1872,7 +1713,6 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.fhCircleColor = null;
 	this.editableToken = new TEEditableToken(this);
 	this.fhToken = new Path();
-	//this.fhToken.fullySelected = true;
 	this.fhToken.strokeColor = '#000';
 
 	// initialize marked circle and index
@@ -1896,8 +1736,7 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 			// default is not needed: if this.markedCircle is part of editableToken, index is set automatically
 			// via the identify method (which is called in the if statement)
 		}
-	} //else this
-	//console.log("index set to: ", this.editableToken.index);
+	}
 }
 TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	numberOfPoints = this.fhToken.segments.length;
@@ -2105,48 +1944,24 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		this.fhToken.insert(this.editableToken.index, event.point) // path doesn't have slice method - use insert method instead (same functionality)
 		//console.log("insertNewKnot: ", event.point);
 		this.editableToken.insertNewKnot(event.point);
-		
-		//this.editableToken.index += 1; // point to the newly inserted element
-		
-		//var length = this.rotatingAxis.relativeToken.knotsList.length;
-		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);		
 	}
 	this.connectPreceedingAndFollowing();
 	// link thickness sliders
-	//console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
 	this.parent.thicknessSliders.linkEditableToken(this.editableToken);
-	
-	//console.log("TEDrawingArea.handleMouseDown: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-	//this.preceeding.connect();
-/*	this.following.connect();
-*/
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
 	//console.log("HandlingParent: ", this.handlingParent);
-	//console.log("TEDrawingArea.handleMouseUp1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);
 	}
-	//console.log("TEDrawingArea.handleMouseUp2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-
-	///*this.*/mouseDown = false;
 	this.mouseDownItem = null;
 	this.handlingParent = null;
 }
 TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);	
-		//var length = this.rotatingAxis.relativeToken.knotsList.length;
-		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);
-		
 	}
 	this.connectPreceedingAndFollowing();
-	
-		//this.preceeding.connect(); // update connecting point also
-/*		this.following.connect(); // update connecting point also
-*/
 }
 TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {
 	var value = this.preceeding.identify(item);
@@ -2164,46 +1979,29 @@ TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {
 	}
 	return value;
 }
-TEDrawingArea.prototype.isDynamic = function(item) {
-	
+/* some remains from ancient times (Atlantis?:)
+TEDrawingArea.prototype.isDynamic = function(item) {	
 }
 TEDrawingArea.prototype.isStatic = function(item) {
 }
-
+*/
 TEDrawingArea.prototype.handleEvent = function(event) {
 	//console.log("TEDrawingArea.handleEvent()", event);
-	//if (event.item != null) {
-	//console.log("mouseEvent: ", event);
-	//console.log("TEDrawingArea.handleEvent0: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
-			switch (event.type) {
-				case "mousedown" : this.handleMouseDown(event); break;
-				case "mouseup" : 
-				//console.log("TEDrawingArea.handleEvent0.4: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-				this.handleMouseUp(event); 
-				//console.log("TEDrawingArea.handleEvent0.6: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-				break;
-				case "mousedrag" : this.handleMouseDrag(event); break;
-			}
-			//console.log("TEDrawingArea.handleEvent1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-			//var index = this.rotatingAxis.relativeToken.index;
-			//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
-			this.updateFreehandPath();
-			this.knotLabel.updateLabel();
+	if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
+		switch (event.type) {
+			case "mousedown" : this.handleMouseDown(event); break;
+			case "mouseup" : this.handleMouseUp(event); break;
+			case "mousedrag" : this.handleMouseDrag(event); break;
 		}
-	//}
-	//console.log("TEDrawingArea.handleEvent2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
+		//console.log("TEDrawingArea.handleEvent1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+		this.updateFreehandPath();
+		this.knotLabel.updateLabel();
+	}
 }
 TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();
 	this.following.connect();	
 }
-
 // class TEMovingVerticalSlider
 function TEMovingVerticalSlider(from, to) {
 	//var labelPosition = new Point(this.leftX+this.sliderThickness*2-0.5, event.point.y);
@@ -2784,27 +2582,99 @@ function TEParallelRotatingAxisGrouper(parent) {
 	this.epsilon = 0.1; 	// tolerance: if abs(shiftX1 - shiftX2) < epsilon, only 1 axis is drawn 
 							// (internally - i.e. for the knot - the EXACT value is calculated) 
 	this.axisList = []; 	// array of TEParallelRotatingAxis
+	// new variables for manual insertion
+	this.selectedAxis = 0; // select main rotating axis by default
+	this.mainSelected = true;
+	this.newAxisList = [new TEParallelRotatingAxis(0, "main")];	// add "dummy" main axis
 }
-TEParallelRotatingAxisGrouper.prototype.addNewAxis = function(shiftX, type) {
-	// tests if a new visual axis has to be inserted
-	//console.log("Add new axis: ", shiftX);
-	var result = this.getLowestEpsilonAndType(shiftX);
-	if ((result[0] > this.epsilon) && (result[1] != type)) {		// add additional rotating axis when type is different (even if shiftX < epsilon)
-		// insert new axis
-		this.axisList.push(new TEParallelRotatingAxis(shiftX, type));
-	}
-}
-TEParallelRotatingAxisGrouper.prototype.getLowestEpsilonAndType = function(shiftX) {
-	var actualEpsilon = 99999999, newEpsilon, actualType;
-	for (var i=0; i<this.axisList.length; i++) {
-		newEpsilon = Math.abs(this.axisList[i].shiftX - shiftX);
-		if (newEpsilon < actualEpsilon) {
-			//actualEpsilon = (newEpsilon < actualEpsilon) ? newEpsilon : actualEpsilon;
-			actualEpsilon = newEpsilon;
-			actualType = this.axisList[i].type;
+// new method for manual insertion
+TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
+	// add axis from left to right (in order to select them with CTRL-arrow left/right)
+	var defaultValue = 0;
+	var shiftX = Number(prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue));
+	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
+		var i = 0, length = this.newAxisList.length, type = "orthogonal";
+		for (i = 0; i < length; i++) {
+			if ((i == 0) && (shiftX < this.newAxisList[i].shiftX)) break;
+			if (shiftX > this.newAxisList[i]) break;
+			//console.log("i: shiftX/newAxis.shiftX: ", i, shiftX, this.newAxisList[i].shiftX);
 		}
+		//console.log("TEParallelRotatingAxisGrouper.addParallelAxis(): i/shiftX/type: ", i, shiftX, type);
+		var newParallelAxis = new TEParallelRotatingAxis(shiftX, type);
+		newParallelAxis.line.strokeColor = '#00f';
+		this.newAxisList.splice(i, 0, newParallelAxis);
+		this.selectedAxis = i;
+		this.mainSelected = false;
+		this.parent.parent.rotatingAxis.unselect();
 	}
-	return [actualEpsilon, actualType];
+	//console.log("AFTER: newAxisList: ", this.newAxisList);
+	this.updateAll();
+}
+TEParallelRotatingAxisGrouper.prototype.deleteParallelAxis = function() {
+	//console.log("TEParallelRotatingAxis.deleteParallelAxis()");
+	if (this.newAxisList[this.selectedAxis].type != "main") {		// main axis cannot be deleted
+		//console.log("Before: ", this.newAxisList);
+		this.newAxisList[this.selectedAxis].line.removeSegments(); // remove line before deleting object
+		this.newAxisList[this.selectedAxis].line = null;
+		this.newAxisList.splice(this.selectedAxis,1);
+		//console.log("After: ", this.newAxisList);
+		this.selectedAxis -= 1;
+		if (this.selectedAxis < 0) this.selectedAxis = this.newAxisList.length; 
+		if (this.newAxisList[this.selectedAxis].type == "main") {
+			this.mainSelected = true;
+			this.parent.parent.rotatingAxis.select();
+		}
+		this.updateAll();
+	}
+}
+TEParallelRotatingAxisGrouper.prototype.selectFollowingAxis = function() {
+	var length = this.newAxisList.length;
+	//console.log("Select following: length: ", length);
+	if (length > 0) {
+		if (!this.mainSelected) {
+			//console.log("main not selected: this.selectedAxis: ", this.selectedAxis);
+			this.selectedAxis = (this.selectedAxis + 1) % length;	// wrap around
+			//console.log("newAxisList(this.selectedAxis).type: ", this.newAxisList[this.selectedAxis].type);
+			if (this.newAxisList[this.selectedAxis].type == "main") {
+				this.mainSelected = true;
+				//console.log("select main: this.mainSelected: ", this.mainSelected);
+				this.parent.parent.rotatingAxis.select();
+			}
+		} else {
+			//console.log("main selected");
+			//this.selectedAxis = Math.floor(this.selectedAxis);
+			this.selectedAxis = (this.selectedAxis+1) % length;	// wrap around		
+			//console.log("BEFORE: main rotating: selected: ", this.parent.parent.rotatingAxis.selected);
+			this.mainSelected = false;
+			this.parent.parent.rotatingAxis.unselect();
+			//console.log("AFTER: main rotating: selected: ", this.parent.parent.rotatingAxis.selected);
+		
+		}
+		//console.log("this.selectedAxis: ", this.selectedAxis);
+		//console.log("axisList: ", this.newAxisList);
+	}
+	this.updateAll();
+}
+TEParallelRotatingAxisGrouper.prototype.selectPreceedingAxis = function() {
+	var length = this.newAxisList.length;
+	if (length > 0) {
+		if (!this.mainSelected) {		
+			if (this.selectedAxis == 0) this.selectedAxis = length; // wrap around
+			this.selectedAxis = this.selectedAxis - 1;
+			if (this.newAxisList[this.selectedAxis].type == "main") {
+				this.mainSelected = true;
+				//console.log("select main: this.mainSelected: ", this.mainSelected);
+				this.parent.parent.rotatingAxis.select();
+			}
+		} else {
+			if (this.selectedAxis == 0) this.selectedAxis = length; // wrap around
+			this.selectedAxis = this.selectedAxis - 1;
+			this.mainSelected = false;
+			this.parent.parent.rotatingAxis.unselect();
+		}		
+		//console.log("this.selectedAxis: ", this.selectedAxis);
+	}
+	this.updateAll();
 }
 TEParallelRotatingAxisGrouper.prototype.drawAllAxis = function() {
 	// get drawing area borders & scaling
@@ -2893,12 +2763,106 @@ TEParallelRotatingAxisGrouper.prototype.drawAllAxis = function() {
 			}
 		}
 		
-		// calculate left point
-		//iyl = (leftX + upscaledShiftX) / Math.avoidDivisionBy0(dx) * dy;
-		//ixl = (iyl * dx) / dy - upscaledShiftX;
-		
 		// redraw line
 		this.axisList[i].redrawLine(new Point(lx, ly), new Point(rx, ry));
+	}
+}
+/// experimental
+TEParallelRotatingAxisGrouper.prototype.experimentalDrawAllAxis = function() {
+	// get drawing area borders & scaling
+	//console.log("TEParallelRotatingAxis.experimentalDrawAllAxis()");
+	var leftX = this.parent.parent.leftX,
+		rightX = this.parent.parent.rightX,
+		upperY = this.parent.parent.upperY,
+		lowerY = this.parent.parent.lowerY,
+		scaleF = this.parent.parent.scaleFactor;
+	//console.log("leftX, upperY, rightX, lowerY, scaleF: ", leftX, upperY, rightX, lowerY, scaleF);
+	// get coordinates of main rotating axis
+	var ox = this.parent.centerRotatingAxis.x,		// origin
+		oy = this.parent.centerRotatingAxis.y,
+		cx = this.parent.controlCircle.circle.position.x,	// control circle
+		cy = this.parent.controlCircle.circle.position.y;
+	//console.log("ox, oy, cx, cy, this.parent.controlCircle: ", ox, oy, cx, cy, this.parent.controlCircle);	
+	// calculate vector of main rotating axis
+	var	dx = cx - ox,
+		dy = cy - oy;
+	//console.log("dx,dy: ", dx, dy);
+	// declare variables for intersection calculation
+	var r1x, r1y, r2x, r2y, l1x, l1y, l2x, l2y, m, c, lx, ly, rx, ry, angle, hypothenuse, shiftX, upscaledShiftX; 
+	
+	// calculate and draw
+	for (var i=0; i<this.newAxisList.length; i++) {
+		if (this.newAxisList[i].type != "main") {
+			// calculate coordinates inside drawing area (clipping)
+			shiftX = this.newAxisList[i].shiftX;
+			switch (this.newAxisList[i].type) {
+				case "horizontal" : break;
+				case "orthogonal" : angle = Math.abs(Math.radians(this.parent.inclinationValue));	// inclination rotating axis
+								hypothenuse = shiftX / Math.sin(angle);
+								//console.log("proportional values: beta/h", angle, hypothenuse);
+								// make rotating axis proportional
+								shiftX = hypothenuse;
+								break;
+			}
+			upscaledShiftX = shiftX * scaleF;
+		
+			// calculate points (y = m*x + c)
+			// calculate m and c
+			m = dy / Math.avoidDivisionBy0(dx);
+			c = oy - (ox + upscaledShiftX) * m;
+			// calculate right points
+			// fix upperY
+			r1y = upperY;
+			r1x = (upperY - c) / m;
+			// fix rightX
+			r2x = rightX;
+			r2y = m * rightX + c;
+			// calculate left points
+			// fix lowerY
+			l1y = lowerY;
+			l1x = (lowerY - c) / m;
+			// fix leftX
+			l2x = leftX;
+			l2y = leftX * m + c;
+		
+			//console.log("l1x/y, l2x/y, r1x/y, r2x/y: ", l1x, l1y, l2x, l2y, r1x, r1y, r2x, r2y);
+		
+			// chose 2 points that fit drawing area (= clipping)
+			// left point
+			if (l1x < leftX) {
+				lx = l2x;
+				ly = l2y;
+			} else {
+				if (l1x > rightX) {
+					lx = r2x;
+					ly = r2y;
+				} else {
+					lx = l1x;
+					ly = l1y;
+				}
+			}
+		
+			// right point
+			if (r1x > rightX) {
+				rx = r2x;
+				ry = r2y;
+			} else {
+				if (r1x < leftX) {
+					rx = l2x;
+					ry = l2y;
+				} else {	
+					rx = r1x;
+					ry = r1y;
+				}
+			}
+		
+			// color
+			var color = (this.selectedAxis == i) ? colorParallelRotatingAxisSelected : colorParallelRotatingAxisUnselected; 
+		
+			// redraw line
+			//console.log("redraw: ", lx, ly, rx, ry, this.selectedAxis, color);
+			this.newAxisList[i].redrawLine(new Point(lx, ly), new Point(rx, ry), color);
+		}
 	}
 }
 TEParallelRotatingAxisGrouper.prototype.emptyArray = function() {
@@ -2908,7 +2872,8 @@ TEParallelRotatingAxisGrouper.prototype.emptyArray = function() {
 		this.shiftX = undefined;
 	}	
 	this.axisList = [];
-} 
+}
+/* 
 TEParallelRotatingAxisGrouper.prototype.updateRotatingAxisList = function() {
 	var numberKnots = this.parent.relativeToken.knotsList.length;
 	// start with an empty array for simplicity (change that later if performance is an issue)
@@ -2937,13 +2902,9 @@ TEParallelRotatingAxisGrouper.prototype.updateRotatingAxisList = function() {
 		}
 	}
 }
+*/
 TEParallelRotatingAxisGrouper.prototype.updateAll = function() {
-	// this method is called by TERotatingAxis.eventHandler()
-	//console.log("TEParallelRotatingAxisGrouper.updateAll()1: axisList: ", this.axisList);
-	this.updateRotatingAxisList();
-	//console.log("TEParallelRotatingAxisGrouper.updateAll()2: axisList: ", this.axisList);
-	this.drawAllAxis();
-	//console.log("TEParallelRotatingAxisGrouper.updateAll()3: axisList: ", this.axisList);
+	this.experimentalDrawAllAxis();
 }
 
 // class definition
@@ -2960,25 +2921,18 @@ function TEParallelRotatingAxis(shiftX, type) {
 	this.line.strokeWidth = 1;
 	this.line.visible = false;
 }
-TEParallelRotatingAxis.prototype.redrawLine = function(point1, point2) {
+TEParallelRotatingAxis.prototype.redrawLine = function(point1, point2, color) {
+	color = (typeof color == undefined) ? colorParallelRotatingAxisUnselected : color;
 	//console.log("TEParalleRotatingAxis.redrawLine(): point1, point2: ", point1, point2);
 	this.line.removeSegments();
 	this.line = new Path.Line(point1, point2);
-	this.line.strokeColor = '#0f0';
+	this.line.strokeColor = color;
 	this.line.dashArray = [5,5];
 	this.line.strokeWidth = 1;
 	this.line.visible = true;
 }
 
-var parallelRotatingAxisTest = new Path();
-
 // global variables
-// auxiliary lines to test bezier curves
-var outerLines = new Path();
-var innerLines = new Path();
-var tangent = new Path();
-
-//var editor = new TEDrawingArea(new Point(100, 500), 4, 1, 10, 10);
 var mainCanvas = new TECanvas(0,0,800,800);
 	
 // global event handlers and variables
@@ -2997,6 +2951,12 @@ var knotTypeAutoDefine = true,
 	colorSelectedKnot = '#aaa',
 	colorMarkedKnot = '#FFFC00';
 	
+// rotating axis
+var colorParallelRotatingAxisUnselected = '#0f0',
+	colorParallelRotatingAxisSelected = '#f00',
+	colorMainRotatingAxisSelected = colorParallelRotatingAxisSelected,
+	colorMainRotatingAxisUnselected = colorParallelRotatingAxisUnselected;
+	
 var tangentPrecision = 0.001,
 	tangentFixPointMaxIterations = 200,
 	tangentBetweenCurvesMaxIterations = 4;
@@ -3005,14 +2965,12 @@ var keyPressed = "";
 var arrowUp = false,			// global variables for arrow keys
 	arrowDown = false,
 	arrowLeft = false,
-	arrowRight = false;
+	arrowRight = false,
+	ctrlKey = false;
 	
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
  
-//var thicknessSlider = new TEThicknessSlider(100, 550, 400, 20, "L");
-//var thicknessSliders = new TETwoGroupedThicknessSliders(null, 100, 500, 400, 70);
-
 // main classes
 // class TECanvas (main container for complete drawing area)
 function TECanvas(x, y, width, height) {
@@ -3023,13 +2981,10 @@ function TECanvas(x, y, width, height) {
 	this.height = height;
 	// objects
 	// main editor
-	//this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
 	this.editor = new TEDrawingArea(this, new Point(100, 450), 4, 1, 10, 10);
 	// sliders
 	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
 	this.thicknessSliders = new TETwoGroupedThicknessSliders(this, this.editor.leftX, this.editor.lowerY+30, this.editor.rightX - this.editor.leftX, 70);
-	//console.log("TwoGroupedSliders: BEFORE:", this.thicknessSliders);
-
 }
 TECanvas.prototype.handleEvent = function(event) {
 	//console.log("TECanvas.handleEvent()");
@@ -3042,9 +2997,6 @@ TECanvas.prototype.handleEvent = function(event) {
 	}
 	//this.crossUpdateSliderAndFreehandCurve();
 }
-//TECanvas.prototype.crossUpdateSliderAndFreehandCurve() {
-	
-//}
 
 // enable right clicks
 /* doesn't work: unfortunately the oncontextmenu-method is called after the tool.nomouse-methods ...
@@ -3065,28 +3017,47 @@ window.oncontextmenu = function(event) {
 document.onkeydown = checkSpecialKeys; 
 function checkSpecialKeys(e) {
 	e = e || window.event;
-	if (e.keyCode == '38') {
-        arrowUp = true; // up arrow
-        //console.log("arrowUP");
-    }
-    else if (e.keyCode == '40') {
-        arrowDown = true; // down arrow
-		//console.log("arrowDown");
-    }
-    else if (e.keyCode == '37') {
-       arrowLeft = true; // left arrow
-	   mainCanvas.editor.editableToken.selectPreceedingKnot();
-	   // for following line: see comment in freehand => setKnotType()
-	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
-	   //console.log("arrowLeft");
-    }
-    else if (e.keyCode == '39') {
-       arrowRight = true; // right arrow
-	   mainCanvas.editor.editableToken.selectFollowingKnot();
-	   // for following line: see comment in freehand => setKnotType()
-	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
-	   //console.log("arrowRight");
-    }
+	if (e.ctrlKey) ctrlKey = true;
+    else ctrlKey = false;
+    if (ctrlKey) {
+		if (e.keyCode == '38') {
+			arrowUp = true; // up arrow
+			//console.log("arrowUP");
+		} else if (e.keyCode == '40') {
+			arrowDown = true; // down arrow
+			//console.log("arrowDown");
+		} else if (e.keyCode == '37') {
+			arrowLeft = true; // left arrow
+			mainCanvas.editor.rotatingAxis.parallelRotatingAxis.selectPreceedingAxis();
+			// for following line: see comment in freehand => setKnotType()
+			
+		} else if (e.keyCode == '39') {
+			arrowRight = true; // right arrow
+			mainCanvas.editor.rotatingAxis.parallelRotatingAxis.selectFollowingAxis();
+			//console.log("arrowRight");
+		}	
+	} else {
+		if (e.keyCode == '38') {
+			arrowUp = true; // up arrow
+			//console.log("arrowUP");
+		} else if (e.keyCode == '40') {
+			arrowDown = true; // down arrow
+			//console.log("arrowDown");
+		} else if (e.keyCode == '37') {
+			arrowLeft = true; // left arrow
+			mainCanvas.editor.editableToken.selectPreceedingKnot();
+			// for following line: see comment in freehand => setKnotType()
+			mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
+			//console.log("arrowLeft");
+		} else if (e.keyCode == '39') {
+			arrowRight = true; // right arrow
+			mainCanvas.editor.editableToken.selectFollowingKnot();
+			// for following line: see comment in freehand => setKnotType()
+			mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
+			//console.log("arrowRight");
+		}
+	}    
+	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
 }
 document.onkeyup = function resetSpecialKeys() {
 	arrowUp = false;
@@ -3094,23 +3065,6 @@ document.onkeyup = function resetSpecialKeys() {
 	arrowLeft = false;
 	arrowRight = false;
 }
-
-
-// test
-/*
-function makeVisible() {
-	console.log("make visible");
-	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
-	mainCanvas.thicknessSliders.showHorizontalSliders();
-	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
-}
-function makeInvisible() {
-	console.log("make invisible");
-	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
-	mainCanvas.thicknessSliders.hideHorizontalSliders();
-	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
-}
-*/
 
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
@@ -3126,24 +3080,20 @@ tool.onKeyDown = function(event) {
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
 		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
-		//case "v" : makeVisible(); break; // show thickness slider (test)
-		//case "i" : makeInvisible(); break; // hide thickness slider (test)
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
-		case "x" : mainCanvas.editor.editableToken.setParallelRotatingAxis(); break;
 		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
-		
-	
+		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
+		case "-" : console.log("-"); mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
 	}
-	//console.log("Keycode: ",keyPressed.charCodeAt(0));
+	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);
 }
 tool.onKeyUp = function(event) {
 	//console.log("KeyEvent: ", event);
 	keyPressed = "";
 }
-
 
 tool.onMouseDown = function(event) {
 	var newClick = (new Date).getTime();

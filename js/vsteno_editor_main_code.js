@@ -1,13 +1,5 @@
 
-var parallelRotatingAxisTest = new Path();
-
 // global variables
-// auxiliary lines to test bezier curves
-var outerLines = new Path();
-var innerLines = new Path();
-var tangent = new Path();
-
-//var editor = new TEDrawingArea(new Point(100, 500), 4, 1, 10, 10);
 var mainCanvas = new TECanvas(0,0,800,800);
 	
 // global event handlers and variables
@@ -26,6 +18,12 @@ var knotTypeAutoDefine = true,
 	colorSelectedKnot = '#aaa',
 	colorMarkedKnot = '#FFFC00';
 	
+// rotating axis
+var colorParallelRotatingAxisUnselected = '#0f0',
+	colorParallelRotatingAxisSelected = '#f00',
+	colorMainRotatingAxisSelected = colorParallelRotatingAxisSelected,
+	colorMainRotatingAxisUnselected = colorParallelRotatingAxisUnselected;
+	
 var tangentPrecision = 0.001,
 	tangentFixPointMaxIterations = 200,
 	tangentBetweenCurvesMaxIterations = 4;
@@ -34,14 +32,12 @@ var keyPressed = "";
 var arrowUp = false,			// global variables for arrow keys
 	arrowDown = false,
 	arrowLeft = false,
-	arrowRight = false;
+	arrowRight = false,
+	ctrlKey = false;
 	
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
  
-//var thicknessSlider = new TEThicknessSlider(100, 550, 400, 20, "L");
-//var thicknessSliders = new TETwoGroupedThicknessSliders(null, 100, 500, 400, 70);
-
 // main classes
 // class TECanvas (main container for complete drawing area)
 function TECanvas(x, y, width, height) {
@@ -52,13 +48,10 @@ function TECanvas(x, y, width, height) {
 	this.height = height;
 	// objects
 	// main editor
-	//this.editor = new TEDrawingArea(this, new Point(100, 500), 4, 1, 10, 10);
 	this.editor = new TEDrawingArea(this, new Point(100, 450), 4, 1, 10, 10);
 	// sliders
 	this.tensionSliders = new TETwoGroupedTensionSliders(this, this.editor.rightX+10, this.editor.upperY, 80, this.editor.lowerY-this.editor.upperY);
 	this.thicknessSliders = new TETwoGroupedThicknessSliders(this, this.editor.leftX, this.editor.lowerY+30, this.editor.rightX - this.editor.leftX, 70);
-	//console.log("TwoGroupedSliders: BEFORE:", this.thicknessSliders);
-
 }
 TECanvas.prototype.handleEvent = function(event) {
 	//console.log("TECanvas.handleEvent()");
@@ -71,9 +64,6 @@ TECanvas.prototype.handleEvent = function(event) {
 	}
 	//this.crossUpdateSliderAndFreehandCurve();
 }
-//TECanvas.prototype.crossUpdateSliderAndFreehandCurve() {
-	
-//}
 
 // enable right clicks
 /* doesn't work: unfortunately the oncontextmenu-method is called after the tool.nomouse-methods ...
@@ -94,28 +84,47 @@ window.oncontextmenu = function(event) {
 document.onkeydown = checkSpecialKeys; 
 function checkSpecialKeys(e) {
 	e = e || window.event;
-	if (e.keyCode == '38') {
-        arrowUp = true; // up arrow
-        //console.log("arrowUP");
-    }
-    else if (e.keyCode == '40') {
-        arrowDown = true; // down arrow
-		//console.log("arrowDown");
-    }
-    else if (e.keyCode == '37') {
-       arrowLeft = true; // left arrow
-	   mainCanvas.editor.editableToken.selectPreceedingKnot();
-	   // for following line: see comment in freehand => setKnotType()
-	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
-	   //console.log("arrowLeft");
-    }
-    else if (e.keyCode == '39') {
-       arrowRight = true; // right arrow
-	   mainCanvas.editor.editableToken.selectFollowingKnot();
-	   // for following line: see comment in freehand => setKnotType()
-	   mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
-	   //console.log("arrowRight");
-    }
+	if (e.ctrlKey) ctrlKey = true;
+    else ctrlKey = false;
+    if (ctrlKey) {
+		if (e.keyCode == '38') {
+			arrowUp = true; // up arrow
+			//console.log("arrowUP");
+		} else if (e.keyCode == '40') {
+			arrowDown = true; // down arrow
+			//console.log("arrowDown");
+		} else if (e.keyCode == '37') {
+			arrowLeft = true; // left arrow
+			mainCanvas.editor.rotatingAxis.parallelRotatingAxis.selectPreceedingAxis();
+			// for following line: see comment in freehand => setKnotType()
+			
+		} else if (e.keyCode == '39') {
+			arrowRight = true; // right arrow
+			mainCanvas.editor.rotatingAxis.parallelRotatingAxis.selectFollowingAxis();
+			//console.log("arrowRight");
+		}	
+	} else {
+		if (e.keyCode == '38') {
+			arrowUp = true; // up arrow
+			//console.log("arrowUP");
+		} else if (e.keyCode == '40') {
+			arrowDown = true; // down arrow
+			//console.log("arrowDown");
+		} else if (e.keyCode == '37') {
+			arrowLeft = true; // left arrow
+			mainCanvas.editor.editableToken.selectPreceedingKnot();
+			// for following line: see comment in freehand => setKnotType()
+			mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
+			//console.log("arrowLeft");
+		} else if (e.keyCode == '39') {
+			arrowRight = true; // right arrow
+			mainCanvas.editor.editableToken.selectFollowingKnot();
+			// for following line: see comment in freehand => setKnotType()
+			mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
+			//console.log("arrowRight");
+		}
+	}    
+	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
 }
 document.onkeyup = function resetSpecialKeys() {
 	arrowUp = false;
@@ -123,23 +132,6 @@ document.onkeyup = function resetSpecialKeys() {
 	arrowLeft = false;
 	arrowRight = false;
 }
-
-
-// test
-/*
-function makeVisible() {
-	console.log("make visible");
-	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
-	mainCanvas.thicknessSliders.showHorizontalSliders();
-	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
-}
-function makeInvisible() {
-	console.log("make invisible");
-	console.log("TwoGroupedSliders: BEFORE:", mainCanvas.thicknessSliders);
-	mainCanvas.thicknessSliders.hideHorizontalSliders();
-	console.log("TwoGroupedSliders: AFTER:", mainCanvas.thicknessSliders);
-}
-*/
 
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
@@ -155,24 +147,20 @@ tool.onKeyDown = function(event) {
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
 		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
-		//case "v" : makeVisible(); break; // show thickness slider (test)
-		//case "i" : makeInvisible(); break; // hide thickness slider (test)
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
-		case "x" : mainCanvas.editor.editableToken.setParallelRotatingAxis(); break;
 		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
-		
-	
+		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
+		case "-" : console.log("-"); mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
 	}
-	//console.log("Keycode: ",keyPressed.charCodeAt(0));
+	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);
 }
 tool.onKeyUp = function(event) {
 	//console.log("KeyEvent: ", event);
 	keyPressed = "";
 }
-
 
 tool.onMouseDown = function(event) {
 	var newClick = (new Date).getTime();

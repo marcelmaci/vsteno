@@ -22,7 +22,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.dottedGrid = new TEDottedGrid(this, '#000');
 	this.auxiliarySystemLines = new TEAuxiliarySystemLines(this, '#000');
 	this.auxiliaryVerticalLines = new TEAuxiliaryVerticalLines(this, '#000');
-	this.rotatingAxis = new TERotatingAxis(this, '#0f0');
+	this.rotatingAxis = new TERotatingAxis(this, '#0f0'); // colorMainRotatingAxisSelected);
 	this.coordinateLabels = new TECoordinatesLabels(this); // coordinateLabels depends on rotatingAxis!
 	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
 	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
@@ -36,7 +36,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	// token that is edited
 	this.actualToken = new TEEditableToken();
 	
-// actual selected itemsModifiableCircle
+	// actual selected itemsModifiableCircle
 	this.markedIndex = 0;			// 0 = preceeding connection point; 1,2,3 ... n = freehand circles; 99999 = following connection point
 
 	// freehand path
@@ -44,7 +44,6 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.fhCircleColor = null;
 	this.editableToken = new TEEditableToken(this);
 	this.fhToken = new Path();
-	//this.fhToken.fullySelected = true;
 	this.fhToken.strokeColor = '#000';
 
 	// initialize marked circle and index
@@ -68,8 +67,7 @@ TEDrawingArea.prototype.setMarkedCircle = function(circle) { // type TEVisuallyM
 			// default is not needed: if this.markedCircle is part of editableToken, index is set automatically
 			// via the identify method (which is called in the if statement)
 		}
-	} //else this
-	//console.log("index set to: ", this.editableToken.index);
+	}
 }
 TEDrawingArea.prototype.calculateFreehandHandles = function() {
 	numberOfPoints = this.fhToken.segments.length;
@@ -277,48 +275,24 @@ TEDrawingArea.prototype.handleMouseDown = function( event ) {
 		this.fhToken.insert(this.editableToken.index, event.point) // path doesn't have slice method - use insert method instead (same functionality)
 		//console.log("insertNewKnot: ", event.point);
 		this.editableToken.insertNewKnot(event.point);
-		
-		//this.editableToken.index += 1; // point to the newly inserted element
-		
-		//var length = this.rotatingAxis.relativeToken.knotsList.length;
-		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);		
 	}
 	this.connectPreceedingAndFollowing();
 	// link thickness sliders
-	//console.log("hi here: thicknessSliders: ", this.parent.thicknessSliders);
 	this.parent.thicknessSliders.linkEditableToken(this.editableToken);
-	
-	//console.log("TEDrawingArea.handleMouseDown: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-	//this.preceeding.connect();
-/*	this.following.connect();
-*/
 }
 TEDrawingArea.prototype.handleMouseUp = function( event ) {
 	//console.log("HandlingParent: ", this.handlingParent);
-	//console.log("TEDrawingArea.handleMouseUp1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);
 	}
-	//console.log("TEDrawingArea.handleMouseUp2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-
-	///*this.*/mouseDown = false;
 	this.mouseDownItem = null;
 	this.handlingParent = null;
 }
 TEDrawingArea.prototype.handleMouseDrag = function( event ) {
 	if (this.handlingParent != null) {
 		this.handlingParent.handleEvent(event);	
-		//var length = this.rotatingAxis.relativeToken.knotsList.length;
-		//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, length);
-		
 	}
 	this.connectPreceedingAndFollowing();
-	
-		//this.preceeding.connect(); // update connecting point also
-/*		this.following.connect(); // update connecting point also
-*/
 }
 TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {
 	var value = this.preceeding.identify(item);
@@ -336,43 +310,26 @@ TEDrawingArea.prototype.getTEDrawingAreaObject = function(item) {
 	}
 	return value;
 }
-TEDrawingArea.prototype.isDynamic = function(item) {
-	
+/* some remains from ancient times (Atlantis?:)
+TEDrawingArea.prototype.isDynamic = function(item) {	
 }
 TEDrawingArea.prototype.isStatic = function(item) {
 }
-
+*/
 TEDrawingArea.prototype.handleEvent = function(event) {
 	//console.log("TEDrawingArea.handleEvent()", event);
-	//if (event.item != null) {
-	//console.log("mouseEvent: ", event);
-	//console.log("TEDrawingArea.handleEvent0: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-		if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
-			switch (event.type) {
-				case "mousedown" : this.handleMouseDown(event); break;
-				case "mouseup" : 
-				//console.log("TEDrawingArea.handleEvent0.4: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-				this.handleMouseUp(event); 
-				//console.log("TEDrawingArea.handleEvent0.6: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-				break;
-				case "mousedrag" : this.handleMouseDrag(event); break;
-			}
-			//console.log("TEDrawingArea.handleEvent1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
-			//var index = this.rotatingAxis.relativeToken.index;
-			//this.rotatingAxis.relativeToken.updateRelativeCoordinates(event.point.x, event.point.y, index);
-			this.updateFreehandPath();
-			this.knotLabel.updateLabel();
+	if ((event.point.x >= this.leftX) && (event.point.x <= this.rightX) && (event.point.y >= this.upperY) && (event.point.y <= this.lowerY)) {	
+		switch (event.type) {
+			case "mousedown" : this.handleMouseDown(event); break;
+			case "mouseup" : this.handleMouseUp(event); break;
+			case "mousedrag" : this.handleMouseDrag(event); break;
 		}
-	//}
-	//console.log("TEDrawingArea.handleEvent2: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
-	
+		//console.log("TEDrawingArea.handleEvent1: selected/marked: ", this.parent.editor.editableToken.selectedKnot, this.parent.editor.editableToken.markedKnot);
+		this.updateFreehandPath();
+		this.knotLabel.updateLabel();
+	}
 }
 TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();
 	this.following.connect();	
 }
-
