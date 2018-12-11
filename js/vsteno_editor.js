@@ -402,10 +402,16 @@ function TEKnotType() {
 function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, markedColor, link) {
     this.linkToRelativeKnot = link;
     this.type = new TEKnotType();
+    
+    // the following 3 properties will become obsolete
     this.shiftX = 0.0;	// shifting values for additional rotating axis
 	this.shiftY = 0.0;  // now, if you believe that this is a constructor that will set shifX/Y to number 0, forget it! ShiftX/Y are reported as NaN ... (I hate JS ...) 
 						// ok, got it: shiftX = 0 leads to NaN, shiftX = 0.0 leads to 0 ... (did I mention that I hate JS ... ?!)
     this.parallelRotatingAxisType = "horizontal"; // horizontal: shiftX is horizontal; orthogonal: shiftX is orthogonal (= compensation for inclination angle)
+    // they are replaced by a link to a parallel rotation axis
+    this.linkToParallelRotatingAxis = null;	// will be set by setKnotType
+    
+    
     this.tensions = [t1, t2, t1, t2, t1, t2];	// tensions must be controlled individually for left, middle and right path/outer shape (set them all to the same value to start)
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
@@ -558,7 +564,11 @@ TEEditableToken.prototype.setKnotType = function(type) {
 	// Result: doesn't work because if actual knot is selected by default
 	// (e.g. after insertion with mouse), no keyboard action ocurrs ...
 	// OTHER SOLUTION: do not deselect knot in mouseUp event-handler any 
-	// more ... ?!
+	// more ... ?! => seems to work
+	
+	// new: knot is linked to parallel rotating axis
+	//this.markedKnot.linkToParallelRotatingAxis = this.parent.rotatingAxis.parallelRotatingAxis.getLinkToParallelRotatingAxis();
+	
 	switch (type) {
 		case "orthogonal" : this.markedKnot.changeCircleToRectangle(); 
 							var x = this.selectedKnot.circle.position.x,
@@ -577,7 +587,17 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
-		case "proportional" : this.markedKnot.changeKnotToProportional();
+		case "proportional" : 
+							// new: knot is linked to parallel rotating axis
+							// for test: just link the knot for the moment
+							this.markedKnot.linkToParallelRotatingAxis = this.parent.rotatingAxis.parallelRotatingAxis.getLinkToParallelRotatingAxis();
+							//console.log("Type rotating axis: ", this.markedKnot.linkToParallelRotatingAxis.type);
+							// try the easy solution first: use old shiftX and type properties and copy values instead of linking
+							this.markedKnot.shiftX = this.markedKnot.linkToParallelRotatingAxis.shiftX;
+							this.markedKnot.parallelRotatingAxisType = this.markedKnot.linkToParallelRotatingAxis.type;
+							//console.log("shiftX/type: ", this.markedKnot.shiftX, this.markedKnot.parallelRotatingAxisType);
+							
+							this.markedKnot.changeKnotToProportional();
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "proportional");
@@ -1083,6 +1103,8 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				//console.log("visuallyModifiableKnot: ", visuallyModifiableKnot);
 				
 				var shiftX = visuallyModifiableKnot.shiftX;
+				//var shiftX = visuallyModifiableKnot.linkToParallelRotatingAxis.shiftX; // new: take shiftX from linked axis
+				
 				//console.log("shiftX to calculate relative coordinates: ", shiftX);
 				// define return value
 				relative = [downScaledDistance1, downScaledDistance2 - shiftX];
@@ -1107,6 +1129,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 		rd2 = relativeTokenKnot.rd2,
 		type = relativeTokenKnot.type,
 		parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.parallelRotatingAxisType;
+		//parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.linkToParallelRotatingAxis.type; // new: take type from linked axis
+		
 	switch (type) {
 		case "horizontal" : 
 		
@@ -1197,6 +1221,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				// get shiftX for parallel rotating axis
 				//var edTok = mainCanvas.editor.editableToken;		// brutally ugly ... change that in a free minute!
 				var shiftX = relativeTokenKnot.linkToVisuallyModifiableKnot.shiftX;
+				//var shiftX = relativeTokenKnot.linkToVisuallyModifiableKnot.linkToParallelRotatingAxis.shiftX; // new: take shiftX from linked axis
+				
 				//console.log("shiftX from knotsList: ", shiftX);
 				var upscaledShiftX = shiftX * this.parent.scaleFactor;
 				// calculate final absolute point (vector 1 + vector 2) + ox/oy
@@ -2587,6 +2613,9 @@ function TEParallelRotatingAxisGrouper(parent) {
 	this.mainSelected = true;
 	this.newAxisList = [new TEParallelRotatingAxis(0, "main")];	// add "dummy" main axis
 }
+TEParallelRotatingAxisGrouper.prototype.getLinkToParallelRotatingAxis = function() {
+	return this.newAxisList[this.selectedAxis];
+}
 // new method for manual insertion
 TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	// add axis from left to right (in order to select them with CTRL-arrow left/right)
@@ -3085,7 +3114,7 @@ tool.onKeyDown = function(event) {
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
 		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
 		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
-		case "-" : console.log("-"); mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
+		case "-" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
 	}
 	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);

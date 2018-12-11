@@ -12,6 +12,9 @@ function TEParallelRotatingAxisGrouper(parent) {
 	this.mainSelected = true;
 	this.newAxisList = [new TEParallelRotatingAxis(0, "main")];	// add "dummy" main axis
 }
+TEParallelRotatingAxisGrouper.prototype.getLinkToParallelRotatingAxis = function() {
+	return this.newAxisList[this.selectedAxis];
+}
 // new method for manual insertion
 TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	// add axis from left to right (in order to select them with CTRL-arrow left/right)

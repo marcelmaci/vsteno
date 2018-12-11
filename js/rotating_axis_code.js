@@ -332,6 +332,8 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				//console.log("visuallyModifiableKnot: ", visuallyModifiableKnot);
 				
 				var shiftX = visuallyModifiableKnot.shiftX;
+				//var shiftX = visuallyModifiableKnot.linkToParallelRotatingAxis.shiftX; // new: take shiftX from linked axis
+				
 				//console.log("shiftX to calculate relative coordinates: ", shiftX);
 				// define return value
 				relative = [downScaledDistance1, downScaledDistance2 - shiftX];
@@ -356,6 +358,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 		rd2 = relativeTokenKnot.rd2,
 		type = relativeTokenKnot.type,
 		parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.parallelRotatingAxisType;
+		//parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.linkToParallelRotatingAxis.type; // new: take type from linked axis
+		
 	switch (type) {
 		case "horizontal" : 
 		
@@ -446,6 +450,8 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				// get shiftX for parallel rotating axis
 				//var edTok = mainCanvas.editor.editableToken;		// brutally ugly ... change that in a free minute!
 				var shiftX = relativeTokenKnot.linkToVisuallyModifiableKnot.shiftX;
+				//var shiftX = relativeTokenKnot.linkToVisuallyModifiableKnot.linkToParallelRotatingAxis.shiftX; // new: take shiftX from linked axis
+				
 				//console.log("shiftX from knotsList: ", shiftX);
 				var upscaledShiftX = shiftX * this.parent.scaleFactor;
 				// calculate final absolute point (vector 1 + vector 2) + ox/oy

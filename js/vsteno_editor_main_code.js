@@ -152,7 +152,7 @@ tool.onKeyDown = function(event) {
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
 		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
 		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
-		case "-" : console.log("-"); mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
+		case "-" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
 	}
 	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);
