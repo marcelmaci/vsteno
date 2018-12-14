@@ -601,6 +601,7 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "proportional");
+							console.log("setKnotType(proportional): relative[]: ", relative);
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
@@ -838,6 +839,8 @@ TERotatingAxisRelativeToken.prototype.updateRelativeCoordinates = function(tempS
 function TERotatingAxis(drawingArea, color) {
 	this.parent = drawingArea;
 	this.shiftX = 0; // add this property for compatibility with parallel rotating axis
+	this.type = "orthogonal"; // idem
+	
 	this.selected = true; // start with main rotating axis selected
 	this.absBasePosition = this.parent.lowerY - (this.parent.basePosition * this.parent.lineHeight * this.parent.scaleFactor);
 	this.centerRotatingAxis = new Point((this.parent.rightX - this.parent.leftX)/2+this.parent.leftX, this.absBasePosition);
@@ -1044,6 +1047,7 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 	if (visuallyModifiableKnot.linkToRelativeKnot !== null) type = visuallyModifiableKnot.linkToRelativeKnot.type;
 	var x = visuallyModifiableKnot.circle.position.x,
 		y = visuallyModifiableKnot.circle.position.y; 
+	console.log("TERotatingAxis.getRelativeCoordinates(): x, y, type: ", x, y, type);
 	
 	var relative = null;
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
@@ -1073,6 +1077,8 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 		
 		break;
 		case "proportional" : 
+				var shiftX = visuallyModifiableKnot.shiftX;
+				
 				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
 				delta1X = intersection[0] - this.centerRotatingAxis.x;
@@ -1085,10 +1091,22 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				delta2X = intersection[0] - x;
 				delta2Y = intersection[1] - y;
 				distance2 = Math.sqrt(delta2X*delta2X + delta2Y*delta2Y);
+				//console.log("delta2X/Y: distance2: ", delta2X, delta2Y, distance2);
 				// scale them down
 				//console.log("y/intersection(1)/delta1X/delta1Y/distance1/scaleFactor: ", y/intersection[1], delta1X, delta1Y, distance1, this.parent.scaleFactor);
-				downScaledDistance1 = distance1 / this.parent.scaleFactor;
+				// downScaledDistance1 = distance1 / this.parent.scaleFactor; // do that later so that parallel rotating axis distance can be calculated
 				downScaledDistance2 = distance2 / this.parent.scaleFactor;
+				// calculate intersection with parallel rotating axis (i.e. shiftX != 0, works also for shiftX == 0)
+				// calculate intersection point
+				var px = x + (delta2X / downScaledDistance2) * (downScaledDistance2 + shiftX);
+				var py = y + (delta2Y / downScaledDistance2) * (downScaledDistance2 + shiftX);
+				var deltaPX = px - this.centerRotatingAxis.x - (shiftX * this.parent.scaleFactor);
+				var deltaPY = py - this.centerRotatingAxis.y;
+				//console.log("deltaPX/Y: ", deltaPX, deltaPY);
+				var distanceParallel = Math.sqrt((deltaPX*deltaPX)+(deltaPY*deltaPY));
+				distance1 = distanceParallel;
+				downScaledDistance1 = distance1 / this.parent.scaleFactor;
+				//console.log("P(x,y): parallelDistance: ", px, py, distanceParallel, downScaledDistance1);
 				// add direction for distance (positive or negative)
 				if (x<intersection[0]) downScaledDistance2 = -downScaledDistance2; // + = left side, - = right side of rotating axis
 				if (y>this.centerRotatingAxis.y) downScaledDistance1 = -downScaledDistance1; // - = below baseline / + = above baseline
@@ -1102,9 +1120,9 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				// get shiftX value for parallel rotating axis
 				//console.log("visuallyModifiableKnot: ", visuallyModifiableKnot);
 				
-				var shiftX = visuallyModifiableKnot.shiftX;
+				//var shiftX = visuallyModifiableKnot.shiftX;
 				//var shiftX = visuallyModifiableKnot.linkToParallelRotatingAxis.shiftX; // new: take shiftX from linked axis
-				
+				//console.log("downScaledDistance2 (alias rd2): ", downScaledDistance2);
 				//console.log("shiftX to calculate relative coordinates: ", shiftX);
 				// define return value
 				relative = [downScaledDistance1, downScaledDistance2 - shiftX];
@@ -1130,6 +1148,7 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 		type = relativeTokenKnot.type,
 		parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.parallelRotatingAxisType;
 		//parallelRotatingAxisType = relativeTokenKnot.linkToVisuallyModifiableKnot.linkToParallelRotatingAxis.type; // new: take type from linked axis
+	//console.log("TERotatingAxis.getAbsoluteCoordinates(relativeToken): rd1/2, type1/2: ", rd1, rd2, type, parallelRotatingAxisType);
 		
 	switch (type) {
 		case "horizontal" : 
@@ -1211,6 +1230,7 @@ TERotatingAxis.prototype.getAbsoluteCoordinates = function(relativeTokenKnot) {
 				switch (parallelRotatingAxisType) {
 					case "horizontal" : rd2Proportional = rd2 * sinAngle; break;
 					case "orthogonal" : rd2Proportional = rd2; break;  // keep same distance indepent from inclination
+					case "main" : rd2Proportional = rd2; break; // treat main like orthogonal
 				}
 				// calculate new point on rotating axis vector
 				var rnx = rdx * rd1Proportional * this.parent.scaleFactor,
@@ -2621,17 +2641,24 @@ TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	// add axis from left to right (in order to select them with CTRL-arrow left/right)
 	var defaultValue = 0;
 	var shiftX = Number(prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue));
+	var where = undefined;
 	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
-		var i = 0, length = this.newAxisList.length, type = "orthogonal";
-		for (i = 0; i < length; i++) {
-			if ((i == 0) && (shiftX < this.newAxisList[i].shiftX)) break;
-			if (shiftX > this.newAxisList[i]) break;
-			//console.log("i: shiftX/newAxis.shiftX: ", i, shiftX, this.newAxisList[i].shiftX);
+		var i = 0, length = this.newAxisList.length, type = "orthogonal", val1 = -99999999; val2 = 0;
+		//console.log("start: i, length, shiftX: ", i, length, shiftX);
+		while ((i < length) && (where == undefined)) {
+			val2 = this.newAxisList[i].shiftX;
+			//console.log("test i: val1 < shiftX < val2: ", i, val1, shiftX, val2);
+			if ((val1 < shiftX) && (shiftX < val2)) where = i;
+			val1 = val2;
+			i++;
 		}
+		if (where == undefined) where = length;
+		
 		//console.log("TEParallelRotatingAxisGrouper.addParallelAxis(): i/shiftX/type: ", i, shiftX, type);
 		var newParallelAxis = new TEParallelRotatingAxis(shiftX, type);
 		newParallelAxis.line.strokeColor = '#00f';
-		this.newAxisList.splice(i, 0, newParallelAxis);
+		//console.log("where: ", where);
+		this.newAxisList.splice(where, 0, newParallelAxis);
 		this.selectedAxis = i;
 		this.mainSelected = false;
 		this.parent.parent.rotatingAxis.unselect();

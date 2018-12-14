@@ -20,17 +20,24 @@ TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	// add axis from left to right (in order to select them with CTRL-arrow left/right)
 	var defaultValue = 0;
 	var shiftX = Number(prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue));
+	var where = undefined;
 	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
-		var i = 0, length = this.newAxisList.length, type = "orthogonal";
-		for (i = 0; i < length; i++) {
-			if ((i == 0) && (shiftX < this.newAxisList[i].shiftX)) break;
-			if (shiftX > this.newAxisList[i]) break;
-			//console.log("i: shiftX/newAxis.shiftX: ", i, shiftX, this.newAxisList[i].shiftX);
+		var i = 0, length = this.newAxisList.length, type = "orthogonal", val1 = -99999999; val2 = 0;
+		//console.log("start: i, length, shiftX: ", i, length, shiftX);
+		while ((i < length) && (where == undefined)) {
+			val2 = this.newAxisList[i].shiftX;
+			//console.log("test i: val1 < shiftX < val2: ", i, val1, shiftX, val2);
+			if ((val1 < shiftX) && (shiftX < val2)) where = i;
+			val1 = val2;
+			i++;
 		}
+		if (where == undefined) where = length;
+		
 		//console.log("TEParallelRotatingAxisGrouper.addParallelAxis(): i/shiftX/type: ", i, shiftX, type);
 		var newParallelAxis = new TEParallelRotatingAxis(shiftX, type);
 		newParallelAxis.line.strokeColor = '#00f';
-		this.newAxisList.splice(i, 0, newParallelAxis);
+		//console.log("where: ", where);
+		this.newAxisList.splice(where, 0, newParallelAxis);
 		this.selectedAxis = i;
 		this.mainSelected = false;
 		this.parent.parent.rotatingAxis.unselect();
