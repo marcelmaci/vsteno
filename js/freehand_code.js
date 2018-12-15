@@ -220,7 +220,7 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "proportional");
-							console.log("setKnotType(proportional): relative[]: ", relative);
+							// console.log("setKnotType(proportional): relative[]: ", relative);
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
@@ -328,11 +328,18 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	//var newLength = this.knotsList.length;
 	// insert knot vectors for outer shape
 	//var distance = ((this.index == 0) || (this.index == newLength-1)) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	// define vectors for normal shape
 	var distance = 1;
 	var leftVector = new TEKnotVector(distance, "orthogonal");
 	var rightVector = new TEKnotVector(distance, "orthogonal");
 	this.leftVectors[0].splice(this.index,0, leftVector);
 	this.rightVectors[0].splice(this.index,0, rightVector);
+	// define vectors for shadowed shape
+	distance = 2;
+	leftVector = new TEKnotVector(distance, "orthogonal");
+	rightVector = new TEKnotVector(distance, "orthogonal");
+	this.leftVectors[1].splice(this.index,0, leftVector);
+	this.rightVectors[1].splice(this.index,0, rightVector);
 	//console.log("new leftVector: ", leftVector);
 	//console.log("array leftVectors: ", this.leftVectors[this.index]);
 	// automatically define knot type if autodefine is set
@@ -371,12 +378,15 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	this.parent.setMarkedCircle(this.selectedKnot);
 	// remove: circle, knot, lines and vectors
 	// bug: there's something wrong with the lines (they remain on drawing area as zombies ... ;-)
-	this.knotsList[this.index-1].circle.remove(); // make control circle invisible (should be deleted)
+	this.knotsList[this.index-1].circle.remove(); // remove control circle
 	this.knotsList.splice(this.index-1, 1); // deletes 1 element at index and reindexes array
-	this.leftVectors[0][this.index-1].line.removeSegments();
-	this.leftVectors[0].splice(this.index-1, 1);
-	this.rightVectors[0][this.index-1].line.removeSegments();
-	this.rightVectors[0].splice(this.index-1, 1);
+	for (var i=0; i<2; i++) {
+		// delete both vectors (for normal and shadowed shape)
+		this.leftVectors[i][this.index-1].line.removeSegments();
+		this.leftVectors[i].splice(this.index-1, 1);
+		this.rightVectors[i][this.index-1].line.removeSegments();
+		this.rightVectors[i].splice(this.index-1, 1);
+	}
 	// remove also relative knot in relative token (rotating axis)
 	this.parent.rotatingAxis.relativeToken.knotsList.splice(this.index-1,1); // do the same with relative token
 	this.parent.fhToken.removeSegment(this.index-1); // do the same with path

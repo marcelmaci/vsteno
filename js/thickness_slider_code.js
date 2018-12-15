@@ -213,7 +213,7 @@ function TETwoGroupedThicknessSliders(parent, x1, y1, width, height) {
 	//this.tensionSlider1.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
 	//this.tensionSlider2.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
 }
-TETwoGroupedThicknessSliders.prototype.getSelectedShape = function() {
+TETwoGroupedThicknessSliders.prototype.getSelectedShapeAsString = function() {
 	switch (selectedShape) {
 		case "normal" : return "1"; break;
 		case "shadowed" : return "2"; break;
@@ -296,12 +296,42 @@ TETwoGroupedThicknessSliders.prototype.unlinkEditableToken = function() {
 	this.linkedEditableToken = null;
 	this.hideHorizontalSliders(); 
 }
+TETwoGroupedThicknessSliders.prototype.setOuterShapesVisibility = function() {
+	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.outerShape[]: ", this.parent.editor.editableToken.outerShape);
+	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.leftVectors[0]: ", this.parent.editor.editableToken.leftVectors[0]);
+	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.rightVectors[0]: ", this.parent.editor.editableToken.rightVectors[0]);
+	
+	switch (selectedShape) {
+		case "normal" : this.parent.editor.editableToken.outerShape[0].visible = true; 
+						this.parent.editor.editableToken.outerShape[1].visible = false;
+						// additionally, vectors must be set to invisible / invisible
+						for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
+							this.parent.editor.editableToken.leftVectors[0][i].line.visible = true; 
+							this.parent.editor.editableToken.rightVectors[0][i].line.visible = true;
+							this.parent.editor.editableToken.leftVectors[1][i].line.visible = false; 
+							this.parent.editor.editableToken.rightVectors[1][i].line.visible = false;
+						}
+						break;
+		case "shadowed" : this.parent.editor.editableToken.outerShape[0].visible = false; 
+						  this.parent.editor.editableToken.outerShape[1].visible = true;
+						  for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
+							  this.parent.editor.editableToken.leftVectors[0][i].line.visible = false; 
+							  this.parent.editor.editableToken.rightVectors[0][i].line.visible = false;
+							  this.parent.editor.editableToken.leftVectors[1][i].line.visible = true; 
+							  this.parent.editor.editableToken.rightVectors[1][i].line.visible = true;
+						   }
+						   break;
+	}
+	this.parent.editor.updateFreehandPath();
+}
 TETwoGroupedThicknessSliders.prototype.updateLabels = function() {
 	//console.log("TETwoGroupedThicknessSliders.updateLabels(): ", selectedShape);
-	var temp = this.getSelectedShape();
+	var temp = this.getSelectedShapeAsString();
 	//console.log("temp = ", temp, this.thicknessSlider1);
 	this.thicknessSlider1.title.content = "L" + temp;
 	this.thicknessSlider2.title.content = "R" + temp;
+	// update visibility of outer shape at the same time (I know: not the orthodox place to do that, but practical ... ;-)
+	this.setOuterShapesVisibility();
 }
 /*
 TETwoGroupedThicknessSliders.prototype.setNewLabels = function() {

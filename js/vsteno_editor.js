@@ -601,7 +601,7 @@ TEEditableToken.prototype.setKnotType = function(type) {
 							var x = this.selectedKnot.circle.position.x,
 								y = this.selectedKnot.circle.position.y;
 							var relative = this.parent.rotatingAxis.getRelativeCoordinates(this.selectedKnot, "proportional");
-							console.log("setKnotType(proportional): relative[]: ", relative);
+							// console.log("setKnotType(proportional): relative[]: ", relative);
 							relativeTokenKnot.rd1 = relative[0];
 							relativeTokenKnot.rd2 = relative[1];
 							break;
@@ -709,11 +709,18 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	//var newLength = this.knotsList.length;
 	// insert knot vectors for outer shape
 	//var distance = ((this.index == 0) || (this.index == newLength-1)) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	// define vectors for normal shape
 	var distance = 1;
 	var leftVector = new TEKnotVector(distance, "orthogonal");
 	var rightVector = new TEKnotVector(distance, "orthogonal");
 	this.leftVectors[0].splice(this.index,0, leftVector);
 	this.rightVectors[0].splice(this.index,0, rightVector);
+	// define vectors for shadowed shape
+	distance = 2;
+	leftVector = new TEKnotVector(distance, "orthogonal");
+	rightVector = new TEKnotVector(distance, "orthogonal");
+	this.leftVectors[1].splice(this.index,0, leftVector);
+	this.rightVectors[1].splice(this.index,0, rightVector);
 	//console.log("new leftVector: ", leftVector);
 	//console.log("array leftVectors: ", this.leftVectors[this.index]);
 	// automatically define knot type if autodefine is set
@@ -752,12 +759,15 @@ TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	this.parent.setMarkedCircle(this.selectedKnot);
 	// remove: circle, knot, lines and vectors
 	// bug: there's something wrong with the lines (they remain on drawing area as zombies ... ;-)
-	this.knotsList[this.index-1].circle.remove(); // make control circle invisible (should be deleted)
+	this.knotsList[this.index-1].circle.remove(); // remove control circle
 	this.knotsList.splice(this.index-1, 1); // deletes 1 element at index and reindexes array
-	this.leftVectors[0][this.index-1].line.removeSegments();
-	this.leftVectors[0].splice(this.index-1, 1);
-	this.rightVectors[0][this.index-1].line.removeSegments();
-	this.rightVectors[0].splice(this.index-1, 1);
+	for (var i=0; i<2; i++) {
+		// delete both vectors (for normal and shadowed shape)
+		this.leftVectors[i][this.index-1].line.removeSegments();
+		this.leftVectors[i].splice(this.index-1, 1);
+		this.rightVectors[i][this.index-1].line.removeSegments();
+		this.rightVectors[i].splice(this.index-1, 1);
+	}
 	// remove also relative knot in relative token (rotating axis)
 	this.parent.rotatingAxis.relativeToken.knotsList.splice(this.index-1,1); // do the same with relative token
 	this.parent.fhToken.removeSegment(this.index-1); // do the same with path
@@ -1047,7 +1057,7 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 	if (visuallyModifiableKnot.linkToRelativeKnot !== null) type = visuallyModifiableKnot.linkToRelativeKnot.type;
 	var x = visuallyModifiableKnot.circle.position.x,
 		y = visuallyModifiableKnot.circle.position.y; 
-	console.log("TERotatingAxis.getRelativeCoordinates(): x, y, type: ", x, y, type);
+	//console.log("TERotatingAxis.getRelativeCoordinates(): x, y, type: ", x, y, type);
 	
 	var relative = null;
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
@@ -1819,12 +1829,20 @@ TEDrawingArea.prototype.copyKnotsToFreehandPath = function() {
 			this.fhToken.segments[i].point = this.editableToken.knotsList[i].circle.position;
 	}
 }
+TEDrawingArea.prototype.getSelectedShapeIndex = function() {
+	switch (selectedShape) {
+		case "normal" : return 0; break;
+		case "shadowed" : return 1; break;
+	}
+}
 TEDrawingArea.prototype.calculateLeftRightVectors = function() {
+	// define outer shape index
+	var actualShape = this.getSelectedShapeIndex();
 	// start with left vectors
 	var length = this.editableToken.knotsList.length;
 	for (var i=1; i<length-1; i++) {
 		var tempPosition = this.editableToken.knotsList[i].circle.position;
-		this.editableToken.leftVectors[0][i].line.removeSegments();
+		this.editableToken.leftVectors[actualShape][i].line.removeSegments();
 		// calculate vector and coordinates
 		// get point and relative control point
 		var p1 = this.editableToken.knotsList[i].circle.position;
@@ -1843,45 +1861,48 @@ TEDrawingArea.prototype.calculateLeftRightVectors = function() {
 		vectorY = vectorY / Math.avoidDivisionBy0(vectorLength);
 		// calculate new coordinates for left shape
 		// vector endpoint
-		var newLength = this.editableToken.leftVectors[0][i].distance * this.scaleFactor; //10; // 10 pixels
+		var newLength = this.editableToken.leftVectors[actualShape][i].distance * this.scaleFactor; //10; // 10 pixels
 		var endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
 		var startPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// draw left vector
-		this.editableToken.leftVectors[0][i].line.add( startPoint, endPoint); //[newX,newY]);
-		this.editableToken.leftVectors[0][i].line.strokeColor = '#000';
-		this.editableToken.leftVectors[0][i].line.visible = true;
+		this.editableToken.leftVectors[actualShape][i].line.add( startPoint, endPoint); //[newX,newY]);
+		this.editableToken.leftVectors[actualShape][i].line.strokeColor = '#000';
+		this.editableToken.leftVectors[actualShape][i].line.visible = true;
 		// calculate new coordinates for right shape
 		// flip vector by 180 degrees <=> negate x and y
 		vectorY = -vectorY;
 		vectorX = -vectorX;
 		// vector endpoint
-		newLength = this.editableToken.rightVectors[0][i].distance * this.scaleFactor; //10; // 10 pixels
+		newLength = this.editableToken.rightVectors[actualShape][i].distance * this.scaleFactor; //10; // 10 pixels
 		endPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// vector startpoint (outside circle)
 		newLength = 6;
 		startPoint = tempPosition + [vectorX * newLength, vectorY * newLength];
 		// draw right vector
-		this.editableToken.rightVectors[0][i].line.removeSegments();
-		this.editableToken.rightVectors[0][i].line.add( startPoint, endPoint); //[newX,newY]);
-		this.editableToken.rightVectors[0][i].line.strokeColor = '#000';
-		this.editableToken.rightVectors[0][i].line.visible = true;
+		this.editableToken.rightVectors[actualShape][i].line.removeSegments();
+		this.editableToken.rightVectors[actualShape][i].line.add( startPoint, endPoint); //[newX,newY]);
+		this.editableToken.rightVectors[actualShape][i].line.strokeColor = '#000';
+		this.editableToken.rightVectors[actualShape][i].line.visible = true;
 	}
 }
 TEDrawingArea.prototype.calculateOuterShapeHandles = function() {
+	// define outer shape index
+	var actualShape = this.getSelectedShapeIndex();
+	// define length
 	var length = this.editableToken.knotsList.length;
 	// set control points of entry knot to (0,0)
-	this.editableToken.outerShape[0].segments[0].handleIn = 0;
-	this.editableToken.outerShape[0].segments[0].handleOut = 0;
+	this.editableToken.outerShape[actualShape].segments[0].handleIn = 0;
+	this.editableToken.outerShape[actualShape].segments[0].handleOut = 0;
 	//console.log("Starting point: ", this.editableToken.outerShape.segments[0].point);
 	// recalculate handles of left shape
 	var p0, p1, p2, t1, t2, controlPoints, rc1, rc2;
 	for (var i=1; i<length-1; i++) {
 		// get 3 points for control point calculation (preceeding, actual, following)
-		p0 = this.editableToken.outerShape[0].segments[i-1].point;
-		p1 = this.editableToken.leftVectors[0][i].line.segments[1].point;
-		p2 = this.editableToken.outerShape[0].segments[i+1].point;
+		p0 = this.editableToken.outerShape[actualShape].segments[i-1].point;
+		p1 = this.editableToken.leftVectors[actualShape][i].line.segments[1].point;
+		p2 = this.editableToken.outerShape[actualShape].segments[i+1].point;
 		// get tensions
 		t1 = this.editableToken.knotsList[i].tensions[0];
 		t2 = this.editableToken.knotsList[i].tensions[1];
@@ -1891,24 +1912,24 @@ TEDrawingArea.prototype.calculateOuterShapeHandles = function() {
 		// values are absolute => make them relative and copy them to segment
 		rc1 = controlPoints[0]-p1;
 		rc2 = controlPoints[1]-p1;
-		this.editableToken.outerShape[0].segments[i].handleIn = rc1;
-		this.editableToken.outerShape[0].segments[i].handleOut = rc2;
+		this.editableToken.outerShape[actualShape].segments[i].handleIn = rc1;
+		this.editableToken.outerShape[actualShape].segments[i].handleOut = rc2;
 		//console.log("object: ",i,  this.editableToken.leftVectors[i].line.segments[1].point);
 	}
 	
 	// set control points of exit knot to (0,0)
-	this.editableToken.outerShape[0].segments[length-1].handleIn = 0;
-	this.editableToken.outerShape[0].segments[length-1].handleOut = 0;
+	this.editableToken.outerShape[actualShape].segments[length-1].handleIn = 0;
+	this.editableToken.outerShape[actualShape].segments[length-1].handleOut = 0;
 	
 	// calculate right shape control points (backwards)
 	//console.log("End point: ", this.editableToken.outerShape.segments[length-1].point);
 	var continueIndex = length;
 	for (var i=length-2; i>0; i--) {
 		// get 3 points for control point calculation (preceeding, actual, following)
-		p0 = this.editableToken.outerShape[0].segments[continueIndex-1].point;  
-		p1 = this.editableToken.outerShape[0].segments[continueIndex].point;
+		p0 = this.editableToken.outerShape[actualShape].segments[continueIndex-1].point;  
+		p1 = this.editableToken.outerShape[actualShape].segments[continueIndex].point;
 		// modulo = wrap around at the end (lenght of outerShape = 2*length - 2, because start/end points are only inserted 1x)
-		p2 = this.editableToken.outerShape[0].segments[(continueIndex+1)%(2*length-2)].point;
+		p2 = this.editableToken.outerShape[actualShape].segments[(continueIndex+1)%(2*length-2)].point;
 		// get tensions
 		t1 = this.editableToken.knotsList[i].tensions[5];	// tensions have to be inversed 
 		t2 = this.editableToken.knotsList[i].tensions[4];	// due to backwards calculation
@@ -1918,43 +1939,46 @@ TEDrawingArea.prototype.calculateOuterShapeHandles = function() {
 		// values are absolute => make them relative and copy them to segment
 		rc1 = controlPoints[0]-p1;
 		rc2 = controlPoints[1]-p1;
-		this.editableToken.outerShape[0].segments[continueIndex].handleIn = rc1;
-		this.editableToken.outerShape[0].segments[continueIndex].handleOut = rc2;		
+		this.editableToken.outerShape[actualShape].segments[continueIndex].handleIn = rc1;
+		this.editableToken.outerShape[actualShape].segments[continueIndex].handleOut = rc2;		
 		continueIndex++;
 	}
 	// starting point control point values have already been written
 }
 TEDrawingArea.prototype.calculateOuterShape = function() {
+	// define outer shape index
+	var actualShape = this.getSelectedShapeIndex();
+	// define length
 	var length = this.editableToken.knotsList.length;
-	this.editableToken.outerShape[0].removeSegments();
+	this.editableToken.outerShape[actualShape].removeSegments();
 	// add first segment = entry point
-	this.editableToken.outerShape[0].add(this.editableToken.knotsList[0].circle.position);
+	this.editableToken.outerShape[actualShape].add(this.editableToken.knotsList[0].circle.position);
 	// add points of left shape
 	var tempPoint, handleIn, handleOut;
 	for (var i=1; i<length-1; i++) {
-		tempPoint = this.editableToken.leftVectors[0][i].line.segments[1].point;
+		tempPoint = this.editableToken.leftVectors[actualShape][i].line.segments[1].point;
 		handleIn = this.fhToken.segments[i].handleIn;	// not correct
 		handleOut = this.fhToken.segments[i].handleOut;	// not correct
-		this.editableToken.outerShape[0].add(new Segment(tempPoint, handleIn, handleOut));
+		this.editableToken.outerShape[actualShape].add(new Segment(tempPoint, handleIn, handleOut));
 	//console.log("object: ",i,  this.editableToken.leftVectors[i].line.segments[1].point);
 	}
 	
 	// add end point
-	this.editableToken.outerShape[0].add(this.editableToken.knotsList[length-1].circle.position);
+	this.editableToken.outerShape[actualShape].add(this.editableToken.knotsList[length-1].circle.position);
 	// add right shape backwards
 	var tempPoint, handleIn, handleOut;
 	for (var i=length-2; i>0; i--) {
-		tempPoint = this.editableToken.rightVectors[0][i].line.segments[1].point;
+		tempPoint = this.editableToken.rightVectors[actualShape][i].line.segments[1].point;
 		// inverse handleIn / handleOut (since elements are inserted backwards)
 		handleOut = this.fhToken.segments[i].handleIn; // not correct
 		handleIn = this.fhToken.segments[i].handleOut; // not correct
-		this.editableToken.outerShape[0].add(new Segment(tempPoint, handleIn, handleOut));			
+		this.editableToken.outerShape[actualShape].add(new Segment(tempPoint, handleIn, handleOut));			
 	}
 	// no need to add starting point again => just close path
-	this.editableToken.outerShape[0].closePath();
+	this.editableToken.outerShape[actualShape].closePath();
 
 	// set color
-	this.editableToken.outerShape[0].strokeColor = '#000';
+	this.editableToken.outerShape[actualShape].strokeColor = '#000';
 
 	// it's not correct to copy the control points (handles) from the middle path,
 	// outer paths are different (only tensions are equal)!
@@ -2508,7 +2532,7 @@ function TETwoGroupedThicknessSliders(parent, x1, y1, width, height) {
 	//this.tensionSlider1.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
 	//this.tensionSlider2.verticalSlider.rectangle.visible = false; 	// start with sliders hidden
 }
-TETwoGroupedThicknessSliders.prototype.getSelectedShape = function() {
+TETwoGroupedThicknessSliders.prototype.getSelectedShapeAsString = function() {
 	switch (selectedShape) {
 		case "normal" : return "1"; break;
 		case "shadowed" : return "2"; break;
@@ -2591,12 +2615,42 @@ TETwoGroupedThicknessSliders.prototype.unlinkEditableToken = function() {
 	this.linkedEditableToken = null;
 	this.hideHorizontalSliders(); 
 }
+TETwoGroupedThicknessSliders.prototype.setOuterShapesVisibility = function() {
+	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.outerShape[]: ", this.parent.editor.editableToken.outerShape);
+	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.leftVectors[0]: ", this.parent.editor.editableToken.leftVectors[0]);
+	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.rightVectors[0]: ", this.parent.editor.editableToken.rightVectors[0]);
+	
+	switch (selectedShape) {
+		case "normal" : this.parent.editor.editableToken.outerShape[0].visible = true; 
+						this.parent.editor.editableToken.outerShape[1].visible = false;
+						// additionally, vectors must be set to invisible / invisible
+						for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
+							this.parent.editor.editableToken.leftVectors[0][i].line.visible = true; 
+							this.parent.editor.editableToken.rightVectors[0][i].line.visible = true;
+							this.parent.editor.editableToken.leftVectors[1][i].line.visible = false; 
+							this.parent.editor.editableToken.rightVectors[1][i].line.visible = false;
+						}
+						break;
+		case "shadowed" : this.parent.editor.editableToken.outerShape[0].visible = false; 
+						  this.parent.editor.editableToken.outerShape[1].visible = true;
+						  for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
+							  this.parent.editor.editableToken.leftVectors[0][i].line.visible = false; 
+							  this.parent.editor.editableToken.rightVectors[0][i].line.visible = false;
+							  this.parent.editor.editableToken.leftVectors[1][i].line.visible = true; 
+							  this.parent.editor.editableToken.rightVectors[1][i].line.visible = true;
+						   }
+						   break;
+	}
+	this.parent.editor.updateFreehandPath();
+}
 TETwoGroupedThicknessSliders.prototype.updateLabels = function() {
 	//console.log("TETwoGroupedThicknessSliders.updateLabels(): ", selectedShape);
-	var temp = this.getSelectedShape();
+	var temp = this.getSelectedShapeAsString();
 	//console.log("temp = ", temp, this.thicknessSlider1);
 	this.thicknessSlider1.title.content = "L" + temp;
 	this.thicknessSlider2.title.content = "R" + temp;
+	// update visibility of outer shape at the same time (I know: not the orthodox place to do that, but practical ... ;-)
+	this.setOuterShapesVisibility();
 }
 /*
 TETwoGroupedThicknessSliders.prototype.setNewLabels = function() {

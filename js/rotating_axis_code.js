@@ -275,7 +275,7 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 	if (visuallyModifiableKnot.linkToRelativeKnot !== null) type = visuallyModifiableKnot.linkToRelativeKnot.type;
 	var x = visuallyModifiableKnot.circle.position.x,
 		y = visuallyModifiableKnot.circle.position.y; 
-	console.log("TERotatingAxis.getRelativeCoordinates(): x, y, type: ", x, y, type);
+	//console.log("TERotatingAxis.getRelativeCoordinates(): x, y, type: ", x, y, type);
 	
 	var relative = null;
 	var intersection, downScaledX, downScaledY, delta1X, delta1Y, delta2X, delta2Y, distance1, distance2, downScaledDistance1, downScaledDistance2;
