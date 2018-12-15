@@ -310,9 +310,9 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
 				delta1X = intersection[0] - this.centerRotatingAxis.x;
-				//console.log("delta1x: ", delta1X);
+				//console.log("delta1X: ", delta1X);
 				delta1Y = intersection[1] - this.centerRotatingAxis.y;
-				//console.log("delta1y: ", delta1Y);
+				//console.log("delta1Y: ", delta1Y);
 				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
 				//console.log("length vector 1: ", distance1);
 				// calculate distance intersection to knot
@@ -326,8 +326,8 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				downScaledDistance2 = distance2 / this.parent.scaleFactor;
 				// calculate intersection with parallel rotating axis (i.e. shiftX != 0, works also for shiftX == 0)
 				// calculate intersection point
-				var px = x + (delta2X / downScaledDistance2) * (downScaledDistance2 + shiftX);
-				var py = y + (delta2Y / downScaledDistance2) * (downScaledDistance2 + shiftX);
+				var px = x + (delta2X / Math.avoidDivisionBy0(downScaledDistance2)) * (downScaledDistance2 - Math.abs(shiftX));
+				var py = y + (delta2Y / Math.avoidDivisionBy0(downScaledDistance2)) * (downScaledDistance2 - Math.abs(shiftX));
 				var deltaPX = px - this.centerRotatingAxis.x - (shiftX * this.parent.scaleFactor);
 				var deltaPY = py - this.centerRotatingAxis.y;
 				//console.log("deltaPX/Y: ", deltaPX, deltaPY);

@@ -284,10 +284,11 @@ TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
 	this.linkedEditableToken = token;
 	var index = token.index-1;
 	//console.log("Link vector: ", index, token, token.leftVectors[index]);
-	this.thicknessSlider1.linkVector(token.leftVectors[0][index]);
-	this.thicknessSlider2.linkVector(token.rightVectors[0][index]);
+	var actualShape = this.parent.editor.getSelectedShapeIndex();
+	this.thicknessSlider1.linkVector(token.leftVectors[actualShape][index]);
+	this.thicknessSlider2.linkVector(token.rightVectors[actualShape][index]);
 	//console.log("Hi there:", token.leftVectors[index]);
-	this.setValues(token.leftVectors[0][index].distance, token.rightVectors[0][index].distance);	
+	this.setValues(token.leftVectors[actualShape][index].distance, token.rightVectors[actualShape][index].distance);	
 	this.showHorizontalSliders();
 	//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
 	//this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	

@@ -1092,9 +1092,9 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				var intersection = this.calculateOrthogonalIntersectionWithRotatingAxis(x,y);
 				// calculate distance origin to intersection
 				delta1X = intersection[0] - this.centerRotatingAxis.x;
-				//console.log("delta1x: ", delta1X);
+				//console.log("delta1X: ", delta1X);
 				delta1Y = intersection[1] - this.centerRotatingAxis.y;
-				//console.log("delta1y: ", delta1Y);
+				//console.log("delta1Y: ", delta1Y);
 				distance1 = Math.sqrt((delta1X*delta1X) + (delta1Y*delta1Y));
 				//console.log("length vector 1: ", distance1);
 				// calculate distance intersection to knot
@@ -1108,8 +1108,8 @@ TERotatingAxis.prototype.getRelativeCoordinates = function(visuallyModifiableKno
 				downScaledDistance2 = distance2 / this.parent.scaleFactor;
 				// calculate intersection with parallel rotating axis (i.e. shiftX != 0, works also for shiftX == 0)
 				// calculate intersection point
-				var px = x + (delta2X / downScaledDistance2) * (downScaledDistance2 + shiftX);
-				var py = y + (delta2Y / downScaledDistance2) * (downScaledDistance2 + shiftX);
+				var px = x + (delta2X / Math.avoidDivisionBy0(downScaledDistance2)) * (downScaledDistance2 - Math.abs(shiftX));
+				var py = y + (delta2Y / Math.avoidDivisionBy0(downScaledDistance2)) * (downScaledDistance2 - Math.abs(shiftX));
 				var deltaPX = px - this.centerRotatingAxis.x - (shiftX * this.parent.scaleFactor);
 				var deltaPY = py - this.centerRotatingAxis.y;
 				//console.log("deltaPX/Y: ", deltaPX, deltaPY);
@@ -2603,10 +2603,11 @@ TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
 	this.linkedEditableToken = token;
 	var index = token.index-1;
 	//console.log("Link vector: ", index, token, token.leftVectors[index]);
-	this.thicknessSlider1.linkVector(token.leftVectors[0][index]);
-	this.thicknessSlider2.linkVector(token.rightVectors[0][index]);
+	var actualShape = this.parent.editor.getSelectedShapeIndex();
+	this.thicknessSlider1.linkVector(token.leftVectors[actualShape][index]);
+	this.thicknessSlider2.linkVector(token.rightVectors[actualShape][index]);
 	//console.log("Hi there:", token.leftVectors[index]);
-	this.setValues(token.leftVectors[0][index].distance, token.rightVectors[0][index].distance);	
+	this.setValues(token.leftVectors[actualShape][index].distance, token.rightVectors[actualShape][index].distance);	
 	this.showHorizontalSliders();
 	//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
 	//this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
