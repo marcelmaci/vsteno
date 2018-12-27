@@ -4,9 +4,10 @@ function TEKnotVector(distance, type) {
 	//console.log("TEKnotVector.constructor");
 	this.type = "orthogonal"; // make it fix for the moment (change it to type later)
 	this.distance = distance;
-	this.line = Path.Line(new Point(0,0), new Point(100,100));
+	this.line = Path.Line(new Point(0,0), new Point(0,0));		// THIS LINE IS WRONG: CREATE LINE OBJECT THAT WILL NEVER BE DELETED => FIX IT LATER
 	this.line.strokeColor = '#000';
 	this.line.visible = false;
+	//this.line = null;
 }
 
 // class TEKnotType
@@ -153,9 +154,9 @@ TEEditableToken.prototype.setParallelRotatingAxis = function() {
 }
 TEEditableToken.prototype.toggleParallelRotatingAxisType = function() {
 	var actualType = this.selectedKnot.parallelRotatingAxisType;
-	console.log("actual type: ", actualType);
+	//console.log("actual type: ", actualType);
 	this.selectedKnot.parallelRotatingAxisType = (actualType == "horizontal") ? "orthogonal" : "horizontal";
-	console.log("new type: ", this.selectedKnot.parallelRotatingAxisType);
+	//console.log("new type: ", this.selectedKnot.parallelRotatingAxisType);
 }
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();

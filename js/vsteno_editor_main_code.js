@@ -1,7 +1,7 @@
 
 // global variables
 var mainCanvas = new TECanvas(0,0,800,800);
-	
+
 // global event handlers and variables
 var lastClick = null,
 	doubleClickInterval = 500, // milliseconds
@@ -37,6 +37,8 @@ var arrowUp = false,			// global variables for arrow keys
 	
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
+var selectedShapeFill = false;		// true: fill Shape; false: don't fill (toggle with 'f')
+var selectedShapeFillColor = '#000';
  
 // main classes
 // class TECanvas (main container for complete drawing area)
@@ -132,7 +134,6 @@ document.onkeyup = function resetSpecialKeys() {
 	arrowLeft = false;
 	arrowRight = false;
 }
-
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
 	keyPressed = event.key;
@@ -147,6 +148,7 @@ tool.onKeyDown = function(event) {
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
 		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
+		case "f" : selectedShapeFill = (selectedShapeFill == false) ? true : false; mainCanvas.thicknessSliders.setOuterShapesVisibility(); break; // toggle fill and update (method setOuterShapesVisibility should be transferred to more general object, e.g. TEDrawingArea)
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
@@ -180,3 +182,4 @@ tool.onMouseUp = function(event) {
 	mouseDown = false;
     mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
 }
+

@@ -385,9 +385,10 @@ function TEKnotVector(distance, type) {
 	//console.log("TEKnotVector.constructor");
 	this.type = "orthogonal"; // make it fix for the moment (change it to type later)
 	this.distance = distance;
-	this.line = Path.Line(new Point(0,0), new Point(100,100));
+	this.line = Path.Line(new Point(0,0), new Point(0,0));		// THIS LINE IS WRONG: CREATE LINE OBJECT THAT WILL NEVER BE DELETED => FIX IT LATER
 	this.line.strokeColor = '#000';
 	this.line.visible = false;
+	//this.line = null;
 }
 
 // class TEKnotType
@@ -534,9 +535,9 @@ TEEditableToken.prototype.setParallelRotatingAxis = function() {
 }
 TEEditableToken.prototype.toggleParallelRotatingAxisType = function() {
 	var actualType = this.selectedKnot.parallelRotatingAxisType;
-	console.log("actual type: ", actualType);
+	//console.log("actual type: ", actualType);
 	this.selectedKnot.parallelRotatingAxisType = (actualType == "horizontal") ? "orthogonal" : "horizontal";
-	console.log("new type: ", this.selectedKnot.parallelRotatingAxisType);
+	//console.log("new type: ", this.selectedKnot.parallelRotatingAxisType);
 }
 TEEditableToken.prototype.setKnotType = function(type) {
 	var relativeTokenKnot = this.getRelativeTokenKnot();
@@ -1304,15 +1305,21 @@ TERotatingAxis.prototype.recalculateFreehandPoints = function() {
 
 // class TEVisuallyModifiableCircle
 function TEVisuallyModifiableCircle(position, radius, color, selectColor, strokeColor ) {
-	//console.log("TEVisuallyModifiableCircle.constructor");
-	this.circle = new Path.Circle(position, radius);
-	//this.center = position;
-	this.radius = radius;
-	this.circle.fillColor = color;
-	this.circle.strokeWidth = 0;
-	this.circle.strokeColor = strokeColor;
-	this.originalColor = color;
-	this.selectColor = selectColor;
+	//console.log("TEVisuallyModifiableCircle.constructor: position/radius/color/selectColor/strokeColor", position, radius, color, selectColor, strokeColor);this.circle = new Path.Circle(position, radius);
+	if ((position == undefined) || (position == new Point(0,0))) { // avoid creation of null circles that will appear on upper left corner
+		//console.log("no object created");
+		return;
+	} else {
+		this.circle = new Path.Circle(position, radius);
+		//this.center = position;
+		this.radius = radius;
+		this.circle.fillColor = color;
+		this.circle.strokeWidth = 0;
+		this.circle.strokeColor = strokeColor;
+		this.originalColor = color;
+		this.selectColor = selectColor;
+	}
+	//if ((position == undefined) || (position == new Point(0,0))) this.circle.visible = false; // workaround for annoying black circles in left upper corner?
 }
 TEVisuallyModifiableCircle.prototype.mark = function() { // mark <=> set strokeWidth = 2 and strokeColor to a predefined value
 	this.circle.strokeWidth = 2;
@@ -1425,8 +1432,16 @@ function TEConnectionPoint(drawingArea, x, y ) {
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), 5, '#000', '#aaa', '#00f');
 	// handle own stuff
 	this.parent = drawingArea;
-	this.line = this.line = new Path.Line( this.position, this.position ); // initialize line as point inside circle
-	this.line.strokeColor = '#000';
+	//console.log("TEConnectionPoint: this.position/this.circle/this.circle.position/x,y: ", this.position, this.circle, this.circle.position, x, y);
+	//console.log("TEConnectionPoint: this.circle/x,y: ", this.circle, x, y);
+	if ((x == undefined) || (y == undefined) || (x == 0) || (y == 0)) {
+		//console.log("no line created");
+		this.line = null;
+	} else {
+		//console.log("line created: x,y: ", x, y);
+		this.line = new Path.Line( new Point(x,y), new Point(x,y));
+		this.line.strokeColor = '#000';
+	}
 }
 TEConnectionPoint.prototype = new TEVisuallyModifiableCircle(); 	// inherit
 TEConnectionPoint.prototype.handleMouseDown = function(event) {
@@ -2622,7 +2637,9 @@ TETwoGroupedThicknessSliders.prototype.setOuterShapesVisibility = function() {
 	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.rightVectors[0]: ", this.parent.editor.editableToken.rightVectors[0]);
 	
 	switch (selectedShape) {
-		case "normal" : this.parent.editor.editableToken.outerShape[0].visible = true; 
+		case "normal" : if (selectedShapeFill) this.parent.editor.editableToken.outerShape[0].fillColor = selectedShapeFillColor;
+						else this.parent.editor.editableToken.outerShape[0].fillColor = null;
+						this.parent.editor.editableToken.outerShape[0].visible = true; 
 						this.parent.editor.editableToken.outerShape[1].visible = false;
 						// additionally, vectors must be set to invisible / invisible
 						for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
@@ -2632,7 +2649,9 @@ TETwoGroupedThicknessSliders.prototype.setOuterShapesVisibility = function() {
 							this.parent.editor.editableToken.rightVectors[1][i].line.visible = false;
 						}
 						break;
-		case "shadowed" : this.parent.editor.editableToken.outerShape[0].visible = false; 
+		case "shadowed" : if (selectedShapeFill) this.parent.editor.editableToken.outerShape[1].fillColor = selectedShapeFillColor; 
+						  else this.parent.editor.editableToken.outerShape[1].fillColor = null;
+						  this.parent.editor.editableToken.outerShape[0].visible = false; 
 						  this.parent.editor.editableToken.outerShape[1].visible = true;
 						  for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
 							  this.parent.editor.editableToken.leftVectors[0][i].line.visible = false; 
@@ -3045,7 +3064,7 @@ TEParallelRotatingAxis.prototype.redrawLine = function(point1, point2, color) {
 
 // global variables
 var mainCanvas = new TECanvas(0,0,800,800);
-	
+
 // global event handlers and variables
 var lastClick = null,
 	doubleClickInterval = 500, // milliseconds
@@ -3081,6 +3100,8 @@ var arrowUp = false,			// global variables for arrow keys
 	
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
+var selectedShapeFill = false;		// true: fill Shape; false: don't fill (toggle with 'f')
+var selectedShapeFillColor = '#000';
  
 // main classes
 // class TECanvas (main container for complete drawing area)
@@ -3176,7 +3197,6 @@ document.onkeyup = function resetSpecialKeys() {
 	arrowLeft = false;
 	arrowRight = false;
 }
-
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
 	keyPressed = event.key;
@@ -3191,6 +3211,7 @@ tool.onKeyDown = function(event) {
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
 		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
+		case "f" : selectedShapeFill = (selectedShapeFill == false) ? true : false; mainCanvas.thicknessSliders.setOuterShapesVisibility(); break; // toggle fill and update (method setOuterShapesVisibility should be transferred to more general object, e.g. TEDrawingArea)
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
@@ -3224,3 +3245,4 @@ tool.onMouseUp = function(event) {
 	mouseDown = false;
     mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
 }
+

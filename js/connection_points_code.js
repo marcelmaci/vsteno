@@ -1,15 +1,21 @@
 
 // class TEVisuallyModifiableCircle
 function TEVisuallyModifiableCircle(position, radius, color, selectColor, strokeColor ) {
-	//console.log("TEVisuallyModifiableCircle.constructor");
-	this.circle = new Path.Circle(position, radius);
-	//this.center = position;
-	this.radius = radius;
-	this.circle.fillColor = color;
-	this.circle.strokeWidth = 0;
-	this.circle.strokeColor = strokeColor;
-	this.originalColor = color;
-	this.selectColor = selectColor;
+	//console.log("TEVisuallyModifiableCircle.constructor: position/radius/color/selectColor/strokeColor", position, radius, color, selectColor, strokeColor);this.circle = new Path.Circle(position, radius);
+	if ((position == undefined) || (position == new Point(0,0))) { // avoid creation of null circles that will appear on upper left corner
+		//console.log("no object created");
+		return;
+	} else {
+		this.circle = new Path.Circle(position, radius);
+		//this.center = position;
+		this.radius = radius;
+		this.circle.fillColor = color;
+		this.circle.strokeWidth = 0;
+		this.circle.strokeColor = strokeColor;
+		this.originalColor = color;
+		this.selectColor = selectColor;
+	}
+	//if ((position == undefined) || (position == new Point(0,0))) this.circle.visible = false; // workaround for annoying black circles in left upper corner?
 }
 TEVisuallyModifiableCircle.prototype.mark = function() { // mark <=> set strokeWidth = 2 and strokeColor to a predefined value
 	this.circle.strokeWidth = 2;
@@ -122,8 +128,16 @@ function TEConnectionPoint(drawingArea, x, y ) {
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), 5, '#000', '#aaa', '#00f');
 	// handle own stuff
 	this.parent = drawingArea;
-	this.line = this.line = new Path.Line( this.position, this.position ); // initialize line as point inside circle
-	this.line.strokeColor = '#000';
+	//console.log("TEConnectionPoint: this.position/this.circle/this.circle.position/x,y: ", this.position, this.circle, this.circle.position, x, y);
+	//console.log("TEConnectionPoint: this.circle/x,y: ", this.circle, x, y);
+	if ((x == undefined) || (y == undefined) || (x == 0) || (y == 0)) {
+		//console.log("no line created");
+		this.line = null;
+	} else {
+		//console.log("line created: x,y: ", x, y);
+		this.line = new Path.Line( new Point(x,y), new Point(x,y));
+		this.line.strokeColor = '#000';
+	}
 }
 TEConnectionPoint.prototype = new TEVisuallyModifiableCircle(); 	// inherit
 TEConnectionPoint.prototype.handleMouseDown = function(event) {

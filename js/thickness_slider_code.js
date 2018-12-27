@@ -303,7 +303,9 @@ TETwoGroupedThicknessSliders.prototype.setOuterShapesVisibility = function() {
 	//console.log("TETwoGroupedThicknessSliders.setOuterShapesVisibility(): this.parent.editor.editableToken.rightVectors[0]: ", this.parent.editor.editableToken.rightVectors[0]);
 	
 	switch (selectedShape) {
-		case "normal" : this.parent.editor.editableToken.outerShape[0].visible = true; 
+		case "normal" : if (selectedShapeFill) this.parent.editor.editableToken.outerShape[0].fillColor = selectedShapeFillColor;
+						else this.parent.editor.editableToken.outerShape[0].fillColor = null;
+						this.parent.editor.editableToken.outerShape[0].visible = true; 
 						this.parent.editor.editableToken.outerShape[1].visible = false;
 						// additionally, vectors must be set to invisible / invisible
 						for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
@@ -313,7 +315,9 @@ TETwoGroupedThicknessSliders.prototype.setOuterShapesVisibility = function() {
 							this.parent.editor.editableToken.rightVectors[1][i].line.visible = false;
 						}
 						break;
-		case "shadowed" : this.parent.editor.editableToken.outerShape[0].visible = false; 
+		case "shadowed" : if (selectedShapeFill) this.parent.editor.editableToken.outerShape[1].fillColor = selectedShapeFillColor; 
+						  else this.parent.editor.editableToken.outerShape[1].fillColor = null;
+						  this.parent.editor.editableToken.outerShape[0].visible = false; 
 						  this.parent.editor.editableToken.outerShape[1].visible = true;
 						  for (var i=0; i<this.parent.editor.editableToken.knotsList.length; i++) {
 							  this.parent.editor.editableToken.leftVectors[0][i].line.visible = false; 
