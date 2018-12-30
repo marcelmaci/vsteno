@@ -57,7 +57,108 @@ function calculateBezierPoint(p1, c1, p2, c2, percent) {
 	return [bx, by, bm];
 }
 
-function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
+function findTangentPointRelativeToFixPointBrute(fixPoint,p1,c1,p2,c2,epsilon) {
+	// bruteforce method ...
+	var iterations = 200;
+	var deltaPercentage = 100 / iterations;
+	var bestPercentage = undefined;
+	var bestM = undefined;
+	var angleTangent, angleFixPoint;
+	var minEpsilon = 200;
+	
+	var bestBet = undefined;
+	
+	for (p = 0; p <= 100; p += deltaPercentage) {
+		var actPoint = calculateBezierPoint(p1,c1,p2,c2,p);
+	
+		angleTangent = Math.atan(actPoint[2]);
+		var tempM = (actPoint[0] - fixPoint.x) / (actPoint[1] - fixPoint.y);
+		angleFixPoint = Math.atan(tempM);
+		var deltaEpsilon = Math.abs(angleTangent - angleFixPoint);
+		if (deltaEpsilon < minEpsilon) {
+			
+			minEpsilon = deltaEpsilon;
+			bestBet = actPoint;
+			bestM = tempM;
+			bestPercentage = p;
+			//console.log(p, ": angle tangent vs fixpoint / delta: ", angleTangent, angleFixPoint, deltaEpsilon);
+			//console.log("set new minEpsilon = ", minEpsilon, " / actPoint = ", actPoint);
+			
+		}
+	}
+	if (minEpsilon < 0.9) {
+		if (minEpsilon < 0.009) return bestBet;
+		else if (bestPercentage <= 50) return [ p1.x, p1.y, bestM];
+		else if (bestPercentage > 50) return [ p2.x, p2.y, bestM];
+	} else return false;
+}
+function calculateEpsilonDeltaFixPointAndTangent(fixPoint,p1,c1,p2,c2,percentage) {
+	var actPoint = calculateBezierPoint(p1,c1,p2,c2,percentage);
+	var angleTangent = Math.atan(actPoint[2]);
+	var actM = (actPoint[0] - fixPoint.x) / (actPoint[1] - fixPoint.y);
+	var angleFixPoint = Math.atan(actM);
+	var deltaEpsilon = Math.abs(angleTangent - angleFixPoint);
+	return deltaEpsilon; 
+}
+function findTangentPointRelativeToFixPointIntervals(fixPoint,p1,c1,p2,c2,epsilon) {
+	// interval method 
+	var actLeftP = 0, testLeftP = 25, actMiddleP = 50, testRightP = 75, actRightP = 100;
+	var i = 0, maxIterations = 8; // precision = 2 ^ maxIterations
+	var minEpsilon = 200, bestBet = undefined, bestM = undefined, bestP = undefined;
+	
+	do {
+		
+		var middleEpsilon = calculateEpsilonDeltaFixPointAndTangent(fixPoint, p1,c1,p2,c2, actMiddleP); 
+		var leftEpsilon = calculateEpsilonDeltaFixPointAndTangent(fixPoint, p1,c1,p2,c2, testLeftP);
+		var rightEpsilon = calculateEpsilonDeltaFixPointAndTangent(fixPoint, p1,c1,p2,c2, testRightP);
+		
+		//console.log(i, ": percentages/epsilons left/middle/right: ", testLeftP, leftEpsilon, actMiddleP, middleEpsilon, testRightP, rightEpsilon);
+		
+		if ((leftEpsilon <= middleEpsilon) || (leftEpsilon < rightEpsilon)) {
+				// chose left interval
+				minEpsilon = leftEpsilon;
+				bestBet = calculateBezierPoint(p1,c1,p2,c2,testLeftP);
+				bestP = testLeftP;
+				actRightP = actMiddleP;
+				actMiddleP = testLeftP;
+				testLeftP = (actMiddleP + actLeftP) / 2;
+				testRightP = (actRightP + actMiddleP) / 2;
+		} else if ((rightEpsilon <= middleEpsilon) || (rightEpsilon < leftEpsilon)) {
+				// chose right interval
+				minEpsilon = rightEpsilon;
+				bestBet = calculateBezierPoint(p1,c1,p2,c2,testRightP);
+				bestP = testRightP;
+				actLeftP = actMiddleP;
+				actMiddleP = testRightP;
+				testLeftP = (actMiddleP + actLeftP) / 2;
+				testRightP = (actRightP + actMiddleP) / 2;
+		} else {
+			
+			console.log("this case actually shouldn't happen ... ;/)");
+		
+		}
+		
+		// console.log(i, ": angle tangent vs fixPoint: ", angleTangent, angleFixPoint);
+		i++;
+		
+	} while (i < maxIterations);
+	
+	if (minEpsilon < 0.9) {
+		if (minEpsilon < 0.009) return bestBet;
+		else if (bestPercentage <= 50) return [ p1.x, p1.y, 0];	// m = 0 is not the real inclination (but the value is not important)
+		else if (bestPercentage > 50) return [ p2.x, p2.y, 0];
+	} else return false;
+
+}
+
+function findTangentPointRelativeToFixPoint(fixPoint,p1,c1,p2,c2,epsilon) {
+	//return findTangentPointRelativeToFixPointOld(fixPoint,p1,c1,p2,c2,epsilon);
+	//return findTangentPointRelativeToFixPointBrute(fixPoint,p1,c1,p2,c2,epsilon);
+	return findTangentPointRelativeToFixPointIntervals(fixPoint,p1,c1,p2,c2,epsilon);
+
+}
+
+function findTangentPointRelativeToFixPointOld(fixPoint, p1, c1, p2, c2, epsilon) {
 	// DESCRIPTION OF ALGORITHM
 	// define the 3 points:
 	// - the middle one separates the bezier curve (or the actual segment of it) into two halves
@@ -65,6 +166,7 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 	// the points are defined as percentages (= relative location) on the bezier curve
 	// epsilon stands for the precision: delta of straight lines going from connection point
 	// to calculated tangent point should be < epsilon (numerical aproximation) 
+	
 	var leftPercentage = 0.001;			// 0% <=> leftPoint
 	var rightPercentage = 99.999;		// 100% <=> rightPoint
 	var middlePercentage = 50;		// 50% <=> middlePoint
@@ -106,6 +208,8 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 		deltaAngleLeft = Math.abs(angleConnectionPoint - angleLeft);
 		deltaAngleRight = /*Math.abs(angleRight - angleConnectionPoint); */ Math.abs(angleConnectionPoint - angleRight);
 //		console.log("delta: left: ", deltaAngleLeft, "right: ", deltaAngleRight);
+		//console.log("calculateTangent: leftPoint: ", leftPoint, " middlePoint: ", middlePoint, " rightPoint: ", rightPoint);
+		//console.log("leftAngle: ", angleLeft, "middleAngle: ", angleMiddle, " rightAngle: ", angleRight);
 		if (deltaAngleLeft <= deltaAngleRight) { 
 			whichInterval = "left"; 
 			//actualEpsilon =  middlePercentage - leftPercentage; // problem: a point is always found! (angle is not taken into consideration)
@@ -123,6 +227,8 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 			console.log("noidea"); 
 			whichInterval = "noidea";
 		}
+		console.log("left/middle/rightPercentage: ", leftPercentage, middlePercentage, rightPercentage);
+		console.log("deltaAngleLeft: ", deltaAngleLeft, " deltaAngleRight: ", deltaAngleRight, " interval decision: ", whichInterval);
 		
 		//console.log("Deltas: left: ", deltaAngleLeft, "middle: ", deltaAngleMiddle, "right: ", deltaAngleRight);
 
@@ -148,8 +254,10 @@ function findTangentPointRelativeToFixPoint(fixPoint, p1, c1, p2, c2, epsilon) {
 		//console.log("Point found: ", middlePoint, "Epsilon: ", actualEpsilon);
 		return middlePoint;
 	} else { 
-		//console.log("No point found: Epsilon:", actualEpsilon, avoidInfinityLoop);
-		return false;
+		
+		console.log("No point found: Epsilon:", actualEpsilon, avoidInfinityLoop);
+		//return false;
+		return middlePoint;
 		//if (actualEpsilon < 0.5) return middlePoint;
 		//else return false;
 	}

@@ -274,44 +274,55 @@ TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint 
 	var cx = this.circle.position.x,
 		cy = this.circle.position.y;
 	//console.log("Hi there1.");
-	return findTangentPointRelativeToFixPoint(new Point(cx, cy), p1, c1, p2, c2, epsilon);
+	//console.log("calculate tangent with cp/p1/c1/p2/c2/epsilon: ",	new Point(cx,cy), p1, c1, p2, c2, epsilon);
+	
+	var tempResult = findTangentPointRelativeToFixPoint(new Point(cx, cy), p1, c1, p2, c2, epsilon);
+	if (tempResult == false) return [cx, cy, 0];
+	else return tempResult;
 }
 /////////////////////// end of experimental function
 TEConnectionPointPreceeding.prototype.connect = function() {
 	
-	/* // disable this code for the moment
+ // use this code for the moment
 	if (this.parent.editableToken.knotsList.length > 1) {
 		var p1 = this.parent.editableToken.knotsList[0].circle.position,
 			c1 = p1 + this.parent.fhToken.segments[0].handleOut,     // control points are RELATIVE coordinates
 			p2 = this.parent.editableToken.knotsList[1].circle.position,
 			c2 = p2 + this.parent.fhToken.segments[1].handleIn;
 		//var result = calculateBezierPoint(p1, c1, p2, c2, 50);
-			
+		
 		//var bezierPoint = new Point(result[0], result[1]);
-		//console.log("tangentPrecision = ", tangentPrecision);
-		var result2 = this.findTangentPointRelativeToConnectionPoint(p1, c1, p2, c1, tangentPrecision);
+		//console.log("bezierPoint 50%: ", bezierPoint);
+		//var tempCircle = new Path.Circle(bezierPoint,5);
+		//tempCircle.fillColor = '#f00';
+		//console.log("CALL: P1", p1, c1);
+		//console.log("CALL: P2", p2, c2);
+		
+		var result2 = this.findTangentPointRelativeToConnectionPoint(p1, c1, p2, c2, tangentPrecision);
 		//console.log("result2: ",result2);
 		
-		if (result2 != false) {
+		if ((result2 != false) && (result2 != undefined)) {
 			this.line.removeSegments();
 			this.line.add( this.circle.position, new Point(result2[0], result2[1]));
 			this.line.visible = true;
 		} else this.line.visible = false;
 	}
-	*/
+	
+	
 	
 	// for test purposes: calculate tangents between to bezier segments (choose segments 2 and 6 from freehand curve)
-	/* // disable this code for the moment
-	if (this.parent.editableToken.knotsList.length > 6) {
+	// disable this code for the moment
+	/*if (this.parent.editableToken.knotsList.length > 6) {
 		var result3 = this.findTangentPointsBetweenCurves2And6(tangentPrecision);
 	
-	}
-	*/
-	// use this code for the moment: connect to first point of freehand path
-	if (this.parent.editableToken.knotsList.length > 0) {
+	}*/
+
+	// disable this code for the moment: connect to first point of freehand path
+	/* if (this.parent.editableToken.knotsList.length > 0) {
 		this.line.segments[0].point = this.circle.position;
 		this.line.segments[1].point = this.parent.editableToken.knotsList[0].circle.position;
 	}
+	*/
 }
 /*
 TEConnectionPointPreceeding.prototype.handleEvent = function(event) { // overload parent method
