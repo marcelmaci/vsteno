@@ -84,6 +84,18 @@ window.oncontextmenu = function(event) {
 	//console.log("rightclick: ", event);
 	return false; // avoid popping up of context menu
 }
+// eventHandler for global functions (load, save, delete, save to database)
+document.onClick = function() {
+	console.log("onclick: ", document.activeElement.id);
+	switch (document.activeElement.id) {
+		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
+		case "load" : console.log("loadToken triggered...", mainCanvas); break;
+		case "save" : console.log("saveToken triggered..."); break;
+		case "delete" : console.log("deleteToken triggered..."); break;
+		case "todatabase" : console.log("saveToken triggered..."); break;
+		default : console.log("nothing triggered"); break;
+	}
+}
 document.onkeydown = checkSpecialKeys; 
 function checkSpecialKeys(e) {
 	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields

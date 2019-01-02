@@ -42,8 +42,31 @@
 </p>
 </td>
 <td>
-<center><br><br><br>
+<center><br><br>
+
+	<table>
+	<tr>
+		<td>Token: 
+		<select id="tokenpulldown">
+			<option value="empty">(empty)</option>
+		</select> 
+		<button id="addnew" onClick="document.onClick()"><= ADD</button>
+		<input id="token" type="text" size="6"><br>
+		
+		Action:<button id="load" onClick="document.onClick()">Load</button>
+		<button id="save" onClick="document.onClick()">Save</button>
+		<button id="delete" onClick="document.onClick()">Delete</button>
+		<button id="todatabase" onClick="document.onClick()">-> Database</button>
+		
+		
+		</td>
+		
+	</tr>
+   </table>
+   <br>
+   
    <canvas id="drawingArea" width="800" height="600" style="background-color:#eee"></canvas>
+   
    <table>
 	<tr>
 		<td>01<input type="text" id="h1" size="4"></td>
@@ -76,6 +99,8 @@
 		<td>24<input type="text" id="h24" size="4"></td>
 	</tr>
    </table>
+   
+  
    </center>
 </td>
 </tr>

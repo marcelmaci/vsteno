@@ -488,6 +488,21 @@ TECoordinatesLabels.prototype.isDynamic = function() {
 	return false;
 }
 
+// contains data operations for vsteno-editor (import / export etc.)
+
+var tokenPullDownSelection = [];
+tokenPullDownSelection.push("-select-");
+
+function addNewTokenToPullDownSelection(token) {
+	tokenPullDownSelection.push(token);
+	var optionList = "";
+	for (var i=0;i<tokenPullDownSelection.length; i++) {
+		optionList += "<option value=\"" + tokenPullDownSelection[i] + "\">" + tokenPullDownSelection[i] + "</option>\n";
+	}
+	var element = document.getElementById("tokenpulldown");
+	element.innerHTML = optionList;
+}
+
 // definition header (new, i.e. different from SE1)
 /*
 offset: meaning
@@ -3296,6 +3311,18 @@ TECanvas.prototype.handleEvent = function(event) {
 window.oncontextmenu = function(event) {
 	//console.log("rightclick: ", event);
 	return false; // avoid popping up of context menu
+}
+// eventHandler for global functions (load, save, delete, save to database)
+document.onClick = function() {
+	console.log("onclick: ", document.activeElement.id);
+	switch (document.activeElement.id) {
+		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
+		case "load" : console.log("loadToken triggered...", mainCanvas); break;
+		case "save" : console.log("saveToken triggered..."); break;
+		case "delete" : console.log("deleteToken triggered..."); break;
+		case "todatabase" : console.log("saveToken triggered..."); break;
+		default : console.log("nothing triggered"); break;
+	}
 }
 document.onkeydown = checkSpecialKeys; 
 function checkSpecialKeys(e) {

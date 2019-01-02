@@ -5,6 +5,7 @@
 # add license at beginn of each file
 cat license.txt global_functions_code.js > global_functions.js
 cat license.txt static_graphical_elements_code.js > static_graphical_elements.js
+cat license.txt data_code.js > data.js
 cat license.txt freehand_code.js > freehand.js
 cat license.txt rotating_axis_code.js > rotating_axis.js
 cat license.txt connection_points_code.js > connection_points.js
@@ -16,4 +17,4 @@ cat license.txt parallel_rotating_axis_code.js > parallel_rotating_axis.js
 
 # join files into one file containing all the code 
 
-cat license.txt global_functions_code.js static_graphical_elements_code.js freehand_code.js rotating_axis_code.js connection_points_code.js drawing_area_code.js tension_slider_code.js thickness_slider_code.js parallel_rotating_axis_code.js vsteno_editor_main_code.js > vsteno_editor.js
+cat license.txt global_functions_code.js static_graphical_elements_code.js data_code.js freehand_code.js rotating_axis_code.js connection_points_code.js drawing_area_code.js tension_slider_code.js thickness_slider_code.js parallel_rotating_axis_code.js vsteno_editor_main_code.js > vsteno_editor.js
