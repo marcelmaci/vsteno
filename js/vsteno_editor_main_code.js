@@ -39,7 +39,8 @@ var selectedTension = "locked";		// locked = set all three tensions (left, right
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
 var selectedShapeFill = false;		// true: fill Shape; false: don't fill (toggle with 'f')
 var selectedShapeFillColor = '#000';
- 
+var connectPreceedingAndFollowingYes = false;	// true = connect, false = don't connect
+
 // main classes
 // class TECanvas (main container for complete drawing area)
 function TECanvas(x, y, width, height) {
@@ -85,6 +86,8 @@ window.oncontextmenu = function(event) {
 }
 document.onkeydown = checkSpecialKeys; 
 function checkSpecialKeys(e) {
+	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
+	
 	e = e || window.event;
 	if (e.ctrlKey) ctrlKey = true;
     else ctrlKey = false;
@@ -127,6 +130,7 @@ function checkSpecialKeys(e) {
 		}
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
+	}
 }
 document.onkeyup = function resetSpecialKeys() {
 	arrowUp = false;
@@ -136,6 +140,9 @@ document.onkeyup = function resetSpecialKeys() {
 }
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
+	//console.log("active element", document.activeElement.id);
+	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
+	
 	keyPressed = event.key;
 	if (selectedTension != "locked") {
 		switch (keyPressed) {	
@@ -152,12 +159,32 @@ tool.onKeyDown = function(event) {
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
-		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
+		//case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
+		case "c" : ; connectPreceedingAndFollowingYes = (connectPreceedingAndFollowingYes) ? false : true; 
+					 mainCanvas.editor.preceeding.line.visible = connectPreceedingAndFollowingYes;
+					 mainCanvas.editor.following.line.visible = connectPreceedingAndFollowingYes;
+					 mainCanvas.editor.connectPreceedingAndFollowing();
+					break;
+		case "i" : mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
+		
+		/*console.log("input: ", document.getElementById("h1").value,
+					document.getElementById("h2").value,
+					document.getElementById("h3").value,
+					document.getElementById("h4").value,
+					document.getElementById("h5").value,
+					document.activeElement.id
+					); 
+					
+					document.getElementById("h7").blur(); */
+					
+					break;
 		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
 		case "-" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
 	}
 	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);
+	
+	}
 }
 tool.onKeyUp = function(event) {
 	//console.log("KeyEvent: ", event);

@@ -195,8 +195,8 @@ function findTangentPointRelativeToFixPointIntervals(fixPoint,p1,c1,p2,c2,epsilo
 	
 	if (minEpsilon < 0.9) {
 		if (minEpsilon < 0.009) return bestBet;
-		else if (bestPercentage <= 50) return [ p1.x, p1.y, 0];	// m = 0 is not the real inclination (but the value is not important)
-		else if (bestPercentage > 50) return [ p2.x, p2.y, 0];
+		else if (bestP<= 50) return [ p1.x, p1.y, 0];	// m = 0 is not the real inclination (but the value is not important)
+		else if (bestP > 50) return [ p2.x, p2.y, 0];
 	} else return false;
 
 }
@@ -488,6 +488,20 @@ TECoordinatesLabels.prototype.isDynamic = function() {
 	return false;
 }
 
+// definition header (new, i.e. different from SE1)
+/*
+offset: meaning
+ 0: "virtual" or "real" token
+ 1: width (not necessary)
+ 2: height (not necessary)
+ 3: additional width left
+ 4: additional width right
+ 5: conditional deltaY before (virtual token: value / real token: factor)
+ 6: conditional deltaY after (virtual token: value / real token: factor)
+ 7: inconditional deltaY before
+ 8: inconditional deltaY after
+10: shadowed
+*/
 // class TEKnotVector
 function TEKnotVector(distance, type) {
 	//console.log("TEKnotVector.constructor");
@@ -553,6 +567,9 @@ function TEEditableToken(drawingArea) {
 	// parent
 	this.parent = drawingArea;
 	// token data
+	this.header = [];	// array for header elements
+	for (var i=0;i<24;i++) this.header[i] = 0;
+	
 	this.knotsList = []; 	// type: TEVisuallyModifiableKnot
 	this.leftVectors = new Array(2);  	// type: TEKnotVector
 	this.rightVectors = new Array(2);
@@ -852,6 +869,18 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.connectPreceedingAndFollowing();
 	//console.log("insertNewKnot: selected/marked:", this.selectedKnot, this.markedKnot);
 	
+}
+TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
+	console.log("copy header: ");
+	var output = "";
+	for (var i=0; i<24; i++) {
+			var id = "h" + Math.floor(i+1);
+			var tmp = document.getElementById(id);
+			if (tmp != null) this.header[i] = tmp.value;
+			var string = (this.header[i] == null) ? "null" : this.header[i];
+			output += "[" + string + "]";
+	}
+	console.log("values: ", output);
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
@@ -1694,7 +1723,7 @@ TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint 
 }
 /////////////////////// end of experimental function
 TEConnectionPointPreceeding.prototype.connect = function() {
-	
+	if (connectPreceedingAndFollowingYes) {
  // use this code for the moment
 	if (this.parent.editableToken.knotsList.length > 1) {
 		var p1 = this.parent.editableToken.knotsList[0].circle.position,
@@ -1720,7 +1749,7 @@ TEConnectionPointPreceeding.prototype.connect = function() {
 		} else this.line.visible = false;
 	}
 	
-	
+	} else return;
 	
 	// for test purposes: calculate tangents between to bezier segments (choose segments 2 and 6 from freehand curve)
 	// disable this code for the moment
@@ -1778,11 +1807,13 @@ function TEConnectionPointFollowing(drawingArea, x, y) {
 }
 TEConnectionPointFollowing.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
 TEConnectionPointFollowing.prototype.connect = function() {
-	var length = this.parent.editableToken.knotsList.length;
-	if (length > 0) {
-		this.line.segments[0].point = this.circle.position;
-		this.line.segments[1].point = this.parent.editableToken.knotsList[length-1].circle.position;
-	}
+	if (connectPreceedingAndFollowingYes) {
+		var length = this.parent.editableToken.knotsList.length;
+		if (length > 0) {
+			this.line.segments[0].point = this.circle.position;
+			this.line.segments[1].point = this.parent.editableToken.knotsList[length-1].circle.position;
+		}
+	} else return;
 /*	if (this.parent.fhCircleList.length != 0) {
 		//console.log(this.parent.fhCircleList[0].position);
 		var exitPoint = this.parent.fhCircleList[this.parent.fhCircleList.length-1];
@@ -3221,7 +3252,8 @@ var selectedTension = "locked";		// locked = set all three tensions (left, right
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
 var selectedShapeFill = false;		// true: fill Shape; false: don't fill (toggle with 'f')
 var selectedShapeFillColor = '#000';
- 
+var connectPreceedingAndFollowingYes = false;	// true = connect, false = don't connect
+
 // main classes
 // class TECanvas (main container for complete drawing area)
 function TECanvas(x, y, width, height) {
@@ -3267,6 +3299,8 @@ window.oncontextmenu = function(event) {
 }
 document.onkeydown = checkSpecialKeys; 
 function checkSpecialKeys(e) {
+	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
+	
 	e = e || window.event;
 	if (e.ctrlKey) ctrlKey = true;
     else ctrlKey = false;
@@ -3309,6 +3343,7 @@ function checkSpecialKeys(e) {
 		}
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
+	}
 }
 document.onkeyup = function resetSpecialKeys() {
 	arrowUp = false;
@@ -3318,6 +3353,9 @@ document.onkeyup = function resetSpecialKeys() {
 }
 // work with keyboard events instead
 tool.onKeyDown = function(event) {
+	//console.log("active element", document.activeElement.id);
+	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
+	
 	keyPressed = event.key;
 	if (selectedTension != "locked") {
 		switch (keyPressed) {	
@@ -3334,12 +3372,32 @@ tool.onKeyDown = function(event) {
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
 		case "h" : mainCanvas.editor.editableToken.setKnotType("horizontal"); break;
 		case "p" : mainCanvas.editor.editableToken.setKnotType("proportional"); break;
-		case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
+		//case "c" : mainCanvas.editor.editableToken.toggleParallelRotatingAxisType(); break;
+		case "c" : ; connectPreceedingAndFollowingYes = (connectPreceedingAndFollowingYes) ? false : true; 
+					 mainCanvas.editor.preceeding.line.visible = connectPreceedingAndFollowingYes;
+					 mainCanvas.editor.following.line.visible = connectPreceedingAndFollowingYes;
+					 mainCanvas.editor.connectPreceedingAndFollowing();
+					break;
+		case "i" : mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
+		
+		/*console.log("input: ", document.getElementById("h1").value,
+					document.getElementById("h2").value,
+					document.getElementById("h3").value,
+					document.getElementById("h4").value,
+					document.getElementById("h5").value,
+					document.activeElement.id
+					); 
+					
+					document.getElementById("h7").blur(); */
+					
+					break;
 		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
 		case "-" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
 	}
 	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);
+	
+	}
 }
 tool.onKeyUp = function(event) {
 	//console.log("KeyEvent: ", event);

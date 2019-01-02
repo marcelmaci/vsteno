@@ -145,8 +145,8 @@ function findTangentPointRelativeToFixPointIntervals(fixPoint,p1,c1,p2,c2,epsilo
 	
 	if (minEpsilon < 0.9) {
 		if (minEpsilon < 0.009) return bestBet;
-		else if (bestPercentage <= 50) return [ p1.x, p1.y, 0];	// m = 0 is not the real inclination (but the value is not important)
-		else if (bestPercentage > 50) return [ p2.x, p2.y, 0];
+		else if (bestP<= 50) return [ p1.x, p1.y, 0];	// m = 0 is not the real inclination (but the value is not important)
+		else if (bestP > 50) return [ p2.x, p2.y, 0];
 	} else return false;
 
 }

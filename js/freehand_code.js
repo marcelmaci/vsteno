@@ -1,4 +1,18 @@
 
+// definition header (new, i.e. different from SE1)
+/*
+offset: meaning
+ 0: "virtual" or "real" token
+ 1: width (not necessary)
+ 2: height (not necessary)
+ 3: additional width left
+ 4: additional width right
+ 5: conditional deltaY before (virtual token: value / real token: factor)
+ 6: conditional deltaY after (virtual token: value / real token: factor)
+ 7: inconditional deltaY before
+ 8: inconditional deltaY after
+10: shadowed
+*/
 // class TEKnotVector
 function TEKnotVector(distance, type) {
 	//console.log("TEKnotVector.constructor");
@@ -64,6 +78,9 @@ function TEEditableToken(drawingArea) {
 	// parent
 	this.parent = drawingArea;
 	// token data
+	this.header = [];	// array for header elements
+	for (var i=0;i<24;i++) this.header[i] = 0;
+	
 	this.knotsList = []; 	// type: TEVisuallyModifiableKnot
 	this.leftVectors = new Array(2);  	// type: TEKnotVector
 	this.rightVectors = new Array(2);
@@ -363,6 +380,18 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	this.connectPreceedingAndFollowing();
 	//console.log("insertNewKnot: selected/marked:", this.selectedKnot, this.markedKnot);
 	
+}
+TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
+	console.log("copy header: ");
+	var output = "";
+	for (var i=0; i<24; i++) {
+			var id = "h" + Math.floor(i+1);
+			var tmp = document.getElementById(id);
+			if (tmp != null) this.header[i] = tmp.value;
+			var string = (this.header[i] == null) ? "null" : this.header[i];
+			output += "[" + string + "]";
+	}
+	console.log("values: ", output);
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token

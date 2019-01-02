@@ -282,7 +282,7 @@ TEConnectionPointPreceeding.prototype.findTangentPointRelativeToConnectionPoint 
 }
 /////////////////////// end of experimental function
 TEConnectionPointPreceeding.prototype.connect = function() {
-	
+	if (connectPreceedingAndFollowingYes) {
  // use this code for the moment
 	if (this.parent.editableToken.knotsList.length > 1) {
 		var p1 = this.parent.editableToken.knotsList[0].circle.position,
@@ -308,7 +308,7 @@ TEConnectionPointPreceeding.prototype.connect = function() {
 		} else this.line.visible = false;
 	}
 	
-	
+	} else return;
 	
 	// for test purposes: calculate tangents between to bezier segments (choose segments 2 and 6 from freehand curve)
 	// disable this code for the moment
@@ -366,11 +366,13 @@ function TEConnectionPointFollowing(drawingArea, x, y) {
 }
 TEConnectionPointFollowing.prototype = new TEConnectionPoint(); //new TEConnectionPoint(TEConnectionPoint.prototype);
 TEConnectionPointFollowing.prototype.connect = function() {
-	var length = this.parent.editableToken.knotsList.length;
-	if (length > 0) {
-		this.line.segments[0].point = this.circle.position;
-		this.line.segments[1].point = this.parent.editableToken.knotsList[length-1].circle.position;
-	}
+	if (connectPreceedingAndFollowingYes) {
+		var length = this.parent.editableToken.knotsList.length;
+		if (length > 0) {
+			this.line.segments[0].point = this.circle.position;
+			this.line.segments[1].point = this.parent.editableToken.knotsList[length-1].circle.position;
+		}
+	} else return;
 /*	if (this.parent.fhCircleList.length != 0) {
 		//console.log(this.parent.fhCircleList[0].position);
 		var exitPoint = this.parent.fhCircleList[this.parent.fhCircleList.length-1];
