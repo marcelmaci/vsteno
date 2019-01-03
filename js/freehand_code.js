@@ -381,6 +381,87 @@ TEEditableToken.prototype.insertNewKnot = function(point) {
 	//console.log("insertNewKnot: selected/marked:", this.selectedKnot, this.markedKnot);
 	
 }
+TEEditableToken.prototype.deleteAllKnotData = function() {
+	// delete all data of editableToken (i.e. dependent objects) as clean as possible (... and here we are again with the JS-problem: 
+	// no explicit method for deleting data ... no "destructor" ... since we're talking about destructors: ceterum censeo ...)
+	// and no: don't (even) try to explain me that JS is so cool that you actually don't have to destroy your objects (and that
+	// the fabulous garbage collector of JS is intelligent enough to do that for you ... This is definitely not true: at this point
+	// there are paper.js objects (lines, circles, polygons ...) on the canvas that need to be deleted before a new token can be loaded 
+	// in ... at least they won't go away like "magic" ... Just in case I didn't mention it before: I hate JS!
+	
+	console.log("Data to delete: before:", this);
+	// parent
+	this.parent = drawingArea;		// delete parent right away and use mainCanvas later (see below for fhToken)
+	this.parent = null;
+	console.log("Data to delete: 1:", this);
+	
+	// token data
+	this.header.length = 0;
+	this.header = null;
+	console.log("Data to delete: 2:", this);
+	
+	for (var i=0; i<this.knotsList.length; i++) {
+		this.knotsList[i].circle.remove();
+	}
+	this.knotsList.length = 0;
+	this.knotsList = null; 	// type: TEVisuallyModifiableKnot
+	console.log("Data to delete: 3:", this);
+	
+	for (var shape=0; shape<2; shape++) {
+		for (var i=0; i<this.leftVectors[0].length; i++) {
+			console.log("shape:",shape,"i:",i);
+			this.leftVectors[shape][i].line.remove();
+			this.rightVectors[shape][i].line.remove();
+		}
+	}
+	
+	for (var i=0; i<2; i++) {			// make 2-dimensional array for vectors (TEKnotVector)
+		this.leftVectors[i].length = 0;
+		this.leftVectors[i] = null;
+		this.rightVectors[i].length = 0;
+		this.rightVectors[i] = null;
+	}
+	this.leftVectors.length = 0;
+	this.leftVectors = null;
+	this.rightVectors.length = 0;
+	this.rightVectors = null;
+	
+	console.log("Data to delete: 4:", this);
+	
+	
+	// paths
+	//this.middlePath.remove();	// don't know if this variable is used?! seems to be null?! => seems to be unused duplicate of fhToken in TEDrawingArea
+	//this.middlePath = null; 
+	console.log("outerShape: ", this.outerShape);
+				
+	this.outerShape[0].remove();
+	//this.outerShape = null;		
+	this.outerShape[1].remove();
+	//this.outerShape = null;
+	console.log("Data to delete: 6:", this);
+	
+	this.outerShape.length = 0;
+	this.outerShape = null;		
+	console.log("Data to delete: 7:", this);
+	
+	// delete middlepath
+	//for (var i=0; i<mainCanvas.editor.fhToken.segments.length; i++);
+	mainCanvas.editor.fhToken.remove();
+	mainCanvas.editor.fhToken = new Path();
+	mainCanvas.editor.fhToken.strokeColor = '#000';
+	
+	// delete label
+	mainCanvas.editor.knotLabel.coordinates.remove();
+	//mainCanvas.editor.knotLabel = null;
+	
+	this.selectedKnot = null;
+	this.markedKnot = null;
+
+	// index (is updated whenever identify-method is called)
+	this.index = 0;
+
+	console.log("Data to delete: after:", this);
+}
 TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
 	console.log("copy header: ");
 	var output = "";

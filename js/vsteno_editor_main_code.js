@@ -89,10 +89,10 @@ document.onClick = function() {
 	console.log("onclick: ", document.activeElement.id);
 	switch (document.activeElement.id) {
 		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
-		case "load" : console.log("loadToken triggered...", mainCanvas); break;
-		case "save" : console.log("saveToken triggered..."); break;
-		case "delete" : console.log("deleteToken triggered..."); break;
-		case "todatabase" : console.log("saveToken triggered..."); break;
+		case "load" : actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
+		case "save" : actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
+		case "delete" : actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); break;
+		case "todatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); break;
 		default : console.log("nothing triggered"); break;
 	}
 }

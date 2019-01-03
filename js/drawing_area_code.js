@@ -34,7 +34,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.handlingParent = null;
 	
 	// token that is edited
-	this.actualToken = new TEEditableToken();
+	this.actualToken = new TEEditableToken(); // what's that?! Did I use that somewhere ... ?
 	
 	// actual selected itemsModifiableCircle
 	this.markedIndex = 0;			// 0 = preceeding connection point; 1,2,3 ... n = freehand circles; 99999 = following connection point
@@ -346,4 +346,47 @@ TEDrawingArea.prototype.handleEvent = function(event) {
 TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();
 	this.following.connect();	
+}
+TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
+	console.log("loadAndInitializeTokenData()");
+	mainCanvas.editor.editableToken.deleteAllKnotData();
+	// delete main object
+	this.editableToken = null;
+	// create new object
+	this.editableToken = new TEEditableToken(this);
+	// copy data
+	this.editableToken.header = token.header;
+	console.log("tokenData: ", token, token.tokenData.length);
+	for (var i=0; i<token.tokenData.length; i++) {
+		// insert knots and stuff
+		console.log("tokenData: i: ", i, token.tokenData[i]);
+		var x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x,
+			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
+		console.log("xy: ", x, y);
+		
+		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
+		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
+		
+		
+		//mainCanvas.editor.editableToken.knotsList[i].type = token.tokenData[i].knotType;
+		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
+		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1 ;
+		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;
+		//mainCanvas.editor.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
+		//mainCanvas.editor.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
+		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions;
+		//mainCanvas.editor.editableToken.leftVectors[0][i].distance = token.tokenData[i].thickness["standard"]["left"];		// make data more readable with associative array
+		//mainCanvas.editor.editableToken.rightVectors[0][i].distance = token.tokenData[i].thickness["standard"]["right"];	    // hugh ... copying array element by element ... this 'll be slow ... (but who cares ... ;-)
+		//mainCanvas.editor.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["left"];
+		//mainCanvas.editor.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["right"];		
+	}
+	console.log("fhToken: ", mainCanvas.editor.fhToken);
+	mainCanvas.editor.updateFreehandPath();
+	mainCanvas.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
+	
+	console.log("mainCanvas.editor: ", mainCanvas.editor);
+}
+
+TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
+	console.log("loadAndInitializeEditorData()");
 }
