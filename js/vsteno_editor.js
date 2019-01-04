@@ -493,15 +493,25 @@ TECoordinatesLabels.prototype.isDynamic = function() {
 var tokenPullDownSelection = [];
 var actualFont = new ShorthandFont();
 
+function filterOutEmptySpaces(string) {
+	var newString = string;
+	do {
+		string = newString;
+		newString = string.replace(/\s+/, '');
+	} while (newString != string);
+	return newString;
+}
+
 // general functions
 function addNewTokenToPullDownSelection(token) {
-	if (tokenPullDownSelection.indexOf(token) == -1) {	// element doesn't exist => add
+	token = filterOutEmptySpaces(token); // filter out empty spaces 
+	if ((tokenPullDownSelection.indexOf(token) == -1)  && (token != "")) {	// element doesn't exist => add
 		tokenPullDownSelection.push(token);
 		tokenPullDownSelection.sort(); // sort array alphabetically
 		updatePullDownSelection(token);
-		// set textfield to empty
-		document.getElementById("token").value = "";
 	}
+	// set textfield to empty
+	document.getElementById("token").value = "";
 }
 function updatePullDownSelection(token) {			// preselect token in list
 	var optionList = "<option value=\"select\">-select-</option>\n";
@@ -527,8 +537,8 @@ ShorthandFont.prototype.saveTokenAndEditorData = function(token) {		// saves act
 		this.editorData[token] = new EditorParameters();		// same for editor data
 	}
 	
-	console.log("ShorthandFont: ", this);
-	console.log("EditableToken: ", mainCanvas.editor.editableToken);
+	//console.log("ShorthandFont: ", this);
+	//console.log("EditableToken: ", mainCanvas.editor.editableToken);
 }
 ShorthandFont.prototype.deleteTokenFromPullDownSelection = function(token) {
 	this.deleteTokenData(token);
@@ -543,11 +553,11 @@ ShorthandFont.prototype.deleteTokenAndEditorData = function(token) {
 	this.deleteEditorData(token);
 }
 ShorthandFont.prototype.deleteTokenData = function(token) {
-	console.log("deleteTokenData");
+	//console.log("deleteTokenData");
 	this.tokenList[token] = null;
 }
 ShorthandFont.prototype.deleteEditorData = function(token) {
-	console.log("deleteEditorData");
+	//console.log("deleteEditorData");
 	this.editorData[token] = null;	
 }
 ShorthandFont.prototype.loadTokenAndEditorData = function(token) {
@@ -564,7 +574,13 @@ function TokenDefinition() {
 }
 TokenDefinition.prototype.goAndGrabThatTokenData = function() {
 	mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
-	this.header = mainCanvas.editor.editableToken.header;
+	this.header = mainCanvas.editor.editableToken.header.slice(); 
+	// well, guess what ... slice() is vital here ... otherwise JS will make this.header point to one and the same object 
+	// (and operations destined for this token will affect other objects also ... ceterum censeo ;-))
+	// to resume: slice() <=> copy by value
+	
+	//console.log("goAndGrabThatTokenData: header: ", this.header);
+	
 	this.getTokenDefinition();
 }
 TokenDefinition.prototype.getTokenDefinition = function() {
@@ -909,22 +925,24 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		//this.rightVectors[0][i].distance = 1;
 	}
 	// set new types
-	this.knotsList[0].type.entry = true;
-	this.knotsList[this.knotsList.length-1].type.exit = true;
-	indexP1 = (this.knotsList.length > 2) ? 1 : 0;
-	indexP2 = (this.knotsList.length > 2) ? this.knotsList.length-2: this.knotsList.length-1;
-	this.knotsList[indexP1].type.pivot1 = true;
-	this.knotsList[indexP2].type.pivot2 = true;
-	// set colors
-	this.knotsList[indexP1].circle.fillColor = colorPivot1;
-	this.knotsList[indexP2].circle.fillColor = colorPivot2;
-	this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
-	this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
-	// correct thicknesses of entry and exit knot (set them to 0)
-	//this.leftVectors[0][0].distance = 0;
-	//this.rightVectors[0][0].distance = 0;
-	//this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
-	//this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
+	if ((this.knotsList != null) && (this.knotsList != undefined) && (this.knotsList.length>0)) {
+		this.knotsList[0].type.entry = true;
+		this.knotsList[this.knotsList.length-1].type.exit = true;
+		indexP1 = (this.knotsList.length > 2) ? 1 : 0;
+		indexP2 = (this.knotsList.length > 2) ? this.knotsList.length-2: this.knotsList.length-1;
+		this.knotsList[indexP1].type.pivot1 = true;
+		this.knotsList[indexP2].type.pivot2 = true;
+		// set colors
+		this.knotsList[indexP1].circle.fillColor = colorPivot1;
+		this.knotsList[indexP2].circle.fillColor = colorPivot2;
+		this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
+		this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
+		// correct thicknesses of entry and exit knot (set them to 0)
+		//this.leftVectors[0][0].distance = 0;
+		//this.rightVectors[0][0].distance = 0;
+		//this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
+		//this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
+	}
 }
 TEEditableToken.prototype.getNewKnotTypeColor = function() {
 	// knot will be inserted after this.index
@@ -1004,27 +1022,27 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	// there are paper.js objects (lines, circles, polygons ...) on the canvas that need to be deleted before a new token can be loaded 
 	// in ... at least they won't go away like "magic" ... Just in case I didn't mention it before: I hate JS!
 	
-	console.log("Data to delete: before:", this);
+	//console.log("Data to delete: before:", this);
 	// parent
 	this.parent = drawingArea;		// delete parent right away and use mainCanvas later (see below for fhToken)
 	this.parent = null;
-	console.log("Data to delete: 1:", this);
+	//console.log("Data to delete: 1:", this);
 	
 	// token data
-	this.header.length = 0;
-	this.header = null;
-	console.log("Data to delete: 2:", this);
+	//this.header.length = 0; // setting header.length = 0 is fatal ... data referenced by another variable (e.g. TokenDefinition.header will also get deleted
+	this.header = null;		  // => setting only this.header to null leaves that data intact and "frees" variable this.header so that it can point to a new header
+	//console.log("Data to delete: 2:", this);	// again: JS is just an ugly and unprecise language!
 	
 	for (var i=0; i<this.knotsList.length; i++) {
 		this.knotsList[i].circle.remove();
 	}
 	this.knotsList.length = 0;
 	this.knotsList = null; 	// type: TEVisuallyModifiableKnot
-	console.log("Data to delete: 3:", this);
+	//console.log("Data to delete: 3:", this);
 	
 	for (var shape=0; shape<2; shape++) {
 		for (var i=0; i<this.leftVectors[0].length; i++) {
-			console.log("shape:",shape,"i:",i);
+			//console.log("shape:",shape,"i:",i);
 			this.leftVectors[shape][i].line.remove();
 			this.rightVectors[shape][i].line.remove();
 		}
@@ -1041,23 +1059,23 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	this.rightVectors.length = 0;
 	this.rightVectors = null;
 	
-	console.log("Data to delete: 4:", this);
+	//console.log("Data to delete: 4:", this);
 	
 	
 	// paths
 	//this.middlePath.remove();	// don't know if this variable is used?! seems to be null?! => seems to be unused duplicate of fhToken in TEDrawingArea
 	//this.middlePath = null; 
-	console.log("outerShape: ", this.outerShape);
+	//console.log("outerShape: ", this.outerShape);
 				
 	this.outerShape[0].remove();
 	//this.outerShape = null;		
 	this.outerShape[1].remove();
 	//this.outerShape = null;
-	console.log("Data to delete: 6:", this);
+	//console.log("Data to delete: 6:", this);
 	
 	this.outerShape.length = 0;
 	this.outerShape = null;		
-	console.log("Data to delete: 7:", this);
+	//console.log("Data to delete: 7:", this);
 	
 	// delete middlepath
 	//for (var i=0; i<mainCanvas.editor.fhToken.segments.length; i++);
@@ -1075,10 +1093,10 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	// index (is updated whenever identify-method is called)
 	this.index = 0;
 
-	console.log("Data to delete: after:", this);
+	//console.log("Data to delete: after:", this);
 }
 TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
-	console.log("copy header: ");
+	//console.log("copy header: ");
 	var output = "";
 	for (var i=0; i<24; i++) {
 			var id = "h" + Math.floor(i+1);
@@ -1087,13 +1105,27 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
 			var string = (this.header[i] == null) ? "null" : this.header[i];
 			output += "[" + string + "]";
 	}
-	console.log("values: ", output);
+	//console.log("values: ", output);
+}
+TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
+	//console.log("copy header array to text fields: header: ", this.header);
+	var output = "<tr>\n"; // open first row
+	for (var i=0; i<24; i++) {
+			var id = "h" + Math.floor(i+1);
+			var nr = (Math.floor(i)<10) ? "0"+Math.floor(i+1) : Math.floor(i+1);
+			output += "<td>" + nr + "<input type=\"text\" id=\"" + id + "\" size=\"4\" value=\"" + this.header[i] + "\"></td>\n";
+			if ((i+1)%8==0) output += "</tr><tr>"; // new row
+	}
+	output += "</tr>"; // close last row
+	document.getElementById("headertable").innerHTML = output; 
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
 	// set new selected / marked knot before deleting the actual knot
+	// this function is still buggy ... e.g. rests of vectors remain on canvas and thickness sliders aren't unlinked => FIX IT LATER
 	var end = this.knotsList.length;
 	switch (this.index) {
+		case 1 : this.selectedKnot = this.knotsList[0]; this.markedKnot = this.selectedKnot; break;
 		case end : this.selectedKnot = this.knotsList[end-2]; this.markedKnot = this.selectedKnot; break;
 		default : this.selectedKnot = this.knotsList[this.index]; this.markedKnot = this.selectedKnot; break;
 	}
@@ -1221,6 +1253,8 @@ function TERotatingAxis(drawingArea, color) {
 	
 	// parallel rotating axis
 	this.parallelRotatingAxis = new TEParallelRotatingAxisGrouper(this);
+	//console.log("parallelRotatingAxis: ", this.parallelRotatingAxis);
+	//this.parallelRotatingAxis.updateAll();
 }
 TERotatingAxis.prototype.select = function() {
 	this.selected = true;
@@ -1230,9 +1264,9 @@ TERotatingAxis.prototype.unselect = function() {
 	this.selected = false;
 	this.updateColor();
 } 
-TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
-	var dx = event.point.x - this.centerRotatingAxis.x,
-		dy = event.point.y - this.centerRotatingAxis.y;
+TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(point) {
+	var dx = point.x - this.centerRotatingAxis.x,
+		dy = point.y - this.centerRotatingAxis.y;
 	
 	if (dx == 0) return [[this.centerRotatingAxis.x,this.parent.lowerY],[this.centerRotatingAxis.x, this.parent.upperY]];	// avoid division by 0
 	else {
@@ -1322,7 +1356,8 @@ TERotatingAxis.prototype.updateColor = function() {
 }
 TERotatingAxis.prototype.handleMouseDrag = function(event) {
 	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.centerRotatingAxis.y) && (event.point.y > this.parent.upperY)) {
-		var startAndEndPoints = this.getStraightLineStartAndEndPoints(event);
+		var point = event.point;
+		var startAndEndPoints = this.getStraightLineStartAndEndPoints(point);
 		this.line.segments[0].point = startAndEndPoints[0];
 		this.line.segments[1].point = startAndEndPoints[1];	
 		this.updateColor();
@@ -1339,6 +1374,25 @@ TERotatingAxis.prototype.handleMouseDrag = function(event) {
 		this.parent.updateFreehandPath();
 		this.parent.connectPreceedingAndFollowing();
 	}
+}
+TERotatingAxis.prototype.setRotatingAxisManually = function(point) {
+	// basically same code as handleMouseDrag, but with custom x,y instead of event.point
+	var startAndEndPoints = this.getStraightLineStartAndEndPoints(point);
+	this.line.segments[0].point = startAndEndPoints[0];
+	this.line.segments[1].point = startAndEndPoints[1];	
+	this.updateColor();
+	this.controlCircle.circle.position = point;
+	// adjust token points
+	var angleRad = Math.atan((startAndEndPoints[1][1] - startAndEndPoints[0][1]) / (startAndEndPoints[1][0] - startAndEndPoints[0][0]));
+	var angleDeg = Math.degrees(angleRad);
+	// copy values
+	this.inclinationValue = angleDeg;
+	this.inclinationLabel.content = Math.abs(angleDeg.toFixed(0)) + "°"; // show only positive values
+	// update	
+	//this.updateVisibleKnots();
+	this.recalculateFreehandPoints();
+	this.parent.updateFreehandPath();
+	this.parent.connectPreceedingAndFollowing();
 }
 TERotatingAxis.prototype.calculateHorizontalIntersectionX = function(y, type) {
 	var dx = this.centerRotatingAxis.x - this.controlCircle.circle.position.x,
@@ -2146,6 +2200,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	// initialize marked circle and index
 	// following line throws an error => why?!?!?!?!?
     this.setMarkedCircle(this.preceeding);
+    //this.rotatingAxis.parallelRotatingAxis.updateAll();
 }
 
 // class TEDrawingArea: methods
@@ -2445,7 +2500,8 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.following.connect();	
 }
 TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
-	console.log("loadAndInitializeTokenData()");
+	//console.log("actualfont: ", actualFont);
+	//console.log("loadAndInitializeTokenData(): token: ", token);
 	mainCanvas.editor.editableToken.deleteAllKnotData();
 	// delete main object
 	this.editableToken = null;
@@ -2453,13 +2509,12 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	this.editableToken = new TEEditableToken(this);
 	// copy data
 	this.editableToken.header = token.header;
-	console.log("tokenData: ", token, token.tokenData.length);
+	//console.log("tokenData: ", token, token.tokenData.length);
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
-		console.log("tokenData: i: ", i, token.tokenData[i]);
+		//console.log("tokenData: i: ", i, token.tokenData[i]);
 		var x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x,
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
-		console.log("xy: ", x, y);
 		
 		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
 		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
@@ -2477,15 +2532,46 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		//mainCanvas.editor.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["left"];
 		//mainCanvas.editor.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["right"];		
 	}
-	console.log("fhToken: ", mainCanvas.editor.fhToken);
+	//console.log("fhToken: ", mainCanvas.editor.fhToken);
 	mainCanvas.editor.updateFreehandPath();
 	mainCanvas.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
 	
-	console.log("mainCanvas.editor: ", mainCanvas.editor);
+	// update header fields in HTML
+	//console.log("header: ", mainCanvas.editor.editableToken.header);
+	mainCanvas.editor.editableToken.copyHeaderArrayToTextFields();
+	
+	
+	
+	//console.log("mainCanvas.editor: ", mainCanvas.editor);
 }
-
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
-	console.log("loadAndInitializeEditorData()");
+	// set standard parameters for editor in order to insert data
+	// set rotatingAxis to horizontal (makes it easier: relativ coordinates can be used as absolute coordinates)
+	//this.rotatingAxis.controlCircle.circle.position.x = this.rotatingAxis.centerRotatingAxis.x;
+	//this.rotatingAxis.controlCircle.circle.position.y = this.upperY; 
+	this.rotatingAxis.setRotatingAxisManually(new Point(this.rotatingAxis.centerRotatingAxis.x, this.upperY));
+	this.rotatingAxis.parallelRotatingAxis.updateAll(); // update all rotating axis (including main)
+	
+	//console.log("loadAndInitializeEditorData()");
+}
+TEDrawingArea.prototype.cleanDrawingArea = function() {
+	// clean drawing area and start editing a new token
+	this.editableToken.deleteAllKnotData();
+	// delete main object
+	this.editableToken = null;
+	// create new object
+	this.editableToken = new TEEditableToken(this);
+	
+	/* nice try but didn't work ... couldn't get the deleteMarkedKnotFromArray() method to delete last knot => maybe there's a bug there ... !?
+	for (var i=this.editableToken.knotsList.length-1; i>=0; i--) {
+		console.log("editableToken: ", i, this.editableToken.knotsList);
+		this.editableToken.index = this.editableToken.knotsList.length; // point index to length, so that deleteMarkedKnotFromArray will delete last element and set selected/markedKnot accordingly
+		console.log("index: ", this.editableToken.index);
+		if (this.editableToken.index == 1) this.editableToken.index = 0; // set index to 0 if it is the last (first of array) element to delete
+		this.editableToken.deleteMarkedKnotFromArray();
+	}
+	this.editableToken.index = 0;
+	*/
 }
 // class TEMovingVerticalSlider
 function TEMovingVerticalSlider(from, to) {
@@ -2866,9 +2952,11 @@ TEThicknessSlider.prototype.showLinked = function() {
 	//console.log("linkedVector: ", this.linkedVector);
 }
 TEThicknessSlider.prototype.linkVector = function(vector) {
-	this.linkedVector = vector;
-	this.setValue(vector.distance);
-	this.horizontalSlider.show();
+	if ((vector != undefined) && (vector != null)) {
+		this.linkedVector = vector;
+		this.setValue(vector.distance);
+		this.horizontalSlider.show();
+	}
 }
 TEThicknessSlider.prototype.unlinkVector = function() {
 	this.linkedVector = null;
@@ -2970,8 +3058,9 @@ TETwoGroupedThicknessSliders.prototype.handleEvent = function(event) {
 		//console.log("Write new values: ", this.thicknessSlider1.getValue(), this.thicknessSlider2.getValue());
 		//this.showHorizontalSliders();
 		//console.log("set visible: ",this.thicknessSlider1.horizontalSlider.rectangle.visible);
-		this.thicknessSlider1.horizontalSlider.rectangle.visible=true;
-		this.thicknessSlider2.horizontalSlider.rectangle.visible=true;
+		
+		//this.thicknessSlider1.horizontalSlider.rectangle.visible=true;
+		//this.thicknessSlider2.horizontalSlider.rectangle.visible=true;
 		
 }
 /*
@@ -2990,12 +3079,15 @@ TETwoGroupedThicknessSliders.prototype.setValues = function(t1, t2) {
 }
 TETwoGroupedThicknessSliders.prototype.showHorizontalSliders = function() {
 	//console.log("TETwoGroupedThicknessSliders.showHorizontalSliders()", this.thicknessSlider1.horizontalSlider.rectangle.visible);
-	this.thicknessSlider1.horizontalSlider.show(); //horizontalSlider.show();
-	this.thicknessSlider2.horizontalSlider.show();
-	//console.log("visible = ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
-	//console.log("fillColor = ", this.thicknessSlider1.horizontalSlider.rectangle.fillColor);
-	//console.log("strokeColor = ", this.thicknessSlider1.horizontalSlider.rectangle.strokeColor);
+	//console.log("TETwoGroupedThicknessSliders.showHorizontalSliders()", this.linkedVector, this.linkedVector.knotsList.length);
 	
+	if ((this.linkedVector != null) && (this.linkedVector != undefined) && (this.linkedVector.knotsList.length>0)) {
+		this.thicknessSlider1.horizontalSlider.show(); //horizontalSlider.show();
+		this.thicknessSlider2.horizontalSlider.show();
+		//console.log("visible = ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
+		//console.log("fillColor = ", this.thicknessSlider1.horizontalSlider.rectangle.fillColor);
+		//console.log("strokeColor = ", this.thicknessSlider1.horizontalSlider.rectangle.strokeColor);
+	}
 }
 TETwoGroupedThicknessSliders.prototype.hideHorizontalSliders = function() {
 	this.thicknessSlider1.horizontalSlider.hide();
@@ -3015,17 +3107,23 @@ TETwoGroupedThicknessSliders.prototype.updateValues = function() {
 TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
 	//console.log("TETwoGroupedThicknessSliders.linkEditableToken()", token);
 	//console.log("Visible? ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
-	this.linkedEditableToken = token;
-	var index = token.index-1;
-	//console.log("Link vector: ", index, token, token.leftVectors[index]);
-	var actualShape = this.parent.editor.getSelectedShapeIndex();
-	this.thicknessSlider1.linkVector(token.leftVectors[actualShape][index]);
-	this.thicknessSlider2.linkVector(token.rightVectors[actualShape][index]);
-	//console.log("Hi there:", token.leftVectors[index]);
-	this.setValues(token.leftVectors[actualShape][index].distance, token.rightVectors[actualShape][index].distance);	
-	this.showHorizontalSliders();
-	//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
-	//this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
+	if ((token != null) && (token != undefined) && (token.knotsList.length>0)) {
+		this.linkedEditableToken = token;
+		var index = token.index-1;
+		//console.log("Link vector: ", index, token, token.leftVectors[index]);
+		var actualShape = this.parent.editor.getSelectedShapeIndex();
+		
+		//console.log(index, token);
+		if (token.leftVectors[actualShape][index] != undefined) { // this is only a quick fix ... there's something wrong with that
+			this.thicknessSlider1.linkVector(token.leftVectors[actualShape][index]);
+			this.thicknessSlider2.linkVector(token.rightVectors[actualShape][index]);
+			//console.log("Hi there:", token.leftVectors[index]);
+			this.setValues(token.leftVectors[actualShape][index].distance, token.rightVectors[actualShape][index].distance);	
+		}
+		this.showHorizontalSliders();
+		//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
+		//this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
+	}
 }
 TETwoGroupedThicknessSliders.prototype.unlinkEditableToken = function() {
 	this.linkedEditableToken = null;
@@ -3553,7 +3651,11 @@ document.onClick = function() {
 	switch (document.activeElement.id) {
 		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
 		case "load" : actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
-		case "save" : actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
+		case "save" : // call add function first, in case text field is not empty
+					  // in that case: add token (name), select it and save it directly to this (eventually new) token (name)
+					  addNewTokenToPullDownSelection(document.getElementById("token").value); 
+					  actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  break;
 		case "delete" : actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); break;
 		case "todatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); break;
 		default : console.log("nothing triggered"); break;
@@ -3566,6 +3668,7 @@ function checkSpecialKeys(e) {
 	e = e || window.event;
 	if (e.ctrlKey) ctrlKey = true;
     else ctrlKey = false;
+   
     if (ctrlKey) {
 		if (e.keyCode == '38') {
 			arrowUp = true; // up arrow
@@ -3602,6 +3705,9 @@ function checkSpecialKeys(e) {
 			// for following line: see comment in freehand => setKnotType()
 			mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
 			//console.log("arrowRight");
+		} else if (e.keyCode == '32') {
+			// space bar
+			mainCanvas.editor.cleanDrawingArea();
 		}
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);

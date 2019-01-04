@@ -132,9 +132,11 @@ TEThicknessSlider.prototype.showLinked = function() {
 	//console.log("linkedVector: ", this.linkedVector);
 }
 TEThicknessSlider.prototype.linkVector = function(vector) {
-	this.linkedVector = vector;
-	this.setValue(vector.distance);
-	this.horizontalSlider.show();
+	if ((vector != undefined) && (vector != null)) {
+		this.linkedVector = vector;
+		this.setValue(vector.distance);
+		this.horizontalSlider.show();
+	}
 }
 TEThicknessSlider.prototype.unlinkVector = function() {
 	this.linkedVector = null;
@@ -236,8 +238,9 @@ TETwoGroupedThicknessSliders.prototype.handleEvent = function(event) {
 		//console.log("Write new values: ", this.thicknessSlider1.getValue(), this.thicknessSlider2.getValue());
 		//this.showHorizontalSliders();
 		//console.log("set visible: ",this.thicknessSlider1.horizontalSlider.rectangle.visible);
-		this.thicknessSlider1.horizontalSlider.rectangle.visible=true;
-		this.thicknessSlider2.horizontalSlider.rectangle.visible=true;
+		
+		//this.thicknessSlider1.horizontalSlider.rectangle.visible=true;
+		//this.thicknessSlider2.horizontalSlider.rectangle.visible=true;
 		
 }
 /*
@@ -256,12 +259,15 @@ TETwoGroupedThicknessSliders.prototype.setValues = function(t1, t2) {
 }
 TETwoGroupedThicknessSliders.prototype.showHorizontalSliders = function() {
 	//console.log("TETwoGroupedThicknessSliders.showHorizontalSliders()", this.thicknessSlider1.horizontalSlider.rectangle.visible);
-	this.thicknessSlider1.horizontalSlider.show(); //horizontalSlider.show();
-	this.thicknessSlider2.horizontalSlider.show();
-	//console.log("visible = ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
-	//console.log("fillColor = ", this.thicknessSlider1.horizontalSlider.rectangle.fillColor);
-	//console.log("strokeColor = ", this.thicknessSlider1.horizontalSlider.rectangle.strokeColor);
+	//console.log("TETwoGroupedThicknessSliders.showHorizontalSliders()", this.linkedVector, this.linkedVector.knotsList.length);
 	
+	if ((this.linkedVector != null) && (this.linkedVector != undefined) && (this.linkedVector.knotsList.length>0)) {
+		this.thicknessSlider1.horizontalSlider.show(); //horizontalSlider.show();
+		this.thicknessSlider2.horizontalSlider.show();
+		//console.log("visible = ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
+		//console.log("fillColor = ", this.thicknessSlider1.horizontalSlider.rectangle.fillColor);
+		//console.log("strokeColor = ", this.thicknessSlider1.horizontalSlider.rectangle.strokeColor);
+	}
 }
 TETwoGroupedThicknessSliders.prototype.hideHorizontalSliders = function() {
 	this.thicknessSlider1.horizontalSlider.hide();
@@ -281,17 +287,23 @@ TETwoGroupedThicknessSliders.prototype.updateValues = function() {
 TETwoGroupedThicknessSliders.prototype.linkEditableToken = function(token) {
 	//console.log("TETwoGroupedThicknessSliders.linkEditableToken()", token);
 	//console.log("Visible? ", this.thicknessSlider1.horizontalSlider.rectangle.visible);
-	this.linkedEditableToken = token;
-	var index = token.index-1;
-	//console.log("Link vector: ", index, token, token.leftVectors[index]);
-	var actualShape = this.parent.editor.getSelectedShapeIndex();
-	this.thicknessSlider1.linkVector(token.leftVectors[actualShape][index]);
-	this.thicknessSlider2.linkVector(token.rightVectors[actualShape][index]);
-	//console.log("Hi there:", token.leftVectors[index]);
-	this.setValues(token.leftVectors[actualShape][index].distance, token.rightVectors[actualShape][index].distance);	
-	this.showHorizontalSliders();
-	//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
-	//this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
+	if ((token != null) && (token != undefined) && (token.knotsList.length>0)) {
+		this.linkedEditableToken = token;
+		var index = token.index-1;
+		//console.log("Link vector: ", index, token, token.leftVectors[index]);
+		var actualShape = this.parent.editor.getSelectedShapeIndex();
+		
+		//console.log(index, token);
+		if (token.leftVectors[actualShape][index] != undefined) { // this is only a quick fix ... there's something wrong with that
+			this.thicknessSlider1.linkVector(token.leftVectors[actualShape][index]);
+			this.thicknessSlider2.linkVector(token.rightVectors[actualShape][index]);
+			//console.log("Hi there:", token.leftVectors[index]);
+			this.setValues(token.leftVectors[actualShape][index].distance, token.rightVectors[actualShape][index].distance);	
+		}
+		this.showHorizontalSliders();
+		//console.log("Set values: ", token.leftVectors[index].distance, token.rightVectors[index].distance);
+		//this.setValues(token.leftVectors[index].distance, token.rightVectors[index].distance);	
+	}
 }
 TETwoGroupedThicknessSliders.prototype.unlinkEditableToken = function() {
 	this.linkedEditableToken = null;

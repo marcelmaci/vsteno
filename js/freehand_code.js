@@ -294,22 +294,24 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		//this.rightVectors[0][i].distance = 1;
 	}
 	// set new types
-	this.knotsList[0].type.entry = true;
-	this.knotsList[this.knotsList.length-1].type.exit = true;
-	indexP1 = (this.knotsList.length > 2) ? 1 : 0;
-	indexP2 = (this.knotsList.length > 2) ? this.knotsList.length-2: this.knotsList.length-1;
-	this.knotsList[indexP1].type.pivot1 = true;
-	this.knotsList[indexP2].type.pivot2 = true;
-	// set colors
-	this.knotsList[indexP1].circle.fillColor = colorPivot1;
-	this.knotsList[indexP2].circle.fillColor = colorPivot2;
-	this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
-	this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
-	// correct thicknesses of entry and exit knot (set them to 0)
-	//this.leftVectors[0][0].distance = 0;
-	//this.rightVectors[0][0].distance = 0;
-	//this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
-	//this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
+	if ((this.knotsList != null) && (this.knotsList != undefined) && (this.knotsList.length>0)) {
+		this.knotsList[0].type.entry = true;
+		this.knotsList[this.knotsList.length-1].type.exit = true;
+		indexP1 = (this.knotsList.length > 2) ? 1 : 0;
+		indexP2 = (this.knotsList.length > 2) ? this.knotsList.length-2: this.knotsList.length-1;
+		this.knotsList[indexP1].type.pivot1 = true;
+		this.knotsList[indexP2].type.pivot2 = true;
+		// set colors
+		this.knotsList[indexP1].circle.fillColor = colorPivot1;
+		this.knotsList[indexP2].circle.fillColor = colorPivot2;
+		this.knotsList[0].circle.fillColor = colorEntryKnot;	// if pivot color has been set before, it will be overwritten
+		this.knotsList[this.knotsList.length-1].circle.fillColor = colorExitKnot;
+		// correct thicknesses of entry and exit knot (set them to 0)
+		//this.leftVectors[0][0].distance = 0;
+		//this.rightVectors[0][0].distance = 0;
+		//this.leftVectors[0][this.leftVectors[0].length-1].distance = 0;
+		//this.rightVectors[0][this.rightVectors[0].length-1].distance = 0;
+	}
 }
 TEEditableToken.prototype.getNewKnotTypeColor = function() {
 	// knot will be inserted after this.index
@@ -389,27 +391,27 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	// there are paper.js objects (lines, circles, polygons ...) on the canvas that need to be deleted before a new token can be loaded 
 	// in ... at least they won't go away like "magic" ... Just in case I didn't mention it before: I hate JS!
 	
-	console.log("Data to delete: before:", this);
+	//console.log("Data to delete: before:", this);
 	// parent
 	this.parent = drawingArea;		// delete parent right away and use mainCanvas later (see below for fhToken)
 	this.parent = null;
-	console.log("Data to delete: 1:", this);
+	//console.log("Data to delete: 1:", this);
 	
 	// token data
-	this.header.length = 0;
-	this.header = null;
-	console.log("Data to delete: 2:", this);
+	//this.header.length = 0; // setting header.length = 0 is fatal ... data referenced by another variable (e.g. TokenDefinition.header will also get deleted
+	this.header = null;		  // => setting only this.header to null leaves that data intact and "frees" variable this.header so that it can point to a new header
+	//console.log("Data to delete: 2:", this);	// again: JS is just an ugly and unprecise language!
 	
 	for (var i=0; i<this.knotsList.length; i++) {
 		this.knotsList[i].circle.remove();
 	}
 	this.knotsList.length = 0;
 	this.knotsList = null; 	// type: TEVisuallyModifiableKnot
-	console.log("Data to delete: 3:", this);
+	//console.log("Data to delete: 3:", this);
 	
 	for (var shape=0; shape<2; shape++) {
 		for (var i=0; i<this.leftVectors[0].length; i++) {
-			console.log("shape:",shape,"i:",i);
+			//console.log("shape:",shape,"i:",i);
 			this.leftVectors[shape][i].line.remove();
 			this.rightVectors[shape][i].line.remove();
 		}
@@ -426,23 +428,23 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	this.rightVectors.length = 0;
 	this.rightVectors = null;
 	
-	console.log("Data to delete: 4:", this);
+	//console.log("Data to delete: 4:", this);
 	
 	
 	// paths
 	//this.middlePath.remove();	// don't know if this variable is used?! seems to be null?! => seems to be unused duplicate of fhToken in TEDrawingArea
 	//this.middlePath = null; 
-	console.log("outerShape: ", this.outerShape);
+	//console.log("outerShape: ", this.outerShape);
 				
 	this.outerShape[0].remove();
 	//this.outerShape = null;		
 	this.outerShape[1].remove();
 	//this.outerShape = null;
-	console.log("Data to delete: 6:", this);
+	//console.log("Data to delete: 6:", this);
 	
 	this.outerShape.length = 0;
 	this.outerShape = null;		
-	console.log("Data to delete: 7:", this);
+	//console.log("Data to delete: 7:", this);
 	
 	// delete middlepath
 	//for (var i=0; i<mainCanvas.editor.fhToken.segments.length; i++);
@@ -460,10 +462,10 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	// index (is updated whenever identify-method is called)
 	this.index = 0;
 
-	console.log("Data to delete: after:", this);
+	//console.log("Data to delete: after:", this);
 }
 TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
-	console.log("copy header: ");
+	//console.log("copy header: ");
 	var output = "";
 	for (var i=0; i<24; i++) {
 			var id = "h" + Math.floor(i+1);
@@ -472,13 +474,27 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
 			var string = (this.header[i] == null) ? "null" : this.header[i];
 			output += "[" + string + "]";
 	}
-	console.log("values: ", output);
+	//console.log("values: ", output);
+}
+TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
+	//console.log("copy header array to text fields: header: ", this.header);
+	var output = "<tr>\n"; // open first row
+	for (var i=0; i<24; i++) {
+			var id = "h" + Math.floor(i+1);
+			var nr = (Math.floor(i)<10) ? "0"+Math.floor(i+1) : Math.floor(i+1);
+			output += "<td>" + nr + "<input type=\"text\" id=\"" + id + "\" size=\"4\" value=\"" + this.header[i] + "\"></td>\n";
+			if ((i+1)%8==0) output += "</tr><tr>"; // new row
+	}
+	output += "</tr>"; // close last row
+	document.getElementById("headertable").innerHTML = output; 
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
 	// set new selected / marked knot before deleting the actual knot
+	// this function is still buggy ... e.g. rests of vectors remain on canvas and thickness sliders aren't unlinked => FIX IT LATER
 	var end = this.knotsList.length;
 	switch (this.index) {
+		case 1 : this.selectedKnot = this.knotsList[0]; this.markedKnot = this.selectedKnot; break;
 		case end : this.selectedKnot = this.knotsList[end-2]; this.markedKnot = this.selectedKnot; break;
 		default : this.selectedKnot = this.knotsList[this.index]; this.markedKnot = this.selectedKnot; break;
 	}

@@ -4,15 +4,25 @@
 var tokenPullDownSelection = [];
 var actualFont = new ShorthandFont();
 
+function filterOutEmptySpaces(string) {
+	var newString = string;
+	do {
+		string = newString;
+		newString = string.replace(/\s+/, '');
+	} while (newString != string);
+	return newString;
+}
+
 // general functions
 function addNewTokenToPullDownSelection(token) {
-	if (tokenPullDownSelection.indexOf(token) == -1) {	// element doesn't exist => add
+	token = filterOutEmptySpaces(token); // filter out empty spaces 
+	if ((tokenPullDownSelection.indexOf(token) == -1)  && (token != "")) {	// element doesn't exist => add
 		tokenPullDownSelection.push(token);
 		tokenPullDownSelection.sort(); // sort array alphabetically
 		updatePullDownSelection(token);
-		// set textfield to empty
-		document.getElementById("token").value = "";
 	}
+	// set textfield to empty
+	document.getElementById("token").value = "";
 }
 function updatePullDownSelection(token) {			// preselect token in list
 	var optionList = "<option value=\"select\">-select-</option>\n";
@@ -38,8 +48,8 @@ ShorthandFont.prototype.saveTokenAndEditorData = function(token) {		// saves act
 		this.editorData[token] = new EditorParameters();		// same for editor data
 	}
 	
-	console.log("ShorthandFont: ", this);
-	console.log("EditableToken: ", mainCanvas.editor.editableToken);
+	//console.log("ShorthandFont: ", this);
+	//console.log("EditableToken: ", mainCanvas.editor.editableToken);
 }
 ShorthandFont.prototype.deleteTokenFromPullDownSelection = function(token) {
 	this.deleteTokenData(token);
@@ -54,11 +64,11 @@ ShorthandFont.prototype.deleteTokenAndEditorData = function(token) {
 	this.deleteEditorData(token);
 }
 ShorthandFont.prototype.deleteTokenData = function(token) {
-	console.log("deleteTokenData");
+	//console.log("deleteTokenData");
 	this.tokenList[token] = null;
 }
 ShorthandFont.prototype.deleteEditorData = function(token) {
-	console.log("deleteEditorData");
+	//console.log("deleteEditorData");
 	this.editorData[token] = null;	
 }
 ShorthandFont.prototype.loadTokenAndEditorData = function(token) {
@@ -75,7 +85,13 @@ function TokenDefinition() {
 }
 TokenDefinition.prototype.goAndGrabThatTokenData = function() {
 	mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
-	this.header = mainCanvas.editor.editableToken.header;
+	this.header = mainCanvas.editor.editableToken.header.slice(); 
+	// well, guess what ... slice() is vital here ... otherwise JS will make this.header point to one and the same object 
+	// (and operations destined for this token will affect other objects also ... ceterum censeo ;-))
+	// to resume: slice() <=> copy by value
+	
+	//console.log("goAndGrabThatTokenData: header: ", this.header);
+	
 	this.getTokenDefinition();
 }
 TokenDefinition.prototype.getTokenDefinition = function() {

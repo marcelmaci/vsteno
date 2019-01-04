@@ -90,7 +90,11 @@ document.onClick = function() {
 	switch (document.activeElement.id) {
 		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
 		case "load" : actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
-		case "save" : actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
+		case "save" : // call add function first, in case text field is not empty
+					  // in that case: add token (name), select it and save it directly to this (eventually new) token (name)
+					  addNewTokenToPullDownSelection(document.getElementById("token").value); 
+					  actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  break;
 		case "delete" : actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); break;
 		case "todatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); break;
 		default : console.log("nothing triggered"); break;
@@ -103,6 +107,7 @@ function checkSpecialKeys(e) {
 	e = e || window.event;
 	if (e.ctrlKey) ctrlKey = true;
     else ctrlKey = false;
+   
     if (ctrlKey) {
 		if (e.keyCode == '38') {
 			arrowUp = true; // up arrow
@@ -139,6 +144,9 @@ function checkSpecialKeys(e) {
 			// for following line: see comment in freehand => setKnotType()
 			mainCanvas.editor.editableToken.selectedKnot = mainCanvas.editor.editableToken.markedKnot;
 			//console.log("arrowRight");
+		} else if (e.keyCode == '32') {
+			// space bar
+			mainCanvas.editor.cleanDrawingArea();
 		}
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);

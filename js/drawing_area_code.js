@@ -49,6 +49,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	// initialize marked circle and index
 	// following line throws an error => why?!?!?!?!?
     this.setMarkedCircle(this.preceeding);
+    //this.rotatingAxis.parallelRotatingAxis.updateAll();
 }
 
 // class TEDrawingArea: methods
@@ -348,7 +349,8 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.following.connect();	
 }
 TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
-	console.log("loadAndInitializeTokenData()");
+	//console.log("actualfont: ", actualFont);
+	//console.log("loadAndInitializeTokenData(): token: ", token);
 	mainCanvas.editor.editableToken.deleteAllKnotData();
 	// delete main object
 	this.editableToken = null;
@@ -356,13 +358,12 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	this.editableToken = new TEEditableToken(this);
 	// copy data
 	this.editableToken.header = token.header;
-	console.log("tokenData: ", token, token.tokenData.length);
+	//console.log("tokenData: ", token, token.tokenData.length);
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
-		console.log("tokenData: i: ", i, token.tokenData[i]);
+		//console.log("tokenData: i: ", i, token.tokenData[i]);
 		var x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x,
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
-		console.log("xy: ", x, y);
 		
 		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
 		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
@@ -380,13 +381,44 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		//mainCanvas.editor.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["left"];
 		//mainCanvas.editor.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["right"];		
 	}
-	console.log("fhToken: ", mainCanvas.editor.fhToken);
+	//console.log("fhToken: ", mainCanvas.editor.fhToken);
 	mainCanvas.editor.updateFreehandPath();
 	mainCanvas.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
 	
-	console.log("mainCanvas.editor: ", mainCanvas.editor);
+	// update header fields in HTML
+	//console.log("header: ", mainCanvas.editor.editableToken.header);
+	mainCanvas.editor.editableToken.copyHeaderArrayToTextFields();
+	
+	
+	
+	//console.log("mainCanvas.editor: ", mainCanvas.editor);
 }
-
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
-	console.log("loadAndInitializeEditorData()");
+	// set standard parameters for editor in order to insert data
+	// set rotatingAxis to horizontal (makes it easier: relativ coordinates can be used as absolute coordinates)
+	//this.rotatingAxis.controlCircle.circle.position.x = this.rotatingAxis.centerRotatingAxis.x;
+	//this.rotatingAxis.controlCircle.circle.position.y = this.upperY; 
+	this.rotatingAxis.setRotatingAxisManually(new Point(this.rotatingAxis.centerRotatingAxis.x, this.upperY));
+	this.rotatingAxis.parallelRotatingAxis.updateAll(); // update all rotating axis (including main)
+	
+	//console.log("loadAndInitializeEditorData()");
+}
+TEDrawingArea.prototype.cleanDrawingArea = function() {
+	// clean drawing area and start editing a new token
+	this.editableToken.deleteAllKnotData();
+	// delete main object
+	this.editableToken = null;
+	// create new object
+	this.editableToken = new TEEditableToken(this);
+	
+	/* nice try but didn't work ... couldn't get the deleteMarkedKnotFromArray() method to delete last knot => maybe there's a bug there ... !?
+	for (var i=this.editableToken.knotsList.length-1; i>=0; i--) {
+		console.log("editableToken: ", i, this.editableToken.knotsList);
+		this.editableToken.index = this.editableToken.knotsList.length; // point index to length, so that deleteMarkedKnotFromArray will delete last element and set selected/markedKnot accordingly
+		console.log("index: ", this.editableToken.index);
+		if (this.editableToken.index == 1) this.editableToken.index = 0; // set index to 0 if it is the last (first of array) element to delete
+		this.editableToken.deleteMarkedKnotFromArray();
+	}
+	this.editableToken.index = 0;
+	*/
 }

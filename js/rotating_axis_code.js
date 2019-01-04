@@ -94,6 +94,8 @@ function TERotatingAxis(drawingArea, color) {
 	
 	// parallel rotating axis
 	this.parallelRotatingAxis = new TEParallelRotatingAxisGrouper(this);
+	//console.log("parallelRotatingAxis: ", this.parallelRotatingAxis);
+	//this.parallelRotatingAxis.updateAll();
 }
 TERotatingAxis.prototype.select = function() {
 	this.selected = true;
@@ -103,9 +105,9 @@ TERotatingAxis.prototype.unselect = function() {
 	this.selected = false;
 	this.updateColor();
 } 
-TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(event) {
-	var dx = event.point.x - this.centerRotatingAxis.x,
-		dy = event.point.y - this.centerRotatingAxis.y;
+TERotatingAxis.prototype.getStraightLineStartAndEndPoints = function(point) {
+	var dx = point.x - this.centerRotatingAxis.x,
+		dy = point.y - this.centerRotatingAxis.y;
 	
 	if (dx == 0) return [[this.centerRotatingAxis.x,this.parent.lowerY],[this.centerRotatingAxis.x, this.parent.upperY]];	// avoid division by 0
 	else {
@@ -195,7 +197,8 @@ TERotatingAxis.prototype.updateColor = function() {
 }
 TERotatingAxis.prototype.handleMouseDrag = function(event) {
 	if ((event.point.x >= this.parent.leftX) && (event.point.x < this.parent.rightX) && (event.point.y < this.centerRotatingAxis.y) && (event.point.y > this.parent.upperY)) {
-		var startAndEndPoints = this.getStraightLineStartAndEndPoints(event);
+		var point = event.point;
+		var startAndEndPoints = this.getStraightLineStartAndEndPoints(point);
 		this.line.segments[0].point = startAndEndPoints[0];
 		this.line.segments[1].point = startAndEndPoints[1];	
 		this.updateColor();
@@ -212,6 +215,25 @@ TERotatingAxis.prototype.handleMouseDrag = function(event) {
 		this.parent.updateFreehandPath();
 		this.parent.connectPreceedingAndFollowing();
 	}
+}
+TERotatingAxis.prototype.setRotatingAxisManually = function(point) {
+	// basically same code as handleMouseDrag, but with custom x,y instead of event.point
+	var startAndEndPoints = this.getStraightLineStartAndEndPoints(point);
+	this.line.segments[0].point = startAndEndPoints[0];
+	this.line.segments[1].point = startAndEndPoints[1];	
+	this.updateColor();
+	this.controlCircle.circle.position = point;
+	// adjust token points
+	var angleRad = Math.atan((startAndEndPoints[1][1] - startAndEndPoints[0][1]) / (startAndEndPoints[1][0] - startAndEndPoints[0][0]));
+	var angleDeg = Math.degrees(angleRad);
+	// copy values
+	this.inclinationValue = angleDeg;
+	this.inclinationLabel.content = Math.abs(angleDeg.toFixed(0)) + "°"; // show only positive values
+	// update	
+	//this.updateVisibleKnots();
+	this.recalculateFreehandPoints();
+	this.parent.updateFreehandPath();
+	this.parent.connectPreceedingAndFollowing();
 }
 TERotatingAxis.prototype.calculateHorizontalIntersectionX = function(y, type) {
 	var dx = this.centerRotatingAxis.x - this.controlCircle.circle.position.x,
