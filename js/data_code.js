@@ -48,8 +48,8 @@ ShorthandFont.prototype.saveTokenAndEditorData = function(token) {		// saves act
 		this.editorData[token] = new EditorParameters();		// same for editor data
 	}
 	
-	//console.log("ShorthandFont: ", this);
-	//console.log("EditableToken: ", mainCanvas.editor.editableToken);
+	console.log("ShorthandFont: ", this);
+	console.log("editor: ", mainCanvas.editor);
 }
 ShorthandFont.prototype.deleteTokenFromPullDownSelection = function(token) {
 	this.deleteTokenData(token);
@@ -89,6 +89,9 @@ TokenDefinition.prototype.goAndGrabThatTokenData = function() {
 	// well, guess what ... slice() is vital here ... otherwise JS will make this.header point to one and the same object 
 	// (and operations destined for this token will affect other objects also ... ceterum censeo ;-))
 	// to resume: slice() <=> copy by value
+	// well, guess what (2): I just learned that JSON can't stringify arrays ... that means that I will have to rewrite the whole
+	// data structure as objects ... oh, I really like this JS ...
+	
 	
 	//console.log("goAndGrabThatTokenData: header: ", this.header);
 	
@@ -107,7 +110,9 @@ function EditorParameters() {
 }
 EditorParameters.prototype.goAndCollectThatEditorData = function() {
 	for (var i=0; i<mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList.length; i++) {
-		this.rotatingAxisList.push(mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList[i].shiftX);
+		if (mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList[i].type != "main") { // don't save main axis
+			this.rotatingAxisList.push(mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList[i].shiftX);
+		}
 	}
 }
 

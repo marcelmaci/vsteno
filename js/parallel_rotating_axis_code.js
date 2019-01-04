@@ -6,7 +6,7 @@ function TEParallelRotatingAxisGrouper(parent) {
 	this.parent = parent;	// TERotatingAxis
 	this.epsilon = 0.1; 	// tolerance: if abs(shiftX1 - shiftX2) < epsilon, only 1 axis is drawn 
 							// (internally - i.e. for the knot - the EXACT value is calculated) 
-	this.axisList = []; 	// array of TEParallelRotatingAxis
+	//this.axisList = []; 	// array of TEParallelRotatingAxis
 	// new variables for manual insertion
 	this.selectedAxis = 0; // select main rotating axis by default
 	this.mainSelected = true;
@@ -20,6 +20,10 @@ TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	// add axis from left to right (in order to select them with CTRL-arrow left/right)
 	var defaultValue = 0;
 	var shiftX = Number(prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue));
+	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
+		this.addParallelAxisWithoutDialog(shiftX);
+	}
+	/*
 	var where = undefined;
 	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
 		var i = 0, length = this.newAxisList.length, type = "orthogonal", val1 = -99999999; val2 = 0;
@@ -44,9 +48,38 @@ TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	}
 	//console.log("AFTER: newAxisList: ", this.newAxisList);
 	this.updateAll();
+	*/
+}
+TEParallelRotatingAxisGrouper.prototype.addParallelAxisWithoutDialog = function(shiftX) {
+	// add axis from left to right (in order to select them with CTRL-arrow left/right)
+	console.log("add parallel rotating axis: ", shiftX);
+	var where = undefined;
+	
+		var i = 0, length = this.newAxisList.length, type = "orthogonal", val1 = -99999999; val2 = 0;
+		//console.log("start: i, length, shiftX: ", i, length, shiftX);
+		while ((i < length) && (where == undefined)) {
+			val2 = this.newAxisList[i].shiftX;
+			//console.log("test i: val1 < shiftX < val2: ", i, val1, shiftX, val2);
+			if ((val1 < shiftX) && (shiftX < val2)) where = i;
+			val1 = val2;
+			i++;
+		}
+		if (where == undefined) where = length;
+		
+		console.log("TEParallelRotatingAxisGrouper.addParallelAxis(): i/shiftX/type: ", i, shiftX, type);
+		var newParallelAxis = new TEParallelRotatingAxis(shiftX, type);
+		newParallelAxis.line.strokeColor = '#00f';
+		console.log("where: ", where);
+		this.newAxisList.splice(where, 0, newParallelAxis);
+		this.selectedAxis = i;
+		this.mainSelected = false;
+		this.parent.parent.rotatingAxis.unselect();
+	
+	console.log("AFTER: newAxisList: ", this.newAxisList);
+	this.updateAll();
 }
 TEParallelRotatingAxisGrouper.prototype.deleteParallelAxis = function() {
-	//console.log("TEParallelRotatingAxis.deleteParallelAxis()");
+	//console.log("TEParallelRotatingAxis.deleteParallelAxis()", this.selectedAxis, this.newAxisList);
 	if (this.newAxisList[this.selectedAxis].type != "main") {		// main axis cannot be deleted
 		//console.log("Before: ", this.newAxisList);
 		this.newAxisList[this.selectedAxis].line.removeSegments(); // remove line before deleting object
@@ -61,6 +94,19 @@ TEParallelRotatingAxisGrouper.prototype.deleteParallelAxis = function() {
 		}
 		this.updateAll();
 	}
+}
+TEParallelRotatingAxisGrouper.prototype.deleteAllParallelAxis = function() {
+	for (var i=this.newAxisList.length-1; i>=0; i--) {
+		if (this.newAxisList[i].type != "main") {		// main axis cannot be deleted
+			//console.log("Before: ", this.newAxisList);
+			this.newAxisList[i].line.removeSegments(); // remove line before deleting object
+			this.newAxisList[i].line = null;
+			this.newAxisList.splice(i,1);
+		}
+	}
+	this.selectedAxis = 0;
+	this.mainSelected = true;
+	this.updateAll();
 }
 TEParallelRotatingAxisGrouper.prototype.selectFollowingAxis = function() {
 	var length = this.newAxisList.length;
@@ -301,12 +347,12 @@ TEParallelRotatingAxisGrouper.prototype.experimentalDrawAllAxis = function() {
 	}
 }
 TEParallelRotatingAxisGrouper.prototype.emptyArray = function() {
-	for (var i=0; i<this.axisList.length; i++) {
-		this.axisList[i].line.removeSegments();
-		this.axisList[i].line = undefined;  // horrible to abandon an array somewhere hoping that it will be cleaned by garbage collector ...
+	for (var i=0; i<this.newAxisList.length; i++) {
+		this.newAxisList[i].line.removeSegments();
+		this.newAxisList[i].line = undefined;  // horrible to abandon an array somewhere hoping that it will be cleaned by garbage collector ...
 		this.shiftX = undefined;
 	}	
-	this.axisList = [];
+	this.newAxisList = [];
 }
 /* 
 TEParallelRotatingAxisGrouper.prototype.updateRotatingAxisList = function() {

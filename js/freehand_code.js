@@ -456,6 +456,12 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	mainCanvas.editor.knotLabel.coordinates.remove();
 	//mainCanvas.editor.knotLabel = null;
 	
+	// delete rotating axis
+	//mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList = 0;
+	//mainCanvas.editor.rotatingAxis.parallelRotatingAxis.emptyArray();
+	//mainCanvas.editor.rotatingAxis.parallelRotatingAxis = null;
+	mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteAllParallelAxis();
+	
 	this.selectedKnot = null;
 	this.markedKnot = null;
 

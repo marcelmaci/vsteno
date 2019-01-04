@@ -14,6 +14,7 @@ cat license.txt vsteno_editor_main_code.js > vsteno_editor_main.js
 cat license.txt tension_slider_code.js > tension_slider.js
 cat license.txt thickness_slider_code.js > thickness_slider.js
 cat license.txt parallel_rotating_axis_code.js > parallel_rotating_axis.js
+#cat license.txt js2db_code.js > js2db.js
 
 # join files into one file containing all the code 
 

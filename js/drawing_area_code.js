@@ -349,7 +349,7 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.following.connect();	
 }
 TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
-	//console.log("actualfont: ", actualFont);
+	console.log("actualfont: ", actualFont);
 	//console.log("loadAndInitializeTokenData(): token: ", token);
 	mainCanvas.editor.editableToken.deleteAllKnotData();
 	// delete main object
@@ -357,7 +357,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	// create new object
 	this.editableToken = new TEEditableToken(this);
 	// copy data
-	this.editableToken.header = token.header;
+	this.editableToken.header = token.header.slice(); // ?
 	//console.log("tokenData: ", token, token.tokenData.length);
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
@@ -399,8 +399,22 @@ TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	//this.rotatingAxis.controlCircle.circle.position.x = this.rotatingAxis.centerRotatingAxis.x;
 	//this.rotatingAxis.controlCircle.circle.position.y = this.upperY; 
 	this.rotatingAxis.setRotatingAxisManually(new Point(this.rotatingAxis.centerRotatingAxis.x, this.upperY));
-	this.rotatingAxis.parallelRotatingAxis.updateAll(); // update all rotating axis (including main)
+	//console.log("test1: ",this.rotatingAxis);
+	//var tmp = new TEParallelRotatingAxisGrouper(this.rotatingAxis); 
+	//this.rotatingAxis.parallelRotatingAxis = tmp; //new TEParallelRotatingAxisGrouper(this.rotatingAxis); // install main axis
+	//console.log("test2: ",tmp);
 	
+	// copy parallel rotating axis
+	//console.log("editor: ", editor);
+	for (var i=0; i<editor.rotatingAxisList.length; i++) {
+			console.log("add axis: ", editor.rotatingAxisList[i]);
+			this.rotatingAxis.parallelRotatingAxis.addParallelAxisWithoutDialog(editor.rotatingAxisList[i]);
+			//tmp.addParallelAxisWithoutDialog(editor.rotatingAxisList[i]);
+			//console.log("i:tmp: ", i, tmp);
+	}
+	//console.log("test3: ",tmp);
+	console.log("drawingArea: ", this);
+	this.rotatingAxis.parallelRotatingAxis.updateAll(); // update all rotating axis (including main)
 	//console.log("loadAndInitializeEditorData()");
 }
 TEDrawingArea.prototype.cleanDrawingArea = function() {

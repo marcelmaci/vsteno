@@ -537,8 +537,8 @@ ShorthandFont.prototype.saveTokenAndEditorData = function(token) {		// saves act
 		this.editorData[token] = new EditorParameters();		// same for editor data
 	}
 	
-	//console.log("ShorthandFont: ", this);
-	//console.log("EditableToken: ", mainCanvas.editor.editableToken);
+	console.log("ShorthandFont: ", this);
+	console.log("editor: ", mainCanvas.editor);
 }
 ShorthandFont.prototype.deleteTokenFromPullDownSelection = function(token) {
 	this.deleteTokenData(token);
@@ -578,6 +578,9 @@ TokenDefinition.prototype.goAndGrabThatTokenData = function() {
 	// well, guess what ... slice() is vital here ... otherwise JS will make this.header point to one and the same object 
 	// (and operations destined for this token will affect other objects also ... ceterum censeo ;-))
 	// to resume: slice() <=> copy by value
+	// well, guess what (2): I just learned that JSON can't stringify arrays ... that means that I will have to rewrite the whole
+	// data structure as objects ... oh, I really like this JS ...
+	
 	
 	//console.log("goAndGrabThatTokenData: header: ", this.header);
 	
@@ -596,7 +599,9 @@ function EditorParameters() {
 }
 EditorParameters.prototype.goAndCollectThatEditorData = function() {
 	for (var i=0; i<mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList.length; i++) {
-		this.rotatingAxisList.push(mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList[i].shiftX);
+		if (mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList[i].type != "main") { // don't save main axis
+			this.rotatingAxisList.push(mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList[i].shiftX);
+		}
 	}
 }
 
@@ -1086,6 +1091,12 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 	// delete label
 	mainCanvas.editor.knotLabel.coordinates.remove();
 	//mainCanvas.editor.knotLabel = null;
+	
+	// delete rotating axis
+	//mainCanvas.editor.rotatingAxis.parallelRotatingAxis.newAxisList = 0;
+	//mainCanvas.editor.rotatingAxis.parallelRotatingAxis.emptyArray();
+	//mainCanvas.editor.rotatingAxis.parallelRotatingAxis = null;
+	mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteAllParallelAxis();
 	
 	this.selectedKnot = null;
 	this.markedKnot = null;
@@ -2500,7 +2511,7 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.following.connect();	
 }
 TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
-	//console.log("actualfont: ", actualFont);
+	console.log("actualfont: ", actualFont);
 	//console.log("loadAndInitializeTokenData(): token: ", token);
 	mainCanvas.editor.editableToken.deleteAllKnotData();
 	// delete main object
@@ -2508,7 +2519,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	// create new object
 	this.editableToken = new TEEditableToken(this);
 	// copy data
-	this.editableToken.header = token.header;
+	this.editableToken.header = token.header.slice(); // ?
 	//console.log("tokenData: ", token, token.tokenData.length);
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
@@ -2550,8 +2561,22 @@ TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	//this.rotatingAxis.controlCircle.circle.position.x = this.rotatingAxis.centerRotatingAxis.x;
 	//this.rotatingAxis.controlCircle.circle.position.y = this.upperY; 
 	this.rotatingAxis.setRotatingAxisManually(new Point(this.rotatingAxis.centerRotatingAxis.x, this.upperY));
-	this.rotatingAxis.parallelRotatingAxis.updateAll(); // update all rotating axis (including main)
+	//console.log("test1: ",this.rotatingAxis);
+	//var tmp = new TEParallelRotatingAxisGrouper(this.rotatingAxis); 
+	//this.rotatingAxis.parallelRotatingAxis = tmp; //new TEParallelRotatingAxisGrouper(this.rotatingAxis); // install main axis
+	//console.log("test2: ",tmp);
 	
+	// copy parallel rotating axis
+	//console.log("editor: ", editor);
+	for (var i=0; i<editor.rotatingAxisList.length; i++) {
+			console.log("add axis: ", editor.rotatingAxisList[i]);
+			this.rotatingAxis.parallelRotatingAxis.addParallelAxisWithoutDialog(editor.rotatingAxisList[i]);
+			//tmp.addParallelAxisWithoutDialog(editor.rotatingAxisList[i]);
+			//console.log("i:tmp: ", i, tmp);
+	}
+	//console.log("test3: ",tmp);
+	console.log("drawingArea: ", this);
+	this.rotatingAxis.parallelRotatingAxis.updateAll(); // update all rotating axis (including main)
 	//console.log("loadAndInitializeEditorData()");
 }
 TEDrawingArea.prototype.cleanDrawingArea = function() {
@@ -3199,7 +3224,7 @@ function TEParallelRotatingAxisGrouper(parent) {
 	this.parent = parent;	// TERotatingAxis
 	this.epsilon = 0.1; 	// tolerance: if abs(shiftX1 - shiftX2) < epsilon, only 1 axis is drawn 
 							// (internally - i.e. for the knot - the EXACT value is calculated) 
-	this.axisList = []; 	// array of TEParallelRotatingAxis
+	//this.axisList = []; 	// array of TEParallelRotatingAxis
 	// new variables for manual insertion
 	this.selectedAxis = 0; // select main rotating axis by default
 	this.mainSelected = true;
@@ -3213,6 +3238,10 @@ TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	// add axis from left to right (in order to select them with CTRL-arrow left/right)
 	var defaultValue = 0;
 	var shiftX = Number(prompt("Enter x-Delta for parallel rotating axis:\n(negative = left side; positive = right side)", defaultValue));
+	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
+		this.addParallelAxisWithoutDialog(shiftX);
+	}
+	/*
 	var where = undefined;
 	if ((shiftX != defaultValue) && (!isNaN(shiftX))) {
 		var i = 0, length = this.newAxisList.length, type = "orthogonal", val1 = -99999999; val2 = 0;
@@ -3237,9 +3266,38 @@ TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	}
 	//console.log("AFTER: newAxisList: ", this.newAxisList);
 	this.updateAll();
+	*/
+}
+TEParallelRotatingAxisGrouper.prototype.addParallelAxisWithoutDialog = function(shiftX) {
+	// add axis from left to right (in order to select them with CTRL-arrow left/right)
+	console.log("add parallel rotating axis: ", shiftX);
+	var where = undefined;
+	
+		var i = 0, length = this.newAxisList.length, type = "orthogonal", val1 = -99999999; val2 = 0;
+		//console.log("start: i, length, shiftX: ", i, length, shiftX);
+		while ((i < length) && (where == undefined)) {
+			val2 = this.newAxisList[i].shiftX;
+			//console.log("test i: val1 < shiftX < val2: ", i, val1, shiftX, val2);
+			if ((val1 < shiftX) && (shiftX < val2)) where = i;
+			val1 = val2;
+			i++;
+		}
+		if (where == undefined) where = length;
+		
+		console.log("TEParallelRotatingAxisGrouper.addParallelAxis(): i/shiftX/type: ", i, shiftX, type);
+		var newParallelAxis = new TEParallelRotatingAxis(shiftX, type);
+		newParallelAxis.line.strokeColor = '#00f';
+		console.log("where: ", where);
+		this.newAxisList.splice(where, 0, newParallelAxis);
+		this.selectedAxis = i;
+		this.mainSelected = false;
+		this.parent.parent.rotatingAxis.unselect();
+	
+	console.log("AFTER: newAxisList: ", this.newAxisList);
+	this.updateAll();
 }
 TEParallelRotatingAxisGrouper.prototype.deleteParallelAxis = function() {
-	//console.log("TEParallelRotatingAxis.deleteParallelAxis()");
+	//console.log("TEParallelRotatingAxis.deleteParallelAxis()", this.selectedAxis, this.newAxisList);
 	if (this.newAxisList[this.selectedAxis].type != "main") {		// main axis cannot be deleted
 		//console.log("Before: ", this.newAxisList);
 		this.newAxisList[this.selectedAxis].line.removeSegments(); // remove line before deleting object
@@ -3254,6 +3312,19 @@ TEParallelRotatingAxisGrouper.prototype.deleteParallelAxis = function() {
 		}
 		this.updateAll();
 	}
+}
+TEParallelRotatingAxisGrouper.prototype.deleteAllParallelAxis = function() {
+	for (var i=this.newAxisList.length-1; i>=0; i--) {
+		if (this.newAxisList[i].type != "main") {		// main axis cannot be deleted
+			//console.log("Before: ", this.newAxisList);
+			this.newAxisList[i].line.removeSegments(); // remove line before deleting object
+			this.newAxisList[i].line = null;
+			this.newAxisList.splice(i,1);
+		}
+	}
+	this.selectedAxis = 0;
+	this.mainSelected = true;
+	this.updateAll();
 }
 TEParallelRotatingAxisGrouper.prototype.selectFollowingAxis = function() {
 	var length = this.newAxisList.length;
@@ -3494,12 +3565,12 @@ TEParallelRotatingAxisGrouper.prototype.experimentalDrawAllAxis = function() {
 	}
 }
 TEParallelRotatingAxisGrouper.prototype.emptyArray = function() {
-	for (var i=0; i<this.axisList.length; i++) {
-		this.axisList[i].line.removeSegments();
-		this.axisList[i].line = undefined;  // horrible to abandon an array somewhere hoping that it will be cleaned by garbage collector ...
+	for (var i=0; i<this.newAxisList.length; i++) {
+		this.newAxisList[i].line.removeSegments();
+		this.newAxisList[i].line = undefined;  // horrible to abandon an array somewhere hoping that it will be cleaned by garbage collector ...
 		this.shiftX = undefined;
 	}	
-	this.axisList = [];
+	this.newAxisList = [];
 }
 /* 
 TEParallelRotatingAxisGrouper.prototype.updateRotatingAxisList = function() {
@@ -3735,6 +3806,7 @@ tool.onKeyDown = function(event) {
 	switch (keyPressed) {	
 		// use 't' to toggle between locked and unlocked tensions
 		case "t" : selectedTension = (selectedTension == "locked") ? "middle" : "locked"; mainCanvas.tensionSliders.setNewLabels(); mainCanvas.tensionSliders.updateValues(); break;
+		//case "y" : writeDataToDB(); break;
 		case "s" : selectedShape = (selectedShape == "normal") ? "shadowed" : "normal"; mainCanvas.thicknessSliders.updateLabels(); break;
 		case "f" : selectedShapeFill = (selectedShapeFill == false) ? true : false; mainCanvas.thicknessSliders.setOuterShapesVisibility(); break; // toggle fill and update (method setOuterShapesVisibility should be transferred to more general object, e.g. TEDrawingArea)
 		case "o" : mainCanvas.editor.editableToken.setKnotType("orthogonal"); break;
