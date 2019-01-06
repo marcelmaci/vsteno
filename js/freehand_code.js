@@ -30,6 +30,11 @@ function TEKnotType() {
 	this.exit = false;
 	this.pivot1 = false;
 	this.pivot2 = false;
+	// elements for compatibility with SE1
+	this.lateEntry = false;
+	this.earlyExit = false;
+	this.connectionPoint = false;
+	this.connect2preceeding = true;
 }
 
 // class TEVisuallyModifiableKnotTEVisuallyModifiableKnot extends TEVisuallyModfiableCircle

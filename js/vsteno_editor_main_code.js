@@ -1,6 +1,8 @@
 
 // global variables
 var mainCanvas = new TECanvas(0,0,800,800);
+var middlePathWithVariableWidth = [];	// test: array of paths (subdivided main middle path)
+var showMiddlePathWithVariableWidth = false;
 
 // global event handlers and variables
 var lastClick = null,
@@ -96,7 +98,9 @@ document.onClick = function() {
 					  actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); 
 					  break;
 		case "delete" : actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); break;
-		case "todatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); break;
+		case "savetodatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); 
+							writeDataToDB();
+							break;
 		default : console.log("nothing triggered"); break;
 	}
 }
@@ -187,6 +191,7 @@ tool.onKeyDown = function(event) {
 					 mainCanvas.editor.connectPreceedingAndFollowing();
 					break;
 		case "i" : mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
+		case "q" : mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth(); break;	// test
 		
 		/*console.log("input: ", document.getElementById("h1").value,
 					document.getElementById("h2").value,

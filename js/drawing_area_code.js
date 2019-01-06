@@ -270,10 +270,61 @@ TEDrawingArea.prototype.updateFreehandPath = function() {
 		this.calculateOuterShape();
 		this.calculateFreehandHandles();
 	}
+	// test: path with variable width
+	this.drawMiddlePathWithVariableWidth();;
+}
+TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
+	// Implementation for SE2 takes a lot of time, so maybe make the editor
+	// somehow compatible with SE1. In order to achieve that it must be possible
+	// to variable the width along the middle path. Paper.js unfortunately doesn't
+	// offer this function out of the box, so try the following workaround:
+	// Take the given path (consisting of x elements/points), divide it into
+	// x-1 subpaths (storing them in an array9 and assign a variable width for each of those 
+	// subpaths.
+	
+	// first of all delete subdivided path (if it has been drawn before)
+	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
+		middlePathWithVariableWidth[i].remove();	// delete subpath (erase from canvas)
+	}
+	middlePathWithVariableWidth.length = 0; // delete array
+	
+	// now create new array width subdivided paths
+	for (i=0; i<this.fhToken.segments.length-1; i++) {
+		// copy part of the path
+		middlePathWithVariableWidth[i] = new Path(this.fhToken.segments[i], this.fhToken.segments[i+1]);
+		middlePathWithVariableWidth[i].strokeColor = '#000';
+		// calculate width
+		// sum up left and right distance and scale, use selected shape
+		var actualShape = this.getSelectedShapeIndex();
+		var width = (this.editableToken.leftVectors[actualShape][i].distance + this.editableToken.rightVectors[actualShape][i].distance) * this.scaleFactor; 
+		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
+		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
+		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
+		
+	}
+	
+}
+TEDrawingArea.prototype.hideMiddlePathWithVariableWidth = function() {
+	showMiddlePathWithVariableWidth = false;
+	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
+		middlePathWithVariableWidth[i].visible = false;
+	}
+}
+TEDrawingArea.prototype.showMiddlePathWithVariableWidth = function() {
+	showMiddlePathWithVariableWidth = true;
+	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
+		middlePathWithVariableWidth[i].visible = true;
+	}	
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	if ((this.leftX <= event.point.x) && (this.rightX >= event.point.x) && (this.lowerY >= event.point.y) && (this.upperY <= event.point.y)) return true;
 	else return false;
+}
+TEDrawingArea.prototype.toggleVisibilityMiddlePathWithVariableWidth = function() {
+	switch (showMiddlePathWithVariableWidth) {
+		case true : this.hideMiddlePathWithVariableWidth(); break;
+		case false : this.showMiddlePathWithVariableWidth(); break;
+	}
 }
 TEDrawingArea.prototype.handleMouseDown = function( event ) {
 	///*this.*/mouseDown = true;
