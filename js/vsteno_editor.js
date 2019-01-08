@@ -688,8 +688,47 @@ function TEKnotType() {
 	// elements for compatibility with SE1
 	this.lateEntry = false;
 	this.earlyExit = false;
-	this.connectionPoint = false;
-	this.connect2preceeding = true;
+	this.combinationPoint = false;	// for token combiner
+	this.connect = true;
+}
+TEKnotType.prototype.setKnotType = function(type) {
+	switch (type) {
+		case "entry" : this.entry = true; break;
+		case "exit" : this.exit = true; break;
+		case "pivot1" : this.pivot1 = true; break;
+		case "pivot2" : this.pivot2 = true; break;
+		case "normal" : this.entry = false; this.exit = false; this.pivot1 = false; this.pivot2 = false; break;
+		case "earlyExit" : this.earlyExit = true; break;
+		case "lateEntry" : this.lateEntry = true; break;
+		case "combinationPoint" : this.combinationPoint = true; break;
+		case "connect" : this.connect = true; break;
+	}
+}
+TEKnotType.prototype.getKnotType = function(type) {
+	switch (type) {
+		case "entry" : return this.entry; break;
+		case "exit" : return this.exit; break;
+		case "pivot1" : return this.pivot1; break;
+		case "pivot2" : return this.pivot2; break;
+		//case "normal" :  break;
+		case "earlyExit" : return this.earlyExit; break;
+		case "lateEntry" : return this.lateEntry; break;
+		case "combinationPoint" : return this.combinationPoint; break;
+		case "connect" : return this.connect; break;
+	}
+}
+TEKnotType.prototype.toggleKnotType = function(type) {
+	switch (type) {
+		case "entry" : this.entry = (this.entry) ? false : true; break;
+		case "exit" : this.exit = (this.exit) ? false : true; break;
+		case "pivot1" : this.pivot1 = (this.pivot1) ? false : true; break;
+		case "pivot2" : this.pivot2 = (this.pivot2) ? false : true; break;
+		case "earlyExit" : this.earlyExit = (this.earlyExit) ? false : true;break;
+		case "lateEntry" : this.lateEntry = (this.lateEntry) ? false : true; break;
+		case "combinationPoint" : this.combinationPoint = (this.combinationPoint) ? false : true; break;
+		case "connect" : this.connect = (this.connect) ? false : true; break;
+	}
+	console.log(this);
 }
 
 // class TEVisuallyModifiableKnotTEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
@@ -710,6 +749,15 @@ function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, ma
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
 TEVisuallyModifiableKnot.prototype = new TEVisuallyModifiableCircle(); 	// inherit
+TEVisuallyModifiableKnot.prototype.setKnotType = function(type) {
+	this.type.setKnotType(type);
+}
+TEVisuallyModifiableKnot.prototype.getKnotType = function(type) {	// returns true if knot is type
+	return this.type.getKnotType(type);
+}
+TEVisuallyModifiableKnot.prototype.toggleKnotType = function(type) {
+	this.type.toggleKnotType(type);
+}
 TEVisuallyModifiableKnot.prototype.identify = function(item) {
 	if (this.circle == item) return this;
 	else return null;
@@ -2486,7 +2534,11 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
-		
+		if (i==2) {
+			console.log("i = ", i);
+			middlePathWithVariableWidth[i].strokeWidth = 0; // works for not connecting
+			middlePathWithVariableWidth[i].visible = false; // disable one segment (for not connecting points) -- doesn't work?!
+		}
 	}
 	
 }
@@ -3709,10 +3761,81 @@ TEParallelRotatingAxis.prototype.redrawLine = function(point1, point2, color) {
 // JSON / PHP XMLHTTPRequest export / import to / from database
 
 function writeDataToDB() {
-	var data = JSON.stringify(actualFont);
-	console.log("data: ", data, actualFont);
+	//var data = JSON.stringify(actualFont);
+	//console.log("data: ", data, actualFont);
+	//console.log("custom: ", custom);
+
+	// use this for SE1 export for the moment (no JSON)
+	// prepare textarea data that will be presented in an intermedia step
+	// as html form ant then exported via normal php/form/post-call
+	// (using the php-code from SE1 without any modification (hopefully;-))
+	// "Translation" from new SE2 to old SE1 occurs via actualFont: 
+	// all data must be stored in actualFont first and is then converted
+	// to SE1 notation (= text) afterwards.
 	
+	console.log(actualFont);
+	
+	var textArea = getBaseSectionSE1() + combinerSection + shifterSection;
+	console.log("textArea: ", textArea);
 }
+
+function getBaseSectionSE1() {	
+	// this function "translate" SE2 data into SE1 notation
+	
+	var output = "\t#BeginSubSection(base)\n";
+	
+	// loop through list of tokens
+	// "TT" => {  /*h*/ 0,  0.5,  0,  0,  5,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+	for (key in actualFont.tokenList) {
+			
+			output += "\t\t\"" + key + "\" => {";
+			
+			// add header
+			output += " /*header*/ ";
+			for (var i=0; i<24; i++) {
+				switch (actualFont.tokenList[key].header[i]) {
+					case "undefined" : output += "0, "; break;
+					case "" : output += "\"\", "; break;
+					default: output += actualFont.tokenList[key].header[i] + ", "; break;
+				
+					// add comma and space between elements (no comma after last)
+					//if (i != 23) output += ", ";	// comma is needed: array continues
+				}
+			}
+			
+			// add data
+			output += "/*data*/ ";
+		    var length = actualFont.tokenList[key].tokenData.length;
+		    console.log("length = ",length);
+		    for (var i=0; i<length; i++) {
+				
+				// add tuplet with 8 entries 
+				if (i != 0) output += " /**/ "; 
+				output += actualFont.tokenList[key].tokenData[i].vector1 + ", ";		// offset 0: x
+				output += actualFont.tokenList[key].tokenData[i].vector2 + ", ";		// offset 1: y
+				output += actualFont.tokenList[key].tokenData[i].tensions[2] + ", ";	// offset 2: t1 (use middle tension of SE2)
+				output += "d1" + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
+				output += (actualFont.tokenList[key].tokenData[i].thickness.shadowed.left + actualFont.tokenList[key].tokenData[i].thickness.shadowed.right) / 2 + ", ";		// offset 4: thickness (use shadowed)
+				output += "dr" + ", ";		// offset 5: dr field
+				output += "d2" + ", ";		// offset 6: d2 (see d1)
+				output += actualFont.tokenList[key].tokenData[i].tensions[3];	// offset 7: t2 (use middle tension of SE2)
+	
+				// add comma if necessary
+				if (i != length-1) output += ", ";
+				
+			}
+		    
+	
+			// close token definition and go to next line
+			output += " }\n";
+	}
+	
+	// close subsection
+	output += "\t#EndSubSection(base)\n";
+	
+	return output;
+}
+
 
 // global variables
 var mainCanvas = new TECanvas(0,0,800,800);
@@ -3843,7 +3966,38 @@ function checkSpecialKeys(e) {
 			arrowRight = true; // right arrow
 			mainCanvas.editor.rotatingAxis.parallelRotatingAxis.selectFollowingAxis();
 			//console.log("arrowRight");
-		}	
+		} else if (e.key == "1") {
+			//console.log("set entry knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("entry");
+		} else if (e.key == "2") {
+			//console.log("set normal knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].setKnotType("normal"); 	// can be used to "reset" knot type
+		} else if (e.key == "3") {
+			//console.log("set exit knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("exit");
+		} else if (e.key == "4") {
+			//console.log("set pivot1 knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot1");
+		} else if (e.key == "5") {
+			//console.log("set connPoint value");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("combinationPoint");
+		} else if (e.key == "6") {
+			//console.log("set pivot2 knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot2");
+		} else if (e.key == "7") {
+			//console.log("set lateEntry knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("lateEntry");
+		} else if (e.key == "8") {
+			//console.log("set connect");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("connect");
+		} else if (e.key == "9") {
+			//console.log("set earlyExit knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("earlyExit");
+		}  else if (e.key == "0") {
+			//console.log("show knot status: ");
+			console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
+			//console.log(mainCanvas.editor.editableToken);
+		}		
 	} else {
 		if (e.keyCode == '38') {
 			arrowUp = true; // up arrow
@@ -3866,7 +4020,7 @@ function checkSpecialKeys(e) {
 		} else if (e.keyCode == '32') {
 			// space bar
 			mainCanvas.editor.cleanDrawingArea();
-		}
+		} 
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
 	}

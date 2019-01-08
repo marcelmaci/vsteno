@@ -128,7 +128,38 @@ function checkSpecialKeys(e) {
 			arrowRight = true; // right arrow
 			mainCanvas.editor.rotatingAxis.parallelRotatingAxis.selectFollowingAxis();
 			//console.log("arrowRight");
-		}	
+		} else if (e.key == "1") {
+			//console.log("set entry knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("entry");
+		} else if (e.key == "2") {
+			//console.log("set normal knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].setKnotType("normal"); 	// can be used to "reset" knot type
+		} else if (e.key == "3") {
+			//console.log("set exit knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("exit");
+		} else if (e.key == "4") {
+			//console.log("set pivot1 knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot1");
+		} else if (e.key == "5") {
+			//console.log("set connPoint value");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("combinationPoint");
+		} else if (e.key == "6") {
+			//console.log("set pivot2 knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot2");
+		} else if (e.key == "7") {
+			//console.log("set lateEntry knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("lateEntry");
+		} else if (e.key == "8") {
+			//console.log("set connect");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("connect");
+		} else if (e.key == "9") {
+			//console.log("set earlyExit knot");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("earlyExit");
+		}  else if (e.key == "0") {
+			//console.log("show knot status: ");
+			console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
+			//console.log(mainCanvas.editor.editableToken);
+		}		
 	} else {
 		if (e.keyCode == '38') {
 			arrowUp = true; // up arrow
@@ -151,7 +182,7 @@ function checkSpecialKeys(e) {
 		} else if (e.keyCode == '32') {
 			// space bar
 			mainCanvas.editor.cleanDrawingArea();
-		}
+		} 
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
 	}

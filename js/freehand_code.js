@@ -33,8 +33,47 @@ function TEKnotType() {
 	// elements for compatibility with SE1
 	this.lateEntry = false;
 	this.earlyExit = false;
-	this.connectionPoint = false;
-	this.connect2preceeding = true;
+	this.combinationPoint = false;	// for token combiner
+	this.connect = true;
+}
+TEKnotType.prototype.setKnotType = function(type) {
+	switch (type) {
+		case "entry" : this.entry = true; break;
+		case "exit" : this.exit = true; break;
+		case "pivot1" : this.pivot1 = true; break;
+		case "pivot2" : this.pivot2 = true; break;
+		case "normal" : this.entry = false; this.exit = false; this.pivot1 = false; this.pivot2 = false; break;
+		case "earlyExit" : this.earlyExit = true; break;
+		case "lateEntry" : this.lateEntry = true; break;
+		case "combinationPoint" : this.combinationPoint = true; break;
+		case "connect" : this.connect = true; break;
+	}
+}
+TEKnotType.prototype.getKnotType = function(type) {
+	switch (type) {
+		case "entry" : return this.entry; break;
+		case "exit" : return this.exit; break;
+		case "pivot1" : return this.pivot1; break;
+		case "pivot2" : return this.pivot2; break;
+		//case "normal" :  break;
+		case "earlyExit" : return this.earlyExit; break;
+		case "lateEntry" : return this.lateEntry; break;
+		case "combinationPoint" : return this.combinationPoint; break;
+		case "connect" : return this.connect; break;
+	}
+}
+TEKnotType.prototype.toggleKnotType = function(type) {
+	switch (type) {
+		case "entry" : this.entry = (this.entry) ? false : true; break;
+		case "exit" : this.exit = (this.exit) ? false : true; break;
+		case "pivot1" : this.pivot1 = (this.pivot1) ? false : true; break;
+		case "pivot2" : this.pivot2 = (this.pivot2) ? false : true; break;
+		case "earlyExit" : this.earlyExit = (this.earlyExit) ? false : true;break;
+		case "lateEntry" : this.lateEntry = (this.lateEntry) ? false : true; break;
+		case "combinationPoint" : this.combinationPoint = (this.combinationPoint) ? false : true; break;
+		case "connect" : this.connect = (this.connect) ? false : true; break;
+	}
+	console.log(this);
 }
 
 // class TEVisuallyModifiableKnotTEVisuallyModifiableKnot extends TEVisuallyModfiableCircle
@@ -55,6 +94,15 @@ function TEVisuallyModifiableKnot(x, y, t1, t2, radius, color, selectedColor, ma
 	TEVisuallyModifiableCircle.prototype.constructor.call(this, new Point(x, y), radius, color, selectedColor, markedColor);
 }
 TEVisuallyModifiableKnot.prototype = new TEVisuallyModifiableCircle(); 	// inherit
+TEVisuallyModifiableKnot.prototype.setKnotType = function(type) {
+	this.type.setKnotType(type);
+}
+TEVisuallyModifiableKnot.prototype.getKnotType = function(type) {	// returns true if knot is type
+	return this.type.getKnotType(type);
+}
+TEVisuallyModifiableKnot.prototype.toggleKnotType = function(type) {
+	this.type.toggleKnotType(type);
+}
 TEVisuallyModifiableKnot.prototype.identify = function(item) {
 	if (this.circle == item) return this;
 	else return null;

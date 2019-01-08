@@ -6,6 +6,15 @@
     <!--<link rel="stylesheet" href="./paper.js/examples/css/style.css">-->
     <script type="text/javascript" src="./paper.js/dist/paper-full.js"></script>
     <script src="vsteno_editor.js" type="text/paperscript" canvas="drawingArea"></script>
+    <script>
+			// This is the section where php can "patch" the editor, i.e. define if it 
+			// should be used for SE1 or SE2 and include special data needed for SE1.
+			// The data is included as global variables in JS (that can be used directly
+			// by the editor).
+			// These are just examples:
+			var combinerSection = "#BeginSubSection(combiner)\n\t\"D\" => { \"@R\", 0, 0 }\n\t\t\"ND\" => { \"@R\", 0, 0 }\n\t#EndSubSection(combiner)";
+			var shifterSection = "#BeginSubSection(shifter)\n\t\"DEM\" => { \"^DEM\", 0, 5, 0, 0 }\n\t\t\"DEN\" => { \"^DEN\", 0, 5, 0, 0 }\n\t#EndSubSection(combiner)";
+    </script>
 </head>
 <body style="background:white">
 <table>

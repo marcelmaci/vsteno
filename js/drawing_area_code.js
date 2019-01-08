@@ -300,7 +300,11 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
-		
+		if (i==2) {
+			console.log("i = ", i);
+			middlePathWithVariableWidth[i].strokeWidth = 0; // works for not connecting
+			middlePathWithVariableWidth[i].visible = false; // disable one segment (for not connecting points) -- doesn't work?!
+		}
 	}
 	
 }
