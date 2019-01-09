@@ -241,6 +241,14 @@ tool.onKeyDown = function(event) {
 					break;
 		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
 		case "-" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
+		case "w" : console.log("Try this hack ..."); 
+			console.log("actualFont: ", actualFont); 
+			console.log("actualFontSE1: ", actualFontSE1); 
+			var tempPrototypes = actualFont.prototype;
+			actualFont = actualFontSE1; // problem: all prototype functions get lost ... try to save and copy them
+			actualFont.prototype = tempPrototypes; // doesn't work ... the problem is that actualFont contains loadFont-method ... if prototype is deleted no font can be loaded ... good thing that oop always keeps data and methods together, right? well, in that case, it's a rather annoying effect: since data has to be transferred from php to js, php creates a new datastructure which doesn't contain the JS methods ... would be nice to copy only the data this time ...
+			createPullDownSelectionFromActualFont();
+			break; // try this hack ...
 	}
 	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);

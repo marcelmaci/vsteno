@@ -18,7 +18,7 @@
  */
  
  
- class JSGlobalStructure {
+class JSGlobalStructure {
     public $tokenList;  // JSTokenList;
     public $editorData; //array();
     public function JSGlobalStructure() {
@@ -66,6 +66,45 @@ class JSKnotType {
     public $combinationPoint = false;
     public $connect = false;
     public $intermediteShadow = false;
+    public function importFromSE1($d1, $d2, $dr) {
+        // assume alle properties are set to false
+        switch ($d1) {
+            case 1 : $this->entry = true; break;
+            case 2 : $this->pivot1 = true; break;
+            case 4 : $this->combinationPoint = true; break;
+            case 5 : $this->intermediateShadow = true; break;
+            case 98 : $this->lateEntry = true; break;
+        }
+        switch ($d2) {
+            case 1 : $this->exit = true; break;
+            case 2 : $this->pivot2 = true; break;
+            case 99 : $this->earlyExit = true; break;
+        }
+        switch ($dr) {
+            case 0 : $this->connect = true; break;
+            case 5 : $this->connect = false; break;            
+        }
+    }
+}
+
+class JSThicknessContainer {
+    public $standard;
+    public $shadowed; 
+    public function JSThicknessContainer() {
+        $this->standard = new JSThicknessLeftRight;
+        $this->shadowed = new JSThicknessLeftRight;
+    }
+    public function importFromSE1($thickness) {
+        $this->standard->left = 0.5;    // SE1 has no standard thickness (it's assumed it is 1, so divide it by 2 for left and right vectors and use that value for standard property)
+        $this->standard->right = 0.5;
+        $this->shadowed->left = $thickness / 2;     // use thickness property of SE1 and divide it by 2 for left and right vectors
+        $this->shadowed->right = $thickness / 2;
+    }
+}
+
+class JSThicknessLeftRight {
+    public $left;
+    public $right;
 }
 
 global $default_model;
@@ -88,7 +127,7 @@ require_once "export_old_parser_only_functions.php";
 
 function InsertHTMLHeader() {
    //if ($_SESSION['output_integratedyesno']) {
-        require "vsteno_template_top.php";
+        require "vsteno_template_top_editor.php";
     //} else {
         //require "vsteno_fullpage_template_top.php";
     //}
@@ -224,17 +263,32 @@ function OpenEditorPage() {
    //     $index = 0;
         for ($i=24; $i<count($steno_tokens_master[$key]); $i+=8) {
             
+            // read data
+            $tempX1 = $steno_tokens_master[$key][$i+0];
+            $tempY1 = $steno_tokens_master[$key][$i+1];
+            $tempT1 = $steno_tokens_master[$key][$i+2];
+            $tempD1 = $steno_tokens_master[$key][$i+3];
+            $tempTH = $steno_tokens_master[$key][$i+4];
+            $tempDR = $steno_tokens_master[$key][$i+5];
+            $tempD2 = $steno_tokens_master[$key][$i+6];
+            $tempT2 = $steno_tokens_master[$key][$i+7];
+            
+            // create objects and write data
             $newTuplet = new JSTokenData();
-            $newTuplet->calcType = "horizontal";
-            $newTuplet->vector1 = 1;
-            $newTuplet->vector2 = 1;
-            $newTuplet->shiftX = 1;
-            $newTuplet->shiftY = 1;
-            $newTuplet->tensions = array( 0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
-            $newTuplet->thickness = array();
+            $newTuplet->calcType = "horizontal";        // this is the default value in SE1
+            $newTuplet->vector1 = $tempX1;
+            $newTuplet->vector2 = $tempY1;
+            $newTuplet->shiftX = 0;                     // default value in SE1
+            $newTuplet->shiftY = 0;                     // default value in SE1
+            $newTuplet->tensions = array($tempT1, $tempT2, $tempT1, $tempT2, $tempT1, $tempT2);    // SE1: only offsets 2+3 (for middle path) are important, but copy them to the outer shapes as well
+            
+            $newThickness = new JSThicknessContainer();
+            $newThickness->importFromSE1($tempTH);
+            $newTuplet->thickness = $newThickness;
             
             $newKnotType = new JSKnotType();
             $newTuplet->knotType = $newKnotType;
+            $newTuplet->knotType->importFromSE1($tempD1, $tempD2, $tempDR);
             
             $export_variable->tokenList[$key]->tokenData[] = $newTuplet; //new JSTokenData(); //"tuplet: $i";
             
@@ -255,10 +309,13 @@ function OpenEditorPage() {
    }
    // var_dump($export_variable);
     
+    require_once "editor_raw_html_code.php"; // wow, this is ugly ... :-)
+    
     $result = json_encode($export_variable);
-    echo "<p>php json:</p><pre>$result</pre>";
-    $complete = "var test = $result;"; // works
-    $script = "<script>$complete console.log(test);</script>";
+    //echo "<p>php json:</p><pre>$result</pre>";
+    $complete = "var actualFontSE1 = $result;"; // works
+    $script = "<script>$complete console.log(actualFontSE1); actualFont = actualFontSE1; 
+			createPullDownSelectionFromActualFont();;</script>";
     echo $script;
 
 /*   

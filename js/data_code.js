@@ -34,6 +34,19 @@ function updatePullDownSelection(token) {			// preselect token in list
 	var element = document.getElementById("tokenpulldown");
 	element.innerHTML = optionList;	
 }
+function createPullDownSelectionFromActualFont() {
+	// deletes tokenPullDownSelection and creates a new array with elements from actualFont
+	// can be used to "load" a new font and adjust pulldown list accordingls (for exemple if editor is used for SE1)
+	// delete actual list
+	tokenPullDownSelection.length = 0;
+	// create new list
+	for (var token in actualFont.tokenList) {
+		tokenPullDownSelection.push(token);
+	}
+	updatePullDownSelection(""); // don't select anything but update html list
+}
+
+
 
 // classes 
 // class ShorthandFont
@@ -72,7 +85,8 @@ ShorthandFont.prototype.deleteEditorData = function(token) {
 	this.editorData[token] = null;	
 }
 ShorthandFont.prototype.loadTokenAndEditorData = function(token) {
-	mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
+	if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
+	else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);
 }
 
