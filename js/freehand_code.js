@@ -35,6 +35,7 @@ function TEKnotType() {
 	this.earlyExit = false;
 	this.combinationPoint = false;	// for token combiner
 	this.connect = true;
+	this.intermediateShadow = false;
 }
 TEKnotType.prototype.setKnotType = function(type) {
 	switch (type) {
@@ -47,7 +48,9 @@ TEKnotType.prototype.setKnotType = function(type) {
 		case "lateEntry" : this.lateEntry = true; break;
 		case "combinationPoint" : this.combinationPoint = true; break;
 		case "connect" : this.connect = true; break;
+		case "intermediateShadow" : this.intermediateShadow = true; break;
 	}
+	console.log(this);
 }
 TEKnotType.prototype.getKnotType = function(type) {
 	switch (type) {
@@ -60,6 +63,7 @@ TEKnotType.prototype.getKnotType = function(type) {
 		case "lateEntry" : return this.lateEntry; break;
 		case "combinationPoint" : return this.combinationPoint; break;
 		case "connect" : return this.connect; break;
+		case "intermediateShadow" : return this.intermediateShadow; break;
 	}
 }
 TEKnotType.prototype.toggleKnotType = function(type) {
@@ -72,6 +76,7 @@ TEKnotType.prototype.toggleKnotType = function(type) {
 		case "lateEntry" : this.lateEntry = (this.lateEntry) ? false : true; break;
 		case "combinationPoint" : this.combinationPoint = (this.combinationPoint) ? false : true; break;
 		case "connect" : this.connect = (this.connect) ? false : true; break;
+		case "intermediateShadow" : this.intermediateShadow = (this.intermediateShadow) ? false : true; break;
 	}
 	console.log(this);
 }
@@ -340,7 +345,7 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		this.knotsList[i].type.entry = false;
 		this.knotsList[i].type.exit = false;
 		this.knotsList[i].type.pivot1 = false;
-		this.knotsList[i].type.pivot1 = false;
+		this.knotsList[i].type.pivot2 = false;
 		this.knotsList[i].circle.fillColor = colorNormalKnot;
 		// set thicknesses to 1
 		//this.leftVectors[0][i].distance = 1;

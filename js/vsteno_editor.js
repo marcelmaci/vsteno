@@ -690,6 +690,7 @@ function TEKnotType() {
 	this.earlyExit = false;
 	this.combinationPoint = false;	// for token combiner
 	this.connect = true;
+	this.intermediateShadow = false;
 }
 TEKnotType.prototype.setKnotType = function(type) {
 	switch (type) {
@@ -702,7 +703,9 @@ TEKnotType.prototype.setKnotType = function(type) {
 		case "lateEntry" : this.lateEntry = true; break;
 		case "combinationPoint" : this.combinationPoint = true; break;
 		case "connect" : this.connect = true; break;
+		case "intermediateShadow" : this.intermediateShadow = true; break;
 	}
+	console.log(this);
 }
 TEKnotType.prototype.getKnotType = function(type) {
 	switch (type) {
@@ -715,6 +718,7 @@ TEKnotType.prototype.getKnotType = function(type) {
 		case "lateEntry" : return this.lateEntry; break;
 		case "combinationPoint" : return this.combinationPoint; break;
 		case "connect" : return this.connect; break;
+		case "intermediateShadow" : return this.intermediateShadow; break;
 	}
 }
 TEKnotType.prototype.toggleKnotType = function(type) {
@@ -727,6 +731,7 @@ TEKnotType.prototype.toggleKnotType = function(type) {
 		case "lateEntry" : this.lateEntry = (this.lateEntry) ? false : true; break;
 		case "combinationPoint" : this.combinationPoint = (this.combinationPoint) ? false : true; break;
 		case "connect" : this.connect = (this.connect) ? false : true; break;
+		case "intermediateShadow" : this.intermediateShadow = (this.intermediateShadow) ? false : true; break;
 	}
 	console.log(this);
 }
@@ -995,7 +1000,7 @@ TEEditableToken.prototype.redefineKnotTypesAndSetColors = function() {
 		this.knotsList[i].type.entry = false;
 		this.knotsList[i].type.exit = false;
 		this.knotsList[i].type.pivot1 = false;
-		this.knotsList[i].type.pivot1 = false;
+		this.knotsList[i].type.pivot2 = false;
 		this.knotsList[i].circle.fillColor = colorNormalKnot;
 		// set thicknesses to 1
 		//this.leftVectors[0][i].distance = 1;
@@ -3810,14 +3815,17 @@ function getBaseSectionSE1() {
 		    for (var i=0; i<length; i++) {
 				
 				// add tuplet with 8 entries 
-				if (i != 0) output += " /**/ "; 
+				if (i != 0) output += " /**/ ";
+				var d1 = calculateD1(actualFont.tokenList[key].tokenData[i].knotType);
+				var d2 = calculateD2(actualFont.tokenList[key].tokenData[i].knotType);
+				var dr = calculateDR(actualFont.tokenList[key].tokenData[i].knotType);
 				output += actualFont.tokenList[key].tokenData[i].vector1 + ", ";		// offset 0: x
 				output += actualFont.tokenList[key].tokenData[i].vector2 + ", ";		// offset 1: y
 				output += actualFont.tokenList[key].tokenData[i].tensions[2] + ", ";	// offset 2: t1 (use middle tension of SE2)
-				output += "d1" + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
+				output += d1 + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
 				output += (actualFont.tokenList[key].tokenData[i].thickness.shadowed.left + actualFont.tokenList[key].tokenData[i].thickness.shadowed.right) / 2 + ", ";		// offset 4: thickness (use shadowed)
-				output += "dr" + ", ";		// offset 5: dr field
-				output += "d2" + ", ";		// offset 6: d2 (see d1)
+				output += dr + ", ";		// offset 5: dr field
+				output += d2 + ", ";		// offset 6: d2 (see d1)
 				output += actualFont.tokenList[key].tokenData[i].tensions[3];	// offset 7: t2 (use middle tension of SE2)
 	
 				// add comma if necessary
@@ -3836,6 +3844,51 @@ function getBaseSectionSE1() {
 	return output;
 }
 
+function calculateD1(knotTypeObject) {		// parameter: TEKnotType
+// to simplify things respect SE1 philosophy: only 1 (!) type per point can be set (well, that's not entirely true: since there are 2 fields (d1 and d2)
+// some combinations (e.g. entry and exit point at same knot) are possible; in addition, the drawValue (connect in SE2) can be combined with any of those
+// types in the same knot (what a mess:-)) ... again: to keep things simple (and with a maximum of compatibility): implement different functions for these 
+// datafields (d1, d2, dr))
+// => his means that if the same coordinates should hold different types of knots, then SEVERAL knots have to be defined!
+// if you want to export tokens from SE1 to SE2 this separation must be done manually! (Note: this will be problematic since - graphically - it is impossible
+// to add more than 1 point at the same coordinates with the mouse => maybe a workaround will be needed (..) for the moment leave it like that)
+// the following docuementation comes directly from the SE1 php code
+// conditional pivot point is obsolete (and won't be implemented)
+// note also that first tension (= tension before first knot) is stored in the header in SE1 and can't be edited (header is copied without modification)
+
+// d1: entry data field: 0 = regular point / 1 = entry point / 2 = pivot point / 4 = connecting point (for combined tokens created "on the fly")
+//                       5 = "intermediate shadow point" (this point will only be used if the token is shadowed, otherwise it wont be inserted into splines),
+//                       3 = conditional pivot point: if token is in normal position this point will be ignored/considered as a normal point (= value 0)
+//                      98 = late entry point (= if token is first token in tokenlist then don't draw points before late entry point; consider this point as entry point)	
+// d2: exit data field: 0 = regular point / 1 = exit point / 2 = pivot point / 99 = early exit point (= this point is the last one inserted into splines if token is the last one in tokenlist)
+//                      3 = conditional pivot point: if token is in normal position this point will be ignored/considered as a normal point (= value 0)
+// dr: data field for drawing function: 0 = normal (i.e. connect points) / 5 = don't connect to this point from preceeding point
+
+	with (knotTypeObject) {
+		if (entry) return 1;			// d1
+		else if (pivot1) return 2; 		// d1
+		else if (lateEntry) return 98;	// d1
+		else if (combinationPoint) return 4; // d1
+		else if (intermediateShadow) return 5; // d1
+		else return 0; // corresponds to "regular point"
+	} 
+}
+
+function calculateD2(knotTypeObject) {
+	with (knotTypeObject) {
+		if (exit) return 1; 		// d2
+		else if (pivot2) return 2;	// d2
+		else if (earlyExit) return 99; // d2
+		else return 0; // corresponds to "regular point"
+	}
+}
+
+function calculateDR(knotTypeObject) {
+	with (knotTypeObject) {
+		if (connect) return 0;
+		else return 5;			// 5 = don't connect
+	}
+}
 
 // global variables
 var mainCanvas = new TECanvas(0,0,800,800);
@@ -3968,34 +4021,38 @@ function checkSpecialKeys(e) {
 			//console.log("arrowRight");
 		} else if (e.key == "1") {
 			//console.log("set entry knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("entry");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("entry");
 		} else if (e.key == "2") {
 			//console.log("set normal knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].setKnotType("normal"); 	// can be used to "reset" knot type
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].setKnotType("normal"); 	// can be used to "reset" knot type
 		} else if (e.key == "3") {
+			//console.log("i=", mainCanvas.editor.editableToken.index-1);
 			//console.log("set exit knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("exit");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("exit");
 		} else if (e.key == "4") {
 			//console.log("set pivot1 knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot1");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("pivot1");
 		} else if (e.key == "5") {
 			//console.log("set connPoint value");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("combinationPoint");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("combinationPoint");
 		} else if (e.key == "6") {
 			//console.log("set pivot2 knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot2");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("pivot2");
 		} else if (e.key == "7") {
 			//console.log("set lateEntry knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("lateEntry");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("lateEntry");
 		} else if (e.key == "8") {
 			//console.log("set connect");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("connect");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("connect");
 		} else if (e.key == "9") {
 			//console.log("set earlyExit knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("earlyExit");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("earlyExit");
 		}  else if (e.key == "0") {
+			// use this for intermediata shadow points
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("intermediateShadow");
+			
 			//console.log("show knot status: ");
-			console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
+			//console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
 			//console.log(mainCanvas.editor.editableToken);
 		}		
 	} else {

@@ -130,34 +130,38 @@ function checkSpecialKeys(e) {
 			//console.log("arrowRight");
 		} else if (e.key == "1") {
 			//console.log("set entry knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("entry");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("entry");
 		} else if (e.key == "2") {
 			//console.log("set normal knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].setKnotType("normal"); 	// can be used to "reset" knot type
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].setKnotType("normal"); 	// can be used to "reset" knot type
 		} else if (e.key == "3") {
+			//console.log("i=", mainCanvas.editor.editableToken.index-1);
 			//console.log("set exit knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("exit");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("exit");
 		} else if (e.key == "4") {
 			//console.log("set pivot1 knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot1");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("pivot1");
 		} else if (e.key == "5") {
 			//console.log("set connPoint value");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("combinationPoint");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("combinationPoint");
 		} else if (e.key == "6") {
 			//console.log("set pivot2 knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("pivot2");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("pivot2");
 		} else if (e.key == "7") {
 			//console.log("set lateEntry knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("lateEntry");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("lateEntry");
 		} else if (e.key == "8") {
 			//console.log("set connect");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("connect");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("connect");
 		} else if (e.key == "9") {
 			//console.log("set earlyExit knot");
-			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].toggleKnotType("earlyExit");
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("earlyExit");
 		}  else if (e.key == "0") {
+			// use this for intermediata shadow points
+			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("intermediateShadow");
+			
 			//console.log("show knot status: ");
-			console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
+			//console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
 			//console.log(mainCanvas.editor.editableToken);
 		}		
 	} else {
