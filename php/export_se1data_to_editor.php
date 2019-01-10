@@ -23,8 +23,7 @@ class JSGlobalStructure {
     public $editorData; //array();
     public function JSGlobalStructure() {
        $this->tokenList = array();      // important: don't cast array to a standard object, the following is wrong: (object)array(); (the point is that by doing that, you loose the array push function to insert new key/value pairs!)
-       $this->editorData = array();     // provide at least a prototype for JS (only temporary solution)
-       // $this->addTokenListElement();
+       $this->editorData = array(); 
     }
     public function addTokenListElement($token) {
        $newToken = new JSTokenList;
@@ -44,10 +43,7 @@ class JSTokenList {
     public $header = array(); 
     public $tokenData = array();
     public function JSTokenList() {
-        //$this->addTokenDataElement();
-      //  $this->addTokenDataElement();
-       // $this->addTokenDataElement();
-        
+        // empty constructor: probably obsolete
     }
     public function addTokenDataElement() {
         array_push($this->tokenData, new JSTokenData);
@@ -138,23 +134,12 @@ require_once "parser.php";
 require_once "engine.php";
 require_once "export_old_parser_only_functions.php"; 
 
-//require_once "words.php";     // revert back to procedural-only version
-
-
 function InsertHTMLHeader() {
-   //if ($_SESSION['output_integratedyesno']) {
-        require "vsteno_template_top_editor.php";
-    //} else {
-        //require "vsteno_fullpage_template_top.php";
-    //}
+    require "vsteno_template_top_editor.php";
 }
 
 function InsertHTMLFooter() {
-   // if ($_SESSION['output_integratedyesno']) {
-        require "vsteno_template_bottom.php";
-    //} else {
-      //  require "vsteno_fullpage_template_bottom.php";
-    //}
+    require "vsteno_template_bottom.php";
 }
 
 function ResetSessionGetBackPage() {
@@ -193,27 +178,6 @@ function InsertDatabaseButton() {
     echo '<center><input type="submit" name="action" value="speichern"></center><br>';
 }
 
-/*
-function GenerateCombinerSubsectionJS() {
-    global $combiner_table;             // variable containing TokenCombiner-definitions in old parser
-    $output = "\t#BeginSubSection(combiner)\n";
-    $definition = "";
-    echo "hi there";
-    foreach($combiner_table as $data_array) {
-    /*
-        $first = AddQuotes($data_array[0]);
-        $second = AddQuotes($data_array[1]);
-        $delta_x = $data_array[2];
-        $delta_y = $data_array[3];
-        $definition = "\t\t$first => { $second, $delta_x, $delta_y }";
-        $output .= "$definition\n";
-        //
-    }
-    $output .= "\t#EndSubSection(combiner)\n";
-    return $output;
-}
-*/
-
 function OpenEditorPage() {
     global $global_debug_string, $steno_tokens_master, $combiner_table, $shifter_table;
     $global_debug_string = "";
@@ -221,16 +185,14 @@ function OpenEditorPage() {
     InsertHTMLHeader();
 
     echo "<h1>Editor SE1</h1><i><p><b>SE1-Hack:</b> Die Programmierung der SE2 benötigt sehr viel Zeit. Ein \"produktives Ende\" ist im Moment nicht in Sicht. Um trotzdem weiterarbeiten zu können,
-    soll der Editor mit der SE1 kompatibel gemacht werden (Rückwärtskompatibilität). Die Verwendung des Editor für die SE1 (Import, Export und Editieren der Daten) war nicht geplant und kann
-    deshalb nur durch diverse \"Hacks\" (= \"münchhauserische\" Anbindung der Daten, die direkt, queerbeet und ohne Rücksicht auf die OOP-Philosophie der SE2 in den Editor geschrieben werden). 
-    Das Ganze ist aber möglich und sollte dazu führen, dass SE1 und SE2 letztlich parallel verwendet werden können (bis anhin war eher beabsichtigt, die SE1 nach der Implementierung der SE2 
-    komplett zu löschen, da die SE2 aber sehr komplex ist, macht es allenfalls Sinn, die einfachere SE1 weiterzubehalten und evtl. sogar weiterzuentwickeln).</p>
+    soll der Editor mit der SE1 kompatibel gemacht werden (Rückwärtskompatibilität). Die Verwendung des Editors für die SE1 (Import, Export und Editieren der Daten) war nicht geplant und kann
+    deshalb nur durch diverse \"Hacks\" (= \"münchhausnerische\" Anbindung der Daten, die direkt, queerbeet und ohne Rücksicht auf die OOP-Philosophie der SE2 in den Editor geschrieben werden). 
+    erreicht werden. Das Ganze ist aber möglich und sollte dazu führen, dass SE1 und SE2 letztlich parallel verwendet werden können (bis anhin war eher beabsichtigt, die SE1 nach der 
+    Implementierung der SE2 komplett zu löschen, da die SE2 aber sehr komplex ist, macht es allenfalls Sinn, die einfachere SE1 weiterzubehalten und evtl. sogar weiterzuentwickeln).</p>
     <p><b>Bedienung:</b> Im Moment können die von PHP exportierten Daten mit \"w\" direkt in den Editor kopiert werden (wilder \"Datahack;-)\"). Anschliessend kann mit \"q\" die Darstellung 
     der SE1 eingeschaltet werden (Linien statt Umrisse). Viele weitere Funktionen sind noch nicht oder nur teilweise implementiert.<p><i>";
     
-    // searching for my data ... where the heck did I store all that stuff ... ;-)
-    // it's been a long time since I worked on this program for the last time ... ;-)
-    // ok, found: global variables $steno_tokens_master, $combiner_table, $shifter_table
+    // All data in: global variables $steno_tokens_master, $combiner_table, $shifter_table
     
     // so here comes the code for the export "patch"
     // fortunately, I wrote some code to export the old parser (which apparently - hopefully - will also work for this export ... :-)
@@ -241,51 +203,39 @@ function OpenEditorPage() {
     //echo "<pre>" . GenerateCombinerSubsection() . "</pre>";
     //echo "<pre>" . GenerateShifterSubsection() . "</pre>";
     
-   // $export_variable = (object)array( 
-     //                           "tokenList" => (object)array(
-                          /*                  "header" => array(), 
-                                            "tokenData" => (object)array(
-                                            
-                                            
-                                                        "knotType" => array(),
-                                                        "calcType" => "horizontal",
-                                                        "vector1" => 1,
-                                                        "vector2" => 2,
-                                                        "shiftX" => 3,
-                                                        "shiftY" => 4,
-                                                        "tensions" => array(),
-                                                        "thickness" => array(),
-                                                
-                                            ) */
-       //                         ), 
-         //                       "editorData" => (object)array()
-           //             );
-
-      $export_variable = new JSGlobalStructure;
-  //    $export_variable->addTokenListElement("A");
-  //    $export_variable->addTokenListElement("B");
-  //    $export_variable->addTokenListElement("C");
-      
-  
+    // combiner and shifter: there's an important decision to be made
+    // either (1): the tokens should not be combined before exported to the editor (this needs modification of data.php! shifter/tokenCombiner functions must not be called!) and the 
+    //             combiner/shifter tables are exported to the editor
+    // or (2): the thokens are combined (no changes in data.php), but then, there's no need to save shifter/combiner table any more (so nothing must be exported)
+    // (a third possibility would be a hybrid mode: combine and shift tokens and export the tables nonetheless - but this is like calling the devil and ask him if he eventually likes
+    // to mess up with everything ... ;-) ... normally, even if tokens are shifted/combined 2x they should appear only 1x in the associative array, but you never know ... so better not
+    // to opt for this solution ...)
+    //
+    // (dis)advantages:
+    // (1) a) more flexibility and efficiency (modifications in one part of combined token will be applied to every combination, so it has to be edited only once), b) more complex: token and
+    //     combiner/shifter tables have to be edited (manually)), c) the combined tokens sometimes are not 100% perfect (since generic parts are combined with generic tokens)
+    // (2) a) possibility to get rid of combiner/shifter table, but at the price of b) less flexibility and efficiency (every token and every combination has to be edited separately => more work)
+    //     and with the possibility to design every token and combinations as it should be (esthetically better tokens)
+    // Haven't made my mind up yet, so for the moment export export all data ... (which looks dangerously similar to option 3 ... :-)
+    
+   $export_combiner = ""; //addslashes(GenerateCombinerSubsection()); // hm ... strings conatain "" so they must be escaped ... but addslashes isn't enough ... why?!
+   $export_shifter = ""; //addslashes(GenerateShifterSubsection());
+    
+    $export_variable = new JSGlobalStructure;
+    
     
     
     foreach ($steno_tokens_master as $key => $definition) {
     
-        
         //$export_variable->addTokenListElement($key);
         //$export_variable->addTokenEditorDataElement($key);
         $export_variable->addNewElement($key); // add both JSTokenListElement and JSTokenEditorDataElement
-        
-       // $export_variable->tokenList[$key]->header = array(4,5,6,7);
-       
+    
         for ($i=0; $i<24; $i++) {
             $export_variable->tokenList[$key]->header[] = $steno_tokens_master[$key][$i];
         }
-    
-        
         $export_variable->tokenList[$key]->tokenData = array();
             
-   //     $index = 0;
         for ($i=24; $i<count($steno_tokens_master[$key]); $i+=8) {
             
             // read data
@@ -318,9 +268,6 @@ function OpenEditorPage() {
             $export_variable->tokenList[$key]->tokenData[] = $newTuplet; //new JSTokenData(); //"tuplet: $i";
      
         }
-   
-        // create editor data object and write data
-        //$export_variable->editorData[$key] = new TETokenEditorDataElement;   // the element is empty (no data), it just provides the data structure so that JS functions can access them (otherwhise the functions will throw an "undefined" error)
      
    }
    // var_dump($export_variable);
@@ -329,49 +276,17 @@ function OpenEditorPage() {
     
     $result = json_encode($export_variable);
     //echo "<p>php json:</p><pre>$result</pre>";
-    $complete = "var actualFontSE1 = $result;"; // works
-    $script = "<script>$complete console.log(actualFontSE1); actualFont = actualFontSE1; 
-			createPullDownSelectionFromActualFont();;</script>";
+   
+   $complete = "var actualFontSE1 = $result;"; // works
+    $script = "<script>$complete console.log(actualFontSE1); var actualCombiner = \"$export_combiner\"; var actualShifter = \"$export_shifter\"; </script>";
     echo $script;
 
-/*   
-   // some test for export
-   // now, the part that's more difficult is the export of the token data ...
-    // maybe start with one entry to see if it works ...
+   //$complete = "var actualFontSE1 = $result;"; // works
+    //$script = "<script>var actualFontSE1 = $result, actualCombiner = \"$export_combiner\", actualShifter = \"$export_shifter\";</script>" // export only data, because all the rest (= function calls) doesn't work (probably due to the fact that the page is still loading an DOM not ready => function calls can be done late
+    //$script = "<script>var actualFontSE1 = \"$result\"; var actualCombiner = \"$export_combiner\"; var actualShifter = \"$export_shifter\";</script>"; // export only data, because all the rest (= function calls) doesn't work (probably due to the fact that the page is still loading an DOM not ready => function calls can be done late
     
-    //var_dump($steno_tokens_master["T"]);  // use token "T" ("an easy one" to start with ...;-)
-    
-    // start with header
-    $header = "";
-    for ($i=0; $i<24; $i++) {
-        // generate list of elements
-        $temp = AddQuotes($steno_tokens_master["A"][$i]);
-        if ($temp == null) $temp = "\"\"";
-        $header .= $temp;
-        if ($i < 23) $header .= ", ";
-    }
-    // generate JS notation
-    $header = "\"header\" : [ $header ]";
-    
-    // generate entire object
-    // manual solution
-    //$complete = "var test = { \"tokenList\" : { \"A\" : { $header, \"tokenData\" : { [] } } }, \"editorData\" : { \"A\" : \"rotatingAxisList\" : [] } };";
-    //$complete = "var test = { $header };"; // works
-    //$script = "<script>$complete console.log(test);</script>";
-    
-    // try to do the same as above an export it with JSON => ok, seems to work! Use this, i.e. export data from $steno_tokens_master to some intermediata variable and use json_encode
- */   
- /*   $php_object = (object)array( "header" => array( 0, 1, 2, 3, 4, 5, 7, "one", "two", "three" )); // there are no literal objects in php, but it is possible to cast an array to a standard object (and it gets encode correctly in JSON)
-    $result = json_encode($php_object);
-    
-    echo "<pre>$complete</pre>";
-   
-   echo "<p>php json:</p><pre>$result</pre>";
-*//*    echo $script;
-    
-    //for ($i=24; $i<count($steno_tokens_master); $i++) {
-    //}
-*/
+    //echo $script;
+
 
     InsertHTMLFooter();
 }
@@ -386,15 +301,5 @@ global $global_error_string;
 // do it in data.php?
 
 OpenEditorPage();
-
-/*
-if ($_POST['action'] === "abschicken") {
-    $global_error_string = "";
-    CalculateStenoPage();
-} else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
-    ResetSessionGetBackPage();
-}
-*/
-
 
 ?>

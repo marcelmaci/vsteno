@@ -527,6 +527,7 @@ function createPullDownSelectionFromActualFont() {
 	// deletes tokenPullDownSelection and creates a new array with elements from actualFont
 	// can be used to "load" a new font and adjust pulldown list accordingls (for exemple if editor is used for SE1)
 	// delete actual list
+	console.log("create pullDownSelectionFromActualFont");
 	tokenPullDownSelection.length = 0;
 	// create new list
 	for (var token in actualFont.tokenList) {
@@ -592,6 +593,9 @@ function loadTokenAndEditorData(token) {
 	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
 	//else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
+	console.log("focus: ", document.activeElement);
+	//document.getElementById("drawingArea").focus();
+	document.getElementById("load").blur(); // correct focus
 }
 function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
 	console.log("save token and editor data");
@@ -606,6 +610,7 @@ function saveTokenAndEditorData(token) {		// saves actual token to this.tokenLis
 	
 	console.log("ShorthandFont: ", actualFont);
 	console.log("editor: ", mainCanvas.editor);
+	document.getElementById("save").blur(); // correct focus
 }
 function deleteTokenFromPullDownSelection(token) {
 	deleteTokenData(token);
@@ -614,6 +619,7 @@ function deleteTokenFromPullDownSelection(token) {
 		tokenPullDownSelection.splice(index, 1);
 		updatePullDownSelection();
 	}
+	document.getElementById("delete").blur(); // correct focus
 }
 function deleteTokenAndEditorData(token) {
 	console.log("delete token and editor data (function)");
@@ -1265,7 +1271,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
 	var output = "<tr>\n"; // open first row
 	for (var i=0; i<24; i++) {
 			var id = "h" + Math.floor(i+1);
-			var nr = (Math.floor(i)<9.9) ? "0"+Math.floor(i+1) : Math.floor(i+1);
+			var nr = (Math.floor(i)<9.9) ? "0"+Math.floor(i+1) : Math.floor(i+1); // I hate JS ... guess what: since all numeric variables are floating point (no integer), comparison < 10 doesn't work in IceCat (even if it works perfectly in ABrowser), so that explains the < 9.9 comparison and the whole Math.floor() stuff ... just stupid!
 			output += "<td>" + nr + "<input type=\"text\" id=\"" + id + "\" size=\"4\" value=\"" + this.header[i] + "\"></td>\n";
 			if ((i+1)%8==0) output += "</tr><tr>"; // new row
 	}
@@ -2604,11 +2610,15 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
+		
+		// code: disable one segment (nr. 2 in the example)
+		/*
 		if (i==2) {
 			console.log("i = ", i);
 			middlePathWithVariableWidth[i].strokeWidth = 0; // works for not connecting
 			middlePathWithVariableWidth[i].visible = false; // disable one segment (for not connecting points) -- doesn't work?!
 		}
+		*/
 	}
 	
 }
@@ -4155,7 +4165,19 @@ function checkSpecialKeys(e) {
 		} else if (e.keyCode == '32') {
 			// space bar
 			mainCanvas.editor.cleanDrawingArea();
-		} 
+		} else if (e.key == "w") {
+			console.log("Try this hack ..."); 
+			console.log("actualFont: ", actualFont); 
+			console.log("actualFontSE1: ", actualFontSE1); 
+			actualFont = actualFontSE1; // problem: all prototype functions get lost ... try to save and copy them (not necessary any more: methods rewritten as global functions, actualFont now only contains data)
+			console.log(actualFont);
+			console.log("combiner: ", actualCombiner);
+			console.log("shifter: ", actualShifter);
+			createPullDownSelectionFromActualFont();
+		} else if (e.key == "q") {
+			console.log("toggle middle path visibility");
+			mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth();	
+		}
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
 	}
@@ -4195,7 +4217,8 @@ tool.onKeyDown = function(event) {
 					 mainCanvas.editor.connectPreceedingAndFollowing();
 					break;
 		case "i" : mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
-		case "q" : mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth(); break;	// test
+		//case "q" : console.log("test"); break;
+//		case "q" : mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth(); break;	// test
 		
 		/*console.log("input: ", document.getElementById("h1").value,
 					document.getElementById("h2").value,
@@ -4207,10 +4230,10 @@ tool.onKeyDown = function(event) {
 					
 					document.getElementById("h7").blur(); */
 					
-					break;
+	//				break;
 		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
 		case "-" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
-		case "w" : console.log("Try this hack ..."); 
+/*		case "w" : console.log("Try this hack ..."); 
 			console.log("actualFont: ", actualFont); 
 			console.log("actualFontSE1: ", actualFontSE1); 
 			//var tempPrototypes = actualFont.prototype;
@@ -4223,6 +4246,7 @@ tool.onKeyDown = function(event) {
 			console.log(actualFont);
 			createPullDownSelectionFromActualFont();
 			break; // try this hack ...
+*/
 	}
 	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);

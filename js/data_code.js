@@ -38,6 +38,7 @@ function createPullDownSelectionFromActualFont() {
 	// deletes tokenPullDownSelection and creates a new array with elements from actualFont
 	// can be used to "load" a new font and adjust pulldown list accordingls (for exemple if editor is used for SE1)
 	// delete actual list
+	console.log("create pullDownSelectionFromActualFont");
 	tokenPullDownSelection.length = 0;
 	// create new list
 	for (var token in actualFont.tokenList) {
@@ -103,6 +104,9 @@ function loadTokenAndEditorData(token) {
 	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
 	//else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
+	console.log("focus: ", document.activeElement);
+	//document.getElementById("drawingArea").focus();
+	document.getElementById("load").blur(); // correct focus
 }
 function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
 	console.log("save token and editor data");
@@ -117,6 +121,7 @@ function saveTokenAndEditorData(token) {		// saves actual token to this.tokenLis
 	
 	console.log("ShorthandFont: ", actualFont);
 	console.log("editor: ", mainCanvas.editor);
+	document.getElementById("save").blur(); // correct focus
 }
 function deleteTokenFromPullDownSelection(token) {
 	deleteTokenData(token);
@@ -125,6 +130,7 @@ function deleteTokenFromPullDownSelection(token) {
 		tokenPullDownSelection.splice(index, 1);
 		updatePullDownSelection();
 	}
+	document.getElementById("delete").blur(); // correct focus
 }
 function deleteTokenAndEditorData(token) {
 	console.log("delete token and editor data (function)");

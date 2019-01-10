@@ -196,7 +196,19 @@ function checkSpecialKeys(e) {
 		} else if (e.keyCode == '32') {
 			// space bar
 			mainCanvas.editor.cleanDrawingArea();
-		} 
+		} else if (e.key == "w") {
+			console.log("Try this hack ..."); 
+			console.log("actualFont: ", actualFont); 
+			console.log("actualFontSE1: ", actualFontSE1); 
+			actualFont = actualFontSE1; // problem: all prototype functions get lost ... try to save and copy them (not necessary any more: methods rewritten as global functions, actualFont now only contains data)
+			console.log(actualFont);
+			console.log("combiner: ", actualCombiner);
+			console.log("shifter: ", actualShifter);
+			createPullDownSelectionFromActualFont();
+		} else if (e.key == "q") {
+			console.log("toggle middle path visibility");
+			mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth();	
+		}
 	}    
 	//console.log("e.keyCode/e.ctrlKey: ", e.keyCode, e.ctrlKey);
 	}
@@ -236,7 +248,8 @@ tool.onKeyDown = function(event) {
 					 mainCanvas.editor.connectPreceedingAndFollowing();
 					break;
 		case "i" : mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
-		case "q" : mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth(); break;	// test
+		//case "q" : console.log("test"); break;
+//		case "q" : mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth(); break;	// test
 		
 		/*console.log("input: ", document.getElementById("h1").value,
 					document.getElementById("h2").value,
@@ -248,10 +261,10 @@ tool.onKeyDown = function(event) {
 					
 					document.getElementById("h7").blur(); */
 					
-					break;
+	//				break;
 		case "+" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.addParallelAxis(); break;
 		case "-" : mainCanvas.editor.rotatingAxis.parallelRotatingAxis.deleteParallelAxis(); break;
-		case "w" : console.log("Try this hack ..."); 
+/*		case "w" : console.log("Try this hack ..."); 
 			console.log("actualFont: ", actualFont); 
 			console.log("actualFontSE1: ", actualFontSE1); 
 			//var tempPrototypes = actualFont.prototype;
@@ -264,6 +277,7 @@ tool.onKeyDown = function(event) {
 			console.log(actualFont);
 			createPullDownSelectionFromActualFont();
 			break; // try this hack ...
+*/
 	}
 	//console.log("Keycode(charCode): ",keyPressed.charCodeAt(0));
 	//console.log("KeyEvent: ", event);
