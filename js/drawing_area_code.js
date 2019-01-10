@@ -309,12 +309,14 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 	
 }
 TEDrawingArea.prototype.hideMiddlePathWithVariableWidth = function() {
+	console.log("hide middle path");
 	showMiddlePathWithVariableWidth = false;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = false;
 	}
 }
 TEDrawingArea.prototype.showMiddlePathWithVariableWidth = function() {
+	console.log("show middle path");
 	showMiddlePathWithVariableWidth = true;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = true;
@@ -325,6 +327,7 @@ TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	else return false;
 }
 TEDrawingArea.prototype.toggleVisibilityMiddlePathWithVariableWidth = function() {
+	console.log("toggle visibility");
 	switch (showMiddlePathWithVariableWidth) {
 		case true : this.hideMiddlePathWithVariableWidth(); break;
 		case false : this.showMiddlePathWithVariableWidth(); break;

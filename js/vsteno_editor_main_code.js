@@ -91,13 +91,23 @@ document.onClick = function() {
 	console.log("onclick: ", document.activeElement.id);
 	switch (document.activeElement.id) {
 		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
-		case "load" : actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
+		case "load" : //if (actualFont.editorData != null) actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  //else loadTokenAndEditorData(document.getElementById("tokenpulldown").value);
+					  // replace method definitely by global function due to php import
+					  loadTokenAndEditorData(document.getElementById("tokenpulldown").value);
+					  break;
 		case "save" : // call add function first, in case text field is not empty
 					  // in that case: add token (name), select it and save it directly to this (eventually new) token (name)
 					  addNewTokenToPullDownSelection(document.getElementById("token").value); 
-					  actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  //actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  // replace method definitely by global function due to php import
+					  saveTokenAndEditorData(document.getElementById("tokenpulldown").value);
 					  break;
-		case "delete" : actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); break;
+		case "delete" : //actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); 
+						// replace method definitely by function due to php import
+						deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value);
+					  
+						break;
 		case "savetodatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); 
 							writeDataToDB();
 							break;
@@ -244,9 +254,14 @@ tool.onKeyDown = function(event) {
 		case "w" : console.log("Try this hack ..."); 
 			console.log("actualFont: ", actualFont); 
 			console.log("actualFontSE1: ", actualFontSE1); 
-			var tempPrototypes = actualFont.prototype;
+			//var tempPrototypes = actualFont.prototype;
+			//var oldActualFont = actualFont;
 			actualFont = actualFontSE1; // problem: all prototype functions get lost ... try to save and copy them
-			actualFont.prototype = tempPrototypes; // doesn't work ... the problem is that actualFont contains loadFont-method ... if prototype is deleted no font can be loaded ... good thing that oop always keeps data and methods together, right? well, in that case, it's a rather annoying effect: since data has to be transferred from php to js, php creates a new datastructure which doesn't contain the JS methods ... would be nice to copy only the data this time ...
+			//actualFont.prototype = Object.clone(oldActualFont.prototype);
+			//actualFont.prototype.loadAndInitializeEditorData = oldActualFont.prototype.loadAndInitializeEditorData;
+			//actualFont.prototype = tempPrototypes; // doesn't work ... the problem is that actualFont contains loadFont-method ... if prototype is deleted no font can be loaded ... good thing that oop always keeps data and methods together, right? well, in that case, it's a rather annoying effect: since data has to be transferred from php to js, php creates a new datastructure which doesn't contain the JS methods ... would be nice to copy only the data this time ...
+			//actualFont.prototype = new ShorthandFont(); // try to re-inherit prototypes from ShorthandFont (doesn't seem to work neither)
+			console.log(actualFont);
 			createPullDownSelectionFromActualFont();
 			break; // try this hack ...
 	}

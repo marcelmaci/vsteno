@@ -28,7 +28,7 @@ Funktionen, die z.T. erst rudimentär implementiert wurden und Bugfixes im Rahme
 <li><p><b>Zeicheneditor:</b> Parallel zum Testing der Version 0.1 wird ein graphischer Zeicheneditor (basierend auf <a href="http://www.paperjs.org">paper.js</a>) entwickelt, der es ermöglichen 
 soll, schönere und einfachere Stenozeichen zu generieren. 
 Dafür wird ein vollkommen neuer Ansatz für das Zeichnen der Stenozeichen verfolgt, der den kompletten Austausch der Steno-Engine bedingt. Diese etwas grössere und kompliziertere "Operation 
-am offenen Herzen" ist erst für Version 0.2 geplant. Einen Einblick in den aktuellen Entwicklungsstand des Zeicheneditors gibt es <a href="../js/vsteno_editor.html">hier</a>. <b>(Ergänzt am 8.12.18: <a href="../docs/stenoengines.pdf">STENO-ENGINES</a>).</b></p></li>
+am offenen Herzen" ist erst für Version 0.2 geplant. Einen Einblick in den aktuellen Entwicklungsstand des Zeicheneditors gibt es <a href="../js/vsteno_editor.html">hier</a>. <b>(Ergänzungen: 8.12.18: <a href="../docs/stenoengines.pdf">STENO-ENGINES</a> / 10.01.19: <a href="../php/export_se1data_to_editor.php">Editor SE1</a>).</b></p></li>
 </ul>
 </p>
 <p>Nicht angestrebt wird im Moment die Umsetzung anderer Stenografie-Systeme. Ebenfalls zurückgestellt wird die Dokumentation der Version 0.1: Wer bereits mit dieser Version ein eigenes 

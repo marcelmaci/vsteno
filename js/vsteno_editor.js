@@ -543,6 +543,9 @@ function ShorthandFont() {
 	this.tokenList = {}; 
 	this.editorData = {};
 }
+
+// all the following methods have to be replaced by global functions due to data import from PHP (see below)
+/*
 ShorthandFont.prototype.saveTokenAndEditorData = function(token) {		// saves actual token to this.tokenList["token"]
 	if ((token != "select") && (token != "empty")) {
 		this.deleteTokenAndEditorData(token);
@@ -578,6 +581,54 @@ ShorthandFont.prototype.loadTokenAndEditorData = function(token) {
 	else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);
 }
+*/
+
+// implement ShorthandFont methods the procedural way .. reason: when ShorthandFont is imported from PHP, only
+// data is present (no methods) => it's better to pass only the data to a function instead of trying to "repair"
+// broken (inexistent) objects method in PHP datastructure.
+
+function loadTokenAndEditorData(token) {
+	console.log("procedural loadTokenAndEditorData()");
+	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
+	//else console.log("don't (re)set editor data ... (null)");
+	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
+}
+function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
+	console.log("save token and editor data");
+	if ((token != "select") && (token != "empty")) {
+		deleteTokenAndEditorData(token);
+		console.log("token and editor data deleted");
+		console.log("create TokenDefinition object");
+		actualFont.tokenList[token] = new TokenDefinition();			// data will be copied directly via constructor that call goAndGrabThatTokenData()-method
+		console.log("create EditorParameters object");
+		actualFont.editorData[token] = new EditorParameters();		// same for editor data
+	}
+	
+	console.log("ShorthandFont: ", actualFont);
+	console.log("editor: ", mainCanvas.editor);
+}
+function deleteTokenFromPullDownSelection(token) {
+	deleteTokenData(token);
+	var index = tokenPullDownSelection.indexOf(token);
+	if (index > -1) {	// element does exist => delete it
+		tokenPullDownSelection.splice(index, 1);
+		updatePullDownSelection();
+	}
+}
+function deleteTokenAndEditorData(token) {
+	console.log("delete token and editor data (function)");
+	deleteTokenData(token);
+	deleteEditorData(token);
+}
+function deleteTokenData(token) {
+	console.log("deleteTokenData");
+	actualFont.tokenList[token] = null;
+}
+function deleteEditorData(token) {
+	console.log("deleteEditorData");
+	actualFont.editorData[token] = null;	
+}
+
 
 // database data types
 // class TokenDefinition
@@ -1214,7 +1265,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
 	var output = "<tr>\n"; // open first row
 	for (var i=0; i<24; i++) {
 			var id = "h" + Math.floor(i+1);
-			var nr = (Math.floor(i)<10) ? "0"+Math.floor(i+1) : Math.floor(i+1);
+			var nr = (Math.floor(i)<9.9) ? "0"+Math.floor(i+1) : Math.floor(i+1);
 			output += "<td>" + nr + "<input type=\"text\" id=\"" + id + "\" size=\"4\" value=\"" + this.header[i] + "\"></td>\n";
 			if ((i+1)%8==0) output += "</tr><tr>"; // new row
 	}
@@ -2562,12 +2613,14 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 	
 }
 TEDrawingArea.prototype.hideMiddlePathWithVariableWidth = function() {
+	console.log("hide middle path");
 	showMiddlePathWithVariableWidth = false;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = false;
 	}
 }
 TEDrawingArea.prototype.showMiddlePathWithVariableWidth = function() {
+	console.log("show middle path");
 	showMiddlePathWithVariableWidth = true;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = true;
@@ -2578,6 +2631,7 @@ TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	else return false;
 }
 TEDrawingArea.prototype.toggleVisibilityMiddlePathWithVariableWidth = function() {
+	console.log("toggle visibility");
 	switch (showMiddlePathWithVariableWidth) {
 		case true : this.hideMiddlePathWithVariableWidth(); break;
 		case false : this.showMiddlePathWithVariableWidth(); break;
@@ -3996,13 +4050,23 @@ document.onClick = function() {
 	console.log("onclick: ", document.activeElement.id);
 	switch (document.activeElement.id) {
 		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
-		case "load" : actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); break;
+		case "load" : //if (actualFont.editorData != null) actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  //else loadTokenAndEditorData(document.getElementById("tokenpulldown").value);
+					  // replace method definitely by global function due to php import
+					  loadTokenAndEditorData(document.getElementById("tokenpulldown").value);
+					  break;
 		case "save" : // call add function first, in case text field is not empty
 					  // in that case: add token (name), select it and save it directly to this (eventually new) token (name)
 					  addNewTokenToPullDownSelection(document.getElementById("token").value); 
-					  actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  //actualFont.saveTokenAndEditorData(document.getElementById("tokenpulldown").value); 
+					  // replace method definitely by global function due to php import
+					  saveTokenAndEditorData(document.getElementById("tokenpulldown").value);
 					  break;
-		case "delete" : actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); break;
+		case "delete" : //actualFont.deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value); 
+						// replace method definitely by function due to php import
+						deleteTokenFromPullDownSelection(document.getElementById("tokenpulldown").value);
+					  
+						break;
 		case "savetodatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); 
 							writeDataToDB();
 							break;
@@ -4149,7 +4213,14 @@ tool.onKeyDown = function(event) {
 		case "w" : console.log("Try this hack ..."); 
 			console.log("actualFont: ", actualFont); 
 			console.log("actualFontSE1: ", actualFontSE1); 
-			actualFont = actualFontSE1; 
+			//var tempPrototypes = actualFont.prototype;
+			//var oldActualFont = actualFont;
+			actualFont = actualFontSE1; // problem: all prototype functions get lost ... try to save and copy them
+			//actualFont.prototype = Object.clone(oldActualFont.prototype);
+			//actualFont.prototype.loadAndInitializeEditorData = oldActualFont.prototype.loadAndInitializeEditorData;
+			//actualFont.prototype = tempPrototypes; // doesn't work ... the problem is that actualFont contains loadFont-method ... if prototype is deleted no font can be loaded ... good thing that oop always keeps data and methods together, right? well, in that case, it's a rather annoying effect: since data has to be transferred from php to js, php creates a new datastructure which doesn't contain the JS methods ... would be nice to copy only the data this time ...
+			//actualFont.prototype = new ShorthandFont(); // try to re-inherit prototypes from ShorthandFont (doesn't seem to work neither)
+			console.log(actualFont);
 			createPullDownSelectionFromActualFont();
 			break; // try this hack ...
 	}

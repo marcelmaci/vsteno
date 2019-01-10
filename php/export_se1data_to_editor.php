@@ -23,11 +23,20 @@ class JSGlobalStructure {
     public $editorData; //array();
     public function JSGlobalStructure() {
        $this->tokenList = array();      // important: don't cast array to a standard object, the following is wrong: (object)array(); (the point is that by doing that, you loose the array push function to insert new key/value pairs!)
+       $this->editorData = array();     // provide at least a prototype for JS (only temporary solution)
        // $this->addTokenListElement();
     }
     public function addTokenListElement($token) {
        $newToken = new JSTokenList;
        $this->tokenList[$token] = $newToken;    // add new object as key/value pair by using the array push function (the array will be implicitely converted to a standard object and then stringified correctly)
+    }
+    public function addTokenEditorDataElement($token) {
+       $newEditorDataElement = new JSTokenEditorDataElement;
+       $this->editorData[$token] = $newEditorDataElement;    // add new object as key/value pair by using the array push function (the array will be implicitely converted to a standard object and then stringified correctly)
+    }
+    public function addNewElement($token) {
+        $this->addTokenListElement($token);
+        $this->addTokenEditorDataElement($token);
     }
 }
 
@@ -105,6 +114,13 @@ class JSThicknessContainer {
 class JSThicknessLeftRight {
     public $left;
     public $right;
+}
+
+class JSTokenEditorDataElement {
+    public $rotatingAxisList;
+    public function JSTokenEditorDataElement() {
+        $this->rotatingAxisList = array();
+    }
 }
 
 global $default_model;
@@ -204,7 +220,13 @@ function OpenEditorPage() {
     CopyFormToSessionVariables();
     InsertHTMLHeader();
 
-    echo "<h1>Export that stuff ... ;-)</h1>";
+    echo "<h1>Editor SE1</h1><i><p><b>SE1-Hack:</b> Die Programmierung der SE2 benötigt sehr viel Zeit. Ein \"produktives Ende\" ist im Moment nicht in Sicht. Um trotzdem weiterarbeiten zu können,
+    soll der Editor mit der SE1 kompatibel gemacht werden (Rückwärtskompatibilität). Die Verwendung des Editor für die SE1 (Import, Export und Editieren der Daten) war nicht geplant und kann
+    deshalb nur durch diverse \"Hacks\" (= \"münchhauserische\" Anbindung der Daten, die direkt, queerbeet und ohne Rücksicht auf die OOP-Philosophie der SE2 in den Editor geschrieben werden). 
+    Das Ganze ist aber möglich und sollte dazu führen, dass SE1 und SE2 letztlich parallel verwendet werden können (bis anhin war eher beabsichtigt, die SE1 nach der Implementierung der SE2 
+    komplett zu löschen, da die SE2 aber sehr komplex ist, macht es allenfalls Sinn, die einfachere SE1 weiterzubehalten und evtl. sogar weiterzuentwickeln).</p>
+    <p><b>Bedienung:</b> Im Moment können die von PHP exportierten Daten mit \"w\" direkt in den Editor kopiert werden (wilder \"Datahack;-)\"). Anschliessend kann mit \"q\" die Darstellung 
+    der SE1 eingeschaltet werden (Linien statt Umrisse). Viele weitere Funktionen sind noch nicht oder nur teilweise implementiert.<p><i>";
     
     // searching for my data ... where the heck did I store all that stuff ... ;-)
     // it's been a long time since I worked on this program for the last time ... ;-)
@@ -250,7 +272,10 @@ function OpenEditorPage() {
     foreach ($steno_tokens_master as $key => $definition) {
     
         
-        $export_variable->addTokenListElement($key);
+        //$export_variable->addTokenListElement($key);
+        //$export_variable->addTokenEditorDataElement($key);
+        $export_variable->addNewElement($key); // add both JSTokenListElement and JSTokenEditorDataElement
+        
        // $export_variable->tokenList[$key]->header = array(4,5,6,7);
        
         for ($i=0; $i<24; $i++) {
@@ -273,7 +298,7 @@ function OpenEditorPage() {
             $tempD2 = $steno_tokens_master[$key][$i+6];
             $tempT2 = $steno_tokens_master[$key][$i+7];
             
-            // create objects and write data
+            // create token data objects and write data
             $newTuplet = new JSTokenData();
             $newTuplet->calcType = "horizontal";        // this is the default value in SE1
             $newTuplet->vector1 = $tempX1;
@@ -291,21 +316,12 @@ function OpenEditorPage() {
             $newTuplet->knotType->importFromSE1($tempD1, $tempD2, $tempDR);
             
             $export_variable->tokenList[$key]->tokenData[] = $newTuplet; //new JSTokenData(); //"tuplet: $i";
-            
-            /*
-            $export_variable["tokenList"]["key"]["tokenData"][$index] = (object)array();
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["knotType"] = (object)array();
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["calcType"] = "horizontal";
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["vector1"] = 1;
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["vector2"] = 2;
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["shiftX"] = 3;
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["shiftY"] = 4;
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["tensions"] = array( 0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
-            $export_variable["tokenList"]["key"]["tokenData"][$index]["thickness"] = array();
-            */
-     //       $index++:
+     
         }
    
+        // create editor data object and write data
+        //$export_variable->editorData[$key] = new TETokenEditorDataElement;   // the element is empty (no data), it just provides the data structure so that JS functions can access them (otherwhise the functions will throw an "undefined" error)
+     
    }
    // var_dump($export_variable);
     

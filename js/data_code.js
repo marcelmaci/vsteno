@@ -54,6 +54,9 @@ function ShorthandFont() {
 	this.tokenList = {}; 
 	this.editorData = {};
 }
+
+// all the following methods have to be replaced by global functions due to data import from PHP (see below)
+/*
 ShorthandFont.prototype.saveTokenAndEditorData = function(token) {		// saves actual token to this.tokenList["token"]
 	if ((token != "select") && (token != "empty")) {
 		this.deleteTokenAndEditorData(token);
@@ -89,6 +92,54 @@ ShorthandFont.prototype.loadTokenAndEditorData = function(token) {
 	else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);
 }
+*/
+
+// implement ShorthandFont methods the procedural way .. reason: when ShorthandFont is imported from PHP, only
+// data is present (no methods) => it's better to pass only the data to a function instead of trying to "repair"
+// broken (inexistent) objects method in PHP datastructure.
+
+function loadTokenAndEditorData(token) {
+	console.log("procedural loadTokenAndEditorData()");
+	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
+	//else console.log("don't (re)set editor data ... (null)");
+	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
+}
+function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
+	console.log("save token and editor data");
+	if ((token != "select") && (token != "empty")) {
+		deleteTokenAndEditorData(token);
+		console.log("token and editor data deleted");
+		console.log("create TokenDefinition object");
+		actualFont.tokenList[token] = new TokenDefinition();			// data will be copied directly via constructor that call goAndGrabThatTokenData()-method
+		console.log("create EditorParameters object");
+		actualFont.editorData[token] = new EditorParameters();		// same for editor data
+	}
+	
+	console.log("ShorthandFont: ", actualFont);
+	console.log("editor: ", mainCanvas.editor);
+}
+function deleteTokenFromPullDownSelection(token) {
+	deleteTokenData(token);
+	var index = tokenPullDownSelection.indexOf(token);
+	if (index > -1) {	// element does exist => delete it
+		tokenPullDownSelection.splice(index, 1);
+		updatePullDownSelection();
+	}
+}
+function deleteTokenAndEditorData(token) {
+	console.log("delete token and editor data (function)");
+	deleteTokenData(token);
+	deleteEditorData(token);
+}
+function deleteTokenData(token) {
+	console.log("deleteTokenData");
+	actualFont.tokenList[token] = null;
+}
+function deleteEditorData(token) {
+	console.log("deleteEditorData");
+	actualFont.editorData[token] = null;	
+}
+
 
 // database data types
 // class TokenDefinition
