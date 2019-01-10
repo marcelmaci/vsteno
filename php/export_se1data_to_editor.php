@@ -218,8 +218,8 @@ function OpenEditorPage() {
     //     and with the possibility to design every token and combinations as it should be (esthetically better tokens)
     // Haven't made my mind up yet, so for the moment export export all data ... (which looks dangerously similar to option 3 ... :-)
     
-   $export_combiner = ""; //addslashes(GenerateCombinerSubsection()); // hm ... strings conatain "" so they must be escaped ... but addslashes isn't enough ... why?!
-   $export_shifter = ""; //addslashes(GenerateShifterSubsection());
+   $export_combiner = htmlspecialchars(GenerateCombinerSubsection()); //addslashes(GenerateCombinerSubsection()); // hm ... strings conatain "" so they must be escaped ... but addslashes isn't enough ... why?!
+   $export_shifter = htmlspecialchars(GenerateShifterSubsection()); //addslashes(GenerateShifterSubsection());
     
     $export_variable = new JSGlobalStructure;
     
@@ -278,9 +278,16 @@ function OpenEditorPage() {
     //echo "<p>php json:</p><pre>$result</pre>";
    
    $complete = "var actualFontSE1 = $result;"; // works
-    $script = "<script>$complete console.log(actualFontSE1); var actualCombiner = \"$export_combiner\"; var actualShifter = \"$export_shifter\"; </script>";
+    //$script = "<script>$complete console.log(actualFontSE1); var actualCombiner = \"$export_combiner\"; var actualShifter = \"$export_shifter\"; </script>";
+    $script = "<script>$complete console.log(actualFontSE1); </script>";
+    
     echo $script;
-
+    
+    // include data inside HTML page via hidden input field
+    echo "\n<input type=\"hidden\" id=\"combinerHTML\" value=\"$export_combiner\">";
+    echo "\n<input type=\"hidden\" id=\"shifterHTML\" value=\"$export_shifter\">";
+    
+    
    //$complete = "var actualFontSE1 = $result;"; // works
     //$script = "<script>var actualFontSE1 = $result, actualCombiner = \"$export_combiner\", actualShifter = \"$export_shifter\";</script>" // export only data, because all the rest (= function calls) doesn't work (probably due to the fact that the page is still loading an DOM not ready => function calls can be done late
     //$script = "<script>var actualFontSE1 = \"$result\"; var actualCombiner = \"$export_combiner\"; var actualShifter = \"$export_shifter\";</script>"; // export only data, because all the rest (= function calls) doesn't work (probably due to the fact that the page is still loading an DOM not ready => function calls can be done late

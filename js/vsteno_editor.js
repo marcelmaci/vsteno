@@ -4171,8 +4171,11 @@ function checkSpecialKeys(e) {
 			console.log("actualFontSE1: ", actualFontSE1); 
 			actualFont = actualFontSE1; // problem: all prototype functions get lost ... try to save and copy them (not necessary any more: methods rewritten as global functions, actualFont now only contains data)
 			console.log(actualFont);
-			console.log("combiner: ", actualCombiner);
-			console.log("shifter: ", actualShifter);
+			console.log("combiner: ", document.getElementById("combinerHTML").value);
+			console.log("shifter: ", document.getElementById("shifterHTML").value);
+			
+			//console.log("combiner: ", actualCombiner);
+			//console.log("shifter: ", actualShifter);
 			createPullDownSelectionFromActualFont();
 		} else if (e.key == "q") {
 			console.log("toggle middle path visibility");
