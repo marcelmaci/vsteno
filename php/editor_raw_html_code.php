@@ -59,5 +59,7 @@
 	</tr>
    </table>
    
+   <div id="textAreaOutput">
+   </div>
   
    </center>

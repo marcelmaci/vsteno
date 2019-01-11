@@ -54,6 +54,9 @@ var mainCanvas = new TECanvas(0,0,800,800);
 var middlePathWithVariableWidth = [];	// test: array of paths (subdivided main middle path)
 var showMiddlePathWithVariableWidth = false;
 
+// version
+//var versionSE = "SE2";	// default editor mode is SE2
+
 // global event handlers and variables
 var lastClick = null,
 	doubleClickInterval = 500, // milliseconds
@@ -246,7 +249,8 @@ function checkSpecialKeys(e) {
 		} else if (e.keyCode == '32') {
 			// space bar
 			mainCanvas.editor.cleanDrawingArea();
-		} else if (e.key == "w") {
+		} 
+/*		else if (e.key == "w") {
 			console.log("Try this hack ..."); 
 			console.log("actualFont: ", actualFont); 
 			console.log("actualFontSE1: ", actualFontSE1); 
@@ -258,7 +262,10 @@ function checkSpecialKeys(e) {
 			//console.log("combiner: ", actualCombiner);
 			//console.log("shifter: ", actualShifter);
 			createPullDownSelectionFromActualFont();
-		} else if (e.key == "q") {
+		} 
+*/
+		
+		else if (e.key == "q") {
 			console.log("toggle middle path visibility");
 			mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth();	
 		}
@@ -359,5 +366,14 @@ tool.onMouseUp = function(event) {
 	mainCanvas.handleEvent(event);
 	mouseDown = false;
     mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
+}
+
+// load font automatically => not clear which code is executed: this one (in head) or the patched one (in body)?!
+window.onload = function() {
+	//console.log("versionSE: ", versionSE, "actualFontSE1: ", actualFontSE1);
+	if (actualFontSE1 != undefined) {		// if editor is used in SE1 mode, load font (= "patched" variable actualFontSE1) automatically 
+		actualFont = actualFontSE1;
+		createPullDownSelectionFromActualFont();
+	}
 }
 

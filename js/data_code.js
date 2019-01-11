@@ -3,6 +3,7 @@
 
 var tokenPullDownSelection = [];
 var actualFont = new ShorthandFont();
+var otherFont = new ShorthandFont();
 
 function filterOutEmptySpaces(string) {
 	var newString = string;

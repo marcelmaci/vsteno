@@ -70,7 +70,7 @@ class JSKnotType {
     public $lateEntry = false;
     public $combinationPoint = false;
     public $connect = false;
-    public $intermediteShadow = false;
+    public $intermediateShadow = false;
     public function importFromSE1($d1, $d2, $dr) {
         // assume alle properties are set to false
         switch ($d1) {
@@ -189,8 +189,9 @@ function OpenEditorPage() {
     deshalb nur durch diverse \"Hacks\" (= \"münchhausnerische\" Anbindung der Daten, die direkt, queerbeet und ohne Rücksicht auf die OOP-Philosophie der SE2 in den Editor geschrieben werden). 
     erreicht werden. Das Ganze ist aber möglich und sollte dazu führen, dass SE1 und SE2 letztlich parallel verwendet werden können (bis anhin war eher beabsichtigt, die SE1 nach der 
     Implementierung der SE2 komplett zu löschen, da die SE2 aber sehr komplex ist, macht es allenfalls Sinn, die einfachere SE1 weiterzubehalten und evtl. sogar weiterzuentwickeln).</p>
-    <p><b>Bedienung:</b> Im Moment können die von PHP exportierten Daten mit \"w\" direkt in den Editor kopiert werden (wilder \"Datahack;-)\"). Anschliessend kann mit \"q\" die Darstellung 
-    der SE1 eingeschaltet werden (Linien statt Umrisse). Viele weitere Funktionen sind noch nicht oder nur teilweise implementiert.<p><i>";
+    <p><b>Bedienung:</b> Das Standard-Font der SE1 wird automatisch geladen (Zeichen aus der PullDownSelection wählen und auf Load klicken, um ein Zeichen zu laden). Anschliessend kann 
+    mit \"q\" die Darstellung der SE1 ein- und ausgeschaltet werden (Linien statt Umrisse). Viele weitere Funktionen sind noch nicht oder nur teilweise implementiert. \"Save to Database\" generiert
+    den ASCII Text, der für die SE1 in die Datenbank generiert wird und zeigt ihn in einem Textfeld auf der gleichen Seite an.<p><i>";
     
     // All data in: global variables $steno_tokens_master, $combiner_table, $shifter_table
     
@@ -218,8 +219,19 @@ function OpenEditorPage() {
     //     and with the possibility to design every token and combinations as it should be (esthetically better tokens)
     // Haven't made my mind up yet, so for the moment export export all data ... (which looks dangerously similar to option 3 ... :-)
     
-   $export_combiner = htmlspecialchars(GenerateCombinerSubsection()); //addslashes(GenerateCombinerSubsection()); // hm ... strings conatain "" so they must be escaped ... but addslashes isn't enough ... why?!
-   $export_shifter = htmlspecialchars(GenerateShifterSubsection()); //addslashes(GenerateShifterSubsection());
+    // ok, have done some further thinking and made up my mind: export for combiner/shifter will be a combination of solutions 1 and 3:
+    // - tokens will be exported in combined and shifted version. Reason: This way, ALL tokens (base tokens, combined, shifted tokens) will be available in die editor (and can be graphically
+    //   visualized)
+    // - token/shifter tables will be exported as comments inside #BeginSubSection/#EndSubSection tags. Reason: If really, someone wants to recreated new combined tokens, it is possible to
+    //   do it manually (using text editor: delete combined/shifted tokens in base section and uncomment necessary combined/shifted definitions in the corresponding subsections)
+    //
+    // there's still 2 problems left:
+    // 1) subsection with commented definitions has to be created (new function needed, easy to do)
+    // 2) comments have to be preserved from one editing process to the other (so, wenn loading the definitions, comments should also be loaded an inserted again later ... this problem
+    // is the trickier one ... )
+    
+    $export_combiner = htmlspecialchars(GenerateCombinerSubsection()); //addslashes(GenerateCombinerSubsection()); // hm ... strings conatain "" so they must be escaped ... but addslashes isn't enough ... why?!
+    $export_shifter = htmlspecialchars(GenerateShifterSubsection()); //addslashes(GenerateShifterSubsection());
     
     $export_variable = new JSGlobalStructure;
     
@@ -271,30 +283,18 @@ function OpenEditorPage() {
      
    }
    // var_dump($export_variable);
-    
     require_once "editor_raw_html_code.php"; // wow, this is ugly ... :-)
     
+    // patch editor page and load font automatically
     $result = json_encode($export_variable);
-    //echo "<p>php json:</p><pre>$result</pre>";
-   
-   $complete = "var actualFontSE1 = $result;"; // works
-    //$script = "<script>$complete console.log(actualFontSE1); var actualCombiner = \"$export_combiner\"; var actualShifter = \"$export_shifter\"; </script>";
-    $script = "<script>$complete console.log(actualFontSE1); </script>";
-    
+    $data_patch = "var actualFontSE1 = $result;"; // works
+    $script = "<script>$data_patch window.onload = function() { actualFont = actualFontSE1; createPullDownSelectionFromActualFont(); }</script>";
     echo $script;
     
     // include data inside HTML page via hidden input field
     echo "\n<input type=\"hidden\" id=\"combinerHTML\" value=\"$export_combiner\">";
     echo "\n<input type=\"hidden\" id=\"shifterHTML\" value=\"$export_shifter\">";
     
-    
-   //$complete = "var actualFontSE1 = $result;"; // works
-    //$script = "<script>var actualFontSE1 = $result, actualCombiner = \"$export_combiner\", actualShifter = \"$export_shifter\";</script>" // export only data, because all the rest (= function calls) doesn't work (probably due to the fact that the page is still loading an DOM not ready => function calls can be done late
-    //$script = "<script>var actualFontSE1 = \"$result\"; var actualCombiner = \"$export_combiner\"; var actualShifter = \"$export_shifter\";</script>"; // export only data, because all the rest (= function calls) doesn't work (probably due to the fact that the page is still loading an DOM not ready => function calls can be done late
-    
-    //echo $script;
-
-
     InsertHTMLFooter();
 }
 

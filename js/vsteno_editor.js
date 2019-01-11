@@ -492,6 +492,7 @@ TECoordinatesLabels.prototype.isDynamic = function() {
 
 var tokenPullDownSelection = [];
 var actualFont = new ShorthandFont();
+var otherFont = new ShorthandFont();
 
 function filterOutEmptySpaces(string) {
 	var newString = string;
@@ -3848,18 +3849,32 @@ function writeDataToDB() {
 	//console.log("data: ", data, actualFont);
 	//console.log("custom: ", custom);
 
-	// use this for SE1 export for the moment (no JSON)
-	// prepare textarea data that will be presented in an intermedia step
-	// as html form ant then exported via normal php/form/post-call
-	// (using the php-code from SE1 without any modification (hopefully;-))
-	// "Translation" from new SE2 to old SE1 occurs via actualFont: 
-	// all data must be stored in actualFont first and is then converted
-	// to SE1 notation (= text) afterwards.
+	if (actualFontSE1 != undefined) {
+		// use this for SE1 export for the moment (no JSON) - only if actualFontSE1 exists!
+		// prepare textarea data that will be presented in an intermedia step
+		// as html form ant then exported via normal php/form/post-call
+		// (using the php-code from SE1 without any modification (hopefully;-))
+		// "Translation" from new SE2 to old SE1 occurs via actualFont: 
+		// all data must be stored in actualFont first and is then converted
+		// to SE1 notation (= text) afterwards.
 	
-	console.log(actualFont);
+		console.log(actualFont);
 	
-	var textArea = getBaseSectionSE1() + combinerSection + shifterSection;
-	console.log("textArea: ", textArea);
+		var textArea = getBaseSectionSE1() + getCombinerSectionSE1() + getShifterSectionSE1();
+		//console.log("textArea: ", textArea);
+	
+		// write result on the same page in div "textAreaOutput" for the moment
+		document.getElementById("textAreaOutput").innerHTML = "<textarea rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea>";
+		
+	}
+}
+
+function getCombinerSectionSE1() {
+	return document.getElementById("combinerHTML").value;
+}
+
+function getShifterSectionSE1() {
+	return document.getElementById("shifterHTML").value;
 }
 
 function getBaseSectionSE1() {	
@@ -3871,12 +3886,13 @@ function getBaseSectionSE1() {
 	// "TT" => {  /*h*/ 0,  0.5,  0,  0,  5,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
 	for (key in actualFont.tokenList) {
 			
+			console.log("key: ", key);
 			output += "\t\t\"" + key + "\" => {";
 			
 			// add header
 			output += " /*header*/ ";
 			for (var i=0; i<24; i++) {
-				switch (actualFont.tokenList[key].header[i]) {
+				switch (actualFont.tokenList[""+key].header[i]) {
 					case "undefined" : output += "0, "; break;
 					case "" : output += "\"\", "; break;
 					default: output += actualFont.tokenList[key].header[i] + ", "; break;
@@ -3972,6 +3988,9 @@ function calculateDR(knotTypeObject) {
 var mainCanvas = new TECanvas(0,0,800,800);
 var middlePathWithVariableWidth = [];	// test: array of paths (subdivided main middle path)
 var showMiddlePathWithVariableWidth = false;
+
+// version
+//var versionSE = "SE2";	// default editor mode is SE2
 
 // global event handlers and variables
 var lastClick = null,
@@ -4165,7 +4184,8 @@ function checkSpecialKeys(e) {
 		} else if (e.keyCode == '32') {
 			// space bar
 			mainCanvas.editor.cleanDrawingArea();
-		} else if (e.key == "w") {
+		} 
+/*		else if (e.key == "w") {
 			console.log("Try this hack ..."); 
 			console.log("actualFont: ", actualFont); 
 			console.log("actualFontSE1: ", actualFontSE1); 
@@ -4177,7 +4197,10 @@ function checkSpecialKeys(e) {
 			//console.log("combiner: ", actualCombiner);
 			//console.log("shifter: ", actualShifter);
 			createPullDownSelectionFromActualFont();
-		} else if (e.key == "q") {
+		} 
+*/
+		
+		else if (e.key == "q") {
 			console.log("toggle middle path visibility");
 			mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth();	
 		}
@@ -4278,5 +4301,14 @@ tool.onMouseUp = function(event) {
 	mainCanvas.handleEvent(event);
 	mouseDown = false;
     mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
+}
+
+// load font automatically => not clear which code is executed: this one (in head) or the patched one (in body)?!
+window.onload = function() {
+	//console.log("versionSE: ", versionSE, "actualFontSE1: ", actualFontSE1);
+	if (actualFontSE1 != undefined) {		// if editor is used in SE1 mode, load font (= "patched" variable actualFontSE1) automatically 
+		actualFont = actualFontSE1;
+		createPullDownSelectionFromActualFont();
+	}
 }
 
