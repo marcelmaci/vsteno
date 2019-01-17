@@ -430,6 +430,8 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
 		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
 		
+		// set tensions
+		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // copy entire array(6) use slice!!!
 		
 		//mainCanvas.editor.editableToken.knotsList[i].type = token.tokenData[i].knotType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
@@ -453,7 +455,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	
 	
 	
-	//console.log("mainCanvas.editor: ", mainCanvas.editor);
+	console.log("mainCanvas.editor: ", mainCanvas.editor);
 }
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	// set standard parameters for editor in order to insert data

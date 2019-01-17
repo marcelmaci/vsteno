@@ -4,9 +4,11 @@
 	<table>
 	<tr>
 		<td>Token: 
-		<select id="tokenpulldown">
+		<!-- <div id="tokenpulldowndiv"> -->
+        <select id="tokenpulldown">
 			<option value="empty">(empty)</option>
 		</select> 
+        <!-- </div> -->
 		<button id="addnew" onClick="document.onClick()"><= ADD</button>
 		<input id="token" type="text" size="6"><br>
 		

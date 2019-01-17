@@ -14,6 +14,27 @@ function filterOutEmptySpaces(string) {
 	return newString;
 }
 
+// workaround for browsers where innerHTML with select-tag doesn't work
+/* doesn't work ... */
+function swapInnerHTML(objID,newHTML) {
+  var el=document.getElementById(objID);
+  el.outerHTML=el.outerHTML.replace(el.innerHTML+'</select>',newHTML+'</select>');
+}
+// another workaround ... one guy came up with the absurd recursive solution ... I love absurd solution for absurd problems ... :-) :-) :-)
+/* ... but doesn't work neither ...
+function setInnerHTML(element, html, count) {
+     element.innerHTML = html;
+     if(!count)
+         count = 1;
+     if(html != '' && element.innerHTML == '' && count < 5) {
+         ++count;
+         setTimeout( function() {
+             setInnerHTML( element, html, count );
+         }, 50 );
+     }
+}
+*/
+ 
 // general functions
 function addNewTokenToPullDownSelection(token) {
 	token = filterOutEmptySpaces(token); // filter out empty spaces 
@@ -32,8 +53,30 @@ function updatePullDownSelection(token) {			// preselect token in list
 		if (i == preselection) optionList += "<option value=\"" + tokenPullDownSelection[i] + "\" selected>" + tokenPullDownSelection[i] + "</option>\n";
 		else optionList += "<option value=\"" + tokenPullDownSelection[i] + "\">" + tokenPullDownSelection[i] + "</option>\n"; 
 	}
-	var element = document.getElementById("tokenpulldown");
-	element.innerHTML = optionList;	
+	//var element = document.getElementById("tokenpulldown");
+	//element.innerHTML = optionList;	
+	// use workaround
+	swapInnerHTML("tokenpulldown", optionList); ; // doesn't work (i.e. works, but doesn't solve the problem/incompatibility with other browsers)
+	// use another workaround
+	// var element = document.getElementById("tokenpulldowndiv");
+	// element.innerHTML = "<select id=\"tokenpulldown\">" + optionList + "</select>";
+	// try another workaround
+	// setTimeout( function() { element.innerHTML = optionList; }, 50 );
+	// and one more ...
+	// setInnerHTML(element, optionList, 0);
+	// element.InnerText = optionList;
+	
+	
+	// other ideas: use document.getElementById('day').options.add(new Option("1", "1")); with: new Option("optionText", "optionValue")
+	
+	
+	// ok, greetings to all Apple and Windows users: get yourself a Linux ... ! :-)
+	// Safari: doesn't work
+	// Android (stock browser): doesn't work
+	// Android (Chrome): works
+	// IE: untested
+	// Firefox (original): mainly untested (Mac: pulldown menu works, but bottons don't?!)
+	// Firefox (clones): derived versions like IceCat and ABrowser under Linux work
 }
 function createPullDownSelectionFromActualFont() {
 	// deletes tokenPullDownSelection and creates a new array with elements from actualFont

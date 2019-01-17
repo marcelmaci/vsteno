@@ -503,6 +503,27 @@ function filterOutEmptySpaces(string) {
 	return newString;
 }
 
+// workaround for browsers where innerHTML with select-tag doesn't work
+/* doesn't work ... */
+function swapInnerHTML(objID,newHTML) {
+  var el=document.getElementById(objID);
+  el.outerHTML=el.outerHTML.replace(el.innerHTML+'</select>',newHTML+'</select>');
+}
+// another workaround ... one guy came up with the absurd recursive solution ... I love absurd solution for absurd problems ... :-) :-) :-)
+/* ... but doesn't work neither ...
+function setInnerHTML(element, html, count) {
+     element.innerHTML = html;
+     if(!count)
+         count = 1;
+     if(html != '' && element.innerHTML == '' && count < 5) {
+         ++count;
+         setTimeout( function() {
+             setInnerHTML( element, html, count );
+         }, 50 );
+     }
+}
+*/
+ 
 // general functions
 function addNewTokenToPullDownSelection(token) {
 	token = filterOutEmptySpaces(token); // filter out empty spaces 
@@ -521,8 +542,30 @@ function updatePullDownSelection(token) {			// preselect token in list
 		if (i == preselection) optionList += "<option value=\"" + tokenPullDownSelection[i] + "\" selected>" + tokenPullDownSelection[i] + "</option>\n";
 		else optionList += "<option value=\"" + tokenPullDownSelection[i] + "\">" + tokenPullDownSelection[i] + "</option>\n"; 
 	}
-	var element = document.getElementById("tokenpulldown");
-	element.innerHTML = optionList;	
+	//var element = document.getElementById("tokenpulldown");
+	//element.innerHTML = optionList;	
+	// use workaround
+	swapInnerHTML("tokenpulldown", optionList); ; // doesn't work (i.e. works, but doesn't solve the problem/incompatibility with other browsers)
+	// use another workaround
+	// var element = document.getElementById("tokenpulldowndiv");
+	// element.innerHTML = "<select id=\"tokenpulldown\">" + optionList + "</select>";
+	// try another workaround
+	// setTimeout( function() { element.innerHTML = optionList; }, 50 );
+	// and one more ...
+	// setInnerHTML(element, optionList, 0);
+	// element.InnerText = optionList;
+	
+	
+	// other ideas: use document.getElementById('day').options.add(new Option("1", "1")); with: new Option("optionText", "optionValue")
+	
+	
+	// ok, greetings to all Apple and Windows users: get yourself a Linux ... ! :-)
+	// Safari: doesn't work
+	// Android (stock browser): doesn't work
+	// Android (Chrome): works
+	// IE: untested
+	// Firefox (original): mainly untested (Mac: pulldown menu works, but bottons don't?!)
+	// Firefox (clones): derived versions like IceCat and ABrowser under Linux work
 }
 function createPullDownSelectionFromActualFont() {
 	// deletes tokenPullDownSelection and creates a new array with elements from actualFont
@@ -1272,7 +1315,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
 	var output = "<tr>\n"; // open first row
 	for (var i=0; i<24; i++) {
 			var id = "h" + Math.floor(i+1);
-			var nr = (Math.floor(i)<9.9) ? "0"+Math.floor(i+1) : Math.floor(i+1); // I hate JS ... guess what: since all numeric variables are floating point (no integer), comparison < 10 doesn't work in IceCat (even if it works perfectly in ABrowser), so that explains the < 9.9 comparison and the whole Math.floor() stuff ... just stupid!
+			var nr = (Math.floor(i)<9) ? "0"+Math.floor(i+1) : Math.floor(i+1); // ok, peace and love: this works now! :-)
 			output += "<td>" + nr + "<input type=\"text\" id=\"" + id + "\" size=\"4\" value=\"" + this.header[i] + "\"></td>\n";
 			if ((i+1)%8==0) output += "</tr><tr>"; // new row
 	}
@@ -2741,6 +2784,8 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
 		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
 		
+		// set tensions
+		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // copy entire array(6) use slice!!!
 		
 		//mainCanvas.editor.editableToken.knotsList[i].type = token.tokenData[i].knotType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
@@ -2764,7 +2809,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	
 	
 	
-	//console.log("mainCanvas.editor: ", mainCanvas.editor);
+	console.log("mainCanvas.editor: ", mainCanvas.editor);
 }
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	// set standard parameters for editor in order to insert data
@@ -3860,12 +3905,15 @@ function writeDataToDB() {
 	
 		console.log(actualFont);
 	
-		var textArea = getBaseSectionSE1() + getCombinerSectionSE1() + getShifterSectionSE1();
+		var textArea = "#BeginSection(font)\n" + getBaseSectionSE1() + getCombinerSectionSE1() + getShifterSectionSE1() + "#EndSection(font)"; // + getCombinerSectionSE1() + getShifterSectionSE1(); // don't add shifter and combiner
 		//console.log("textArea: ", textArea);
 	
 		// write result on the same page in div "textAreaOutput" for the moment
-		document.getElementById("textAreaOutput").innerHTML = "<textarea rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea>";
+        
+		//document.getElementById("textAreaOutput").innerHTML = "<form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
+		document.getElementById("whole_page_content").innerHTML = "<?php require_once \"session.php\"; ?><form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
 		
+		//window.open("test");
 	}
 }
 
@@ -3886,15 +3934,23 @@ function getBaseSectionSE1() {
 	// "TT" => {  /*h*/ 0,  0.5,  0,  0,  5,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
 	for (key in actualFont.tokenList) {
 			
+		if (key == "0") console.log("begin export: ", key);
+			
+		if ((actualFont.tokenList[key].tokenType != "shifted") &&  (actualFont.tokenList[key].tokenType != "combined")) {		// export only base tokens, define base tokens negatively: != shifted && != combined (reason: tokenType might be undefined, since save function doesn't set this variable for the moment)
+			
 			console.log("key: ", key);
 			output += "\t\t\"" + key + "\" => {";
 			
 			// add header
 			output += " /*header*/ ";
 			for (var i=0; i<24; i++) {
-				switch (actualFont.tokenList[""+key].header[i]) {
+				switch (actualFont.tokenList[key].header[i]) {
 					case "undefined" : output += "0, "; break;
 					case "" : output += "\"\", "; break;
+					case "no" : output += "\"no\", "; break;
+					case "yes" : output += "\"yes\", "; break;
+					case "wide" : output += "\"wide\", "; break;
+					case "narrow" : output += "\"narrow\", "; break;
 					default: output += actualFont.tokenList[key].header[i] + ", "; break;
 				
 					// add comma and space between elements (no comma after last)
@@ -3930,6 +3986,9 @@ function getBaseSectionSE1() {
 	
 			// close token definition and go to next line
 			output += " }\n";
+		} else {
+			console.log("not exported: ", key, actualFont.tokenList[key].tokenType);
+		}
 	}
 	
 	// close subsection

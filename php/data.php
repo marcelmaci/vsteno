@@ -43,6 +43,28 @@ where:     a is the original B (i.e. replacement for REGEX)
  
 // 25. September 2018: read data from database
 
+require_once "session.php";
+
+if ($_SESSION['user_logged_in']) {
+    //echo "<p>POST(model): " . $_POST['model'] . "</p>";  // why is $_POST['model'] === "" in mini.php??? => ok, in input.php it's a post variable, in mini.php it's not ... should be taken from the session variable!!!  $_SESSION['model_standard_or_custom']
+    // fix that: $_SESSION['model_standard_or_custom'] 
+    // now the name is correct, but nothing works ...
+
+    if (isset($_POST['model'])) {    // if POST-variable is set via maxi.php, this selection has priority (i.e. disregard SESSION-variable)
+        switch ($_POST['model']) {
+            case "custom" : $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
+            default : $_SESSION['actual_model'] = $default_model; break;
+        } 
+    } else {    
+        switch ($_SESSION['model_standard_or_custom']) {
+            case "custom" : $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
+            default : $_SESSION['actual_model'] = $default_model; break;
+        }
+    }
+
+//echo "Model = " . $_SESSION['actual_model'] . "<br>";
+}
+
 require_once "import_model.php";
 require_once "engine.php";
 require_once "parser.php";
@@ -59,7 +81,21 @@ global $insertion_key;
 /*
 require_once "vsteno_fullpage_template_top.php";
 */
-$text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+/*
+switch ($_SESSION['model_standard_or_custom']) {
+        case "standard" : $model_name = $_SESSION['actual_model']; break; 
+        case "custom" : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
+}
+*/
+
+
+//echo "<p>Actual model: " . $_SESSION['actual_model'] . "</p>";
+// old version!!!!!
+ $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+//$text_to_parse = LoadModelFromDatabase($model_name);
+//echo "<p>$text_to_parse</p>";
+
+
 //echo "text: $text_to_parse<br><br>";
 /*
 
@@ -73,7 +109,7 @@ $test = ImportModelFromText($text_to_parse);
 // note: this is the easy (or should i say "quick and dirty";-) method to reuse old parser functions with new data
 // it works as long as you reassign the new data to the old variables whenever (each time!) the model changes!
 // there's still a bug: exported array has 170 elements, imported one 161 => why?!?
-global $steno_tokens_master, $combiner_table, $shifter_table;
+global $steno_tokens_master, $combiner_table, $shifter_table, $steno_tokens_type; // $steno_tokens_type: table to mark tokens created by shifter/combiner
 $actual_model = $_SESSION['actual_model'];
 //echo "actual_model: $actual_model<br>";
 $steno_tokens_master = $font[$actual_model];

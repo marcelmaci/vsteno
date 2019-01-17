@@ -40,6 +40,7 @@ class JSGlobalStructure {
 }
 
 class JSTokenList {
+    public $tokenType;   // use this to indicate if a token is: base / shifted / combined (necessary for backwards compatibility when re-exporting data to db via js)
     public $header = array(); 
     public $tokenData = array();
     public function JSTokenList() {
@@ -142,6 +143,7 @@ function InsertHTMLFooter() {
     require "vsteno_template_bottom.php";
 }
 
+/*
 function ResetSessionGetBackPage() {
     InitializeSessionVariables();   // output is reseted to integrated, so that the following message will appear integrated
     InsertHTMLHeader();
@@ -149,6 +151,7 @@ function ResetSessionGetBackPage() {
     echo '<a href="input.php"><br><button>"zurück"</button></a>';
     InsertHTMLFooter();
 }
+*/
 
 function InsertTitle() {
     if (($_SESSION['title_yesno']) && ($_SESSION['output_format'] !== "debug")) {
@@ -178,20 +181,30 @@ function InsertDatabaseButton() {
     echo '<center><input type="submit" name="action" value="speichern"></center><br>';
 }
 
+function GetTokenType($key) {
+    global $steno_tokens_type;
+    if ($steno_tokens_type[$key] === "shifted") return "shifted";
+    else if ($steno_tokens_type[$key] === "combined") return "combined";
+    else return "base"; // default value
+}
+
+
 function OpenEditorPage() {
-    global $global_debug_string, $steno_tokens_master, $combiner_table, $shifter_table;
+    global $global_debug_string, $steno_tokens_master, $combiner_table, $shifter_table, $steno_tokens_type;
     $global_debug_string = "";
     CopyFormToSessionVariables();
     InsertHTMLHeader();
 
-    echo "<h1>Editor SE1</h1><i><p><b>SE1-Hack:</b> Die Programmierung der SE2 benötigt sehr viel Zeit. Ein \"produktives Ende\" ist im Moment nicht in Sicht. Um trotzdem weiterarbeiten zu können,
+    echo "<div id='whole_page_content'><h1>Editor SE1</h1><i><p><b>SE1-Hack:</b> Die Programmierung der SE2 benötigt sehr viel Zeit. Ein \"produktives Ende\" ist im Moment nicht in Sicht. Um trotzdem weiterarbeiten zu können,
     soll der Editor mit der SE1 kompatibel gemacht werden (Rückwärtskompatibilität). Die Verwendung des Editors für die SE1 (Import, Export und Editieren der Daten) war nicht geplant und kann
-    deshalb nur durch diverse \"Hacks\" (= \"münchhausnerische\" Anbindung der Daten, die direkt, queerbeet und ohne Rücksicht auf die OOP-Philosophie der SE2 in den Editor geschrieben werden). 
+    deshalb nur durch diverse \"Hacks\" (= \"münchhausnerische\" Anbindung der Daten, die direkt, queerbeet und ohne Rücksicht auf die OOP-Philosophie der SE2 in den Editor geschrieben werden) 
     erreicht werden. Das Ganze ist aber möglich und sollte dazu führen, dass SE1 und SE2 letztlich parallel verwendet werden können (bis anhin war eher beabsichtigt, die SE1 nach der 
     Implementierung der SE2 komplett zu löschen, da die SE2 aber sehr komplex ist, macht es allenfalls Sinn, die einfachere SE1 weiterzubehalten und evtl. sogar weiterzuentwickeln).</p>
     <p><b>Bedienung:</b> Das Standard-Font der SE1 wird automatisch geladen (Zeichen aus der PullDownSelection wählen und auf Load klicken, um ein Zeichen zu laden). Anschliessend kann 
     mit \"q\" die Darstellung der SE1 ein- und ausgeschaltet werden (Linien statt Umrisse). Viele weitere Funktionen sind noch nicht oder nur teilweise implementiert. \"Save to Database\" generiert
-    den ASCII Text, der für die SE1 in die Datenbank generiert wird und zeigt ihn in einem Textfeld auf der gleichen Seite an.<p><i>";
+    den ASCII Text, der für die SE1 in die Datenbank generiert wird und zeigt ihn in einem Textfeld auf der gleichen Seite an.<p>
+    <p><b>BUG:</b> Session gets lost after saving new font to database and no other calculations can be made. Manual workaround: chose 'maxi' and reset options manually.</p>
+    <i>";
     
     // All data in: global variables $steno_tokens_master, $combiner_table, $shifter_table
     
@@ -229,6 +242,14 @@ function OpenEditorPage() {
     // 1) subsection with commented definitions has to be created (new function needed, easy to do)
     // 2) comments have to be preserved from one editing process to the other (so, wenn loading the definitions, comments should also be loaded an inserted again later ... this problem
     // is the trickier one ... )
+    //
+    // the shifter/combiner problem is trickier than expected: it also hit's the performance - and other side effects may occur (this is just a guess, but sometimes the SE doesn't work 
+    // after editing the font - this can be due to other reasons (e.g. variables that are not correctly resetted etc.), but in any case it seems useful to make the editor FULLY backwards
+    // compatible (i.e. including shifter/combiner). This means that base tokens and combined tokens must be clearly distinguishable when data is exported to the editor (this wasn't necessary
+    // for the original engine: the combiner/shifter just created the tokens and inserted them into the main token table used by the engine). 
+    // The problem will be solved by creating a new table ($steno_tokens_type[]) that contain information about wether the token was created by shifter/token (if not, it is a base token).
+    // The tables will be created directly by the shifter/combiner during data import.
+    
     
     $export_combiner = htmlspecialchars(GenerateCombinerSubsection()); //addslashes(GenerateCombinerSubsection()); // hm ... strings conatain "" so they must be escaped ... but addslashes isn't enough ... why?!
     $export_shifter = htmlspecialchars(GenerateShifterSubsection()); //addslashes(GenerateShifterSubsection());
@@ -243,10 +264,17 @@ function OpenEditorPage() {
         //$export_variable->addTokenEditorDataElement($key);
         $export_variable->addNewElement($key); // add both JSTokenListElement and JSTokenEditorDataElement
     
+       // if ($key === "E") var_dump($steno_tokens_master[$key]);
+        
         for ($i=0; $i<24; $i++) {
             $export_variable->tokenList[$key]->header[] = $steno_tokens_master[$key][$i];
+         //   if ($key === "E") echo "$i: " . $steno_tokens_master[$key][$i];
         }
+        //if ($key === "E") var_dump($export_variable->tokenList[$key]->header);
+        
         $export_variable->tokenList[$key]->tokenData = array();
+        $export_variable->tokenList[$key]->tokenType = GetTokenType($key);
+            
             
         for ($i=24; $i<count($steno_tokens_master[$key]); $i+=8) {
             
@@ -294,7 +322,9 @@ function OpenEditorPage() {
     // include data inside HTML page via hidden input field
     echo "\n<input type=\"hidden\" id=\"combinerHTML\" value=\"$export_combiner\">";
     echo "\n<input type=\"hidden\" id=\"shifterHTML\" value=\"$export_shifter\">";
-    
+    echo "</div>"; // end div whole_page_content
+   
+    //var_dump($steno_tokens_type);
     InsertHTMLFooter();
 }
 
@@ -307,6 +337,13 @@ global $global_error_string;
 //CreateShiftedTokens();
 // do it in data.php?
 
-OpenEditorPage();
+if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
+    require_once "vsteno_template_top.php";
+    echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Modell auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
+    echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
+    require_once "vsteno_template_bottom.php";
+} else { 
+    OpenEditorPage();
+}
 
 ?>

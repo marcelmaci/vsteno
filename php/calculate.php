@@ -17,12 +17,19 @@
  */
 
 global $default_model;
+
+/* do model selection directly in data.php
 require_once "session.php";
 if ($_SESSION['user_logged_in']) {
-    if ($_POST['model'] === "custom") $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); 
+    echo "<p>POST(model): " . $_POST['model'] . "</p>";  // why is $_POST['model'] === "" in mini.php??? => ok, in input.php it's a post variable, in mini.php it's not ... should be taken from the session variable!!!  $_SESSION['model_standard_or_custom']
+    // fix that: $_SESSION['model_standard_or_custom'] 
+    // now the name is correct, but nothing works ...
+
+    if (($_POST['model'] === "custom") || ($_SESSION['model_standard_or_custom'] === "custom")) $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); 
     else $_SESSION['actual_model'] = $default_model;
-    //echo "Model = " . $_SESSION['actual_model'] . "<br>";
+    echo "Model = " . $_SESSION['actual_model'] . "<br>";
 }
+*/
 
 // include external data and code
 require_once "constants.php";

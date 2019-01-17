@@ -1513,9 +1513,12 @@ function NormalText2SVG( $text ) {
 // Values are written to header of new token
 
 function TokenCombiner( $first_token, $second_token, $deltay_before, $deltay_after ) {
-    global $steno_tokens_master;
+    global $steno_tokens_master, $steno_tokens_type;
     $new_token = array();
     $new_token_key = $first_token . $second_token;
+     // enter token in $steno_tokens_table
+    $steno_tokens_type[$new_token_key] = "combined";
+   
     // copy the header of $first_token adding x width for new token
     // first copy all values without modification
     for ($i = 0; $i < header_length; $i++) {
@@ -1599,9 +1602,12 @@ function CreateCombinedTokens() {
 //
 
 function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $inconditional_delta_y_before, $inconditional_delta_y_after ) {
-    global $steno_tokens_master;
+    global $steno_tokens_master, $steno_tokens_type;
     $new_token = array();
     $new_token_key = $key_for_new_token;
+    // enter token in $steno_tokens_table
+    $steno_tokens_type[$new_token_key] = "shifted";
+    
     // copy the header of $base_token
     // first copy all values without modification
     //echo "TokenShifter: $base_token => $key_for_new_token: deltax = $delta_x / deltay = $delta_y / inc_deltay_bef = $inconditional_delta_y_before / inc_deltay_after = $inconditional_delta_y_after<br>";

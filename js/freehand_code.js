@@ -545,7 +545,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
 	var output = "<tr>\n"; // open first row
 	for (var i=0; i<24; i++) {
 			var id = "h" + Math.floor(i+1);
-			var nr = (Math.floor(i)<9.9) ? "0"+Math.floor(i+1) : Math.floor(i+1); // I hate JS ... guess what: since all numeric variables are floating point (no integer), comparison < 10 doesn't work in IceCat (even if it works perfectly in ABrowser), so that explains the < 9.9 comparison and the whole Math.floor() stuff ... just stupid!
+			var nr = (Math.floor(i)<9) ? "0"+Math.floor(i+1) : Math.floor(i+1); // ok, peace and love: this works now! :-)
 			output += "<td>" + nr + "<input type=\"text\" id=\"" + id + "\" size=\"4\" value=\"" + this.header[i] + "\"></td>\n";
 			if ((i+1)%8==0) output += "</tr><tr>"; // new row
 	}
