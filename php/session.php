@@ -96,6 +96,13 @@ function InitializeSessionVariables() {
 
 function CopyFormToSessionVariablesMaxi() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide; // probably superfluous .. ?!
+
+if ($_POST['token_size'] != "") {    
+    // ok, this is an ugly bugfix: when editor is called in SE1-mode, php somehow executes this code (don't know why and it shouldn't)
+    // the thing is that the $_POST-variable is empty (the editor isn't called via a form, so again: no idea why this happens!) and
+    // therefore all session variables get overwritten. Since I can't disable the (erroneous) call for the moment, the only workaround
+    // is to avoid execution of the code below by checking if one of the variables - $_POST['token_size'] in this case - is empty ...
+    
     $_SESSION['original_text_format'] = htmlspecialchars($_POST['text_format_metayesno']);
     $_SESSION['original_text_content'] = htmlspecialchars($_POST['original_text']);
     $_SESSION['title_yesno'] = (htmlspecialchars($_POST['title_yesno']) === "title_yes") ? true : false;
@@ -172,6 +179,7 @@ function CopyFormToSessionVariablesMaxi() {
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
     //$_SESSION['actual_model'] = "99999_default";
     $_SESSION['model_custom_or_standard'] = (htmlspecialchars($_POST['model']) === "standard") ? "standard" : "custom";
+}
 }
 
 function CopyFormToSessionVariablesMini() {

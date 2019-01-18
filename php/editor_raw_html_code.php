@@ -45,6 +45,9 @@
    </table>
    
    <div id="textAreaOutput">
-   </div>
   
+    <form action='edit_font_without_db.php' method='post'>
+        <input type='hidden' id='font_as_text'><br>
+        <input type='submit' name='action' value='speichern'>
+    </form>
    </center>

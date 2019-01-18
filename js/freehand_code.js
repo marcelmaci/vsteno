@@ -582,19 +582,19 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 		case "yes" : connectToPreceeding = 0; break;
 		case "no" : connectToPreceeding = 1; break;
 	}	
-	console.log("hi there0");
+	
 	
 	// write values to header array
 	this.header[0] = Number(document.getElementById('width_middle').value);
 	this.header[1] = Number(document.getElementById('conddeltaybefore').value);
 	this.header[2] = Number(document.getElementById('conddeltayafter').value);
-	console.log("hi there1");
+	
 	
 	this.header[3] = firstTension; // comes directly from editor (knot) in SE2
 	this.header[4] = Number(document.getElementById('width_before').value);
 	this.header[5] = Number(document.getElementById('width_after').value);
 	this.header[6] = Number(document.getElementById('offset6').value);
-	console.log("hi there1");
+	
 	this.header[7] = "";	// 7-11: unused
 	this.header[8] = "";
 	this.header[9] = "";
@@ -605,7 +605,7 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	this.header[14] = Number(document.getElementById ('inconddeltayafter').value);
 	this.header[15] = Number(document.getElementById ('altx').value);;
 	this.header[16] = Number(document.getElementById ('alty').value);;
-	console.log("hi there2");
+	
 	
 	this.header[17] = exitToUse;
 	this.header[18] = coordType;
@@ -614,8 +614,8 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	this.header[21] = shadowed;
 	this.header[22] = connectToPreceeding;
 	this.header[23] = ""; // not used
-	console.log("editableToken: ", this);
-	console.log("new font: ", actualFont);
+	//console.log("editableToken: ", this);
+	//console.log("new font: ", actualFont);
 
 }
 TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {

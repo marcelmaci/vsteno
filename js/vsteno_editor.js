@@ -1374,19 +1374,19 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 		case "yes" : connectToPreceeding = 0; break;
 		case "no" : connectToPreceeding = 1; break;
 	}	
-	console.log("hi there0");
+	
 	
 	// write values to header array
 	this.header[0] = Number(document.getElementById('width_middle').value);
 	this.header[1] = Number(document.getElementById('conddeltaybefore').value);
 	this.header[2] = Number(document.getElementById('conddeltayafter').value);
-	console.log("hi there1");
+	
 	
 	this.header[3] = firstTension; // comes directly from editor (knot) in SE2
 	this.header[4] = Number(document.getElementById('width_before').value);
 	this.header[5] = Number(document.getElementById('width_after').value);
 	this.header[6] = Number(document.getElementById('offset6').value);
-	console.log("hi there1");
+	
 	this.header[7] = "";	// 7-11: unused
 	this.header[8] = "";
 	this.header[9] = "";
@@ -1397,7 +1397,7 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	this.header[14] = Number(document.getElementById ('inconddeltayafter').value);
 	this.header[15] = Number(document.getElementById ('altx').value);;
 	this.header[16] = Number(document.getElementById ('alty').value);;
-	console.log("hi there2");
+	
 	
 	this.header[17] = exitToUse;
 	this.header[18] = coordType;
@@ -1406,8 +1406,8 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	this.header[21] = shadowed;
 	this.header[22] = connectToPreceeding;
 	this.header[23] = ""; // not used
-	console.log("editableToken: ", this);
-	console.log("new font: ", actualFont);
+	//console.log("editableToken: ", this);
+	//console.log("new font: ", actualFont);
 
 }
 TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
@@ -4134,7 +4134,33 @@ function writeDataToDB() {
 		// write result on the same page in div "textAreaOutput" for the moment
         
 		//document.getElementById("textAreaOutput").innerHTML = "<form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
+
+		// use this code for the moment:
+		// display text first in textarea (so that output can be verified and manually edited if necessary)
+		// PROBLEM: when data is sent to server via this dynamically created form, the session gets lost => why?!?
+		// WRONG: it's not the session that is lost (user is still logged-in and user data available - must be something else ...)
+		// OK: fixed, problem was the session variables were reinitialized with an empty post variable ... see session.php
+		
 		document.getElementById("whole_page_content").innerHTML = "<form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
+		
+		
+		// use the following ode to send new model to data base:
+		// - modify copy_font_to_session.php: instead of writing to session write directly to database
+		// - once it works, the textarea step can probably be skipped
+		
+//		var request = new XMLHttpRequest();
+//		request.open('POST', 'copy_font_to_session.php', /* async = */ false);
+//
+//		var formData = new FormData();
+//		formData.append('font_as_text', textArea);
+//    
+//		request.send(formData);
+		//console.log(request.response);
+		
+		
+		
+		
+		
 		
 		//window.open("test");
 	}

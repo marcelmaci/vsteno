@@ -1,8 +1,8 @@
 <?php
-
+require_once "session.php";
 require_once "constants.php";
 require_once "vsteno_template_top.php";
-require_once "session.php";
+
 require_once "dbpw.php";
 
 function die_more_elegantly( $text ) {
@@ -21,6 +21,7 @@ if ($conn->connect_error) {
 }
 
 echo "<h1>Zeichen</h1>";
+   // echo "token_size=" . $_SESSION['token_size'];
     
 if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Modell auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
