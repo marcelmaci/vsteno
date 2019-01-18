@@ -345,6 +345,15 @@ function fract(n) {
 	// That's why JS in my opinion fully and entirely deserves the verdict of Cato the Elder ... ;-)
 }
 
+function humanReadableEditor(data) {
+	switch (typeof data) {
+		case "number" : return Math.floor(data * 100) / 100; break;
+		case "string" : return "\"" + data + "\""; break;
+		case "undefined" : return ""; break;
+		case "null" : return 0; break;
+	}
+}
+
 // classes 
 // class TEBorders (TokenEditBorders)
 function TEBorders(a, color) { // a = TEDrawingArea
@@ -637,9 +646,17 @@ function loadTokenAndEditorData(token) {
 	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
 	//else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
-	console.log("focus: ", document.activeElement);
+	//console.log("focus1: ", document.activeElement);
 	//document.getElementById("drawingArea").focus();
 	document.getElementById("load").blur(); // correct focus
+	console.log("layers", paper);
+	// set editor mode (visibility: middle line or outerShape)
+	//console.log("set editor mode: ", actualFont);
+	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		mainCanvas.editor.showMiddlePathWithVariableWidth(); // outerShape still active for the moment
+	} else {
+		mainCanvas.editor.hideMiddlePathWithVariableWidth(); // supposing that outer shape is still active
+	}
 }
 function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
 	console.log("save token and editor data");
@@ -2378,6 +2395,11 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.auxiliaryVerticalLines = new TEAuxiliaryVerticalLines(this, '#000');
 	this.rotatingAxis = new TERotatingAxis(this, '#0f0'); // colorMainRotatingAxisSelected);
 	this.coordinateLabels = new TECoordinatesLabels(this); // coordinateLabels depends on rotatingAxis!
+	
+	// all background objects created => save children index in order to insert shapes here later!
+	this.positionAfterBackgroundElements = project.activeLayer.children.length;
+	console.log("positionAfterBackgroundElements: ", this.positionAfterBackgroundElements);
+	
 	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
 	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
 	this.knotLabel = new TEKnotLabel(this);
@@ -2654,7 +2676,7 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
-		
+		project.activeLayer.insertChild(this.positionAfterBackgroundElements, middlePathWithVariableWidth[i]);
 		// code: disable one segment (nr. 2 in the example)
 		/*
 		if (i==2) {
@@ -3911,7 +3933,7 @@ function writeDataToDB() {
 		// write result on the same page in div "textAreaOutput" for the moment
         
 		//document.getElementById("textAreaOutput").innerHTML = "<form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
-		document.getElementById("whole_page_content").innerHTML = "<?php require_once \"session.php\"; ?><form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
+		document.getElementById("whole_page_content").innerHTML = "<form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
 		
 		//window.open("test");
 	}
@@ -3934,11 +3956,11 @@ function getBaseSectionSE1() {
 	// "TT" => {  /*h*/ 0,  0.5,  0,  0,  5,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
 	for (key in actualFont.tokenList) {
 			
-		if (key == "0") console.log("begin export: ", key);
+		//if (key == "0") console.log("begin export: ", key);
 			
 		if ((actualFont.tokenList[key].tokenType != "shifted") &&  (actualFont.tokenList[key].tokenType != "combined")) {		// export only base tokens, define base tokens negatively: != shifted && != combined (reason: tokenType might be undefined, since save function doesn't set this variable for the moment)
 			
-			console.log("key: ", key);
+			//console.log("key: ", key);
 			output += "\t\t\"" + key + "\" => {";
 			
 			// add header
@@ -3969,14 +3991,14 @@ function getBaseSectionSE1() {
 				var d1 = calculateD1(actualFont.tokenList[key].tokenData[i].knotType);
 				var d2 = calculateD2(actualFont.tokenList[key].tokenData[i].knotType);
 				var dr = calculateDR(actualFont.tokenList[key].tokenData[i].knotType);
-				output += actualFont.tokenList[key].tokenData[i].vector1 + ", ";		// offset 0: x
-				output += actualFont.tokenList[key].tokenData[i].vector2 + ", ";		// offset 1: y
-				output += actualFont.tokenList[key].tokenData[i].tensions[2] + ", ";	// offset 2: t1 (use middle tension of SE2)
+				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 0: x
+				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2) + ", ";		// offset 1: y
+				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[2]) + ", ";	// offset 2: t1 (use middle tension of SE2)
 				output += d1 + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
-				output += (actualFont.tokenList[key].tokenData[i].thickness.shadowed.left + actualFont.tokenList[key].tokenData[i].thickness.shadowed.right) / 2 + ", ";		// offset 4: thickness (use shadowed)
+				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].thickness.shadowed.left + actualFont.tokenList[key].tokenData[i].thickness.shadowed.right) / 2 + ", ";		// offset 4: thickness (use shadowed)
 				output += dr + ", ";		// offset 5: dr field
 				output += d2 + ", ";		// offset 6: d2 (see d1)
-				output += actualFont.tokenList[key].tokenData[i].tensions[3];	// offset 7: t2 (use middle tension of SE2)
+				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[3]);	// offset 7: t2 (use middle tension of SE2)
 	
 				// add comma if necessary
 				if (i != length-1) output += ", ";
@@ -3987,7 +4009,7 @@ function getBaseSectionSE1() {
 			// close token definition and go to next line
 			output += " }\n";
 		} else {
-			console.log("not exported: ", key, actualFont.tokenList[key].tokenType);
+			//console.log("not exported: ", key, actualFont.tokenList[key].tokenType);
 		}
 	}
 	

@@ -19,6 +19,7 @@
  
  
 class JSGlobalStructure {
+    public $version;
     public $tokenList;  // JSTokenList;
     public $editorData; //array();
     public function JSGlobalStructure() {
@@ -255,6 +256,7 @@ function OpenEditorPage() {
     $export_shifter = htmlspecialchars(GenerateShifterSubsection()); //addslashes(GenerateShifterSubsection());
     
     $export_variable = new JSGlobalStructure;
+    $export_variable->version = "SE1";
     
     
     

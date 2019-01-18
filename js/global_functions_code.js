@@ -294,3 +294,12 @@ function fract(n) {
 	// server-side languages.
 	// That's why JS in my opinion fully and entirely deserves the verdict of Cato the Elder ... ;-)
 }
+
+function humanReadableEditor(data) {
+	switch (typeof data) {
+		case "number" : return Math.floor(data * 100) / 100; break;
+		case "string" : return "\"" + data + "\""; break;
+		case "undefined" : return ""; break;
+		case "null" : return 0; break;
+	}
+}

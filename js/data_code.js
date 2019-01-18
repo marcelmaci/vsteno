@@ -148,9 +148,17 @@ function loadTokenAndEditorData(token) {
 	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
 	//else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
-	console.log("focus: ", document.activeElement);
+	//console.log("focus1: ", document.activeElement);
 	//document.getElementById("drawingArea").focus();
 	document.getElementById("load").blur(); // correct focus
+	console.log("layers", paper);
+	// set editor mode (visibility: middle line or outerShape)
+	//console.log("set editor mode: ", actualFont);
+	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		mainCanvas.editor.showMiddlePathWithVariableWidth(); // outerShape still active for the moment
+	} else {
+		mainCanvas.editor.hideMiddlePathWithVariableWidth(); // supposing that outer shape is still active
+	}
 }
 function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
 	console.log("save token and editor data");

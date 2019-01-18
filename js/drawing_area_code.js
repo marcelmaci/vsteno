@@ -24,6 +24,11 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	this.auxiliaryVerticalLines = new TEAuxiliaryVerticalLines(this, '#000');
 	this.rotatingAxis = new TERotatingAxis(this, '#0f0'); // colorMainRotatingAxisSelected);
 	this.coordinateLabels = new TECoordinatesLabels(this); // coordinateLabels depends on rotatingAxis!
+	
+	// all background objects created => save children index in order to insert shapes here later!
+	this.positionAfterBackgroundElements = project.activeLayer.children.length;
+	console.log("positionAfterBackgroundElements: ", this.positionAfterBackgroundElements);
+	
 	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
 	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
 	this.knotLabel = new TEKnotLabel(this);
@@ -300,6 +305,7 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
+		project.activeLayer.insertChild(this.positionAfterBackgroundElements, middlePathWithVariableWidth[i]); // position middlePath after static background elements
 		
 		// code: disable one segment (nr. 2 in the example)
 		/*
