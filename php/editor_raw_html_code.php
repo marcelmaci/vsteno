@@ -30,35 +30,18 @@
    
    <table id="headertable">
 	<tr>
-		<td>01<input type="text" id="h1" size="4"></td>
-		<td>02<input type="text" id="h2" size="4"></td>
-		<td>03<input type="text" id="h3" size="4"></td>
-		<td>04<input type="text" id="h4" size="4"></td>
-		<td>05<input type="text" id="h5" size="4"></td>
-		<td>06<input type="text" id="h6" size="4"></td>
-		<td>07<input type="text" id="h7" size="4"></td>
-		<td>08<input type="text" id="h8" size="4"></td>
-	</tr>
-   <tr>
-		<td>09<input type="text" id="h9" size="4"></td>
-		<td>10<input type="text" id="h10" size="4"></td>
-		<td>11<input type="text" id="h11" size="4"></td>
-		<td>12<input type="text" id="h12" size="4"></td>
-		<td>13<input type="text" id="h13" size="4"></td>
-		<td>14<input type="text" id="h14" size="4"></td>
-		<td>15<input type="text" id="h15" size="4"></td>
-		<td>16<input type="text" id="h16" size="4"></td>
-	</tr>
-	<tr>
-		<td>17<input type="text" id="h17" size="4"></td>
-		<td>28<input type="text" id="h18" size="4"></td>
-		<td>19<input type="text" id="h19" size="4"></td>
-		<td>20<input type="text" id="h20" size="4"></td>
-		<td>21<input type="text" id="h21" size="4"></td>
-		<td>22<input type="text" id="h22" size="4"></td>
-		<td>23<input type="text" id="h23" size="4"></td>
-		<td>24<input type="text" id="h24" size="4"></td>
-	</tr>
+        <td>
+            type: <select id='tokenpulldown'><option value='normal' selected>normal</option><option value='shadowed'>shadowed</option><option value='virtual'>virtual</option></select><br>
+            width: before <input id='width_before' type='text' size='4' value='4'> token <input id='width_middle' type='text' size='4' value='7'> after <input id='width_after' type='text' size='4' value='0'><br>
+            following: <select id='higherpositionpulldown'><option value='higher'>higher</option><option value='same_line'>same line</option><option value='lower'>lower</option><option value='none' selected>---</option></select><select id='shadowingpulldown'><option value='shadowed'>shadowed</option><option value='not_shadowed'>normal</option><option value='shadow_none' selected>---</option></select><select id='distancepulldown'><option value='narrow'>narrow</option><option value='wide'>wide</option><option value='none' selected>---</option></select><br>
+            delta-Y: if higher: before <input id='conddeltaybefore' type='text' size='4' value='0'> after <input id='conddeltayafter' type='text' size='4' value='0'><br>
+            inconditional: before <input id='inconddeltaybefore' type='text' size='4' value='0'> after <input id='inconddeltayafter' type='text' size='4' value='0'><br>
+            2nd: x <input id='altx' type='text' size='4' value='0'> y <input id='alty' type='text' size='4' value='0'> <input type='radio' id='relativecoordinates' value='relative'> relative <input type='radio' id='relativecoordinates' value='absolute' checked> absolute<br>
+            use: <input type='radio' id='whichexit' value='normal' checked> normal <input type='radio' id='whichexit' value='alternative'> alternative <br>
+            connect: <input type='radio' id='connect' value='yes' checked> yes <input type='radio' id='connect' value='no'> no <br>
+            offset 6: <input type='text' id='offset6' size='4' value='0'><br>
+        </td>
+    </tr>
    </table>
    
    <div id="textAreaOutput">

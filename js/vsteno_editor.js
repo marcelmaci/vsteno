@@ -649,7 +649,6 @@ function loadTokenAndEditorData(token) {
 	//console.log("focus1: ", document.activeElement);
 	//document.getElementById("drawingArea").focus();
 	document.getElementById("load").blur(); // correct focus
-	console.log("layers", paper);
 	// set editor mode (visibility: middle line or outerShape)
 	//console.log("set editor mode: ", actualFont);
 	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
@@ -706,25 +705,31 @@ function TokenDefinition() {
 }
 TokenDefinition.prototype.goAndGrabThatTokenData = function() {
 	mainCanvas.editor.editableToken.copyTextFieldsToHeaderArray();
-	this.header = mainCanvas.editor.editableToken.header.slice(); 
-	// well, guess what ... slice() is vital here ... otherwise JS will make this.header point to one and the same object 
-	// (and operations destined for this token will affect other objects also ... ceterum censeo ;-))
-	// to resume: slice() <=> copy by value
-	// well, guess what (2): I just discovered that JSON doesn't stringify my arrays ... that means that I will have to rewrite the whole
-	// data structure as objects ... oh, I really like this JS ...
-	// ok, I've verified that JSON CAN stringify arrays ... but apparently arrays are not always arrays in JS (... oh yeah: why 
-	// not add a little bit more to the confusion). For short: "normal" arrays only can have numeric indices and can be stringified, 
-	// but as soon as you try to create something similar to an associative array (e.g. var a = []; a["info"] = "foo";), JS converts 
-	// this array to a standard-object ... Now, you might think: ok, if my array gets converted to an object (and an object can be
-	// stringified) then my ex-array-now-object should be stringifiable, but no, you're wrong: what you've created is a "neither-nor"
-	// data structure which won't get stringified (some people call it the "JSON array bizarreness" ... I'd just say: ceterum censeo ...:)
-	// Anyway, conclusion (or lesson learned): if you wan't to use JSON for your data use either pure objects or pure arrays 
-	// (and even combinations of the two) but not "associative arrays"  (even if - bizarrely - they DO work in your running code). 
-	// There's nothing like "associative arrays" in JS. The closest thing to an associative array (like in PHP for example) is
-	// an object! In other words: var a = {}; a["info"] = "foo"; OR: a.info = "foo"; The annoying thing is that you can't access
-	// the elements with a numeric index afterwards (so a[0] won't work ...)
+	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {	// header for SE1 must be recreated from human readable webpage format
+		mainCanvas.editor.editableToken.copyTextFieldsToHeaderArraySE1();
+		this.header = mainCanvas.editor.editableToken.header.slice(); 
+		
+	} else {	// use standard (flat) array
+		this.header = mainCanvas.editor.editableToken.header.slice(); 
+		// well, guess what ... slice() is vital here ... otherwise JS will make this.header point to one and the same object 
+		// (and operations destined for this token will affect other objects also ... ceterum censeo ;-))
+		// to resume: slice() <=> copy by value
+		// well, guess what (2): I just discovered that JSON doesn't stringify my arrays ... that means that I will have to rewrite the whole
+		// data structure as objects ... oh, I really like this JS ...
+		// ok, I've verified that JSON CAN stringify arrays ... but apparently arrays are not always arrays in JS (... oh yeah: why 
+		// not add a little bit more to the confusion). For short: "normal" arrays only can have numeric indices and can be stringified, 
+		// but as soon as you try to create something similar to an associative array (e.g. var a = []; a["info"] = "foo";), JS converts 
+		// this array to a standard-object ... Now, you might think: ok, if my array gets converted to an object (and an object can be
+		// stringified) then my ex-array-now-object should be stringifiable, but no, you're wrong: what you've created is a "neither-nor"
+		// data structure which won't get stringified (some people call it the "JSON array bizarreness" ... I'd just say: ceterum censeo ...:)
+		// Anyway, conclusion (or lesson learned): if you wan't to use JSON for your data use either pure objects or pure arrays 
+		// (and even combinations of the two) but not "associative arrays"  (even if - bizarrely - they DO work in your running code). 
+		// There's nothing like "associative arrays" in JS. The closest thing to an associative array (like in PHP for example) is
+		// an object! In other words: var a = {}; a["info"] = "foo"; OR: a.info = "foo"; The annoying thing is that you can't access
+		// the elements with a numeric index afterwards (so a[0] won't work ...)
 	
-	//console.log("goAndGrabThatTokenData: header: ", this.header);
+		//console.log("goAndGrabThatTokenData: header: ", this.header);
+	}
 	
 	this.getTokenDefinition();
 }
@@ -1315,7 +1320,7 @@ TEEditableToken.prototype.deleteAllKnotData = function() {
 
 	//console.log("Data to delete: after:", this);
 }
-TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
+TEEditableToken.prototype.copyTextFieldsToHeaderArrayStandard = function() {
 	//console.log("copy header: ");
 	var output = "";
 	for (var i=0; i<24; i++) {
@@ -1327,7 +1332,96 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
 	}
 	//console.log("values: ", output);
 }
-TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
+
+TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
+	// copies the human readable user inputs to editableToken.header
+	
+	console.log("generate new header for SE1 from human readable form");
+	// special variables
+	
+	var firstTension = (this.knotsList[0] != undefined) ? this.knotsList[0].tensions[3] : 0;
+	var HTMLValue = document.getElementById('tokentypepulldown').value, 
+		tokenType = 0;
+	console.log("tokenTypeHTML: ", HTMLValue);
+	switch (HTMLValue) {
+		case "normal" : tokenType = 0; break;
+		case "shadowed" : tokenType = 1; break;
+		case "virtual" : tokenType = 2; break;
+		// 0 normal, 1 shadowed, 2 virtual
+	}
+	HTLMValue = document.getElementById('whichexit').value;
+	var exitToUse = (HTMLValue == "normal") ? 0 : 1;
+		HTLMValue = document.getElementById ('relativecoordinates').value;
+	var coordType = (HTMLValue == "relative") ? 0 : 1;
+	// offsets 19-21
+	var higherPosition = "", shadowed = "", distance = "";
+	switch (document.getElementById('higherpositionpulldown').value) {
+		case "higher" : higherPosition = "up"; break;
+		case "same_line" : higherPosition = "no"; break;
+		case "down" : higherPosition = "down"; break;
+	}
+	switch (document.getElementById('shadowingpulldown').value) {
+		case "shadowed" : shadowed = "yes"; break;
+		case "not_shadowed" : shadowed = "no"; break;
+	}
+	switch (document.getElementById('distancepulldown').value) {
+		case "narrow" : distance = "narrow"; break;
+		case "wide" : distance = "wide"; break;
+	}	
+	// connect
+	var connectToPreceeding = 0;
+	switch (document.getElementById('connect').value) {
+		case "yes" : connectToPreceeding = 0; break;
+		case "no" : connectToPreceeding = 1; break;
+	}	
+	console.log("hi there0");
+	
+	// write values to header array
+	this.header[0] = Number(document.getElementById('width_middle').value);
+	this.header[1] = Number(document.getElementById('conddeltaybefore').value);
+	this.header[2] = Number(document.getElementById('conddeltayafter').value);
+	console.log("hi there1");
+	
+	this.header[3] = firstTension; // comes directly from editor (knot) in SE2
+	this.header[4] = Number(document.getElementById('width_before').value);
+	this.header[5] = Number(document.getElementById('width_after').value);
+	this.header[6] = Number(document.getElementById('offset6').value);
+	console.log("hi there1");
+	this.header[7] = "";	// 7-11: unused
+	this.header[8] = "";
+	this.header[9] = "";
+	this.header[10] = "";
+	this.header[11] = "";
+	this.header[12] = tokenType;
+	this.header[13] = Number(document.getElementById ('inconddeltaybefore').value);
+	this.header[14] = Number(document.getElementById ('inconddeltayafter').value);
+	this.header[15] = Number(document.getElementById ('altx').value);;
+	this.header[16] = Number(document.getElementById ('alty').value);;
+	console.log("hi there2");
+	
+	this.header[17] = exitToUse;
+	this.header[18] = coordType;
+	this.header[19] = higherPosition;
+	this.header[20] = distance;
+	this.header[21] = shadowed;
+	this.header[22] = connectToPreceeding;
+	this.header[23] = ""; // not used
+	console.log("editableToken: ", this);
+	console.log("new font: ", actualFont);
+
+}
+TEEditableToken.prototype.copyTextFieldsToHeaderArray = function() {
+	//console.log("copy header: ");
+	//this.copyTextFieldsToHeaderArrayStandard();
+	
+	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		this.copyTextFieldsToHeaderArraySE1();			
+	} else {
+		this.copyTextFieldsToHeaderArrayStandard();
+	}
+	
+}
+TEEditableToken.prototype.copyHeaderArrayToTextFieldsStandard = function() {
 	//console.log("copy header array to text fields: header: ", this.header);
 	var output = "<tr>\n"; // open first row
 	for (var i=0; i<24; i++) {
@@ -1338,6 +1432,112 @@ TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
 	}
 	output += "</tr>"; // close last row
 	document.getElementById("headertable").innerHTML = output; 
+
+}
+TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
+	console.log("copy header array to text fields (SE1): header: ", this.header);
+	var output = "<tr>\n"; // open first row
+	
+	/* standard header
+	for (var i=0; i<24; i++) {
+			var id = "h" + Math.floor(i+1);
+			var nr = (Math.floor(i)<9) ? "0"+Math.floor(i+1) : Math.floor(i+1); // ok, peace and love: this works now! :-)
+			output += "<td>" + nr + "<input type=\"text\" id=\"" + id + "\" size=\"4\" value=\"" + this.header[i] + "\"></td>\n";
+			if ((i+1)%8==0) output += "</tr><tr>"; // new row
+	}
+	*/
+	
+	// special header for SE1
+	// prepare data variables
+	// token type (offset 12)
+	var TTS = ["", "", ""];		// TTS = token type selection
+	switch (this.header[12]) {
+		case 0 : TTS[0] = " selected"; break;
+		case 1 : TTS[1] = " selected"; break;
+		case 2 : TTS[2] = " selected"; break; 
+	}
+	// width (offsets 4, 0, 5)
+	var WB = this.header[4],		// width before
+		WM = this.header[0],		// .. middle (called 'token' in the text)
+		WA = this.header[5];		// .. after
+	// following
+	// vertical up (offset 19)
+	var VS = ["", "", "", ""]; 		// VS = vertical selection
+	switch (this.header[19]) {
+		case "up" : VS[0] = " selected"; break;
+		case "no" : VS[1] = " selected"; break;
+		case "down" : VS[2] = " selected"; break;
+		default : VS[3] = " selected"; break;
+	}
+	// shadow (offset 21)
+	var SS = ["","",""]; 			// SS = shadow selection
+	switch (this.header[21]) {
+		case "yes" : SS[0] = " selected"; break;
+		case "no" : SS[1] = " selected"; break;
+		default : SS[2] = " selected"; break;
+	}
+	// distance (offset 20)
+	var DS = ["", "", ""];			// DS = distance selection
+	switch (this.header[20]) {
+		case "narrow" : DS[0] = " selected"; break;	// treat "narrow" and "none" as "narrow"
+		case "none" : DS[0] = " selected"; break;
+		case "wide" : DS[1] = " selected"; break;
+		default : DS[2] = " selected"; break;
+	}
+	// deltaY
+	// conditional (offsets 1, 2)
+	var CDYB = this.header[1], CDYA = this.header[2]; 	// Conditional Delta Y Before / After
+	// inconditional (offsets 13, 14)
+	var IDYB = this.header[13], IDYA = this.header[14]; 	// Inconditional Delta Y Before / After
+	// alternative exit coordinates (offsets 15, 16)
+	var AX = this.header[15], AY = this.header[16];		// AX = x86 register name haha ... :-) ... or alternative x, alternative y
+	// which exit knot? (offset 17)
+	var ES = ["", ""];				// ES = another x86 register ... ;-) ... or Exit Selection
+	switch (this.header[17]) {
+		case 0 : ES[0] = " checked"; break;
+		case 1 : ES[1] = " checked"; break;
+	}
+	// y coordinates absolute or relative?
+	var CS = ["", ""];				// CS = this definitely a reunion of all the old x86 cpu architecture ... ;-) ... Coordinates Selector
+	switch (this.header[18]) {
+		case 0 : CS[0] = " checked"; break;
+		case 1 : CS[1] = " checked"; break;
+	}
+	// connected token? (offset 22)
+	var CTS = ["", ""];				// Connected Token Selector
+	switch (this.header[22]) {
+		case 0 : CTS[0] = " checked"; break;
+		case 1 : CTS[1] = " checked"; break;
+	}
+	// offset 6 (still don't know if this is obsolete, I think that 1 token still uses it ... so keep it for the sake of backwards compatibility)
+	var O6 = this.header[6];
+	
+	// prepare HTML
+	output += "<td>\n"; 	// open first table cell
+	output += "type: <select id='tokentypepulldown'><option value='normal'" + TTS[0] + ">normal</option><option value='shadowed'" + TTS[1] + ">shadowed</option><option value='virtual'" + TTS[2] + ">virtual</option></select><br>\n";
+	output += "width: before <input id='width_before' type='text' size='4' value='" + WB + "'> token <input id='width_middle' type='text' size='4' value='" + WM + "'> after <input id='width_after' type='text' size='4' value='" + WA + "'><br>\n";
+	output += "following: <select id='higherpositionpulldown'><option value='higher'" + VS[0] + ">higher</option><option value='same_line'" + VS[1] + ">same line</option><option value='lower'" + VS[2] + ">lower</option><option value='none'" + VS[3] + ">---</option></select>";
+	output += "<select id='shadowingpulldown'><option value='shadowed'" + SS[0] + ">shadowed</option><option value='not_shadowed'" + SS[1] + ">normal</option><option value='shadow_none'" + SS[2] + ">---</option></select>";
+	output += "<select id='distancepulldown'><option value='narrow'" + DS[0] + ">narrow</option><option value='wide'" + DS[1] + ">wide</option><option value='none'" + DS[2] + ">---</option></select><br>\n";
+	output += "delta-Y: if higher: before <input id='conddeltaybefore' type='text' size='4' value='" + CDYB + "'> after <input id='conddeltayafter' type='text' size='4' value='" + CDYA + "'><br>\n";
+	output += "         inconditional: before <input id='inconddeltaybefore' type='text' size='4' value='" + IDYB + "'> after <input id='inconddeltayafter' type='text' size='4' value='" + IDYB + "'><br>\n";
+	output += "2nd: x <input id='altx' type='text' size='4' value='" + AX + "'> y <input id='alty' type='text' size='4' value='" + AY + "'> <input type='radio' id='relativecoordinates' value='relative'" + CS[0] + "> relative <input type='radio' id='relativecoordinates' value='absolute'" + CS[1] + "> absolute<br>\n";
+	output += "use: <input type='radio' id='whichexit' value='normal'" + ES[0] + "> normal <input type='radio' id='whichexit' value='alternative'" + ES[1] + "> alternative <br>\n";
+	output += "connect: <input type='radio' id='connect' value='yes'" + CTS[0] + "> yes <input type='radio' id='connect' value='no'" + CTS[1] + "> no <br>\n";
+	output += "offset 6: <input type='text' id='offset6' size='4' value='" + O6 + "'><br>\n";
+
+	output += "</td>\n</tr>\n"; // close table cell and last row
+	
+	//console.log(output);
+	document.getElementById("headertable").innerHTML = output; 
+}
+TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
+	console.log("copy header array to text fields (main method)", actualFont);
+	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		this.copyHeaderArrayToTextFieldsSE1();
+	} else {
+		this.copyHeaderArrayToTextFieldsStandard();
+	}
 }
 TEEditableToken.prototype.deleteMarkedKnotFromArray = function() {
 	// marked knot can be identified by index in editable token
@@ -2676,7 +2876,8 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
-		project.activeLayer.insertChild(this.positionAfterBackgroundElements, middlePathWithVariableWidth[i]);
+		project.activeLayer.insertChild(this.positionAfterBackgroundElements, middlePathWithVariableWidth[i]); // position middlePath after static background elements
+		
 		// code: disable one segment (nr. 2 in the example)
 		/*
 		if (i==2) {
