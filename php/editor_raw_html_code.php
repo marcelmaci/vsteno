@@ -16,7 +16,7 @@
 		<button id="save" onClick="document.onClick()">Save</button>
 		<button id="delete" onClick="document.onClick()">Delete</button>
 		Database:
-		<button id="savetodatabase" onClick="document.onClick()">Save</button>
+		<button id="savetodatabase" onClick="document.onClick()">->DB</button>
 		<button id="loadfromdatabase" onClick="document.onClick()">Load</button>
 		
 		

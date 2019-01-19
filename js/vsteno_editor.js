@@ -2873,7 +2873,10 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		// sum up left and right distance and scale, use selected shape
 		var actualShape = this.getSelectedShapeIndex();
 		var width = (this.editableToken.leftVectors[actualShape][i].distance + this.editableToken.rightVectors[actualShape][i].distance) * this.scaleFactor; 
-		
+		if ((this.editableToken.knotsList[i+1] != undefined) && (this.editableToken.knotsList[i+1].type.connect == false)) {
+			 console.log("i+1= ", i+1, "=> don't connect");
+			 width = 0;
+		}
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility

@@ -20,3 +20,9 @@ VPAINT: Vector Paint - (an) Awfully Instable Nerd Tool
 (with a bit of luck - an probably in a far future -, it'll 
 let you paint your steno tokens instead of entering them as 
 text ... ;-)
+
+And for those who prefer less nerdy acronyms:
+
+VPAINT can also be read as:
+
+Vector Paint - (an) Amazing Interactive New Tool ;-)

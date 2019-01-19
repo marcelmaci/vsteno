@@ -201,10 +201,9 @@ function OpenEditorPage() {
     deshalb nur durch diverse \"Hacks\" (= \"münchhausnerische\" Anbindung der Daten, die direkt, queerbeet und ohne Rücksicht auf die OOP-Philosophie der SE2 in den Editor geschrieben werden) 
     erreicht werden. Das Ganze ist aber möglich und sollte dazu führen, dass SE1 und SE2 letztlich parallel verwendet werden können (bis anhin war eher beabsichtigt, die SE1 nach der 
     Implementierung der SE2 komplett zu löschen, da die SE2 aber sehr komplex ist, macht es allenfalls Sinn, die einfachere SE1 weiterzubehalten und evtl. sogar weiterzuentwickeln).</p>
-    <p><b>Bedienung:</b> Das Standard-Font der SE1 wird automatisch geladen (Zeichen aus der PullDownSelection wählen und auf Load klicken, um ein Zeichen zu laden). Anschliessend kann 
-    mit \"q\" die Darstellung der SE1 ein- und ausgeschaltet werden (Linien statt Umrisse). Viele weitere Funktionen sind noch nicht oder nur teilweise implementiert. \"Save to Database\" generiert
-    den ASCII Text, der für die SE1 in die Datenbank generiert wird und zeigt ihn in einem Textfeld auf der gleichen Seite an.<p>
-    <p><b>BUG:</b> Session gets lost after saving new font to database and no other calculations can be made. Manual workaround: chose 'maxi' and reset options manually.</p>
+    <p><b>Bedienung:</b> Das Standard-Font der SE1 wird automatisch geladen (Zeichen aus der PullDownSelection wählen und auf Load klicken, um ein Zeichen zu laden). Anschliessend Zeichen editieren
+    (Punkte, Dicke, Tensions können geändert werden). Dann Zeichen in Browser-Font speichern ('save'). Zuletzt '->DB' wählen (das Font wird als ASCII-Text dargestellt, noch einmal 'speichern'
+    klicken, um es definitiv in die Datenbank zu speichern. Danach ausprobieren über 'maxi' (Daten sind als 'custom' Font gespeichert, darauf achten, dass links unten 'custom' gewählt ist.<p>
     <i>";
     
     // All data in: global variables $steno_tokens_master, $combiner_table, $shifter_table
