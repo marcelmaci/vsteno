@@ -266,7 +266,7 @@ function checkSpecialKeys(e) {
 */
 		
 		else if (e.key == "q") {
-			console.log("toggle middle path visibility");
+			//console.log("toggle middle path visibility");
 			mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth();	
 		}
 	}    

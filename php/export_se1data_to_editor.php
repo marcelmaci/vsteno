@@ -104,8 +104,8 @@ class JSThicknessContainer {
     public function importFromSE1($thickness) {
         $this->standard->left = 0.5;    // SE1 has no standard thickness (it's assumed it is 1, so divide it by 2 for left and right vectors and use that value for standard property)
         $this->standard->right = 0.5;
-        $this->shadowed->left = $thickness / 2;     // use thickness property of SE1 and divide it by 2 for left and right vectors
-        $this->shadowed->right = $thickness / 2;
+        $this->shadowed->left = ($thickness > 1) ? ($thickness / 2) : 0.5;     // use thickness property of SE1 and divide it by 2 for left and right vectors
+        $this->shadowed->right = ($thickness > 1) ? ($thickness / 2) : 0.5;     // thickness must at least be 1 (normal thickness), only thicknesses > 1 are converted (divided by 2)
     }
 }
 

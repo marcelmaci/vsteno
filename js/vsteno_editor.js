@@ -2863,7 +2863,7 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		middlePathWithVariableWidth[i].remove();	// delete subpath (erase from canvas)
 	}
 	middlePathWithVariableWidth.length = 0; // delete array
-	
+	console.log("this.editableToken: ", this.editableToken);
 	// now create new array width subdivided paths
 	for (i=0; i<this.fhToken.segments.length-1; i++) {
 		// copy part of the path
@@ -2873,6 +2873,7 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		// sum up left and right distance and scale, use selected shape
 		var actualShape = this.getSelectedShapeIndex();
 		var width = (this.editableToken.leftVectors[actualShape][i].distance + this.editableToken.rightVectors[actualShape][i].distance) * this.scaleFactor; 
+		
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
 		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
@@ -2890,14 +2891,14 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 	
 }
 TEDrawingArea.prototype.hideMiddlePathWithVariableWidth = function() {
-	console.log("hide middle path");
+	//console.log("hide middle path");
 	showMiddlePathWithVariableWidth = false;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = false;
 	}
 }
 TEDrawingArea.prototype.showMiddlePathWithVariableWidth = function() {
-	console.log("show middle path");
+	//console.log("show middle path");
 	showMiddlePathWithVariableWidth = true;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = true;
@@ -2908,7 +2909,7 @@ TEDrawingArea.prototype.isInsideBorders = function( event ) {
 	else return false;
 }
 TEDrawingArea.prototype.toggleVisibilityMiddlePathWithVariableWidth = function() {
-	console.log("toggle visibility");
+	//console.log("toggle visibility");
 	switch (showMiddlePathWithVariableWidth) {
 		case true : this.hideMiddlePathWithVariableWidth(); break;
 		case false : this.showMiddlePathWithVariableWidth(); break;
@@ -2998,6 +2999,8 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	// copy data
 	this.editableToken.header = token.header.slice(); // ?
 	//console.log("tokenData: ", token, token.tokenData.length);
+	console.log("load token: token:", token);
+		
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
 		//console.log("tokenData: i: ", i, token.tokenData[i]);
@@ -3008,19 +3011,22 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
 		
 		// set tensions
-		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // copy entire array(6) use slice!!!
+		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions.slice(); // copy entire array(6) use slice!!! // direct reference or copy (what is better?)
 		
-		//mainCanvas.editor.editableToken.knotsList[i].type = token.tokenData[i].knotType;
-		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
-		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1 ;
-		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;
-		//mainCanvas.editor.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
-		//mainCanvas.editor.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
-		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions;
-		//mainCanvas.editor.editableToken.leftVectors[0][i].distance = token.tokenData[i].thickness["standard"]["left"];		// make data more readable with associative array
-		//mainCanvas.editor.editableToken.rightVectors[0][i].distance = token.tokenData[i].thickness["standard"]["right"];	    // hugh ... copying array element by element ... this 'll be slow ... (but who cares ... ;-)
-		//mainCanvas.editor.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["left"];
-		//mainCanvas.editor.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness["shadowed"]["right"];		
+		 
+		mainCanvas.editor.editableToken.knotsList[i].type = token.tokenData[i].knotType;	// direct reference or copy (what is better?!)
+		mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
+		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1;		// has been inserted via insertNewKnot()
+		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;		// has been inserted via insertNewKnot()
+		mainCanvas.editor.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
+		mainCanvas.editor.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
+		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // done above
+		
+		// copy thicknesses
+		mainCanvas.editor.editableToken.leftVectors[0][i].distance = token.tokenData[i].thickness.standard.left				
+		mainCanvas.editor.editableToken.rightVectors[0][i].distance = token.tokenData[i].thickness.standard.right;
+		mainCanvas.editor.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
+		mainCanvas.editor.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
 	}
 	//console.log("fhToken: ", mainCanvas.editor.fhToken);
 	mainCanvas.editor.updateFreehandPath();
@@ -4222,7 +4228,7 @@ function getBaseSectionSE1() {
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2) + ", ";		// offset 1: y
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[2]) + ", ";	// offset 2: t1 (use middle tension of SE2)
 				output += d1 + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
-				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].thickness.shadowed.left + actualFont.tokenList[key].tokenData[i].thickness.shadowed.right) / 2 + ", ";		// offset 4: thickness (use shadowed)
+				output += humanReadableEditor(calculateSE1Thickness(actualFont.tokenList[key].tokenData[i].thickness.shadowed.left, actualFont.tokenList[key].tokenData[i].thickness.shadowed.right)) + ", ";		// offset 4: thickness (use shadowed)
 				output += dr + ", ";		// offset 5: dr field
 				output += d2 + ", ";		// offset 6: d2 (see d1)
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[3]);	// offset 7: t2 (use middle tension of SE2)
@@ -4290,6 +4296,12 @@ function calculateDR(knotTypeObject) {
 		if (connect) return 0;
 		else return 5;			// 5 = don't connect
 	}
+}
+
+function calculateSE1Thickness(left, right) {		// shadowed thicknesses left and right
+	var se1Thickness = left + right;
+	if (se1Thickness < 1) se1Thickness = 1; 		// SE1 can't have thicknesses < 1 (..) => this is an backwards incompatibility from SE2 to SE1 (i.e. not all tokens designed by SE2 can be represented in SE1);
+	return se1Thickness;
 }
 
 // global variables
@@ -4509,7 +4521,7 @@ function checkSpecialKeys(e) {
 */
 		
 		else if (e.key == "q") {
-			console.log("toggle middle path visibility");
+			//console.log("toggle middle path visibility");
 			mainCanvas.editor.toggleVisibilityMiddlePathWithVariableWidth();	
 		}
 	}    

@@ -40,7 +40,7 @@
                         echo "<li><a href='edit_header.php'>->Header</a></li>";
                         echo "<li><a href='edit_font.php'>->Zeichen</a></li>";
                         echo "<li><a href='edit_rules.php'>->Regeln</a></li>";
-                        echo "<li><a href='export_se1data_to_editor.php'>->VISTE</a></li>";
+                        echo "<li><a href='export_se1data_to_editor.php'>->VPAINT</a></li>";
                         echo "</ul>";
                       }
                 ?>
