@@ -204,6 +204,7 @@ function OpenEditorPage() {
     <p><b>Bedienung:</b> Das Standard-Font der SE1 wird automatisch geladen (Zeichen aus der PullDownSelection wählen und auf Load klicken, um ein Zeichen zu laden). Anschliessend Zeichen editieren
     (Punkte, Dicke, Tensions können geändert werden). Dann Zeichen in Browser-Font speichern ('save'). Zuletzt '->DB' wählen (das Font wird als ASCII-Text dargestellt, noch einmal 'speichern'
     klicken, um es definitiv in die Datenbank zu speichern. Danach ausprobieren über 'maxi' (Daten sind als 'custom' Font gespeichert, darauf achten, dass links unten 'custom' gewählt ist.<p>
+    <p><b>DISCLAIMER: THERE'S ABSOLUTELY NO GUARANTEE THAT THIS EDITOR WORKS - USE IT AT YOUR OWN RISK! (IT MAY DAMAGE YOUR FONT!)</b></p>
     <i>";
     
     // All data in: global variables $steno_tokens_master, $combiner_table, $shifter_table
@@ -282,12 +283,14 @@ function OpenEditorPage() {
             // read data
             $tempX1 = $steno_tokens_master[$key][$i+0];
             $tempY1 = $steno_tokens_master[$key][$i+1];
-            $tempT1 = $steno_tokens_master[$key][$i+2];
+            // $tempT1 = $steno_tokens_master[$key][$i+2];
+            if ($i==24) $tempT1 = $steno_tokens_master[$key][3];    // incoming tension in first knot = offset 3 in HEADER
+            else $tempT1 = $steno_tokens_master[$key][$i-1]; // normally, this is the incoming tension in SE2 ... (except for the first knot: tension = offset 3 in HEADER!
             $tempD1 = $steno_tokens_master[$key][$i+3];
             $tempTH = $steno_tokens_master[$key][$i+4];
             $tempDR = $steno_tokens_master[$key][$i+5];
-            $tempD2 = $steno_tokens_master[$key][$i+6];
-            $tempT2 = $steno_tokens_master[$key][$i+7];
+            $tempD2 = $steno_tokens_master[$key][$i+6]; 
+            $tempT2 = $steno_tokens_master[$key][$i+2]; // actually, offset 2 is the outgoing tension in SE2 ...
             
             // create token data objects and write data
             $newTuplet = new JSTokenData();
@@ -338,8 +341,14 @@ global $global_error_string;
 //CreateShiftedTokens();
 // do it in data.php?
 
-if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
+if ($_SESSION['user_logged_in'] == false) {
     require_once "vsteno_template_top.php";
+    echo "<h1>Fehler</h1>";
+    echo "<p>Sie müssen eingeloggt sein, um den grafischen Editor zu benutzen (Daten werden aus Datenbank gelesen / in Datenbank geschrieben).</p>";
+    require_once "vsteno_template_bottom.php";
+} elseif (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
+    require_once "vsteno_template_top.php";
+    echo "<h1>Fehler</h1>";
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Modell auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
     echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
     require_once "vsteno_template_bottom.php";

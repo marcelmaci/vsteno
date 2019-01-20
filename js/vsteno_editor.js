@@ -1187,6 +1187,67 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else if (index == length-1) { /*console.log("exitKnot");*/ return colorExitKnot; }
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
+TEEditableToken.prototype.insertNewKnotFromActualFont = function(point, type) {
+	// same code as insertNewKnot, but with type as parameter to set color
+	var newColor;
+	if (type.entry) newColor = colorEntryKnot;
+	else if (type.exit) newColor = colorExitKnot;
+	else if (type.pivot1) newColor = colorPivot1;
+	else if (type.pivot2) newColor = colorPivot2;
+	else if (type.earlyExit) newColor = colorNormalKnot;		// possibility to define other colors
+	else if (type.lateEntry) newColor = colorNormalKnot;
+	else if (type.combinationPoint) newColor = colorNormalKnot;
+	else if (type.intermediateShadow) newColor = colorNormalKnot;
+	else newColor = colorNormalKnot;
+	
+	
+	
+	// code from insertNewKnot() => make this a new function that can be called from both functions (avoid duplicate code) => fix that later
+	//console.log("TEEditableToken.insertNewKnot(): ", point, this.index);
+	// get color of new knot before inserting it
+//	var newColor = this.getNewKnotTypeColor();
+	// insert knot
+	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot, null);
+	//console.log("newKnot: ", newKnot);
+	this.knotsList.splice(this.index, 0, newKnot);
+	//var newLength = this.knotsList.length;
+	// insert knot vectors for outer shape
+	//var distance = ((this.index == 0) || (this.index == newLength-1)) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	// define vectors for normal shape
+	var distance = 1;
+	var leftVector = new TEKnotVector(distance, "orthogonal");
+	var rightVector = new TEKnotVector(distance, "orthogonal");
+	this.leftVectors[0].splice(this.index,0, leftVector);
+	this.rightVectors[0].splice(this.index,0, rightVector);
+	// define vectors for shadowed shape
+	distance = 2;
+	leftVector = new TEKnotVector(distance, "orthogonal");
+	rightVector = new TEKnotVector(distance, "orthogonal");
+	this.leftVectors[1].splice(this.index,0, leftVector);
+	this.rightVectors[1].splice(this.index,0, rightVector);
+	//console.log("new leftVector: ", leftVector);
+	//console.log("array leftVectors: ", this.leftVectors[this.index]);
+	// automatically define knot type if autodefine is set
+	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
+	// select new knot as actual knot
+	this.selectedKnot = newKnot;
+	// link tension slider to new knot
+	this.parent.parent.tensionSliders.link(this.selectedKnot);
+	// set marked knot and handling parent
+	this.markedKnot = newKnot; // maybe superfluous
+	this.parent.setMarkedCircle(newKnot);
+	this.parent.handlingParent = this;
+	// insert relative knot in rotating axis relativeToken
+	//this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
+	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(newKnot);
+	
+	// make index point to new knot
+	this.index += 1; // point to the newly inserted element
+	// update connections from preceeding and following connection point
+	this.connectPreceedingAndFollowing();
+	//console.log("insertNewKnot: selected/marked:", this.selectedKnot, this.markedKnot);
+	
+}
 TEEditableToken.prototype.insertNewKnot = function(point) {
 	//console.log("TEEditableToken.insertNewKnot(): ", point, this.index);
 	// get color of new knot before inserting it
@@ -3003,7 +3064,8 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	this.editableToken.header = token.header.slice(); // ?
 	//console.log("tokenData: ", token, token.tokenData.length);
 	console.log("load token: token:", token);
-		
+	
+	knotTypeAutoDefine = false; // disable autodefine for knots
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
 		//console.log("tokenData: i: ", i, token.tokenData[i]);
@@ -3011,7 +3073,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
 		
 		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
-		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
+		mainCanvas.editor.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
 		
 		// set tensions
 		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions.slice(); // copy entire array(6) use slice!!! // direct reference or copy (what is better?)
@@ -4209,7 +4271,14 @@ function getBaseSectionSE1() {
 					case "yes" : output += "\"yes\", "; break;
 					case "wide" : output += "\"wide\", "; break;
 					case "narrow" : output += "\"narrow\", "; break;
-					default: output += actualFont.tokenList[key].header[i] + ", "; break;
+					case "up" : output += "\"up\", "; break;
+					case "down" : output += "\"down\", "; break;
+					default: 	if (i==3) {
+									if ((actualFont.tokenList[key].tokenData[0] != undefined) && (actualFont.tokenList[key].tokenData[0] != null)) {
+									output += actualFont.tokenList[key].tokenData[0].tensions[2] + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
+									} else output += "0, ";		// if there's no 1st knot, write 0
+								} else output += actualFont.tokenList[key].header[i] + ", "; 
+							break;
 				
 					// add comma and space between elements (no comma after last)
 					//if (i != 23) output += ", ";	// comma is needed: array continues
@@ -4227,14 +4296,17 @@ function getBaseSectionSE1() {
 				var d1 = calculateD1(actualFont.tokenList[key].tokenData[i].knotType);
 				var d2 = calculateD2(actualFont.tokenList[key].tokenData[i].knotType);
 				var dr = calculateDR(actualFont.tokenList[key].tokenData[i].knotType);
+				
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 0: x
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2) + ", ";		// offset 1: y
-				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[2]) + ", ";	// offset 2: t1 (use middle tension of SE2)
+				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[3]) + ", ";	// offset 2: t1 (use middle outgoing tension of SE2 = offset 3!)
 				output += d1 + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
 				output += humanReadableEditor(calculateSE1Thickness(actualFont.tokenList[key].tokenData[i].thickness.shadowed.left, actualFont.tokenList[key].tokenData[i].thickness.shadowed.right)) + ", ";		// offset 4: thickness (use shadowed)
 				output += dr + ", ";		// offset 5: dr field
 				output += d2 + ", ";		// offset 6: d2 (see d1)
-				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[3]);	// offset 7: t2 (use middle tension of SE2)
+				if ((actualFont.tokenList[key].tokenData[i+1] != undefined) && (actualFont.tokenList[key].tokenData[i+1] != null)) {
+						output += humanReadableEditor(actualFont.tokenList[key].tokenData[i+1].tensions[2]);	// offset 7: t2 (use incoming (= offset 2) middle tension of following knot in SE2)
+				} else output += "0";	// if no following knot exists, write 0
 	
 				// add comma if necessary
 				if (i != length-1) output += ", ";

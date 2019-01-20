@@ -395,6 +395,67 @@ TEEditableToken.prototype.getDeleteKnotTypeColor = function() {
 	else if (index == length-1) { /*console.log("exitKnot");*/ return colorExitKnot; }
 	else { /*console.log("normalKnot");*/ return colorNormalKnot; }
 }
+TEEditableToken.prototype.insertNewKnotFromActualFont = function(point, type) {
+	// same code as insertNewKnot, but with type as parameter to set color
+	var newColor;
+	if (type.entry) newColor = colorEntryKnot;
+	else if (type.exit) newColor = colorExitKnot;
+	else if (type.pivot1) newColor = colorPivot1;
+	else if (type.pivot2) newColor = colorPivot2;
+	else if (type.earlyExit) newColor = colorNormalKnot;		// possibility to define other colors
+	else if (type.lateEntry) newColor = colorNormalKnot;
+	else if (type.combinationPoint) newColor = colorNormalKnot;
+	else if (type.intermediateShadow) newColor = colorNormalKnot;
+	else newColor = colorNormalKnot;
+	
+	
+	
+	// code from insertNewKnot() => make this a new function that can be called from both functions (avoid duplicate code) => fix that later
+	//console.log("TEEditableToken.insertNewKnot(): ", point, this.index);
+	// get color of new knot before inserting it
+//	var newColor = this.getNewKnotTypeColor();
+	// insert knot
+	var newKnot = new TEVisuallyModifiableKnot(point.x, point.y, 0.5, 0.5, 5, newColor, colorSelectedKnot, colorMarkedKnot, null);
+	//console.log("newKnot: ", newKnot);
+	this.knotsList.splice(this.index, 0, newKnot);
+	//var newLength = this.knotsList.length;
+	// insert knot vectors for outer shape
+	//var distance = ((this.index == 0) || (this.index == newLength-1)) ? 0 : 1; 	// 0 = no pencil thickness, 1 = maximum thickness
+	// define vectors for normal shape
+	var distance = 1;
+	var leftVector = new TEKnotVector(distance, "orthogonal");
+	var rightVector = new TEKnotVector(distance, "orthogonal");
+	this.leftVectors[0].splice(this.index,0, leftVector);
+	this.rightVectors[0].splice(this.index,0, rightVector);
+	// define vectors for shadowed shape
+	distance = 2;
+	leftVector = new TEKnotVector(distance, "orthogonal");
+	rightVector = new TEKnotVector(distance, "orthogonal");
+	this.leftVectors[1].splice(this.index,0, leftVector);
+	this.rightVectors[1].splice(this.index,0, rightVector);
+	//console.log("new leftVector: ", leftVector);
+	//console.log("array leftVectors: ", this.leftVectors[this.index]);
+	// automatically define knot type if autodefine is set
+	if (knotTypeAutoDefine) this.redefineKnotTypesAndSetColors();
+	// select new knot as actual knot
+	this.selectedKnot = newKnot;
+	// link tension slider to new knot
+	this.parent.parent.tensionSliders.link(this.selectedKnot);
+	// set marked knot and handling parent
+	this.markedKnot = newKnot; // maybe superfluous
+	this.parent.setMarkedCircle(newKnot);
+	this.parent.handlingParent = this;
+	// insert relative knot in rotating axis relativeToken
+	//this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(point.x, point.y, "horizontal", this.index);
+	this.parent.rotatingAxis.relativeToken.insertNewRelativeKnot(newKnot);
+	
+	// make index point to new knot
+	this.index += 1; // point to the newly inserted element
+	// update connections from preceeding and following connection point
+	this.connectPreceedingAndFollowing();
+	//console.log("insertNewKnot: selected/marked:", this.selectedKnot, this.markedKnot);
+	
+}
 TEEditableToken.prototype.insertNewKnot = function(point) {
 	//console.log("TEEditableToken.insertNewKnot(): ", point, this.index);
 	// get color of new knot before inserting it

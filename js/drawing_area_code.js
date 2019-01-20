@@ -432,7 +432,8 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	this.editableToken.header = token.header.slice(); // ?
 	//console.log("tokenData: ", token, token.tokenData.length);
 	console.log("load token: token:", token);
-		
+	
+	knotTypeAutoDefine = false; // disable autodefine for knots
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
 		//console.log("tokenData: i: ", i, token.tokenData[i]);
@@ -440,7 +441,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
 		
 		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
-		mainCanvas.editor.editableToken.insertNewKnot(new Point( x, y));
+		mainCanvas.editor.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
 		
 		// set tensions
 		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions.slice(); // copy entire array(6) use slice!!! // direct reference or copy (what is better?)
