@@ -299,6 +299,12 @@ TEDrawingArea.prototype.showSelectedKnotSE1Type = function() {
 		}
 	}
 }
+TEDrawingArea.prototype.moveRelativeSelectedKnot = function(x,y) {
+	if (this.editableToken.selectedKnot != null) {
+		this.editableToken.selectedKnot.moveRelative(x,y);
+		this.updateFreehandPath();
+	}
+}
 TEDrawingArea.prototype.updateFreehandPath = function() {
 	if (this.editableToken.knotsList.length > 0) {
 		this.copyKnotsToFreehandPath();

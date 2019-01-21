@@ -30,6 +30,9 @@ TEVisuallyModifiableCircle.prototype.select = function() { // select <=> modify 
 TEVisuallyModifiableCircle.prototype.unselect = function() { // unselect <=> restore original fillColor
 	this.circle.fillColor = this.originalColor;
 }
+TEVisuallyModifiableCircle.prototype.moveRelative = function(x,y) {
+	this.circle.position += new Point(x,y);
+}
 /*
 TEVisuallyModifiableCircle.prototype.handleEvent = function(event) {
 switch (event.type) {

@@ -88,7 +88,8 @@ var arrowUp = false,			// global variables for arrow keys
 	arrowDown = false,
 	arrowLeft = false,
 	arrowRight = false,
-	ctrlKey = false;
+	ctrlKey = false,
+	altKey = false;
 	
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
@@ -172,8 +173,11 @@ function checkSpecialKeys(e) {
 	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
 	
 	e = e || window.event;
+	//console.log("e: ", e);
 	if (e.ctrlKey) ctrlKey = true;
     else ctrlKey = false;
+	if (e.altKey) altKey = true;
+	else altKey = false;
    
     if (ctrlKey) {
 		if (e.keyCode == '38') {
@@ -227,6 +231,25 @@ function checkSpecialKeys(e) {
 			//console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
 			//console.log(mainCanvas.editor.editableToken);
 		}		
+	} else if (altKey) {
+		if (e.keyCode == '38') {
+			arrowUp = true; // up arrow
+			mainCanvas.editor.moveRelativeSelectedKnot(0,-1);
+			//console.log("arrowUP");
+		} else if (e.keyCode == '40') {
+			arrowDown = true; // down arrow
+			mainCanvas.editor.moveRelativeSelectedKnot(0,1);
+			//console.log("arrowDown");
+		} else if (e.keyCode == '37') {
+			arrowLeft = true; // left arrow
+			mainCanvas.editor.moveRelativeSelectedKnot(-1,0);
+			return false; // returning false prevents execution of predefined browser functionality (e.g. "go back" for alt + left arroy) => should be used for other commands also! => fix that later
+			// for following line: see comment in freehand => setKnotType()
+			//console.log("arrowLeft");
+		} else if (e.keyCode == '39') {
+			arrowRight = true; // right arrow
+			mainCanvas.editor.moveRelativeSelectedKnot(1,0);
+		}
 	} else {
 		if (e.keyCode == '38') {
 			arrowUp = true; // up arrow
