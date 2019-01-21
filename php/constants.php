@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "083dd35320d8a63b3a63ba2aad8aaf78b4d23938";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "19. Januar 2019";                                  // idem
+const version_commit_id = "8e951967371df396a9424219a096b9b8099b543a";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "20. Januar 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)

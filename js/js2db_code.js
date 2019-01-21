@@ -30,7 +30,7 @@ function writeDataToDB() {
 		// WRONG: it's not the session that is lost (user is still logged-in and user data available - must be something else ...)
 		// OK: fixed, problem was the session variables were reinitialized with an empty post variable ... see session.php
 		
-		document.getElementById("whole_page_content").innerHTML = "<form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
+		document.getElementById("whole_page_content").innerHTML = "<h1>Speichern</h1><p><i>Untenstehend das Font, wie es direkt aus dem Grafikeditor exportiert wurde. Es besteht die Möglichkeit, es manuell nachzueditieren (falls gewünscht oder nötig, z.B. im Bereich Shifter oder Combiner). Um das Font definitiv in die Datenbank zu schreiben, klicken Sie auf 'speichern'.<i></p><form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='110' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
 		
 		
 		// use the following ode to send new model to data base:
@@ -93,7 +93,7 @@ function getBaseSectionSE1() {
 					case "down" : output += "\"down\", "; break;
 					default: 	if (i==3) {
 									if ((actualFont.tokenList[key].tokenData[0] != undefined) && (actualFont.tokenList[key].tokenData[0] != null)) {
-									output += actualFont.tokenList[key].tokenData[0].tensions[2] + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
+									output += humanReadableEditor(actualFont.tokenList[key].tokenData[0].tensions[2]) + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
 									} else output += "0, ";		// if there's no 1st knot, write 0
 								} else output += actualFont.tokenList[key].header[i] + ", "; 
 							break;

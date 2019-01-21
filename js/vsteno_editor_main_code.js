@@ -145,14 +145,14 @@ function checkSpecialKeys(e) {
 			//console.log("set entry knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("entry");
 		} else if (e.key == "2") {
-			//console.log("set normal knot");
+			console.log("set normal knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].setKnotType("normal"); 	// can be used to "reset" knot type
 		} else if (e.key == "3") {
 			//console.log("i=", mainCanvas.editor.editableToken.index-1);
 			//console.log("set exit knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("exit");
 		} else if (e.key == "4") {
-			//console.log("set pivot1 knot");
+			console.log("set pivot1 knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("pivot1");
 		} else if (e.key == "5") {
 			//console.log("set connPoint value");
@@ -228,9 +228,10 @@ document.onkeyup = function resetSpecialKeys() {
 	arrowDown = false;
 	arrowLeft = false;
 	arrowRight = false;
+	mainCanvas.editor.showSelectedKnotSE1Type();
 }
 // work with keyboard events instead
-tool.onKeyDown = function(event) {
+tool.onKeyDown = function(event) {	
 	//console.log("active element", document.activeElement.id);
 	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
 	
@@ -297,9 +298,11 @@ tool.onKeyDown = function(event) {
 tool.onKeyUp = function(event) {
 	//console.log("KeyEvent: ", event);
 	keyPressed = "";
+	mainCanvas.editor.showSelectedKnotSE1Type();
 }
 
 tool.onMouseDown = function(event) {
+	
 	var newClick = (new Date).getTime();
 	mouseDown = true;
 	//console.log("mousedown: event: ", event);
@@ -316,6 +319,7 @@ tool.onMouseUp = function(event) {
 	mainCanvas.handleEvent(event);
 	mouseDown = false;
     mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
+	mainCanvas.editor.showSelectedKnotSE1Type();
 }
 
 // load font automatically => not clear which code is executed: this one (in head) or the patched one (in body)?!

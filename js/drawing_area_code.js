@@ -268,6 +268,37 @@ TEDrawingArea.prototype.calculateOuterShape = function() {
 	// later this calculation can be integrated inside the for-loops above
 	this.calculateOuterShapeHandles();
 }
+TEDrawingArea.prototype.showSelectedKnotSE1Type = function() {
+	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		//console.log("selectedKnot: ", this.editableToken.selectedKnot, "Index: ", this.editableToken.index);
+		if (this.editableToken.selectedKnot != undefined) { // check if at least 1 knot exists
+			// using method of TEKnotType (this is possible now that only data is copied from JSKnotType to TEKnotType and methods are preserved)
+			var output = this.editableToken.selectedKnot.type.getKnotTypesAsString();
+	//		console.log("this.editableToken.selectedKnot.type: ", this.editableToken.selectedKnot.type);
+			
+			/*
+			var output = "SE1-Knottype:";
+			with (this.editableToken.selectedKnot.type) {
+				output += (entry) ? " entry" : "";
+				output += (exit) ? " exit" : "";
+				output += (pivot1) ? " pivot1" : "";
+				output += (pivot2) ? " pivot2" : "";
+				output += (lateEntry) ? " lateEntry" : "";
+				output += (earlyExit) ? " earlyExit" : "";
+				output += (combinationPoint) ? " combinationPoint" : "";
+				output += (connect) ? " connect" : "";
+				output += (intermediateShadow) ? " intermediateShadow" : "";
+			}
+			*/
+			// impossible to call type method because type is copied from export_variable (php) and this variable only contains data, no code!
+			// use code above instead
+			//var type = this.editableToken.knotsList[this.editableToken.index-1].type;
+			//console.log('check type...', type, typeof type); //, type.getKnotTypesAsString();
+			//document.getElementById('se1_knottype').innerHTML = type.getKnotTypesAsString();
+			document.getElementById('se1_knottype').innerHTML = output;
+		}
+	}
+}
 TEDrawingArea.prototype.updateFreehandPath = function() {
 	if (this.editableToken.knotsList.length > 0) {
 		this.copyKnotsToFreehandPath();
@@ -275,8 +306,12 @@ TEDrawingArea.prototype.updateFreehandPath = function() {
 		this.calculateOuterShape();
 		this.calculateFreehandHandles();
 	}
-	// test: path with variable width
-	this.drawMiddlePathWithVariableWidth();;
+	// draw path with variable width
+	this.drawMiddlePathWithVariableWidth();
+	// test: update se1-knottype (for se1)
+	//if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		//this.showSelectedKnotSE1Type();
+	//} 
 }
 TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 	// Implementation for SE2 takes a lot of time, so maybe make the editor
@@ -423,7 +458,7 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	console.log("actualfont: ", actualFont);
 	//console.log("loadAndInitializeTokenData(): token: ", token);
-	mainCanvas.editor.editableToken.deleteAllKnotData();
+	this.editableToken.deleteAllKnotData();
 	// delete main object
 	this.editableToken = null;
 	// create new object
@@ -440,35 +475,53 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		var x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x,
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
 		
-		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
-		mainCanvas.editor.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
+		this.fhToken.insert(this.editableToken.index, new Point(x,y))
+		this.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
 		
 		// set tensions
-		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions.slice(); // copy entire array(6) use slice!!! // direct reference or copy (what is better?)
+		this.editableToken.knotsList[i].tensions = token.tokenData[i].tensions.slice(); // copy entire array(6) use slice!!! // direct reference or copy (what is better?)
 		
-		 
-		mainCanvas.editor.editableToken.knotsList[i].type = token.tokenData[i].knotType;	// direct reference or copy (what is better?!)
-		mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
+		this.editableToken.knotsList.type = new TEKnotType();
+		
+		//console.log("this.editableToken.knotsList[i].type: ", this.editableToken.knotsList[i].type);
+		//console.log("token.tokenData[i].knotType: ", token.tokenData[i].knotType);
+		
+		// ok, the following line is completely wrong!
+		// by copying knotType from token.tokenData.knotType (which comes from actualFont), we are replacing TEKnotType by JSKnotType (from PHP export, i.e. $export_variable)
+		// since $export_variable only contains data (= no methods), all editor functions are lost! 
+		//this.editableToken.knotsList[i].type = token.tokenData[i].knotType;	// direct reference or copy (what is better?!)
+		// SOLUTION: keep TEKnotType and copy only the properties from JSKnotType to TEKnotType!
+		this.editableToken.knotsList[i].type.entry = token.tokenData[i].knotType.entry;
+		this.editableToken.knotsList[i].type.exit = token.tokenData[i].knotType.exit;
+		this.editableToken.knotsList[i].type.pivot1 = token.tokenData[i].knotType.pivot1;
+		this.editableToken.knotsList[i].type.pivot2 = token.tokenData[i].knotType.pivot2;
+		this.editableToken.knotsList[i].type.earlyExit = token.tokenData[i].knotType.earlyExit;
+		this.editableToken.knotsList[i].type.lateEntry = token.tokenData[i].knotType.lateEntry;
+		this.editableToken.knotsList[i].type.combinationPoint = token.tokenData[i].knotType.combinationPoint;
+		this.editableToken.knotsList[i].type.connect = token.tokenData[i].knotType.connect;
+		this.editableToken.knotsList[i].type.intermediateShadow = token.tokenData[i].knotType.intermediateShadow;
+		
+		this.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1;		// has been inserted via insertNewKnot()
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;		// has been inserted via insertNewKnot()
-		mainCanvas.editor.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
-		mainCanvas.editor.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
+		this.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
+		this.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
 		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // done above
 		
 		// copy thicknesses
-		mainCanvas.editor.editableToken.leftVectors[0][i].distance = token.tokenData[i].thickness.standard.left				
-		mainCanvas.editor.editableToken.rightVectors[0][i].distance = token.tokenData[i].thickness.standard.right;
-		mainCanvas.editor.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
-		mainCanvas.editor.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
+		this.editableToken.leftVectors[0][i].distance = token.tokenData[i].thickness.standard.left				
+		this.editableToken.rightVectors[0][i].distance = token.tokenData[i].thickness.standard.right;
+		this.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
+		this.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
 	}
 	//console.log("fhToken: ", mainCanvas.editor.fhToken);
-	mainCanvas.editor.updateFreehandPath();
-	mainCanvas.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
+	this.updateFreehandPath();
+	this.parent.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
 	
 	// update header fields in HTML
 	//console.log("header: ", mainCanvas.editor.editableToken.header);
-	mainCanvas.editor.editableToken.copyHeaderArrayToTextFields();
-	
+	this.editableToken.copyHeaderArrayToTextFields();
+	this.showSelectedKnotSE1Type();
 	
 	
 	console.log("mainCanvas.editor: ", mainCanvas.editor);

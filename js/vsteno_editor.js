@@ -829,6 +829,21 @@ function TEKnotType() {
 	this.connect = true;
 	this.intermediateShadow = false;
 }
+/* doesn't work for imported tokens: export_variable only contains data, no methods! */
+// solved by copying only data from JSKnotType to TEKnotType when loading token from actualFont
+TEKnotType.prototype.getKnotTypesAsString = function() {
+	var output = "SE1-Knottype:";
+	output += (this.entry) ? " entry" : "";
+	output += (this.exit) ? " exit" : "";
+	output += (this.pivot1) ? " pivot1" : "";
+	output += (this.pivot2) ? " pivot2" : "";
+	output += (this.lateEntry) ? " lateEntry" : "";
+	output += (this.earlyExit) ? " earlyExit" : "";
+	output += (this.combinationPoint) ? " combinationPoint" : "";
+	output += (this.connect) ? " connect" : "";
+	output += (this.intermediateShadow) ? " intermediateShadow" : "";
+	return output;
+}
 TEKnotType.prototype.setKnotType = function(type) {
 	switch (type) {
 		case "entry" : this.entry = true; break;
@@ -2900,6 +2915,37 @@ TEDrawingArea.prototype.calculateOuterShape = function() {
 	// later this calculation can be integrated inside the for-loops above
 	this.calculateOuterShapeHandles();
 }
+TEDrawingArea.prototype.showSelectedKnotSE1Type = function() {
+	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		//console.log("selectedKnot: ", this.editableToken.selectedKnot, "Index: ", this.editableToken.index);
+		if (this.editableToken.selectedKnot != undefined) { // check if at least 1 knot exists
+			// using method of TEKnotType (this is possible now that only data is copied from JSKnotType to TEKnotType and methods are preserved)
+			var output = this.editableToken.selectedKnot.type.getKnotTypesAsString();
+	//		console.log("this.editableToken.selectedKnot.type: ", this.editableToken.selectedKnot.type);
+			
+			/*
+			var output = "SE1-Knottype:";
+			with (this.editableToken.selectedKnot.type) {
+				output += (entry) ? " entry" : "";
+				output += (exit) ? " exit" : "";
+				output += (pivot1) ? " pivot1" : "";
+				output += (pivot2) ? " pivot2" : "";
+				output += (lateEntry) ? " lateEntry" : "";
+				output += (earlyExit) ? " earlyExit" : "";
+				output += (combinationPoint) ? " combinationPoint" : "";
+				output += (connect) ? " connect" : "";
+				output += (intermediateShadow) ? " intermediateShadow" : "";
+			}
+			*/
+			// impossible to call type method because type is copied from export_variable (php) and this variable only contains data, no code!
+			// use code above instead
+			//var type = this.editableToken.knotsList[this.editableToken.index-1].type;
+			//console.log('check type...', type, typeof type); //, type.getKnotTypesAsString();
+			//document.getElementById('se1_knottype').innerHTML = type.getKnotTypesAsString();
+			document.getElementById('se1_knottype').innerHTML = output;
+		}
+	}
+}
 TEDrawingArea.prototype.updateFreehandPath = function() {
 	if (this.editableToken.knotsList.length > 0) {
 		this.copyKnotsToFreehandPath();
@@ -2907,8 +2953,12 @@ TEDrawingArea.prototype.updateFreehandPath = function() {
 		this.calculateOuterShape();
 		this.calculateFreehandHandles();
 	}
-	// test: path with variable width
-	this.drawMiddlePathWithVariableWidth();;
+	// draw path with variable width
+	this.drawMiddlePathWithVariableWidth();
+	// test: update se1-knottype (for se1)
+	//if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
+		//this.showSelectedKnotSE1Type();
+	//} 
 }
 TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 	// Implementation for SE2 takes a lot of time, so maybe make the editor
@@ -3055,7 +3105,7 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	console.log("actualfont: ", actualFont);
 	//console.log("loadAndInitializeTokenData(): token: ", token);
-	mainCanvas.editor.editableToken.deleteAllKnotData();
+	this.editableToken.deleteAllKnotData();
 	// delete main object
 	this.editableToken = null;
 	// create new object
@@ -3072,35 +3122,53 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		var x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x,
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
 		
-		mainCanvas.editor.fhToken.insert(this.editableToken.index, new Point(x,y))
-		mainCanvas.editor.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
+		this.fhToken.insert(this.editableToken.index, new Point(x,y))
+		this.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
 		
 		// set tensions
-		mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions.slice(); // copy entire array(6) use slice!!! // direct reference or copy (what is better?)
+		this.editableToken.knotsList[i].tensions = token.tokenData[i].tensions.slice(); // copy entire array(6) use slice!!! // direct reference or copy (what is better?)
 		
-		 
-		mainCanvas.editor.editableToken.knotsList[i].type = token.tokenData[i].knotType;	// direct reference or copy (what is better?!)
-		mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
+		this.editableToken.knotsList.type = new TEKnotType();
+		
+		//console.log("this.editableToken.knotsList[i].type: ", this.editableToken.knotsList[i].type);
+		//console.log("token.tokenData[i].knotType: ", token.tokenData[i].knotType);
+		
+		// ok, the following line is completely wrong!
+		// by copying knotType from token.tokenData.knotType (which comes from actualFont), we are replacing TEKnotType by JSKnotType (from PHP export, i.e. $export_variable)
+		// since $export_variable only contains data (= no methods), all editor functions are lost! 
+		//this.editableToken.knotsList[i].type = token.tokenData[i].knotType;	// direct reference or copy (what is better?!)
+		// SOLUTION: keep TEKnotType and copy only the properties from JSKnotType to TEKnotType!
+		this.editableToken.knotsList[i].type.entry = token.tokenData[i].knotType.entry;
+		this.editableToken.knotsList[i].type.exit = token.tokenData[i].knotType.exit;
+		this.editableToken.knotsList[i].type.pivot1 = token.tokenData[i].knotType.pivot1;
+		this.editableToken.knotsList[i].type.pivot2 = token.tokenData[i].knotType.pivot2;
+		this.editableToken.knotsList[i].type.earlyExit = token.tokenData[i].knotType.earlyExit;
+		this.editableToken.knotsList[i].type.lateEntry = token.tokenData[i].knotType.lateEntry;
+		this.editableToken.knotsList[i].type.combinationPoint = token.tokenData[i].knotType.combinationPoint;
+		this.editableToken.knotsList[i].type.connect = token.tokenData[i].knotType.connect;
+		this.editableToken.knotsList[i].type.intermediateShadow = token.tokenData[i].knotType.intermediateShadow;
+		
+		this.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1;		// has been inserted via insertNewKnot()
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;		// has been inserted via insertNewKnot()
-		mainCanvas.editor.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
-		mainCanvas.editor.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
+		this.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
+		this.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
 		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // done above
 		
 		// copy thicknesses
-		mainCanvas.editor.editableToken.leftVectors[0][i].distance = token.tokenData[i].thickness.standard.left				
-		mainCanvas.editor.editableToken.rightVectors[0][i].distance = token.tokenData[i].thickness.standard.right;
-		mainCanvas.editor.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
-		mainCanvas.editor.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
+		this.editableToken.leftVectors[0][i].distance = token.tokenData[i].thickness.standard.left				
+		this.editableToken.rightVectors[0][i].distance = token.tokenData[i].thickness.standard.right;
+		this.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
+		this.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
 	}
 	//console.log("fhToken: ", mainCanvas.editor.fhToken);
-	mainCanvas.editor.updateFreehandPath();
-	mainCanvas.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
+	this.updateFreehandPath();
+	this.parent.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
 	
 	// update header fields in HTML
 	//console.log("header: ", mainCanvas.editor.editableToken.header);
-	mainCanvas.editor.editableToken.copyHeaderArrayToTextFields();
-	
+	this.editableToken.copyHeaderArrayToTextFields();
+	this.showSelectedKnotSE1Type();
 	
 	
 	console.log("mainCanvas.editor: ", mainCanvas.editor);
@@ -4212,7 +4280,7 @@ function writeDataToDB() {
 		// WRONG: it's not the session that is lost (user is still logged-in and user data available - must be something else ...)
 		// OK: fixed, problem was the session variables were reinitialized with an empty post variable ... see session.php
 		
-		document.getElementById("whole_page_content").innerHTML = "<form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='120' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
+		document.getElementById("whole_page_content").innerHTML = "<h1>Speichern</h1><p><i>Untenstehend das Font, wie es direkt aus dem Grafikeditor exportiert wurde. Es besteht die Möglichkeit, es manuell nachzueditieren (falls gewünscht oder nötig, z.B. im Bereich Shifter oder Combiner). Um das Font definitiv in die Datenbank zu schreiben, klicken Sie auf 'speichern'.<i></p><form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='110' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
 		
 		
 		// use the following ode to send new model to data base:
@@ -4275,7 +4343,7 @@ function getBaseSectionSE1() {
 					case "down" : output += "\"down\", "; break;
 					default: 	if (i==3) {
 									if ((actualFont.tokenList[key].tokenData[0] != undefined) && (actualFont.tokenList[key].tokenData[0] != null)) {
-									output += actualFont.tokenList[key].tokenData[0].tensions[2] + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
+									output += humanReadableEditor(actualFont.tokenList[key].tokenData[0].tensions[2]) + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
 									} else output += "0, ";		// if there's no 1st knot, write 0
 								} else output += actualFont.tokenList[key].header[i] + ", "; 
 							break;
@@ -4525,14 +4593,14 @@ function checkSpecialKeys(e) {
 			//console.log("set entry knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("entry");
 		} else if (e.key == "2") {
-			//console.log("set normal knot");
+			console.log("set normal knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].setKnotType("normal"); 	// can be used to "reset" knot type
 		} else if (e.key == "3") {
 			//console.log("i=", mainCanvas.editor.editableToken.index-1);
 			//console.log("set exit knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("exit");
 		} else if (e.key == "4") {
-			//console.log("set pivot1 knot");
+			console.log("set pivot1 knot");
 			mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index-1].toggleKnotType("pivot1");
 		} else if (e.key == "5") {
 			//console.log("set connPoint value");
@@ -4608,9 +4676,10 @@ document.onkeyup = function resetSpecialKeys() {
 	arrowDown = false;
 	arrowLeft = false;
 	arrowRight = false;
+	mainCanvas.editor.showSelectedKnotSE1Type();
 }
 // work with keyboard events instead
-tool.onKeyDown = function(event) {
+tool.onKeyDown = function(event) {	
 	//console.log("active element", document.activeElement.id);
 	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
 	
@@ -4677,9 +4746,11 @@ tool.onKeyDown = function(event) {
 tool.onKeyUp = function(event) {
 	//console.log("KeyEvent: ", event);
 	keyPressed = "";
+	mainCanvas.editor.showSelectedKnotSE1Type();
 }
 
 tool.onMouseDown = function(event) {
+	
 	var newClick = (new Date).getTime();
 	mouseDown = true;
 	//console.log("mousedown: event: ", event);
@@ -4696,6 +4767,7 @@ tool.onMouseUp = function(event) {
 	mainCanvas.handleEvent(event);
 	mouseDown = false;
     mainCanvas.editor.rotatingAxis.controlCircle.unselect(); 
+	mainCanvas.editor.showSelectedKnotSE1Type();
 }
 
 // load font automatically => not clear which code is executed: this one (in head) or the patched one (in body)?!

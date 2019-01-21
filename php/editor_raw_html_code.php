@@ -27,7 +27,7 @@
    <br>
    
    <canvas id="drawingArea" width="800" height="600" style="background-color:#eee"></canvas>
-   
+   <p id='se1_knottype'>SE1-Knottype: (none)</p>
    <table id="headertable">
 	<tr>
         <td>
@@ -44,10 +44,6 @@
     </tr>
    </table>
    
-   <div id="textAreaOutput">
-  
-    <form action='edit_font_without_db.php' method='post'>
-        <input type='hidden' id='font_as_text'><br>
-        <input type='submit' name='action' value='speichern'>
-    </form>
+   
+   
    </center>

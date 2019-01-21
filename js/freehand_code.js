@@ -37,6 +37,21 @@ function TEKnotType() {
 	this.connect = true;
 	this.intermediateShadow = false;
 }
+/* doesn't work for imported tokens: export_variable only contains data, no methods! */
+// solved by copying only data from JSKnotType to TEKnotType when loading token from actualFont
+TEKnotType.prototype.getKnotTypesAsString = function() {
+	var output = "SE1-Knottype:";
+	output += (this.entry) ? " entry" : "";
+	output += (this.exit) ? " exit" : "";
+	output += (this.pivot1) ? " pivot1" : "";
+	output += (this.pivot2) ? " pivot2" : "";
+	output += (this.lateEntry) ? " lateEntry" : "";
+	output += (this.earlyExit) ? " earlyExit" : "";
+	output += (this.combinationPoint) ? " combinationPoint" : "";
+	output += (this.connect) ? " connect" : "";
+	output += (this.intermediateShadow) ? " intermediateShadow" : "";
+	return output;
+}
 TEKnotType.prototype.setKnotType = function(type) {
 	switch (type) {
 		case "entry" : this.entry = true; break;
