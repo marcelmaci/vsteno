@@ -17,8 +17,109 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
  
+/* SE1 BACKPORTS
+
+   Ok, first of all, let's be honest: this code (i.e. SE1) is a MESS! It's the 
+   result of the fact that the concept for a working "steno engine" was developped
+   at the same time when it was coded. In other words: No real concept existed at 
+   the beginning and the process was trial and error: add one feature and if it
+   worked, leave it. If it didn't work: Adapt it or delete it (entirely or partially)
+   and go on to the next step (next feature needed by the Stolze-Schrey-System).
+   For short: The SE1 - as a "proof of concept" developpement - is the result
+   of those constant addings and deletings without a global concept (and with
+   meany tweaks and ad-hoc solutions). That was the reason why a new SE2 should
+   be developped with all the lessons learned.
+   
+   Unfortunately, SE1 is the only engine that really works up to this date (january
+   2019) and the SE2 is still a lot of work and a long road to go. So let's see
+   if we can add a last tweak to at least add orthogonal, proportional knots and
+   parallel rotating axis to SE1 as described in se1_backports.php.
+   
+   Again: This implementation should have as little impact on the working engine
+   as possible. Theoretically, the only thing that changes with orthogonal and
+   proportional knots is the calculation for the x and y coordinates for the knots.
+   But even if it looks easy to substitute those coordinates in SE1, it is not:
+   there isn't one single function that would allow us to change them. Instead,
+   stenograms in SE1 are calculated in multiple steps:
+   
+   1st: Tokens are scaled ($steno_tokens_master is copied to $steno_tokens with
+        scaled token information)
+   2nd: Scaled tokens are inserted into a splines list. For a word this means that
+        SEVERAL tokens are inserted (concatenated) and their relative coordinates
+        are transformed to word coordinates. For the SE1 this seemed to be a good
+        approach: Since all knots were horizontal, the x coordinates of the whole 
+        word could then be shifted to the right.
+   3rd: The shifting is done by calling the TiltWordInSplines function which uses 
+        uses the same delta list for all points). Nonetheless, for the SE2 this is 
+        a very bad idea: the x and y coordinates have to be calculated BEFORE the 
+        are concatenated.
+   4th: Via SmoothenEntryAndExitPoints, the whole word (splines array) is then 
+        "smoothened", which means that entry and exit points are adapted according
+        to pivot points if they exist. Those functions are very basic due to the
+        fact that the SE1 can't handle tangent points to bezier curves (it
+        actually repositions entry and exit points using a straight line between
+        pivot points).
+   5th: Finally, calling CalculateWord the SE1 calculated the the bezier curves
+        for the whole word (splines array) in one go. This was and is a very
+        efficient way to calculate stenograms can be used without any problem
+        for SE2.
+   6th: The splines list is finally used to create a single SVG (CreateSVG)
+        or a layouted SVG (CalculateLayoutedSVG). [The only difference in 
+        layouted mode, CalculateLayoutedSVG creates an array of splines
+        list, each corresponding to one word; at the end of a line, the
+        list is then inserted to the layouted SVG; beforehand, the same
+        TokenList2WordSplines function is used, making it basically
+        compatible with modifications we want to apply to single word 
+        calculations).
+        
+    Ŝo, what can we do to "hack" the SE1 in order to integrate our backports?
+  The only viable way seems to be to "hijack" the scaling function (step 1)
+  since it is the last moment when coordinates can be calculated inside - i.e.
+  relative to - single tokens). Unfortunately, this creates a conflict with
+  the later TiltWordInSplinesFunction (which therefore has to be disabled).
+  So, basically the strategy is the following:
+  
+  (1)   Hijack the ScaleTokens function to a ScaleAndTiltTokens function
+        that scales and tilts tokens in one step and creates the $steno_tokens
+        variable as a copy of $steno_tokens_master.
+  (2)   The insertion of the tokens into the splines list (step 2) should work 
+        the same way even if the tokens are already inclined since the width 
+        of the token is the same vertically (i.e. for all y). [CROSS FINGERS 
+        ABOUT THAT OTHERWISE IT'LL GET HORRIBLY COMPLICATED ... ;-)]
+  (3)   The shifting (step 3) is disables (already done in step 1).
+  (4)   Steps 4-6 should work without any modifications: The deal with
+        the $splines variable which should contain different values now, but
+        be fully compatible with all the calculations (also for single or
+        layouted SVG). [AGAIN: CROSS FINGERS ...]
+
+  Backporting the features means I high risk to corrupt the working SE1, so
+  the backport will be controlled by one variable: $backport_revision1
+  
+        true = enable backport
+        false = disable backport (use "legacy" revision 0)
+        
+  No - or only 2 existing - functions will be modified and it will be done
+  via the mentioned "hijacking" strategy. In other words, the functions are
+  hijacked when the $backport_revision1 variable is set:
+  
+        ScaleTokens: redirects to ScaleAndTiltTokens
+        TiltWordInSplines: redirects to nothing (don't execute function)
+
+  In addition, all other SE1-backport-function will be hold in a separate
+  file (se1_backports.php) which will only be included if variable 
+  $backport_revision1 is set.
+  
+*/
+ 
 require_once "data.php";
 require_once "constants.php";
+
+// SE1-BACKPORTS: revision1
+$backport_revision1 = true;
+
+if ($backport_revision1) {
+    require_once "se1_backports.php";
+}
 
 ///////////////////////////////////////////// calculation ///////////////////////////////////////////////
 
@@ -46,7 +147,11 @@ function CreateDeltaList( $angle ) {
     return $deltalist;
 }
 
+// SE1-BACKPORT: revision1 - disable function if $backport_revision1 is set
 function TiltWordInSplines( $angle, $splines ) {
+if ($backport_revision1) {
+    return $splines;
+} else { // preserve legacy code without any modification
     global $height_above_baseline;
     $deltalist = CreateDeltaList( $angle );
     for ($i = 0; $i < count( $splines ); $i += 8) {
@@ -60,10 +165,12 @@ function TiltWordInSplines( $angle, $splines ) {
     }    
     return $splines;
 }
+}
 
-// copy some tokens to $splines array
+// SE1-BACKPORTS: revision1 (orthogonal, proporitional knots,
 
-function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
+function ScaleAndTiltTokens($steno_tokens_temp, $factor, $angle) {
+    // use exactly the same code for the moment in order to see if structure works
     global $standard_height, $svg_height, $height_above_baseline, $half_upordown, $one_upordown, 
     $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
     //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
@@ -79,7 +186,31 @@ function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
     SetGlobalScalingVariables( $factor );
     //echo "stenotokens (dump): ";
     //var_dump($steno_tokens_temp);
+    return $steno_tokens_temp;
+}
+
+// copy some tokens to $splines array
+function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
+    global $standard_height, $svg_height, $height_above_baseline, $half_upordown, $one_upordown, 
+    $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
+if ($backport_revision1) {
+        return ScaleAndTiltTokens($steno_tokens_temp, $factor, $_SESSION['token_inclination']);
+} else { // leave SE1 legacy function without any modification
+    //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
+    foreach( $steno_tokens_temp as $token => $definition ) {    
+        // scale informations in header
+        $steno_tokens_temp[$token][0] *= $factor;
+        for ($i = header_length; $i < count($definition); $i += 8) {
+            $steno_tokens_temp[$token][$i] *= $factor;
+            $steno_tokens_temp[$token][$i+1] *= $factor;
+        }
+    }
+    // scale values for output in svg
+    SetGlobalScalingVariables( $factor );
+    //echo "stenotokens (dump): ";
+    //var_dump($steno_tokens_temp);
     return $steno_tokens_temp/*_master*/;
+}
 }
 
 function CopyTokenToSplinesArray( $token, $base_x, $base_y, $token_list, $splines ) {

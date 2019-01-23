@@ -89,7 +89,8 @@ var arrowUp = false,			// global variables for arrow keys
 	arrowLeft = false,
 	arrowRight = false,
 	ctrlKey = false,
-	altKey = false;
+	altKey = false,
+	shiftKey = false;
 	
 var selectedTension = "locked";		// locked = set all three tensions (left, right, middle) to same value; other values for selectedTension: left, middle, right (every tension is handled individually)
 var selectedShape = "normal"		// normal = normal outer shape; shadowed = shadowed outer shape
@@ -168,6 +169,7 @@ document.onClick = function() {
 		default : console.log("nothing triggered"); break;
 	}
 }
+
 document.onkeydown = checkSpecialKeys; 
 function checkSpecialKeys(e) {
 	if (document.activeElement.id == "") {		// separate keyboard events: drawingArea vs input text fields
@@ -178,7 +180,9 @@ function checkSpecialKeys(e) {
     else ctrlKey = false;
 	if (e.altKey) altKey = true;
 	else altKey = false;
-   
+	if (e.shiftKey) shiftKey = true;
+	else shiftKey = false;
+	
     if (ctrlKey) {
 		if (e.keyCode == '38') {
 			arrowUp = true; // up arrow
@@ -231,22 +235,23 @@ function checkSpecialKeys(e) {
 			//console.log(mainCanvas.editor.editableToken.knotsList[mainCanvas.editor.editableToken.index].type);
 			//console.log(mainCanvas.editor.editableToken);
 		}		
-	} else if (altKey) {
+	} else if (shiftKey) {
 		if (e.keyCode == '38') {
+			e.preventDefault(); // disables standard function of shift + arrow (= text selection)
 			arrowUp = true; // up arrow
 			mainCanvas.editor.moveRelativeSelectedKnot(0,-1);
 			//console.log("arrowUP");
 		} else if (e.keyCode == '40') {
+			e.preventDefault();
 			arrowDown = true; // down arrow
 			mainCanvas.editor.moveRelativeSelectedKnot(0,1);
-			//console.log("arrowDown");
 		} else if (e.keyCode == '37') {
+			e.preventDefault();  
 			arrowLeft = true; // left arrow
 			mainCanvas.editor.moveRelativeSelectedKnot(-1,0);
-			return false; // returning false prevents execution of predefined browser functionality (e.g. "go back" for alt + left arroy) => should be used for other commands also! => fix that later
-			// for following line: see comment in freehand => setKnotType()
 			//console.log("arrowLeft");
 		} else if (e.keyCode == '39') {
+			e.preventDefault();
 			arrowRight = true; // right arrow
 			mainCanvas.editor.moveRelativeSelectedKnot(1,0);
 		}
@@ -403,4 +408,3 @@ window.onload = function() {
 		createPullDownSelectionFromActualFont();
 	}
 }
-
