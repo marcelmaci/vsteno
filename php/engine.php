@@ -176,10 +176,23 @@ function ScaleAndTiltTokens($steno_tokens_temp, $factor, $angle) {
     //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
     foreach( $steno_tokens_temp as $token => $definition ) {    
         // scale informations in header
-        $steno_tokens_temp[$token][0] *= $factor;
+        $steno_tokens_temp[$token][0] *= $factor; // scale width
+        $steno_tokens_temp[$token][4] *= $factor; // scale additional width before
+        $steno_tokens_temp[$token][5] *= $factor; // scale additional width after
+        
         for ($i = header_length; $i < count($definition); $i += 8) {
-            $steno_tokens_temp[$token][$i] *= $factor;
-            $steno_tokens_temp[$token][$i+1] *= $factor;
+            $steno_tokens_temp[$token][$i] *= $factor;  // x-coordinate
+            $steno_tokens_temp[$token][$i+1] *= $factor; // y-coordinate
+            $x = $steno_tokens_temp[$token][$i];
+            $y = $steno_tokens_temp[$token][$i+1];
+            
+            $legacy_dr = $steno_tokens_temp[$token][$i+offs_dr];
+            
+            $dr = new ContainerDRField($legacy_dr); 
+            $new_point = get_absolute_knot_coordinates($x, $y, $dr->knottype, $dr->shiftX, $angle);
+            
+            $steno_tokens_temp[$token][$i] = $new_point->x;
+            $steno_tokens_temp[$token][$i+1] = $new_point->y;
         }
     }
     // scale values for output in svg
@@ -199,7 +212,10 @@ if ($backport_revision1) {
     //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
     foreach( $steno_tokens_temp as $token => $definition ) {    
         // scale informations in header
-        $steno_tokens_temp[$token][0] *= $factor;
+        $steno_tokens_temp[$token][0] *= $factor; // scale width
+        $steno_tokens_temp[$token][4] *= $factor; // scale additional width before -- bugfix: this scaling has been forgotten in legacy SE1
+        $steno_tokens_temp[$token][5] *= $factor; // scale additional width after -- bugfix: this scaling has been forgotten in legacy SE1
+       
         for ($i = header_length; $i < count($definition); $i += 8) {
             $steno_tokens_temp[$token][$i] *= $factor;
             $steno_tokens_temp[$token][$i+1] *= $factor;

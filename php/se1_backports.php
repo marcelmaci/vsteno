@@ -126,8 +126,27 @@
             
 */
 
-// knot type and rotating axis functions
+class ContainerDRField {
+    public $connect;
+    public $connect_boolean;
+    public $knottype;
+    public $ra_number;
+    public $ra_offset;
+    public $shiftX;
+    function ContainerDRField($dr) {
+        $this->setPropertiesDRField($dr);
+    }
+    function setPropertiesDRField($dr) {
+        $this->connect = get_connect_value($dr);
+        $this->connect_boolean = connect_true_false($dr);
+        $this->knottype = get_knot_type($dr);
+        $this->ra_number = get_rotating_axis_number($dr);
+        $this->ra_offset = get_rotating_axis_header_offset($dr);
+        $this->shiftX = get_rotating_axis_shiftX($dr);
+    }
+}
 
+// knot type and rotating axis functions
 function get_connect_value($dr) {
     $connect_value = $dr & bindec("111"); // bits 0-3 = old (legacy) connect value
     return $connect_value;
@@ -235,10 +254,6 @@ function calculate_proportional_coordinates($x, $y, $shiftX, $angle) {
     $newY = $v1y + $v2y;
     $newX += $shiftX;
     return new Point($newX,$newY);
-}
-
-function calculate_horizontal_intersection_x($y) {
-      
 }
 
 // test

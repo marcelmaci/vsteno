@@ -1,5 +1,6 @@
 
 // JSON / PHP XMLHTTPRequest export / import to / from database
+var tempKey;
 
 function writeDataToDB() {
 	//var data = JSON.stringify(actualFont);
@@ -55,6 +56,63 @@ function writeDataToDB() {
 	}
 }
 
+function getRotatingAxisArrayForSE1(token) {
+	var tokenDataList = token.tokenData;
+	var rotatingAxisArray = [0,0,0]; // make sure the 3 fields for rotating axis in SE1 rev1 are 0 (in order to now if token has rotating axis or not)
+	var actualIndex = 0;
+	for (var i=0; i<tokenDataList.length; i++) {
+		var shiftX = tokenDataList[i].shiftX;
+		if (shiftX != 0) {
+			if (rotatingAxisArray.indexOf(shiftX) > -1) {
+				rotatingAxisArray[actualIndex++] = tokenDataList[i].shiftX;  // array can be longer than 3, but SE1 rev1 only supports 3 rotating axis
+			}	
+		}
+		if (tempKey == "SP") {
+			    if (i==0) console.log("tokenDataList: ", tokenDataList);
+				console.log("Key: ", tempKey, "data-i: ", i, "shiftX: ", shiftX, "rotatingAxisArray: ", rotatingAxisArray)
+		}
+		
+	} 
+	//console.log("rotatingAxisArray: ", rotatingAxisArray);
+	return rotatingAxisArray;
+}
+
+function calculateDRFieldForRevision1(knotType, calcType, raNumber) {
+    var output = 0;
+    switch (knotType.connect) {
+		case true : break; // output += 0; // default
+		case false : output += 5; break;
+	}
+	switch (calcType) {
+		case "horizontal" : break; // output += 0; // default
+		case "orthogonal" : output += 16; break; // set bit 4
+		case "proportional" : output += 32; break; // set bit 5
+	}
+	switch (raNumber) {
+		case 0 : break; // output += 0; // main axis (default)
+		default : var shiftedNumber = raNumber << 7; // shift value 7 bits to left (use bits 7-8 for value)
+				  output += shiftedNumber;
+				break;
+	}
+	//console.log("drfield (revision1): ", output);
+	
+	return output;
+}
+
+function determineRotatingAxisNumber(rotatingAxisList, findShiftX) {
+	var number = -1;
+	var tolerance = 0.01;
+	for (var i=0; i<3; i++) {
+		var shiftX = rotatingAxisList[i];
+		if (Math.abs(shiftX - findShiftX) < tolerance) {
+			number = i;
+		}
+	}
+	//console.log("findShiftX: ", findShiftX, "corresponds to: ", rotatingAxisList[number], "number=", number);
+	
+	return number;
+}
+
 function getCombinerSectionSE1() {
 	return document.getElementById("combinerHTML").value;
 }
@@ -79,6 +137,25 @@ function getBaseSectionSE1() {
 			//console.log("key: ", key);
 			output += "\t\t\"" + key + "\" => {";
 			
+			// determine rotating axis before going through header
+			// to do so, it is necessary to go once through the whole data array of the token 
+			var rotatingAxisArray = getRotatingAxisArrayForSE1(actualFont.tokenList[key]); 
+			
+			tempKey = key; // for debugging
+			/*
+			if (key == "SP") {
+				console.log("key: ", key, "rotatingAxisArray: ", rotatingAxisArray);
+			}
+			*/
+			if (rotatingAxisArray.length > 3) {
+				console.log("Error: more than 3 rotating axis (not possible in SE1, additional axis will be ignored)"); 
+			}
+			
+			// write values to header
+			actualFont.tokenList[key].header[7] = rotatingAxisArray[0];	// 1st rotating axis
+			actualFont.tokenList[key].header[8] = rotatingAxisArray[1]; // 2nd rotating axis
+			actualFont.tokenList[key].header[9] = rotatingAxisArray[2]; // 3rd rotating axis
+			
 			// add header
 			output += " /*header*/ ";
 			for (var i=0; i<24; i++) {
@@ -96,6 +173,7 @@ function getBaseSectionSE1() {
 									output += humanReadableEditor(actualFont.tokenList[key].tokenData[0].tensions[2]) + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
 									} else output += "0, ";		// if there's no 1st knot, write 0
 								} else output += actualFont.tokenList[key].header[i] + ", "; 
+							
 							break;
 				
 					// add comma and space between elements (no comma after last)
@@ -113,7 +191,9 @@ function getBaseSectionSE1() {
 				if (i != 0) output += " /**/ ";
 				var d1 = calculateD1(actualFont.tokenList[key].tokenData[i].knotType);
 				var d2 = calculateD2(actualFont.tokenList[key].tokenData[i].knotType);
-				var dr = calculateDR(actualFont.tokenList[key].tokenData[i].knotType);
+				//var dr = calculateDR(actualFont.tokenList[key].tokenData[i].knotType);
+				var axisNumber = determineRotatingAxisNumber(rotatingAxisArray, actualFont.tokenList[key].tokenData[i].shiftX);
+				var dr = calculateDRFieldForRevision1(actualFont.tokenList[key].tokenData[i].knotType, actualFont.tokenList[key].tokenData[i].calcType, axisNumber);
 				
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 0: x
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2) + ", ";		// offset 1: y
