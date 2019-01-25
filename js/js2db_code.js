@@ -56,20 +56,35 @@ function writeDataToDB() {
 	}
 }
 
+function arrayContainsFloatingPointWithTolerance(haystack, needle, tolerance) {
+	var i = 0;
+	var length = haystack.length;
+	var hit = -1; 
+	while ((i < length) && (hit < 0)) {
+		var epsilon = Math.abs(haystack[i] - needle);
+		if (epsilon < tolerance) {
+			hit = i;
+		}
+		i++;
+	}
+	return hit;
+}
+
 function getRotatingAxisArrayForSE1(token) {
 	var tokenDataList = token.tokenData;
 	var rotatingAxisArray = [0,0,0]; // make sure the 3 fields for rotating axis in SE1 rev1 are 0 (in order to now if token has rotating axis or not)
+	var tolerance = 0.01;
 	var actualIndex = 0;
 	for (var i=0; i<tokenDataList.length; i++) {
 		var shiftX = tokenDataList[i].shiftX;
-		if (shiftX != 0) {
-			if (rotatingAxisArray.indexOf(shiftX) > -1) {
+		if (!(shiftX < tolerance)) {
+			if (arrayContainsFloatingPointWithTolerance(rotatingAxisArray, shiftX, tolerance) < 0) { // no entry is found
 				rotatingAxisArray[actualIndex++] = tokenDataList[i].shiftX;  // array can be longer than 3, but SE1 rev1 only supports 3 rotating axis
 			}	
 		}
 		if (tempKey == "SP") {
 			    if (i==0) console.log("tokenDataList: ", tokenDataList);
-				console.log("Key: ", tempKey, "data-i: ", i, "shiftX: ", shiftX, "rotatingAxisArray: ", rotatingAxisArray)
+				console.log("Key: ", tempKey, "data-i: ", i, "shiftX: ", shiftX, "rotatingAxisArray: ", rotatingAxisArray, "token: ", token)
 		}
 		
 	} 
@@ -90,7 +105,7 @@ function calculateDRFieldForRevision1(knotType, calcType, raNumber) {
 	}
 	switch (raNumber) {
 		case 0 : break; // output += 0; // main axis (default)
-		default : var shiftedNumber = raNumber << 7; // shift value 7 bits to left (use bits 7-8 for value)
+		default : var shiftedNumber = raNumber << 6; // shift value 6 bits to left (use bits 7-8 for value)
 				  output += shiftedNumber;
 				break;
 	}
@@ -98,7 +113,7 @@ function calculateDRFieldForRevision1(knotType, calcType, raNumber) {
 	
 	return output;
 }
-
+/*
 function determineRotatingAxisNumber(rotatingAxisList, findShiftX) {
 	var number = -1;
 	var tolerance = 0.01;
@@ -112,6 +127,7 @@ function determineRotatingAxisNumber(rotatingAxisList, findShiftX) {
 	
 	return number;
 }
+*/
 
 function getCombinerSectionSE1() {
 	return document.getElementById("combinerHTML").value;
@@ -129,7 +145,7 @@ function getBaseSectionSE1() {
 	// loop through list of tokens
 	// "TT" => {  /*h*/ 0,  0.5,  0,  0,  5,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
 	for (key in actualFont.tokenList) {
-			
+			tempKey = key; // for debugging
 		//if (key == "0") console.log("begin export: ", key);
 			
 		if ((actualFont.tokenList[key].tokenType != "shifted") &&  (actualFont.tokenList[key].tokenType != "combined")) {		// export only base tokens, define base tokens negatively: != shifted && != combined (reason: tokenType might be undefined, since save function doesn't set this variable for the moment)
@@ -139,9 +155,12 @@ function getBaseSectionSE1() {
 			
 			// determine rotating axis before going through header
 			// to do so, it is necessary to go once through the whole data array of the token 
+			if (tempKey == "SP") {
+			    console.log("token given to getRotatingAxisArrayForSE1: ", actualFont.tokenList[key])
+			    console.log("actualFont: ", actualFont);
+			}
 			var rotatingAxisArray = getRotatingAxisArrayForSE1(actualFont.tokenList[key]); 
 			
-			tempKey = key; // for debugging
 			/*
 			if (key == "SP") {
 				console.log("key: ", key, "rotatingAxisArray: ", rotatingAxisArray);
@@ -184,7 +203,7 @@ function getBaseSectionSE1() {
 			// add data
 			output += "/*data*/ ";
 		    var length = actualFont.tokenList[key].tokenData.length;
-		    console.log("length = ",length);
+		    //console.log("length = ",length);
 		    for (var i=0; i<length; i++) {
 				
 				// add tuplet with 8 entries 
@@ -192,11 +211,34 @@ function getBaseSectionSE1() {
 				var d1 = calculateD1(actualFont.tokenList[key].tokenData[i].knotType);
 				var d2 = calculateD2(actualFont.tokenList[key].tokenData[i].knotType);
 				//var dr = calculateDR(actualFont.tokenList[key].tokenData[i].knotType);
-				var axisNumber = determineRotatingAxisNumber(rotatingAxisArray, actualFont.tokenList[key].tokenData[i].shiftX);
+				//var axisNumber = determineRotatingAxisNumber(rotatingAxisArray, actualFont.tokenList[key].tokenData[i].shiftX);
+				var axisNumber = arrayContainsFloatingPointWithTolerance(rotatingAxisArray, actualFont.tokenList[key].tokenData[i].shiftX, 0.01);
+				//axisNumber = (axisNumber < 0) ? 0 : axisNumber+1; // this line is correct, but the following is easier: -1 means no axis found => value 0 in dr field; values 0-2 mean: axis number 1-3 in dr field => conclusion: add 1 to axisNumber in any case
+				axisNumber += 1;
+				if (tempKey == "SP") {
+					console.log("key: ", tempKey, "i: ", i, "axisNumber: ", axisNumber);
+				}
 				var dr = calculateDRFieldForRevision1(actualFont.tokenList[key].tokenData[i].knotType, actualFont.tokenList[key].tokenData[i].calcType, axisNumber);
 				
-				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 0: x
-				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2) + ", ";		// offset 1: y
+				
+				var actualShiftX = rotatingAxisArray[axisNumber-1]; 
+				switch (actualFont.tokenList[key].tokenData[i].calcType) {
+					case "horizontal" : // default in SE1
+										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 0: x
+										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2) + ", ";		// offset 1: y
+										break;
+				    case "orthogonal" : // values x and y (vectors) have to be inverted!!!
+										// in addition, SE1 stores coordinates as absolute values, so actualShiftX has to be added to rd2 value (= vector2)!
+										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2 + actualShiftX) + ", ";		// offset 0: x
+										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 1: y
+										break;
+					case "proportional" : // values x and y (vectors) have to be inverted!!!
+										  // in addition, SE1 stores coordinates as absolute values, so actualShiftX has to be added to rd2 value (= vector2)!
+										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector2 + actualShiftX) + ", ";		// offset 0: x
+										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 1: y
+										break;
+				}
+				
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[3]) + ", ";	// offset 2: t1 (use middle outgoing tension of SE2 = offset 3!)
 				output += d1 + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
 				output += humanReadableEditor(calculateSE1Thickness(actualFont.tokenList[key].tokenData[i].thickness.shadowed.left, actualFont.tokenList[key].tokenData[i].thickness.shadowed.right)) + ", ";		// offset 4: thickness (use shadowed)

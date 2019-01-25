@@ -149,6 +149,7 @@ function CreateDeltaList( $angle ) {
 
 // SE1-BACKPORT: revision1 - disable function if $backport_revision1 is set
 function TiltWordInSplines( $angle, $splines ) {
+    global $backport_revision1;
 if ($backport_revision1) {
     return $splines;
 } else { // preserve legacy code without any modification
@@ -180,6 +181,13 @@ function ScaleAndTiltTokens($steno_tokens_temp, $factor, $angle) {
         $steno_tokens_temp[$token][4] *= $factor; // scale additional width before
         $steno_tokens_temp[$token][5] *= $factor; // scale additional width after
         
+        /*
+        if ($token === "SP") {
+                var_dump($definition);
+                echo "key: $token factor: $factor<br>";
+        }
+        */
+        
         for ($i = header_length; $i < count($definition); $i += 8) {
             $steno_tokens_temp[$token][$i] *= $factor;  // x-coordinate
             $steno_tokens_temp[$token][$i+1] *= $factor; // y-coordinate
@@ -189,7 +197,18 @@ function ScaleAndTiltTokens($steno_tokens_temp, $factor, $angle) {
             $legacy_dr = $steno_tokens_temp[$token][$i+offs_dr];
             
             $dr = new ContainerDRField($legacy_dr); 
-            $new_point = get_absolute_knot_coordinates($x, $y, $dr->knottype, $dr->shiftX, $angle);
+            //$shiftX = $steno_tokens_temp[$token][$dr->ra_offset];
+            $shiftX = $definition[$dr->ra_offset];
+            
+            $new_point = get_absolute_knot_coordinates($x, $y, $dr->knottype, $shiftX, $angle);
+            //var_dump($new_point);
+            /*
+            if ($token === "SP") {
+                //echo "key: $token i: $i<br>";
+                echo "i: $i dr: ra_number: " . $dr->ra_number . " ra_offset: " . $dr->ra_offset . " shiftX: " . $shiftX . "<br>";
+                echo "old: x/y: $x/$y new: x/y: " . $new_point->x . "/" . $new_point->y . "<br>";
+            }
+            */
             
             $steno_tokens_temp[$token][$i] = $new_point->x;
             $steno_tokens_temp[$token][$i+1] = $new_point->y;
@@ -205,7 +224,7 @@ function ScaleAndTiltTokens($steno_tokens_temp, $factor, $angle) {
 // copy some tokens to $splines array
 function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
     global $standard_height, $svg_height, $height_above_baseline, $half_upordown, $one_upordown, 
-    $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
+    $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $backport_revision1;
 if ($backport_revision1) {
         return ScaleAndTiltTokens($steno_tokens_temp, $factor, $_SESSION['token_inclination']);
 } else { // leave SE1 legacy function without any modification

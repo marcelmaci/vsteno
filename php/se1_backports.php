@@ -132,7 +132,6 @@ class ContainerDRField {
     public $knottype;
     public $ra_number;
     public $ra_offset;
-    public $shiftX;
     function ContainerDRField($dr) {
         $this->setPropertiesDRField($dr);
     }
@@ -142,7 +141,6 @@ class ContainerDRField {
         $this->knottype = get_knot_type($dr);
         $this->ra_number = get_rotating_axis_number($dr);
         $this->ra_offset = get_rotating_axis_header_offset($dr);
-        $this->shiftX = get_rotating_axis_shiftX($dr);
     }
 }
 
@@ -203,6 +201,7 @@ function get_absolute_knot_coordinates($x, $y, $type, $shiftX, $angle) {
         case "orthogonal" : $coordinates = calculate_orthogonal_coordinates($x, $y, $shiftX, $angle); break;
         case "proportional" : $coordinates = calculate_proportional_coordinates($x, $y, $shiftX, $angle); break;
     }
+    return $coordinates;
 }
 
 function calculate_horizontal_coordinates($x, $y, $shiftX, $angle) {    // shiftX is irrelevant for horizontal knots but leave it as parameter for calling compatibility
