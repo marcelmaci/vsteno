@@ -620,13 +620,13 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArrayStandard = function() {
 TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	// copies the human readable user inputs to editableToken.header
 	
-	console.log("generate new header for SE1 from human readable form");
+	//console.log("generate new header for SE1 from human readable form");
 	// special variables
 	
 	var firstTension = (this.knotsList[0] != undefined) ? this.knotsList[0].tensions[3] : 0;
 	var HTMLValue = document.getElementById('tokentypepulldown').value, 
 		tokenType = 0;
-	console.log("tokenTypeHTML: ", HTMLValue);
+	//console.log("tokenTypeHTML: ", HTMLValue);
 	switch (HTMLValue) {
 		case "normal" : tokenType = 0; break;
 		case "shadowed" : tokenType = 1; break;
@@ -719,7 +719,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFieldsStandard = function() {
 
 }
 TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
-	console.log("copy header array to text fields (SE1): header: ", this.header);
+	//console.log("copy header array to text fields (SE1): header: ", this.header);
 	var output = "<tr>\n"; // open first row
 	
 	/* standard header
@@ -816,7 +816,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
 	document.getElementById("headertable").innerHTML = output; 
 }
 TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
-	console.log("copy header array to text fields (main method)", actualFont);
+	//console.log("copy header array to text fields (main method)", actualFont);
 	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
 		this.copyHeaderArrayToTextFieldsSE1();
 	} else {

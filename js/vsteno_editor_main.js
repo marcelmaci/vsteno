@@ -52,7 +52,7 @@
 // global variables
 var mainCanvas = new TECanvas(0,0,800,800);
 var middlePathWithVariableWidth = [];	// test: array of paths (subdivided main middle path)
-var showMiddlePathWithVariableWidth = false;
+var showMiddlePathWithVariableWidthBoolean = false;
 
 // version
 //var versionSE = "SE2";	// default editor mode is SE2
@@ -143,7 +143,7 @@ window.oncontextmenu = function(event) {
 }
 // eventHandler for global functions (load, save, delete, save to database)
 document.onClick = function() {
-	console.log("onclick: ", document.activeElement.id);
+	//console.log("onclick: ", document.activeElement.id);
 	switch (document.activeElement.id) {
 		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
 		case "load" : //if (actualFont.editorData != null) actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); 
@@ -166,7 +166,7 @@ document.onClick = function() {
 		case "savetodatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); 
 							writeDataToDB();
 							break;
-		default : console.log("nothing triggered"); break;
+		default : /*console.log("nothing triggered");*/ break;
 	}
 }
 

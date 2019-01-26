@@ -580,7 +580,7 @@ function createPullDownSelectionFromActualFont() {
 	// deletes tokenPullDownSelection and creates a new array with elements from actualFont
 	// can be used to "load" a new font and adjust pulldown list accordingls (for exemple if editor is used for SE1)
 	// delete actual list
-	console.log("create pullDownSelectionFromActualFont");
+	//console.log("create pullDownSelectionFromActualFont");
 	tokenPullDownSelection.length = 0;
 	// create new list
 	for (var token in actualFont.tokenList) {
@@ -642,7 +642,7 @@ ShorthandFont.prototype.loadTokenAndEditorData = function(token) {
 // broken (inexistent) objects method in PHP datastructure.
 
 function loadTokenAndEditorData(token) {
-	console.log("procedural loadTokenAndEditorData()");
+	//console.log("procedural loadTokenAndEditorData()");
 	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
 	//else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
@@ -653,23 +653,24 @@ function loadTokenAndEditorData(token) {
 	//console.log("set editor mode: ", actualFont);
 	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
 		mainCanvas.editor.showMiddlePathWithVariableWidth(); // outerShape still active for the moment
+		console.log("set middle path mode - mainCanvas.editor: ", mainCanvas.editor);
 	} else {
 		mainCanvas.editor.hideMiddlePathWithVariableWidth(); // supposing that outer shape is still active
 	}
 }
 function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
-	console.log("save token and editor data");
+	//console.log("save token and editor data");
 	if ((token != "select") && (token != "empty")) {
 		deleteTokenAndEditorData(token);
-		console.log("token and editor data deleted");
-		console.log("create TokenDefinition object");
+		//console.log("token and editor data deleted");
+		//console.log("create TokenDefinition object");
 		actualFont.tokenList[token] = new TokenDefinition();			// data will be copied directly via constructor that call goAndGrabThatTokenData()-method
-		console.log("create EditorParameters object");
+		//console.log("create EditorParameters object");
 		actualFont.editorData[token] = new EditorParameters();		// same for editor data
 	}
 	
 	console.log("ShorthandFont: ", actualFont);
-	console.log("editor: ", mainCanvas.editor);
+	console.log("Editor: ", mainCanvas.editor);
 	document.getElementById("save").blur(); // correct focus
 }
 function deleteTokenFromPullDownSelection(token) {
@@ -682,16 +683,16 @@ function deleteTokenFromPullDownSelection(token) {
 	document.getElementById("delete").blur(); // correct focus
 }
 function deleteTokenAndEditorData(token) {
-	console.log("delete token and editor data (function)");
+	//console.log("delete token and editor data (function)");
 	deleteTokenData(token);
 	deleteEditorData(token);
 }
 function deleteTokenData(token) {
-	console.log("deleteTokenData");
+	//console.log("deleteTokenData");
 	actualFont.tokenList[token] = null;
 }
 function deleteEditorData(token) {
-	console.log("deleteEditorData");
+	//console.log("deleteEditorData");
 	actualFont.editorData[token] = null;	
 }
 
@@ -1412,13 +1413,13 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArrayStandard = function() {
 TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	// copies the human readable user inputs to editableToken.header
 	
-	console.log("generate new header for SE1 from human readable form");
+	//console.log("generate new header for SE1 from human readable form");
 	// special variables
 	
 	var firstTension = (this.knotsList[0] != undefined) ? this.knotsList[0].tensions[3] : 0;
 	var HTMLValue = document.getElementById('tokentypepulldown').value, 
 		tokenType = 0;
-	console.log("tokenTypeHTML: ", HTMLValue);
+	//console.log("tokenTypeHTML: ", HTMLValue);
 	switch (HTMLValue) {
 		case "normal" : tokenType = 0; break;
 		case "shadowed" : tokenType = 1; break;
@@ -1511,7 +1512,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFieldsStandard = function() {
 
 }
 TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
-	console.log("copy header array to text fields (SE1): header: ", this.header);
+	//console.log("copy header array to text fields (SE1): header: ", this.header);
 	var output = "<tr>\n"; // open first row
 	
 	/* standard header
@@ -1608,7 +1609,7 @@ TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
 	document.getElementById("headertable").innerHTML = output; 
 }
 TEEditableToken.prototype.copyHeaderArrayToTextFields = function() {
-	console.log("copy header array to text fields (main method)", actualFont);
+	//console.log("copy header array to text fields (main method)", actualFont);
 	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
 		this.copyHeaderArrayToTextFieldsSE1();
 	} else {
@@ -2677,7 +2678,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	
 	// all background objects created => save children index in order to insert shapes here later!
 	this.positionAfterBackgroundElements = project.activeLayer.children.length;
-	console.log("positionAfterBackgroundElements: ", this.positionAfterBackgroundElements);
+	//console.log("positionAfterBackgroundElements: ", this.positionAfterBackgroundElements);
 	
 	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
 	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
@@ -2983,7 +2984,7 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		middlePathWithVariableWidth[i].remove();	// delete subpath (erase from canvas)
 	}
 	middlePathWithVariableWidth.length = 0; // delete array
-	console.log("this.editableToken: ", this.editableToken);
+	//console.log("this.editableToken: ", this.editableToken);
 	// now create new array width subdivided paths
 	for (i=0; i<this.fhToken.segments.length-1; i++) {
 		// copy part of the path
@@ -2993,13 +2994,16 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		// sum up left and right distance and scale, use selected shape
 		var actualShape = this.getSelectedShapeIndex();
 		var width = (this.editableToken.leftVectors[actualShape][i].distance + this.editableToken.rightVectors[actualShape][i].distance) * this.scaleFactor; 
+		//console.log("middle path: set width: ", width);
 		if ((this.editableToken.knotsList[i+1] != undefined) && (this.editableToken.knotsList[i+1].type.connect == false)) {
-			 console.log("i+1= ", i+1, "=> don't connect");
+			 //console.log("i+1= ", i+1, "=> don't connect");
 			 width = 0;
+			 //console.log("middle path: set width(correction): ", width);
+			 //console.log("this.editableToken.knotsList[i+1].type: ", this.editableToken.knotsList[i+1].type);
 		}
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
-		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
+		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidthBoolean;			// set visibility
 		project.activeLayer.insertChild(this.positionAfterBackgroundElements, middlePathWithVariableWidth[i]); // position middlePath after static background elements
 		
 		// code: disable one segment (nr. 2 in the example)
@@ -3015,16 +3019,17 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 }
 TEDrawingArea.prototype.hideMiddlePathWithVariableWidth = function() {
 	//console.log("hide middle path");
-	showMiddlePathWithVariableWidth = false;
+	showMiddlePathWithVariableWidthBoolean = false;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = false;
 	}
 }
 TEDrawingArea.prototype.showMiddlePathWithVariableWidth = function() {
-	//console.log("show middle path");
-	showMiddlePathWithVariableWidth = true;
+	//console.log("show middle path: boolean: ", showMiddlePathWithVariableWidthBoolean);
+	showMiddlePathWithVariableWidthBoolean = true;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = true;
+		//console.log("i: ", i, "middlePathWithVariableWidth[i]: ", middlePathWithVariableWidth[i]); 
 	}	
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {
@@ -3033,7 +3038,7 @@ TEDrawingArea.prototype.isInsideBorders = function( event ) {
 }
 TEDrawingArea.prototype.toggleVisibilityMiddlePathWithVariableWidth = function() {
 	//console.log("toggle visibility");
-	switch (showMiddlePathWithVariableWidth) {
+	switch (showMiddlePathWithVariableWidthBoolean) {
 		case true : this.hideMiddlePathWithVariableWidth(); break;
 		case false : this.showMiddlePathWithVariableWidth(); break;
 	}
@@ -3122,14 +3127,21 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	// copy data
 	this.editableToken.header = token.header.slice(); // ?
 	//console.log("tokenData: ", token, token.tokenData.length);
-	console.log("load token: token:", token);
+	//console.log("load token: token:", token);
 	
 	knotTypeAutoDefine = false; // disable autodefine for knots
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
 		//console.log("tokenData: i: ", i, token.tokenData[i]);
-		var x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x,
+		var x, y;
+		
+		if (token.tokenData[i].calcType == "horizontal") {
+			x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x;
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
+		} else { // swap vectors for proportional and orthogonal knots
+			x = (token.tokenData[i].vector2 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x;
+			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector1 * this.scaleFactor);
+		}
 		
 		this.fhToken.insert(this.editableToken.index, new Point(x,y))
 		this.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
@@ -3160,6 +3172,17 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		this.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1;		// has been inserted via insertNewKnot()
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;		// has been inserted via insertNewKnot()
+		// if calcType is proportional or orthogonal vectors have to be swapped (vector1 = vector2 and viceversa)
+	
+		//console.log("token.tokenData[i]: ", token.tokenData[i]);
+		if ((token.tokenData[i].calcType == "orthogonal") || (token.tokenData[i].calcType == "proportional")) { // swap vectors in relative knot
+			var tempRD = this.editableToken.knotsList[i].linkToRelativeKnot.rd1;
+			this.editableToken.knotsList[i].linkToRelativeKnot.rd1 = this.editableToken.knotsList[i].linkToRelativeKnot.rd2;
+			this.editableToken.knotsList[i].linkToRelativeKnot.rd2 = tempRD;
+			this.editableToken.knotsList[i].parallelRotatingAxisType = "orthogonal"; // token.tokenData[i].calcType; // set correct rotatingAxisType (use "orthogonal" for the moment)
+		}
+
+		
 		this.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
 		this.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
 		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // done above
@@ -3170,6 +3193,9 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		this.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
 		this.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
 	}
+	// load editor data
+	//this.loadAndInitializeEditorData(this);
+	
 	//console.log("fhToken: ", mainCanvas.editor.fhToken);
 	this.updateFreehandPath();
 	this.parent.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
@@ -3184,6 +3210,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 }
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	// set standard parameters for editor in order to insert data
+	console.log("initialize editor data");
 	// set rotatingAxis to horizontal (makes it easier: relativ coordinates can be used as absolute coordinates)
 	//this.rotatingAxis.controlCircle.circle.position.x = this.rotatingAxis.centerRotatingAxis.x;
 	//this.rotatingAxis.controlCircle.circle.position.y = this.upperY; 
@@ -4266,7 +4293,7 @@ function writeDataToDB() {
 	//console.log("data: ", data, actualFont);
 	//console.log("custom: ", custom);
 
-	if (actualFontSE1 != undefined) {
+	if (typeof actualFontSE1 != undefined) {
 		// use this for SE1 export for the moment (no JSON) - only if actualFontSE1 exists!
 		// prepare textarea data that will be presented in an intermedia step
 		// as html form ant then exported via normal php/form/post-call
@@ -4481,6 +4508,7 @@ function getBaseSectionSE1() {
 				
 				
 				var actualShiftX = rotatingAxisArray[axisNumber-1]; 
+				
 				switch (actualFont.tokenList[key].tokenData[i].calcType) {
 					case "horizontal" : // default in SE1
 										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 0: x
@@ -4497,6 +4525,7 @@ function getBaseSectionSE1() {
 										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 1: y
 										break;
 				}
+				
 				
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[3]) + ", ";	// offset 2: t1 (use middle outgoing tension of SE2 = offset 3!)
 				output += d1 + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)
@@ -4581,7 +4610,7 @@ function calculateSE1Thickness(left, right) {		// shadowed thicknesses left and 
 // global variables
 var mainCanvas = new TECanvas(0,0,800,800);
 var middlePathWithVariableWidth = [];	// test: array of paths (subdivided main middle path)
-var showMiddlePathWithVariableWidth = false;
+var showMiddlePathWithVariableWidthBoolean = false;
 
 // version
 //var versionSE = "SE2";	// default editor mode is SE2
@@ -4672,7 +4701,7 @@ window.oncontextmenu = function(event) {
 }
 // eventHandler for global functions (load, save, delete, save to database)
 document.onClick = function() {
-	console.log("onclick: ", document.activeElement.id);
+	//console.log("onclick: ", document.activeElement.id);
 	switch (document.activeElement.id) {
 		case "addnew" : addNewTokenToPullDownSelection(document.getElementById("token").value); break;
 		case "load" : //if (actualFont.editorData != null) actualFont.loadTokenAndEditorData(document.getElementById("tokenpulldown").value); 
@@ -4695,7 +4724,7 @@ document.onClick = function() {
 		case "savetodatabase" : console.log("toDatabase triggered..."); console.log("selection: ", document.getElementById("tokenpulldown").value); 
 							writeDataToDB();
 							break;
-		default : console.log("nothing triggered"); break;
+		default : /*console.log("nothing triggered");*/ break;
 	}
 }
 

@@ -159,7 +159,7 @@ function connect_true_false($dr) {
 function get_knot_type($dr) {
     $knot_type_value = ($dr & bindec("110000")) >> 4; // bits 4-5 = value for knot type
     switch ($knot_type_value) {
-        case 0 : return "normal"; break;
+        case 0 : return "horizontal"; break;
         case 1 : return "orthogonal"; break;
         case 2 : return "proportional"; break;
         default : return null; break;
@@ -197,7 +197,7 @@ class Point {
 
 function get_absolute_knot_coordinates($x, $y, $type, $shiftX, $angle) {
     switch ($type) {
-        case "normal" : $coordinates = calculate_horizontal_coordinates($x, $y, $shiftX, $angle); break;    // calculation for horizontal could be taken from se1, but to be more systematic integrate it here as a function like the other calculations
+        case "horizontal" : $coordinates = calculate_horizontal_coordinates($x, $y, $shiftX, $angle); break;    // calculation for horizontal could be taken from se1, but to be more systematic integrate it here as a function like the other calculations
         case "orthogonal" : $coordinates = calculate_orthogonal_coordinates($x, $y, $shiftX, $angle); break;
         case "proportional" : $coordinates = calculate_proportional_coordinates($x, $y, $shiftX, $angle); break;
     }

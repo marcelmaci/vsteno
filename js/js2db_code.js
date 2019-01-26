@@ -7,7 +7,7 @@ function writeDataToDB() {
 	//console.log("data: ", data, actualFont);
 	//console.log("custom: ", custom);
 
-	if (actualFontSE1 != undefined) {
+	if (typeof actualFontSE1 != undefined) {
 		// use this for SE1 export for the moment (no JSON) - only if actualFontSE1 exists!
 		// prepare textarea data that will be presented in an intermedia step
 		// as html form ant then exported via normal php/form/post-call
@@ -222,6 +222,7 @@ function getBaseSectionSE1() {
 				
 				
 				var actualShiftX = rotatingAxisArray[axisNumber-1]; 
+				
 				switch (actualFont.tokenList[key].tokenData[i].calcType) {
 					case "horizontal" : // default in SE1
 										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 0: x
@@ -238,6 +239,7 @@ function getBaseSectionSE1() {
 										output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].vector1) + ", ";		// offset 1: y
 										break;
 				}
+				
 				
 				output += humanReadableEditor(actualFont.tokenList[key].tokenData[i].tensions[3]) + ", ";	// offset 2: t1 (use middle outgoing tension of SE2 = offset 3!)
 				output += d1 + ", ";		// offset 3: d1 (more complex issue: some points have to be copied first ...)

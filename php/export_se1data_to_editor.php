@@ -87,7 +87,8 @@ class JSKnotType {
             case 2 : $this->pivot2 = true; break;
             case 99 : $this->earlyExit = true; break;
         }
-        switch ($dr) {
+        $rev0_dr = $dr & bindec("111"); // in order to make it backwards compatible, get only lowest three bits of dr rev1!
+        switch ($rev0_dr) {
             case 0 : $this->connect = true; break;
             case 5 : $this->connect = false; break;            
         }
@@ -274,6 +275,16 @@ function OpenEditorPage() {
         }
         //if ($key === "E") var_dump($export_variable->tokenList[$key]->header);
         
+        // create rotating axis array
+        $rotatingAxisArray = array();
+        for ($i=7; $i<10; $i++) {
+            if ($steno_tokens_master[$key][$i] != 0) {
+                    $rotatingAxisArray[] = $steno_tokens_master[$key][$i];
+            }
+        }
+        $export_variable->editorData[$key]->rotatingAxisList = $rotatingAxisArray;
+        //$export_variable->editorData[$key]->rotatingAxisList = array(2,6);
+        
         $export_variable->tokenList[$key]->tokenData = array();
         $export_variable->tokenList[$key]->tokenType = GetTokenType($key);
             
@@ -291,12 +302,20 @@ function OpenEditorPage() {
             $tempDR = $steno_tokens_master[$key][$i+5];
             $tempD2 = $steno_tokens_master[$key][$i+6]; 
             $tempT2 = $steno_tokens_master[$key][$i+2]; // actually, offset 2 is the outgoing tension in SE2 ...
+            // convert dr field
+            $rev1_dr = new ContainerDRField($tempDR);
             
             // create token data objects and write data
             $newTuplet = new JSTokenData();
-            $newTuplet->calcType = "horizontal";        // this is the default value in SE1
-            $newTuplet->vector1 = $tempX1;
-            $newTuplet->vector2 = $tempY1;
+            //$newTuplet->calcType = "horizontal";        // this is the default value in SE1
+            $newTuplet->calcType = $rev1_dr->knottype;        // use rev1 dr
+            if ($newTuplet->calcType === "horizontal") {
+                $newTuplet->vector1 = $tempX1;
+                $newTuplet->vector2 = $tempY1;
+            } else {
+                $newTuplet->vector2 = $tempX1;      // if calcType is "proportional" or "orthogonal" swap vectors!
+                $newTuplet->vector1 = $tempY1;
+            }
             $newTuplet->shiftX = 0;                     // default value in SE1
             $newTuplet->shiftY = 0;                     // default value in SE1
             $newTuplet->tensions = array($tempT1, $tempT2, $tempT1, $tempT2, $tempT1, $tempT2);    // SE1: only offsets 2+3 (for middle path) are important, but copy them to the outer shapes as well

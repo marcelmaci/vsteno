@@ -27,7 +27,7 @@ function TEDrawingArea(parent, lowerLeft, totalLines, basePosition, lineHeight, 
 	
 	// all background objects created => save children index in order to insert shapes here later!
 	this.positionAfterBackgroundElements = project.activeLayer.children.length;
-	console.log("positionAfterBackgroundElements: ", this.positionAfterBackgroundElements);
+	//console.log("positionAfterBackgroundElements: ", this.positionAfterBackgroundElements);
 	
 	this.preceeding = new TEConnectionPointPreceeding(this, this.leftX+10, this.rotatingAxis.centerRotatingAxis.y);
 	this.following =  new TEConnectionPointFollowing(this, this.rightX-10, this.rotatingAxis.centerRotatingAxis.y);
@@ -333,7 +333,7 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		middlePathWithVariableWidth[i].remove();	// delete subpath (erase from canvas)
 	}
 	middlePathWithVariableWidth.length = 0; // delete array
-	console.log("this.editableToken: ", this.editableToken);
+	//console.log("this.editableToken: ", this.editableToken);
 	// now create new array width subdivided paths
 	for (i=0; i<this.fhToken.segments.length-1; i++) {
 		// copy part of the path
@@ -343,13 +343,16 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 		// sum up left and right distance and scale, use selected shape
 		var actualShape = this.getSelectedShapeIndex();
 		var width = (this.editableToken.leftVectors[actualShape][i].distance + this.editableToken.rightVectors[actualShape][i].distance) * this.scaleFactor; 
+		//console.log("middle path: set width: ", width);
 		if ((this.editableToken.knotsList[i+1] != undefined) && (this.editableToken.knotsList[i+1].type.connect == false)) {
-			 console.log("i+1= ", i+1, "=> don't connect");
+			 //console.log("i+1= ", i+1, "=> don't connect");
 			 width = 0;
+			 //console.log("middle path: set width(correction): ", width);
+			 //console.log("this.editableToken.knotsList[i+1].type: ", this.editableToken.knotsList[i+1].type);
 		}
 		//console.log("this.editableToken:i:width: ", this.editableToken, i, width);
 		middlePathWithVariableWidth[i].strokeWidth = width;			// variable width: just assign growing i at this point for demonstration
-		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidth;			// set visibility
+		middlePathWithVariableWidth[i].visible = showMiddlePathWithVariableWidthBoolean;			// set visibility
 		project.activeLayer.insertChild(this.positionAfterBackgroundElements, middlePathWithVariableWidth[i]); // position middlePath after static background elements
 		
 		// code: disable one segment (nr. 2 in the example)
@@ -365,16 +368,17 @@ TEDrawingArea.prototype.drawMiddlePathWithVariableWidth = function() {
 }
 TEDrawingArea.prototype.hideMiddlePathWithVariableWidth = function() {
 	//console.log("hide middle path");
-	showMiddlePathWithVariableWidth = false;
+	showMiddlePathWithVariableWidthBoolean = false;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = false;
 	}
 }
 TEDrawingArea.prototype.showMiddlePathWithVariableWidth = function() {
-	//console.log("show middle path");
-	showMiddlePathWithVariableWidth = true;
+	//console.log("show middle path: boolean: ", showMiddlePathWithVariableWidthBoolean);
+	showMiddlePathWithVariableWidthBoolean = true;
 	for (var i=0; i<middlePathWithVariableWidth.length; i++) {
 		middlePathWithVariableWidth[i].visible = true;
+		//console.log("i: ", i, "middlePathWithVariableWidth[i]: ", middlePathWithVariableWidth[i]); 
 	}	
 }
 TEDrawingArea.prototype.isInsideBorders = function( event ) {
@@ -383,7 +387,7 @@ TEDrawingArea.prototype.isInsideBorders = function( event ) {
 }
 TEDrawingArea.prototype.toggleVisibilityMiddlePathWithVariableWidth = function() {
 	//console.log("toggle visibility");
-	switch (showMiddlePathWithVariableWidth) {
+	switch (showMiddlePathWithVariableWidthBoolean) {
 		case true : this.hideMiddlePathWithVariableWidth(); break;
 		case false : this.showMiddlePathWithVariableWidth(); break;
 	}
@@ -472,14 +476,21 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	// copy data
 	this.editableToken.header = token.header.slice(); // ?
 	//console.log("tokenData: ", token, token.tokenData.length);
-	console.log("load token: token:", token);
+	//console.log("load token: token:", token);
 	
 	knotTypeAutoDefine = false; // disable autodefine for knots
 	for (var i=0; i<token.tokenData.length; i++) {
 		// insert knots and stuff
 		//console.log("tokenData: i: ", i, token.tokenData[i]);
-		var x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x,
+		var x, y;
+		
+		if (token.tokenData[i].calcType == "horizontal") {
+			x = (token.tokenData[i].vector1 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x;
 			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector2 * this.scaleFactor);
+		} else { // swap vectors for proportional and orthogonal knots
+			x = (token.tokenData[i].vector2 * this.scaleFactor) + this.rotatingAxis.centerRotatingAxis.x;
+			y =	this.rotatingAxis.centerRotatingAxis.y - (token.tokenData[i].vector1 * this.scaleFactor);
+		}
 		
 		this.fhToken.insert(this.editableToken.index, new Point(x,y))
 		this.editableToken.insertNewKnotFromActualFont(new Point(x, y), token.tokenData[i].knotType);
@@ -510,6 +521,17 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		this.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1;		// has been inserted via insertNewKnot()
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;		// has been inserted via insertNewKnot()
+		// if calcType is proportional or orthogonal vectors have to be swapped (vector1 = vector2 and viceversa)
+	
+		//console.log("token.tokenData[i]: ", token.tokenData[i]);
+		if ((token.tokenData[i].calcType == "orthogonal") || (token.tokenData[i].calcType == "proportional")) { // swap vectors in relative knot
+			var tempRD = this.editableToken.knotsList[i].linkToRelativeKnot.rd1;
+			this.editableToken.knotsList[i].linkToRelativeKnot.rd1 = this.editableToken.knotsList[i].linkToRelativeKnot.rd2;
+			this.editableToken.knotsList[i].linkToRelativeKnot.rd2 = tempRD;
+			this.editableToken.knotsList[i].parallelRotatingAxisType = "orthogonal"; // token.tokenData[i].calcType; // set correct rotatingAxisType (use "orthogonal" for the moment)
+		}
+
+		
 		this.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
 		this.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
 		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // done above
@@ -520,6 +542,9 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		this.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
 		this.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
 	}
+	// load editor data
+	//this.loadAndInitializeEditorData(this);
+	
 	//console.log("fhToken: ", mainCanvas.editor.fhToken);
 	this.updateFreehandPath();
 	this.parent.thicknessSliders.updateLabels(); // well, this is getting very messy ... call this updateFunction to set visibility of OuterShape at the same time ...
@@ -534,6 +559,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 }
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	// set standard parameters for editor in order to insert data
+	console.log("initialize editor data");
 	// set rotatingAxis to horizontal (makes it easier: relativ coordinates can be used as absolute coordinates)
 	//this.rotatingAxis.controlCircle.circle.position.x = this.rotatingAxis.centerRotatingAxis.x;
 	//this.rotatingAxis.controlCircle.circle.position.y = this.upperY; 

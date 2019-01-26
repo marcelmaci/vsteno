@@ -82,7 +82,7 @@ function createPullDownSelectionFromActualFont() {
 	// deletes tokenPullDownSelection and creates a new array with elements from actualFont
 	// can be used to "load" a new font and adjust pulldown list accordingls (for exemple if editor is used for SE1)
 	// delete actual list
-	console.log("create pullDownSelectionFromActualFont");
+	//console.log("create pullDownSelectionFromActualFont");
 	tokenPullDownSelection.length = 0;
 	// create new list
 	for (var token in actualFont.tokenList) {
@@ -144,7 +144,7 @@ ShorthandFont.prototype.loadTokenAndEditorData = function(token) {
 // broken (inexistent) objects method in PHP datastructure.
 
 function loadTokenAndEditorData(token) {
-	console.log("procedural loadTokenAndEditorData()");
+	//console.log("procedural loadTokenAndEditorData()");
 	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
 	//else console.log("don't (re)set editor data ... (null)");
 	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
@@ -155,23 +155,24 @@ function loadTokenAndEditorData(token) {
 	//console.log("set editor mode: ", actualFont);
 	if ((actualFont.version != undefined) && (actualFont.version == "SE1")) {
 		mainCanvas.editor.showMiddlePathWithVariableWidth(); // outerShape still active for the moment
+		console.log("set middle path mode - mainCanvas.editor: ", mainCanvas.editor);
 	} else {
 		mainCanvas.editor.hideMiddlePathWithVariableWidth(); // supposing that outer shape is still active
 	}
 }
 function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
-	console.log("save token and editor data");
+	//console.log("save token and editor data");
 	if ((token != "select") && (token != "empty")) {
 		deleteTokenAndEditorData(token);
-		console.log("token and editor data deleted");
-		console.log("create TokenDefinition object");
+		//console.log("token and editor data deleted");
+		//console.log("create TokenDefinition object");
 		actualFont.tokenList[token] = new TokenDefinition();			// data will be copied directly via constructor that call goAndGrabThatTokenData()-method
-		console.log("create EditorParameters object");
+		//console.log("create EditorParameters object");
 		actualFont.editorData[token] = new EditorParameters();		// same for editor data
 	}
 	
 	console.log("ShorthandFont: ", actualFont);
-	console.log("editor: ", mainCanvas.editor);
+	console.log("Editor: ", mainCanvas.editor);
 	document.getElementById("save").blur(); // correct focus
 }
 function deleteTokenFromPullDownSelection(token) {
@@ -184,16 +185,16 @@ function deleteTokenFromPullDownSelection(token) {
 	document.getElementById("delete").blur(); // correct focus
 }
 function deleteTokenAndEditorData(token) {
-	console.log("delete token and editor data (function)");
+	//console.log("delete token and editor data (function)");
 	deleteTokenData(token);
 	deleteEditorData(token);
 }
 function deleteTokenData(token) {
-	console.log("deleteTokenData");
+	//console.log("deleteTokenData");
 	actualFont.tokenList[token] = null;
 }
 function deleteEditorData(token) {
-	console.log("deleteEditorData");
+	//console.log("deleteEditorData");
 	actualFont.editorData[token] = null;	
 }
 
