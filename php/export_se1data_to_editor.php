@@ -283,6 +283,7 @@ function OpenEditorPage() {
             }
         }
         $export_variable->editorData[$key]->rotatingAxisList = $rotatingAxisArray;
+        //var_dump($rotatingAxisArray);
         //$export_variable->editorData[$key]->rotatingAxisList = array(2,6);
         
         $export_variable->tokenList[$key]->tokenData = array();
@@ -316,7 +317,8 @@ function OpenEditorPage() {
                 $newTuplet->vector2 = $tempX1;      // if calcType is "proportional" or "orthogonal" swap vectors!
                 $newTuplet->vector1 = $tempY1;
             }
-            $newTuplet->shiftX = 0;                     // default value in SE1
+            //$newTuplet->shiftX = 0;                     // default value in SE1
+            $newTuplet->shiftX = get_rotating_axis_shiftX($steno_tokens_master[$key], $tempDR);
             $newTuplet->shiftY = 0;                     // default value in SE1
             $newTuplet->tensions = array($tempT1, $tempT2, $tempT1, $tempT2, $tempT1, $tempT2);    // SE1: only offsets 2+3 (for middle path) are important, but copy them to the outer shapes as well
             

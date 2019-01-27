@@ -147,7 +147,11 @@ function loadTokenAndEditorData(token) {
 	//console.log("procedural loadTokenAndEditorData()");
 	//if (actualFont.editorData != null) mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]);
 	//else console.log("don't (re)set editor data ... (null)");
-	mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
+	//mainCanvas.editor.loadAndInitializeTokenData(actualFont.tokenList[token]);		// ok, that works!
+	mainCanvas.editor.loadAndInitializeTokenData(token);		// ok, that works! call function with tokenKey, so that it can access editorData
+	//mainCanvas.editor.loadAndInitializeEditorData(actualFont.editorData[token]); // load editor data first, so that knots can be connected to parallelRotatingAxis => doesn't work ...
+	mainCanvas.editor.loadAndInitializeEditorData(token); // load editor data first, so that knots can be connected to parallelRotatingAxis => doesn't work ... // call function with tokenKey so that it can access tokenList data
+	
 	//console.log("focus1: ", document.activeElement);
 	//document.getElementById("drawingArea").focus();
 	document.getElementById("load").blur(); // correct focus

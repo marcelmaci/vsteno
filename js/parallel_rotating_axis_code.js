@@ -15,6 +15,18 @@ function TEParallelRotatingAxisGrouper(parent) {
 TEParallelRotatingAxisGrouper.prototype.getLinkToParallelRotatingAxis = function() {
 	return this.newAxisList[this.selectedAxis];
 }
+TEParallelRotatingAxisGrouper.prototype.getLinkToParallelRotatingAxisViaShiftX = function(testX) {
+	console.log("getLinkToParallelRotatingAxisViaShiftX: x: ", testX);
+	var i=0, hit=-1, tolerance=0.01, length=this.newAxisList.length;
+	console.log("length: ", length);
+	while ((i<length) && (hit<0)) {
+		if (Math.abs(testX-this.newAxisList[i].shiftX) < tolerance) hit=i; 
+		i++;
+	}
+	if (hit<length) return this.newAxisList[i-1]; // -1 becaus i gets incremented even if hit is found
+	else return null;
+}
+
 // new method for manual insertion
 TEParallelRotatingAxisGrouper.prototype.addParallelAxis = function() {
 	// add axis from left to right (in order to select them with CTRL-arrow left/right)

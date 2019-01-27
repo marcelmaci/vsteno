@@ -465,7 +465,8 @@ TEDrawingArea.prototype.connectPreceedingAndFollowing = function() {
 	this.preceeding.connect();
 	this.following.connect();	
 }
-TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
+TEDrawingArea.prototype.loadAndInitializeTokenData = function(tokenKey) {
+	var token = actualFont.tokenList[tokenKey];
 	console.log("actualfont: ", actualFont);
 	//console.log("loadAndInitializeTokenData(): token: ", token);
 	this.editableToken.deleteAllKnotData();
@@ -518,6 +519,11 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		this.editableToken.knotsList[i].type.connect = token.tokenData[i].knotType.connect;
 		this.editableToken.knotsList[i].type.intermediateShadow = token.tokenData[i].knotType.intermediateShadow;
 		
+		
+		//mainCanvas.editor.editableToken.setKnotType("proportional");
+		this.editableToken.setKnotType(token.tokenData[i].calcType);
+		
+		/*
 		this.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1;		// has been inserted via insertNewKnot()
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;		// has been inserted via insertNewKnot()
@@ -528,12 +534,18 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 			var tempRD = this.editableToken.knotsList[i].linkToRelativeKnot.rd1;
 			this.editableToken.knotsList[i].linkToRelativeKnot.rd1 = this.editableToken.knotsList[i].linkToRelativeKnot.rd2;
 			this.editableToken.knotsList[i].linkToRelativeKnot.rd2 = tempRD;
-			this.editableToken.knotsList[i].parallelRotatingAxisType = "orthogonal"; // token.tokenData[i].calcType; // set correct rotatingAxisType (use "orthogonal" for the moment)
+			this.editableToken.knotsList[i].parallelRotatingAxisType = token.tokenData[i].calcType; // set correct rotatingAxisType (use "orthogonal" for the moment)
 		}
-
+		*/
 		
+		console.log("i: ", i, "token.tokenData: ", token.tokenData, "set shiftX/Y: ", token.tokenData[i].shiftX, token.tokenData[i].shiftY);
 		this.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
 		this.editableToken.knotsList[i].shiftY = token.tokenData[i].shiftY;
+		// shiftX/Y must be inserted manually in linkToParallelRotatingAxis too
+		console.log("linkToParallelRotatingAxis: ", this.editableToken.knotsList[i].linkToParallelRotatingAxis);
+		//this.editableToken.knotsList[i].linkToParallelRotatingAxis.shiftX = token.tokenData[i].shiftX;
+		//this.editableToken.knotsList[i].linkToParallelRotatingAxis.shiftY = token.tokenData[i].shiftY;
+		
 		//mainCanvas.editor.editableToken.knotsList[i].tensions = token.tokenData[i].tensions; // done above
 		
 		// copy thicknesses
@@ -542,8 +554,8 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 		this.editableToken.leftVectors[1][i].distance = token.tokenData[i].thickness.shadowed.left;
 		this.editableToken.rightVectors[1][i].distance = token.tokenData[i].thickness.shadowed.right;		
 	}
-	// load editor data
-	//this.loadAndInitializeEditorData(this);
+	// load editor data => can't be called from here!
+	//this.loadAndInitializeEditorData(token.editorData);
 	
 	//console.log("fhToken: ", mainCanvas.editor.fhToken);
 	this.updateFreehandPath();
@@ -557,13 +569,18 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(token) {
 	
 	console.log("mainCanvas.editor: ", mainCanvas.editor);
 }
-TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
+TEDrawingArea.prototype.loadAndInitializeEditorData = function(tokenKey) {
+	var editorData = actualFont.editorData[tokenKey];
 	// set standard parameters for editor in order to insert data
-	console.log("initialize editor data");
+	console.log("initialize editor data: token.editorData", editorData, this.rotatingAxis);
 	// set rotatingAxis to horizontal (makes it easier: relativ coordinates can be used as absolute coordinates)
 	//this.rotatingAxis.controlCircle.circle.position.x = this.rotatingAxis.centerRotatingAxis.x;
 	//this.rotatingAxis.controlCircle.circle.position.y = this.upperY; 
-	this.rotatingAxis.setRotatingAxisManually(new Point(this.rotatingAxis.centerRotatingAxis.x, this.upperY));
+	
+	
+//this.rotatingAxis.setRotatingAxisManually(new Point(this.rotatingAxis.centerRotatingAxis.x, this.upperY));
+	
+	
 	//console.log("test1: ",this.rotatingAxis);
 	//var tmp = new TEParallelRotatingAxisGrouper(this.rotatingAxis); 
 	//this.rotatingAxis.parallelRotatingAxis = tmp; //new TEParallelRotatingAxisGrouper(this.rotatingAxis); // install main axis
@@ -571,9 +588,12 @@ TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	
 	// copy parallel rotating axis
 	//console.log("editor: ", editor);
-	for (var i=0; i<editor.rotatingAxisList.length; i++) {
-			console.log("add axis: ", editor.rotatingAxisList[i]);
-			this.rotatingAxis.parallelRotatingAxis.addParallelAxisWithoutDialog(editor.rotatingAxisList[i]);
+	
+	// create parallel rotating axis grouper
+	this.rotatingAxis.parallelRotatingAxis = new TEParallelRotatingAxisGrouper(this.rotatingAxis);
+	for (var i=0; i<editorData.rotatingAxisList.length; i++) {
+			console.log("add axis: ", editorData.rotatingAxisList[i]);
+			this.rotatingAxis.parallelRotatingAxis.addParallelAxisWithoutDialog(editorData.rotatingAxisList[i]);
 			//tmp.addParallelAxisWithoutDialog(editor.rotatingAxisList[i]);
 			//console.log("i:tmp: ", i, tmp);
 	}
@@ -581,6 +601,24 @@ TEDrawingArea.prototype.loadAndInitializeEditorData = function(editor) {
 	console.log("drawingArea: ", this);
 	this.rotatingAxis.parallelRotatingAxis.updateAll(); // update all rotating axis (including main)
 	//console.log("loadAndInitializeEditorData()");
+
+	console.log("this.rotatingAxis: ", this.rotatingAxis);
+	// now that knots and parallelRotatingAxis are installed, knot types must be set and knots linked to parallelRotingAxis
+	var tokenData = actualFont.tokenList[tokenKey].tokenData;
+	console.log("tokenData: ", tokenData);
+	for (var i=0;i<tokenData.length; i++) {
+		//this.editableToken.knotsList[i].parallelRotatingAxisType = "test";
+		var testX = tokenData[i].shiftX;
+		var tempL = this.rotatingAxis.parallelRotatingAxis.getLinkToParallelRotatingAxisViaShiftX(testX); 
+		this.editableToken.knotsList[i].linkToParallelRotatingAxis = tempL;
+		//console.log("i: ", i, "editableToken.knotsList[i].parallelRotatingAxisType BEFORE: ", editableToken.knotsList[i].parallelRotatingAxisType);
+		//var test = this.editableToken.knotsList[i].parallelRotatingAxisType; // = "test";
+		var tempType = (tokenData[i].calcType == "horizontal") ? "horizontal" : "orthogonal";
+		this.editableToken.knotsList[i].parallelRotatingAxisType = tempType;
+		//console.log("editableToken.knotsList[i].parallelRotatingAxisType AFTER: ", editableToken.knotsList[i].parallelRotatingAxisType);
+		//console.log("knot(i): ", i, "linkToParallelRotatingAxis: ", tempL);
+		console.log("i: ", i, "this: ", this, "testX: ", testX, "tempL: ", tempL);
+	}
 }
 TEDrawingArea.prototype.cleanDrawingArea = function() {
 	// clean drawing area and start editing a new token
