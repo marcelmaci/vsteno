@@ -1,7 +1,8 @@
 
 // class TEVisuallyModifiableCircle
 function TEVisuallyModifiableCircle(position, radius, color, selectColor, strokeColor ) {
-	//console.log("TEVisuallyModifiableCircle.constructor: position/radius/color/selectColor/strokeColor", position, radius, color, selectColor, strokeColor);this.circle = new Path.Circle(position, radius);
+	console.log("TEVisuallyModifiableCircle.constructor: position/radius/color/selectColor/strokeColor", position, radius, color, selectColor, strokeColor);
+	this.circle = new Path.Circle(position, radius);
 	if ((position == undefined) || (position == new Point(0,0))) { // avoid creation of null circles that will appear on upper left corner
 		//console.log("no object created");
 		return;
@@ -124,7 +125,14 @@ TEVisuallyModifiableCircle.prototype.changeKnotToProportional = function() {
 	this.circle.strokeColor = strokeColor;
 	this.circle.strokeWidth = strokeWidth;
 }
-
+TEVisuallyModifiableCircle.prototype.changeKnotShapeAccordingToType = function(type) {
+	console.log("changeKnotShapeAccordingToType: ", type);
+	switch (type) {
+		case "horizontal" : this.changeRectangleToCircle(); break;
+		case "orthogonal" : this.changeCircleToRectangle(); break;
+		case "proportional" : this.changeKnotToProportional(); break;
+	}
+}
 // class TEConnectionPoint extends TEVisuallyModifiableCircle
 function TEConnectionPoint(drawingArea, x, y ) {
 	// call parent constructor

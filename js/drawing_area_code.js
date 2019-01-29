@@ -521,22 +521,38 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(tokenKey) {
 		
 		
 		//mainCanvas.editor.editableToken.setKnotType("proportional");
-		this.editableToken.setKnotType(token.tokenData[i].calcType);
+		this.editableToken.setKnotType(token.tokenData[i].calcType); // do this in editor data?!? => sets knot type correctly but changes coordinates!
+		// here's the dilemma: if knot type is not set, shapes are wrong (coordinates are correct)
+		// if knot tpye is set, shapes are correct but coordinates are correct
+	
+		// **************************** fix that **********************************
+		/*
+		console.log("hithere1");
+		this.editableToken.knotsList[i].changeKnotShapeAccordingToType(token.tokenData[i].calcType); // use these methods to change shape
+		this.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
+		console.log("hithere2");
+		*/
 		
 		/*
 		this.editableToken.knotsList[i].linkToRelativeKnot.type = token.tokenData[i].calcType;
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd1 = token.tokenData[i].vector1;		// has been inserted via insertNewKnot()
 		//mainCanvas.editor.editableToken.knotsList[i].linkToRelativeKnot.rd2 = token.tokenData[i].vector2;		// has been inserted via insertNewKnot()
 		// if calcType is proportional or orthogonal vectors have to be swapped (vector1 = vector2 and viceversa)
-	
+	*//*
 		//console.log("token.tokenData[i]: ", token.tokenData[i]);
 		if ((token.tokenData[i].calcType == "orthogonal") || (token.tokenData[i].calcType == "proportional")) { // swap vectors in relative knot
 			var tempRD = this.editableToken.knotsList[i].linkToRelativeKnot.rd1;
 			this.editableToken.knotsList[i].linkToRelativeKnot.rd1 = this.editableToken.knotsList[i].linkToRelativeKnot.rd2;
 			this.editableToken.knotsList[i].linkToRelativeKnot.rd2 = tempRD;
-			this.editableToken.knotsList[i].parallelRotatingAxisType = token.tokenData[i].calcType; // set correct rotatingAxisType (use "orthogonal" for the moment)
+			//this.editableToken.knotsList[i].parallelRotatingAxisType = token.tokenData[i].calcType; // set correct rotatingAxisType (use "orthogonal" for the moment)
 		}
-		*/
+	*/
+		if ((token.tokenData[i].calcType == "orthogonal") || (token.tokenData[i].calcType == "proportional")) { // subtract shiftX in editableToken for correct vectors
+			console.log("Subtract shiftX");
+			this.editableToken.knotsList[i].linkToRelativeKnot.rd2 -= token.tokenData[i].shiftX;
+			// parallelRotatingAxisType will be defined in loadAndInitializeEditorData
+			//this.editableToken.knotsList[i].parallelRotatingAxisType = "horizontal"; //token.tokenData[i].calcType; // set correct rotatingAxisType (use "horizontal" for the moment)
+		}
 		
 		console.log("i: ", i, "token.tokenData: ", token.tokenData, "set shiftX/Y: ", token.tokenData[i].shiftX, token.tokenData[i].shiftY);
 		this.editableToken.knotsList[i].shiftX = token.tokenData[i].shiftX;
@@ -568,6 +584,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(tokenKey) {
 	
 	
 	console.log("mainCanvas.editor: ", mainCanvas.editor);
+	console.log("parallelRotatingAxisType: ", mainCanvas.editor.editableToken.knotsList[8].parallelRotatingAxisType);
 }
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(tokenKey) {
 	var editorData = actualFont.editorData[tokenKey];
@@ -610,15 +627,21 @@ TEDrawingArea.prototype.loadAndInitializeEditorData = function(tokenKey) {
 		//this.editableToken.knotsList[i].parallelRotatingAxisType = "test";
 		var testX = tokenData[i].shiftX;
 		var tempL = this.rotatingAxis.parallelRotatingAxis.getLinkToParallelRotatingAxisViaShiftX(testX); 
-		this.editableToken.knotsList[i].linkToParallelRotatingAxis = tempL;
 		//console.log("i: ", i, "editableToken.knotsList[i].parallelRotatingAxisType BEFORE: ", editableToken.knotsList[i].parallelRotatingAxisType);
 		//var test = this.editableToken.knotsList[i].parallelRotatingAxisType; // = "test";
-		var tempType = (tokenData[i].calcType == "horizontal") ? "horizontal" : "orthogonal";
+		//this.editableToken.setKnotType(token.tokenData[i].calcType);
+		console.log("this.editableToken.knotsList", this.editableToken.knotsList);
+		console.log("tokenData: ", tokenData);
+		//var tempType = (tokenData[i].calcType == "horizontal") ? "horizontal" : "orthogonal";
+		var tempType = "horizontal"; // use only horizontal type for the moment!
 		this.editableToken.knotsList[i].parallelRotatingAxisType = tempType;
+		this.editableToken.knotsList[i].linkToParallelRotatingAxis = tempL;
+		
 		//console.log("editableToken.knotsList[i].parallelRotatingAxisType AFTER: ", editableToken.knotsList[i].parallelRotatingAxisType);
 		//console.log("knot(i): ", i, "linkToParallelRotatingAxis: ", tempL);
 		console.log("i: ", i, "this: ", this, "testX: ", testX, "tempL: ", tempL);
 	}
+	console.log("END EDITOR DATA: parallelRotatingAxisType: ", mainCanvas.editor.editableToken.knotsList[8].parallelRotatingAxisType);
 }
 TEDrawingArea.prototype.cleanDrawingArea = function() {
 	// clean drawing area and start editing a new token

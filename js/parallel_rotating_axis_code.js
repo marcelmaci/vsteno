@@ -21,9 +21,12 @@ TEParallelRotatingAxisGrouper.prototype.getLinkToParallelRotatingAxisViaShiftX =
 	console.log("length: ", length);
 	while ((i<length) && (hit<0)) {
 		if (Math.abs(testX-this.newAxisList[i].shiftX) < tolerance) hit=i; 
+		console.log("i: ", i, "hit: ", hit);
 		i++;
 	}
-	if (hit<length) return this.newAxisList[i-1]; // -1 becaus i gets incremented even if hit is found
+	var temp = this.newAxisList[hit];
+	console.log("temp: ", temp);
+	if (hit>-1) return this.newAxisList[hit]; 
 	else return null;
 }
 
@@ -67,7 +70,7 @@ TEParallelRotatingAxisGrouper.prototype.addParallelAxisWithoutDialog = function(
 	console.log("add parallel rotating axis: ", shiftX);
 	var where = undefined;
 	
-		var i = 0, length = this.newAxisList.length, type = "orthogonal", val1 = -99999999; val2 = 0;
+		var i = 0, length = this.newAxisList.length, type = "horizontal", val1 = -99999999; val2 = 0;
 		//console.log("start: i, length, shiftX: ", i, length, shiftX);
 		while ((i < length) && (where == undefined)) {
 			val2 = this.newAxisList[i].shiftX;
