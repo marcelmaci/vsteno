@@ -196,10 +196,11 @@ class Point {
 }
 
 function get_absolute_knot_coordinates($x, $y, $type, $shiftX, $angle) {
+    $scaled_shiftX = $_SESSION['token_size'] * $shiftX; // scale shiftX
     switch ($type) {
-        case "horizontal" : $coordinates = calculate_horizontal_coordinates($x, $y, $shiftX, $angle); break;    // calculation for horizontal could be taken from se1, but to be more systematic integrate it here as a function like the other calculations
-        case "orthogonal" : $coordinates = calculate_orthogonal_coordinates($x, $y, $shiftX, $angle); break;
-        case "proportional" : $coordinates = calculate_proportional_coordinates($x, $y, $shiftX, $angle); break;
+        case "horizontal" : $coordinates = calculate_horizontal_coordinates($x, $y, $scaled_shiftX, $angle); break;    // calculation for horizontal could be taken from se1, but to be more systematic integrate it here as a function like the other calculations
+        case "orthogonal" : $coordinates = calculate_orthogonal_coordinates($x, $y, $scaled_shiftX, $angle); break;
+        case "proportional" : $coordinates = calculate_proportional_coordinates($x, $y, $scaled_shiftX, $angle); break;
     }
     return $coordinates;
 }
@@ -236,6 +237,7 @@ function calculate_orthogonal_coordinates($x, $y, $shiftX, $angle) {
 }
 
 function calculate_proportional_coordinates($x, $y, $shiftX, $angle) {
+    //echo "proportional: ($x/$y) shiftx=$shiftX angle=$angle";
     $rad = deg2rad($angle);
     $dx = 1 / tan($rad);
     $factor = sqrt($dx*$dx + 1);
@@ -252,6 +254,7 @@ function calculate_proportional_coordinates($x, $y, $shiftX, $angle) {
     $newX = $v1x + $v2x;
     $newY = $v1y + $v2y;
     $newX += $shiftX;
+    //echo " => new: ($newX/$newY)<br>";
     return new Point($newX,$newY);
 }
 

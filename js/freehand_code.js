@@ -619,6 +619,7 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArrayStandard = function() {
 
 TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	// copies the human readable user inputs to editableToken.header
+	console.log("copyTextFieldsToHeaderArraySE1");
 	
 	//console.log("generate new header for SE1 from human readable form");
 	// special variables
@@ -626,7 +627,7 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	var firstTension = (this.knotsList[0] != undefined) ? this.knotsList[0].tensions[3] : 0;
 	var HTMLValue = document.getElementById('tokentypepulldown').value, 
 		tokenType = 0;
-	//console.log("tokenTypeHTML: ", HTMLValue);
+	// console.log("tokenTypeHTML: ", HTMLValue);
 	switch (HTMLValue) {
 		case "normal" : tokenType = 0; break;
 		case "shadowed" : tokenType = 1; break;
@@ -634,8 +635,10 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 		// 0 normal, 1 shadowed, 2 virtual
 	}
 	HTLMValue = document.getElementById('whichexit').value;
+	console.log("whichexit HTMLValue: ", HTMLValue);
 	var exitToUse = (HTMLValue == "normal") ? 0 : 1;
-		HTLMValue = document.getElementById ('relativecoordinates').value;
+		HTMLValue = document.getElementById ('relative_or_absolute').value;
+	console.log("relative_or_absolute: ", HTMLValue);
 	var coordType = (HTMLValue == "relative") ? 0 : 1;
 	// offsets 19-21
 	var higherPosition = "", shadowed = "", distance = "";
@@ -805,9 +808,9 @@ TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
 	output += "<select id='distancepulldown'><option value='narrow'" + DS[0] + ">narrow</option><option value='wide'" + DS[1] + ">wide</option><option value='none'" + DS[2] + ">---</option></select><br>\n";
 	output += "delta-Y: if higher: before <input id='conddeltaybefore' type='text' size='4' value='" + CDYB + "'> after <input id='conddeltayafter' type='text' size='4' value='" + CDYA + "'><br>\n";
 	output += "         inconditional: before <input id='inconddeltaybefore' type='text' size='4' value='" + IDYB + "'> after <input id='inconddeltayafter' type='text' size='4' value='" + IDYB + "'><br>\n";
-	output += "2nd: x <input id='altx' type='text' size='4' value='" + AX + "'> y <input id='alty' type='text' size='4' value='" + AY + "'> <input type='radio' id='relativecoordinates' value='relative'" + CS[0] + "> relative <input type='radio' id='relativecoordinates' value='absolute'" + CS[1] + "> absolute<br>\n";
-	output += "use: <input type='radio' id='whichexit' value='normal'" + ES[0] + "> normal <input type='radio' id='whichexit' value='alternative'" + ES[1] + "> alternative <br>\n";
-	output += "connect: <input type='radio' id='connect' value='yes'" + CTS[0] + "> yes <input type='radio' id='connect' value='no'" + CTS[1] + "> no <br>\n";
+	output += "2nd: x <input id='altx' type='text' size='4' value='" + AX + "'> y <input id='alty' type='text' size='4' value='" + AY + "'> <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='relative'" + CS[0] + "> relative <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='absolute'" + CS[1] + "> absolute<br>\n";
+	output += "use: <input type='radio' name='whichexit' id='whichexit' value='normal'" + ES[0] + "> normal <input type='radio' name='whichexit' id='whichexit' value='alternative'" + ES[1] + "> alternative <br>\n";
+	output += "connect: <input type='radio' name='connect' id='connect' value='yes'" + CTS[0] + "> yes <input type='radio' name='connect' id='connect' value='no'" + CTS[1] + "> no <br>\n";
 	output += "offset 6: <input type='text' id='offset6' size='4' value='" + O6 + "'><br>\n";
 
 	output += "</td>\n</tr>\n"; // close table cell and last row

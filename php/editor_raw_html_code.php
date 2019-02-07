@@ -36,9 +36,9 @@
             following: <select id='higherpositionpulldown'><option value='higher'>higher</option><option value='same_line'>same line</option><option value='lower'>lower</option><option value='none' selected>---</option></select><select id='shadowingpulldown'><option value='shadowed'>shadowed</option><option value='not_shadowed'>normal</option><option value='shadow_none' selected>---</option></select><select id='distancepulldown'><option value='narrow'>narrow</option><option value='wide'>wide</option><option value='none' selected>---</option></select><br>
             delta-Y: if higher: before <input id='conddeltaybefore' type='text' size='4' value='0'> after <input id='conddeltayafter' type='text' size='4' value='0'><br>
             inconditional: before <input id='inconddeltaybefore' type='text' size='4' value='0'> after <input id='inconddeltayafter' type='text' size='4' value='0'><br>
-            2nd: x <input id='altx' type='text' size='4' value='0'> y <input id='alty' type='text' size='4' value='0'> <input type='radio' id='relativecoordinates' value='relative'> relative <input type='radio' id='relativecoordinates' value='absolute' checked> absolute<br>
-            use: <input type='radio' id='whichexit' value='normal' checked> normal <input type='radio' id='whichexit' value='alternative'> alternative <br>
-            connect: <input type='radio' id='connect' value='yes' checked> yes <input type='radio' id='connect' value='no'> no <br>
+            2nd: x <input id='altx' type='text' size='4' value='0'> y <input id='alty' type='text' size='4' value='0'> <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='relative' checked> relative <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='absolute'> absolute<br>
+            use: <input type='radio' name='whichexit' id='whichexit' value='normal' checked> normal <input type='radio' name='whichexit' id='whichexit' value='alternative'> alternative <br>
+            connect: <input type='radio' name='connect' id='connect' value='yes' checked> yes <input type='radio' name='connect' id='connect' value='no'> no <br>
             offset 6: <input type='text' id='offset6' size='4' value='0'><br>
         </td>
     </tr>
