@@ -593,7 +593,16 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         // vertical post offset (for example "ich" => baseline has to come down again; 2nd case: grr => baseline has two move up 1 standard_height
         if (($vertical == "up") or ( $steno_tokens[$token][offs_delta_y_after] > 0) /*or ($steno_tokens[$token][6] == 3)*/) $actual_y -= $steno_tokens[$token][offs_delta_y_after] * $standard_height;
         // now set new values for actual_x and actual_y (i.e. create new base for next token)
+        //echo "token: $token position: $position actual_x: BEFORE: $actual_x ";
         $actual_x += $steno_tokens[$token][offs_token_width]+$steno_tokens[$token][offs_additional_x_before]+$steno_tokens[$token][offs_additional_x_after]; // add width of token + pre/post offsets for x to calculate new horizontal position x        
+        //echo "AFTER: $actual_x<br>";
+        // CONCLUSIONS after examining "Wachtmeister" with and without tokens | and \:
+        // - \ and | can be defined as token => width (offset 0) and additional width before/after (offsets 4 and 5) are added to actual_x (if no token is defined, nothing is added)
+        // - horizontal delta x is wrong if following token is added at higer position (due to angle; this occurs here with &T)
+        // this is quite a complex problem:
+        // - adding a "scaled delta x" (e.g. higher values in higer positions, depending on angle) might be complicated due to proportional knots and parallel rotating axis
+        // - ignoring | and \ for tokens that lead to higer positions (typically &T in Stolze-Schrey) requires "global" replacement (before parser separates word parts) and might lead to other unpleasant phenomenons (since mecanism \ | introduced for composed words will not work any more ...)
+        // no idea how to solve the problem for the moment ...
         
         // restore original baseline => add inconditional deltay to token if specified in token_list
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_after] * $standard_height;
@@ -722,7 +731,7 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
             $temp1_separator2 = mb_strpos( "|", $temp1) !== false ? true : false;
             $temp1_separator = $temp1_separator1; // || $temp1_separator2;
             //echo "<p>Zeichen: $temp - i+1 = $temp1 - punctuation = $punctuation - last_position: $last_position</p>";
-            if (($i == $length_tokenlist -1) || ($temp1_punctuation) || ($temp1_separator)) $position = "last";
+            if (($i == $length_tokenlist -1) || ($temp1_punctuation) || ($temp1_separator) || ($temp1_separator2)) $position = "last"; // test: added || $temp1_separator2 9.2.19 => not sure if this is correct!
             
             //echo "<p>tokenlist($i) = $temp</p>";
             // if token is a vowel ("virtual token") then set positioning variables

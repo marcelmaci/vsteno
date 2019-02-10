@@ -3250,7 +3250,7 @@ TEDrawingArea.prototype.loadAndInitializeTokenData = function(tokenKey) {
 	
 	
 	console.log("mainCanvas.editor: ", mainCanvas.editor);
-	console.log("parallelRotatingAxisType: ", mainCanvas.editor.editableToken.knotsList[8].parallelRotatingAxisType);
+	//console.log("parallelRotatingAxisType: ", mainCanvas.editor.editableToken.knotsList[8].parallelRotatingAxisType);
 }
 TEDrawingArea.prototype.loadAndInitializeEditorData = function(tokenKey) {
 	var editorData = actualFont.editorData[tokenKey];
@@ -3307,7 +3307,7 @@ TEDrawingArea.prototype.loadAndInitializeEditorData = function(tokenKey) {
 		//console.log("knot(i): ", i, "linkToParallelRotatingAxis: ", tempL);
 		console.log("i: ", i, "this: ", this, "testX: ", testX, "tempL: ", tempL);
 	}
-	console.log("END EDITOR DATA: parallelRotatingAxisType: ", mainCanvas.editor.editableToken.knotsList[8].parallelRotatingAxisType);
+	//console.log("END EDITOR DATA: parallelRotatingAxisType: ", mainCanvas.editor.editableToken.knotsList[8].parallelRotatingAxisType);
 }
 TEDrawingArea.prototype.cleanDrawingArea = function() {
 	// clean drawing area and start editing a new token

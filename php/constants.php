@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "5865a94bf43c3071ebd08d01bf615dc1b80699d2";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "21. Januar 2019";                                  // idem
+const version_commit_id = "f494dac7c9ed5f7389ec5b34db3f668ad7c509ca";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "7. Februar 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -172,6 +172,9 @@ $processing_in_parser = "";                        // variable that indicates if
 $sentence_start = true;                            // variable needed for training mode to offer lower case checkbox
 $last_word_punctuation = false;
 $this_word_punctuation = true;
+
+// rules
+$rules_pointer_start_std2prt = null;
 
 // error handling
 $global_error_string = "";

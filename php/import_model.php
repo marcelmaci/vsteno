@@ -366,17 +366,30 @@ function ImportRulesFromGenericSubSection() {
 }
 
 function WriteParamListToRulesArray( $type, $param_list ) {
-    global $rules, $insertion_key, $rules_pointer;
+    global $rules, $insertion_key, $rules_pointer, $rules_pointer_start_std2prt;
     $rules["$insertion_key"][$rules_pointer][] = $type;
     foreach( $param_list as $parameter ) {
+        if ($parameter === "=:std") {
+            //echo "End of WRD=>STD detected: rule number: $rules_pointer<br>";
+            //echo "rule($rules_pointer): " . $rules["$insertion_key"][$rules_pointer][0];
+            //echo "set rules_pointer_start_std2prt";
+            $rules_pointer_start_std2prt = $rules_pointer + 1;  // set it to begin of following function
+        }
+    
         $rules["$insertion_key"][$rules_pointer][] = $parameter;
     }
     $rules_pointer++;
 }
 
 function WriteEntryPointToFunctionTable ($param_list) {
-    global $functions_table;
+    global $functions_table, $rules_pointer;
     $key = $param_list[0];
+    /*
+    echo "param_list: $param_list rules_pointer: $rules_pointer<br>";
+    var_dump($param_list);
+    echo "functions_table: ";
+    var_dump($functions_table);
+    */
     foreach( $param_list as $parameter ) {
         switch ($parameter) {
             case "=:std" : $functions_table["$insertion_key"]["$key"][] = "=:std"; break;

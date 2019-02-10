@@ -345,7 +345,7 @@ function ExecuteRule( /*$word*/ ) {
 
 function ParserChain( $text ) {
         global $font, $combiner, $shifter, $rules, $functions_table, $rules_pointer;
-        global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form;
+        global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $rules_pointer_start_std2prt;
         global $original_word, $result_after_last_rule, $act_word, $start_word_parser;
         // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
         
@@ -361,8 +361,15 @@ function ParserChain( $text ) {
             return $res_prt;
         }
         */
-        $rules_pointer = $start_word_parser; // use rules pointer as instruction pointer (ip) // set it to $start_word_parser (= first rule that has to be applyied to 1 single word after global text parser)
-        //echo "set rules_pointer to $start_word_parser<br>";
+        
+        // set rules pointer
+        $rules_pointer = $start_word_parser; // default
+        if ($_SESSION['original_text_format'] === "std") {
+            $rules_pointer = $rules_pointer_start_std2prt; // start with STD form (after bundler)
+            $act_word = $text;
+        }
+        
+       //echo "set rules_pointer to $start_word_parser<br>";
         $actual_model = $_SESSION['actual_model'];
         //$act_word = $text;
         
@@ -373,7 +380,7 @@ function ParserChain( $text ) {
         //echo "actual_model: $actual_model";
         //var_dump($rules);
         $number_of_rules = count($rules[$actual_model]);
-        //echo "number of rules: $number_of_rules<br>";
+        //echo "number of rules: $number_of_rules rules_pointer: $rules_pointer<br>";
         while ($rules_pointer < $number_of_rules) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
             //echo "before executerule: $rules_pointer<br>";
             //$act_word = ExecuteRule( $act_word );
@@ -489,10 +496,13 @@ function MetaParser( $text ) {          // $text is a single word!
        // $safe_std is either (1) set via database in purgatorium1.php1
        // or (2) - if the calculation is initiated from the maxi-form - 
        // it is the variable text (so in the latter case, set $safe_std = $text;
+       //echo "calculate STD => PRT<br>";
        $safe_std = (mb_strlen($safe_std) > 0) ? $safe_std : mb_strtoupper($text);
        //echo "prt muss von std (#$safe_std#) berechnet werden<br>";
-       $prt_form = ParserChain( $temp_std ); 
-       $safe_std = "";
+       //echo "safe_std: $safe_std<br>";
+       //$prt_form = ParserChain( $temp_std ); 
+       $prt_form = ParserChain( $safe_std ); 
+       //$safe_std = "";//???????????
        //echo "prt: $prt_form<br>";
        
        return $prt_form;
