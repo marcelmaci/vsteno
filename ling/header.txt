@@ -1,5 +1,40 @@
 #BeginSection(header)
-	/* this file was automatically generated as export from old parser */
-	/* with later manual additions */
-	// neu in DESSBAS - mit Zusatzkommentar
+	/* this file was originately generated as export from old parser, then later completed with manual additions to form DESSBAS (DD=Deutsch SS=Stolze-Schrey BAS=Grundschrift) */
+	//
+	// Die Grundschrift Stolze-Schrey soll nun nach folgenden Prinzipien neu designt werden:
+	// 
+	// Zeichen:
+	// Prinzipiell sollen schönere Zeichen gestaltet werden. Dies wird erreicht durch:
+	// - bessere Platzierung der Zeichenknoten (Verwendung von VPAINT wo möglich, der Rest wird nach wie vor handeditiert)
+	// - Korrektur der Spannungen (geradere Modellierung von Zeichen-Rücken, schönere Anfangs- und Endbögen)
+	// - bessere Zeichenabstände in Engschreibung (Zeichenabstand wird in zwei Teile aufgeteilt: Teil 1 = Abstand, der vom Vorzeichen verlangt wird; Teil 2 = Abstand, der vom Folgezeichen verlangt wird)
+	//
+	// Technisch sollen folgende Prinzipien eingehalten werden:
+	// - es soll nur die SE1 rev0 genutzt werden (also keine parallelen Rotationsachsen und keine proportionalen/orthogonalen Punkte), dies um sicherzustellen, dass die Definitionen 100% mit der
+	//   SE1 kompatibel sind)
+	// - die Zeichen werden für eine Neigung von 60 Grad optimiert (dies damit die Knoten trotz horizontaler Schiebung möglichst optimal platziert werden)
+	//
+	// Wenn nötig (d.h. wenn damit keine schönen Zeichen generiert werden können) soll auf spezielle Funktionen der SE1, die darauf ausgerichtet waren, den Editionsaufwand und die Datenmengen 
+	// zu reduzieren, verzichtet werden:
+	// - auf late entry und early exit knots wird verzichtet => stattdessen wird für jede Variante ein eigenes Zeichen definiert
+	// - auf token combiner und shifter wird verzichtet => stattdessen wird für jede Variante ein eigenes Zeichen definiert
+	// - eventuell sollen die Zeichen auch um neue Knoten erweitert werden, um eine feinere Ausgestaltung zu erreichen (z.B. bei der Schattierung), allerdings soll dies vorsichtig gehandhabt
+	//   werden, da es allenfalls Sinn macht, Optimierung der Schattierung später automatisch vorzunehmen (ähnlich wie bei der geplanten SE2)
+	//
+	// Regeln:
+	// - es soll konsequent darauf geachtet werden, mit der STD-Form einen Kompatibilitätspunkt im Parsprozess zu generieren
+	// - da mehr Zeichen definiert werden, soll konsequent darauf geachtet werden, dass die Bezeichnungen der Tokens einer einheitlichen Schreibweise folgen (diese soll im Font und innerhalb
+	//   der Regeln verwendet werden)
+	// - Reste aus dem alten "Trickster" sollen entfernt werden
+	// - generelles Ausmisten und Ausräumen der Regeln
+	//
+	// Schreibweise:
+	// = ein Zeichen am Wortanfang (z.B. [F=]) oder Wortende (z.B. [=NG])
+	// ^ ein höher gestelltes Zeichen (z.B. [^CH]) oder Variante vor höhergestelltem Zeichen (z.B. [AR5^])
+	// _ ein tiefer gestelltes Zeichen (z.B. [_N])
+	// @ ein Verbundzeichen (z.B. [@L] oder [@R], die mit anderen Zeichen verbunden werden)
+	// 0..9 bei runden Zeichen: Anknüpfpunkt (z.B. [@R6] = Zeichen R mit Anknüpfpunkt bei 6 Uhr, also im Fusspunkt)
+	// # technische Zeichen (z.B. [#WS] = wide shadowed, eine weite, schattierte Verbindung, also ä im System Stolze-Schrey)
+	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
+	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
 #EndSection(header)

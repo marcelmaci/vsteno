@@ -162,7 +162,7 @@
 		"wil$" => "WIL";
 		"los(igkeit)?$" => "Los$1";
 		"^[Uu]nbeirr" => "{UN}{BE}irr";
-		"ie([mn])$" => "[&I]e$1";
+		"ie([mn])$" => "[I]e$1";
 		"ietät" => "[&I]{HEIT}";
 		"t(u|ü)mlich" => "{TUM}{LICH}";
 		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
@@ -646,7 +646,7 @@
 		"\[SPR\]" => "[SP@R6]";
 		"\[PR\]" => "[P@R6]";
 		"\[PFR\]" => "[PF@R6]";
-		"\[WR\]" => "[WR@R6]";
+		"\[WR\]" => "[W@R6]";
 		"\[RL\]" => "[VR@L]";
 		"\[GL\]" => "[G@L3]";
 		"\[SR\]" => "[S][AR]";
@@ -663,6 +663,8 @@
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"IU" => "[&I]U";
 		"IE" => "[&I]E";
+		"\[I\]{E" => "[&I]{E";
+		
 		"IA" => "[&I]A";
 		"IO([^N])" => "[&I]O$1";
 		"II" => "[&I]I";
@@ -772,6 +774,7 @@
 		"\[EI\]{ER}" => "[EI][&E]{ER}";
 		"\[AU\]U" => "[AU][&E]U";
 		"\[O\]U" => "[&O]U";
+		"\[AR\](\[AU\]|\[EI\]|\[?I\]?)" => "[AR^]$1"; 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 		// trickier ones
