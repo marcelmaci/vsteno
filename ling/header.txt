@@ -1,0 +1,5 @@
+#BeginSection(header)
+	/* this file was automatically generated as export from old parser */
+	/* with later manual additions */
+	// neu in DESSBAS - mit Zusatzkommentar
+#EndSection(header)
