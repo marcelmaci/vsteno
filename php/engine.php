@@ -519,6 +519,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         if ($initial_splines_length > 0) {
             // set tension for preceeding point at offset 7 from header offset 3 of token to insert
             $splines[$initial_splines_length - 1] = $steno_tokens[$token][$i+offs_tension_before];
+            //echo "token = $token<br>";
+            //if ($token === "CH") echo "first tension at " . ($initial_splines_length - 1) . " set to " .  $steno_tokens[$token][$i+offs_tension_before];
+            
         }
         //for ($i = header_length /* + $late_entry_position * tuplet_length */; $i < $token_definition_length; $i += tuplet_length) {
        
@@ -741,6 +744,9 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
                 $vertical = $steno_tokens[$TokenList[$i]][offs_vertical];
                 $distance = $steno_tokens[$TokenList[$i]][offs_distance];
                 $shadowed = $steno_tokens[$TokenList[$i]][offs_shadowed];
+            } elseif ($steno_tokens[$TokenList[$i]][offs_token_type] == 3) {    // token type == spacer
+                $actual_x += $steno_tokens[$TokenList[$i]][offs_token_width];   // only add width and leave the rest as is (and cross fingers that this patch works;-)
+                echo "spacer";
             } else {
                 list( $splines, $actual_x, $actual_y) = InsertTokenInSplinesList( $TokenList[$i], $position, $splines, $LastToken, $actual_x, $actual_y, $vertical, $distance, $shadowed, $scaling );
                 $vertical = "no"; $distance = "none"; $shadowed = "no";
@@ -1113,6 +1119,8 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
                 $vertical = $steno_tokens[$TokenList[$i]][offs_vertical];
                 $distance = $steno_tokens[$TokenList[$i]][offs_distance];
                 $shadowed = $steno_tokens[$TokenList[$i]][offs_shadowed];
+            } elseif ($steno_tokens[$TokenList[$i]][offs_token_type] == 3) {    // token type == spacer
+                $actual_x += $steno_tokens[$TokenList[$i]][offs_token_width];   // only add width and leave the rest as is (and cross fingers that this patch works;-)
             } else {
                 list( $splines, $actual_x, $actual_y) = InsertTokenInSplinesList( $TokenList[$i], $position, $splines, $LastToken, $actual_x, $actual_y, $vertical, $distance, $shadowed, $scaling );
                 $vertical = "no"; $distance = "none"; $shadowed = "no";

@@ -333,7 +333,7 @@
 		"(^|\|)rück(?=!ens?$)" => "$1{RÜCK}";
 		"^([Aa])llerun" => "{ALL}{ER}|{UN}";
 		"(^|\|)({?ver}?)?un(?!(te|iv))" => "$1$2{UN}";
-		"(^|\|)({?ver}?)?ur" => { "$1$2{UR}", "Uri" };
+		"(^|\|)({?ver}?)?ur" => { "$1$2{UR}", "Uri", "Urs" };
 		"eien" => "[EI][&E]{EN}";
 		"^([Ss]ch|[Zz])ien$" => "$1[I]n";
 		"(?<=pb)ien$" => "[&I]{EN}";
@@ -449,7 +449,7 @@
 		"sr" => "[SR]";
 		"tt" => "[TT]";
 		"tr" => "[TR]";
-		"vr" => "[#VR]"; // use special name vor v+r, since [VR] can be confused with "vocal r"
+		"vr" => "[#VR]"; // use special name for v+r, since [VR] can be confused with "vocal r"
 		"wr" => "[WR]";
 		"xr" => "[XR]";
 		"yr" => "[YR]";
@@ -496,6 +496,8 @@
 
 		// Aufstrich-t				
 		"([bcdfghjklmnpqrvwxyz])t" => "$1[&T]";
+		"(\[NK\]|\[NG\])t" => "$1[&T]";
+
 		"\[(CH|SCH)\]t" => "[$1][&T]";
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|PP|RR|SS)\]t" => "[$1][&T]";
 
@@ -698,7 +700,10 @@
 		"\[&T\]\[?X\]?" => "[&TX]";
 		"\[&T\]\[?Y\]?" => "[&TY]";
 		"\[&T\]\[?&E\]?" => "[&T&E]";
-		"\[&T&E\]E" => "[&T&E][-E]";
+		"\[&T&E\]\[EN\]" => "[&T&E][/EN]";
+		"\[&T&E\]\[EM\]" => "[&T&E][/EM]";
+
+		"\[&T&E\]E$" => "[&T&E][-E]";
 		"\[&T\]{HAFT}" => "[&THAFT]";
 		"{HEIT}{LICH}" => "[&EITH]";
 		"\[&T\]{SCHAFT}" => "[&TSCHAFT]";

@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "f494dac7c9ed5f7389ec5b34db3f668ad7c509ca";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "7. Februar 2019";                                  // idem
+const version_commit_id = "ea3ba913c7547ed1f6a6f2e68674a20eaede33bc";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "9. Februar 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -45,8 +45,9 @@ const offs_additional_delta_y = 6;              // offset 6: additional delta y 
                                                 //           negative values: -0.5: place token 1/2 line lower => can be used for [&T] + consonant
                                                 // offsets 7-11: unused (obsolete, free for reuse)
 const offs_token_type = 12;                     // offset 12: token type: 0 = normal token (with/without shadows) / 
-                                                //            1 = allways shadowed / 2 = "virtual" tokens (defines how the following 
+                                                //            1 = always shadowed / 2 = "virtual" tokens (defines how the following 
                                                 //            token has to be placed (values at offsets 19-21)
+                                                //            3 = spacer (no points are inserted, the token only contains delta x at offset 0 (width)
 const offs_inconditional_delta_y_before = 13;   // offset 13: add this delta_y as relative value to baseline in any case BEFORE drawing token
 const offs_inconditional_delta_y_after = 14;    // offset 14: add this delta_y as relative value to baseline in any case BEFORE drawing token
 const offs_alternative_exit_point_x = 15;       // offset 15: alternative exit point: 0 = none / != 0: x coordinate of alternative exit point
