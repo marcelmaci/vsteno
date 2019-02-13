@@ -1260,29 +1260,32 @@
 		// make sure single tokens ARE inside brackets [] (no confusion between f and ff!)
 		"([a-zA-Z])(?!.*\])" => "[$1]"; 
 		"([a-zA-Z])(?=\[)" => "[$1]"; 
-
-		// tokens following immediately each other or vowel a (= short, same line)
-		// first: (1) - second: (1)=(1,2,3,4)
-		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ng|sch|nk|[jyz])\])" => "$1[#0]$3$4";
-		// special cases (second token): c,d,b,f,pf,st (vertical straight line at beginning needs more space)
-		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(pf|st|[bcdf])\])" => "$1[#3]$3$4";
-
-		// first: (1) - second: (2)=(5,8,9,11)
-		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(sp|zw|schw|[k])\])" => "$1[#0]$3$4";
-		// special cases (second token): l,t,v,q,ff (vertical straight line at beginning needs more space)
-		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ff|[ptvq])\])" => "$1[#3]$3$4";
+		"(?<=\])([a-zA-Z])" => "[$1]"; 
 		
-		// first: (1) - second: (3)=(6,7,13)
-		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ll|nd|ns|vr|ant|&e|&o|&u|&a|[lxns])\])" => "$1[#0]$3$4";
-
-		// first: (1) - second: (4)=(10+12)
-		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ck)\])" => "$1[#0]$3$4";
-		// special cases (second token): tt,pp (vertical straight line at beginning needs more space)
-		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(pp|tt)\])" => "$1[#3]$3$4";
+		// spaces depend on: (1) first token (exit point), (2) vowel, (3) second token (entry point)
+		// (1) 2 types: (a) tokens that need no additional space (b,l,m,p; g,k,x,y; h,j,mpf; schm, zw etc.)
+		//              (b) tokens that need additional spacing (c,d,t,tt,nd,q,st; ng,ns,nk;sch,schw etc.)
+		// (2) 3 cases: (a) high&narrow (i,au), (b) narrow, (c) low&narrow (o,u) => only (a) and (b) need spacing
+		// (3) 2 types: (a) tokens that need additional spacing (b,d,c,f,pf,st,w,l,x,nd,v,q etc.)
+		//              (b) tokens that don't need additional spacing (j,z,ng,nk,schm,g,sp,k etc.)
+		// default value for spacing is 0 (no additional spacing, 75% of the cases)
+		// of the 12 mentioned cases (2x3x2), only 7 need additional spacing
+		// the 12 cases can be reduced to a total of 4 cases:
+		// (a) default (spacing = 0)
+		// (b) spacing = 2: type (aba) (1 case)
+		// (c) spacing = 4: types (aab, bba, bbb) (3 cases)
+		// (d) spacing = 6: types (aaa, baa, bab) (3 cases)
 		
-		/////////////////////////////////// first = (2) ///////////////////////////////
-
+		// case: aba
+		"(\[(ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[a\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvq])\])" => "$1[#2]$3$4";
 		
+		// case aab, bba, bbb => aab, bb(ab)
+		"(\[(ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[(i|au)\])(\[(ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|[jzghmkn])\])" => "$1[#4]$3$5";
+		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|[cdtq])\])(\[a\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|[jzghmknbdycfwlxptvq])\])" => "$1[#4]$3$4";
+
+		// case aaa, baa, bab => (ab)aa, bab
+		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[(i|au)\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvq])\])" => "$1[#6]$3$5";
+		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|[cdtqblmnpvwf])\])(\[(i|au)\])(\[(ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvqjzghmkn])\])" => "$1[#6]$3$5";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
