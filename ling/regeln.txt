@@ -891,7 +891,13 @@
 		"([a-zA-Z])(?!.*\])" => "[$1]"; 
 		"([a-zA-Z])(?=\[)" => "[$1]"; 
 		"(?<=\])([a-zA-Z])" => "[$1]"; 
+		"^([a-zA-Z])" => "[$1]"; 
+		"([a-zA-Z])$" => "[$1]"; 
 		
+		// apparently, there are still some accolades (not substituted by substituter because the represent a token of their own => replace accolades by brackets
+		"{" => "[";
+		"}" => "]";		
+
 		// spaces depend on: (1) first token (exit point), (2) vowel, (3) second token (entry point)
 		// (1) 2 types: (a) tokens that need no additional space (b,l,m,p; g,k,x,y; h,j,mpf; schm, zw etc.)
 		//              (b) tokens that need additional spacing (c,d,t,tt,nd,q,st; ng,ns,nk;sch,schw etc.)
@@ -906,16 +912,31 @@
 		// (c) spacing = 4: types (aab, bba, bbb) (3 cases)
 		// (d) spacing = 6: types (aaa, baa, bab) (3 cases)
 		
+		// regex definitions
+		// first token type a:
+// (\[(ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|[blmnpvwfsxy])\])
+		// type b:
+// (\[(mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|vor|inter|rück|ion|durch|ch|solch|[gkhjcdtqz])\])
+	
+		// vowel
+		// type a: (\[(i|au)\])
+		// type b: (\[a\])?
+
+		// second token type a:
+// (\[(pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|[bdcfwlxptvq)\])
+		// type b:
+// (\[(ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzghmykn)\])
+	
 		// case: aba
-		"(\[(ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[a\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvq])\])" => "$1[#2]$3$4";
+		"(\[(ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[a\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|ss|[bdycfwlxptvq])\])" => "$1[#2]$3$4";
 		
 		// case aab, bba, bbb => aab, bb(ab)
-		"(\[(ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[(i|au)\])(\[(ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|[jzghmkn])\])" => "$1[#4]$3$5";
-		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|[cdtq])\])(\[a\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|[jzghmknbdycfwlxptvq])\])" => "$1[#4]$3$4";
+		"(\[(ff|mm|nn|pp|sp|ant|haft|zw|[blmnpvwf])\])(\[(i|au)\])(\[(ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|schw|^isch|ck|[jzghmkn])\])" => "$1[#4]$3$5";
+		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|[cdtq])\])(\[a\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|ss|ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|[jzghmknbdycfwlxptvq])\])" => "$1[#4]$3$4";
 
 		// case aaa, baa, bab => (ab)aa, bab
-		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[(i|au)\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvq])\])" => "$1[#6]$3$5";
-		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|[cdtqblmnpvwf])\])(\[(i|au)\])(\[(ng|nk|sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvqjzghmkn])\])" => "$1[#6]$3$5";
+		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|zw|ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[(i|au)\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|ss|[bdycfwlxptvq])\])" => "$1[#6]$3$5";
+		"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|[cdtqblmnpvwf])\])(\[(i|au)\])(\[(ng|nk|sch|^sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvqjzghmkn])\])" => "$1[#6]$3$5";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
