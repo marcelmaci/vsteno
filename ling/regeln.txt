@@ -2,6 +2,7 @@
 	#BeginSubSection(global,@@txt)
 		// global replacements in the whole text
 		"…" => "...";
+		"–" => "-"; // blocks calculation in layouted mode
 	#EndSubSection(global)
 	#BeginSubSection(helvetizer,@@wrd)
 		"ß" => "ss";
@@ -79,7 +80,7 @@
 		// priority 1 = create good rules
 		// priority 2 = feed the database (but it should be as small as possible ... hence priority 1)
 
-		"^Lebenspartner$" => "LEBE[NS]|PA[VR][&TN][#N][VR]"; 
+		//"^Lebenspartner$" => "LEBE[NS]|PA[VR][&TN][#N][VR]"; 
                 "^Athen$" => "[0N-][A][T][H][E][N]";
                 "^Athens$" => "[0N-][A][T][H][E][NS]";
                 "^Zuge$" => "ZUG[-E]";
@@ -162,7 +163,7 @@
 		"wil$" => "WIL";
 		"los(igkeit)?$" => "Los$1";
 		"^[Uu]nbeirr" => "{UN}{BE}irr";
-		"ie([mn])$" => "[I]e$1";
+		"ie([mn])$" => "[&I]e$1";
 		"ietät" => "[&I]{HEIT}";
 		"t(u|ü)mlich" => "{TUM}{LICH}";
 		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
@@ -333,7 +334,7 @@
 		"(^|\|)rück(?=!ens?$)" => "$1{RÜCK}";
 		"^([Aa])llerun" => "{ALL}{ER}|{UN}";
 		"(^|\|)({?ver}?)?un(?!(te|iv))" => "$1$2{UN}";
-		"(^|\|)({?ver}?)?ur" => { "$1$2{UR}", "Uri", "Urs" };
+		"(^|\|)({?ver}?)?ur" => { "$1$2{UR}", "Uri" };
 		"eien" => "[EI][&E]{EN}";
 		"^([Ss]ch|[Zz])ien$" => "$1[I]n";
 		"(?<=pb)ien$" => "[&I]{EN}";
@@ -449,7 +450,7 @@
 		"sr" => "[SR]";
 		"tt" => "[TT]";
 		"tr" => "[TR]";
-		"vr" => "[#VR]"; // use special name for v+r, since [VR] can be confused with "vocal r"
+		"vr" => "[#VR]"; // use special name vor v+r, since [VR] can be confused with "vocal r"
 		"wr" => "[WR]";
 		"xr" => "[XR]";
 		"yr" => "[YR]";
@@ -467,14 +468,14 @@
 		"ei" => "[EI]";
 		"ai" => "[EI]";
 	#EndSubSection(bundler,=:std)
-	#BeginSubSection(relancer)	
+	#BeginSubSection(relancer1)	
 		// relancer reconverts everything except shortings {..} and bundled tokens [..] to lower case
 		"^(.*?)$" => "strtolower()";	// all to low
 		//"({[a-zäöü&\/#@\+-]*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
 		//"(\[[a-zäöü\/#@\+-].*?\])" => "strtoupper()";
 		"({.*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
 		"(\[.*?\])" => "strtoupper()";
-	#EndSubSection(relancer)
+	#EndSubSection(relancer1)
 	#BeginSubSection(transcriptor)
 		////////////////////////////////////////////////////////
 		// 1st step: transform all single (lower case) tokens //
@@ -496,8 +497,6 @@
 
 		// Aufstrich-t				
 		"([bcdfghjklmnpqrvwxyz])t" => "$1[&T]";
-		"(\[NK\]|\[NG\])t" => "$1[&T]";
-
 		"\[(CH|SCH)\]t" => "[$1][&T]";
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|PP|RR|SS)\]t" => "[$1][&T]";
 
@@ -648,7 +647,7 @@
 		"\[SPR\]" => "[SP@R6]";
 		"\[PR\]" => "[P@R6]";
 		"\[PFR\]" => "[PF@R6]";
-		"\[WR\]" => "[W@R6]";
+		"\[WR\]" => "[WR@R6]";
 		"\[RL\]" => "[VR@L]";
 		"\[GL\]" => "[G@L3]";
 		"\[SR\]" => "[S][AR]";
@@ -665,8 +664,6 @@
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"IU" => "[&I]U";
 		"IE" => "[&I]E";
-		"\[I\]{E" => "[&I]{E";
-		
 		"IA" => "[&I]A";
 		"IO([^N])" => "[&I]O$1";
 		"II" => "[&I]I";
@@ -700,10 +697,7 @@
 		"\[&T\]\[?X\]?" => "[&TX]";
 		"\[&T\]\[?Y\]?" => "[&TY]";
 		"\[&T\]\[?&E\]?" => "[&T&E]";
-		"\[&T&E\]\[EN\]" => "[&T&E][/EN]";
-		"\[&T&E\]\[EM\]" => "[&T&E][/EM]";
-
-		"\[&T&E\]E$" => "[&T&E][-E]";
+		"\[&T&E\]E" => "[&T&E][-E]";
 		"\[&T\]{HAFT}" => "[&THAFT]";
 		"{HEIT}{LICH}" => "[&EITH]";
 		"\[&T\]{SCHAFT}" => "[&TSCHAFT]";
@@ -779,7 +773,6 @@
 		"\[EI\]{ER}" => "[EI][&E]{ER}";
 		"\[AU\]U" => "[AU][&E]U";
 		"\[O\]U" => "[&O]U";
-		"\[AR\](\[AU\]|\[EI\]|\[?I\]?)" => "[AR^]$1"; 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 		// trickier ones
@@ -878,5 +871,50 @@
 		"{HAB}T" => "[HAB][&T]";
 		"{HAB}" => "[HAB]";
 		"{ZUSAMMEN}" => "[Z][A][S]";
-	#EndSubSection(substituter,=:prt)
+	#EndSubSection(substituter)
+	#BeginSubSection(relancer2)	
+		// relancer reconverts everything except shortings {..} and bundled tokens [..] to lower case
+		"^(.*?)$" => "strtolower()";	// all to low
+		//"({[a-zäöü&\/#@\+-]*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
+		//"(\[[a-zäöü\/#@\+-].*?\])" => "strtoupper()";
+		//"({.*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
+		//"(\[.*?\])" => "strtoupper()";
+	#EndSubSection(relancer2)
+	#BeginSubSection(spacer)
+		
+		// at this point all tokens are lower case 
+		// single tokens can be inside [] or not
+		// multiple tokens are inside []
+		// all abbreviations have been transformed to single or multiple tokens (by preceeding subsituter)
+			
+		// make sure single tokens ARE inside brackets [] (no confusion between f and ff!)
+		"([a-zA-Z])(?!.*\])" => "[$1]"; 
+		"([a-zA-Z])(?=\[)" => "[$1]"; 
+
+		// tokens following immediately each other or vowel a (= short, same line)
+		// first: (1) - second: (1)=(1,2,3,4)
+		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ng|sch|nk|[jyz])\])" => "$1[#0]$3$4";
+		// special cases (second token): c,d,b,f,pf,st (vertical straight line at beginning needs more space)
+		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(pf|st|[bcdf])\])" => "$1[#3]$3$4";
+
+		// first: (1) - second: (2)=(5,8,9,11)
+		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(sp|zw|schw|[k])\])" => "$1[#0]$3$4";
+		// special cases (second token): l,t,v,q,ff (vertical straight line at beginning needs more space)
+		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ff|[ptvq])\])" => "$1[#3]$3$4";
+		
+		// first: (1) - second: (3)=(6,7,13)
+		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ll|nd|ns|vr|ant|&e|&o|&u|&a|[lxns])\])" => "$1[#0]$3$4";
+
+		// first: (1) - second: (4)=(10+12)
+		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(ck)\])" => "$1[#0]$3$4";
+		// special cases (second token): tt,pp (vertical straight line at beginning needs more space)
+		"(\[(ff|mm|nn|pp|pf|sp|ant|&e|[blmnpvwf])\])(\[a\])?(\[(pp|tt)\])" => "$1[#3]$3$4";
+		
+		/////////////////////////////////// first = (2) ///////////////////////////////
+
+		
+
+		"^(.*?)$" => "strtoupper()";	// all to upper
+
+	#EndSubSection(spacer,=:prt)
 #EndSection(rules)

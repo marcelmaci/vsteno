@@ -462,6 +462,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         $token_definition_length = count( $steno_tokens[$token] );           // continue splines-list
         //echo "stenotokens($token) - DUMP: ";
        // var_dump($steno_tokens["IST"]);
+       //echo "START: InsertToken(): token = $token distance = $distance actual_x = $actual_x<br>";
         
         //$old_dont_connect = $dont_connect;
         $late_entry_position = GetLateEntryPoint( $steno_tokens[$token] );
@@ -499,8 +500,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         
         // if actual token must be higher or lower and if it has to be joined narrow or wide adjust actual_x and actual_y before insertion
         switch( $distance ) {
-            case "narrow" : $actual_x += $horizontal_distance_narrow; break;
-            case "wide" : $actual_x += $horizontal_distance_wide; break;
+            case "none" : $actual_x += $_SESSION['token_distance_none'] * $_SESSION['token_size']; /*$horizontal_distance_narrow;*/ break;
+            case "narrow" : $actual_x += $_SESSION['token_distance_narrow'] * $_SESSION['token_size']; /*echo "add narrow: " . $_SESSION['token_distance_narrow'] * $_SESSION['token_size'] . "<br>";*/ /*$horizontal_distance_narrow;*/ break;
+            case "wide" : $actual_x += $_SESSION['token_distance_wide'] * $_SESSION['token_size']; /*$horizontal_distance_wide;*/ break;
         }
         switch ( $vertical ) {
                 case "up" : $actual_y -= ($steno_tokens[$token][offs_delta_y_before] * $standard_height); break;
@@ -597,6 +599,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         if (($vertical == "up") or ( $steno_tokens[$token][offs_delta_y_after] > 0) /*or ($steno_tokens[$token][6] == 3)*/) $actual_y -= $steno_tokens[$token][offs_delta_y_after] * $standard_height;
         // now set new values for actual_x and actual_y (i.e. create new base for next token)
         //echo "token: $token position: $position actual_x: BEFORE: $actual_x ";
+        //echo "actual_x = $actual_x width = " . $steno_tokens[$token][offs_token_width] . " additional: before: " . $steno_tokens[$token][offs_additional_x_before] . " after: " . $steno_tokens[$token][offs_additional_x_after]. "<br>";
         $actual_x += $steno_tokens[$token][offs_token_width]+$steno_tokens[$token][offs_additional_x_before]+$steno_tokens[$token][offs_additional_x_after]; // add width of token + pre/post offsets for x to calculate new horizontal position x        
         //echo "AFTER: $actual_x<br>";
         // CONCLUSIONS after examining "Wachtmeister" with and without tokens | and \:
@@ -612,7 +615,8 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
 }
 //echo "InsertTokenInSplinesList(): SPLINES<br>";
 //var_dump($splines);
-
+    //echo "END: InsertToken(): actual_x = $actual_x actual_y = $actual_y<br>";
+        
     return array( $splines, $actual_x, $actual_y );
 }
 
@@ -746,7 +750,7 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
                 $shadowed = $steno_tokens[$TokenList[$i]][offs_shadowed];
             } elseif ($steno_tokens[$TokenList[$i]][offs_token_type] == 3) {    // token type == spacer
                 $actual_x += $steno_tokens[$TokenList[$i]][offs_token_width];   // only add width and leave the rest as is (and cross fingers that this patch works;-)
-                echo "spacer";
+                //echo "spacer";
             } else {
                 list( $splines, $actual_x, $actual_y) = InsertTokenInSplinesList( $TokenList[$i], $position, $splines, $LastToken, $actual_x, $actual_y, $vertical, $distance, $shadowed, $scaling );
                 $vertical = "no"; $distance = "none"; $shadowed = "no";

@@ -497,7 +497,9 @@ function MetaParser( $text ) {          // $text is a single word!
        // or (2) - if the calculation is initiated from the maxi-form - 
        // it is the variable text (so in the latter case, set $safe_std = $text;
        //echo "calculate STD => PRT<br>";
-       $safe_std = (mb_strlen($safe_std) > 0) ? $safe_std : mb_strtoupper($text);
+       //$safe_std = (mb_strlen($safe_std) > 0) ? $safe_std : mb_strtoupper($text);
+       $safe_std = mb_strtoupper($text);
+       
        //echo "prt muss von std (#$safe_std#) berechnet werden<br>";
        //echo "safe_std: $safe_std<br>";
        //$prt_form = ParserChain( $temp_std ); 

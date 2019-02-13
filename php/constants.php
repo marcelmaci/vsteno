@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "ea3ba913c7547ed1f6a6f2e68674a20eaede33bc";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "9. Februar 2019";                                  // idem
+const version_commit_id = "5264a3106ffbd1828157950121b2edb41852695c";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "11. Februar 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -183,6 +183,6 @@ $global_error_string = "";
 // declarations
 $splines = array();                             // not really necessary in php
 $default_model = "DESSBAS";
-//$default_model = "99999_default";
+//$default_model = "99999_default_backup";
 
 ?>

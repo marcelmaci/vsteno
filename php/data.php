@@ -102,7 +102,9 @@ switch ($_SESSION['model_standard_or_custom']) {
 echo "Importiert: <textarea id='Model_as_text' name='Model_as_text' rows='30' cols='230'>" . htmlspecialchars($text_to_parse) . "</textarea><br>";
 */
 $test = ImportModelFromText($text_to_parse);
-//echo "test = $test<br>";
+$actual_model = $_SESSION['actual_model'];
+
+//echo "Imported:  actual_model = $actual_model font[actual_model][Z][4] = " . $font[$actual_model]["Z"][4] . "<br>";
 
 
 // connect old variables
@@ -110,7 +112,6 @@ $test = ImportModelFromText($text_to_parse);
 // it works as long as you reassign the new data to the old variables whenever (each time!) the model changes!
 // there's still a bug: exported array has 170 elements, imported one 161 => why?!?
 global $steno_tokens_master, $combiner_table, $shifter_table, $steno_tokens_type; // $steno_tokens_type: table to mark tokens created by shifter/combiner
-$actual_model = $_SESSION['actual_model'];
 //echo "actual_model: $actual_model<br>";
 $steno_tokens_master = $font[$actual_model];
 $combiner_table = $combiner[$actual_model];

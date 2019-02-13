@@ -100,6 +100,7 @@ function LoadModelFromDatabase($name) {
     $conn = connect_or_die();
     $safe_name = $conn->real_escape_string($name);
     $sql = "SELECT * FROM models WHERE name='$safe_name'";
+    //echo "QUERY: $sql<br>";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc(); 
@@ -110,6 +111,7 @@ function LoadModelFromDatabase($name) {
        // $shifter[] = $insertion_key;    // idem for $shifter
         $rules[] = $insertion_key;      // idem for $rules
         $functions_table[] = $insertion_key; // semper idem
+        //echo "output = $output<br>";
         return $output;
     } else {
         die_more_elegantly("<p>Kein Eintrag in models.</p>");

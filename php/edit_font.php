@@ -37,6 +37,8 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
         $sql = "UPDATE models
             SET font = '$update_font'
             WHERE name='$model_name';";
+        //echo "QUERY: $sql<br>";
+        //echo "model_name = $model_name<br>";
         $result = $conn->query($sql);
 
         if ($result == TRUE) {
