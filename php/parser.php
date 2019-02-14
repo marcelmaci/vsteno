@@ -124,8 +124,24 @@ function extended_preg_replace( $pattern, $replacement, $string) {
                                       break;
                 case "strtoupper()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtoupper($word[1]); }, $string); 
                                       break;
-                default : $result = preg_replace( $pattern, $replacement, $string);
-        }
+                default :  // found a really tricky aspect in regex: "overlapping contexts" ... found out that when two matches overlap,
+                           // only one (!) is replaced. Example: rule = "([kr])([rp])" => "$1X$2", only "kXr" is generated ...
+                           // 1st solution was to create a loop here and apply preg_replace until the result doesn't change any more ...
+                           // But this leads to infinite loops with certain rules ... For example a => "[a]" will be applied eternally 
+                           // (due to "autofeeding").
+                           // The current workaround is to apply the rule twice (this might be enough to overcome short overlappings).
+                           // Infinite loops are not possible if rule is repeated only once but the above rule a => [a] still produces
+                           // unpleasant results (namely [[a]] instead of [a]).
+                           // Workaround here: reformulate the rule as (?<!\[)a => [a]
+                           // Maybe it's possible to solve this using lookahead expressions for the contexts that overlap (haven't 
+                           // tried that for the moment, because the rules VSTENO uses for individual spacing are terribly complicated
+                           // and it'd drive me crayzy to rewrite that regex_helper.php which creates those rules (they are so complicated
+                           // I don't event want to write them by hand ... :-)
+                           // CAVEAT: OBSERVE VERY WELL IF THIS "APPLY-TWICE" WORKAROUND HAS ANY UNPLEASANT SIDE EFFECTS!!!
+                            $result = preg_replace( $pattern, $replacement, $string);
+                            if ($result !== $string) $result = preg_replace( $pattern, $replacement, $result);
+                        break;
+        }       
         return $result;
 };
 

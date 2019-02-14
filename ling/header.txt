@@ -39,4 +39,5 @@
 	// # technische Zeichen (z.B. [#WS] = wide shadowed, eine weite, schattierte Verbindung, also ä im System Stolze-Schrey; [#5] = spacer mit Abstand 5px)
 	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
+        // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 #EndSection(header)

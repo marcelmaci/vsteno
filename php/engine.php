@@ -478,7 +478,12 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         // ********************** header operations *************************************
         // if token is prefix then adjust actual_y
         // add inconditional deltay to token if specified in token_list
+        $old_y = $actual_y;
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_before] * $standard_height;
+        $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+        //echo "inconditional_delta_y_before: vertical_compensation_x = $vertical_compensation_x<br>";
+        $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
+                            
         $additional_deltay = 0; // probably obsolete ?!
         if ($steno_tokens[$token][offs_additional_delta_y] === 1) {         // probably obsolete with absolute positioning at offset 18 (but leave it for the moment)
             $additional_deltay = $standard_height * $steno_tokens[$token][offs_delta_y_after];
@@ -494,7 +499,11 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 // preceding token offers alternative exit point
                 // => adjust $actual_x / $actual_y
                 $actual_x += $alternative_x * $factor;
+                $old_y = $actual_y;
                 $actual_y -= $alternative_y * $factor;
+                $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+                //echo "alternative_exit_point: vertical_compensation_x = $vertical_compensation_x<br>"; // leave this line active to find error if necessary
+                $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary! // untested!
             }
         }
         
@@ -505,14 +514,23 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
             case "wide" : $actual_x += $_SESSION['token_distance_wide'] * $_SESSION['token_size']; /*$horizontal_distance_wide;*/ break;
         }
         switch ( $vertical ) {
-                case "up" : $actual_y -= ($steno_tokens[$token][offs_delta_y_before] * $standard_height); break;
-                case "down" : $actual_y += $half_upordown /*0.5 * $standard_height*/; 
-                break; 
+                case "up" : $old_y = $actual_y;
+                            $actual_y -= ($steno_tokens[$token][offs_delta_y_before] * $standard_height); 
+                            $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+                            //echo "vertical_compensation_x = $vertical_compensation_x<br>";
+                            $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
+                            break;
+                case "down" : $old_y = $actual_y; 
+                            $actual_y += $half_upordown /*0.5 * $standard_height*/; 
+                            $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+                            //echo "vertical_compensation_x = $vertical_compensation_x<br>";
+                            $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
+                            break; 
         }   
         $old_dont_connect = $dont_connect;
         $dont_connect = $steno_tokens[$token][offs_dont_connect]; // echo "$token: old_dont_connect=$old_dont_connect / dont_connect = $dont_connect<br>";
         if ($dont_connect == 1) $actual_y = $baseline_y;
-        
+        //echo "before data operations: token: $token coordinates: ($actual_x/$actual_y)<br>";
         // ******************************** data operations *************************************************
         // start with $i after header (offset header_length)
         $stop_inserting = FALSE; 
@@ -596,11 +614,19 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         $token_points_length = count( $steno_tokens[$token] ) - header_length;
  
         // vertical post offset (for example "ich" => baseline has to come down again; 2nd case: grr => baseline has two move up 1 standard_height
+        $old_y = $actual_y; 
         if (($vertical == "up") or ( $steno_tokens[$token][offs_delta_y_after] > 0) /*or ($steno_tokens[$token][6] == 3)*/) $actual_y -= $steno_tokens[$token][offs_delta_y_after] * $standard_height;
+        $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+        //echo "old_y = $old_y actual_y = $actual_y<br>"; 
+        //echo "offset_delta_y_after: token = $token vertical_compensation_x = $vertical_compensation_x<br>";
+        $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
+        
         // now set new values for actual_x and actual_y (i.e. create new base for next token)
         //echo "token: $token position: $position actual_x: BEFORE: $actual_x ";
         //echo "actual_x = $actual_x width = " . $steno_tokens[$token][offs_token_width] . " additional: before: " . $steno_tokens[$token][offs_additional_x_before] . " after: " . $steno_tokens[$token][offs_additional_x_after]. "<br>";
         $actual_x += $steno_tokens[$token][offs_token_width]+$steno_tokens[$token][offs_additional_x_before]+$steno_tokens[$token][offs_additional_x_after]; // add width of token + pre/post offsets for x to calculate new horizontal position x        
+        
+        
         //echo "AFTER: $actual_x<br>";
         // CONCLUSIONS after examining "Wachtmeister" with and without tokens | and \:
         // - \ and | can be defined as token => width (offset 0) and additional width before/after (offsets 4 and 5) are added to actual_x (if no token is defined, nothing is added)
