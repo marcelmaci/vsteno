@@ -25,7 +25,7 @@ $first_token_type_b_multi = "1b_multi"; // "mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|
 $first_token_type_b_combined = "d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|";
 $first_token_type_b_combined .= "k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|";
 $first_token_type_b_single = "gkjcdstqzh";
-$first_token_type_b_multi = "$first_token_type_b_special" . "$first_token_type_b_combined" . "mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|solch|";
+$first_token_type_b_multi = "$first_token_type_b_special" . "$first_token_type_b_combined" . "mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|";
 
 // (\[(mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|vor|inter|rück|ion|durch|ch|solch|[gkhjcdtqz])\])
 //$first_token_type_b_combined = "d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|b@l|g@l3|m@l|f@l|p@l|pf@l|v@l|sp@l|w@l|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|";
@@ -51,7 +51,7 @@ $second_token_type_b_multi = "2b_multi"; //"ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns
 $second_token_type_b_combined = "g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|";
 $second_token_type_b_combined .= "k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|";
 $second_token_type_b_single = "jzgmyk";
-$second_token_type_b_multi = "$second_token_type_b_combined" . "ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|";
+$second_token_type_b_multi = "$second_token_type_b_combined" . "&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|";
 
 // combine
 $condition_aa = "(\\[($first_token_type_a_multi" . "[" . "$first_token_type_a_single" . "]" . ")\\])$all_narrow_vowels(\\[($second_token_type_a_multi" . "[" . "$second_token_type_a_single" . "]" . ")\\])";

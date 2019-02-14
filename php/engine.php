@@ -575,6 +575,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 else $y_interpretation = $actual_y;
                 $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
                 $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
+                
+                 ///*if ($token = "TT") */echo "y-value: " . $y_interpretation - $steno_tokens[$token][$i+offs_y1] . "<br>";
+               
                 $splines[] = /*(($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 0 :*/ $steno_tokens[$token][$i+offs_t1];                        // tension following the point
                 // pivot point: if entry/exit point is conditional pivot (= value 3) 
                 // (1) if token in normal position or down => insert pivot as normal point (= value 0)

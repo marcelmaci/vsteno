@@ -132,7 +132,7 @@ $horizontal_distance_none = 0;
 //$horizontal_distance_narrow = $standard_height / 4;
 $horizontal_distance_narrow = 0;
 
-$horizontal_distance_wide = $standard_height * 1;
+$horizontal_distance_wide = $standard_height * 1.5;
 $space_at_end_of_stenogramm = $horizontal_distance_wide;    // defines horizontal distance between stenogramms
 $border_margin = 1;                                         // additional ("security") margin for trimmed stenogramms (should be > 0, since bezier curves tend to go outside of min and max coordinates
 $distance_words = 5;                           // distance between words (added to svg at the end of the stenogram)
