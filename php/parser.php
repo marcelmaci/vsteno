@@ -278,6 +278,15 @@ function ExecuteBeginParameters() {
     }
 }
 
+function WrapStringAfterNCharacters($string, $n) {
+    $output = ""; $position = 0;
+    while (mb_strlen($string) > $n) {
+        $output .= mb_substr($string, $position, $n) . "\n";
+        $string = mb_substr($string, $n+1);
+    }
+    $output .= $string;
+    return $output;
+}
 // ExecuteRule replaces GenericParser from old parser
 function ExecuteRule( /*$word*/ ) {
 
@@ -308,7 +317,8 @@ function ExecuteRule( /*$word*/ ) {
                 if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                     $result_after_last_rule = $output;
                     $global_number_of_rules_applied++;
-                    $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
+                    $wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
+                    $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
                 }
                 //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";

@@ -5,8 +5,24 @@
 <h2>Konkretisierung</h2>
 <p>Ab Juni 2018 verdichteten sich die Ziele, das Projekt ... <ol><li>weiterzuentwickeln</li><li>sauber zu versionieren</li><li>publik zu machen</li><li>gegen aussen zu öffnen (via Github)</li></ol></p>
 <h2>Aktuell</h2>
-<p>Mit Stand Oktober 2018 umfasst das Projekt nun rund 17000 Zeilen (wovon ca. 5700 Zeilen Code, 1000 Zeilen linguistische Daten, 800 Zeilen Webseite und der Rest Dokumentation). Trotz dieser 
-ansehnlichen Grösse steht das Projekt nach wie vor am Anfang und wird vermutlich etwa 1-2 Jahre Entwicklungsarbeit benötigen (Grundversion, danach regelmässige Updates).</p>
+<p>Mit Stand Februar 2019 umfasst das Projekt inzwischen 168 commits und einige zehntausend Zeilen Code, die sich auf zwei Programme
+aufteilen: 
+<ol>
+<li>(1) VSTENO: das ursprüngliche PHP-Programm, das die eigentliche steno engine enthält.
+<li>(2) VPAINT: der grafische Editor in JavaScript (der vor allem im Hinblick auf die SE2 entwickelt wurde). 
+</ol>
+Die Steno-Engine selbst verarbeitet inzwischen ein <a href="https://github.com/marcelmaci/vsteno/blob/master/ling/grundschrift_stolze_schrey_redesign.txt">File</a> 
+von etwa 1300 Zeilen mit Zeichendefinitionen der Grundschrift Stolze-Schrey und Regeln zur Übertragung aus der Langschrift (ca. 750 Regeln). Als
+nächster Schritt ist die Veröffentlichung der offiziellen Version 0.1 (SE1 rev0) im Sommer 2019 geplant. Entwicklungsstand der einzelnen Programme und Programmteile:
+</p>
+<ol>
+<li>VSTENO SE1 rev0: beta (wird getestet und verbessert, soll im Sommer 2019 erscheinen)</li>
+<li>VSTENO SE1 rev1: alpha (funktioniert, aber unzuverlässig; soll deshalb vorerst nicht eingesetzt werden)</li>
+<li>VPAINT backport SE1: alpha (funktioniert, aber unzuverlässig - <b>es wird dringend davon abgeraten, damit Daten zu speichern 
+(you've been warned! VPAINT can and will destroy your data!;-))</b></li>
+<li>VPAINT SE2: pre-alpha (noch in Entwicklung, nicht fertig - ausserdem fehlt eine Umsetzung der entsprechenden Funktionalität der SE2 in VSTENO)</li>
+</ol>
+
 <h2>Mitmachen</h2>
 <p>VSTENO ist von Anfang an als Gemeinschaftsprojekt gedacht: Einerseits ist der Quellcode via <a href="http://www.github.com/marcelmaci/vsteno">GitHub</a> öffentlich zugänglich. Darüberhinaus bietet VSTENO verschiedene Online-Möglichkeiten, auch als Nicht-Programmierer/in einen Beitrag
 zur Verbesserung der linguistischen Daten zu leisten: z.B.

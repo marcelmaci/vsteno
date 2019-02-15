@@ -1,8 +1,10 @@
+
 #BeginSection(rules)
 	#BeginSubSection(global,@@txt)
 		// global replacements in the whole text
 		"…" => "...";
 		"–" => "-"; // blocks calculation in layouted mode
+ 		"&ndash;" => "-"; // blocks calculation in layouted mode
 	#EndSubSection(global)
 	#BeginSubSection(helvetizer,@@wrd)
 		"ß" => "ss";
@@ -13,7 +15,7 @@
 		// (which has to be drawn as such) or a part of a token definition (like [0N-]
 		// in order to avoid that, "packer" bundles those characters adding brackets []
 		// later the transcriptor converts them back into normal characters
-		"-" => "[-]";
+		"(?<!\[)-" => "[-]";
 	#EndSubSection(packer)
 	#BeginSubSection(trickster)
 		"([Dd])ahinter" => "{DA}[H][N][&TVR]";
@@ -276,7 +278,7 @@
 		"damals" => "{DA}mals";
 		"über" => "{ÜBER}";
 		"dieselb" => "{DI}{SELB}";
-		"selb" => "{SELB}";
+		
 		"^der" => "{DER}";
 		"unter" => "{UNTER}";
 		"(^|\|)(((un)?(ver|be|über))|(gegen|neben|rück|fehl|ur|nach|vor|voll))?[ae]nt([^i])" => "$1$2{ANT}$7";
@@ -295,7 +297,8 @@
 		"^[Rr]ücker" => "{RÜCK}{ER}";
 		"^[Rr]ück" => { "{RÜCK}", "[Rr]ücke" };
 		"^[Mm]itver" => "{M}{VER}";
-		"^([Mm]iss|[Kk]riminal|[Ee]in)?ver" => "$1{VER}";
+		"^([Ss]elb(st)?|[Mm]iss|[Kk]riminal|[Ee]in)?ver" => "$1{VER}";
+		"selb" => "{SELB}";
 		"(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}";
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
 		"wie?der" => "{WIDER}";
@@ -353,7 +356,7 @@
 		//"\[-" => "[=";
 		"-(i|au|eu|äu|ei)" => "|[-]\[0D-]$1";
 		"-(a|e|o|u)" => "|[-]\[0N-]$1";
-		"\[-\]" => "|[-]\";
+		"(?<!\|)\[-\]" => "|[-]\";
 		//"=\]" => "-]";
 		//"\[=" => "[-";
 		"'(i|au|eu|äu|ei)" => "|[']\[0D-]$1";
@@ -610,6 +613,9 @@
 		///////////////////////////////////////////////////////
 
 		//"\[(CH|LL)\]T" => "[$1][&T]";
+		"{VOR}\[AR\]" => "[VOR+AR]";
+		"^{ER}\[AR\]" => "[0N-][#N][VR+AR]"; 
+		"{ER}\[AR\]" => "[#N][VR+AR]"; 
 		"{ER}T" => "{ER}[&T]";
 		"\[NK\]T" => "[NK][&T]";
 		"\[ND\]T" => "[ND][&T]";
@@ -710,7 +716,7 @@
 		"\[&T\]{SCHAFT}" => "[&TSCHAFT]";
 		"{HEIT}{SCHAFT}" => "[&EITSCHAFT]";
 		"\[&T\]{ION}" => "[&TION]";
-		"\[&T\](\[?[AEIOU]\]?)" => "[&T&E]$1";
+		"\[&T\](\[?[AEIOU]\]?)" => "[&T][&E]$1"; 	//"[&T&E]$1";
 		"{&TALL}" => "[&TALL]";
 		"\[&T\]\[?N\]?" => "[&TN]";
 		"\[&T\]\[?VR\]?" => "[&TVR]";
@@ -718,10 +724,10 @@
 		"\[&TL\]" => "[&T@L3]";
 		"\[&T\]\[L\]" => "[&T@L3]";
 		"{&T-L}" => "[&TL]";
-		"\[&T\]\[SCH\]" => "[&T^SCH]";
-		"\[&T\]\[?S\]?" => "[&TS]";
+		//"\[&T\]\[SCH\]" => "[&T^SCH]";
+		//"\[&T\]\[?S\]?" => "[&TS]";
 		"\[&T\]\[?U\]?" => "[&TU]";
-		"\[&T\]\[?SCH\]?" => "[&T^SCH]";
+		//"\[&T\]\[?SCH\]?" => "[&T^SCH]";
 		"\[&T\]\[?Z\]?" => "[&T^Z]";
 		"\[&T\]\[F@L\]" => "[&TF@L]";
 		"\[&T\]F" => "[&TF]";
@@ -795,8 +801,8 @@
 		"{ET}(e[^s]|{EN}|{EM})" => "{ET}[&E]$1";
 		"\[EI\]t" => "[EI]T";
 
-		"{VOR}r" => "[VOR+AR]";
-		"{ER}r" => "[VR+AR]";
+		//"{VOR}r" => "[VOR+AR]";
+		//"{ER}r" => "[VR+AR]";
 		"{DEM}n" => "[^DEM]N";
 		"{DE(M|N)}j" => "[^^DE$1]J";
 		"{DE(M|N)}\[j\]" => "[^^DE$1][J]";
@@ -843,8 +849,8 @@
 		"{NICHT}" => "[NICHT]";
 		"{HEIT}ig" => "[#W][TIG]";
 		"\|{VER}" => "[EN][AR]";
-		"([^\|]){VER}" => "$1[0N-][EN][AR]";
-		"{VER}" => "[0N-][EN][AR]";
+		"^{VER}" => "$1[0N-][EN][AR]";
+		"{VER}" => "[EN][AR]";
 		"{DEM}" => "[0N-][EM]";
 		"{DEN}" => "[0N-][EN]";
 		"{SI}" => "[0N-][#N][S][/I]";
@@ -908,14 +914,14 @@
 		
 		// spacer rules (generated with regex_helper.php
 
- // case: aa
+// case: aa
 "(\[(0n-|l@l|b@l|m@l|f@l|p@l|pf@l|v@l|sp@l|w@l|b@r6|sp@r6|m@r6|p@r6|pf@r6|n@r6|n@l|l@r6|rr|ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|[blmnpvwfxy])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(d@r|nd@r|t@r|st@r|l@l|b@l|f@l|p@l|pf@l|v@l|w@l|t@l3|d@l3|nd@l3|st@l3|k@l3|b@r6|f@r6|p@r6|pf@r6|v@r6|w@r6|da@r|n@r6|n@l|vr@l|l@r6|tt@r|pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|[bdcfwlxptvqhns])\])" => "$1[#3]$3$5";
 // case: ab
 "(\[(0n-|l@l|b@l|m@l|f@l|p@l|pf@l|v@l|sp@l|w@l|b@r6|sp@r6|m@r6|p@r6|pf@r6|n@r6|n@l|l@r6|rr|ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|[blmnpvwfxy])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzgmyk])\])" => "$1[#0]$3$5";
 // case: ba
-"(\[(d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|[gkjcdstqzh])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(d@r|nd@r|t@r|st@r|l@l|b@l|f@l|p@l|pf@l|v@l|w@l|t@l3|d@l3|nd@l3|st@l3|k@l3|b@r6|f@r6|p@r6|pf@r6|v@r6|w@r6|da@r|n@r6|n@l|vr@l|l@r6|tt@r|pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|[bdcfwlxptvqhns])\])" => "$1[#6]$3$5";
+"(\[(vr@l|d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|[gkjcdstqzh])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(d@r|nd@r|t@r|st@r|l@l|b@l|f@l|p@l|pf@l|v@l|w@l|t@l3|d@l3|nd@l3|st@l3|k@l3|b@r6|f@r6|p@r6|pf@r6|v@r6|w@r6|da@r|n@r6|n@l|vr@l|l@r6|tt@r|pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|[bdcfwlxptvqhns])\])" => "$1[#6]$3$5";
 // case: bb
-"(\[(d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|[gkjcdstqzh])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzgmyk])\])" => "$1[#3]$3$5";
+"(\[(vr@l|d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|[gkjcdstqzh])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzgmyk])\])" => "$1[#3]$3$5";
 
 		// additional space for i, au
 		"\[(i|au)\](?!\[#)" => "[$1][#3]";
