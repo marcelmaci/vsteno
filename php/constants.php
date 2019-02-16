@@ -48,6 +48,8 @@ const offs_token_type = 12;                     // offset 12: token type: 0 = no
                                                 //            1 = always shadowed / 2 = "virtual" tokens (defines how the following 
                                                 //            token has to be placed (values at offsets 19-21)
                                                 //            3 = spacer (no points are inserted, the token only contains delta x at offset 0 (width)
+                                                //            4 = part of a token (if exit and entry point of two parts are identical, only 1 point is 
+                                                //            inserted in splines: entry tension = from first point, exit tension = from second point
 const offs_inconditional_delta_y_before = 13;   // offset 13: add this delta_y as relative value to baseline in any case BEFORE drawing token
 const offs_inconditional_delta_y_after = 14;    // offset 14: add this delta_y as relative value to baseline in any case BEFORE drawing token
 const offs_alternative_exit_point_x = 15;       // offset 15: alternative exit point: 0 = none / != 0: x coordinate of alternative exit point
