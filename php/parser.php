@@ -540,6 +540,10 @@ function MetaParser( $text ) {          // $text is a single word!
         //$text1 = GenericParser( $globalizer_table, $text ); // must be replaced!?
         $text1 = html_entity_decode( $text );    // do it here the hardcoded way
         $text2 = GetWordSetPreAndPostTags( $text1 );
+        
+        $text2 = preg_replace('/»/', '"', $text2);
+        $text2 = preg_replace('/«/', '"', $text2);
+        
         // $original_word = $text2;
         //echo "text: $text text1: $text1 text2: $text2<br>";
         list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );

@@ -117,9 +117,9 @@ require_once "constants.php";
 // SE1-BACKPORTS: revision1
 $backport_revision1 = false;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
 
-if ($backport_revision1) {
-    require_once "se1_backports.php";
-}
+//if ($backport_revision1) {
+    require_once "se1_backports.php"; // always include se1_backports.php to make VPAINT work even if backports are disabled
+//}
 
 ///////////////////////////////////////////// calculation ///////////////////////////////////////////////
 

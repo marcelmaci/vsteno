@@ -1,10 +1,11 @@
-
 #BeginSection(rules)
 	#BeginSubSection(global,@@txt)
 		// global replacements in the whole text
 		"…" => "...";
 		"–" => "-"; // blocks calculation in layouted mode
  		"&ndash;" => "-"; // blocks calculation in layouted mode
+		"&raquote;" => "«"; 
+		"&laquote;" => "»";
 	#EndSubSection(global)
 	#BeginSubSection(helvetizer,@@wrd)
 		"ß" => "ss";
@@ -158,8 +159,8 @@
 		"([A-Z])" => "strtolower()";
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(filter)
-		"«" => "[#Q#]";
-		"»" => "[#Q#][0N-]";
+		"«" => "\[#Q#]";
+		"»" => "[#Q#][#5]\";
 	#EndSubSection(filter)
 	#BeginSubSection(shortener)
 		"wil$" => "WIL";
@@ -170,10 +171,10 @@
 		"t(u|ü)mlich" => "{TUM}{LICH}";
 		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
 		"[Uu]nbeein" => "{UN}{BE}[EI]N";
-		"eitlich" => "{HEIT}{LICH}";
-		"eitig" => "{HEIT}ig";
+		"h?eitlich" => "{HEIT}{LICH}";
+		"h?eitig" => "{HEIT}ig";
 		"eitens" => "{HEIT}ens";
-		"keits" => "{HEIT}s";
+		"[kh]?eits" => "{HEIT}s";
 		"iet$" => "[I]T";
 		"solch" => "{SOLCH}";
 		"^und$" => "{UND}";
@@ -239,7 +240,7 @@
 		"fürch" => "Fürch";
 		"für(?!st)" => "{FÜR}";
 		"gehabt" => "{GEHABT}";
-		"hab" => "{HAB}";
+		"(?<![Cc])hab" => "{HAB}";
 		"^[Hh]att?" => "{HAT}";
 		"^chin" => "[CH]in";
 		"^hinzu" => "{HIN}{ZU}";
@@ -924,7 +925,7 @@
 "(\[(vr@l|d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|[gkjcdstqzh])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzgmyk])\])" => "$1[#3]$3$5";
 
 		// additional space for i, au
-		"\[(i|au)\](?!\[#)" => "[$1][#3]";
+		//"\[(i|au)\](?!\[#)" => "[$1][#3]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
