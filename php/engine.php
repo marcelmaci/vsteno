@@ -115,7 +115,7 @@ require_once "data.php";
 require_once "constants.php";
 
 // SE1-BACKPORTS: revision1
-$backport_revision1 = true;
+$backport_revision1 = false;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
 
 if ($backport_revision1) {
     require_once "se1_backports.php";
@@ -226,6 +226,7 @@ function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
     global $standard_height, $svg_height, $height_above_baseline, $half_upordown, $one_upordown, 
     $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $backport_revision1;
 if ($backport_revision1) {
+        echo "execute backport revision 1<br>";
         return ScaleAndTiltTokens($steno_tokens_temp, $factor, $_SESSION['token_inclination']);
 } else { // leave SE1 legacy function without any modification
     //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
@@ -482,6 +483,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         $old_y = $actual_y;
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_before] * $standard_height;
         $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+        if (!($backport_revision1)) $vertical_compensation_x = 0; // disable vertical compensation (compatibility issue with revision1) - revision0 doesn't need compensation!
         //echo "inconditional_delta_y_before: vertical_compensation_x = $vertical_compensation_x<br>";
         $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
                             
@@ -503,6 +505,8 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 $old_y = $actual_y;
                 $actual_y -= $alternative_y * $factor;
                 $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+                if (!($backport_revision1)) $vertical_compensation_x = 0; // disable vertical compensation (compatibility issue with revision1) - revision0 doesn't need compensation!
+        
                 //echo "alternative_exit_point: vertical_compensation_x = $vertical_compensation_x<br>"; // leave this line active to find error if necessary
                 $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary! // untested!
             }
@@ -518,12 +522,16 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 case "up" : $old_y = $actual_y;
                             $actual_y -= ($steno_tokens[$token][offs_delta_y_before] * $standard_height); 
                             $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+                            if (!($backport_revision1)) $vertical_compensation_x = 0; // disable vertical compensation (compatibility issue with revision1) - revision0 doesn't need compensation!
+        
                             //echo "vertical_compensation_x = $vertical_compensation_x<br>";
                             $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
                             break;
                 case "down" : $old_y = $actual_y; 
                             $actual_y += $half_upordown /*0.5 * $standard_height*/; 
                             $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+                            if (!($backport_revision1)) $vertical_compensation_x = 0; // disable vertical compensation (compatibility issue with revision1) - revision0 doesn't need compensation!
+        
                             //echo "vertical_compensation_x = $vertical_compensation_x<br>";
                             $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
                             break; 
@@ -596,14 +604,18 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 } // offset 18 indicates if y-coordinates are relative or absolute
                 else $y_interpretation = $actual_y;
                 
+                //echo "<br>token: $token i=$i steno_tokens(x/y): (" . $steno_tokens[$token][$i] . "/" . $steno_tokens[$token][$i+offs_y1] . ")";
                 $new_x = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];
                 $new_y = $y_interpretation - $steno_tokens[$token][$i+offs_y1];
-                //echo "type = " . $steno_tokens[$token][offs_token_type] . "<br>";
+                //echo "<br>token: $token type = " . $steno_tokens[$token][offs_token_type] . " actual_x/y: $actual_x/$actual_y<br>";
                 //echo "newx/y: $new_x/$new_y preceeding_point_x/y: $preceeding_point_x/$preceeding_point_y<br>";
                
-                if (($steno_tokens[$token][offs_token_type] != 4) || (($preceeding_point_x !== $new_x) || ($preceeding_point_y !== $new_y))) {
+                //if (($steno_tokens[$token][offs_token_type] != 4) || (($preceeding_point_x !== $new_x) || ($preceeding_point_y !== $new_y))) {
+                //if (($steno_tokens[$token][offs_token_type] !== 4) || (!(($preceeding_point_x === $new_x) or ($preceeding_point_y === $new_y)))) {
+                if (($steno_tokens[$token][offs_token_type] !== 4) || 
+                    ($steno_tokens[$token][offs_token_type] === 4) && (!(($preceeding_point_x === $new_x) && ($preceeding_point_y === $new_y)))) {
                 
-                    //echo "insert knot (knot different or type != 4)<br>";
+                    //echo "insert knot...<br>";
                     
                     $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
                     $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
@@ -645,6 +657,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         //for ($t = 0; $t < 8; $t++) $splines[] = $splines[$start_last_point + $t];
                     //}
                 } else {
+                        //echo "don't insert knot<br>";
                         // preceeding and new points are identical and type is 4 (<=> part of a token)
                         // this means that the two points are "joined": only one knot is inserted
                         // this knot contains t2 from preceeding knot as entry tension (is already there,
@@ -654,6 +667,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                             $splines[$initial_splines_length-8+offs_t1] = $steno_tokens[$token][$i+offs_t1];
                             //echo "insert t2 into preceeding knot (joined knots): " . $steno_tokens[$token][$i+offs_t1] . "<br>";
                         }
+                        // adjust actual_x
+                        //echo "<br>actual_x: $actual_x token: $token type: " . $steno_tokens[$token][offs_token_type] . "width: " . $steno_tokens[$token][0] . "<br>"; 
+                        //if ($steno_tokens[$token][offs_token_type] == 4) $actual_x += $steno_tokens[$token][0];
                 }
             }
 
@@ -667,6 +683,8 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         $old_y = $actual_y; 
         if (($vertical == "up") or ( $steno_tokens[$token][offs_delta_y_after] > 0)) $actual_y -= $steno_tokens[$token][offs_delta_y_after] * $standard_height;
         $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+        if (!($backport_revision1)) $vertical_compensation_x = 0; // disable vertical compensation (compatibility issue with revision1) - revision0 doesn't need compensation!
+        
         //echo "old_y = $old_y actual_y = $actual_y<br>"; 
         //echo "offset_delta_y_after: token = $token vertical_compensation_x = $vertical_compensation_x<br>";
         $actual_x += $vertical_compensation_x; // vertical compensation for actual_x is necessary!
@@ -689,7 +707,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         // restore original baseline => add inconditional deltay to token if specified in token_list
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_after] * $standard_height;
 }
-//echo "InsertTokenInSplinesList(): SPLINES<br>";
+//echo "<br>InsertTokenInSplinesList(): SPLINES actual_x: $actual_x<br>";
 //var_dump($splines);
     //echo "END: InsertToken(): actual_x = $actual_x actual_y = $actual_y<br>";
         
