@@ -1,5 +1,6 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Tutorials</h1>
+<p><b>[Update 20.02.19: <a href="../docs/documentation_v01rc.pdf">Dokumentation 0.1rc</a>]</b></p>
 <p>Diese Seite enthält Tutorials und Dokumentationen zu VSTENO. Aus unserer Sicht kann das Programm von 3 Zielgruppen genutzt werden: 
 (1) Leseratten,  (2) Stenograf/innen, (3) Programmierer/innen</p>
 <h2>(1) Leseratten</h2>

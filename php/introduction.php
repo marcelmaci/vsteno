@@ -40,7 +40,7 @@ wird ab jetzt die SE2 und die SE1 rev1 konsequent auf Eis gelegt. Ziel ist somit
 zu den steno engines sind <a href="../docs/stenoengines.pdf">STENO-ENGINES</a> hier erläutert.
 </li>
 <li><b>Dokumentation</b>: Da die SE1 rev0 nun als vollwertige Version 0.1 geplant ist, soll sie in den kommenden Monaten auch sauber und
-möglichst vollständig dokumentiert werden.</p></li>
+möglichst vollständig dokumentiert werden. <b>[Update 20.02.19: <a href="../docs/documentation_v01rc.pdf">Dokumentation 0.1rc</a>]</b></p></li>
 <li><b>Zeitplan</b>: Es war von Frühling bis Sommer 2019 die Rede - es wird wohl eher Sommer ... ;-)</p></li>
 </ul>
 </p>

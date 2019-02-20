@@ -2,17 +2,17 @@
 \lyxformat 413
 \begin_document
 \begin_header
-\textclass paper
+\textclass article
 \use_default_options true
 \maintain_unincluded_children false
-\language ngerman
+\language english
 \language_package default
 \inputencoding auto
 \fontencoding global
 \font_roman default
 \font_sans default
 \font_typewriter default
-\font_default_family sfdefault
+\font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
@@ -25,7 +25,6 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
-\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -77,9 +76,8 @@ VSTENO - kurz Vector Shorthand Tool with Enhanced Notational Options oder
  zu Deutsch Vektor-Kurzschrift-Werkzeug mit erweiterten Darstellungsoptionen
  - ist ein PHP-Programm zur automatisierten Generierung von Kurzschrifttexten
  (Stenogrammen) unter Verwendung des SVG-Grafikformates.
- Die generierten Texte können als HTML-Seite in einem Browser angezeigt
- oder von dort als PDF exportiert und zum Beispiel auf einem E-Reader gelesen
- werden.
+ Die Texte können als HTML-Seite in einem Browser angezeigt oder von dort
+ als PDF exportiert und zum Beispiel auf einem E-Reader gelesen werden.
  
 \end_layout
 
@@ -96,8 +94,8 @@ Den Kern des Programmes bildet die so genannte Steno Engine, ein abstraktes
 \end_layout
 
 \begin_layout Abstract
-VSTENO ist Freie Software - das Programm kann unter der GPL (General Public
- License) frei kopiert und genutzt werden.
+VSTENO ist Freie Software - das Programm kann also unter der GPL (General
+ Public License) frei kopiert und genutzt werden.
  Die aktuelle und hier dokumentierte Version ist 0.1rc (rc = release candidate
  oder Beta-/Testversion) und richtet sich sowohl an Anwender/innen, Linguist/inn
 en und Programmierer/innen.
@@ -120,14 +118,8 @@ Die letzte Dokumentation von VSTENO liegt schon einige Zeit zurück
 status open
 
 \begin_layout Plain Layout
-Anwender/innen-Tutorial (
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
-
-\end_inset
-
-) vom 11.
+Anwender/innen-Tutorial (https://www.vsteno.ch/docs/vsteno_tutorial.pdf) vom
+ 11.
  August 2018 und Tutorial für Linguist/innen (https://www.vsteno.ch/docs/tutorial_
 linguistinnen.pdf) vom 18.
  August 2018.
@@ -139,21 +131,13 @@ linguistinnen.pdf) vom 18.
  Seitdem ist viel passiert: Datenbankfunktionen, externe Formelsprache,
  Weiterentwicklung der Steno Engine - dies alles sind Neuerungen, die bis
  heute nirgendwo erläutert wurden.
- 
-\end_layout
-
-\begin_layout Standard
-Höchste Zeit also, dies nachzuholen und so Ihnen, den Anwender/innen die
+ Höchste Zeit also, dies nachzuholen und so Ihnen, den Anwender/innen die
  Möglichkeit zu geben, eigene Stenografie-Systeme umzusetzen.
  Denn dies ist zugegebenermassen eine der primären Visionen von VSTENO:
  Stenograf/innen anderer Systeme dazu zu animieren, Ihr eigenes Stenografie-Syst
-em mit VSTENO umzusetzen! 
-\end_layout
-
-\begin_layout Standard
-Wie jedes quelloffene, freie Software-Projekt strebt VSTENO danach, irgendwann
- jenes entscheidende Momentum zu gewinnen, das den Quantensprung vom Einpersonen
-- ins Community-Projekt schafft.
+em mit VSTENO umzusetzen! Wie jedes quelloffene, freie Software-Projekt
+ strebt VSTENO danach, irgendwann jenes entscheidende Momentum zu gewinnen,
+ das den Quantensprung vom Einpersonen- ins Community-Projekt schafft.
  Mir ist sehr wohl bewusst, dass Stenografie heutzutage nicht mehr 
 \begin_inset Quotes eld
 \end_inset
@@ -165,10 +149,7 @@ so der Renner
  ist, aber die Möglichkeit, dank VSTENO in Zukunft jeden beliebigen Roman
  in einem x-beliebigen Kurzschrift-System zu lesen, könnte vielleicht doch
  dazu führen, dass die Stenografie wieder etwas populärer wird.
-\end_layout
-
-\begin_layout Standard
-Aus eigener Erfahrung kann ich sagen, dass das Verwenden der Kurzschrift
+ Aus eigener Erfahrung kann ich sagen, dass das Verwenden der Kurzschrift
  umso mehr Spass macht, je besser man sie beherrscht, und zur Beherrschung
  gehört nicht nur das Schreiben, sondern vor allem auch das flüssige Lesen.
  Gerade hier kann VSTENO mit seinem 
@@ -183,13 +164,13 @@ Lesestoff à gogo
 \end_layout
 
 \begin_layout Standard
-Sollte jemand Interesse haben, VSTENO weiterzuentwickeln - als Linguist/in
+Sollte also jemand Interesse haben, VSTENO weiterzuentwickeln - als Linguist/in
  (andere Systeme) oder als Programmierer/in (Erweiterung des Programmes),
  dann bitte bei mir melden (m.maci@gmx.ch)!
 \end_layout
 
 \begin_layout Standard
-Nun wünsche ich viel Spass und anregende Lesestunden mit VSTENO!
+Nun wünsche ich aber viel Spass und angeregte Lesestunden mit VSTENO!
 \end_layout
 
 \begin_layout Part*
@@ -206,13 +187,14 @@ Lesestoff
 \end_inset
 
  verwenden wollen.
- Sie erfahren hier, wo Sie gemeinfreie Bücher finden, die Sie mit VSTENO
- übertragen können, wie Sie die Bücher in Kurzschrift übertragen und wie
- Sie die Stenografie-Texte ausdrucken oder auf einem E-Reader lesen können.
+ Sie erfahren hier, (1) wo sie gemeinfreie Bücher finden, die sie mit VSTENO
+ übertragen können, (2) wie sie die Bücher in Kurzschrift übertragen und
+ (3) wie sie die Stenografie-Texte ausdrucken oder auf einem E-Reader lesen
+ können.
 \end_layout
 
 \begin_layout Section*
-Bücher
+(1) Bücher
 \end_layout
 
 \begin_layout Standard
@@ -233,13 +215,7 @@ Es gibt allerdings auch Bücher, die gemeinfrei sind, entweder weil deren
 status open
 
 \begin_layout Plain Layout
-\begin_inset CommandInset href
-LatexCommand href
-target "https://de.wikipedia.org/wiki/Creative_Commons"
-
-\end_inset
-
-
+https://de.wikipedia.org/wiki/Creative_Commons
 \end_layout
 
 \end_inset
@@ -250,13 +226,7 @@ target "https://de.wikipedia.org/wiki/Creative_Commons"
 \end_layout
 
 \begin_layout Quotation
-\begin_inset CommandInset href
-LatexCommand href
-target "http://gutenberg.spiegel.de/"
-
-\end_inset
-
-
+http://gutenberg.spiegel.de/
 \end_layout
 
 \begin_layout Standard
@@ -270,7 +240,7 @@ status open
 \begin_layout Plain Layout
 Es ist dann z.B.
  möglich einen gemeinfreien Roman in Kurzschrift zu übertragen und öffentlich
- im Internet zum Download anzubieten.
+ im Internet zum Download anzubieten
 \end_layout
 
 \end_inset
@@ -283,7 +253,7 @@ Es ist dann z.B.
 \end_layout
 
 \begin_layout Section*
-Übertragen
+(2) Übertragen
 \end_layout
 
 \begin_layout Standard
@@ -294,10 +264,10 @@ status open
 \begin_layout Plain Layout
 Empfohlen wird Firefox.
  VSTENO ist Freie Software und wurde somit ausschliesslich unter Linux und
- unter Verwendung von Freier Software entwickelt.
+ unter Verwendung mit freier Software entwickelt.
  Getestet wurde VSTENO ausschliesslich auf den Browsern IceCat und ABrowser
  (unter Trisquel 7).
- Einige Funktionalitäten (insbesondere von VPAINT, welches JavaScript verwendet)
+ Einige Funktionalitäten (insbesondere von VPAINT, welches JavaScript verwenden)
  laufen ausdrücklich nicht auf Browsern wie Safari und Internet Explorer.
 \end_layout
 
@@ -305,7 +275,7 @@ Empfohlen wird Firefox.
 
  und geben die Adresse www.vsteno.ch ein.
  Es existieren grundsätzlich zwei mögliche Formate, um Texte zu übertragen
- und zu lesen: (1) im Webbrowser und (2) auf einem E-Reader (via PDF).
+ und zu lesen: (1) im Webbrowser und (2) auf einem E-Reader (PDF).
  
 \end_layout
 
@@ -363,14 +333,8 @@ Die Empfehlung für einen E-Ink-Reader kommt mir allerdings nicht leicht
 status open
 
 \begin_layout Plain Layout
-Ich verweise hier nurmal auf Richard Stallmans Seite: 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://stallman.org/amazon.html"
-
-\end_inset
-
-.
+Ich verweise hier nurmal auf Richard Stallmans Seite: https://stallman.org/amazon.
+html.
  Aus persönlicher Sicht füge ich hinzu, dass ich es stossend finde, dass
  ein Mensch wie Jeff Bezos, seines Zeichens reichster Mann der Welt, ein
  weltweites Unternehmen führt, das Angestellte unter unmenschlichen Arbeitsbedig
@@ -378,14 +342,8 @@ ungen ausbeutet, im Namen der Globalisierung jeden lokalen Markt kaputt
  macht - und schliesslich noch die Frechheit hat, Steuerschlupflöcher zu
  nutzen, die dazu führen, dass die Firma Amazon im Jahr 2018 nicht nur keine
  Steuern bezahlt hat, sondern sogar noch 129 Millionen Dollar vom Fiskus
- rückerstattet erhielt (siehe hier: 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.nau.ch/news/wirtschaft/amazon-zahlt-in-den-usa-keine-steuern-65485543"
-
-\end_inset
-
-).
+ rückerstattet erhielt (siehe hier: https://www.nau.ch/news/wirtschaft/amazon-zahl
+t-in-den-usa-keine-steuern-65485543).
 \end_layout
 
 \end_inset
@@ -399,14 +357,8 @@ target "https://www.nau.ch/news/wirtschaft/amazon-zahlt-in-den-usa-keine-steuern
 status open
 
 \begin_layout Plain Layout
-Hilfreich dabei ist aus meiner Sicht die Seite: 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.ethicalconsumer.org/technology/shopping-guide/tablets-e-readers"
-
-\end_inset
-
-
+Hilfreich dabei ist aus meiner Sicht die Seite: https://www.ethicalconsumer.org/te
+chnology/shopping-guide/tablets-e-readers
 \end_layout
 
 \end_inset
@@ -421,15 +373,15 @@ PDF
 
 \begin_layout Standard
 Es empfiehlt sich Kurzschrift-Texte via PDF auf den E-Reader zu transferieren.
- Dies kann in zwei Schritten erreicht werden: (1) Generieren der gelayouteten
+ Die kann in zwei Schritten erreicht werden: (1) generieren der gelayouteten
  Seiten im Webbrowser und (2) Export der Seiten als PDF (via Druckfunktion
  des Browsers).
  
 \end_layout
 
-\begin_layout Enumerate
-Gehen Sie auf die Seite www.vsteno.ch und wählen Sie Maxi aus der linken Navigatio
-nsleiste.
+\begin_layout Standard
+(1) Gehen Sie auf die Seite www.vsteno.ch und wählen Sie Maxi aus der linken
+ Navigationsleiste.
  Geben Sie den Text ein (oder kopieren Sie ihn aus der Zwischenablage) und
  wählen Sie dann folgende Einstellungen: Fenster = Vollseite (ohne Button);
  Ausgabe = Layout (statt Inline).
@@ -441,8 +393,8 @@ nsleiste.
  Klicken Sie anschliessend auf abschicken.
 \end_layout
 
-\begin_layout Enumerate
-Im Unterschied zu Inline erscheint ihr Text nun gelayoutet, d.h.
+\begin_layout Standard
+(2) Im Unterschied zu Inline erscheint ihr Text nun gelayoutet, d.h.
  für jede Seite wird nun eine grosse SVG-Grafik erstellt und die Stenogramme
  darin platziert (standardmässig ist die Seite 660x1000 Punkte gross und
  die Stenogramme werden im Blocksatz dargestellt).
@@ -519,26 +471,8 @@ Damit Sie - insbesondere bei längeren Texten (wie Büchern), die Sie von
 \end_layout
 
 \begin_layout Itemize
-Rufen Sie die Seite mit dem Text auf, den Sie kopieren möchten
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Wir verwenden hier im Folgenden die 
-\begin_inset Quotes eld
-\end_inset
-
-Notwendige Vorrede
-\begin_inset Quotes erd
-\end_inset
-
- aus Matto regiert von Friedricht Glauser in der Version des Projekts Gutenberg,
- siehe http://gutenberg.spiegel.de/buch/matto-regiert-1855/1.
-\end_layout
-
-\end_inset
-
-.
+Rufen Sie die Seite mit dem Text auf, den Sie kopieren möchten (z.B.
+ http://gutenberg.spiegel.de/buch/matto-regiert-1855/1).
 \end_layout
 
 \begin_layout Itemize
@@ -569,7 +503,7 @@ Fügen Sie diesen Text (inklusive HTML-Tags) ins Textfeld von VSTENO ein
 \end_layout
 
 \begin_layout Standard
-Hier unser Beispieltext als HTML-Quellcode:
+Hier also Beispiel der obige Text als HTML-Quellcode:
 \end_layout
 
 \begin_layout LyX-Code
@@ -628,33 +562,10 @@ Unter Zeichen haben Sie die Möglichkeit Grösse, Dicke, Neigung, Schattierung
  (Inline und Layouted) implementiert! Am wichtigsten für ein gutes Schriftbild
  auf einem E-Reader (oder beim Ausdrucken) ist jedoch die Schriftgrösse
  und die Schriftdicke.
- Experimentieren Sie etwas mit diesen Werten, um die optimalen Grössen für
+ Experimentieren Sie etwas mit diesen Werten, um die optimalen Werte für
  Ihren E-Reader zu finden! Gleiches gilt für die Parameter unter Layouted:
  Experimentieren Sie mit Höhe/Breite, Randeinstellungen etc.
  um die für Sie optimalen Werte zu finden!
-\end_layout
-
-\begin_layout Subsubsection*
-Inline-Option-Tags
-\end_layout
-
-\begin_layout Standard
-Die Layouts können mit so genannten Inline-Option-Tags bis zu einem gewissen
- Grad noch weiter verfeinert werden.
- Info hierzu finden Sie unter 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Die Unterstützung von Inline-Option-Tags ist in der Version 0.1rc allerdings
- noch rudimentär und funktioniert insbesondere im Layout-Modus nur sehr
- eingeschränkt.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -669,17 +580,14 @@ Diese Zeichen geben VSTENO an, ob es sich um ein zusammengesetztes Wort
  Betrachten wird die beiden Wörter Lebenspartner und Eulenspiegel.
  Beide Wörter sind aus zwei Einzelwörtern zusammengesetzt und beide weisen
  an der Verbindungsstelle die Konsontengruppe -nsp- auf.
-\end_layout
-
-\begin_layout Standard
-Im System Stolze-Schrey können diese auf zwei Arten gruppiert werden: (1)
+ Im System Stolze-Schrey können diese auf zwei Arten gruppiert werden: (1)
  -ns- plus -p- oder (2) -n- plus -sp-.
  VSTENO hat grundsätzlich keine Möglichkeit zu entscheiden, welches die
  bessere Gruppierung ist.
  Sie können aber eine Gruppierung erzwingen, indem Sie die Einzelwörter
  mit | und 
 \backslash
- trennen:
+ abtrennen:
 \end_layout
 
 \begin_layout LyX-Code
@@ -723,8 +631,8 @@ Drucken
 Nebst der Ausgabe der Stenogramme im Webbrowser oder auf einem E-Reader
  können Sie diese natürlich auch ausdrucken.
  Auch hier wird (wie beim E-Reader) der Modus Layout (anstelle von Inline)
- empfohlen, da VSTENO dann ganze Seiten generiert (und die Stenogramme innerhalb
- der Seite ästhetisch - z.B.
+ empfohlen, da VSTENO dann ganze Seiten generiert (und die Stenogramme dann
+ darauf ästhetisch - z.B.
  unter Verwendung von Blocksatz - anordnet).
  Ebenfalls wird empohlen, die Optionen Vollseite und ohne Button zu verwenden,
  damit VSTENO die Stenogramme auf eine leere Seite setzt (und nicht das
@@ -734,9 +642,9 @@ Nebst der Ausgabe der Stenogramme im Webbrowser oder auf einem E-Reader
 \begin_layout Standard
 Zum Drucken können Sie entweder ein PDF exportieren (wie für den E-Reader)
  oder die Druckfunktion des Browsers direkt verwenden.
- Auch hier empfiehlt es sich, verschiedene Einstellungen (Grösse, Dicke,
- Layout: Breite/Höhe, Rand etc.) auszuprobieren, um herauszufinden, welche
- Werte auf Ihrem Drucker die besten Resultate ergeben.
+ Auch hier empfiehlt es sich mit den verschiedenen Einstellungen (Grösse,
+ Dicke, Layout: Breite/Höhe, Rand etc.) etwas auszuprobieren, welche Werte
+ auf Ihrem Drucker die besten Resultate ergeben.
 \end_layout
 
 \begin_layout Part*
@@ -769,13 +677,7 @@ Im Mai 2018 gelangte eine erste Version auf Github
 status open
 
 \begin_layout Plain Layout
-\begin_inset CommandInset href
-LatexCommand href
-target "https://github.com/marcelmaci/vsteno"
-
-\end_inset
-
-
+https://github.com/marcelmaci/vsteno
 \end_layout
 
 \end_inset
@@ -792,22 +694,10 @@ Im August 2018 war das Programm so weit fortgeschritten, dass eine erste
 status open
 
 \begin_layout Plain Layout
-Anwender/innen-Tutorial (
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
-
-\end_inset
-
-) vom 11.
- August 2018 und Tutorial für Linguist/innen (
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/tutorial_linguistinnen.pdf"
-
-\end_inset
-
-) vom 18.
+Anwender/innen-Tutorial (https://www.vsteno.ch/docs/vsteno_tutorial.pdf) vom
+ 11.
+ August 2018 und Tutorial für Linguist/innen (https://www.vsteno.ch/docs/tutorial_
+linguistinnen.pdf) vom 18.
  August 2018.
 \end_layout
 
@@ -820,8 +710,8 @@ target "https://www.vsteno.ch/docs/tutorial_linguistinnen.pdf"
 \end_layout
 
 \begin_layout Standard
-Bis zu diesem Zeitpunkt (August) konnte VSTENO nur regelmässige Stenogramme
- generieren, d.h.
+Bis zu diesem Zeitpunkt konnte VSTENO nur regelmässige Stenogramme generieren,
+ d.h.
  Wörter, die automatisiert von der Langschrift in die Kurzschrift übertragen
  werden.
  Ausnahmen - also Wörter, die von den Regeln abweichen - konnten nicht oder
@@ -840,7 +730,8 @@ Der Trickster enthielt spezielle Regeln für unregelmässige Wörter.
 
 ) berücksichtigt werden.
  Aus diesem Grund erhielt VSTENO im September 2018 eine Datenbankanbindung.
- Abweichende Wörter konnten fortan in einem Wörterbuch hinterlegt werden.
+ Abweichende Wörter konnten somit fortan in einem Wörterbuch hinterlegt
+ werden.
 \end_layout
 
 \begin_layout Standard
@@ -859,8 +750,8 @@ ickeln, allerdings hatte sich im Laufe der Zeit gezeigt, dass der gewählte
  abrupte Übergänge realisierbar (kein Anti-Aliasing, Treppenbildung), ebenso
  wurden gewisse Stenozeichen durch den Neigungsalgorithmus verformt.
  Es entstand deshalb die Idee, eine neue Steno Engine zu entwickeln: die
- Steno Engine 1 (SE1) sollte nur noch Bugfixes erhalten und später durch
- eine bessere Steno Engine 2 (SE2) ersetzt werden.
+ Steno Engine 1 (SE1) sollte deshalb nur noch Bugfixes erhalten und später
+ durch eine bessere Steno Engine 2 (SE2) ersetzt werden.
  
 \end_layout
 
@@ -881,21 +772,16 @@ VSTENO und etwaige Hilfsprogramme sollten unbedingt via Webbrowser benutzbar
 \end_inset
 
 .
- Und je ausgefeilter VPAINT wurde, umso mehr begann die SE2 zu wuchern:
- Im Januar machte der Quellcode von VPAINT bereits die halbe Grösse des
- ursprünglichen PHP-Codes von VSTENO aus.
+ Und die SE2 begann zu wuchern: Im Januar machte der Quellcode von VPAINT
+ bereits die halbe Grösse des ursprünglichen PHP-Codes von VSTENO aus.
  Dabei war dies erst der Editor und die Implementierung der SE2 in PHP noch
  in weiter Ferne ...
- 
-\end_layout
-
-\begin_layout Standard
-Dies wurde insofern zu einem Dilemma, als dass jede linguistische Weiterentwickl
-ung des Systems Stolze-Schrey blockiert war: Wenn die SE1 entfernt werden
- sollte, machte es keinen Sinn, die bereits vorhandenen Zeichen und Regeln
- weiterzuentwickeln (da sie für die SE2 nicht mehr gültig sein würden);
- andererseits konnten keine neuen Zeichen und Regeln definiert werden, solange
- die SE2 nicht fertig war.
+ Dies wurde insofern zu einem Dilemma, als dass jede linguistische Weiterentwick
+lung blockiert war: Wenn die SE1 entfernt werden sollte, machte es keinen
+ Sinn, die Zeichen und Regeln für die Grundschrift Stolze-Schrey weiterzuentwick
+eln (da sie für die SE2 nicht mehr gültig sein würden); andererseits konnten
+ keine neuen Zeichen und Regeln definiert werden, solange die SE2 nicht
+ fertig war.
 \end_layout
 
 \begin_layout Standard
@@ -903,7 +789,7 @@ Im Januar hielt ich es schliesslich für eine gute Idee, dem Dilemma durch
  die magischen Worte Backports und Rückwärtskompabilität zu entkommen: Es
  sollten also die wichtigsten Features der SE2 auf die SE1 rückportiert
  werden (damit insbesondere auch der Editor VPAINT für die SE1 verwendet
- werden könnte) und die neue SE1 (nun mit dem Namen SE1 rev1) sollte vollständig
+ werden könnte) und die neue SE1 (mit dem Namen SE1 rev1) sollte vollständig
  rückwärtskompatibel (zur ursprünglichen SE1 rev0) sein.
  Die SE1 rev1 sollte also das 
 \begin_inset Quotes eld
@@ -913,11 +799,11 @@ Beste aus zwei Welten
 \begin_inset Quotes erd
 \end_inset
 
- vereinen - die aufgebretzelte eierlegende Wollmichsau, gewissermassen.
+ vereinen.
 \end_layout
 
 \begin_layout Standard
-Aber schön ist bekanntlich (nur) die Theorie! Im Februar wurde klar, dass
+Aber schön ist bekanntlich (nur) die Theorie! Im Februar war klar, dass
  die Rückwärtskompatibilität sehr wackelig war und die zum Teil gewagten
  Backports die SE1 aus entwicklungstechnischer Sicht auf ein Alpha-Stadium
  zurückwarfen.
@@ -988,22 +874,21 @@ Weiteres wird im Dokument https://www.vsteno.ch/docs/stenoengines.pdf erläutert
 :
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
 Ursprüngliche Steno Engine 1 (SE1 rev0): Hier wird die Mittellinie der Zeichen
  anhand von aufeinanderfolgenden Bezier-Kurven (so genannte Splines) modelliert.
- Dickere und dünnere Stellen werden durch dickere und dünnere Striche dargestell
-t.
- Der Übergang von einer Strichdicke zur nächsten erfolgt abrupt (diskontiuierlic
-h), was je nachdem eine Treppenbildung zur Folge hat.
- Die SE1 neigt Zeichen ausschliesslich durch horizontale Punktverschiebung,
- was zu einer Änderung der Winkel führt, sodass die Zeichen - je nach Art
- und Beschaffenheit - verformt werden.
+ Dickere und dünnere Stellen werden durch dickere und dünnere Striche modelliert.
+ Der Übergang von einer Strichdicke zur nächsten erfolgt abrupt (was je
+ nachdem eine Treppenbildung zur Folge hat).
+ Die SE1 neigt Zeichen ausschliesslich durch horizontale Punktverschiebung
+ (was eine Änderung der Winkel zur Folge hat und die Zeichen deshalb - je
+ nach Art des Zeichens - verformt).
  Die einzige Möglichkeit, mit der SE1 rev0 schöne Zeichen zu modellieren,
  besteht darin, das Zeichen direkt in der vorgesehenen Neigung zu entwerfen
  (VSTENO verwendet im Fall der Grundschrift Stolze-Schrey 60 Grad).
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
 Steno Engine Revision 1 (SE1 rev1): Verwendet die gleiche Mittellinienmodellieru
 ng und horizontale Punktverschiedbung wie die SE1 rev0.
  Zwei Features der SE2 wurden jedoch als Hacks rückportiert: (1) parallele
@@ -1029,7 +914,7 @@ ssig funktioniert und deshalb in der Version 0.1rc deaktiviert wurde.
  
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
 Steno Engine 2: Hier wird ausgehend von einer Mittellinie (wie in der SE1)
  ein Umriss des Zeichens modelliert.
  Jedes Zeichen ist also eine Fläche, die von Bezier-Kurven (Splines) umschlossen
@@ -1040,10 +925,10 @@ Steno Engine 2: Hier wird ausgehend von einer Mittellinie (wie in der SE1)
  Ebenfalls bietet die SE2 nebst der horizontalen Punktverschiebung (wie
  in der SE1) zwei weitere Möglichkeiten, Zeichen zu neigen: so genannte
  (1) orthogonale und proportionale Knots (Punkte).
- Beide Punkte stehen vertikal auf einer Rotationsachse (und rotieren mit
- ihr), wobei bei den orthogonalen Knots die Abstände vom Rotationspunkt
- und zur Rotationsachse nicht korrigiert werden (das Zeichen verliert dann
- durch die Neigung an Höhe, ausserdem können sich gewisse Punkte durch die
+ Beide Punkte stehen vertikal auf einer Rotationsachse (und rotieren somit
+ mit ihr), wobei bei den orthogonalen Knots die Abstände vom Rotationspunkt
+ und zur Rotationsachse nicht korrigiert werden (das Zeichen verliert durch
+ die Neigung dann an Höhe, ausserdem können sich gewisse Punkte durch die
  Drehung unter die Grundlinie verschieben).
  Proportionale Knots korrigieren den Abstand vom Rotationspunkt (das Zeichen
  wird bei der Drehung also länger, was z.B.
@@ -1055,6 +940,45 @@ en Knot eine parallele Rotationsachse zu definieren.
  Die Funktionalitäten der SE2 funktionieren in VPAINT zu ca.
  95%, dennoch ist die SE2 bis heute nicht als PHP-Code innerhalb von VSTENO
  implementiert.
+ 
+\end_layout
+
+\begin_layout Standard
+Wenn Sie das Programm VSTENO einfach zur Übertragung von deutschen Texten
+ in die Grundschrift von Stolze-Schrey nutzen möchten (z.B.
+ zum Lesen von Texten auf einem E-Reader oder dergleichen), dann benötigen
+ dieses Tutorial nicht, sondern können einfach die Demoversion von VSTENO
+ mit den vordefinierten Zeichen und Regeln verwenden.
+ Wenn Sie aber ein eigenes Stenografie-System umsetzen möchten - z.B.
+ die Eilschrift von Stolze-Schrey oder auch andere Sprachen wie Spanisch,
+ Französisch, Italienisch, Englisch oder ein System, das nicht von Stolze-Schrey
+ ist, aber ähnlich funktioniert (wie z.B.
+ DEK) - dann benötigen Sie das folgende Tutorial, um zu verstehen, wie man
+ selber Zeichen und Regeln formuliert, um Langschrift- in Kurzschrifttexte
+ umzuwandeln.
+\end_layout
+
+\begin_layout Standard
+Mit Drucklegung dieser Dokumentation verfügt VSTENO noch über keine Datenbankfun
+ktionen und keinen Editor zum Erstellen, Speichern und Einlesen von Zeichen
+ und Regeln.
+ Besagte Daten müssen deshalb als PHP-Code eingegeben werden.
+ Ich bin mir bewusst, dass Linguisten und Sprachwissenschaftler nicht zwangsläuf
+ig über Programmierkenntnisse verfügen (oder zumindest wenig erpicht sind,
+ linguistische Daten als Programmcode einzugeben).
+ Dennoch ist dies - wie ich im Folgenden zeigen möchte - auch keine Hexerei
+ (oder zumindest nicht schwieriger als das Verfassen eigener Zeichen und
+ Regeln).
+ Ein separator Editor für linguistische Daten ist selbstverständlich geplant.
+ Die Implementierung desselben wir jedoch einige Zeit in Anspruch nehmen,
+ weshalb es mir ein Anliegen ist, die linguistischen Funktionen bereits
+ jetzt zu erklären und zu dokumentieren.
+ Es ist übrigens zu betonen, dass sich an der Funktionalität von VSTENO
+ nichts ändert: Ob mit oder ohne Editor - die Möglichkeiten des Programmes
+ bleiben genau die gleichen.
+ Der geplante Editor wird somit nur eine andere (selbstverständlich leichtere
+ und intuitivere) Möglichkeit sein, dem Programm die linguistischen Daten
+ zur Verfügung zu stellen.
  
 \end_layout
 
@@ -1080,9 +1004,9 @@ e-System definieren können.
 Dies alles wird im Folgenden detailliert und anhand von Beispielen aus dem
  System Stolze-Schrey (welches der Grundversion von VSTENO standardmässig
  beiliegt) erklärt.
- Sie können die Beispiele auch selber ausprobieren, indem Sie auf der Webseite
- www.vsteno.ch ein Benutzerkonto anlegen und das Modell custom abändern oder
- neu erstellen.
+ Sie können solche die Beispiele auch selber ausprobieren, indem Sie auf
+ der Webseite www.vsteno.ch ein Benutzerkonto anlegen und das Modell custom
+ abändern oder neu erstellen.
 \end_layout
 
 \begin_layout Section*
@@ -1119,14 +1043,8 @@ Falls Sie das System Stolze-Schrey nicht kennen, melden Sie sich bei mir
 
 \begin_layout Standard
 Detailliertere Informationen zum Anlegen eines Kontos inklusive grafischer
- Screenshots finden Sie auch unter: 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/mitmachen_bei_vsteno.pdf"
-
-\end_inset
-
-.
+ Screenshots finden Sie auch unter: https://www.vsteno.ch/docs/mitmachen_bei_vsten
+o.pdf.
 \end_layout
 
 \begin_layout Section*
@@ -1139,22 +1057,14 @@ Sie sind also ein/e passionierte/r Stenograf/in, schreiben ein System, das
  DEK, Stiefografie oder Varianten von Stolze-Schrey wie Eil-/Redeschrift
  oder andere Sprachen wie Französisch, Spanisch, Englisch), und möchten
  gerne wissen, wie Sie VSTENO dazu bringen, Texte in diesem System auszugeben.
- 
-\end_layout
-
-\begin_layout Standard
-Als erstes müssen Sie VSTENO hierfür beibringen, wie die Zeichen in Ihrem
+ Als erstes müssen Sie VSTENO hierfür beibringen, wie die Zeichen in Ihrem
  System aussehen.
  Dies ist durchaus grafisch zu verstehen, das heisst: Sie müssen VSTENO
  beibringen, welche Linien es schreiben muss, damit ein Zeichen so aussieht,
  wie es aussehen soll.
  Auch können Zeichen unter Umständen (je nach System) schattiert werden
  können.
- 
-\end_layout
-
-\begin_layout Standard
-Dies alles müssen Sie VSTENO beibringen.
+ Dies alles müssen Sie VSTENO beibringen.
  In gewissem Sinne werden Sie also zu einem/r Stenografie-Lehrer/in - und
  VSTENO wiederum ist Ihr/e Stenografie-Schüler/in.
  Das einzige, was Sie nun noch brauchen für Ihren Unterricht, ist die (gemeinsam
@@ -1173,16 +1083,12 @@ drücken
 \begin_layout Standard
 Vermutlich kennen Sie jene Kindermalbücher mit Zeichnungen, die aus vielen
  nummerierten Punkten bestehen.
- Die Punkte dienen dazu, dass ein Kind, das u.U.
+ Die Punkte dienen dafür, dass ein Kind, das u.U.
  noch nicht so gut zeichnen kann, relativ simpel einen Elefanten, eine Giraffe
  (oder was immer vorgegeben ist) zeichnen kann.
  Die Zeichnung entsteht, indem man den Stift bei Punkt 1 ansetzt und dann
  alle folgenden Punkte verbindet.
- 
-\end_layout
-
-\begin_layout Standard
-Die gute Nachricht ist nun: VSTENO funktioniert im Prinzip genau gleich!
+ Git gute Nachricht ist nun: VSTENO funktioniert im Prinzip genau gleich!
  Jedes Zeichen ist als eine 
 \begin_inset Quotes eld
 \end_inset
@@ -1284,7 +1190,8 @@ Nun gut: Auf den ersten Blick sieht das vielleicht nun doch relativ verwirrlich
  aus, deshalb vereinfachen wir die Sache gleich noch etwas, indem wir das,
  was wir für das Verständnis nicht benötigen, weglassen.
  Ausserdem können Sie alles zwischen den Zeichen /* und */ ignorieren: Hierbei
- handelt es sich um Kommentare, die für VSTENO keine weitere Bedeutung haben
+ handelt es sich um Kommentare, die für den Programmcode bzw.
+ das Programm selber keine Bedeutung haben
 \begin_inset Foot
 status open
 
@@ -1492,8 +1399,8 @@ T
 \begin_inset Quotes erd
 \end_inset
 
- aussieht, dann gehen Sie am besten zur Webseite www.vsteno.ch und geben Wörter
- mit 
+ aussieht, dann gehen Sie am besten zur Demoversion und geben Wörter mit
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1511,8 +1418,8 @@ beten
 \end_inset
 
 .
- Standardmässig ist eine Neigung von 60° voreingestellt, weshalb das Zeichen
- nicht senkrecht, sondern um 60 Grad geneigt erscheint.
+ In der Demoversion ist eine Neigung von 60° voreingestellt, weshalb das
+ Zeichen nicht senkrecht, sondern um 60 Grad geneigt erscheint.
  Wenn Sie das Zeichen so sehen möchten, wie wir es oben definiert haben,
  dann geben Sie im Formular unter Optionen 90° ein: Sowohl der Buchstabe
  
@@ -4871,12 +4778,9 @@ Absolute Koordinaten
 \end_layout
 
 \begin_layout Standard
-Eine weitere Frage betrifft die Koordinaten: Wie werden diese von VSTENO
- gehandhabt? Prinzipiell können diese als absolute oder relative Werte betrachte
-t werden.
- Deshalb muss VSTENO angegeben werden, wie es die Koordinaten verrechnen
- soll.
- Dies geschieht im Offset 18, der für die 
+Damit nähern wir uns allmählich doch dem Ende der Erklärungen zum Header.
+ Es bleiben uns allerdings noch drei letzte Dinge zu klären.
+ Das erste betrifft den Offset 18, der für die 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4885,7 +4789,7 @@ Interpretation y-Koordinate
 \end_inset
 
  steht.
- Das Feld kann zwei Werte annehmen:
+ Dieses Feld kann zwei Werte annehmen:
 \end_layout
 
 \begin_layout Standard
@@ -5015,11 +4919,11 @@ Unverbundene Zeichen
 \end_layout
 
 \begin_layout Standard
-Zeichen können verbunden (mit Vorzeichen) oder unverbunden sein.
- Dies trifft zum Beispiel auf Zahlen zu.
+Der zweitletzte Hinweis zum Header betrifft unverbundene Zeichen: Dies können
+ zum Beispiel Zahlen sein.
  Diese werden - auch in einem stenografischen Text - als normale Zahlen
- in Blockschrift geschrieben (und dürfen somit nicht an das vorangehende
- Zeichen angeschlossen werden).
+ geschrieben (und dürfen somit nicht an das vorangehende Zeichen angeschlossen
+ werden).
  Als Beispiel hier die Definition der Zahl 1 (die wir wiederum deshalb wählen,
  weil sie nur aus zwei geraden Strichen besteht und damit sehr einfach ist):
 \end_layout
@@ -5144,23 +5048,16 @@ Anfangsspannung
 \end_layout
 
 \begin_layout Standard
-Wie wir gesehen haben, müseen bei Bezier-Kurven für den Anfangs- und Endpunkt
- je zwei Spannungen (tensions) definiert werden: eine Eingans- und eine
- Ausgangsspannung.
- Die Spannungen stehen in den Felder t1 und t2 der 8er-Datentupel: 
-\end_layout
-
-\begin_layout LyX-Code
-x1, y1, t1, d1, th, dr, d2, t2
-\end_layout
-
-\begin_layout Standard
-Hierbei bezeichnet t1 die Ausggangsspannung des Punktes und t2 die Eingangsspann
-ung des folgenden Punktes.
- Logischerweise fehlt bei dieser Art der Datenspeicherung die Eingangsspannung
- des ersten Punktes.
- Um diesen Mangel zu beheben wird deshalb die Eingangsspannung des allerersten
- Punktes in den Offset 3 des Headers geschrieben.
+Damit kommen wir zum definitiv letzten Punkt des Headers, dem Offset 3,
+ welcher der Bedeutung tension before (Anfangsspannung betrifft).
+ Wie wir bei der Definition einzelner Punkte gesehen haben, enthält jedes
+ Datentupel zwei Spannungen: t1 für die Spannung die auf den Punkt folgt
+ und Spannung t2 vor dem nächsten Punkt.
+ Wenn die Spannungswerte auf diese Art gespeichert werden, ist schnell klar,
+ dass für den ersten Punkt keine Anfangsspannung definiert werden kann (da
+ ihm ja dann ein Punkt vorausgehen müsste, der ein Feld tension before enthält).
+ Dies wird nun so gelöst, dass die Spannung vor dem ersten Punkt in den
+ Offset 3 des Headers geschrieben wird.
 \end_layout
 
 \begin_layout Standard
@@ -5200,21 +5097,12 @@ Zeichenteile
 \end_layout
 
 \begin_layout Standard
-Ursprunglich konnten in der SE1 nur einzelne Zeichen definiert werden.
- Es kann jedoch auch Sinn machen, Zeichen als eine Folge (Aneinanderreihung)
- von einzelnen (und für verschiedene Zeichen verwendbare) Teile zu definieren.
- Dies wird erreicht, indem im Header im Offset 12 (Zeichentyp) der Wert
- 4 gesetzt wird: Die nachfolgenden Daten werden dann als 
-\begin_inset Quotes eld
-\end_inset
-
-Zeichenteile
-\begin_inset Quotes erd
-\end_inset
-
- betrachtet.
- Zeichenteile unterscheiden sich von Zeichen dadurch, dass sie miteinander
- verbunden (joined) werden können.
+Nach dem definitiv letzten Punkt wird aufgrund einer Erweiterung der SE1
+ rev0 eine weitere Ergänzung nötig: Wenn im Offset 12 des Header (= Zeichentyp)
+ der Wert 4 gesetzt wird, so bedeutet dies, dass die nachfolgenden Daten
+ als Zeichenteile behandelt werden.
+ Zeichenteile unterscheiden sich durch Zeichen dadurch, dass sie miteinander
+ verbunden (joined) werden.
 \end_layout
 
 \begin_layout Standard
@@ -5232,9 +5120,10 @@ Teile
 \end_inset
 
  (Wert 4 in Offset 12) definieren, so wird VSTENO sie nahtlos aneinanderfügen.
- Das heisst zum Beispiel, dass der Endpunkt von SP1 und der Anfangspunkt
- von SP2 nur einmal eingefügt wird (da sie zusammenfallen, genau gleich
- bei SP2 und SP3).
+ D.h.
+ z.B.
+ dass der Endpunkt von SP1 und der Anfangspunkt von SP2 nur einmal eingefügt
+ wird (da sie zusammenfallen, genau gleich bei SP2 und SP3).
  Der verbundene (joined) Punkt zwischen SP1 und SP2 erhält die Eingangsspannung
  von SP1 und die Ausgangsspannung von SP2.
 \end_layout
@@ -5251,7 +5140,7 @@ Der Punkttyp wurde eingefügt in der Annahme, dass sich Zeichenverbindungen
 
 \begin_layout Standard
 Die Funktion, Zeichenteile aneinanderfügen zu können, kann dennoch für den
- einen oder anderen Fall nützlich sein und wird drum in der SE1 rev0 belassen.
+ einen oder anderen Fall nützlich sein und wird drum in der SE1 rev1 belassen.
 \end_layout
 
 \begin_layout Subsection*
@@ -5260,9 +5149,8 @@ Stenofont
 
 \begin_layout Standard
 Nachdem wir nun gesehen haben, wie man ein Zeichen definiert, stellt sich
- die Frage: Wohin mit diesen Informationen, damit VSTENO sich auch verarbeiten
- kann? Betrachten wir noch einmal die komplette Definition des Zeichens
- 
+ die Frage: Wohin mit diesen Informationen, damit VSTENO sich auch bearbeitet?
+ Betrachten wir noch einmal die komplette Definition des Zeichens 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5293,35 +5181,17 @@ Spacer
 :
 \end_layout
 
-\begin_layout LyX-Code
-"T" => { /*h*/ 0, 0.5, 0, 0, 0, 0, 0, "", 
-\end_layout
-
-\begin_layout LyX-Code
-/**/ "", "", "", "", 0, 0, 0, 0, 
-\end_layout
-
-\begin_layout LyX-Code
-/**/ 0, 0, 0, 0, 0, 0, 0, 0, 
-\end_layout
-
-\begin_layout LyX-Code
-/*d*/ 0, 20, 0, 1, 3, 0, 0, 0, 
-\end_layout
-
-\begin_layout LyX-Code
-/**/ 0, 0, 0, 0, 1, 0, 1, 0,
-\end_layout
-
-\begin_layout LyX-Code
-/**/ 0, 2.5, 0, 4, 1, 0, 0, 0.5 } 
+\begin_layout Standard
+"T" => { /*h*/ 0, 0.5, 0, 0, 0, 0, 0, "", /**/ "", "", "", "", 0, 0, 0, 0,
+ /**/ 0, 0, 0, 0, 0, 0, 0, 0, /*d*/ 0, 20, 0, 1, 3, 0, 0, 0, /**/ 0, 0,
+ 0, 0, 1, 0, 1, 0, /**/ 0, 2.5, 0, 4, 1, 0, 0, 0.5 } 
 \end_layout
 
 \begin_layout Standard
 Diese Definition ist somit eines von vielen Zeichen, die wir zu einem so
  genannten Font (Schriftart) zusammenfassen.
- Ein Font wiederum ist Teil eines so genannten Modells (das einem Stenografische
-n System entspricht).
+ Ein Font wiederum ist ein Teil eines so genannten Modells (das einem Stenografi
+schen System entspricht).
  Ein Modell enthält nebst dem Font (Zeichendefinitionen) auch Regeln (rules),
  die angeben, wie die Zeichen verwendet werden sollen, sowie einen Header
  (Kopf), der allgemeine Informationen zum Modell enthält
@@ -5336,18 +5206,14 @@ In der SE1 rev0 ist der Header prinzipiell leer, kann aber dazu verwendet
 \end_inset
 
 .
- 
-\end_layout
-
-\begin_layout Standard
-VSTENO liest die Angaben für ein Modell - also das Font und die Regeln -
+ VSTENO liest die Angaben für ein Modell - als das Font und die Regeln -
  aus der Datenbank.
  Wenn Sie ein eigenes Font (Modell) erstellen wollen, benötigen Sie deshalb
  als erstes ein Benutzer/innen-Konto.
  Loggen Sie sich mit diesem Konto ein und wählen Sie das Modell custom,
  indem Sie links unten auf den Button standard klicken.
  Zur Erinnerung: Das Modell custom ist jener Datenbank-Eintrag, den Sie
- für Ihr persönliches Modell verwenden können (das Modell Standard hingegen
+ für ihr persönliches Modell verwenden können (das Modell Standard hingegen
  kann nicht überschrieben werden).
 \end_layout
 
@@ -5414,13 +5280,8 @@ Am besten, Sie werfen einen Blick auf das Modell der Grundschrift Stolze-Schrey
 status open
 
 \begin_layout Plain Layout
-\begin_inset CommandInset href
-LatexCommand href
-target "https://github.com/marcelmaci/vsteno/blob/master/ling/grundschrift_stolze_schrey_redesign.txt"
-
-\end_inset
-
-
+https://github.com/marcelmaci/vsteno/blob/master/ling/grundschrift_stolze_schrey_
+redesign.txt
 \end_layout
 
 \end_inset
@@ -5790,7 +5651,7 @@ Der TokenCombiner ist ein ungemein praktisches Werkzeug, um im Handumdrehen
 \begin_inset Quotes eld
 \end_inset
 
-D
+B
 \begin_inset Quotes erd
 \end_inset
 
@@ -8150,8 +8011,8 @@ Gross-/Kleinbuchstaben
 \end_layout
 
 \begin_layout Standard
-VSTENO bietet eine weitere, sehr nützliche Erweiterung des Standard-REGEX-Regelf
-ormalismus, um Gross- in Kleinbuchstaben umzuwandeln (und umgekehrt):
+VSTENO bietet eine weitere, sehr nützliche Erweiterung des Regelformalismus,
+ um Gross- in Kleinbuchstaben umzuwandeln (und umgekehrt):
 \end_layout
 
 \begin_layout LyX-Code
@@ -8196,7 +8057,7 @@ Mit dem Debug-Modus konnten wir bereits einen Eindruck gewinnen, wie (in
  Die Standardreihenfolge ist im Prinzip von oben nach unten.
  Aber es gibt auch Möglichkeiten, Gruppen von Regeln zu so genannten Funktionen
  zusammenzufassen und die Abarbeitungsreihenfolge dieser Funktionen selber
- zu definieren bzw.
+ definieren bzw.
  von Bedingungen abhängig zu machen.
  Aber der Reihe nach - betrachten wir zunächst ein Beispiel:
 \end_layout
@@ -8257,7 +8118,7 @@ Text oder Wort?
 \end_layout
 
 \begin_layout Standard
-Im Prinzip werden Regeln standardmässig auf einzelne Wörter angewandt.
+Im Prinzip werden Regeln auf standardmässig auf einzelne Wörter angewandt.
  Mit dem Schlüsselwort @@txt kann dies allerdings geändert werden:
 \end_layout
 
@@ -8291,7 +8152,7 @@ Im Prinzip werden Regeln standardmässig auf einzelne Wörter angewandt.
 
 \begin_layout Standard
 Diese Regeln werden also auf den gesamten Text angewendet.
- Das Schlüsselwort @@txt sollte nur am Anfang verwendet werden (bevor der
+ Das Schlüsselwort @@txt sollte nur am Anfang verwendet werden (before der
  Text nach einzelnen Wörter aufgeschlüsselt werden und steht mit Komma an
  der zweiten Stelle hinter dem Funktonsnamen (global).
  Sollen die Regeln auf ein Wort angewandt werden, muss - nur einmal innerhalb
@@ -8357,24 +8218,18 @@ Wörterbuch
 \begin_layout Standard
 Schickt der Regelparser ein Wort zum Wörterbuch, so wird es entweder gefunden
  oder nicht.
- Wenn es gefunden wird, enthält das Wörterbuch zwei Einträge namens STD
- (standard form) und PRT (print form).
- Der Unterschied zwischen den beiden ist grundsätzlich, dass STD eine Standard-V
-ersion von Stenogrammen darstellt.
+ Wenn es gefunden wird enthält das Wöterbuch zwei Variablen namens STD (standard
+ form) und PRT (print form).
+ Der Unterschied zwischen den beiden ist grundsätzlich, das STD eine Standard-Ve
+rsion von Stenogrammen darstellt.
  PRT wiederum entspricht quasi 1:1 dem Stenogramm, wie es am Ende generiert
  werden soll
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Weitere Hinweise zur STD und PRT Form finden sich hier: 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/mitmachen_bei_vsteno.pdf"
-
-\end_inset
-
-
+Weiter Hinweise zur STD und PRT Form finden sich hier: https://www.vsteno.ch/docs/
+mitmachen_bei_vsteno.pdf
 \end_layout
 
 \end_inset
@@ -8433,9 +8288,9 @@ weise zu
 
 .
  Die Zuweisung erfolgt hier der Variable std, welche der STD-Form entspricht.
- Jede Regelsammlung, die ein Stenografie-System definiert, sollte also eine
- Funktion enthalten, wo im End-Teil der Variablen STD ein Wert zugewiesen
- wird (damit diese für das Wörterbuch verwendet werden kann).
+ Jede Regelsammlung, die ein Stenografie-System definiert, sollte eine Funktion
+ enthalten, wo im End-Teil der Variablen STD ein Wert zugewiesen wird (damit
+ diese für das Wörterbuch verwendet werden kann).
 \end_layout
 
 \begin_layout Standard
@@ -8457,18 +8312,8 @@ Das Gleiche gilt für die PRT-Form, die ganz am Ende der Regelsammlung zugewiese
 
 \begin_layout Standard
 Wichtig: Im Unterschied zu @@txt, @@wrd und @@dic sind =:std und =: nur
- Variablen, die gesetzt und innerhalb des Parsers und des Wörterbuchs verwendet
- werden.
- Sie können deshalb nicht im Begin-Teil einer Funktion stehen (da sie nicht
- 
-\begin_inset Quotes eld
-\end_inset
-
-angefordert
-\begin_inset Quotes erd
-\end_inset
-
- werden können - entweder sie sind gesetzt oder nicht).
+ Variablen, die gesetzt werden.
+ Sie können deshalb nicht im Begin-Teil einer Funktion stehen.
  Wenn VSTENO die PRT-Form ausgehend von der STD-Form berechnen soll, verwendet
  es einfach als erstes jene Regel, welche auf die Zuweisung zur Variable
  STD folgt (es ist deshalb wichtig, innerhalb der Regeln eine solche Zuweisung
@@ -8480,8 +8325,8 @@ Verzweigungen
 \end_layout
 
 \begin_layout Standard
-Funktionen können auch definieren, welche Regeln bzw.
- welche Funktion als nächstes ausgeführt werden soll.
+Funktionen können auch definieren, welche Regeln als nächstes ausgeführt
+ werden sollen.
  Wird nichts angegeben, wird einfach die nächste Regel (aus der folgenden
  Funktion) ausgeführt.
  Alternativ kann eine bedingte Verzweigung angegeben werden:
@@ -8489,20 +8334,6 @@ Funktionen können auch definieren, welche Regeln bzw.
 
 \begin_layout LyX-Code
 #BeginSubSection(trickster)
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Hier also nochmals der berüchtigte Trickster - es bleibt zu hoffen, dass
- VSTENO sich dieses unseligen Compagnons bis zur finalen Version 0.1 definitiv
- entledigen kann ...
- Der Trickster eignet sich deshalb als Beispiel, weil er gleich zwei bedingte
- Verzweigungen enthält.
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout LyX-Code
@@ -8514,7 +8345,7 @@ Hier also nochmals der berüchtigte Trickster - es bleibt zu hoffen, dass
 \end_layout
 
 \begin_layout Standard
-Diese Funktion definiert folgende bedingte Verzweigungen:
+Diese Funktion definiert folgende bedingte Verzweigung:
 \end_layout
 
 \begin_layout Enumerate
@@ -8528,9 +8359,7 @@ Wenn sich das Wort nach Ausführung von Trickster verändert hat, verzweige
 \end_layout
 
 \begin_layout Standard
-Verglichen wird also das Wort am Anfang und am Ende der Funktion.
- Bedingte und unbedingte Verzweigungen können in VSTENO mit folgenden Zeichen
- definiert werden:
+Die Bedingung wird durch die Zeichen =, ! und > vor > ausgedrückt:
 \end_layout
 
 \begin_layout Itemize
@@ -8538,7 +8367,7 @@ Verglichen wird also das Wort am Anfang und am Ende der Funktion.
 \begin_inset Quotes eld
 \end_inset
 
-verzweige wenn gleich
+Verzweige wenn gleich
 \begin_inset Quotes erd
 \end_inset
 
@@ -8550,7 +8379,7 @@ verzweige wenn gleich
 \begin_inset Quotes eld
 \end_inset
 
-verzweige wenn nicht gleich
+Verzweige wenn nicht gleich
 \begin_inset Quotes erd
 \end_inset
 
@@ -8562,7 +8391,7 @@ verzweige wenn nicht gleich
 \begin_inset Quotes eld
 \end_inset
 
-verzweige in jedem Fall
+Verzweige in jedem Fall
 \begin_inset Quotes erd
 \end_inset
 
@@ -8574,8 +8403,8 @@ Gross- und Kleinbuchstaben
 \end_layout
 
 \begin_layout Standard
-Dieses Thema haben wir bis jetzt stillschweigend übergangen bzw.
- nur hie und da kurz angedeutet.
+Dieses Thema sind wir bis jetzt stillschweigend übergangen bzw.
+ haben es nur hie und da kurz angedeutet.
  Es geht um die Frage, wie Klein- und Grossbuchstaben in VSTENO verwendet
  werden.
 \end_layout
@@ -8837,863 +8666,59 @@ nd
  
 \end_layout
 
-\begin_layout Part*
-VPAINT
-\end_layout
-
-\begin_layout Standard
-Wie bereits erwähnt wurde VPAINT als Hilfsprogramm für VSTENO entwickelt:
- In der Version SE1 rev0 ist die Definition der Zeichen grundsätzlich nur
- via einen Text-Editor möglich.
- Stenografische Zeichen erscheinen darin als lange Listen abstrakter Zahlen,
- die keine visuelle Vorstellung der Zeichen erlaubt und ein intuitives Entwerfen
- und Bearbeiten von Stenozeichen praktisch unmöglich machen.
- Als Abhilfe sollte hier der grafische Editor VPAINT (VPAINT - an Amazing
- Interactive New Tool
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Vorläufig aber eher VPAINT - an Awfully Instable Nerd Tool (und man möge
- mir zugestehen, dass im Englischen die Variante instable für unstable,
- wenn auch seltener, durchaus existiert;-) 
-\end_layout
-
-\end_inset
-
-) schaffen.
-\end_layout
-
-\begin_layout Standard
-Wie bereits in Version (Rückblick) dargelegt, war eigentlich geplant, mit
- VPAINT 
-\begin_inset Quotes eld
-\end_inset
-
-durchzustarten
-\begin_inset Quotes erd
-\end_inset
-
-, d.h.
- mit VPAINT eine neue (bessere) SE2 zu entwickelt, diese sowohl in JavaScript
- als auch in PHP zu implementieren und schliesslich die SE1 in einer 
-\begin_inset Quotes eld
-\end_inset
-
-Operation am offenen Herzen
-\begin_inset Quotes erd
-\end_inset
-
- vollständig aus VSTENO zu entfernen und durch die SE2 zu ersetzen.
- Aus bereits dargelegten Gründen wurden diese Pläne geändert und stattdessen
- versucht, VPAINT mit einer - zwischenzeitlich zu einer rev1 weiterentwickelten
- SE1 - rückwärtskompatibel zu machen.
- Dies alles gefolgt von der weiteren Entscheidung, in der Version 0.1rc die
- SE1 rev1 komplett zu deaktivieren und nur dei SE1 rev0 zu verwenden.
-\end_layout
-
-\begin_layout Standard
-Der langen Rede kurzer Sinn: VPAINT ist mit der SE1 rev0 inkompatibel! Dennoch
- kann VPAINT in der Version 0.1rc von VSTENO wenigstens dazu verwendet werden,
- Stenografiezeichen zu visualisieren und - in eingeschränktem Masse - zu
- editieren, um schönere Zeichen zu gestalten und das Entwerfen der Stenozeichen
- intuitiver zu gestalten.
-\end_layout
-
-\begin_layout Standard
-Die folgenden Ausführen sollen somit aufzeigen, was möglich ist - und was
- Sie tunlichst (!) vermeiden sollten!
-\end_layout
-
-\begin_layout Section*
-Visualisieren
-\end_layout
-
-\begin_layout Standard
-Mit VPAINT können Stenozeichen aus dem Text-Editor (also so, wie wir sie
- bis jetzt editiert haben) visualisiert werden.
- Gehen Sie hierzu wie folgt vor:
-\end_layout
-
-\begin_layout Enumerate
-Gehen Sie auf die Seite www.vsteno.ch und loggen Sie sich ein.
-\end_layout
-
-\begin_layout Enumerate
-Wählen Sie das Modell custom (1x links unten auf den Button standard klicken)
-\end_layout
-
-\begin_layout Enumerate
-Klicken Sie in der linken Navigationsleiste auf VPAINT (das Programm wird
- geöffnet)
-\end_layout
-
-\begin_layout Enumerate
-Laden Sie nun ein Zeichen, indem Sie aus dem Pulldown-Menü Select das Zeichen
- wählen und auf Load klicken.
-\end_layout
-
-\begin_layout Standard
-Sie sehen nun die folgende Darstellung:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename /home/smuege/Schreibtisch/vpaint_geladenes_zeichen.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Die Darstellung zeigt das Zeichen 
-\begin_inset Quotes eld
-\end_inset
-
-NN
-\begin_inset Quotes erd
-\end_inset
-
- aus dem System Stolze-Schrey in vertikaler Stellung (90 Grad).
-\end_layout
-
-\begin_layout Section*
-Editieren
-\end_layout
-
-\begin_layout Standard
-Sie können das geladene Zeichen nun editieren.
- Da die SE1 rev0 nur horizontale Punktverschiebungen beherrscht, empfiehlt
- sich das folgende Vorgehen: Neigen Sie die Rotationsachse auf die gewünschte
- Neigung (z.B.
- 60 Grad in der Standardeinstellung von VSTENO).
- Sie erreichen dies durch Ziehen (klicken und ziehen) des grünen Punktes
- der Rotationsachse mit der Maus.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename /home/smuege/Schreibtisch/vpaint_nn_60grad.png
-	scale 60
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Editieren Sie nun das Zeichen so, dass es in dieser Neigung gut aussieht:
-\end_layout
-
-\begin_layout Itemize
-Verschieben der Punkte mit der Maus (der aktuelle Punkt ist gelb umrandet).
-\end_layout
-
-\begin_layout Itemize
-Anpassen der Spannungen (A1 = Eingangsspannung, A2 = Ausgangsspannung).
-\end_layout
-
-\begin_layout Standard
-Mit der Taste 
-\begin_inset Quotes eld
-\end_inset
-
-s
-\begin_inset Quotes erd
-\end_inset
-
- können Sie zwischen der normalen und der schattierten Variante des Zeichens
- hin- und herwechseln.
- Die Strichdicke kann mit L1 und R1 angepasst werden
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Im Unterschied zur SE1 verfügt die SE2 über eine linke (L1) und eine rechte
- Dicke (R1).
- Die Dicke 1 (L1, R1) steht für das normale, die Dicke 2 (L2, R2) für das
- schattierte Zeichen.
- Beachten Sie bitte, dass die Dicke der SE1 dem Mittelwert von L1 und L1
- (L2 und L2 für das schattierte Zeichen) entspricht, als TH = (L1+L2) /
- 2.
- Um die linke und rechte Dicke der SE2 zu visualisieren, können Sie mit
- der Taste 
-\begin_inset Quotes eld
-\end_inset
-
-q
-\begin_inset Quotes erd
-\end_inset
-
- zwischen SE1 (Mittellinienmodellierung) und SE2 (Umrissmodellierung) umschalten.
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Wenn das Zeichen in der 60-Grad-Stellung gut aussieht, richten Sie die Rotations
-achse wieder auf 90 Grad aus.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename /home/smuege/Schreibtisch/vpaint_90grad.png
-	scale 60
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Und nun kommt der schöne Teil: Nehmen Sie ein Blatt Papier und notieren
- Sie sich die Koordinaten und die Spannungen (und eventuell Dicken) der
- Punkte der Reihe nach
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Sie können sich mit den Pfeiltasten < und > rechts jeweils einen Punkt nach
- links oder nach rechts bewegen.
-\end_layout
-
-\end_inset
-
-.
- Ja genau: Es ist Handarbeit gefragt! VPAINT ist mit der SE1 rev0 inkompatibel
- - versuchen Sie nicht die Daten zu speichern - klicken Sie NICHT auf den
- Button ->DB!
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Sie wurden gewarnt: Wenn Sie auf ->DB klicken, exportiert VPAINT die Daten
- in den Text-Editor der SE1 rev0.
- Das exportierte Format entspricht allerdings der SE1 rev1 (und ist mit
- der SE1 rev0 nicht kompatibel).
- Wenn Sie danach noch einmal abspeichern klicken, wird Ihr aktuelles Modell
- mit KORRUPTEN Daten überschrieben (und wird unbrauchbar)!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-VPAINT kann Ihnen also lediglich helfen, bestehende Zeichen zu visualisieren
- und zu editieren.
- Die Daten müssen anschliessend aber von Hand via Texteditor in VSTENO 0.1rc
- (SE1 rev0) übertragen werden.
-\end_layout
-
-\begin_layout Section*
-Zukunftsmusik
-\end_layout
-
-\begin_layout Standard
-Wenn Sie gerne einen Blick auf die SE2 werfen und etwas mit dem Programm
- VPAINT herumprobieren möchten, dann verwenden Sie dafür bitte den folgenden
- Link:
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/js/vsteno_editor.html"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Dies ist die allgemeine (d.h.
- nicht an VSTENO gekoppelte) Version von VPAINT.
- Sie funktioniert auch, wenn Sie nicht eingeloggt sind und Sie können hier
- also sicher sein, dass Sie nichts kaputt machen können.
- Sie finden hier auch eine Auflistung der Tastaturbefehlen, mit denen Sie
- weitere Funktionen von VPAINT nutzen können.
-\end_layout
-
-\begin_layout Part*
-Programm
-\end_layout
-
-\begin_layout Section*
-Ja, ja ...
- Dokumentation
-\end_layout
-
-\begin_layout Standard
-Nach dem praktischen und dem linguistischen Teil stünde nun natürlich noch
- die Dokumentation des (bzw.
- der) Programme(s) selber an.
- Dies, damit interessierte Programmierer/innen VSTENO unter Umständen klonen
- (oder forken:) und selber weiterentwickeln können.
-\end_layout
-
-\begin_layout Standard
-Wie allgemein bekannt ist das Dokumentieren so ein bisschen das Stiefkind
- des/der Programmierer/in: Es wird in der Regel erst ganz am Schluss erledigt
- - wenn das Progamm (endlich!) läuft und man weder Zeit noch wirklich Lust
- hat, 
-\begin_inset Quotes eld
-\end_inset
-
-das alles auch noch aufzuschreiben
-\begin_inset Quotes erd
-\end_inset
-
-.
- Ausserdem kann es gut sein, dass gewisse Programmteile bereits vor Monaten
- geschrieben wurden - und nun, wo man sie dokumentieren sollte, weiss man
- selber nicht mehr so genau, was man damals eigentlich so alles programmiert
- hat, und muss sich deshalb selber wieder in alten Code reinknien (von dem
- man, wie gesagt, überhaupt schon froh ist, dass er läuft:)
-\end_layout
-
-\begin_layout Standard
-Anyway: Ich bin keine Ausnahme von der Regel und berufe mich deshalb auf
- eine weitere Programmierregel: my code is my documentation ...
- ! Natürlich ist das die Billig-Lösung, aber sie ist so schlecht nicht:
- Tatsächlich habe ich im Laufe der Entwicklung von VSTENO den Quellcode
- reichlich dokumentiert.
- Anhand der eingefügten Kommentare sollte das Programm also grundsätzlich
- nachvollziehbar sein.
-\end_layout
-
-\begin_layout Standard
-Nicht nachzuvollziehen sind aber vielleicht gewisse allgemeine Entscheidungen
- und Ansätze, die bei diesem Projekt spezifisch sind.
- Auf einige solche Aspekte möchte ich im Folgenden doch kurz eingehen, um
- wenigstens den Zugang zum Programm zu erleichtern.
-\end_layout
-
-\begin_layout Standard
-Ebenfalls wichtig scheint mir zu dokumentieren, wie das Programm grundsätzlich
- lokal installiert und zum Laufen gebracht werden kann.
- Es existiert bis dato nämlich kein Installer und VSTENO verlangt einige
- Abhängigkeiten und Konfigurationen, die korrekt vorgenommen werden müssen,
- damit es läuft.
-\end_layout
-
-\begin_layout Standard
-Grundsätzlich werde ich mich in allen Ausführungen sehr kurz und allgemein
- halten und als erstes auch nur das Minimum dokumentieren
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Weil es ja seit August schon eine Weile her ist, dass das Programm das letzte
- Mal dokumentiert wurde.
- Im Moment soll die Dokumentation vor allem möglichst schnell verfügbar
- sein.
-\end_layout
-
-\end_inset
-
- und weitere Aspekt später ergänzen.
-\end_layout
-
 \begin_layout Subsection*
-Installieren
+VSTENO lokal installieren
 \end_layout
 
 \begin_layout Standard
-Wenn Sie VSTENO lokal installieren möchten, müssen einige Pakete (Abhängikeiten)
- installiert werden und die Datenbank vorgängig konfiguriert werden.
- Im folgenden gehe ich davon aus, dass Sie grundsätzlich mit der Installation
- von Paketen vertraut sind (wie z.B.
- sudo apt-get install <paketname> unter Debian
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-VSTENO wurde unter Trisquel, einem Debian-Abkömmling, entwickelt.
-\end_layout
-
-\end_inset
-
- oder anderen Paketmanagern auf anderen Disktributionen).
- Ich werde mich deshalb auf die Angabe der Pakete beschränken, die installiert
- werden müssen:
-\end_layout
-
-\begin_layout Enumerate
-Apache-Webserve
-\end_layout
-
-\begin_layout Enumerate
-PHP
-\end_layout
-
-\begin_layout Enumerate
-mySQL (ebenfalls nützlich: MySQL Workbench)
-\end_layout
-
-\begin_layout Enumerate
-hunspell
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Ich füge hunspell bereits an, weil es voraussichtlich bald in VSTENO integriert
- wird: benötigt wird ein deutsches Wörterbuch (am besten de_CH).
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Klonen Sie anschliessend die Programme VSTENO und VPAINT (sowie verwendete
- Libraries wie paper.js und phpSyllable
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Auch phpSyllable wird voraussichtlich bald in VSTENO integriert.
-\end_layout
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Enumerate
-git clone https://github.com/marcelmaci/vsteno
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Im Verzeichnis des Webservers (vermutlich /var/www/html).
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Konfigurieren Sie die Datenbank:
-\end_layout
-
-\begin_layout Enumerate
-Legen Sie einen Datenbankbenutzer an
-\end_layout
-
-\begin_layout Enumerate
-Tragen Sie die Zugangsdaten in den PHP-Quellcode ein (Datei dbpw.php)
-\end_layout
-
-\begin_layout Enumerate
-Erstellen Sie die leeren Datanbank-Tables (kann einfach erreicht werden,
- indem die Datei init_db.php im Browser aufgerufen wird)
-\end_layout
-
-\begin_layout Standard
-Wenn Sie nun localhost/vsteno/php/input.php im Browser aufrufen, sollten
- Sie das Eingabe-Formular von VSTENO sehen.
- Wenn dies der Fall ist, läuft das Programm - allerdings enhält es noch
- keine linguistischen Daten.
+Damit Sie Ihre neuen Zeichen und Regeln ausprobieren können, müssen Sie
+ VSTENO lokal installieren und die Datei data.php durch Ihre eigene ersetzen.
+ Es wird empfohlen, hierfür eine freie Linux-Distribution (z.B.
+ Trisquel oder Debian) zu verwenden, da diese die Philosophie der Freien
+ Software unterstützen und von Hause aus einen Webserver (z.B.
+ Apache) mit sich bringen.
  
 \end_layout
 
 \begin_layout Enumerate
-Legen Sie ein VSTENO-Benutzerkonto an (leer) und wählen Sie das Modell custom.
+Der Apache-Webserver kann in Trisquel oder Debian installiert werden mit:
+ sudo apt-get install apache2.
+ Der Apache-Server ist bereits vorkonfiguriert und das home-Verzeichnis
+ von localhost befindet sich in /var/www/html/.
+ 
 \end_layout
 
 \begin_layout Enumerate
-Holen Sie sich die Definitionen für das System Stolze-Schrey 
+Installieren Sie nun PHP mit: sudo apt-get install php5
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-\begin_inset CommandInset href
-LatexCommand href
-target "https://github.com/marcelmaci/vsteno/blob/master/ling/grundschrift_stolze_schrey_redesign.txt"
-
-\end_inset
-
-
+Verwenden Sie PHP in der Version 7, falls Ihre Distribution ein entsprechendes
+ Paket anbieten: Die Version ist gegenüber der Version 5 ca.
+ 80% schneller und verbraucht weniger Speicher.
 \end_layout
 
 \end_inset
 
-.
+ (anschliessend sollten Sie Ihren Webserver neu starten; falls dies nicht
+ automatisch geschieht, können Sie es manuell tun mit: sudo service apache2
+ restart).
 \end_layout
 
 \begin_layout Enumerate
-Kopieren Sie Header, Font und Rules in die Datenbank (nutzen Sie hierfür
- die Links zu den Texteditoren: Header, Zeichen, Regeln).
+Wechseln Sie ins Verzeichnis /var/www/html und “klonen” Sie VSTENO mit:
+ git clone https://github.com/marcelmaci/vsteno.
 \end_layout
 
 \begin_layout Enumerate
-Loggen Sie sich mit einem Datenbankprogramm (mySQL Workbench) in die Datenbank
- ein:
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-öffnen Sie die Table models
+Ersetzen Sie nun die Datei /var/www/html/vsteno/php/data.php durch ihre eigenen
+ Zeichen und Regeln!
 \end_layout
 
 \begin_layout Enumerate
-tragen Sie folgende Werte ein: user_id = 99999, name = DESSBAS
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-Loggen Sie sich aus, schliessen Sie den Browser und starten Sie das Ganze
- neu.
- Mit etwas Glück funktioniert's ...
- ! ;-)
-\end_layout
-
-\begin_layout Subsection*
-VSTENO
-\end_layout
-
-\begin_layout Standard
-Im Folgenden einige Hinweise zu VSTENO:
-\end_layout
-
-\begin_layout Itemize
-VSTENO wurde ausschliesslich in PHP (ohne JavaScript
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Einzige Ausnahme ist die Deaktivierung des Tabulator-Events für den Texteditor
-\end_layout
-
-\end_inset
-
-) programmiert.
-\end_layout
-
-\begin_layout Itemize
-Das Verzeichnis php/ enthält nicht nur den Quellcode sondern auch die Webseite
- von VSTENO
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Wer also nur den Programmcode möchte, muss diesen von der Webseite trennen.
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-Sämtlicher Quellcode von VSTENO befindet sich innerhalb des Verzeichnisses
- php/.
-\end_layout
-
-\begin_layout Itemize
-VSTENO verwendet die Bibliothek phpSyllable, die sich im Verzeichnis ../phpSyllabl
-e/ befindet.
-\end_layout
-
-\begin_layout Standard
-Alles Übrige sollte ziemlich selbsterklärend sein.
-\end_layout
-
-\begin_layout Subsection*
-VPAINT
-\end_layout
-
-\begin_layout Itemize
-VPAINT wurde in PaperScript programmiert, d.h.
- JavaScript unter Verwendung der Bibliothek paper.js.
-\end_layout
-
-\begin_layout Itemize
-Sämtlicher Code (auch der von paperl.js) befindet sich im Verzeichnis ../js/
-\end_layout
-
-\begin_layout Itemize
-Das Skript buildjs.sh fügt alle Programmteile von VPAINT zu einem einzigen
- File zusammen
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Ich wollte den Quellcode einigermassen überschaubar aufteilen und die Möglichkei
-t haben, Lizenzvermerke automatisiert einzufügen, deshalb die Aufteilung
- und das Skript.
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Auch hier sollte der Rest selbsterklärend sein.
-\end_layout
-
-\begin_layout Subsection*
-JSON & Co
-\end_layout
-
-\begin_layout Standard
-VSTENO ist eine fröhliche Import-Export-Escape-Hölle ...
- :-) Mit anderen Worten: Da zwei Programmiersprachen, eine Datenbank, HTML-Code,
- REGEX und auch die Shell verwendet wird, müssen die Daten zum Teil mehrmals
- von einer Umgebung in eine andere überführt, konvertiert und escaped werden.
-\end_layout
-
-\begin_layout Standard
-Während das Escaping mit Standard-Funktionen erledigt werden kann, war der
- export der linguistischen Daten von PHP zu JS etwas speziell und soll deshalb
- hier kurz erläutert werden:
-\end_layout
-
-\begin_layout Itemize
-An Anfang lagen die Daten von VSTENO innerhalb von PHP als (associative)
- arrays vor.
-\end_layout
-
-\begin_layout Itemize
-VPAINT definierte seine eigenen Datenstrukturen
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Es war ja vorgesehen, die SE1 zu entfernen und die SE2 komplett neu zu gestalten.
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-Mit der Idee der Rückwärtskompatibilität wurde ein Export von PHP zu JS
- realisiert:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-in PHP wird eine mit JS kompatible Objekt-Datenstruktur definiert
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-siehe export_se1_data_to_editor.php.
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-die Datenstruktur wird mit JSON exportiert
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Das PHP-Objekt wird 
-\begin_inset Quotes eld
-\end_inset
-
-stringified
-\begin_inset Quotes erd
-\end_inset
-
- eine JS-Variablen zugwiesen, die direkt in die HTML-Seite von VPAINT geschriebe
-n wird; von dort verwendet Sie VPAINT wie eine normale Variable.
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Der umgekehrte Weg, also von JS zu PHP, sollte in der SE1 rev1 folgendermassen
- laufen:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-VPAINT exportiert die Daten ins eigenen VSTENO-Format (ASCII-Text, der vom
- Parser von VSTENO geparst werden kann).
-\end_layout
-
-\begin_layout Itemize
-Um die Datenbank-Routinen nicht nochmals neu schreiben zu müssen, kreiiert
- VPAINT eine Formular-Seite, die genau gleich aussieht wie edit_font.php
- und die zu schreibenden Daten direkt enthält).
-\end_layout
-
-\begin_layout Itemize
-Von der Datenbank aus kann VSTENO die Daten wieder lesen und parsen, sodass
- sie wieder im ursprünglichen Format der (associative) arrays vorliegen.
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-Der Datenfluss von VSTENO zu VPAINT und zurück zu VSTENO ist also gewissermassen
- zirkulär: er beschreitet andere Wege und kann auch nicht umgekehrt werden
- (JSON-Export funktioniert nur von PHP->JS; ASCII-Export funktioniert nur
- von JS->DB->PHP; unmöglich ist also JSON: JS->PHP oder ASCII: DB->JS).
-\end_layout
-
-\begin_layout Standard
-Für die SE2 war (ist) vorgesehen sämtliche Import/Export von und zu der
- Datenbank sowohl von PHP als auch von JS aus mit JSON zu lösen.
-\end_layout
-
-\begin_layout Subsection*
-PARSER
-\end_layout
-
-\begin_layout Standard
-Der ASCII-Parser von VSTENO (von dem im vorherigen Kapitel die Rede war)
- befindet sich in parser.php und ist im Wesentlichen eine Abfolge von REGEX-Patte
-rn, mit denen die ASCII-Daten aufgeschlüsselt und in Variablen geschrieben
- werden.
-\end_layout
-
-\begin_layout Standard
-Für den Export der Daten von PHP zur Datenbank werden die Daten dann gemäss
- der Formelsyntax von VSTENO zusammengefügt.
-\end_layout
-
-\begin_layout Subsection*
-DATENBANK
-\end_layout
-
-\begin_layout Standard
-Die Datenbank enthält folgende Tables:
-\end_layout
-
-\begin_layout Itemize
-users: Benutzerdaten (login, passwort, name, email etc.)
-\end_layout
-
-\begin_layout Itemize
-models: Definitionen für Stenografische Systeme (header, font, rules; die
- Modelle haben einen Namen und sind mit einer user_id verknüpft)
-\end_layout
-
-\begin_layout Itemize
-Wörterbücher:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-purgatorium: enthält Wörter, die markiert wurden und reviewed werden müssen.
-\end_layout
-
-\begin_layout Itemize
-elysium: enthält Ausnahmen (STD-, PRT-Formen)
-\end_layout
-
-\begin_layout Itemize
-olympus: enthält regelmässige, richtige Wörter (die zum Überprüfen des Modells
- verwendet werden können)
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-Die Tables users und models werden nur ein Mal für alle Nutzer angeleget.
- Die Tables purgatorium, elysium und olympus werden für jeden Nutzer individuell
- angelegt.
- Der Table name ergibt sich dabei aus der user_id der Benutzers plus den
- Anfangsbuchstaben der Table:
-\end_layout
-
-\begin_layout Itemize
-E = elysium
-\end_layout
-
-\begin_layout Itemize
-P = purgatorium
-\end_layout
-
-\begin_layout Itemize
-O = olympus
-\end_layout
-
-\begin_layout Standard
-Ausserdem wir zwischen einem Standard und einem Custom-Modell unterschieden:
-\end_layout
-
-\begin_layout Itemize
-Z = standard
-\end_layout
-
-\begin_layout Itemize
-X = custom
-\end_layout
-
-\begin_layout Standard
-Hier ein paar Beispiele für Table-Namen:
-\end_layout
-
-\begin_layout Itemize
-XE0000008: custom Wörterbuch Elysium der user_id 8
-\end_layout
-
-\begin_layout Itemize
-ZP0000001: standard Wörterbuch Purgatorium der user_id 1
-\end_layout
-
-\begin_layout Subsection*
-SUPERUSER
-\end_layout
-
-\begin_layout Standard
-In VSTENO gibt es Standard-Nutzer (privilege level 1) und Superuser (privilege
- level 2).
- Standard-Nutzer können nur custom Wörterbücher beschreiben.
- Superuser können alle Tables beschreiben.
- VSTENO bietet keine erweiterten Funktionen zur Nutzerverwaltung: Nutzer
- können nur 1x angelegt werden.
- Danach kann das Passwort und andere Nutzerdaten nicht mehr geändert werden.
- Solche Änderungen (z.B.
- die Erhöhung des privilege levels müssen deshalb von Hand in der Datenbank
- vorgenommen werden).
-\end_layout
-
-\begin_layout Subsection*
-SESSION
-\end_layout
-
-\begin_layout Standard
-Die Session-Variable wird von VSTENO rege genutzt.
- Sämtliche benutzten Daten sind aus session.php ersichtlich.
- Die Variable können auch via Inline-Option-Tags verändert werden
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
+Öffnen Sie Ihren Webbrowser und geben Sie die Adresse localhost/vsteno/php/input.
+php ein - that’s it!
 \end_layout
 
 \begin_layout Subsection*
@@ -9701,7 +8726,15 @@ Zum Schluss
 \end_layout
 
 \begin_layout Standard
-Diese Dokumentation entstand wie immer mit einem relativ knappen Zeitbudget.
+Damit sind wir am Ende dieses 
+\begin_inset Quotes eld
+\end_inset
+
+linguistischen Tutorials
+\begin_inset Quotes erd
+\end_inset
+
+, welches mit einem einigermassen knappen Zeitbudget erstellt wurde.
  Ich hoffe, dass trotzdem die wesentlichsten Aspekte abgedeckt werden konnten.
  Bei Unklarheiten stehe ich gerne zur Verfügung (m.maci@gmx.ch).
  
