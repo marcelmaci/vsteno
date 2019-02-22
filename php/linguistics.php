@@ -226,6 +226,48 @@ function create_word_list($word) {
     return array($word_list_as_string, $word_list_as_array);
 }
 
+function recursive_search($line, $row, $array) {
+    echo "call ($line/$row): " . $array[$line][$row][0] . " (" . $array[$line][$row][2] . ")<br>";
+    //if (($line < 0) || ($row < 0) || ($line > count($array)) || ($row > count($array[$line]))) return "";
+    if ($array[$line][$row][2] == "*") {
+        if ($row === count($array[$line])-1) {
+            echo "reached end of line => return >" . $array[$line][$row][0] . "<<br>";
+            $hit = true;
+            return $array[$line][$row][0];
+        } else {
+            if (($line>0) && ($row+$line+1<count($array[$line-1]))) {
+                echo "($line/$row) => try up<br>";
+                $up = recursive_search($line-1, $row+$line+1, $array);
+            } else $up = "";
+            if (mb_strlen($up)>0) {
+                echo "found up: $up and return my own: " . $array[$line][$row][0] . "<br>";
+                return $array[$line][$row][0] . "\\" . $up;
+            } else {
+                if ($row+$line+1<count($array[$line])) {
+                    echo "($line/$row) => try horizontal<br>";
+                    $horizontal = recursive_search($line, $row+$line+1, $array);
+                } else $horizontal = "";
+                if (mb_strlen($horizontal)>0) {
+                    echo "found horizontal: $horizontal and return my own: " . $array[$line][$row][0] . "<br>";
+                    return $array[$line][$row][0] . "\\" .$horizontal;
+                } else {
+                    if (($line+1<count($array)) && ($row+$line+1<count($array[$line]))) {
+                        echo "($line/$row) => try down<br>";
+                        $down = recursive_search($line+1, $row+$line+1, $array);
+                    } else $down = "";
+                    if (mb_strlen($down)>0) {
+                        echo "found down: $down and return my own: " . $array[$line][$row][0] . "<br>";
+                        return $array[$line][$row][0] . "\\" .  $down;
+                    } else return ""; // no luck - even the main word isn't recognized by hunspell ...
+                }
+            }
+        }
+    } else {
+        echo "($line/$row) != '*' => go down<br>"; 
+        if ($line+1<count($array)) return recursive_search($line+1, $row, $array);
+    }
+}
+
 /********************************** some tests with hunspell spellchecker executed via shell
 //echo shell_exec(escapeshellarg("echo \"Testwort\" \| hunspell -d de_CH -a"));
 //echo shell_exec(escapeshellarg("hunspell -d de_CH -f \"testwoerter.txt\""));

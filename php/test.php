@@ -3,25 +3,25 @@
 require "linguistics.php";
 
 // variables
-$original_word = 'Wachtmeister';
-$original_word = "Lebenspartner";
-$original_word = "Eulenspiegel";
-$original_word = "Wolkenkratzer";
-$original_word = "Versicherungsvertreter";
+$original_word = 'Wachtmeisters';
+//$original_word = "Lebenspartner";
+//$original_word = "Eulenspiegel";
+//$original_word = "Wolkenkratzer";
+//$original_word = "Versicherungsvertreter";
 //$original_word = "kopfgesteuert";
 //$original_word = "Originalbild";
 //$original_word = 'Dampfschifffahrtskapitänsjackenknopfloch'; // doesn't work
 //$original_word = "Abteilungsleiterin";
 //$original_word = "Blumenverkäufer"; // nope
-$original_word = "Wahrscheinlichkeitsrechnung"; // wrong
-$original_word = "Versicherungsgesellschaft"; // wrong
-$original_word = "Ameisenbär";
-$original_word = "Kaffeetasse";
+//$original_word = "Wahrscheinlichkeitsrechnung"; // wrong
+//$original_word = "Versicherungsgesellschaft"; // wrong
+//$original_word = "Ameisenbär";
+//$original_word = "Kaffeetasse";
 
 // hunspell dictionary
 $dictionary = "de_CH"; //"de_CH";
 
-list($test_string, $test_array) = create_word_list("Kaffeetasse");
+list($test_string, $test_array) = create_word_list("$original_word");
 echo "$test_string<br>";
 //var_dump($test_array);
 $length = count($test_array[0]);
@@ -49,12 +49,27 @@ var_dump($o);
 $offset = 1;
 for ($l=0;$l<$length; $l++) {
     for ($r=0;$r<count($test_array[$l]); $r++) {
-        if ($o[$offset] === "*") $test_array[$l][$r][2] = "*";
+        //echo "result: " . $test_array[$l][$r][1] . ": >" . $o[$offset+1] . "<<br>";
+        if (($o[$offset] === "*") || (($o[$offset+1][0] === "&") && (mb_strpos($o[$offset], $test_array[$l][$r][1]) != false))) $test_array[$l][$r][2] = "*"; // normal word (without dash)
         else $test_array[$l][$r][2] = "-";
         $offset+=2;
     }
 }
+/*
+$offset = 1;
+for ($l=0;$l<$length; $l++) {
+    for ($r=0;$r<count($test_array[$l]); $r++) {
+        //echo "result: " . $test_array[$l][$r][1] . ": >" . $o[$offset+1] . "<<br>";
+        echo ">" . $o[$offset][0] . "<>" . $o[$offset] . "<<br>";
+        echo "str_pos: >" . $test_array[$l][$r][1] . "<>" . (mb_strpos($o[$offset], $test_array[$l][$r][1]) != false) . "<<br>";
+        if (($o[$offset][0] === "&") && (mb_strpos($o[$offset], $test_array[$l][$r][1]) != false)) $test_array[$l][$r][3] = "*"; // word with dash (word-)
+        else $test_array[$l][$r][3] = "-";
+        $offset+=2;
+    }
+}
+*/
 echo "results:<br>";
+echo "normal:<br>";
 for ($l=0;$l<$length; $l++) {
     echo "line $l: ";
     for ($r=0;$r<count($test_array[$l]); $r++) {
@@ -62,7 +77,18 @@ for ($l=0;$l<$length; $l++) {
     }
     echo "<br>";
 }
+echo "with dash:<br>";
+for ($l=0;$l<$length; $l++) {
+    echo "line $l: ";
+    for ($r=0;$r<count($test_array[$l]); $r++) {
+        echo $test_array[$l][$r][3] . " ";
+    }
+    echo "<br>";
+}
 
+$result = recursive_search(0,0, $test_array);
+echo "<br>---------------------<br>recursive search: $result<br>";
+var_dump($result);
 
 /*
 // single steps
