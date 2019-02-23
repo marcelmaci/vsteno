@@ -51,7 +51,7 @@ function decapitalize($word) {
 }
 function hyphenate($word) {
     global $syllable;
-    return $syllable->hyphenateText($word);
+    return preg_replace("/-([a-zA-Z])-/", "$1-", $syllable->hyphenateText($word)); // quick fix: add orphanated chars to preceeding (phpSyllable produces such erroneous outputs ... !?)
 }
 function word2array($word) {
     return explode("-", $word);
@@ -113,9 +113,10 @@ function capitalizedStringList2composedWordsArray($string) {
     $composed_words = array();
     $word_list_array = explode(" ", $string);
     //var_dump($word_list_array);
-    for ($i=0; $i<count($word_list_array); $i++) {
+    $length = count($word_list_array);
+    for ($i=0; $i<$length; $i++) {
         $test_in_dictionary = $word_list_array[$i];
-        for ($j=$i; $j<count($word_list_array); $j++) {
+        for ($j=$i; $j<$length; $j++) {
             $hit = false;
             if ($j!=$i) $test_in_dictionary .= decapitalize($word_list_array[$j]);
             if (mb_strlen($test_in_dictionary)>2) {
@@ -130,7 +131,7 @@ function capitalizedStringList2composedWordsArray($string) {
                     $hit = true;
                     $composed_words[] = $test_in_dictionary;
                     $i = $j;
-                    $j = count($word_list_array);
+                    $j = $length; //count($word_list_array);
                     break;
                 }
             }
@@ -201,14 +202,17 @@ function analyze_composed_words_and_hyphenate($word, $speller) {
 // part "ser" would stay "orphanized". Therefore the algorithm must find the best combinations
 // (without orphanized parts).
 
+//$array = array(); // almost no performace gain if $array is declared as global variable!
+
 function create_word_list($word) {
+    //global $array; // don't treat $word_list_as_array as function value but as global variable for performance reason
     $hyphenated = hyphenate($word);
     echo "$hyphenated<br>";
     $hyphenated = decapitalize($hyphenated);
     echo "$hyphenated<br>";
     $hyphenated_array = explode("-", $hyphenated);
     $word_list_as_string = "";
-    $word_list_as_array = array();
+    $array = array();
     $syllables_count = count($hyphenated_array);
     for ($l=0; $l<$syllables_count; $l++) { // l = line of combinations
         for ($r=0; $r<$syllables_count-$l; $r++) {  // r = row of combinations
@@ -217,54 +221,67 @@ function create_word_list($word) {
                 $single .= $hyphenated_array[$r+$n];
             }
             $single = capitalize($single);
-            $single_plus_dash = "$single-";
-            $word_list_as_string .= "$single $single_plus_dash ";
-            $word_list_as_array[$l][$r][0] = $single;
-            $word_list_as_array[$l][$r][1] = $single_plus_dash;
+            //$single_plus_dash = "$single-";
+            //$word_list_as_string .= "$single $single_plus_dash ";
+            $word_list_as_string .= "$single ";
+            $array[$l][$r][0] = $single;
+            //$word_list_as_array[$l][$r][1] = $single_plus_dash; // don't create dash-list for better performance
         }
     }
-    return array($word_list_as_string, $word_list_as_array);
+    return array($word_list_as_string, $array);
+    //return $word_list_as_string; // return only string for performance reason => almost no gain: revert back to function parameters
 }
 
 function recursive_search($line, $row, $array) {
+    //global $array;
     echo "call ($line/$row): " . $array[$line][$row][0] . " (" . $array[$line][$row][2] . ")<br>";
     //if (($line < 0) || ($row < 0) || ($line > count($array)) || ($row > count($array[$line]))) return "";
-    if ($array[$line][$row][2] == "*") {
+    if ($array[$line][$row][0] != "") {
+        echo "that's a good start: word exists!<br>";
         if ($row === count($array[$line])-1) {
             echo "reached end of line => return >" . $array[$line][$row][0] . "<<br>";
             $hit = true;
             return $array[$line][$row][0];
         } else {
-            if (($line>0) && ($row+$line+1<count($array[$line-1]))) {
-                echo "($line/$row) => try up<br>";
-                $up = recursive_search($line-1, $row+$line+1, $array);
+            $temp_row = $line+$row+1;
+            $temp_line = 0; //count($array) - $temp_row-1; // could this do horizontal as well?!
+            //if (($line-1-$row>=0) && ($row+$line<count($array[$line-1-$row]))) {
+            if (($temp_line>=0) && ($temp_row<count($array[$temp_line]))) {
+                echo "=> try up<br>";
+                //$up = recursive_search($line-1, $row+$line, $array);
+                $up = recursive_search($temp_line, $temp_row, $array);
             } else $up = "";
             if (mb_strlen($up)>0) {
                 echo "found up: $up and return my own: " . $array[$line][$row][0] . "<br>";
                 return $array[$line][$row][0] . "\\" . $up;
-            } else {
-                if ($row+$line+1<count($array[$line])) {
-                    echo "($line/$row) => try horizontal<br>";
+            } else /* {
+                /*if ($row+$line+1<count($array[$line])) {
+                    echo "=> try horizontal<br>";
                     $horizontal = recursive_search($line, $row+$line+1, $array);
                 } else $horizontal = "";
                 if (mb_strlen($horizontal)>0) {
                     echo "found horizontal: $horizontal and return my own: " . $array[$line][$row][0] . "<br>";
                     return $array[$line][$row][0] . "\\" .$horizontal;
-                } else {
-                    if (($line+1<count($array)) && ($row+$line+1<count($array[$line]))) {
-                        echo "($line/$row) => try down<br>";
-                        $down = recursive_search($line+1, $row+$line+1, $array);
+                } else */ {
+                    if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
+                        echo "=> try down (count(array)=" . count($array) . "/count(array(line))=" . count($array[$line]) . ")<br>";
+                        $down = recursive_search($line+1, $row, $array);
                     } else $down = "";
                     if (mb_strlen($down)>0) {
-                        echo "found down: $down and return my own: " . $array[$line][$row][0] . "<br>";
-                        return $array[$line][$row][0] . "\\" .  $down;
+                        echo "found down: $down (don't return own " . $array[$line][$row][0] . "<br>";
+                        return /*$array[$line][$row][0] . "\\" . */ $down;
                     } else return ""; // no luck - even the main word isn't recognized by hunspell ...
-                }
+               //}
             }
         }
     } else {
-        echo "($line/$row) != '*' => go down<br>"; 
-        if ($line+1<count($array)) return recursive_search($line+1, $row, $array);
+        if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
+            echo "no luck => traverse down<br>"; 
+            if ($line+1<count($array)) return recursive_search($line+1, $row, $array);
+        } else {
+            echo "no luck => end traversing (go back)<br>";
+            return "";
+        }
     }
 }
 
