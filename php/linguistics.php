@@ -19,6 +19,12 @@
  
 // The file linguistics contains tools for linguistical analysis
 
+// global variables
+$is_noun = false;
+$acronym = 99999;
+$value_separate = 3;
+$value_glue = 2;
+
 // phpSyllable: include and prepare
 require_once("../phpSyllable-master" . '/classes/autoloader.php');
 $phpSyllable_dictionary = "de";                             //"de_CH";
@@ -28,6 +34,12 @@ $syllable->setHyphen(new Syllable_Hyphen_Dash());           // get all syllables
 // hunspell: dictionary
 $hunspell_dictionary = "de_CH"; //"de_DE"; //"de_CH";
 
+// functions
+
+
+
+
+// ***************************************************** unused code **********************************
 // pspell: dictionary
 $pspell_dictionary = "de";
 //$pspell_link = pspell_new("$pspell_dictionary", "", "", "utf-8");
@@ -203,13 +215,90 @@ function analyze_composed_words_and_hyphenate($word, $speller) {
 // (without orphanized parts).
 
 //$array = array(); // almost no performace gain if $array is declared as global variable!
+function count_uppercase($string) {
+    global $acronym;
+    $stripped = preg_replace("/[A-ZÄÖÜ]/", "", $string); // umlaut untested!
+    //echo "string: >$string<<br>stripped: >$stripped<<br>";
+    $length1 = mb_strlen($string);
+    $length2 = mb_strlen($stripped);
+    //echo "length1: $length1<br>length2: $length2<br>";
+    $difference = $length1 - $length2;
+    //echo "difference: $difference<br>";
+    if ($length2 === 0) return $acronym;
+    else return $difference;
+}
+
+function analyze_word_linguistically($word, $separate, $glue) {
+    // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)
+    //            if 0: separate always
+    // $glue: if length of composed word < $glue => use - (= syllable of same word), otherwise use | or \
+    //        if 0: glue always (= annulate effect of linguistical analysis)
+    // Examples: 
+    // a) $glue = 4:                                    $glue = 0:
+    //    Eu-len\spie\gel => Eu-len\spie-gel            Eu-len-spie-gel
+    //    Ab\tei-lungs\lei-ter => Ab-teilungs\leiter
+    // b) $separate = 4:                $separate = 0:
+    //    Mut\pro-be => Mut|probe       Mut\pro-be
+    //    Ha-sen\fuss => Hasen\fuss     Ha-sen\fuss
+    // declare globals
+    global $is_noun;    // true if first letter of word is a capital
+    global $acronym, $value_separate, $value_glue;
+    // set globals
+    $value_separate = $separate;
+    $value_glue = $glue;
+    // check for acronyms and nouns
+    $upper_case = count_uppercase($word);
+    //echo "count uppercase: $count_uppercase<br>";
+    if ($upper_case === $acronym) return $word;         // return word without modifications if it is an acronym (= upper case only)
+    elseif ($upper_case > 1) return hyphenate($word);   // probably an acronym with some lower case => hyphenate        
+    else {
+        list($word_list_as_string, $array) = create_word_list($word);
+        $array = eliminate_inexistent_words_from_array($word_list_as_string, $array);
+        $result = recursive_search(0,0, $array);
+        $result = hyphenate($result);
+        if ($upper_case === 1) {
+            //echo "word is noun<br>";
+            $result = mb_strtolower($result);
+            $result = capitalize($result);
+        } else $result = mb_strtolower($result);
+        return $result;
+    }
+}
+
+function eliminate_inexistent_words_from_array($string, $array) {
+    $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -d de_CH -a" /* ) */;
+    //echo "$shell_command<br>";
+    //echo "hunspell: ";
+    exec("$shell_command",$o);
+    //var_dump($o);
+    $length = count($array[0]);
+    $offset = 1;
+    for ($l=0;$l<$length; $l++) {
+        for ($r=0;$r<count($array[$l]); $r++) {
+            //echo "<br>result: " . $test_array[$l][$r][0] . ": >" . $o[$offset] . "<<br>";
+            if (($o[$offset] === "*") || (($o[$offset][0] === "&") && (mb_strpos($o[$offset], $array[$l][$r][0] . "-") != false))) {
+                //echo "match * found: " . $array[$l][$r][0] . "<br>";
+                
+            } else {
+                // no match => delete string in array (use same data field for performance reason)
+                //echo "no match: " . $array[$l][$r][0] . "<br>";
+                $array[$l][$r][0] = ""; // "" means: no match!
+                
+            }
+            $offset+=1;
+        }
+    }
+    //echo "<br><br>array:<br>";
+    //var_dump($array);
+    return $array;
+}
 
 function create_word_list($word) {
     //global $array; // don't treat $word_list_as_array as function value but as global variable for performance reason
     $hyphenated = hyphenate($word);
-    echo "$hyphenated<br>";
+    //echo "$hyphenated<br>";
     $hyphenated = decapitalize($hyphenated);
-    echo "$hyphenated<br>";
+    //echo "$hyphenated<br>";
     $hyphenated_array = explode("-", $hyphenated);
     $word_list_as_string = "";
     $array = array();
@@ -234,12 +323,12 @@ function create_word_list($word) {
 
 function recursive_search($line, $row, $array) {
     //global $array;
-    echo "call ($line/$row): " . $array[$line][$row][0] . " (" . $array[$line][$row][2] . ")<br>";
+    //echo "call ($line/$row): " . $array[$line][$row][0] . " (" . $array[$line][$row][2] . ")<br>";
     //if (($line < 0) || ($row < 0) || ($line > count($array)) || ($row > count($array[$line]))) return "";
     if ($array[$line][$row][0] != "") {
-        echo "that's a good start: word exists!<br>";
+        //echo "that's a good start: word exists!<br>";
         if ($row === count($array[$line])-1) {
-            echo "reached end of line => return >" . $array[$line][$row][0] . "<<br>";
+            //echo "reached end of line => return >" . $array[$line][$row][0] . "<<br>";
             $hit = true;
             return $array[$line][$row][0];
         } else {
@@ -247,12 +336,12 @@ function recursive_search($line, $row, $array) {
             $temp_line = 0; //count($array) - $temp_row-1; // could this do horizontal as well?!
             //if (($line-1-$row>=0) && ($row+$line<count($array[$line-1-$row]))) {
             if (($temp_line>=0) && ($temp_row<count($array[$temp_line]))) {
-                echo "=> try up<br>";
+                //echo "=> try up<br>";
                 //$up = recursive_search($line-1, $row+$line, $array);
                 $up = recursive_search($temp_line, $temp_row, $array);
             } else $up = "";
             if (mb_strlen($up)>0) {
-                echo "found up: $up and return my own: " . $array[$line][$row][0] . "<br>";
+                //echo "found up: $up and return my own: " . $array[$line][$row][0] . "<br>";
                 return $array[$line][$row][0] . "\\" . $up;
             } else /* {
                 /*if ($row+$line+1<count($array[$line])) {
@@ -264,11 +353,11 @@ function recursive_search($line, $row, $array) {
                     return $array[$line][$row][0] . "\\" .$horizontal;
                 } else */ {
                     if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
-                        echo "=> try down (count(array)=" . count($array) . "/count(array(line))=" . count($array[$line]) . ")<br>";
+                        //echo "=> try down (count(array)=" . count($array) . "/count(array(line))=" . count($array[$line]) . ")<br>";
                         $down = recursive_search($line+1, $row, $array);
                     } else $down = "";
                     if (mb_strlen($down)>0) {
-                        echo "found down: $down (don't return own " . $array[$line][$row][0] . "<br>";
+                        //echo "found down: $down (don't return own " . $array[$line][$row][0] . "<br>";
                         return /*$array[$line][$row][0] . "\\" . */ $down;
                     } else return ""; // no luck - even the main word isn't recognized by hunspell ...
                //}
@@ -276,10 +365,10 @@ function recursive_search($line, $row, $array) {
         }
     } else {
         if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
-            echo "no luck => traverse down<br>"; 
+            //echo "no luck => traverse down<br>"; 
             if ($line+1<count($array)) return recursive_search($line+1, $row, $array);
         } else {
-            echo "no luck => end traversing (go back)<br>";
+            //echo "no luck => end traversing (go back)<br>";
             return "";
         }
     }

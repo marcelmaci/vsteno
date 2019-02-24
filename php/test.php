@@ -1,5 +1,4 @@
 <?php 
-
 require "linguistics.php";
 
 // variables
@@ -11,7 +10,10 @@ $original_word = 'Wachtmeisters'; // 0.55 seconds => 0.4 seconds
 //$original_word = "kopfgesteuert";
 //$original_word = "Originalbild";
 $original_word = 'Dampfschifffahrtoffiziersjackenknopfloch'; // 20 seconds (oh my gosh ...) => 10.02 (8.7) seconds // doesn't work any more => debug
-//$original_word = "Abteilungsleiterin"; // works (but with ab in the beginning:)
+$original_word = "Abteilungsleiterin"; // works (but with ab in the beginning:)
+$original_word = "Tunneldurchbruch";
+$original_word = "hoffnungsvollsten";
+$original_word = "Wetterstation";
 //$original_word = "Spaltungsprozess"; // works!
 //$original_word = "Abspaltungsprozess"; // works
 
@@ -20,6 +22,17 @@ $original_word = 'Dampfschifffahrtoffiziersjackenknopfloch'; // 20 seconds (oh m
 //$original_word = "Versicherungsgesellschaft"; // 5.3 seconds => 2.76 seconds
 //$original_word = "Ameisenbär";
 //$original_word = "Kaffeetasse"; // 0.8 seconds => 0.53 seconds
+
+// condensed test
+echo "<br>condensed test:<br>";
+$word = "Dampfschifffahrtsoffiziersjackenknopfloch";
+$start = microtime(true);
+$result = analyze_word_linguistically($word);
+$end = microtime(true);
+$difference = $end - $start;
+echo "Wort: $word<br>Result: $result<br>Time: $difference seconds<br><br>";
+
+$original_word = $word;
 
 // hunspell dictionary
 $dictionary = "de_CH"; //"de_CH";
@@ -109,6 +122,7 @@ $end = microtime(true);
 $time = $end - $start;
 //var_dump($end);
 echo "<br>Time:<br>Start: $start<br>End: $end<br>Difference: $time seconds<br>";
+
 
 /*
 // single steps
