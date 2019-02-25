@@ -217,7 +217,7 @@ function analyze_composed_words_and_hyphenate($word, $speller) {
 //$array = array(); // almost no performace gain if $array is declared as global variable!
 function count_uppercase($string) {
     global $acronym;
-    $stripped = preg_replace("/[A-ZÄÖÜ]/", "", $string); // umlaut untested!
+    $stripped = preg_replace("/[A-ZÄÖÜ]/u", "", $string); // umlaut untested! => Umlaut needs the u-modifier in REGEX!
     //echo "string: >$string<<br>stripped: >$stripped<<br>";
     $length1 = mb_strlen($string);
     $length2 = mb_strlen($stripped);
@@ -228,7 +228,19 @@ function count_uppercase($string) {
     else return $difference;
 }
 
-function analyze_word_linguistically($word, $separate, $glue) {
+function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue) {
+    $several_words = explode("-", $word);  // if word contains - => split it into array
+    $result = "";
+    for ($i=0;$i<count($several_words);$i++) {
+        $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue);
+        $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
+    }
+    return $result;
+}
+    
+function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue) {
+    //echo "analyze: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
+    
     // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)
     //            if 0: separate always
     // $glue: if length of composed word < $glue => use - (= syllable of same word), otherwise use | or \
@@ -242,31 +254,40 @@ function analyze_word_linguistically($word, $separate, $glue) {
     //    Ha-sen\fuss => Hasen\fuss     Ha-sen\fuss
     // declare globals
     global $is_noun;    // true if first letter of word is a capital
-    global $acronym, $value_separate, $value_glue;
+    global $acronym, $value_separate, $value_glue, $value_hyphenate;
     // set globals
     $value_separate = $separate;
     $value_glue = $glue;
+    $value_hyphenate = $hyphenate;
+
     // check for acronyms and nouns
     $upper_case = count_uppercase($word);
-    //echo "count uppercase: $count_uppercase<br>";
     if ($upper_case === $acronym) return $word;         // return word without modifications if it is an acronym (= upper case only)
     elseif ($upper_case > 1) return hyphenate($word);   // probably an acronym with some lower case => hyphenate        
     else {
-        list($word_list_as_string, $array) = create_word_list($word);
-        $array = eliminate_inexistent_words_from_array($word_list_as_string, $array);
-        $result = recursive_search(0,0, $array);
-        $result = hyphenate($result);
+    
+        if ($decompose) {
+            list($word_list_as_string, $array) = create_word_list($word);
+            $array = eliminate_inexistent_words_from_array($word_list_as_string, $array);
+            $result = recursive_search(0,0, $array);
+        } else $result = $word; //$result = iconv(mb_detect_encoding($word, mb_detect_order(), true), "UTF-8", $word);
+        //echo "$result - $word<br>";
+        if ($hyphenate) $result = hyphenate($result);
         if ($upper_case === 1) {
             //echo "word is noun<br>";
-            $result = mb_strtolower($result);
+            //echo "1:$result<br>";
+            $result = mb_strtolower($result, "UTF-8"); // argh ... always these encoding troubles ...
+            //echo "2:$result<br>";
             $result = capitalize($result);
+            //echo "3:$result<br>";
+           
         } else $result = mb_strtolower($result);
         return $result;
     }
 }
 
 function eliminate_inexistent_words_from_array($string, $array) {
-    $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -d de_CH -a" /* ) */;
+    $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
     //echo "$shell_command<br>";
     //echo "hunspell: ";
     exec("$shell_command",$o);
@@ -322,6 +343,7 @@ function create_word_list($word) {
 }
 
 function recursive_search($line, $row, $array) {
+    global $value_glue, $value_separate;
     //global $array;
     //echo "call ($line/$row): " . $array[$line][$row][0] . " (" . $array[$line][$row][2] . ")<br>";
     //if (($line < 0) || ($row < 0) || ($line > count($array)) || ($row > count($array[$line]))) return "";
@@ -342,7 +364,24 @@ function recursive_search($line, $row, $array) {
             } else $up = "";
             if (mb_strlen($up)>0) {
                 //echo "found up: $up and return my own: " . $array[$line][$row][0] . "<br>";
-                return $array[$line][$row][0] . "\\" . $up;
+                $length_candidate = mb_strlen($array[$line][$row][0]);
+                $pos1 = mb_strpos($up, "|"); // can return boolean or int!!!
+                $pos2 = mb_strpos($up, "\\");
+                if (($pos1 === false) && ($pos2 === false)) {
+                    $pos3 = mb_strlen($up); // if no | and \ => take strlen of already existing word
+                    $pos1 = 99999;
+                    $pos2 = 99999;
+                } else $pos3 = 99999;
+                if ($pos1 != 99999) $relevant = $pos1;
+                if ($pos2 != 99999) $relevant = $pos2;
+                if ($pos3 != 99999) $relevant = $pos3;
+                if (($length_candidate > $value_glue) && ($relevant > $value_glue)) {
+                   
+                    //echo "candidate: " . $array[$line][$row][0] . " up: $up pos123relevant: >$pos1-$pos2-$pos3-$relevant<<br>";
+                    
+                    if (($length_candidate > $value_separate) || ($relevant > $value_separate)) return $array[$line][$row][0] . "\\" . $up;
+                    else return $array[$line][$row][0] . "|" . $up;
+                } else return $array[$line][$row][0] . $up;
             } else /* {
                 /*if ($row+$line+1<count($array[$line])) {
                     echo "=> try horizontal<br>";

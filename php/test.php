@@ -1,3 +1,13 @@
+
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Titel</title>
+  </head>
+  <body>
+
 <?php 
 require "linguistics.php";
 
@@ -25,9 +35,13 @@ $original_word = "Wetterstation";
 
 // condensed test
 echo "<br>condensed test:<br>";
-$word = "Dampfschifffahrtsoffiziersjackenknopfloch";
+//$word = "Dampfschifffahrtsoffiziersjackenknopflochrosenladentischtuch";
+//$word = "Versicherungsangestellter";
+$word = "Andenken";
+
+//$word = mb_convert_encoding ( "Kapitänsjacke" , "UTF-8", "UTF-8");
 $start = microtime(true);
-$result = analyze_word_linguistically($word);
+$result = analyze_word_linguistically($word, true, true, 6, 0);
 $end = microtime(true);
 $difference = $end - $start;
 echo "Wort: $word<br>Result: $result<br>Time: $difference seconds<br><br>";
@@ -61,7 +75,7 @@ for ($l=0;$l<$length; $l++) {
     echo "<br>";
 }
 */
-$shell_command = /* escapeshellcmd( */"echo \"$test_string\" | hunspell -d de_CH -a" /* ) */;
+$shell_command = /* escapeshellcmd( */"echo \"$test_string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
 echo "$shell_command<br>";
 echo "hunspell: ";
 echo exec("$shell_command",$o) . "<br>";
@@ -177,3 +191,6 @@ for ($i=0; $i<count($test); $i++) {
 }
 */
 ?>
+  </body>
+</html>
+

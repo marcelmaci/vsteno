@@ -72,8 +72,14 @@ Stil:
 <input type="text" name="token_line_style_custom_value"  size="10" value="<?php echo $_SESSION['token_style_custom_value'];?>">
 <br>
 </td></tr>
-<tr><td>Markieren</td></tr>
+<tr><td>Sprache</td></tr>
 <tr><td>
+Analysieren: 
+<input type="checkbox" name="hyphenate_yesno" value="hyphenate_yes" <?php echo ($_SESSION['hyphenate_yesno']) ? "checked" : "";?>> Silben
+<input type="checkbox" name="composed_words_yesno" value="composed_words_yes" <?php echo ($_SESSION['composed_words_yesno']) ? "checked" : "";?>> Wörter
+&nbsp;&nbsp;&nbsp;Trennen: ><input type="text" name="composed_words_separate"  size="4" value="<?php echo $_SESSION['composed_words_separate']; ?>">
+Leim: <<input type="text" name="composed_words_glue"  size="4" value="<?php echo $_SESSION['composed_words_glue']; ?>"><br>
+Markieren:<br>
 <input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 
 Hauptwörter: 
 Farbe <input type="text" name="nouns_color"  size="10" value="<?php echo $_SESSION['color_nouns']; ?>">

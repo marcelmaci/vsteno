@@ -21,6 +21,7 @@ require_once "options.php";
 require_once "dbpw.php";
 require_once "data.php";
 require_once "session.php"; // add this temporarily for debugging
+require_once "linguistics.php";
 
 /*
 require_once "engine.php";
@@ -211,6 +212,22 @@ function ExecuteEndParameters() {
                 
             $rules_pointer = count($rules["$actual_model"]);    // set rules pointer to end (= dont execute more rules)
                     //echo "rules_pointer = $rules_pointer std_form = $std_form prt_form = $prt_form<br>";
+                } else {
+                    //echo "word not found in dictionary!<br>";
+                    //echo "LING PARAMETERS: " . $_SESSION['hyphenate_yesno'] . "-" . $_SESSION['composed_words_yesno'] . "-" . $_SESSION['composed_words_separate'] . "-" . $_SESSION['composed_words_glue'] . "-" .
+                    $temp_word = $act_word;
+                    $act_word = analyze_word_linguistically($act_word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
+                    if ($temp_word !== $act_word) {
+                        $parameters = "";
+                        if ($_SESSION['hyphenate_yesno']) $parameters .= "syllables ";
+                        if ($_SESSION['composed_words_yesno']) $parameters .= "words ";
+                        if (mb_strlen($parameters) > 0) {
+                            $parameters .= " / separate: " . $_SESSION['composed_words_separate'] . " glue: " . $_SESSION['composed_words_glue'];
+                        }
+                        if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
+                        
+                        $global_debug_string .= "LING: $temp_word => $act_word $parameters<br>";
+                    }
                 }
                 break;
             default :
@@ -298,6 +315,11 @@ function ExecuteRule( /*$word*/ ) {
     $actual_model = $_SESSION['actual_model'];
     $condition = $rules["$actual_model"][$rules_pointer][0];
     //echo "ExecuteRule(): condition=#$condition#<br>";
+    /*
+    if ($condition === "[^\|]den-") {
+        echo "OBSERVE: >$condition< => >" . $rules["$actual_model"][$rules_pointer][1] . "< in $act_word<br>";
+    }
+    */
     switch ($condition) {
         case "BeginFunction()" : ExecuteBeginParameters(); $output = $act_word; break;
         case "EndFunction()" : ExecuteEndParameters(); $output = $act_word; break;

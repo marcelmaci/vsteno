@@ -28,6 +28,10 @@ function InitializeSessionVariables() {
     $_SESSION['token_style_type'] = "solid"; // solid line
     $_SESSION['token_style_custom_value'] = ""; 
     $_SESSION['token_color'] = "black";
+    $_SESSION['hyphenate_yesno'] = true;
+    $_SESSION['composed_words_yesno'] = true;
+    $_SESSION['composed_words_separate'] = 6;
+    $_SESSION['composed_words_glue'] = 0;
     $_SESSION['color_nounsyesno'] = false;
     $_SESSION['color_nouns'] = "black";
     $_SESSION['color_beginningsyesno'] = false;
@@ -123,6 +127,10 @@ if ($_POST['token_size'] != "") {
     $_SESSION['token_style_type'] = htmlspecialchars($_POST['token_line_style']); 
     $_SESSION['token_style_custom_value'] = htmlspecialchars($_POST['token_line_style_custom_value']); 
     $_SESSION['token_color'] = htmlspecialchars($_POST['token_color']);
+    $_SESSION['hyphenate_yesno'] = (htmlspecialchars($_POST['hyphenate_yesno']) === "hyphenate_yes") ? true : false;
+    $_SESSION['composed_words_yesno'] = (htmlspecialchars($_POST['composed_words_yesno']) === "composed_words_yes") ? true : false;
+    $_SESSION['composed_words_separate'] = htmlspecialchars($_POST['composed_words_separate']);
+    $_SESSION['composed_words_glue'] = htmlspecialchars($_POST['composed_words_glue']);
     $_SESSION['color_nounsyesno'] = (htmlspecialchars($_POST['colored_nouns_yesno']) === "colored_nouns_yes") ? true : false;
     $_SESSION['color_nouns'] = htmlspecialchars($_POST['nouns_color']);
     $_SESSION['color_beginningsyesno'] = (htmlspecialchars($_POST['colored_beginnings_yesno']) === "colored_beginnings_yes") ? true : false;
