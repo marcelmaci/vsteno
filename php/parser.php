@@ -492,7 +492,7 @@ function ParserChain( $text, $start = null, $end = null ) {
         //var_dump($rules);
         //$number_of_rules = count($rules[$actual_model]);
         //echo "number of rules: $number_of_rules rules_pointer: $rules_pointer<br>";
-        echo "ParserChain: Start: $rules_pointer Word: $act_word<br>";
+        //echo "ParserChain: Start: $rules_pointer Word: $act_word<br>";
         while ($rules_pointer < $stop) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
             //echo "before executerule: $rules_pointer<br>";
             //$act_word = ExecuteRule( $act_word );
@@ -505,7 +505,7 @@ function ParserChain( $text, $start = null, $end = null ) {
             //echo "after execute";
             $rules_pointer++;
         }
-        echo "ParserChain: End: $stop Result: $act_word<br>";
+        //echo "ParserChain: End: $stop Result: $act_word<br>";
         return $act_word;
 }
 
@@ -611,23 +611,23 @@ function MetaParser( $text ) {          // $text is a single word!
     // this is a good place to lookup words!
     // after that branch to  std2prt oder stage4
     list($get_standard, $get_print) = Lookuper($text); // corresponds to stage2 (dictionary)
-    echo "dictionary (metaparser): $text std: $get_standard prt: $get_print<br>"; 
-    echo "stage4: $rules_pointer_start_stage4<br>";
+    //echo "dictionary (metaparser): $text std: $get_standard prt: $get_print<br>"; 
+    //echo "stage4: $rules_pointer_start_stage4<br>";
     $safe_std = mb_strtoupper($get_standard, "UTF-8");
     $safe_prt = mb_strtoupper($get_print, "UTF-8");
-    echo "safe_std: $safe_std start: $rules_pointer_start_std2prt<br>";
+    //echo "safe_std: $safe_std start: $rules_pointer_start_std2prt<br>";
     if  ($safe_prt !== "") return $safe_prt;    // no parsing at all
     elseif ($safe_std !== "") {
         // parse from std2stage4
         $std2stage4 = ParserChain($safe_std, $rules_pointer_start_std2prt, $rules_pointer_start_stage4);
         // parse from stage4 to end (= prt)
-        echo "go to stage4";
+        //echo "go to stage4";
         $actual_model = $_SESSION['actual_model'];
         $final_prt = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
         return $final_prt;
     } else {
         // word is not in dictionary => parse from stage3 (= after dictionary) to stage4 (start) using word splitting (composed words)
-        echo "word is not in dictionary<br>";
+        //echo "word is not in dictionary<br>";
         // first check if parsing is (partially) needed
         $text_format = $_SESSION['original_text_format'];
         if ($text_format === "prt") return $text; // no parsing
@@ -637,7 +637,7 @@ function MetaParser( $text ) {          // $text is a single word!
             $std_form = $safe_std; // not sure if this variable has to be set to get infos in the debugger?!
             $std2stage4 = ParserChain($safe_std, $rules_pointer_start_std2prt, $rules_pointer_start_stage4);
             // parse from stage4 to end (= prt)
-            echo "go to stage4";
+            //echo "go to stage4";
             $actual_model = $_SESSION['actual_model'];
             $prt_form = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
             return $prt;
@@ -669,7 +669,8 @@ function MetaParser( $text ) {          // $text is a single word!
                         $parameters .= " / separate: " . $_SESSION['composed_words_separate'] . " glue: " . $_SESSION['composed_words_glue'];
                     }
                     if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
-                    $global_debug_string .= "LING: $temp_word => $test $parameters<br>"; echo "test: $test<br>";
+                    $global_debug_string .= "LING: $temp_word => $test $parameters<br>"; 
+                    //echo "test: $test<br>";
                     // calculate
                     $word = $test;
                     $separated_word_parts_array = explode( "\\", /*GenericParser( $helvetizer_table, */ $word ); // helvetizer must be replaced 
@@ -677,23 +678,58 @@ function MetaParser( $text ) {          // $text is a single word!
                     $output = ""; 
                     $separated_std_form = "";
                     $separated_prt_form = "";
-                    foreach ($separated_word_parts_array as $word_part ) {
+                    for ($w=0; $w<count($separated_word_parts_array); $w++) {
+                        $word_part = $separated_word_parts_array[$w];
+                        //var_dump($separated_word_parts_array);
                         $subword_array = explode( "|", $word_part ); // problem with this method is, that certain shortings (e.g. -en) will be applied at the end of a subword, while the shouldn't ... Workaround: add | at the end (that will be eliminated later shortly before transformation into token_list) ... (?!) seems to work for the moment, but keep an eye on that! Sideeffect: shortenings at the end won't be applied (this was intended at the beginning...) => rules must be rewritten with $ and | to mark end of words and subwords
-                        foreach ($subword_array as $subword) { 
-                            if ($subword !== end($subword_array)) $subword .= "|";
+                        for ($i=0; $i<count($subword_array); $i++) { 
+                            $subword = $subword_array[$i];
+                            //echo "test: $subword i: $i<br>";
+                           // $separated_std_form = ""; // reset those global variables ... otherwhise parser will add them ... ???????
+                           // $separated_prt_form = "";
+                   
+                            $output = ParserChain( $subword, $rules_pointer_start_stage3, $rules_pointer_start_stage4 );
+                            //echo "output: $output<br>";
+                            //var_dump($subword_array);
+                            //if ($i<count($subword_array)-1) 
+                            $subword_array[$i] = $output;
+                            //echo "<br>i: $i<br>";
+                            //var_dump($subword_array);
                             //echo "Metaparser(): subword = $subword<br>";
-                            $output .= ParserChain( $subword, $rules_pointer_start_stage3, $rules_pointer_start_stage4 );
+                            //$output .= ParserChain( $subword, $rules_pointer_start_stage3, $rules_pointer_start_stage4 );
                             //echo "Metaparser(): output = $output<br>";
                        
                             $separated_std_form .= $std_form;
                             $separated_prt_form .= $prt_form;
                         }
+                        //echo "<br>subword_array:<br>";
+                        //var_dump($subword_array);
+                        $word_part = implode("|", $subword_array);
+                        //echo "word_part: $word_part<br>";
+                        $separated_word_parts_array[$w] = $word_part;
+                        /*
                         if ( $word_part !== end($separated_word_parts_array)) { 
                             $output .= "\\";  // shouldn't be hardcoded?!
                             $separated_std_form .= "\\";        // eh oui ... l'horreur continue ... ;-)
                             $separated_prt_form .= "\\";
                         }
+                        */
                     }
+                    //echo "<br>end result: <br>";
+                    //var_dump($separated_word_parts_array);
+                    $output = implode("\\", $separated_word_parts_array);
+                    //if ($output === "ne-men") var_dump($separated_word_parts_array);
+                    
+                    //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
+                    //echo "metaparser: parserchain($rules_pointer_start_stage3, $rules_pointer_start_stage4)<br>";
+                    //echo "metaparser: separated_std_form = $separated_std_form<br>";
+                    //echo "metaparser: full form: $output<br>";
+                   
+                    // now do stage4 (full word)
+                    $actual_model = $_SESSION['actual_model'];
+                    $output = ParserChain($output, $rules_pointer_start_stage4, count($rules[$actual_model]));
+                    
+                    // add pre/posttokens after all parsing is done
                     if (mb_strlen($pretokens) > 0) { 
                         if (($pretokens === "{") || ($pretokens === "[")) {
                             $output = $pretokens . $output; // add { and [ without \\
@@ -709,15 +745,7 @@ function MetaParser( $text ) {          // $text is a single word!
                    
                         } else $output .= "\\$posttokens";
                     }
-                    //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
-                    echo "metaparser: parserchain($rules_pointer_start_stage3, $rules_pointer_start_stage4)<br>";
-                    echo "metaparser: separated_std_form = $separated_std_form<br>";
-                    echo "metaparser: full form: $output<br>";
-                   
-                    // now do stage4 (full word)
-                    $actual_model = $_SESSION['actual_model'];
-                    $output = ParserChain($output, $rules_pointer_start_stage4, count($rules[$actual_model]));
-                    
+                
                     return $output; /// don't return output => go to stage4 instead
   
                     break;

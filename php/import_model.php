@@ -377,10 +377,10 @@ function WriteParamListToRulesArray( $type, $param_list ) {
             //echo "set rules_pointer_start_std2prt";
             $rules_pointer_start_std2prt = $rules_pointer + 1;  // set it to begin of following function
         } elseif ($parameter === "=:stage4") {
-            echo "set stage4: " . $rules_pointer . "<br>";
+            //echo "set stage4: " . $rules_pointer . "<br>";
             $rules_pointer_start_stage4 = $rules_pointer + 1;  // same as for std 
         } elseif ($parameter === "=:stage3") {
-            echo "set stage3: " . $rules_pointer . "<br>";
+            //echo "set stage3: " . $rules_pointer . "<br>";
             $rules_pointer_start_stage3 = $rules_pointer + 1;  // same as for std 
         }
         $rules["$insertion_key"][$rules_pointer][] = $parameter;

@@ -30,7 +30,7 @@ function InitializeSessionVariables() {
     $_SESSION['token_color'] = "black";
     $_SESSION['hyphenate_yesno'] = true;
     $_SESSION['composed_words_yesno'] = true;
-    $_SESSION['composed_words_separate'] = 6;
+    $_SESSION['composed_words_separate'] = 99; // don't separate words by default (leave that to model rules)
     $_SESSION['composed_words_glue'] = 0;
     $_SESSION['color_nounsyesno'] = false;
     $_SESSION['color_nouns'] = "black";

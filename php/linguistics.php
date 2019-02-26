@@ -387,7 +387,7 @@ function recursive_search($line, $row, $array) {
                     
                     if (($length_candidate > $value_separate) || ($relevant > $value_separate)) return $array[$line][$row][0] . "\\" . $up;
                     else return $array[$line][$row][0] . "|" . $up;
-                } else return $array[$line][$row][0] . $up;
+                } else return $array[$line][$row][0] . "|" . $up;
             } else /* {
                 /*if ($row+$line+1<count($array[$line])) {
                     echo "=> try horizontal<br>";

@@ -101,8 +101,8 @@ const bezier_offs_qy2 = 7;
 const regular_point = 0;
 const entry_point = 1;
 const pivot_point = 2;
-//const conditional_pivot_point = 3;        
-// probably not a goog concept: conflict with alternative exit point (e.g. sch: wischen, rauschen, puschen, preschen 
+//const conditional_pivot_point = 3; // still no idea what this point type was meant for ... orginally used in V        
+// probably not a good concept: conflict with alternative exit point (e.g. sch: wischen, rauschen, puschen, preschen 
 // => better to leave this job to the parser: define special tokens for higher poisitions, e.g. "^SCH" without alternative exit point (=> "-EN" will be added correctly)
 // this means more data, but is less complicated
 const connecting_point = 4;
