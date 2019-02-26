@@ -161,6 +161,7 @@ global $global_error_string;
 
 if ($_POST['action'] === "abschicken") {
     $global_error_string = "";
+
     CalculateStenoPage();
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();

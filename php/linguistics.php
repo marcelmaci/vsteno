@@ -235,7 +235,11 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
         $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue);
         $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
     }
-    return $result;
+    //echo "$result<br>";
+    if ($result === "Array") {
+        if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
+        else return $word;
+    } else return $result;
 }
     
 function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue) {
@@ -270,6 +274,8 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
             list($word_list_as_string, $array) = create_word_list($word);
             $array = eliminate_inexistent_words_from_array($word_list_as_string, $array);
             $result = recursive_search(0,0, $array);
+            //echo "inside (one word): word: $word result: $result<br>";
+            if ($result === "") $result = $word; // fix bug: recursive search can return "" instead of a word if word isn't found in hunspell dictionary
         } else $result = $word; //$result = iconv(mb_detect_encoding($word, mb_detect_order(), true), "UTF-8", $word);
         //echo "$result - $word<br>";
         if ($hyphenate) $result = hyphenate($result);

@@ -215,6 +215,60 @@ function ExecuteEndParameters() {
                 } else {
                     //echo "word not found in dictionary!<br>";
                     //echo "LING PARAMETERS: " . $_SESSION['hyphenate_yesno'] . "-" . $_SESSION['composed_words_yesno'] . "-" . $_SESSION['composed_words_separate'] . "-" . $_SESSION['composed_words_glue'] . "-" .
+                    // the problem here is that if LING finds composed words, they are not separated as an array (since this is done
+                    // before in metaparser ... In other words: we deal here only with part of words and the character \ is treated
+                    // as a character (not as a separator to generate an array)
+                    // try to fix that:
+                    // (1) by calling analize_word_linguistically in the metaparser giving it the argument "no hyphens" => if the word
+                    //     has to be separated it will get separated from the beginning.
+                    // (2) call analyze_word_linguistically once more here, but this time giving it the parameter "no composed words"
+                    //     (meaning: it adds only hypens)
+                    // Unfortunately this messes up completely with the dictionary => no idea how to solve that problem for the moment
+                    // In addition: that didn't work ...
+                    // If analyze_word_linguistically is called in metaparser both | and \ will produce separate words in the array.
+                    // Consequence: words like "Andenken" will get tokenized correctly but then spacer rule cannot be applied (because
+                    // "an" and "denken" are two separate parts. For \ this is not a problem (there will be space between the two parts
+                    // anyway) but for | there's no possibility to decide how much space there must be added ...
+                    // The momentary solution is to call analyze_words_linguistically in the metaparser (to get \) and then filter
+                    // out | again ... 
+                    // As a consequence, analyze_words_linguistically must be called again here including the composed word analysis.
+                    // This is terrible for performance ... and messes up with | (now available as character in the string) and \ (not
+                    // available as char since treated only as separator on a higher level).
+                    // no idea how to fix this whole mess ... :-)
+                    // language is complicated - really! :-)
+                    // ok, found a solution:
+                    // the whole parsing process is separated into "stages":
+                    // - stage1: rules apply to the whole text
+                    // - stage2: dictionary (things like the "helvetizer" must be done in stage1 now: in order to be safe for dictionary
+                    //   call, no rules will be applied to words - except stage1!)
+                    // - stage3: rules that apply to composed words (each word individually: for example Test\wort|schatz will be splitted
+                    //   up into 3 parts and rules of stage3 will be applied entirely to any of them)
+                    // - stage4: after stage3, the parser merges the parts together again, using | and \ als "glue" (so the information
+                    //   of analyze_word_individually is preserved and can be used by stage4 or deleted; both tokens now appear as tokens
+                    //   (chars) inside the string)
+                    // how to mark begin and end of the stages (done in import_model.php):
+                    // for the moment, only the beginning of the sections stage3 and stage4 can be marked by using "=:stage3" and
+                    // "=:stage4" as a second or third argument in the #EndSubSection-statement. E.g: #EndSubSection(bundler,=:stage4) 
+                    // marks the end of stage3 and the beginning of stage4 (next rule == stage4). This formalism is really stupid and
+                    // imperfect, but it's the fastest way to implement the concept for now ... :-) (change it later to something more
+                    // logic and "beautiful" ...)
+                    // The limits for the stages
+                    // - stage1: 0 - @@dic
+                    // - stage2: no rules (call to Lookuper)
+                    // - stage3: $rules_pointer_start_stage3 - $rules_pointer_start_stage4 (new global variables)
+                    // - stage4: $rules_pointer_start_stage4 - count($rules[$actual_model])
+                    // the good news: analyze_word_lingistically has to be called only once (directly in metaparser and not here any more,
+                    // the call can be complete (with hyphens and composed words))
+                    // UNCLEAR: up until now, =:std and =: were inside "composed words parsing" (= actual stage3)
+                    // QUESTION: what happens if stage4 is define before =:std and =:prt?
+                    // TEST: the parser seems to work, but no std and prt-information appears in debugging
+                    // => if this is the only side effect, it would be easy to fix, BUT: let's observe this a little bit if it really is
+                    // the only implication of an earlier stage4.
+                    // earlier stage4 is needed because certain consonant-combinations occur even with word boundaries:
+                    // Wohn|raum, Gast|recht, Erd|reich => [NR], [STR], [DR] must be bundled! (=> bundler)
+                    // an earlier stage4 would benefit the performance (fewer cases have to be tested because words are not split up)
+                    
+                    /*
                     $temp_word = $act_word;
                     $act_word = analyze_word_linguistically($act_word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
                     if ($temp_word !== $act_word) {
@@ -227,7 +281,9 @@ function ExecuteEndParameters() {
                         if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
                         
                         $global_debug_string .= "LING: $temp_word => $act_word $parameters<br>";
+                        //var_dump($act_word);
                     }
+                    */
                 }
                 break;
             default :
@@ -391,7 +447,7 @@ function ExecuteRule( /*$word*/ ) {
 
 }
 
-function ParserChain( $text ) {
+function ParserChain( $text, $start = null, $end = null ) {
         global $font, $combiner, $shifter, $rules, $functions_table, $rules_pointer;
         global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $rules_pointer_start_std2prt;
         global $original_word, $result_after_last_rule, $act_word, $start_word_parser;
@@ -416,9 +472,16 @@ function ParserChain( $text ) {
             $rules_pointer = $rules_pointer_start_std2prt; // start with STD form (after bundler)
             $act_word = $text;
         }
+        if ($start !== null) {
+            $rules_pointer = $start;
+            $act_word = $text;
+        }
+        $actual_model = $_SESSION['actual_model'];
+        if ($end !== null) $stop = $end;
+        else $stop = count($rules[$actual_model]);
         
        //echo "set rules_pointer to $start_word_parser<br>";
-        $actual_model = $_SESSION['actual_model'];
+        
         //$act_word = $text;
         
         $original_word = $text;
@@ -427,9 +490,10 @@ function ParserChain( $text ) {
         //$temp = isset($rules[$actual_model][$rules_pointer]);
         //echo "actual_model: $actual_model";
         //var_dump($rules);
-        $number_of_rules = count($rules[$actual_model]);
+        //$number_of_rules = count($rules[$actual_model]);
         //echo "number of rules: $number_of_rules rules_pointer: $rules_pointer<br>";
-        while ($rules_pointer < $number_of_rules) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
+        echo "ParserChain: Start: $rules_pointer Word: $act_word<br>";
+        while ($rules_pointer < $stop) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
             //echo "before executerule: $rules_pointer<br>";
             //$act_word = ExecuteRule( $act_word );
             //echo "rule($rules_pointer) actword = $act_word<br>";
@@ -441,6 +505,7 @@ function ParserChain( $text ) {
             //echo "after execute";
             $rules_pointer++;
         }
+        echo "ParserChain: End: $stop Result: $act_word<br>";
         return $act_word;
 }
 
@@ -527,109 +592,154 @@ function PreProcessGlobalParserFunctions( $text ) {
         return $text;
 }
 
+//function ParserChainForComposed() {
+    // this function is called by MetaParser in stage3 (= composed words have to be splitted and parsed individually)
+    // the function only some sort of "wrapper": it calls ParserChain (with needed start and stop values)
+    // all it does is split the words, call ParserChain individually (for each word) and packing them together
+    // again (which means: ParserChainForComposed gets a string and returns a string - the whole splitting up
+    // occurs inside of this function).
+    // not necessary: do it directly inside MetaParser
+//}
+
 function MetaParser( $text ) {          // $text is a single word!
     global $font, $combiner, $shifter, $rules, $functions_table;
     global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
     global $safe_std;       // this global variable comes from database (in purgatorium1.php)
-    global $last_pretoken_list, $last_posttoken_list;
+    global $last_pretoken_list, $last_posttoken_list, $rules_pointer_start_stage4, $rules_pointer_start_stage3, $rules_pointer_start_std2prt;
     
-    //echo "Textformat: " . $_SESSION['original_text_format'] . "<br>";
-     $text_format = $_SESSION['original_text_format'];
-     //$text_format = 'original';
-    //$original_word = $text;
-    if ($text_format === "prt") return $text; // no parsing
-    elseif ($text_format === "std") { // partial parsing: std => prt
-       // if text format is "standard" (std), then the variable $safe_std has to be set to std_form
-       // $safe_std is either (1) set via database in purgatorium1.php1
-       // or (2) - if the calculation is initiated from the maxi-form - 
-       // it is the variable text (so in the latter case, set $safe_std = $text;
-       //echo "calculate STD => PRT<br>";
-       //$safe_std = (mb_strlen($safe_std) > 0) ? $safe_std : mb_strtoupper($text);
-       $safe_std = mb_strtoupper($text);
-       
-       //echo "prt muss von std (#$safe_std#) berechnet werden<br>";
-       //echo "safe_std: $safe_std<br>";
-       //$prt_form = ParserChain( $temp_std ); 
-       $prt_form = ParserChain( $safe_std ); 
-       //$safe_std = "";//???????????
-       //echo "prt: $prt_form<br>";
-       
-       return $prt_form;
-    } else { // full parsing
-       
-        $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
-        //$text1 = GenericParser( $globalizer_table, $text ); // must be replaced!?
-        $text1 = html_entity_decode( $text );    // do it here the hardcoded way
-        $text2 = GetWordSetPreAndPostTags( $text1 );
+    // this is a good place to lookup words!
+    // after that branch to  std2prt oder stage4
+    list($get_standard, $get_print) = Lookuper($text); // corresponds to stage2 (dictionary)
+    echo "dictionary (metaparser): $text std: $get_standard prt: $get_print<br>"; 
+    echo "stage4: $rules_pointer_start_stage4<br>";
+    $safe_std = mb_strtoupper($get_standard, "UTF-8");
+    $safe_prt = mb_strtoupper($get_print, "UTF-8");
+    echo "safe_std: $safe_std start: $rules_pointer_start_std2prt<br>";
+    if  ($safe_prt !== "") return $safe_prt;    // no parsing at all
+    elseif ($safe_std !== "") {
+        // parse from std2stage4
+        $std2stage4 = ParserChain($safe_std, $rules_pointer_start_std2prt, $rules_pointer_start_stage4);
+        // parse from stage4 to end (= prt)
+        echo "go to stage4";
+        $actual_model = $_SESSION['actual_model'];
+        $final_prt = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
+        return $final_prt;
+    } else {
+        // word is not in dictionary => parse from stage3 (= after dictionary) to stage4 (start) using word splitting (composed words)
+        echo "word is not in dictionary<br>";
+        // first check if parsing is (partially) needed
+        $text_format = $_SESSION['original_text_format'];
+        if ($text_format === "prt") return $text; // no parsing
+        elseif ($text_format === "std") { 
+            // partial parsing: std => prt
+            $safe_std = mb_strtoupper($text, "UTF-8");
+            $std_form = $safe_std; // not sure if this variable has to be set to get infos in the debugger?!
+            $std2stage4 = ParserChain($safe_std, $rules_pointer_start_std2prt, $rules_pointer_start_stage4);
+            // parse from stage4 to end (= prt)
+            echo "go to stage4";
+            $actual_model = $_SESSION['actual_model'];
+            $prt_form = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
+            return $prt;
+        } else { 
+            // full parsing
+            $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
+            $text1 = html_entity_decode( $text );    // do it here the hardcoded way
+            $text2 = GetWordSetPreAndPostTags( $text1 );
         
-        $text2 = preg_replace('/»/', '"', $text2);
-        $text2 = preg_replace('/«/', '"', $text2);
+            $text2 = preg_replace('/»/', '"', $text2);      // not sure if this is done in stage1 ?!
+            $text2 = preg_replace('/«/', '"', $text2);
         
-        // $original_word = $text2;
-        //echo "text: $text text1: $text1 text2: $text2<br>";
-        list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
-        // write pre/posttokens to global varables in order to use them from global parser
-        $last_pretoken_list = $pretokens;
-        $last_posttoken_list = $posttokens;
+            list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
+           
+            $last_pretoken_list = $pretokens;
+            $last_posttoken_list = $posttokens;
         
-        switch ($_SESSION['token_type']) {
-            case "shorthand": 
-                $separated_word_parts_array = explode( "\\", /*GenericParser( $helvetizer_table, */ $word ); // helvetizer must be replaced 
-                //var_dump($separated_word_parts_array);echo"<br";
-                $output = ""; 
-                $separated_std_form = "";
-                $separated_prt_form = "";
-                foreach ($separated_word_parts_array as $word_part ) {
-                    $subword_array = explode( "|", $word_part ); // problem with this method is, that certain shortings (e.g. -en) will be applied at the end of a subword, while the shouldn't ... Workaround: add | at the end (that will be eliminated later shortly before transformation into token_list) ... (?!) seems to work for the moment, but keep an eye on that! Sideeffect: shortenings at the end won't be applied (this was intended at the beginning...) => rules must be rewritten with $ and | to mark end of words and subwords
-                    foreach ($subword_array as $subword) { 
-                        if ($subword !== end($subword_array)) $subword .= "|";
-                        //echo "Metaparser(): subword = $subword<br>";
-                        $output .= ParserChain( $subword );
-                        //echo "Metaparser(): output = $output<br>";
+            switch ($_SESSION['token_type']) {
+                case "shorthand": 
+                    
+                    $temp_word = $text;
+                    $test = analyze_word_linguistically($word, true, $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
+                    //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
+                    // write debug info
+                    $parameters = "";
+                    if ($_SESSION['hyphenate_yesno']) $parameters .= "syllables ";
+                    if ($_SESSION['composed_words_yesno']) $parameters .= "words ";
+                    if (mb_strlen($parameters) > 0) {
+                        $parameters .= " / separate: " . $_SESSION['composed_words_separate'] . " glue: " . $_SESSION['composed_words_glue'];
+                    }
+                    if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
+                    $global_debug_string .= "LING: $temp_word => $test $parameters<br>"; echo "test: $test<br>";
+                    // calculate
+                    $word = $test;
+                    $separated_word_parts_array = explode( "\\", /*GenericParser( $helvetizer_table, */ $word ); // helvetizer must be replaced 
+                    //var_dump($separated_word_parts_array);echo"<br";
+                    $output = ""; 
+                    $separated_std_form = "";
+                    $separated_prt_form = "";
+                    foreach ($separated_word_parts_array as $word_part ) {
+                        $subword_array = explode( "|", $word_part ); // problem with this method is, that certain shortings (e.g. -en) will be applied at the end of a subword, while the shouldn't ... Workaround: add | at the end (that will be eliminated later shortly before transformation into token_list) ... (?!) seems to work for the moment, but keep an eye on that! Sideeffect: shortenings at the end won't be applied (this was intended at the beginning...) => rules must be rewritten with $ and | to mark end of words and subwords
+                        foreach ($subword_array as $subword) { 
+                            if ($subword !== end($subword_array)) $subword .= "|";
+                            //echo "Metaparser(): subword = $subword<br>";
+                            $output .= ParserChain( $subword, $rules_pointer_start_stage3, $rules_pointer_start_stage4 );
+                            //echo "Metaparser(): output = $output<br>";
                        
-                        $separated_std_form .= $std_form;
-                        $separated_prt_form .= $prt_form;
+                            $separated_std_form .= $std_form;
+                            $separated_prt_form .= $prt_form;
+                        }
+                        if ( $word_part !== end($separated_word_parts_array)) { 
+                            $output .= "\\";  // shouldn't be hardcoded?!
+                            $separated_std_form .= "\\";        // eh oui ... l'horreur continue ... ;-)
+                            $separated_prt_form .= "\\";
+                        }
                     }
-                    if ( $word_part !== end($separated_word_parts_array)) { 
-                        $output .= "\\";  // shouldn't be hardcoded?!
-                        $separated_std_form .= "\\";        // eh oui ... l'horreur continue ... ;-)
-                        $separated_prt_form .= "\\";
+                    if (mb_strlen($pretokens) > 0) { 
+                        if (($pretokens === "{") || ($pretokens === "[")) {
+                            $output = $pretokens . $output; // add { and [ without \\
+                            $separated_std_form = $pretokens . $separated_std_form;     // do the same for std and prt form
+                            $separated_prt_form = $pretokens . $separated_prt_form;
+                        } else $output = "$pretokens\\" . "$output";    // not sure whether this is correct (needs same correction for std and prt as above?!?)
                     }
-                }
-                if (mb_strlen($pretokens) > 0) { 
-                    if (($pretokens === "{") || ($pretokens === "[")) {
-                        $output = $pretokens . $output; // add { and [ without \\
-                        $separated_std_form = $pretokens . $separated_std_form;     // do the same for std and prt form
-                        $separated_prt_form = $pretokens . $separated_prt_form;
-                    } else $output = "$pretokens\\" . "$output";    // not sure whether this is correct (needs same correction for std and prt as above?!?)
-                }
-                if (mb_strlen($posttokens) > 0) {
-                    if ((mb_substr($posttokens, 0, 1) === "}") || (mb_substr($posttokens,0,1) === "]")) { // check only first char of posttokens, since there may be . ? ! afterwards (et l'horreur sous forme de greffes aléatoires continue ...;-))
-                        $output .= $posttokens; // add } and ] without \\
-                        $separated_std_form .= $posttokens;     // do the same for std and prt form
-                        $separated_prt_form .= $posttokens;
+                    if (mb_strlen($posttokens) > 0) {
+                        if ((mb_substr($posttokens, 0, 1) === "}") || (mb_substr($posttokens,0,1) === "]")) { // check only first char of posttokens, since there may be . ? ! afterwards (et l'horreur sous forme de greffes aléatoires continue ...;-))
+                            $output .= $posttokens; // add } and ] without \\
+                            $separated_std_form .= $posttokens;     // do the same for std and prt form
+                            $separated_prt_form .= $posttokens;
                    
-                    } else $output .= "\\$posttokens";
-                }
-                //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
-                //echo "metaparser: separated_std_form = $separated_std_form<br>";
-                return $output;
-            case "handwriting":
-                $output = $word;
-                $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+]", $output ); // upper case
-                $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-]", $output ); // lower case
-                $output = mb_strtoupper( $output );
-                return $output;
+                        } else $output .= "\\$posttokens";
+                    }
+                    //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
+                    echo "metaparser: parserchain($rules_pointer_start_stage3, $rules_pointer_start_stage4)<br>";
+                    echo "metaparser: separated_std_form = $separated_std_form<br>";
+                    echo "metaparser: full form: $output<br>";
+                   
+                    // now do stage4 (full word)
+                    $actual_model = $_SESSION['actual_model'];
+                    $output = ParserChain($output, $rules_pointer_start_stage4, count($rules[$actual_model]));
+                    
+                    return $output; /// don't return output => go to stage4 instead
+  
+                    break;
+                case "handwriting":
+                    $output = $word;
+                    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+]", $output ); // upper case
+                    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-]", $output ); // lower case
+                    $output = mb_strtoupper( $output );
+                    return $output;
 /*
-            case "htmlcode":
-                $_SESSION['token_type'] = "shorthand";
-                //return( $pre, $word, $post); 
-                break; // break necessary? 
+                case "htmlcode":
+                    $_SESSION['token_type'] = "shorthand";
+                    //return( $pre, $word, $post); 
+                    break; // break necessary? 
 */
+            }
+            
         }
     }
-    
+    ////////////////////////////////// add stage4 //////////////////////////////////////////
+    //echo "execute stage4<br>";
+    //return $output;
 }
 
 
