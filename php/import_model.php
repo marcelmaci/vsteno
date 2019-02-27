@@ -382,7 +382,11 @@ function WriteParamListToRulesArray( $type, $param_list ) {
         } elseif ($parameter === "=:stage3") {
             //echo "set stage3: " . ($rules_pointer+1) . "<br>";
             $rules_pointer_start_stage3 = $rules_pointer + 1;  // same as for std 
+        } elseif ($parameter === "=:stage2") {
+            //echo "set stage2: " . ($rules_pointer+1) . "<br>";
+            $rules_pointer_start_stage2 = $rules_pointer + 1;  // same as for std 
         }
+    
         $rules["$insertion_key"][$rules_pointer][] = $parameter;
     }
     $rules_pointer++;
@@ -506,6 +510,7 @@ function ImportModelFromText($text) {
      // if stage3 and stage4 are not set => set them for compatibility
     $actual_model = $_SESSION['actual_model'];
     if ($rules_pointer_start_stage3 === null) $rules_pointer_start_stage3 = 0; // this is wrong: should point to "after global" (= stage1) ... but which variable is that?!?
+    if ($rules_pointer_start_stage2 === null) $rules_pointer_start_stage2 = 0; // idem
     if ($rules_pointer_start_stage4 === null) $rules_pointer_start_stage4 = count($rules[$actual_model]); // set stage4 to end of rules (== stage4 inexistant!)
     
     

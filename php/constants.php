@@ -178,6 +178,7 @@ $this_word_punctuation = true;
 
 // rules
 $rules_pointer_start_std2prt = null;
+$rules_pointer_start_stage2 = null;
 $rules_pointer_start_stage3 = null;
 $rules_pointer_start_stage4 = null;
 

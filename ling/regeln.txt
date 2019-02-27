@@ -6,11 +6,27 @@
  		"&ndash;" => "-"; // blocks calculation in layouted mode
 		"&raquote;" => "«"; 
 		"&laquote;" => "»";
+		"›" => "»";
+		"‹" => "«";
 		"ß" => "ss";
 	#EndSubSection(global)
 	#BeginSubSection(helvetizer,@@wrd) // restructure parser: word functions before parser not possible
 		//"ß" => "ss";			// anymore => transfer helvetizer to global section (stage1)
-	#EndSubSection(helvetizer,@@dic,=:stage3)
+	#EndSubSection(helvetizer,@@dic,=:stage2)
+	#BeginSubSection(corrector)
+		// some words are erroneously separated by LING
+		// e.g.: wie|der, sie|ben ...
+		// correct that by remerging them here in stage2 (where words can be treated entirely before stage3)
+		// this is a little bit more elegant than before ... ;-)
+		// (best thing would be a LING module that does everything perfectly - but this is the next best option;-)
+		"([Ww])ie\|der" => "$1ie-der"; 
+		"([Ss])ie\|ben" => "$1ie-ben";
+		"([Ww])er\|de" => "$1er-de";
+		"([Ww])er\|den" => "$1er-den";
+		"\|de([nm])}" => "-de$1"; // there's a hole bunch of that stuff ... :-/ 
+		"([Mm])it\|tag" => "$1it-tag";
+		"([Vv])iel\|leicht" => "$1iel-leicht";
+	#EndSubSection(corrector,=:stage3)
 	#BeginSubSection(packer)
 		// some shorthand tokens use special chars (like -#+=/ etc.) in their definition
 		// this can lead to confusions in the transcriptor: e.g. - might be the character - 
@@ -182,7 +198,7 @@
 		"solch" => "{SOLCH}";
 		"^und$" => "{UND}";
 		"usw\." => "{USW\.}";
-		"vielleicht" => "{VILLEICHT}";
+		"viel-?leicht" => "{VILLEICHT}";
 		"von" => { "{VON}", "Yvonne" };
 		"^wa-?r(st|en)?$" => "{WAR}$1";
 		"^wär(e?st|e|en|et|t)?$" => "{WÄR}$1";
@@ -253,7 +269,7 @@
 		"^in$" => "{IN}";
 		"^ist$" => "{IST}";
 		"mitt" => "m1i2t3t4";
-		"mit" => { "{M}", "Eremit*" };
+		"mit(?!(t|-t))" => { "{M}", "Eremit" };
 		"m1i2t3t4" => "mitt";
 		"^nicht" => "{NICHT}";
 		"^sie$" => "{SI}";
@@ -308,7 +324,7 @@
 		"selb" => "{SELB}";
 		"(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}";
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
-		//"wie?-?der" => "{WIDER}"; // must be placed in stage1
+		"[Ww]ie?-?der" => "{WIDER}"; // from stage2
 		"(?<!^)([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)e-?t(e?|e(n|s)?)$" => { "$1{ET}$2", "[Rr]aket" };
 		"erer([se]?[nm]?)$" => "{ER}{ER}$1";
 		"rr" => "[RR]";
@@ -357,19 +373,6 @@
 		"{ANT}{LICH}" => "en{TLICH}";
 		"{ET}t" => "e[TT]";
 	#EndSubSection(shortener,=:stage4)
-	#BeginSubSection(deshortener)
-		// some words are erroneously separated by LING
-		// e.g.: wie|der, sie|ben ...
-		// correct that by remerging them here in stage4 (where words can be treated entirely again)
-		// all quite ugly, but inevitable ...
-		"{WI}{DER}" => "{WIDER}"; 
-		"{SI}\|{BE}n" => "SIB{EN}"; // be was even treated as prefix ... oh my gosh ... !
-		"^[Ww][Ee][Rr]\|d" => "{WERD}";
-		"^[Ww][Ee][Rr]\|{DEN}" => "{WERD}{EN}";
-		"\|{DE([NM])}" => "D{E$1}"; // there's a hole bunch of that stuff ... :-/ 
-		"{M}\|tag" => "MI[TT]AG]";
-		"vie?l\|leicht" => "{VILLEICHT}";
-	#EndSubSection(deshortener)
 	#BeginSubSection(normalizer)
 		
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied

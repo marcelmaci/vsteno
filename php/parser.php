@@ -267,6 +267,27 @@ function ExecuteEndParameters() {
                     // earlier stage4 is needed because certain consonant-combinations occur even with word boundaries:
                     // Wohn|raum, Gast|recht, Erd|reich => [NR], [STR], [DR] must be bundled! (=> bundler)
                     // an earlier stage4 would benefit the performance (fewer cases have to be tested because words are not split up)
+                    // Another modification:
+                    // Linguistical analysis separates too many words, e.g.: sie|ben, wie|der, wer|den ...
+                    // With the above concept, these errors could be corrected, but only in stage4 (where the word were already considerably transformed)
+                    // Therefore, it would be better to have a stage immediately after LING and before stage3 that would allow to apply rules to
+                    // whole words (like in stage4). In order not to be forced to renumerate the stages 3 and 4, we add 1 stage at the beginning
+                    // (starting with 0):
+                    // stage0: apply to whole text (preprocessing); 0 - @@dic (for the moment)
+                    // stage1: no rules (call lookuper, if it fails: call LING)
+                    // stage2: apply to whole word; $rules_pointer_start_stage2 - $rules_pointer_stage3
+                    // other stages as above
+                    // to do:
+                    // variables $rules_pointer_start_stageX should be rewritten as a global array (e.g. $stages[$x])
+                    // stage markers should not begin with =: (reserve that for variables that go to dictionary!)
+                    // stage markers could be: #stageX 
+                    // as STD and PRT a LIN variable should be created: LIN = result after linguistical analyzer
+                    // there should be an entry LIN in the dictionary (elysium): user has the possibility to define
+                    // each variable individually: only LIN, LIN + STD, LIN + STD + PRT (don't know if PRT really makes sense?!) 
+                    // LIN can contain exceptions with respect to the linguistical analysis (something that is done for now via
+                    // the new "corrector" function in stage2)
+                    // NOTE: This "fully staged parser" concept is - in my opinion - the ultimate solution for all problems!
+                    // It works great (even if the code, for the moment, is a whole mess ...)
                     
                     /*
                     $temp_word = $act_word;
@@ -607,7 +628,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
     global $safe_std;       // this global variable comes from database (in purgatorium1.php)
-    global $last_pretoken_list, $last_posttoken_list, $rules_pointer_start_stage4, $rules_pointer_start_stage3, $rules_pointer_start_std2prt;
+    global $last_pretoken_list, $last_posttoken_list, $rules_pointer_start_stage4, $rules_pointer_start_stage3, $rules_pointer_start_stage2, $rules_pointer_start_std2prt;
     
     // this is a good place to lookup words!
     // after that branch to  std2prt oder stage4
@@ -681,6 +702,11 @@ function MetaParser( $text ) {          // $text is a single word!
                     //echo "test: $test<br>";
                     // calculate
                     $word = $test;
+                    // first do stage2: parse entire word from stage2-stage3
+                    //echo "start stage2<br>";
+                    $word = ParserChain( $word, $rules_pointer_start_stage2, $rules_pointer_start_stage3 );
+                    //echo "result stage2: $word<br>";
+                    ///////////////////////////////////////
                     $separated_word_parts_array = explode( "\\", /*GenericParser( $helvetizer_table, */ $word ); // helvetizer must be replaced 
                     //var_dump($separated_word_parts_array);echo"<br";
                     $output = ""; 
