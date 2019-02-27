@@ -377,10 +377,10 @@ function WriteParamListToRulesArray( $type, $param_list ) {
             //echo "set rules_pointer_start_std2prt";
             $rules_pointer_start_std2prt = $rules_pointer + 1;  // set it to begin of following function
         } elseif ($parameter === "=:stage4") {
-            //echo "set stage4: " . $rules_pointer . "<br>";
+            //echo "set stage4: " . ($rules_pointer+1) . "<br>";
             $rules_pointer_start_stage4 = $rules_pointer + 1;  // same as for std 
         } elseif ($parameter === "=:stage3") {
-            //echo "set stage3: " . $rules_pointer . "<br>";
+            //echo "set stage3: " . ($rules_pointer+1) . "<br>";
             $rules_pointer_start_stage3 = $rules_pointer + 1;  // same as for std 
         }
         $rules["$insertion_key"][$rules_pointer][] = $parameter;
@@ -486,7 +486,8 @@ function ImportRules() {
 //////////////////////////////////////////// import whole Model /////////////////////////////////////////////////////////////
 function ImportModelFromText($text) {
     global $font_section, $rules_section, $base_subsection, $combiner_subsection, $shifter_subsection;
-    // strip out unnecessary stuff
+    global $rules_pointer_start_stage3, $rules_pointer_start_stage4, $rules;
+        // strip out unnecessary stuff
     $output = StripOutComments($text);
     $output = StripOutTabsAndNewlines($output);
     // get main sections
@@ -501,6 +502,12 @@ function ImportModelFromText($text) {
     ImportCombiner(); // idem to $imported_combiner
     ImportShifter(); // idem to $imported_shifter
     ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
+    
+     // if stage3 and stage4 are not set => set them for compatibility
+    $actual_model = $_SESSION['actual_model'];
+    if ($rules_pointer_start_stage3 === null) $rules_pointer_start_stage3 = 0; // this is wrong: should point to "after global" (= stage1) ... but which variable is that?!?
+    if ($rules_pointer_start_stage4 === null) $rules_pointer_start_stage4 = count($rules[$actual_model]); // set stage4 to end of rules (== stage4 inexistant!)
+    
     
     return $output;
 }

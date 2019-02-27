@@ -37,7 +37,7 @@ $original_word = "Wetterstation";
 echo "<br>condensed test:<br>";
 //$word = "Dampfschifffahrtsoffiziersjackenknopflochrosenladentischtuch";
 //$word = "Versicherungsangestellter";
-$word = "Testwortschatz";
+$word = "werde";
 
 //$word = mb_convert_encoding ( "Kapitänsjacke" , "UTF-8", "UTF-8");
 $start = microtime(true);

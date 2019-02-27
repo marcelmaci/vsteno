@@ -480,6 +480,7 @@ function ParserChain( $text, $start = null, $end = null ) {
         if ($end !== null) $stop = $end;
         else $stop = count($rules[$actual_model]);
         
+        
        //echo "set rules_pointer to $start_word_parser<br>";
         
         //$act_word = $text;
@@ -505,7 +506,7 @@ function ParserChain( $text, $start = null, $end = null ) {
             //echo "after execute";
             $rules_pointer++;
         }
-        //echo "ParserChain: End: $stop Result: $act_word<br>";
+        //echo "ParserChain: Stop: $stop Result: $act_word<br>";
         return $act_word;
 }
 
@@ -657,9 +658,16 @@ function MetaParser( $text ) {          // $text is a single word!
         
             switch ($_SESSION['token_type']) {
                 case "shorthand": 
-                    
+                    //echo "shorthand<br>";
                     $temp_word = $text;
-                    $test = analyze_word_linguistically($word, true, $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
+                    $pos1 = mb_strpos($text, "\\", 0, "UTF-8");
+                    $pos2 = mb_strpos($text, "|", 0, "UTF-8");
+                    // if $text contains \ or | from user input, consider that user wants to separate word manually, therefore only do hyphens (no analysis for composed words!)
+                    //echo "pos12: $pos1, $pos2<br>";
+                    if (($pos1 !== false) || ($pos2 !== false)) {
+                        //echo "only do hyphens<br>";
+                        $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], false, $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
+                    } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
                     // write debug info
                     $parameters = "";
@@ -726,7 +734,11 @@ function MetaParser( $text ) {          // $text is a single word!
                     //echo "metaparser: full form: $output<br>";
                    
                     // now do stage4 (full word)
+                    
+                    //$global_debug_string .= "begin stage4";
                     $actual_model = $_SESSION['actual_model'];
+                    //echo "begin stage4: $rules_pointer_start_stage3-$rules_pointer_start_stage4-" . count($rules[$actual_model]) . "<br>";
+                    
                     $output = ParserChain($output, $rules_pointer_start_stage4, count($rules[$actual_model]));
                     
                     // add pre/posttokens after all parsing is done

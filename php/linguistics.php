@@ -271,6 +271,7 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
     else {
     
         if ($decompose) {
+            //echo "decompose word<br>";
             list($word_list_as_string, $array) = create_word_list($word);
             $array = eliminate_inexistent_words_from_array($word_list_as_string, $array);
             $result = recursive_search(0,0, $array);

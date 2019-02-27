@@ -1773,7 +1773,9 @@ function NormalText2SVG( $text ) {
 
     $text = PreProcessNormalText( $text );
     // first apply rules to whole text (if there are any)
+    //echo "preprocess (=stage1)<br>";
     $text = PreProcessGlobalParserFunctions( $text ); // corresponds to stage1 (full text)
+    //echo "preprocess (=stage1) finished<br>";
     $text_array = PostProcessTextArray(explode( " ", $text));
     //echo "\nText aus Normaltext2svg()<br>$text<br>\n";
     
