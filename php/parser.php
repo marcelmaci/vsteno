@@ -121,9 +121,9 @@ function GenericParser( $table, $word ) {
 
 function extended_preg_replace( $pattern, $replacement, $string) {
         switch ($replacement) {
-                case "strtolower()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtolower($word[1]); }, $string); 
+                case "strtolower()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtolower($word[1], "UTF-8"); }, $string); 
                                       break;
-                case "strtoupper()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtoupper($word[1]); }, $string); 
+                case "strtoupper()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtoupper($word[1], "UTF-8"); }, $string); 
                                       break;
                 default :  // found a really tricky aspect in regex: "overlapping contexts" ... found out that when two matches overlap,
                            // only one (!) is replaced. Example: rule = "([kr])([rp])" => "$1X$2", only "kXr" is generated ...
@@ -679,7 +679,7 @@ function MetaParser( $text ) {          // $text is a single word!
         
             switch ($_SESSION['token_type']) {
                 case "shorthand": 
-                    //echo "shorthand<br>";
+                    //echo "shorthand: $text<br>";
                     $temp_word = $text;
                     $pos1 = mb_strpos($text, "\\", 0, "UTF-8");
                     $pos2 = mb_strpos($text, "|", 0, "UTF-8");
@@ -703,7 +703,7 @@ function MetaParser( $text ) {          // $text is a single word!
                     // calculate
                     $word = $test;
                     // first do stage2: parse entire word from stage2-stage3
-                    //echo "start stage2<br>";
+                    //echo "start stage2: $rules_pointer_start_stage2<br>";
                     $word = ParserChain( $word, $rules_pointer_start_stage2, $rules_pointer_start_stage3 );
                     //echo "result stage2: $word<br>";
                     ///////////////////////////////////////

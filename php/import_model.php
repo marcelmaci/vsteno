@@ -368,7 +368,7 @@ function ImportRulesFromGenericSubSection() {
 }
 
 function WriteParamListToRulesArray( $type, $param_list ) {
-    global $rules, $insertion_key, $rules_pointer, $rules_pointer_start_std2prt, $rules_pointer_start_stage4, $rules_pointer_start_stage3;
+    global $rules, $insertion_key, $rules_pointer, $rules_pointer_start_std2prt, $rules_pointer_start_stage2, $rules_pointer_start_stage4, $rules_pointer_start_stage3;
     $rules["$insertion_key"][$rules_pointer][] = $type;
     foreach( $param_list as $parameter ) {
         if ($parameter === "=:std") {
@@ -490,7 +490,7 @@ function ImportRules() {
 //////////////////////////////////////////// import whole Model /////////////////////////////////////////////////////////////
 function ImportModelFromText($text) {
     global $font_section, $rules_section, $base_subsection, $combiner_subsection, $shifter_subsection;
-    global $rules_pointer_start_stage3, $rules_pointer_start_stage4, $rules;
+    global $rules_pointer_start_stage2, $rules_pointer_start_stage3, $rules_pointer_start_stage4, $rules;
         // strip out unnecessary stuff
     $output = StripOutComments($text);
     $output = StripOutTabsAndNewlines($output);

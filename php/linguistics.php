@@ -46,7 +46,8 @@ $pspell_dictionary = "de";
 
 // functions
 function capitalize($word) {
-    $word[0] = mb_strtoupper($word[0]);
+    //$word[0] = mb_strtoupper($word[0], "UTF-8");
+    $word = mb_strtoupper($word, "UTF-8");
     return $word;
 }
 function array2capitalizedStringList($array) {
@@ -58,11 +59,13 @@ function array2capitalizedStringList($array) {
     return $word_list;
 }
 function decapitalize($word) {
-    $word[0] = mb_strtolower($word[0]);
+    //$word[0] = mb_strtolower($word[0], "UTF-8"); // wrong for umlauts
+    $word = mb_strtolower($word, "UTF-8"); // slower but with utf-8
     return $word;
 }
 function hyphenate($word) {
     global $syllable;
+    //echo "word: $word<br>";
     return preg_replace("/-([a-zA-Z])-/", "$1-", $syllable->hyphenateText($word)); // quick fix: add orphanated chars to preceeding (phpSyllable produces such erroneous outputs ... !?)
 }
 function word2array($word) {
@@ -233,9 +236,11 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
     $result = "";
     for ($i=0;$i<count($several_words);$i++) {
         $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue);
+        //echo "single result: $single_result<br>";
+       
         $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
     }
-    //echo "$result<br>";
+    //echo "result: $result<br>";
     if ($result === "Array") {
         if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
         else return $word;
@@ -263,7 +268,7 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
     $value_separate = $separate;
     $value_glue = $glue;
     $value_hyphenate = $hyphenate;
-
+    
     // check for acronyms and nouns
     $upper_case = count_uppercase($word);
     if ($upper_case === $acronym) return $word;         // return word without modifications if it is an acronym (= upper case only)
@@ -275,6 +280,7 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
             list($word_list_as_string, $array) = create_word_list($word);
             $array = eliminate_inexistent_words_from_array($word_list_as_string, $array);
             $result = recursive_search(0,0, $array);
+            
             //echo "inside (one word): word: $word result: $result<br>";
             if ($result === "") $result = $word; // fix bug: recursive search can return "" instead of a word if word isn't found in hunspell dictionary
         } else $result = $word; //$result = iconv(mb_detect_encoding($word, mb_detect_order(), true), "UTF-8", $word);
@@ -327,6 +333,7 @@ function create_word_list($word) {
     //echo "$hyphenated<br>";
     $hyphenated = decapitalize($hyphenated);
     //echo "$hyphenated<br>";
+    
     $hyphenated_array = explode("-", $hyphenated);
     $word_list_as_string = "";
     $array = array();

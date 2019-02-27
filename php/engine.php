@@ -1783,7 +1783,7 @@ function NormalText2SVG( $text ) {
             case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;
             case "train" : $svg = CalculateTrainingSVG( $text_array ); break;
             case "meta_std" : $svg = "<p>" . htmlspecialchars(CalculateInlineSTD( $text_array )) . "</p>"; break;    // abuse svg variable for std and prt also ...
-            case "meta_prt" : $svg = "<p>" .htmlspecialchars(CalculateInlinePRT( $text_array )) . "</p>"; break;
+            case "meta_prt" : $svg = "<p>" . htmlspecialchars(CalculateInlinePRT( $text_array )) . "</p>"; break;
             default : $svg = CalculateInlineSVG( $text_array );
     }
     //echo var_dump($svg);
