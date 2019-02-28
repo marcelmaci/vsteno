@@ -896,6 +896,8 @@ function NormalText2NormalTextInSVG( $text, $size ) {
     // $size contains the text size in pixels (height)
     // font: the Courier font is used since all characters have the same width => allows the calculation of svg-width in advance
     $svg_width = $size * 0.59871795 * mb_strlen( $text ) + 6;    // note: factor is an empirical value (estimation); height: use $svg_height from constants (= same height as shorthand system); add additional 8px to width for spacing
+    //$svg_width = $size * 0.8 * mb_strlen( $text ) + 6;    // note: factor is an empirical value (estimation); height: use $svg_height from constants (= same height as shorthand system); add additional 8px to width for spacing
+    
     $svg_baseline = $baseline_y;    // use same baseline as shorthand words
     $svg_color = $_SESSION['token_color'];                  // use same color as shorthand text
     //echo "SVG: height=$svg_height width=$svg_width baseline=$svg_baseline color=$svg_color text=$text<br>";
@@ -1354,7 +1356,8 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
 function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
     //$width = $size * 0.59871795 * mb_strlen( $text ) + 6;                   // empirical value for courrier font
     $single_word = html_entity_decode($single_word);
-    $width = $size * 0.59871795 * mb_strlen( $single_word );                   // empirical value for courrier font
+    //$width = $size * 0.59871795 * mb_strlen( $single_word );                   // empirical value for courrier font
+    $width = $size * 0.59871795 * (mb_strlen( $single_word )+0.5);               // +0.5 quick fix to have some spaces between text ... 
     return $width;
 }
 
