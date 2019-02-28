@@ -47,7 +47,9 @@ $pspell_dictionary = "de";
 // functions
 function capitalize($word) {
     //$word[0] = mb_strtoupper($word[0], "UTF-8");
-    $word = mb_strtoupper($word, "UTF-8");
+    $first = mb_substr($word, 0, 1);
+    $rest = mb_substr($word, 1);
+    $word = mb_strtoupper($first, "UTF-8") . $rest; // always those twisted solutions to solve the annoying UTF-8 problem ... (slow, but I don't see any other possibility for the moment ...)
     return $word;
 }
 function array2capitalizedStringList($array) {
