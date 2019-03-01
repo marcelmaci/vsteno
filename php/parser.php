@@ -685,10 +685,12 @@ function MetaParser( $text ) {          // $text is a single word!
                     $pos2 = mb_strpos($text, "|", 0, "UTF-8");
                     // if $text contains \ or | from user input, consider that user wants to separate word manually, therefore only do hyphens (no analysis for composed words!)
                     //echo "pos12: $pos1, $pos2<br>";
+                    //echo "stems_list: " . $_SESSION['stems_list'] . "<br>";
+                    //echo "suffixes_list: " . $_SESSION['suffixes_list'] . "<br>";
                     if (($pos1 !== false) || ($pos2 !== false)) {
                         //echo "only do hyphens<br>";
-                        $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], false, $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
-                    } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue']);    
+                        $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], false, $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
+                    } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
                     // write debug info
                     $parameters = "";

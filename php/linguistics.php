@@ -233,11 +233,12 @@ function count_uppercase($string) {
     else return $difference;
 }
 
-function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue) {
+function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes) {
     $several_words = explode("-", $word);  // if word contains - => split it into array
     $result = "";
+    //echo "stems: $stems<br>";
     for ($i=0;$i<count($several_words);$i++) {
-        $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue);
+        $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes);
         //echo "single result: $single_result<br>";
        
         $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
@@ -246,10 +247,46 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
     if ($result === "Array") {
         if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
         else return $word;
-    } else return $result;
+    } else {
+        $result = mark_affixes($result, $prefixes, $suffixes);
+        //echo "result: $result<br>";
+        return $result;
+    }
 }
     
-function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue) {
+function mark_prefixes($word, $prefixes) {
+    // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
+    // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
+    $prefix_list = explode(" ", $prefixes);
+    for ($i=0; $i<count($prefix_list); $i++) {
+        $actual_prefix = trim($prefix_list[$i]);
+        //echo "prefix: $actual_prefix word: $word<br>";
+        $word = preg_replace("/(^|\+|\|)($actual_prefix)\|/i", "$1$2+", $word); // i = regex caseless modifier
+        //echo "result: $word<br>";
+    }
+    return $word;
+}
+
+function mark_suffixes($word, $suffixes) {
+    // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
+    // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
+    $suffix_list = explode(" ", $suffixes);
+    for ($i=0; $i<count($suffix_list); $i++) {
+        $actual_suffix = trim($suffix_list[$i]);
+        //echo "prefix: $actual_prefix word: $word<br>";
+        $word = preg_replace("/(-|\|)($actual_suffix)($|\|)/i", "=$2$3", $word); // i = regex caseless modifier
+        //echo "result: $word<br>";
+    }
+    return $word;
+}
+
+function mark_affixes($word, $prefixes, $suffixes) {
+    $word = mark_prefixes($word, $prefixes);
+    $word = mark_suffixes($word, $suffixes);
+    return $word;
+}
+
+function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes) {
     //echo "analyze: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
     
     // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)
@@ -280,7 +317,9 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
         if ($decompose) {
             //echo "decompose word<br>";
             list($word_list_as_string, $array) = create_word_list($word);
-            $array = eliminate_inexistent_words_from_array($word_list_as_string, $array);
+            //echo "stems: $stems<br>";
+            $array = eliminate_inexistent_words_from_array($word_list_as_string, $array, $prefixes, $stems, $suffixes);
+            //var_dump($array);
             $result = recursive_search(0,0, $array);
             
             //echo "inside (one word): word: $word result: $result<br>";
@@ -301,8 +340,9 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
     }
 }
 
-function eliminate_inexistent_words_from_array($string, $array) {
+function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stems, $suffixes) {
     $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
+    $second_validation = "$prefixes $stems $suffixes";
     //echo "$shell_command<br>";
     //echo "hunspell: ";
     exec("$shell_command",$o);
@@ -311,9 +351,22 @@ function eliminate_inexistent_words_from_array($string, $array) {
     $offset = 1;
     for ($l=0;$l<$length; $l++) {
         for ($r=0;$r<count($array[$l]); $r++) {
-            //echo "<br>result: " . $test_array[$l][$r][0] . ": >" . $o[$offset] . "<<br>";
+            //echo "<br>result: " . $array[$l][$r][0] . ": >" . $o[$offset] . "<<br>";
+            //echo "prefix test: $prefixes: " . mb_strpos(mb_strtolower($prefixes), mb_strtolower($array[$l][$r][0])) . "<br>";
+            //echo "stem test: $stems: " . mb_strpos(mb_strtolower($stems), mb_strtolower($array[$l][$r][0])) . "<br>";
+            
             if (($o[$offset] === "*") || (($o[$offset][0] === "&") && (mb_strpos($o[$offset], $array[$l][$r][0] . "-") != false))) {
                 //echo "match * found: " . $array[$l][$r][0] . "<br>";
+                
+            } elseif (mb_strpos(mb_strtolower($prefixes), " " . mb_strtolower($array[$l][$r][0]) . " ") !== false) { 
+                // if word is in prefix list => separate it as if it where a word!
+                //echo "word: " . $array[$l][$r][0] . " is a prefix!<br>";
+                // do nothing (leave word in array)
+            } elseif (mb_strpos(mb_strtolower($stems), mb_strtolower(" " . $array[$l][$r][0]) . " ") !== false) {
+                //echo "part " . $array[$l][$r][0] . " is a valid (irregular) stem!<br>";
+                
+            } elseif (mb_strpos(mb_strtolower($suffixes), mb_strtolower(" " . $array[$l][$r][0]) . " ") !== false) {
+                //echo "part " . $array[$l][$r][0] . " is a valid suffix!<br>";
                 
             } else {
                 // no match => delete string in array (use same data field for performance reason)

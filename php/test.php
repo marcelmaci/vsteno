@@ -37,11 +37,12 @@ $original_word = "Wetterstation";
 echo "<br>condensed test:<br>";
 //$word = "Dampfschifffahrtsoffiziersjackenknopflochrosenladentischtuch";
 //$word = "Versicherungsangestellter";
-$word = "werde";
+$word = "Testlauf";
+$word = "kannte";
 
 //$word = mb_convert_encoding ( "Kapitänsjacke" , "UTF-8", "UTF-8");
 $start = microtime(true);
-$result = analyze_word_linguistically($word, true, true, 6, 0);
+$result = analyze_word_linguistically($word, true, true, 99, 0, "ge zu");
 $end = microtime(true);
 $difference = $end - $start;
 echo "Wort: $word<br>Result: $result<br>Time: $difference seconds<br><br>";
@@ -88,6 +89,10 @@ for ($l=0;$l<$length; $l++) {
                 //echo "match * found!<br>";
                 //$array[$l][$r][1] = "*"; 
                 
+        } elseif (mb_strpos(mb_strtolower($prefixes), mb_strtolower($array[$l][$r][0])) !== false) { 
+                // if word is in prefix list => separate it as if it where a word!
+                echo "word: " . $array[$l][$r][0] . " is a prefix!<br>";
+                // do nothing (leave word in array)
         } else {
                 // no match => delete string in array (use same data field for performance reason)
                 $array[$l][$r][0] = ""; // "" means: no match!

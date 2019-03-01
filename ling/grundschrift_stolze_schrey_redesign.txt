@@ -389,6 +389,7 @@
 		"›" => "»";
 		"‹" => "«";
 		"ß" => "ss";
+		"(?<!\[)=" => "[#=#]\"; // in packer before
 	#EndSubSection(global)
 	#BeginSubSection(helvetizer,@@wrd) // restructure parser: word functions before parser not possible
 		//"ß" => "ss";			// anymore => transfer helvetizer to global section (stage1)
@@ -409,6 +410,9 @@
 		"^([Pp])ro\|" => "$1ro-";
 		"\|er(?=($|\|))" => "-er";
 		"e\|ren$" => "e-ren";	// näheren
+		"\|ge(-?)n(e[nrs]?)?$" => "-ge$1n$2";
+		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
+		"(?<!=)li(-?)ch" => "=li$1ch";
 	#EndSubSection(corrector,=:stage3)
 	#BeginSubSection(packer)
 		// some shorthand tokens use special chars (like -#+=/ etc.) in their definition
@@ -416,7 +420,7 @@
 		// (which has to be drawn as such) or a part of a token definition (like [0N-]
 		// in order to avoid that, "packer" bundles those characters adding brackets []
 		// later the transcriptor converts them back into normal characters
-		"(?<!\[)=" => "[=]\";
+		//"(?<!\[)=" => "[=]\";
 	#EndSubSection(packer)
 	#BeginSubSection(trickster)
 		"([Dd])ahinter" => "{DA}[H][N][&TVR]";
@@ -563,6 +567,10 @@
 		"»" => "[#Q#][#5]\";
 	#EndSubSection(filter)
 	#BeginSubSection(shortener) 
+		"=[hk]ei-?t" => "{HEIT}";
+		"=li-?ch" => "{H}";
+		"zu\+" => "{ZU}";
+		"ge\+" => "{GE}";
 		"(^|\|)wo(\||$)" => "$1{WO}$2";
 		"wil$" => "WIL";
 		"los(igkeit)?$" => "Los$1";
@@ -658,8 +666,9 @@
 		"^sie$" => "{SI}";
 		"^[Ss]ind$" => "{SIND}";
 		"(?<!^)lich(s?t?e?[mn]?|ere?[mn]?|keit(en)?|es)?$" => { "{LICH}$1", "Pflicht(en)?" };
-		"^(.*?)(k?ei-?t)(et?(re?)?[nms]?)?" => "$1{HEIT}$3";
-		"([hk]?eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
+		//"^(.*?)(k?ei-?t)(et?(re?)?[nms]?)?" => "$1{HEIT}$3";
+		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
+		"(eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
 		"([ie]?tät)(en)?$" => "{HEIT}$2";
 		"bei(?!l)" => "{BEI}";
 		"geh" => "Geh";
@@ -1324,6 +1333,7 @@
 		"\[-" => "[#=#=#";	// first combination of - with brackets must be rewritten
 		"-(?![0-9])" => "";	// - can now be deleted (filter out [T-1] for example ...)
 		"#=#=#" => "-";		// this still might have interferences (watch out if that occurs)
+		"\[#=#\]" => "[=]";
 
 	#EndSubSection(relancer2)
 	#BeginSubSection(spacer)
