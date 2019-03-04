@@ -416,6 +416,7 @@ function ExecuteRule( /*$word*/ ) {
                 if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                     $result_after_last_rule = $output;
                     $global_number_of_rules_applied++;
+                    $_SESSION['rules_count'][$rules_pointer]++;
                     $wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
                     $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
                 }
@@ -453,6 +454,7 @@ function ExecuteRule( /*$word*/ ) {
                         $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     } else {
                         $global_number_of_rules_applied++;
+                        $_SESSION['rules_count'][$rules_pointer]++;
                         $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     }
                 }
@@ -618,7 +620,7 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
     global $analyzer; // contains postprocess-rules
     for ($i=0; $i<count($analyzer); $i++) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
-        echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . "($word)<br>";
+        //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . "($word)<br>";
         $word = replace_all( "/" . $analyzer[$i][0] . "/", $analyzer[$i][1], $word);
     }
     return $word;

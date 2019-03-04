@@ -99,6 +99,7 @@ function InitializeSessionVariables() {
     }
     $_SESSION['actual_model'] = $default_model;
     $_SESSION['model_standard_or_custom'] = "standard";
+    $_SESSION['rules_count'] = null;
 }
 
 

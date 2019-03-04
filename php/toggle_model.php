@@ -17,7 +17,7 @@ $model_name = ($_SESSION['model_standard_or_custom'] === "custom") ? "XM" . str_
 InitializeSessionVariables(); // initialize with raw values
 $_SESSION['model_standard_or_custom'] = $model;
 $_SESSION['actual_model'] = $model_name;
-
+$_SESSION['rules_count'] = null; // reset rules statistics
 $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
 $output = StripOutComments($text_to_parse);
 $output = StripOutTabsAndNewlines($output);

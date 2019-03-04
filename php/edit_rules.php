@@ -36,6 +36,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
     //echo "model_name: $model_name<br>";
     
     if ($_POST['action'] == 'speichern') {
+        $_SESSION['rules_count'] = null; // reset rules statistics (since they no longer necessarily correspond to the newly saved model)
         $update_rules = $conn->real_escape_string($_POST['rules_as_text']);
         $sql = "UPDATE models
             SET rules = '$update_rules'

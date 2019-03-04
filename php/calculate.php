@@ -95,7 +95,7 @@ function InsertIntroduction() {
 
 function InsertReturnButton() {
     if (!$_SESSION['output_without_button_yesno']) {
-        echo '<a href="' . $_SESSION['return_address'] . '"><br><button>zurück</button></a><br><br>';   
+        echo '<br><a href="' . $_SESSION['return_address'] . '"><button>zurück</button></a><br><br>';   
     }
 }
 
@@ -173,8 +173,15 @@ global $global_error_string;
 
 if ($_POST['action'] === "abschicken") {
     $global_error_string = "";
+    $_SESSION['rules_count'] = null;
+    // reset rules statistics
+$_SESSION['rules_count'] = array();
+//echo "count rules: " . count($rules) . "<br>";
+for ($i=0; $i<count($rules[$actual_model]); $i++) $_SESSION['rules_count'][$i] = 0;
+//var_dump($_SESSION['rules_count']);
 
     CalculateStenoPage();
+    //var_dump($_SESSION['rules_count']);
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();
 }

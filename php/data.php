@@ -104,6 +104,7 @@ echo "Importiert: <textarea id='Model_as_text' name='Model_as_text' rows='30' co
 $test = ImportModelFromText($text_to_parse);
 $actual_model = $_SESSION['actual_model'];
 
+
 //echo "Imported:  actual_model = $actual_model font[actual_model][Z][4] = " . $font[$actual_model]["Z"][4] . "<br>";
 
 

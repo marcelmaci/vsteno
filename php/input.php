@@ -136,7 +136,9 @@ Fenster:
 <input type="radio" name="output_format" value="meta_std" <?php echo ($_SESSION['output_format'] === "meta_std") ? "checked" : "";?>> STD
 <input type="radio" name="output_format" value="meta_prt" <?php echo ($_SESSION['output_format'] === "meta_prt") ? "checked" : "";?>> PRT
 <input type="radio" name="output_format" value="train" <?php echo ($_SESSION['output_format'] === "train") ? "checked" : "";?>> Training
-<input type="radio" name="output_format" value="debug" <?php echo ($_SESSION['output_format'] === "debug") ? "checked" : "";?>> Debug<br>
+<input type="radio" name="output_format" value="debug" <?php echo ($_SESSION['output_format'] === "debug") ? "checked" : "";?>> Debug 
+(<a href="rules_statistics.php">Regeln</a>)
+<br>
 
 <input type="radio" name="output_format" value="layout" <?php echo ($_SESSION['output_format']) === "layout" ? "checked" : "";?>> Layout 
 Breite: <input type="text" name="layout_width"  size="10" value="<?php echo $_SESSION['output_width']; ?>"> 
