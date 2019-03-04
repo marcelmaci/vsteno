@@ -614,6 +614,16 @@ function PreProcessGlobalParserFunctions( $text ) {
         return $text;
 }
 
+function PostProcessDataFromLinguisticalAnalyzer($word) {
+    global $analyzer; // contains postprocess-rules
+    for ($i=0; $i<count($analyzer); $i++) {
+        // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
+        echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . "($word)<br>";
+        $word = replace_all( "/" . $analyzer[$i][0] . "/", $analyzer[$i][1], $word);
+    }
+    return $word;
+}
+
 //function ParserChainForComposed() {
     // this function is called by MetaParser in stage3 (= composed words have to be splitted and parsed individually)
     // the function only some sort of "wrapper": it calls ParserChain (with needed start and stop values)
@@ -632,7 +642,7 @@ function MetaParser( $text ) {          // $text is a single word!
     
     // this is a good place to lookup words!
     // after that branch to  std2prt oder stage4
-    list($get_standard, $get_print) = Lookuper($text); // corresponds to stage2 (dictionary)
+    list($get_standard, $get_print) = Lookuper($text); // corresponds to stage1 (dictionary)
     //echo "dictionary (metaparser): $text std: $get_standard prt: $get_print<br>"; 
     //echo "stage4: $rules_pointer_start_stage4<br>";
     $safe_std = mb_strtoupper($get_standard, "UTF-8");
@@ -700,7 +710,11 @@ function MetaParser( $text ) {          // $text is a single word!
                         $parameters .= " / separate: " . $_SESSION['composed_words_separate'] . " glue: " . $_SESSION['composed_words_glue'];
                     }
                     if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
-                    $global_debug_string .= "LING: $temp_word => $test $parameters<br>"; 
+                    $global_debug_string .= "LING (raw): $temp_word => $test $parameters<br>"; 
+                    // now "post"process LING result applying analyzer rules from header (still stage1)
+                    $test = PostProcessDataFromLinguisticalAnalyzer($test);
+                    // write debug info of postprocessing: LING (post)
+                    $global_debug_string .= "LING (post): $test<br>";
                     //echo "test: $test<br>";
                     // calculate
                     $word = $test;

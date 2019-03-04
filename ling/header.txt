@@ -40,4 +40,30 @@
 	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
+	#BeginSubSection(session)
+		"prefixes_list" := "ge, zu, un, ver, mit, ent, auf, ab, an";
+		"stems_list" := "gangen";
+		"suffixes_list" := "heit, hei-t, heits, keit, keiten, keits, lich, liche, lichen, liches";
+		"title_text" := "new prefixes";
+	#EndSubSection(session)
+	#BeginSubSection(analyzer)
+		//"([Ww])ie\|der" => "$1ie-der"; 
+		"([Ss])ie\|ben" => "$1ie-ben";
+		//"([Ww])er\|de" => "$1er-de";
+		//"([Ww])er\|den" => "$1er-den";
+		"\|(de[snrm]?)" => "-$1"; // all the above+ in one formula
+		"zäh\|lun-gen$" => "zäh-lun-gen";
+		"\|de([nm])" => "-de$1"; // there's a hole bunch of that stuff ... :-/ 
+		"([Mm])it\|tag" => "$1it-tag";
+		"([Vv])iel\|leicht" => "$1iel-leicht";
+		"^([Pp])ro\|" => "$1ro-";
+		"\|er(?=($|\|))" => "-er";
+		"e\|ren$" => "e-ren";	// näheren
+		"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
+		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
+		"(?<!#)li(-?)ch" => "#li$1ch";
+		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
+		"(\|)er(\|)" => "{ER}"; // infix er
+		"[Vv]or\|r" => "{VOR}|[AR]";
+	#EndSubSection(analyzer)
 #EndSection(header)

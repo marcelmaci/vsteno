@@ -1,6 +1,7 @@
 <?php
 
 require_once "constants.php";
+require_once "import_model.php";
 
 function InitializeSessionVariables() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
@@ -32,9 +33,9 @@ function InitializeSessionVariables() {
     $_SESSION['composed_words_yesno'] = true;
     $_SESSION['composed_words_separate'] = 99; // don't separate words by default (leave that to model rules)
     $_SESSION['composed_words_glue'] = 0;
-    $_SESSION['prefixes_list'] = " ge zu un ver mit ent auf ab an "; // test if analyze_word_linguistically can be used to make essential (= only partial, the important ones!) analysis of prefixes
-    $_SESSION['stems_list'] = " gangen "; // irregular stem list (in combination with prefixes list) => can be entered by users in maxi form (later) 
-    $_SESSION['suffixes_list'] = " heit hei-t heits keit keiten keits lich liche lichen liches "; // a problem never is as simple as it seems at first glance ... For example: Gelegenheit => prefix ge- can't be recognized (because "legenheit" is not a valid word) => maybe this can be solved analyzing suffixes as well (Ge+le-gen=heit)?!
+    $_SESSION['prefixes_list'] = ""; //" ge zu un ver mit ent auf ab an "; // test if analyze_word_linguistically can be used to make essential (= only partial, the important ones!) analysis of prefixes
+    $_SESSION['stems_list'] = ""; //" gangen "; // irregular stem list (in combination with prefixes list) => can be entered by users in maxi form (later) 
+    $_SESSION['suffixes_list'] = ""; //" heit hei-t heits keit keiten keits lich liche lichen liches "; // a problem never is as simple as it seems at first glance ... For example: Gelegenheit => prefix ge- can't be recognized (because "legenheit" is not a valid word) => maybe this can be solved analyzing suffixes as well (Ge+le-gen=heit)?!
     $_SESSION['color_nounsyesno'] = false;      // heiten => "hei" and "ten" are recognized as valid words => therefore correct that in corrector ...
     $_SESSION['color_nouns'] = "black";         // use regex for prefix/suffix list ... otherwhise the lists will be long!
     $_SESSION['color_beginningsyesno'] = false;
@@ -234,6 +235,12 @@ function pop_session() {
 // main
     session_start();
     if (!isset($_SESSION['initialized'])) {
-        InitializeSessionVariables();
+        InitializeSessionVariables(); // initialize with raw values
+        $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+        $output = StripOutComments($text_to_parse);
+        $output = StripOutTabsAndNewlines($output);
+        $header_section = GetSection($output, "header");
+        $session_subsection = GetSubSection($header_section, "session");
+        ImportSession(); // initialize with values specified by model
     }
 ?>

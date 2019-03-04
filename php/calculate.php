@@ -56,7 +56,19 @@ function InsertHTMLFooter() {
 }
 
 function ResetSessionGetBackPage() {
-    InitializeSessionVariables();   // output is reseted to integrated, so that the following message will appear integrated
+    global $session_subsection;
+    //InitializeSessionVariables();   // output is reseted to integrated, so that the following message will appear integrated
+    //echo "model: " . $_SESSION['actual_model'];
+    $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+    //echo "text_to_parse: $text_to_parse<br>";
+    $output = StripOutComments($text_to_parse);
+    $output = StripOutTabsAndNewlines($output);
+    $header_section = GetSection($output, "header");
+    //echo "header: $header_subsection<br>";
+    $session_subsection = GetSubSection($header_section, "session");
+    //echo "session_text: $session_subsection<br>";
+    ImportSession();
+    
     InsertHTMLHeader();
     echo "<p>Die Optionen wurden zurückgesetzt.</p>";
     echo '<a href="input.php"><br><button>"zurück"</button></a>';

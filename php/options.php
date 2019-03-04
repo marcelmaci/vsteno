@@ -50,7 +50,7 @@ $whitelist_variables .= " auxiliary_upper12_color auxiliary_lower_color auxiliar
 $whitelist_variables .= " auxiliary_upper3_thickness output_texttagsyesno output_width output_height output_style output_page_numberyesno output_page_start_value ";
 $whitelist_variables .= " output_page_start_at mark_wordlist distance_words space_before_word style_nouns style_beginnings baseline_style upper12_style upper3_style lower_style ";
 $whitelist_variables .= " auxiliary_style_general left_margin right_margin top_margin bottom_margin num_system_lines baseline show_margins show_distances svgtext_size ";
-$whitelist_variables .= " actual_model model_custom_or_standard ";
+$whitelist_variables .= " actual_model model_custom_or_standard prefixes_list stems_list suffixes_list ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;

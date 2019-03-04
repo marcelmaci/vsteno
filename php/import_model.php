@@ -71,6 +71,8 @@ $font_section = "";
 $rules_section = "";
 
 // subsections (as text)
+$analyzer_subsection = "";
+$session_subsection = "";
 $base_subsection = "";
 $combiner_subsection = "";
 $shifter_subsection = "";
@@ -81,6 +83,7 @@ $combiner = array();
 $shifter = array();
 $font = array();            // former $steno_tokens_master
 $rules = array();           // use only 1 variable for all rules and parts
+$analyzer = array();
 $rules_pointer = 0; 
 $insertion_key = "";        // key that identifies inserted models (several models can be loaded and used in new parser) 
                             // data will be addressed by: $rules[$key][data] (example for rules: $key identifies array of data)
@@ -91,6 +94,7 @@ $start_word_parser = 0;     // contains rules pointer to first rule that has to 
 
 //require_once "vsteno_fullpage_template_top.php";
 require_once "dbpw.php";
+require_once "options.php";  // for whitelist (session variables)
 //require_once "data.php";
 
 //////////////////////////////////////// load from database ///////////////////////////////////////////////
@@ -145,6 +149,86 @@ function GetSubSection($text, $name) {
         if ($result == 1) $output = $matches[1];
         else $output = "";
         return $output;
+}
+
+/////////////////////////////////////////////////// import header //////////////////////////////////////////////////
+
+// session
+function ImportSession() {
+    global $session_subsection, $whitelist_variables;
+    
+    while ($session_subsection !== "") {
+    $result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?:=[ ]*?({?[ ]*?\".*?\"[ ]*?}?)[ ]*?;(.*)/", $session_subsection, $matches);
+    
+    //echo "session: $session_subsection result: $result<br>";
+    
+    if ($result == 1) {
+        //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
+        $variable = $matches[1];
+        $value = trim(preg_replace("/\"(.*)\"/", "$1", $matches[2]));
+        //echo "variable := value: $variable => $value<br>";
+        $session_subsection = $matches[3];
+        if (mb_strpos($whitelist_variables, " $variable ") === FALSE) {
+            echo "Error! variable not in whitelist!<br>";
+            $global_error_string .= "ERROR: you are not allowed to set variable '$variable'!";
+        } else {
+            echo "assign \$_SESSION[$variable] = >$value<<br>";
+            $_SESSION["$variable"] = $value; 
+            //var_dump($_SESSION);
+        } 
+    } else return null;
+  }
+}
+
+
+// analyzer
+function ImportAnalyzer() {
+    global $analyzer_subsection, $analyzer;
+    $i = 0;
+    
+    while ($analyzer_subsection !== "") {
+    $result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?=>[ ]*?({?[ ]*?\".*?\"[ ]*?}?)[ ]*?;(.*)/", $analyzer_subsection, $matches);
+    
+    //echo "analyer: $analyzer_subsection result: $result<br>";
+    
+    if ($result == 1) {
+        //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
+        $condition = $matches[1];
+        $consequence = $matches[2];
+        //echo "condition => consequence: $condition => $consequence<br>";
+        $analyzer_subsection = $matches[3];
+        ///////////////////////// not sure if multiple consequences is needed - leave it for the moment //////////////////////
+        $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
+        //echo "rule $rules_pointer: $condition => $consequence<br>";
+        switch ($result1) {
+            //$nil = preg_match( "/^{(.*)}$/", $consequence, $matches1); // $nil should always be true ... ! ;-) 
+            case "1" : 
+                // multiple consequences
+                $analyzer[$i][] = $condition;
+                //echo "multiple: #" . $matches1[1] . "#<br>";
+                $consequence_list = explode( ",", $matches1[1] );
+                foreach ($consequence_list as $element) {
+                    $bare_element = preg_replace("/^[ ]*?\"(.*?)\"[ ]*?/", "$1", $element);
+                    //echo "element: #$element# => bare_element: #$bare_element#<br>";
+                    //$rules["$insertion_key"][] = $rules_pointer;
+                
+                    $analyzer[$i][] = $bare_element;
+                }
+                $i++;
+                break;
+            default : 
+                // just one consequence
+                //echo "single consequence: #" . $consequence . "#<br>";
+                $result2 = preg_match( "/^[ ]*?\"(.*?)\"[ ]*?/", $consequence, $matches2);
+                //echo "result2: $result2 matches1(1): " . $matches2[1] . " rulespointer: $rules_pointer<br>";
+                //$rules["$insertion_key"][] = $rules_pointer;
+                $analyzer[] = array( $condition, $matches2[1]);        // rules[model][x][0] = condition of rule x in model
+                //$rules["$insertion_key"][$rules_pointer][] = $matches2[1];      // rules[model][x][1] = consequence of rule x in model
+                $i++;
+                break;
+        }
+    } else return null;
+  }
 }
 
 /////////////////////////////////////////////////// import token definitions ///////////////////////////////////////
@@ -489,19 +573,29 @@ function ImportRules() {
 
 //////////////////////////////////////////// import whole Model /////////////////////////////////////////////////////////////
 function ImportModelFromText($text) {
-    global $font_section, $rules_section, $base_subsection, $combiner_subsection, $shifter_subsection;
+    global $font_section, $rules_section, $base_subsection, $combiner_subsection, $shifter_subsection, $analyzer_subsection, $session_subsection, $analyzer;
     global $rules_pointer_start_stage2, $rules_pointer_start_stage3, $rules_pointer_start_stage4, $rules;
         // strip out unnecessary stuff
     $output = StripOutComments($text);
     $output = StripOutTabsAndNewlines($output);
     // get main sections
+    $header_section = GetSection($output, "header");
     $font_section = GetSection($output, "font");
     $rules_section = GetSection($output, "rules");
     // get subsections
+    // header
+    $analyzer_subsection = GetSubSection($header_section, "analyzer");
+    //$session_subsection = GetSubSection($header_section, "session");
+    //echo "analyzer: $analyzer_subsection<br>"; 
+    //echo "session: $session_subsection<br>";
+    // font
     $base_subsection = GetSubSection($font_section, "base");
     $combiner_subsection = GetSubSection($font_section, "combiner");
     $shifter_subsection = GetSubSection($font_section, "shifter");
     // parse data
+    //ImportSession(); // do that only when loading the page for the 1st time or when reset button is clicked (not whenever a calculation is made: user must have the possibility to override session variables!)
+    ImportAnalyzer();
+    //var_dump($analyzer);
     ImportBase();   // data is written to global variable $imported_base (which corresponds to $steno_tokens_master)
     ImportCombiner(); // idem to $imported_combiner
     ImportShifter(); // idem to $imported_shifter

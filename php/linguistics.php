@@ -257,7 +257,7 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
 function mark_prefixes($word, $prefixes) {
     // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
     // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
-    $prefix_list = explode(" ", $prefixes);
+    $prefix_list = explode(",", $prefixes);
     for ($i=0; $i<count($prefix_list); $i++) {
         $actual_prefix = trim($prefix_list[$i]);
         //echo "prefix: $actual_prefix word: $word<br>";
@@ -270,11 +270,11 @@ function mark_prefixes($word, $prefixes) {
 function mark_suffixes($word, $suffixes) {
     // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
     // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
-    $suffix_list = explode(" ", $suffixes);
+    $suffix_list = explode(",", $suffixes);
     for ($i=0; $i<count($suffix_list); $i++) {
         $actual_suffix = trim($suffix_list[$i]);
         //echo "prefix: $actual_prefix word: $word<br>";
-        $word = preg_replace("/(-|\|)($actual_suffix)($|\|)/i", "=$2$3", $word); // i = regex caseless modifier
+        $word = preg_replace("/(-|\|)($actual_suffix)($|\|)/i", "#$2$3", $word); // i = regex caseless modifier
         //echo "result: $word<br>";
     }
     return $word;
@@ -342,7 +342,15 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
 
 function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stems, $suffixes) {
     $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
-    $second_validation = "$prefixes $stems $suffixes";
+    // explode strings to get rid of commas
+    $prefixes_array = explode(",", $prefixes);
+    $stems_array = explode(",", $stems);
+    $suffixes_array = explode(",", $suffixes);
+    // implode to add spaces for string comparison
+    $prefixes = " " . implode(" ", $prefixes_array) . " ";
+    $stems = " " . implode(" ", $stems_array) . " ";
+    $suffixes = " " . implode(" ", $suffixes) . " ";
+    
     //echo "$shell_command<br>";
     //echo "hunspell: ";
     exec("$shell_command",$o);
