@@ -591,7 +591,7 @@ function PreProcessGlobalParserFunctions( $text ) {
         global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string;
         $rules_pointer = 0;
         $global_textparser_debug_string = "";
-        if (IsAnyOfAllArguments("@@txt")) {
+        if (IsAnyOfAllArguments("#>stage0")) {
             $temp_function = $rules["$actual_model"][$rules_pointer][1];
             while ($rules["$actual_model"][$rules_pointer][0] !== "EndFunction()") {
                 $pattern = $rules["$actual_model"][$rules_pointer][0];

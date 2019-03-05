@@ -237,6 +237,7 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
     $several_words = explode("-", $word);  // if word contains - => split it into array
     $result = "";
     //echo "stems: $stems<br>";
+    //echo "suffixes: $suffixes<br>";
     for ($i=0;$i<count($several_words);$i++) {
         $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes);
         //echo "single result: $single_result<br>";
@@ -307,6 +308,7 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
     $value_separate = $separate;
     $value_glue = $glue;
     $value_hyphenate = $hyphenate;
+    //echo "suffixes (one word): $suffixes<br>";
     
     // check for acronyms and nouns
     $upper_case = count_uppercase($word);
@@ -318,6 +320,8 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
             //echo "decompose word<br>";
             list($word_list_as_string, $array) = create_word_list($word);
             //echo "stems: $stems<br>";
+            //echo "suffixes (one word): $suffixes<br>";
+   
             $array = eliminate_inexistent_words_from_array($word_list_as_string, $array, $prefixes, $stems, $suffixes);
             //var_dump($array);
             $result = recursive_search(0,0, $array);
@@ -349,7 +353,8 @@ function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stem
     // implode to add spaces for string comparison
     $prefixes = " " . implode(" ", $prefixes_array) . " ";
     $stems = " " . implode(" ", $stems_array) . " ";
-    $suffixes = " " . implode(" ", $suffixes) . " ";
+    $suffixes = " " . implode(" ", $suffixes_array) . " ";
+    //echo "<br>suffixes(eliminate): $suffixes<br>";
     
     //echo "$shell_command<br>";
     //echo "hunspell: ";
@@ -421,6 +426,7 @@ function create_word_list($word) {
 
 function recursive_search($line, $row, $array) {
     global $value_glue, $value_separate;
+    //var_dump($array);
     //global $array;
     //echo "call ($line/$row): " . $array[$line][$row][0] . " (" . $array[$line][$row][2] . ")<br>";
     //if (($line < 0) || ($row < 0) || ($line > count($array)) || ($row > count($array[$line]))) return "";

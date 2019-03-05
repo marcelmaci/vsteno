@@ -50,8 +50,8 @@ möglichst vollständig dokumentiert werden. <b>[Update 20.02.19: <a href="../do
 <p>Und hier abschliessend noch ein kleiner "Teaser" - zwei PDFs, die zeigen, wie die von VSTENO generierten Stenogramme inzwischen
 aussehen (die Texte stammen vom <a href="http://gutenberg.spiegel.de">Projekt Gutenberg</a> und sind gemeinfrei):<p>
 <ul>
-<li>Friedrich Glauser, Matto regiert: <a href="../docs/mattoregiert_notwendige_vorrede.pdf">Notwendige Vorrede</a></li>
-<li>Friedrich Glauser, Matto regiert: <a href="../docs/mattoregiert_kap2_auszug_gruen_dicker.pdf">Kapitel 2 (Auszug)</a></li>
+<li>Friedrich Glauser, Matto regiert: <a href="../docs/mattoregiert_notwendige_vorrede.pdf">Notwendige Vorrede</a> <b>[<a href="../docs/matto_regiert_kap1_vers2.pdf">Version2 (05.03.19)</a>]</b></li>
+<li>Friedrich Glauser, Matto regiert: <a href="../docs/mattoregiert_kap2_auszug_gruen_dicker.pdf">Kapitel 2 (Auszug)</a> <b>[<a href="../docs/matto_regiert_kap2_ausschnitt_vers2.pdf">Version2 (05.03.19)</a>]</b></li>
 </ul>
 <p><center>* * *</center></p>
 <p>=> Hier finden Sie <a href="old_news.php">ältere News-Einträge</a>.
