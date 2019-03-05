@@ -1,0 +1,1043 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass paper
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Gel speiende Spiegel und andere (linguistische) Probleme
+\end_layout
+
+\begin_layout Date
+5.
+ März 2019
+\end_layout
+
+\begin_layout Author
+Marcel Maci
+\end_layout
+
+\begin_layout Abstract
+Ein Tool zur automatisierten Generierung von Stenogrammen zu schreiben ist
+ eine schöne Aufgabe - eine ganz schöne sogar.
+ Denn spätestens bei zusammengesetzten Wörtern zeigt sich, dass Lang- und
+ Kurzschrift nicht einmal die sieben Buchstaben aus dem Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Schrift
+\begin_inset Quotes erd
+\end_inset
+
+ gemein haben.
+ Nebst Einzelwörtern komplizieren weitere Kinkerlitzchen wie Präfixe, Suffixe,
+ Morphe und (unregelmässige) Stämme das Leben eines (germanischen) Linguisten
+ auch ganz schön.
+ Hier somit eine kurze Auslegeordnung der Einbahnstrassen, in die sich ein
+ langschrift- und regelbasiertes Tool nichtsahnend (und zwangsläufig) verirrt
+ - mit einigen Hinweisschildern und Bodenarbeiten, die helfen sollen, solche
+ Sackgassen nicht oder zumindest nur so zu befahren, dass die Stenografie
+ nicht auf der Strecke bleibt ...
+\end_layout
+
+\begin_layout Abstract
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Clever (aber) tricky kombiniert
+\end_layout
+
+\begin_layout Standard
+Da wären wir also bei dem, was die Stenografie von der Langschrift unterscheidet
+: die Zeichen.
+ Nur: Was ist ein Zeichen? In der Langschrift ist die Frage leicht zu beantworte
+n: Zeichen = Buchstaben.
+ Wobei Langschriftzeichen in etwa die phonetische Beschaffenheit eines Wortes
+ wiedergeben sollen, aber gerade hier schon fangen die Probleme an: viel
+ vs fiel, man vs Mann, mehr vs Meer.
+ Man wird unschwer erkennen, dass in diesen Wörtern für die gleichen Phoneme
+ (f, nn, langes e) nicht nur unterschiedliche, sondern auch eine unterschiedlich
+e Zahl an Zeichen verwendet wird.
+ Das wäre halb so wild, wenn sich aus der Schreibung wenigstens eine eindeutige
+ Phonetik ableiten liesse, aber auch hier: Theater vs weither, Wien vs Ferien
+ - sowohl th wie ie stehen hier für phonetisch komplett unterschiedeliche
+ Lautanordnungen.
+ 
+\end_layout
+
+\begin_layout Standard
+Von ihrer Seite her macht uns die Stenografie das Leben auch nicht leichter:
+ Kurzschrift ist deshalb kurz, weil sie Dinge verkürzt und sie tut das mitunter,
+ indem sie 
+\begin_inset Quotes eld
+\end_inset
+
+Zeichen
+\begin_inset Quotes erd
+\end_inset
+
+ (was immer das heisst, wie gesagt) fröhlich miteinander kombiniert.
+ Beispiel: Glasträger vs Gastrecht vs Estrich.
+ Stolze-Schreyaner/innen kombinieren in Gastrecht und Estrich s+t und hängen
+ dann gleich noch ein r als Schlaufe ans gleiche Zeichen an; gewissermassen
+ also drei (Langschriftzeichen) auf einen Streich.
+ Glasträger hingegen wird mit separatem s (ein Zeichen) plus ein t (weiteres
+ Zeichen) mit kombiniertem r geschrieben.
+\end_layout
+
+\begin_layout Standard
+Aus den skizzierten Phänomenen lassen sich zwei Schlüsse ziehen: (1) jedes
+ Übertragungstool (Langschrift zu Kurzschrift), das sich rein auf langschriftlic
+he Buchstaben stützt, muss zwangsläufig scheitern und (2) den geschilderten
+ Phänomenen (und damit richtigen Stenogrammen) kann man nur dann auf die
+ Spur kommen, wenn man der schriftlichen Oberflächenstruktur der Wörter
+ eine linguistische Analyse zur Seite stellt, die tiefer schürft und so
+ die für die Stenografie relevanten Strukturen zu Tage fördert.
+ Aber was für Strukturen sind das?
+\end_layout
+
+\begin_layout Section*
+Zusammengesetzte Wörter
+\end_layout
+
+\begin_layout Standard
+Da wären zuerst mal die zusammengesetzten Wörter: Gast|recht und Glas|träger
+ trennen die Konsonantengruppe -str- an unterschiedlicher Stelle.
+ Mit der Information | (Wortgrenze) lassen sich also zwei unterschiedliche
+ Regeln schreiben: (R1) s|tr => [s][tr] und (R2) st|r => [st][r].
+ Aber wie finden wir - bzw.
+ findet ein Computer - zusammengesetzte Wörter?
+\end_layout
+
+\begin_layout Standard
+Eine Möglichkeit hierzu bietet die Umnutzung eines Spellcheckers.
+ Wir schreiben wohlgemerkt: Umnutzung.
+ Denn: Ein Spellchecker ist grundsätzlich dazu da, in einem Textverarbeitungspro
+gramm Rechtschreibfehler zu erkennen.
+ Aber genau diese Eigenschaft lässt sich nutzen, indem man z.B.
+ fragt, welche dieser linken und rechten Wortteile sind - für sich allein
+ genommen - richtig geschrieben: Gas, Gast, Gastr vs Strecht, Trecht, Recht,
+ echt.
+ Der Spellchecker wird hier Gas, Gast, Recht und echt als Wörter erkennen.
+ Daraus lässt sich eindeutig bestimmen, dass Gast und Recht die gesuchten
+ Wörter sind.
+\end_layout
+
+\begin_layout Standard
+Aber wie immer gibt es hier auch Spielverderber: Rohrohrzucker zum Beispiel.
+ Der Computer wird hier zum Schluss kommen, dass sowohl Roh|rohr|zucker
+ als auch Rohr|ohr|zucker eine valable Antwort auf die Frage ist.
+ Die Entscheidung, welche Variante nun die richtige ist, könnte hier nur
+ semantisch erfolgen.
+ Und um es gleich zu sagen: 
+\begin_inset Quotes eld
+\end_inset
+
+Könnte
+\begin_inset Quotes erd
+\end_inset
+
+ bedeutet, dass wir uns dieses Problem (Semantik) hier schon gar nicht um
+ die Ohren schlagen wollen.
+ Erstens gehört sie zu den schwierigsten Gebieten der Computerlinguistik.
+ Zweitens werden wir mit unserer Methode doch - hoffentlich - wesentlich
+ mehr richtige als falsche Resultate produzieren.
+ Drittens haben wir tatsächlich noch ganz andere Probleme zu lösen.
+ Zum Beispiel nur schon die Frage: Wie kommen wir zu den Wörtern, die wir
+ zum Spellchecker schicken?
+\end_layout
+
+\begin_layout Standard
+Die Bruteforce-Methode wäre vielleicht, jede mögliche Buchstabenkombination
+ als potenziellen Wortteil in Betracht zu ziehen (also g, a, s, t, r, e,
+ c, h, t; danach: ga, as, st etc.).
+ Aber linguistisch macht das wenig Sinn: ein Wort besteht ja prinzipiell
+ aus wenigstens einer Silbe.
+\end_layout
+
+\begin_layout Section*
+Kombinatorische Silbentrennung
+\end_layout
+
+\begin_layout Standard
+Silbentrennung ist ein brauchbares Mittel, um potenzielle Wörter zu finden.
+ Unsere Annahmen: Jede einzelne Silbe oder eine Kombination mehreren Silben
+ (in der vorgegebenen Reihenfolge) ist potenziell ein Einzelwort.
+ Im Wort Glas-trä-ger sind also folgende Möglichkeiten zu überprüfen: Glas,
+ Trä, Ger (1 Silbe); Glasträ, Träger (2 Silben); Glasträger (3 Silben).
+ Wenn n der Anzahl Silben entspricht, ergeben sich hier n * (n+1) / 2 Möglichkei
+ten.
+ Sprich: Wir haben es hier mit einem Algorithmus zu tun, der (leider) exponentie
+ll wächst.
+ Da die deutsche Sprache gerne Wörter aneinanderreiht, bekommen wir das
+ rechnerisch zu spüren: Wahr-schein-lich-keits-rech-nung (6 Silben) generiert
+ zum Beispiel 21 Kombinationen.
+\end_layout
+
+\begin_layout Standard
+Mit anderen Worten: Das Finden zusammengesetzter Wörter kann im Hinblick
+ auf die Performance des Programmes zu einem Problem werden.
+ Und zwar in verschiedener Hinsicht: Erstens konsultieren Spellchecker Wörterbüc
+her und leiten mögliche Wortkombinationen zum Teil ihrerseits aus relativ
+ komplizierten, internen Regeln ab (was an sich schon langsam ist).
+ Zweitens wächst unser Problem wie gesagt exponentiell in Bezug auf die
+ Silbenzahl.
+ Und drittens wächst unser Problem prinzipiell linear in Bezug auf die Wortzahl:
+ In einem längeren Text muss eine solche Analyse hintereinander einzeln
+ für jedes Wort erfolgen - es sei denn, ein Teil der Wörter wiederholt sich
+ und wir cachen sie (Ablage in einem Zwischenspeicher).
+\end_layout
+
+\begin_layout Standard
+Selbstverständlich sind wir damit noch nicht am Ende unserer Sorgen.
+ Andere Phänomene - wie zum Beispiel das Fugen-s komplizieren uns die Sache
+ zusätzlich: Schifffahrts|kapitän.
+ Der Spellchecker wird 
+\begin_inset Quotes eld
+\end_inset
+
+Schiffahrts
+\begin_inset Quotes erd
+\end_inset
+
+ kaltblütig als nicht korrekt geschriebenes (und somit inexistentes) Wort
+ brandmarken.
+ Wir können dies zwar umgehen, indem wir jede mögliche Kombination zusätzlich
+ mit einem Bindestrich versehen.
+ Dadurch verdoppelt sich aber die Anzahl der zu testenden Kombinationen:
+ n * (n+1).
+\end_layout
+
+\begin_layout Standard
+Ausserdem haben wir hier erst den ersten Teil der Arbeit erledigt: Wir wissen
+ nun, welche Teilwörter grundsätzlich existieren - aber nicht, welche Kombinatio
+n von Teilwörtern tatsächlich eine gültige Abfolge ergibt.
+\end_layout
+
+\begin_layout Section*
+Rekursiv durchs pyramidale Labyrinth
+\end_layout
+
+\begin_layout Standard
+Die gefundenen, gültigen und (ungültigen) Teilwörter, lassen sich am besten
+ als Pyramide nach Silben angeordnet darstellen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wahr Schein (Lich) (Keits) (Rech) (Nung)
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(Wahrschein) (Scheinlich) (Lichkeits) (Keitsrech) Rechnung
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wahrscheinlich (Scheinlichkeits) (Lichkeitsrech) (Keitsrechnung)
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wahrscheinlichkeits (Scheinlichkeitsrech) (Lichkeitsrechnung)
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(Wahrscheinlichkeitsrech) (Scheinlichkeitsrechnung)
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wahrscheinlichkeitsrechnung
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unsere Annahme ist nun, dass es eine Folge von (kleineren) gültigen Teilwörtern
+ gibt, die in der Summe das zu analysierende Wort (letzte Zeile) ergeben.
+ Da wir die kleinstmöglichen Bestandteile haben möchten, beginnen wir mit
+ den einsilbigen Wörtern: wahr ist richtig, Schein auch, aber *Lich existiert
+ nicht, also suchen wir auf der zweiten Zeilen (mit 2 Silben) weiter: *Lichkeits
+ gibt es auch nicht, also versuchen wir es mit 3 Silben (*Lichkeitsrech)
+ und schliesslich mit 4 (*Lichkeitsrechnung).
+ Da dies nicht zum Ziel führt, ist Schein offensichtlich kein gültiges Teilwort
+ und wir probieren hier eine Kombination mit 2 Silben (*Scheinlich) usw.
+ usf.
+\end_layout
+
+\begin_layout Standard
+Kurzum: Jedes Teilwort ist ein gültiges Wort, wenn es selber gültig ist
+ und das folgende Teilwort ebenfalls ein gültiges Wort ist (oder kein weiteres
+ Teilwort existiert).
+ Auch hier haben wir es mit einem rekursiven Algorithmus zu tun, der der
+ Performance nur weiter abträglich sein kann.
+ Dafür ist der Algorithmus wirklich gründlich: Er findet wirklich die kleinsten
+ möglichen Bestandteile, also zum Beispiel Dampf|schifffahrts|kapitäns|jacken|kn
+opf|loch (6 Teile).
+ Die menschliche, sprachliche Intuition würde hier vielleicht zusätzlich
+ phrasieren: Dampf|schiffahrt(s) + Kapitäns|jacke + Knopf|loch (3 x 2 Teile).
+ Aber auch hier: Solche Ordnungen entspringen wiederum semantischen Kriterien
+ (und wir haben ja gesagt, dass wir davon die Finger lassen wollen:).
+\end_layout
+
+\begin_layout Section*
+Hm ...
+ Vorsilben?
+\end_layout
+
+\begin_layout Standard
+Nun sind wir am Punkt, wo wir unseren Algorithmus über unseren Wortkorpus
+ laufen lassen und stellen Erstaunliches fest: An|gabe, zu|geben, des|wegen,
+ Ein|fall.
+ So weit so gut: Der Computer hat also auch Präpositionen (an, zu) und Artikel
+ (des, ein) als eigenständige Wörter erkannt.
+ Sie machen als 
+\begin_inset Quotes eld
+\end_inset
+
+Einzelwort in einem zusammengesetzten Wort
+\begin_inset Quotes erd
+\end_inset
+
+ zwar wenig Sinn, aber wir können diese - so sagen wir uns - ja allenfalls
+ dazu verwenden, Präfixe zu erkennen und im Hinblick auf gewisse stenografische
+ Kürzungen zu nutzen.
+\end_layout
+
+\begin_layout Standard
+Aber leider wird die Sache unschön und das aus zwei Gründen: 
+\end_layout
+
+\begin_layout Enumerate
+Es gibt eine Unzahl einsilbiger Wörter, die der Algorithmus nun querfeldein
+ als Wortteile erkannt haben will und sie sind durchaus nicht nur als Präfixe
+ verwendbar: Au|tor, lachen|dem, an|genehm|er, Muse|um, Eulen|spie|gel.
+\end_layout
+
+\begin_layout Enumerate
+Vorsilben, die wir im Hinblick auf stenografische Kürzungen benötigen würden,
+ werden nicht als Präfixe (Einzelwörter) erkannt: Gedenken, gedeckt, Gelegenheit
+, gegangen.
+\end_layout
+
+\begin_layout Standard
+Offenbar haben wir uns hier also ein neues Problem aufgehalst im Versuch,
+ ein anderes loszuwerden.
+ Denn: In lachen|dem würde der Computer nun auch lachen + Kürzung 
+\begin_inset Quotes eld
+\end_inset
+
+dem
+\begin_inset Quotes erd
+\end_inset
+
+ schreiben (anstatt das Zeichen -nd-) zu verwenden.
+ Deshalb: Wie werden wir diese Geister, die wir gerufen haben, nun wieder
+ los?
+\end_layout
+
+\begin_layout Section*
+Think twice!
+\end_layout
+
+\begin_layout Standard
+Unsere Knacknuss weist zum Glück ein erfreuliches Kriterium auf: Es sind
+ kurze Wörter, ihre Anzahl also überschau- und in einer (mehr oder weniger
+ kurzen) Liste erfassbar.
+ Diese Liste können wir in einem Zwei-Schritt-Verfahren anwenden, um falsche
+ Kombinationen herauszufiltern.
+ Erster Schritt somit: Generieren aller möglicher Kombinationen.
+ Zweiter Schritt: Anwenden von Filterregel (auf Liste basierend):
+\end_layout
+
+\begin_layout Itemize
+den/dem/des/der am Wortende ist kein eigenes Wort
+\end_layout
+
+\begin_layout Itemize
+au am Wortanfang ist kein selbständiges Wort (ausser vielleicht in Au|see)
+\end_layout
+
+\begin_layout Itemize
+spie, gel, er sind in zusammengesetzten Wörtern in der Regel ebenfalls keine
+ eigenständigen Wörter etc.
+ (auch hier gibt es Ausnahmen wie Duschgel)
+\end_layout
+
+\begin_layout Standard
+Ausserdem kommt uns vielleicht hier auch die Stenografie noch etwas zu Hilfe.
+ Im System Stolze-Schrey werden die meisten zusammengesetzten Wörter verbunden
+ geschrieben.
+ Das heisst, es macht hier eigentlich keinen Unterschied, ob eine Wort-
+ oder eine Silbengrenze erkannt wird.
+ Wir können in den meisten Fällen also die (falschen) Wortgrenzen auch stehen
+ lassen und sie als Synonyme für eine Silbengrenzen betrachten.
+\end_layout
+
+\begin_layout Subsection*
+Präfixe?!
+\end_layout
+
+\begin_layout Standard
+Aber eben: Was wir bis jetzt haben ist ein (mehr oder weniger zuverlässiger)
+ Algorithmus zur Erkennung zusammengesetzter Wörter.
+ Damit bewegen wir uns bezüglich gewissen stenografischen Phänomenen immer
+ noch auf der (langschriftlichen) Oberfläche: Geben vs gemacht vs gegeben.
+ Hier wird (in Stolze-Schrey) die Silbe ge- kurz geschrieben, wenn es sich
+ um eine Vorsilbe (Präfix) handelt.
+ Wie erkennen wir eine solche Vorsilbe?
+\end_layout
+
+\begin_layout Standard
+Wie wir bereits gesehen haben, wird in Wörtern wie Ein|gabe oder An|gabe
+ die Vorsilbe als eigenständiges Wort erkannt, weil sie (1) existieren (als
+ Artikel oder Präposition) und (2) auch der zweite Wortteil (Gabe) existiert.
+ Wir können den Fall ge nun ganz einfach auf die Fälle an und ein zurückführen,
+ indem wir einfach zusätzlich definieren, dass ge ebenfalls als eigenständiges
+ Wort behandelt werden soll.
+ Dank der Bedingung, dass der zweite Teil ebenfalls ein gültiges Wort sein
+ muss, finden wir bei der rekursiven Suche die gewünschte Kombination: ge|macht
+ (macht existiert), Ge|denken (denken existiert).
+\end_layout
+
+\begin_layout Standard
+Im Anschluss machen wir uns den Zwei-Schritt-Ansatz zunutze, den wir bereits
+ zum Ausfiltern falscher Wortteile verwendet haben zunutze.
+ Anstatt die Wörter auszufiltern, können wir hier Regeln schreiben, die
+ eine Wortgrenze in eine Morphemgrenze umschreiben, also zum Beispiel: zu|
+ => zu+ und ge| => ge+ mit den Resultaten: zu|geben => zu+geben und ge|macht
+ => ge+macht.
+\end_layout
+
+\begin_layout Section*
+Präfix + Spellchecker + Suffix
+\end_layout
+
+\begin_layout Standard
+Aber auch hier haben wir die Rechnung wieder ohne den Wirt gemacht, denn
+ es gibt einmal mehr eine Liste von Miesepetern: Gelegenheit, gegangen.
+ Hier existiert der zweite Teil des Wortes nicht (*legenheit, *gangen) und
+ die Vorsilbe ge wird somit nicht erkannt.
+ Auch hier können wir uns analog mit dem gleichen Prinzip weiterhelfen:
+\end_layout
+
+\begin_layout Enumerate
+Wir definieren heit und en als zusätzlich gültige Wortteile
+\end_layout
+
+\begin_layout Enumerate
+Die rekursive Suche findet nun: Ge|le|gen|heit oder Ge|leg|en|heit, ge|gang|en
+\end_layout
+
+\begin_layout Standard
+Mit dem Zweischritt-Verfahren können wir nun Präfixe und Suffixe markieren:
+ Ge+legen#heit, ge+gang#en.
+ Beide Beispiele setzen natürlich voraus, dass im zweiten Schritt gleichzeitig
+ gen und en im Wortinnern herausgefiltert werden.
+ Bei -en ist dies relativ klar (kann nur als Endsilbe vorkommen) bei gen
+ wäre es allenfalls durchaus möglich, dass Wortkombinationen existieren.
+\end_layout
+
+\begin_layout Standard
+In beiden Fällen wurde für den Mittelteil - den wir auch als Stamm betrachten
+ können - der Spellchecker verwendet.
+ Es ist gut möglich, dass auch hier unregelmässige Stämme existieren, die
+ wiederum nicht gefunden würden.
+ Auch hier wäre die Möglichkeit, zusätzliche Wortteile als gültige Wörter
+ (1.
+ Schritt) zu definieren und am Schluss wieder herauszufiltern oder zu belassen
+ (2.
+ Schritt).
+ 
+\end_layout
+
+\begin_layout Section*
+Kleinste Teilchen
+\end_layout
+
+\begin_layout Standard
+Wörter im beschriebenen Verfahren in ihre kleineren und kleinsten (morphologisch
+ 
+\begin_inset Quotes eld
+\end_inset
+
+atomaren
+\begin_inset Quotes erd
+\end_inset
+
+) Teile zu zerlegen hat seine Vorteile und Grenzen.
+ Es fällt auf, dass mit jeder Verkleinerung der untersuchten Einheiten die
+ Zahl der falschen Kombinationen zunimmt.
+ Mit anderen Worten: Die Verfeinerung von Schritt 1 hat immer eine Vergrösserung
+ des Aufwands in Schritt 2 zur Folge.
+ Deshalb sollte das Verfahren abwägend angewendet werden: So kleine (und
+ so wenige) Einheiten wie nötig (im Hinblick auf das Ziel, also z.B.
+ die Umsetzung als Stenogramm), aber so gross wie möglich!
+\end_layout
+
+\begin_layout Section*
+Spellchecker vs morphologische Analyse
+\end_layout
+
+\begin_layout Standard
+Die obige Methode funktioniert soweit.
+ Natürlich stellt sich die Frage, warum man nicht gleich auf ein Tool zurückgrei
+ft, das spezifisch für morphologische Analyse ausgelegt ist (GERTWOL, SMOR,
+ DEMorphy oder ähnliche).
+ Die Frage ist berechtigt und wie bereits eingangs erwähnt: Mit einem Spellcheck
+er (Rechtschreibeprogramm) nach Morphen zu suchen ist, als versuchte man
+ eine Radmutter mit einem Flaschenöffner anzuziehen (es geht, ein bisschen,
+ und dann wünschte man sich doch, man hätte einen Schraubenschlüssel).
+\end_layout
+
+\begin_layout Standard
+Im Falle von VSTENO hat der Ansatz verschiedene Gründe:
+\end_layout
+
+\begin_layout Itemize
+Viele Analysetools sind nur unter kommerzieller Lizenz verwendbar (und hier
+ geht es nicht mal ums Geld, sondern um eine ideologische Allergie und Unverträg
+lichkeit: VSTENO ist 100% freie Software).
+\end_layout
+
+\begin_layout Itemize
+Wenn eine freie Lizenz (GPL oder MIT, wie im Falle von DEMorphy) verfügbar
+ ist, dann stimmen unter Umständen andere Parameter nicht (DEMorphy, beispielswe
+ise, ist in Python geschrieben; es wäre nicht unmöglich, DEMorphy von PHP
+ aus zu verwenden, aber technisch dennoch nicht das naheliegendste).
+\end_layout
+
+\begin_layout Itemize
+Ein sehr zuverlässiger und komplexer Spellchecker mit freier Lizenz (hunspell)
+ wird auf jedem (Linux-)System bereits frei Haus mitgeliefert und kann ohne
+ weiteres verwendet werden.
+\end_layout
+
+\begin_layout Standard
+Als letztes kommt hinzu, dass nicht für jeden Einsatzzweck eine vollständige
+ und übermässig tiefschürfende, morphologische Analyse nötig ist, da diese
+ unter Umständen sogar ein regelrechter Overkill sein kann.
+ Im Falle von Stolze-Schrey beschränken sich die relevanten morphologisch
+ aufzuschlüsselnden Wortteile auf geschätzt ein Dutzend Vorsilben (ge, zu,
+ dem, den, der, des, plus einige weitere).
+ 
+\end_layout
+
+\begin_layout Section*
+VSTENO
+\end_layout
+
+\begin_layout Standard
+VSTENO, in dessen Kontext die obigen Überlegungen formalisiert wurden, verwendet
+ für seine linguistische Analyse lediglich zwei zusätzliche Tools: (1) phpSyllab
+le (als Silbentrenner) und (2) hunspell (als Spellchecker).
+ Beide Tools können verschiedene Sprachen verarbeiten, sodass prinzipiell
+ auch anderssprachige Stenographie-Systeme umgesetzt werden können (die
+ Sprache bzw.
+ das Wörterbuch ist durch den/die Benutzer/in wählbar).
+ 
+\end_layout
+
+\begin_layout Standard
+Diese beiden Tools, verbunden mit einer - ebenfalls durch den/die Nutzer/in
+ definierbare - Liste an zusätzlichen Präfixen, Stämmen und Suffixen (zur
+ Markierung von gültigen Wörtern/Wortteilen) und dem rekursiven Suchalgorithmus,
+ ergeben einen sauberen Schritt 1 der linguistischen Analyse.
+\end_layout
+
+\begin_layout Standard
+Die Nachbearbeitung (Schritt 2) ist dann für den/die Benutzter/in unter
+ Verwendung der REGEX-Formelsprache frei und individuell programmierbar
+ (als Analyzer-Regeln im Header-Teil der Model-Definition).
+\end_layout
+
+\begin_layout Standard
+Wie bereits angedeutet ist eine linguistische Analyse per se rechnerisch
+ einigermassen aufwändig.
+ VSTENO bleibt hiervon nicht verschont und verliert spürbar an Ausführungsgeschw
+indkeit: Im Vergleich zu vorher (ohne linguistische Analyse) verläuft die
+ Generierung der Stenogramme nun um den Faktor 2.5 langsamer (und stellt
+ wesentlich höhere Ansprüche an die Rechenleistung und den Speicher des
+ Servers).
+ Ausgedeutscht bedeutet eine Verlangsamung um den Faktor 2.5: Die linguistische
+ Analyse verbraucht mehr Ressourcen als die eigentliche Berechnung der Stenogram
+me.
+\end_layout
+
+\begin_layout Standard
+Es lohnt sich somit, zeitkritische Funktionen - wie zum Beispiel die rekursive
+ Suche - nicht als PHP-Skript sondern als kompiliertes Modul zu verwirklichen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Diese Möglichkeit besteht zum Beispiel mit PHP-CPP (http://www.php-cpp.com/)
+\end_layout
+
+\end_inset
+
+.
+ Weitere Möglichkeiten der Geschwindigkeitsoptimierung sind das Caching
+ (häufige Wörter
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die häufigsten 207 Wörter der deutschen Sprache machen ca.
+ 54% des Textes aus (https://de.wikipedia.org/wiki/Liste_der_h%C3%A4ufigsten_W%C3%
+B6rter_der_deutschen_Sprache).
+ Besonders lohnenswert wäre es in diesem Fall aber, spezifische, längere
+ Wörter zu cachen, die sich mehrmals wiederholen.
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\end_body
+\end_document
