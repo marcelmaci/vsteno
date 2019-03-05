@@ -197,8 +197,8 @@ function ExecuteEndParameters() {
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
             case "=:std" : /*echo "=:std: #$result_after_last_rule# act_word = $act_word act_function: $actual_function rules_pointer=$rules_pointer<br>";*/ $std_form = $result_after_last_rule; break;
             case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
-            case "@@dic" : 
-                list($temp_std, $temp_prt) = Lookuper($act_word);
+            //case "@@dic" :  // obsolete: replaced by stages
+      /*          list($temp_std, $temp_prt) = Lookuper($act_word);
                 //echo "result lookuper: temp_std = #$temp_std# temp_prt = #$temp_prt#<br>";
                 if (($temp_std !== null) || ($temp_prt !== null)) {
                     // there was a result in the dictionary
@@ -305,8 +305,9 @@ function ExecuteEndParameters() {
                         //var_dump($act_word);
                     }
                     */
-                }
-                break;
+//                }          */
+
+                //break;
             default :
                 $temp_element = $rules["$actual_model"][$rules_pointer][$i];
                 //$temp_element = ">>test";
@@ -517,6 +518,7 @@ function ParserChain( $text, $start = null, $end = null ) {
         //$number_of_rules = count($rules[$actual_model]);
         //echo "number of rules: $number_of_rules rules_pointer: $rules_pointer<br>";
         //echo "ParserChain: Start: $rules_pointer Word: $act_word<br>";
+        //echo "std_form: $std_form<br>";
         while ($rules_pointer < $stop) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
             //echo "before executerule: $rules_pointer<br>";
             //$act_word = ExecuteRule( $act_word );
@@ -530,6 +532,8 @@ function ParserChain( $text, $start = null, $end = null ) {
             $rules_pointer++;
         }
         //echo "ParserChain: Stop: $stop Result: $act_word<br>";
+        //echo "std_form: $std_form<br>";
+        
         return $act_word;
 }
 
@@ -637,7 +641,7 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
 
 function MetaParser( $text ) {          // $text is a single word!
     global $font, $combiner, $shifter, $rules, $functions_table;
-    global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word;
+    global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word, $lin_form;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
     global $safe_std;       // this global variable comes from database (in purgatorium1.php)
     global $last_pretoken_list, $last_posttoken_list, $rules_pointer_start_stage4, $rules_pointer_start_stage3, $rules_pointer_start_stage2, $rules_pointer_start_std2prt;
@@ -704,6 +708,8 @@ function MetaParser( $text ) {          // $text is a single word!
                         $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], false, $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
                     } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
+                    // set lin_form
+                    $lin_form = $test;
                     // write debug info
                     $parameters = "";
                     if ($_SESSION['hyphenate_yesno']) $parameters .= "syllables ";
@@ -757,15 +763,21 @@ function MetaParser( $text ) {          // $text is a single word!
                         //echo "<br>subword_array:<br>";
                         //var_dump($subword_array);
                         $word_part = implode("|", $subword_array);
-                        //echo "word_part: $word_part<br>";
-                        $separated_word_parts_array[$w] = $word_part;
                         /*
+                        echo "word_part: $word_part<br>";
+                        echo "separated_std_form: $separated_std_form<br>";
+                        echo "separated_prt_form: $separated_prt_form<br>";
+                        echo "std_form: $std_form<br>";
+                        echo "prt_form: $prt_form<br>";
+                        */
+                        $separated_word_parts_array[$w] = $word_part;
+                    /*
                         if ( $word_part !== end($separated_word_parts_array)) { 
                             $output .= "\\";  // shouldn't be hardcoded?!
                             $separated_std_form .= "\\";        // eh oui ... l'horreur continue ... ;-)
                             $separated_prt_form .= "\\";
                         }
-                        */
+                    */
                     }
                     //echo "<br>end result: <br>";
                     //var_dump($separated_word_parts_array);
@@ -784,6 +796,7 @@ function MetaParser( $text ) {          // $text is a single word!
                     //echo "begin stage4: $rules_pointer_start_stage3-$rules_pointer_start_stage4-" . count($rules[$actual_model]) . "<br>";
                     
                     $output = ParserChain($output, $rules_pointer_start_stage4, count($rules[$actual_model]));
+                    //echo "final: std/prt_form: $std_form / $prt_form<br>";
                     
                     // add pre/posttokens after all parsing is done
                     if (mb_strlen($pretokens) > 0) { 
@@ -802,7 +815,7 @@ function MetaParser( $text ) {          // $text is a single word!
                         } else $output .= "\\$posttokens";
                     }
                 
-                    return $output; /// don't return output => go to stage4 instead
+                    return $output;
   
                     break;
                 case "handwriting":
@@ -821,9 +834,6 @@ function MetaParser( $text ) {          // $text is a single word!
             
         }
     }
-    ////////////////////////////////// add stage4 //////////////////////////////////////////
-    //echo "execute stage4<br>";
-    //return $output;
 }
 
 

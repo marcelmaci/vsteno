@@ -403,7 +403,7 @@
 	#EndSubSection(shifter)
 #EndSection(font)
 #BeginSection(rules)
-	#BeginSubSection(global,@@txt)
+	#BeginSubSection(global)
 		// global replacements in the whole text
 		"&hellip;" => "..."; // ellipsis
 		"…" => "...";
@@ -417,10 +417,10 @@
 		"ß" => "ss";
 		//"(?<!\[)=" => "[#=#]\"; // in packer before (doesn't work because of inline option tags => choose another symbol for suffix boundary!)
 	#EndSubSection(global)
-	#BeginSubSection(helvetizer,@@wrd) // restructure parser: word functions before parser not possible
+	#BeginSubSection(helvetizer) // restructure parser: word functions before parser not possible
 		//"ß" => "ss";			// anymore => transfer helvetizer to global section (stage1)
-	#EndSubSection(helvetizer,@@dic,=:stage2)
-	#BeginSubSection(corrector)
+	#EndSubSection(helvetizer,#>stage2)
+	#BeginSubSection(corrector,#>stage2)
 		// some words are erroneously separated by LING
 		// e.g.: wie|der, sie|ben ...
 		// correct that by remerging them here in stage2 (where words can be treated entirely before stage3)
@@ -444,8 +444,8 @@
 		//"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
 		//"(\|)er(\|)" => "{ER}"; // infix er
 		//"[Vv]or\|r" => "{VOR}|[AR]";
-	#EndSubSection(corrector,=:stage3)
-	#BeginSubSection(packer)
+	#EndSubSection(corrector,#>stage3)
+	#BeginSubSection(packer,#>stage3)
 		// some shorthand tokens use special chars (like -#+=/ etc.) in their definition
 		// this can lead to confusions in the transcriptor: e.g. - might be the character - 
 		// (which has to be drawn as such) or a part of a token definition (like [0N-]
@@ -797,8 +797,8 @@
 		"([^c])(haft)$" => "$1{HAFT}";
 		"{ANT}{LICH}" => "en{TLICH}";
 		"{ET}t" => "e[TT]";
-	#EndSubSection(shortener,=:stage4)
-	#BeginSubSection(normalizer)
+	#EndSubSection(shortener,#>stage4)
+	#BeginSubSection(normalizer,#>stage4)
 		
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
 		"{EM}(\||\\)" => "EM$1";
@@ -856,7 +856,7 @@
 		"(?<!m)mpfr" => "[MPFR]";
 		"(?<!m)mpfl" => "[MPFL]";
 		"(?<!m)mpf" => "[MPF]";
-		"s-?tr" => "[STR]";
+		"s-?t[\|-]?r" => "[STR]";
 		"(?<!n)nkr" => "[NKR]";
 		"(?<!n)nk-?l" => "[NKL]";
 		"(?<!s)st-?l" => "[STL]";

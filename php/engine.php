@@ -1034,7 +1034,7 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
 function GetDebugInformation( $word ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
             $bundler_table, $transcriptor_table, $substituter_table, $global_debug_string, $global_number_of_rules_applied,
-            $processing_in_parser, $separated_std_form, $separated_prt_form, $global_textparser_debug_string;
+            $processing_in_parser, $separated_std_form, $separated_prt_form, $global_textparser_debug_string, $std_form, $prt_form;
             
 /*
         $original = $word;
@@ -1051,7 +1051,7 @@ function GetDebugInformation( $word ) {
         $alternative_text = $original;
         $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
 */
-        $debug_text .= "<p>WORD: $word</p><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>$global_textparser_debug_string" . "$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
+        $debug_text .= "<p>WORD: $word</p><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>$global_textparser_debug_string" . "$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($std_form) . "<br>PRT: $prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
         $global_number_of_rules_applied = 0; // suppose, this function is called at the end of the calculation (not before ... since this will give false information then ... ;-)
         return $debug_text;        
     
@@ -1635,7 +1635,7 @@ function StripOutUpperCasePunctuation( $word ) {
 
 function CalculateTrainingSVG( $text_array ) {
     global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied, $std_form, $prt_form, 
-        $separated_std_form, $separated_prt_form, $this_word_punctuation, $last_word_punctuation, $sentence_start, $upper_case_punctuation;
+        $separated_std_form, $separated_prt_form, $this_word_punctuation, $last_word_punctuation, $sentence_start, $upper_case_punctuation, $lin_form;
     $output = "";
     $sentence_start = true;
     
@@ -1680,8 +1680,22 @@ function CalculateTrainingSVG( $text_array ) {
             }
             
             $output .= "</center></td>";
-            $std_form_upper = mb_strtoupper($separated_std_form );
+            $std_form_upper = mb_strtoupper($std_form );
             
+            // modification (05.03.19): use old cmp form as new lng (lin/ling) form
+            // in the database: single_bas and separated_bas (in total there are 6 forms and 1 preference information in db)
+            // many combinations are possible:
+            // - default: write single or separated according to preference (eventual rules based separation MUST be DISABLED (not possible for the moment)
+            // - override preference: use single or separated from database (rules based separation must be disabled)
+            // - force (single or separated): stronger than override all subwords are written single or separated (in database they can be mixed, e.g. Bad|meister\stelle: Bad|meister = single; Badmeister\stelle = separated
+            //   forced single: Bad|meister|stelle; force separated: Bad\meister\stelle
+            // in addition: all words from database can have 1 (2) - 3 (6) forms. The user must have the possibility to chose which form should be taken
+            // as the base for the calculation if several forms exist:
+            // - only LNG/STD/PRT: calculate from LNG/STD/PRT
+            // - LNG+STD: calculate from LNG or STD (user decides)
+            // - LNG+STD+PRT: idem
+            // - STD+PRT: idem
+            // - LNG+PRT: idem (rather bizarre as a combination but theoretically possible)
             $output .= "<td>
                 <input type='hidden' name='original$i' value='$bare_word'>
                 <input type='radio' name='result$i' value='wrong$i'>F
@@ -1689,16 +1703,16 @@ function CalculateTrainingSVG( $text_array ) {
                 <input type='radio' name='result$i' value='undefined$i' checked>U $checkbox_kleinschreibung
                 
                 <br>
-
+                <input type='checkbox' name='chkcut$i' value='chkcutyes$i'> LNG: 
+                <input type='text' name='txtcut$i'  size='30' value='$lin_form'> 
+                <br>
                 <input type='checkbox' name='chkstd$i' value='chkstdyes$i'> STD: 
                 <input type='text' name='txtstd$i'  size='30' value='$std_form_upper'>
                 <br>
                 <input type='checkbox' name='chkprt$i' value='chkprtyes$i'> PRT: 
-                <input type='text' name='txtprt$i'  size='30' value='$separated_prt_form'>
+                <input type='text' name='txtprt$i'  size='30' value='$prt_form'>
                 <br>
-                <input type='checkbox' name='chkcut$i' value='chkcutyes$i'> CMP: 
-                <input type='text' name='txtcut$i'  size='30' value='$bare_word'>
-                <br>
+                
             </td>
                 <td>
                     Anmerkung:<br><textarea id='comment$i' name='comment$i' rows='4' cols='40'></textarea>

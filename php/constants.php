@@ -169,6 +169,7 @@ $global_textparser_debug_string = "";
 $global_number_of_rules_applied = 0;
 $std_form = "";
 $prt_form = "";
+$lin_form = "";
 $separated_std_form = "";
 $separated_prt_form = "";
 $processing_in_parser = "";                        // variable that indicates if word has been generated from rules or taken from dictionary: R = rules, D = dictionary

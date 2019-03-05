@@ -36,8 +36,8 @@
 //                     =>   if equal go to that subsection 
 //                     !>   if not equal go to that subsection
 //                     =:   write actual value to that variable (e.g. =:std)
-//                     @@   connect to dictionary (e.g. @@dic)
-//                          or connect to or get source (e.g. @@wrd, @@tag)
+//                     @@   connect to dictionary (e.g. @@dic) => obsolete! replaced by stages
+//                          or connect to or get source (e.g. @@wrd, @@tag) => obsolete! replaced by stages
 //                     +    transform variable to uppercase (e.g. +std)
 //                     -    transform variable to lowercase (e.g. -std)
 //                     //   comment
@@ -46,11 +46,12 @@
 //
 // 3-Letter-Keywords:  std  standard shorthand form
 //                     prt  print shorthand form
-//                     act  actual form
-//                     dic  dictionary
-//                     tag  complete text with tags
-//                     txt  text without tags
-//                     wrd (default)
+//                     (lng  linguistical form => new (hardcoded =:LNG) afert linguistical analyzer)
+//                     act  actual form => ??? (unused until now)
+//                     dic  dictionary => obsolete! replaced by stages
+//                     tag  complete text with tags => obsolete! replaced by stages
+//                     txt  text without tags => obsolete! replaced by stages
+//                     wrd (default) => obsolete! replaced by stages
 //
 // 3-Letter-Keywords are used for variables (std, prt, act), sources (dic, tag, txt, word). 
 // Variables are read/write. Sources are read-only.
@@ -169,10 +170,10 @@ function ImportSession() {
         //echo "variable := value: $variable => $value<br>";
         $session_subsection = $matches[3];
         if (mb_strpos($whitelist_variables, " $variable ") === FALSE) {
-            echo "Error! variable not in whitelist!<br>";
+            //echo "Error! variable not in whitelist!<br>";
             $global_error_string .= "ERROR: you are not allowed to set variable '$variable'!";
         } else {
-            echo "assign \$_SESSION[$variable] = >$value<<br>";
+            //echo "assign \$_SESSION[$variable] = >$value<<br>";
             $_SESSION["$variable"] = $value; 
             //var_dump($_SESSION);
         } 
@@ -454,21 +455,27 @@ function ImportRulesFromGenericSubSection() {
 function WriteParamListToRulesArray( $type, $param_list ) {
     global $rules, $insertion_key, $rules_pointer, $rules_pointer_start_std2prt, $rules_pointer_start_stage2, $rules_pointer_start_stage4, $rules_pointer_start_stage3;
     $rules["$insertion_key"][$rules_pointer][] = $type;
+    //echo "type: $type<br>"; // Begin/EndFunction()
     foreach( $param_list as $parameter ) {
         if ($parameter === "=:std") {
             //echo "End of WRD=>STD detected: rule number: $rules_pointer<br>";
             //echo "rule($rules_pointer): " . $rules["$insertion_key"][$rules_pointer][0];
             //echo "set rules_pointer_start_std2prt";
             $rules_pointer_start_std2prt = $rules_pointer + 1;  // set it to begin of following function
-        } elseif ($parameter === "=:stage4") {
+        } elseif ($parameter === "#>stage4") {
             //echo "set stage4: " . ($rules_pointer+1) . "<br>";
-            $rules_pointer_start_stage4 = $rules_pointer + 1;  // same as for std 
-        } elseif ($parameter === "=:stage3") {
+            if ($type === "EndFunction()") $rules_pointer_start_stage4 = $rules_pointer + 1;  // same as for std 
+            else $rules_pointer_start_stage4 = $rules_pointer;
+        } elseif ($parameter === "#>stage3") {
             //echo "set stage3: " . ($rules_pointer+1) . "<br>";
-            $rules_pointer_start_stage3 = $rules_pointer + 1;  // same as for std 
-        } elseif ($parameter === "=:stage2") {
+            if ($type === "EndFunction()") $rules_pointer_start_stage3 = $rules_pointer + 1;  // same as for std 
+            else $rules_pointer_start_stage3 = $rules_pointer;
+        } elseif ($parameter === "#>stage2") {
             //echo "set stage2: " . ($rules_pointer+1) . "<br>";
-            $rules_pointer_start_stage2 = $rules_pointer + 1;  // same as for std 
+            //if (isset($rules_pointer_start_stage2)) { echo "warning: stage2 set 2x<br>"; $secure = $rules_pointer_start_stage2; }
+            if ($type === "EndFunction()") $rules_pointer_start_stage2 = $rules_pointer + 1;  // same as for std 
+            else $rules_pointer_start_stage2 = $rules_pointer;
+            //echo "stage2: $rules_pointer_start_stage2 $secure<br>";
         }
     
         $rules["$insertion_key"][$rules_pointer][] = $parameter;
