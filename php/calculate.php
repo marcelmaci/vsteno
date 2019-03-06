@@ -179,12 +179,13 @@ $_SESSION['rules_count'] = array();
 //echo "count rules: " . count($rules) . "<br>";
 for ($i=0; $i<count($rules[$actual_model]); $i++) $_SESSION['rules_count'][$i] = 0;
 //var_dump($_SESSION['rules_count']);
-$start = microtime(true);
+   // analyze_word_linguistically_optimized_set_variables($prefixes, $stems, $suffixes); // speed optimization
+//$start = microtime(true);
 
     CalculateStenoPage();
-$end = microtime(true);
-$delta = $end - $start;
-echo "performance:<br>start: $start<br>end: $end<br>difference: $delta<br>";
+//$end = microtime(true);
+//$delta = $end - $start;
+//echo "performance:<br>start: $start<br>end: $end<br>difference: $delta<br>";
 //var_dump($_SESSION['rules_count']);
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();

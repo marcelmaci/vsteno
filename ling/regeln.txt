@@ -7,11 +7,12 @@
 		"–" => "[~~]"; // blocks calculation in layouted mode
  		" &ndash; " => " [~~] "; // Gedankenstrich
 		"&ndash;" => "="; // blocks calculation in layouted mode
-		"&raquote;" => "«"; 
-		"&laquote;" => "»";
+		"&rs?aquo;" => "«"; 
+		"&ls?aquo;" => "»";
 		"›" => "»";
 		"‹" => "«";
 		"ß" => "ss";
+		"&szlig;" => "ss";
 	#EndSubSection(global,#>stage0)
 	#BeginSubSection(helvetizer) // restructure parser: word functions before parser not possible
 		//"ß" => "ss";			// anymore => transfer helvetizer to global section (stage1)
@@ -195,6 +196,7 @@
 	#EndSubSection(filter)
 	#BeginSubSection(shortener) 
 		"un-?ter" => "{UNTER}";
+		"^er+" => "{ER}";
 		
 		"[#-]?[hk]?ei-?t" => "{HEIT}";
 		"#li-?ch" => "{H}";
@@ -540,7 +542,7 @@
 
 		// initial groups
 		"^o" => "[0N-][O]";
-		"^r" => "[AR]";
+		//"^r" => "[AR]"; // is done later
 		"^äo" => "[0N-][Ä][&E][O]";
 		"^ag" => "[0N-][A][G]";
 
@@ -646,7 +648,7 @@
 		"n" => "N";
 		"p" => "P";
 		"q" => "Q";
-		"^r" => "[AR]";
+		"(^|\+|\|])r" => "$1[AR]";
 		"r" => "[VR]";
 		"s" => "S";
 		"t" => "T";
@@ -680,7 +682,7 @@
 
 		
 		//"\[(CH|LL)\]T" => "[$1][&T]";
-		"{VOR}\|?\[AR\]" => "[VORAR]";
+		"{VOR}(\||\+)?\[AR\]" => "[VORAR]";
 		"^{ER}\[AR\]" => "[0N-][#N][VR+AR]"; 
 		"{ER}\[AR\]" => "[#N][VR+AR]"; 
 		"{ER}T" => "{ER}[&T]";

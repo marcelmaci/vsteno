@@ -41,9 +41,9 @@
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
-		"prefixes_list" := "ge, zu, un, ver, mit, ent, auf, ab, an";
+		"prefixes_list" := "ge, zu, un, um, ver, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut";
 		"stems_list" := "gangen, fähr";
-		"suffixes_list" := "heit, hei-t, heits, keit, keiten, keits, lich, liche, lichen, liches";
+		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
@@ -61,10 +61,10 @@
 		"e\|ren$" => "e-ren";	// näheren
 		"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
 		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
-		"(?<!#)li(-?)ch" => "#li$1ch";
+		//"(?<!#)li(-?)ch" => "#li$1ch";
 		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
 		"(\|)er(\|)" => "{ER}"; // infix er
-		"[Vv]or\|r" => "{VOR}|[AR]";
+		//"([Vv]or)\|r" => "$1+r";
 		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
 	#EndSubSection(analyzer)
 #EndSection(header)

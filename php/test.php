@@ -33,19 +33,39 @@ $original_word = "Wetterstation";
 //$original_word = "Ameisenbär";
 //$original_word = "Kaffeetasse"; // 0.8 seconds => 0.53 seconds
 
+// tests
+$word = "Wahrscheinlichkeitsrechnung";
+$word = "Mittelohrentzündung";
+$word = "Erfahrnis";
+$word = "Gelegenheitendieb";
+
+/*
+$prefixes = "ge, zu, un, ver, mit, ent, auf, ab, an, er";
+$stems = "gangen, fähr, geb, leb";
+$suffixes = "heit, hei-t, heits, keit, keiten, keits, lich, liche, lichen, liches, schaft, nis";
+*/
+
+$prefixes = "ge, zu, un, ver, mit, ent, auf, ab, an, er";
+$stems = "gan-?gen, fähr, geb, leb";
+$suffixes = "hei-?t(?:s|en)?";
+
 // condensed test
 echo "<br>condensed test:<br>";
-//$word = "Dampfschifffahrtsoffiziersjackenknopflochrosenladentischtuch";
-//$word = "Versicherungsangestellter";
-$word = "Testlauf";
-$word = "kannte";
-
-//$word = mb_convert_encoding ( "Kapitänsjacke" , "UTF-8", "UTF-8");
 $start = microtime(true);
-$result = analyze_word_linguistically($word, true, true, 99, 0, "ge zu");
+$result = analyze_word_linguistically($word, true, true, 99, 0, $prefixes, $stems, $suffixes);
 $end = microtime(true);
 $difference = $end - $start;
 echo "Wort: $word<br>Result: $result<br>Time: $difference seconds<br><br>";
+
+// optimized test
+echo "<br>optimized test:<br>";
+$start = microtime(true);
+analyze_word_linguistically_optimized_set_variables($prefixes, $stems, $suffixes);
+$result = analyze_word_linguistically_optimized($word, true, true, 99, 0);
+$end = microtime(true);
+$difference = $end - $start;
+echo "Wort: $word<br>Result: $result<br>Time: $difference seconds<br><br>";
+
 
 $original_word = $word;
 

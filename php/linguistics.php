@@ -233,7 +233,242 @@ function count_uppercase($string) {
     else return $difference;
 }
 
+/////////////////////////////////////////////////// optimized functions /////////////////////////////////////////////////
+
+function analyze_word_linguistically_optimized_set_variables ($prefixes, $stems, $suffixes) {
+    $prefixes_array = explode(",", $prefixes);
+    $stems_array = explode(",", $stems);
+    $suffixes_array = explode(",", $suffixes);
+    // trim arrays
+    $prefixes_array=array_map('trim',$prefixes_array); // use callback for trim
+    $stems_array=array_map('trim',$stems_array);
+    $suffixes_array=array_map('trim',$suffixes_array);
+    // implode to add spaces for string comparison
+    $prefixes = " " . implode(" ", $prefixes_array) . " ";
+    $stems = " " . implode(" ", $stems_array) . " ";
+    $suffixes = " " . implode(" ", $suffixes_array) . " ";
+    // complete list
+    $complete = "$prefixes $stems $suffixes";
+    // set session variables
+    $_SESSION['prefixes'] = $prefixes;
+    $_SESSION['stems'] = $stems;
+    $_SESSION['suffixes'] = $suffixes;
+    $_SESSION['complete'] = $complete;
+    $_SESSION['prefixes_array'] = $prefixes_array;
+    $_SESSION['stems_array'] = $stems_array;
+    $_SESSION['suffixes_array'] = $suffixes_array;
+}
+
+function analyze_word_linguistically_optimized($word, $hyphenate, $decompose) {
+    global $value_hyphenate;
+    $several_words = explode("-", $word);  // if word contains - => split it into array
+    $result = "";
+    //echo "stems: $stems<br>";
+    //echo "suffixes: $suffixes<br>";
+    for ($i=0;$i<count($several_words);$i++) {
+        $single_result = analyze_one_word_linguistically_optimized($several_words[$i], $hyphenate, $decompose);
+        //echo "single result: $single_result<br>";
+       
+        $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
+    }
+    //echo "result: $result<br>";
+    if ($result === "Array") {
+        if ($value_hyphenate) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
+        else return $word;
+    } else {
+        $result = mark_affixes_optimized($result);
+        //echo "result: $result<br>";
+        return $result;
+    }
+}
+
+function mark_prefixes_optimized($word) {
+    // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
+    // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
+    $prefix_list = $_SESSION['prefixes_array'];
+    for ($i=0; $i<count($prefix_list); $i++) {
+        $actual_prefix = $prefix_list[$i];
+        //echo "prefix: $actual_prefix word: $word<br>";
+        $word = preg_replace("/(^|\+|\|)($actual_prefix)\|/i", "$1$2+", $word); // i = regex caseless modifier
+        //echo "result: $word<br>";
+    }
+    return $word;
+}
+
+function mark_suffixes_optimized($word) {
+    // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
+    // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
+    $suffix_list = $_SESSION['suffixes_array'];
+    for ($i=0; $i<count($suffix_list); $i++) {
+        $actual_suffix = $suffix_list[$i];
+        //echo "suffix: $actual_suffix word: $word<br>";
+        $word = preg_replace("/(-|\|)($actual_suffix)($|\||#)/i", "#$2$3", $word); // i = regex caseless modifier
+        //echo "result: $word<br>";
+    }
+    return $word;
+}
+
+function mark_affixes_optimized($word) {
+    $word = mark_prefixes_optimized($word);
+    $word = mark_suffixes_optimized($word);
+    return $word;
+}
+
+function analyze_one_word_linguistically_optimized($word, $hyphenate, $decompose) {
+    //echo "analyze: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
+    
+    // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)
+    //            if 0: separate always
+    // $glue: if length of composed word < $glue => use - (= syllable of same word), otherwise use | or \
+    //        if 0: glue always (= annulate effect of linguistical analysis)
+    // Examples: 
+    // a) $glue = 4:                                    $glue = 0:
+    //    Eu-len\spie\gel => Eu-len\spie-gel            Eu-len-spie-gel
+    //    Ab\tei-lungs\lei-ter => Ab-teilungs\leiter
+    // b) $separate = 4:                $separate = 0:
+    //    Mut\pro-be => Mut|probe       Mut\pro-be
+    //    Ha-sen\fuss => Hasen\fuss     Ha-sen\fuss
+    // declare globals
+    global $is_noun;    // true if first letter of word is a capital
+    global $acronym, $value_hyphenate;
+    // set globals
+    $value_hyphenate = $hyphenate;
+    //echo "suffixes (one word): $suffixes<br>";
+    
+    // check for acronyms and nouns
+    $upper_case = count_uppercase($word);
+    if ($upper_case === $acronym) return $word;         // return word without modifications if it is an acronym (= upper case only)
+    elseif ($upper_case > 1) return hyphenate($word);   // probably an acronym with some lower case => hyphenate        
+    else {
+    
+        if ($decompose) {
+            //echo "decompose word<br>";
+            list($word_list_as_string, $array) = create_word_list($word);
+            //echo "stems: $stems<br>";
+            //echo "suffixes (one word): $suffixes<br>";
+   
+            $array = eliminate_inexistent_words_from_array_optimized($word_list_as_string, $array);
+            //var_dump($array);
+            $result = recursive_search_optimized(0,0, $array);
+            
+            //echo "inside (one word): word: $word result: $result<br>";
+            if ($result === "") $result = $word; // fix bug: recursive search can return "" instead of a word if word isn't found in hunspell dictionary
+        } else $result = $word; //$result = iconv(mb_detect_encoding($word, mb_detect_order(), true), "UTF-8", $word);
+        //echo "$result - $word<br>";
+        if ($hyphenate) $result = hyphenate($result);
+        if ($upper_case === 1) {
+            //echo "word is noun<br>";
+            //echo "1:$result<br>";
+            $result = mb_strtolower($result, "UTF-8"); // argh ... always these encoding troubles ...
+            //echo "2:$result<br>";
+            $result = capitalize($result);
+            //echo "3:$result<br>";
+           
+        } else $result = mb_strtolower($result);
+        return $result;
+    }
+}
+
+function eliminate_inexistent_words_from_array_optimized($string, $array) {
+    $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
+    // explode strings to get rid of commas
+    $prefixes_array = $_SESSION['prefixes_array'];
+    $stems_array = $_SESSION['stems_array'];
+    $suffixes_array = $_SESSION['suffixes_array'];
+    // implode to add spaces for string comparison
+    //$prefixes = $_SESSION['prefixes'];
+    //$stems = $_SESSION['stems'];
+    //$suffixes = $_SESSION['suffixes'];
+    $complete = $_SESSION['complete'];
+    //echo "<br>suffixes(eliminate): $suffixes<br>";
+    
+    //echo "$shell_command<br>";
+    //echo "hunspell: ";
+    exec("$shell_command",$o);
+    //var_dump($o);
+    $length = count($array[0]);
+    $offset = 1;
+    for ($l=0;$l<$length; $l++) {
+        for ($r=0;$r<count($array[$l]); $r++) {
+            //echo "<br>result: " . $array[$l][$r][0] . ": >" . $o[$offset] . "<<br>";
+            //echo "prefix test: $prefixes: " . mb_strpos(mb_strtolower($prefixes), mb_strtolower($array[$l][$r][0])) . "<br>";
+            //echo "stem test: $stems: " . mb_strpos(mb_strtolower($stems), mb_strtolower($array[$l][$r][0])) . "<br>";
+            
+            if (($o[$offset] === "*") || (($o[$offset][0] === "&") && (mb_strpos($o[$offset], $array[$l][$r][0] . "-") != false))) {
+                //echo "match * found: " . $array[$l][$r][0] . "<br>";
+                
+            } elseif (mb_strpos(mb_strtolower($complete), " " . mb_strtolower($array[$l][$r][0]) . " ") !== false) { 
+                // if word is in prefix list => separate it as if it where a word!
+                //echo "word: " . $array[$l][$r][0] . " is a prefix!<br>";
+                // do nothing (leave word in array)
+            } else {
+                // no match => delete string in array (use same data field for performance reason)
+                //echo "no match: " . $array[$l][$r][0] . "<br>";
+                $array[$l][$r][0] = ""; // "" means: no match!
+                
+            }
+            $offset+=1;
+        }
+    }
+    //echo "<br><br>array:<br>";
+    //var_dump($array);
+    return $array;
+}
+
+function recursive_search_optimized($line, $row, $array) {
+    if ($array[$line][$row][0] != "") {
+        //echo "that's a good start: word exists!<br>";
+        if ($row === count($array[$line])-1) {
+            //echo "reached end of line => return >" . $array[$line][$row][0] . "<<br>";
+            //$hit = true;
+            return $array[$line][$row][0];
+        } else {
+            $temp_row = $line+$row+1;
+            $temp_line = 0; //count($array) - $temp_row-1; // could this do horizontal as well?!
+            //if (($line-1-$row>=0) && ($row+$line<count($array[$line-1-$row]))) {
+            if (($temp_line>=0) && ($temp_row<count($array[$temp_line]))) {
+                //echo "=> try up<br>";
+                //$up = recursive_search($line-1, $row+$line, $array);
+                $up = recursive_search_optimized($temp_line, $temp_row, $array);
+            } else $up = "";
+            if (mb_strlen($up)>0) {
+                //echo "found up: $up and return my own: " . $array[$line][$row][0] . "<br>";
+                return $array[$line][$row][0] . "|" . $up;
+            } else {
+                    if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
+                        //echo "=> try down (count(array)=" . count($array) . "/count(array(line))=" . count($array[$line]) . ")<br>";
+                        $down = recursive_search_optimized($line+1, $row, $array);
+                    } else $down = "";
+                    if (mb_strlen($down)>0) {
+                        //echo "found down: $down (don't return own " . $array[$line][$row][0] . "<br>";
+                        return /*$array[$line][$row][0] . "\\" . */ $down;
+                    } else return ""; // no luck - even the main word isn't recognized by hunspell ...
+            }
+        }
+    } else {
+        if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
+            //echo "no luck => traverse down<br>"; 
+            if ($line+1<count($array)) return recursive_search_optimized($line+1, $row, $array);
+        } else {
+            //echo "no luck => end traversing (go back)<br>";
+            return "";
+        }
+    }
+}
+
+/////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
+
+
 function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes) {
+    // explode strings to get rid of commas
+    $prefixes_array = explode(",", $prefixes);
+    $stems_array = explode(",", $stems);
+    $suffixes_array = explode(",", $suffixes);
+    // trim
+    $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
+    $stems_array = array_map('trim',$stems_array);
+    $suffixes_array = array_map('trim',$suffixes_array);
+    
     $several_words = explode("-", $word);  // if word contains - => split it into array
     $result = "";
     //echo "stems: $stems<br>";
@@ -249,7 +484,7 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
         if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
         else return $word;
     } else {
-        $result = mark_affixes($result, $prefixes, $suffixes);
+        $result = mark_affixes($result, $prefixes_array, $suffixes_array);
         //echo "result: $result<br>";
         return $result;
     }
@@ -268,22 +503,28 @@ function mark_prefixes($word, $prefixes) {
     return $word;
 }
 
-function mark_suffixes($word, $suffixes) {
+function mark_suffixes($word, $suffix_list) {
     // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
     // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
-    $suffix_list = explode(",", $suffixes);
-    for ($i=0; $i<count($suffix_list); $i++) {
+    //$suffix_list = explode(",", $suffixes);
+    //for ($i=0; $i<count($suffix_list); $i++) {
+        $word = backwards_preg_replace_all($word, $suffix_list, "suffix");
+        
+        /*
         $actual_suffix = trim($suffix_list[$i]);
         //echo "prefix: $actual_prefix word: $word<br>";
-        $word = preg_replace("/(-|\|)($actual_suffix)($|\|)/i", "#$2$3", $word); // i = regex caseless modifier
+        $word = preg_replace("/(-|\|)($actual_suffix)($|\||#)/i", "#$2$3", $word); // i = regex caseless modifier
         //echo "result: $word<br>";
-    }
+        */
+    //}
     return $word;
 }
 
 function mark_affixes($word, $prefixes, $suffixes) {
-    $word = mark_prefixes($word, $prefixes);
-    $word = mark_suffixes($word, $suffixes);
+    $word = backwards_preg_replace_all($word, $prefixes, "prefix");
+    $word = backwards_preg_replace_all($word, $suffixes, "suffix");
+    //$word = mark_prefixes($word, $prefixes);
+    //$word = mark_suffixes($word, $suffixes);
     return $word;
 }
 
@@ -344,12 +585,48 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
     }
 }
 
+function backwards_preg_match($wordpart, $array) { 
+    // tests if regex pattern in array matches wordpart; type = prefix, suffix 
+    // returns modified wordpart if pattern matches
+    //echo "<br>wordpart: $wordpart<br>";
+    //var_dump($array);
+    for ($i=0; $i<count($array); $i++) {
+        $pattern = $array[$i];
+        $result = preg_match("/^$pattern$/i", $wordpart); 
+        //echo "result $i: $result<br>";
+        if ($result === 1) return true;
+    }
+}
+
+function backwards_preg_replace_all($word, $array, $type) { 
+    //var_dump($array);
+    // tests if regex pattern in array matches wordpart; type = prefix, suffix 
+    // returns modified wordpart if pattern matches
+    for ($i=0; $i<count($array); $i++) {
+        $pattern = $array[$i];
+        //echo "pattern: $pattern<br>";
+        switch ($type) {
+            case "prefix" : $result = preg_replace("/(^|\||\+)($pattern)(\|)/i", "$1$2+", $word); break;
+            case "suffix" : $result = preg_replace("/(\||\+)($pattern)(#|\||$)/i", "#$2$3", $word); 
+                            break;
+        }
+        //if ($result !== $wordpart) return $result;
+        $word = $result;
+    }
+    //echo "word: $word<br>";
+    return $word;
+}
+
 function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stems, $suffixes) {
     $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
     // explode strings to get rid of commas
     $prefixes_array = explode(",", $prefixes);
     $stems_array = explode(",", $stems);
     $suffixes_array = explode(",", $suffixes);
+    // trim
+    $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
+    $stems_array = array_map('trim',$stems_array);
+    $suffixes_array = array_map('trim',$suffixes_array);
     // implode to add spaces for string comparison
     $prefixes = " " . implode(" ", $prefixes_array) . " ";
     $stems = " " . implode(" ", $stems_array) . " ";
@@ -367,11 +644,24 @@ function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stem
             //echo "<br>result: " . $array[$l][$r][0] . ": >" . $o[$offset] . "<<br>";
             //echo "prefix test: $prefixes: " . mb_strpos(mb_strtolower($prefixes), mb_strtolower($array[$l][$r][0])) . "<br>";
             //echo "stem test: $stems: " . mb_strpos(mb_strtolower($stems), mb_strtolower($array[$l][$r][0])) . "<br>";
+            $testw = $array[$l][$r][0] . "-";
+            //echo "test: $testw result: " . mb_strpos($o[$offset], $testw) . "<br>";
             
-            if (($o[$offset] === "*") || (($o[$offset][0] === "&") && (mb_strpos($o[$offset], $array[$l][$r][0] . "-") != false))) {
+            if (($o[$offset] === "*") || (($o[$offset][0] === "&") && (mb_strpos($o[$offset], $testw) !== false))) {
+                
                 //echo "match * found: " . $array[$l][$r][0] . "<br>";
                 
-            } elseif (mb_strpos(mb_strtolower($prefixes), " " . mb_strtolower($array[$l][$r][0]) . " ") !== false) { 
+            } elseif (backwards_preg_match($array[$l][$r][0], $prefixes_array)) {
+                 //echo "match found as prefix<br>";
+                 //var_dump($prefixes_array);
+            } elseif (backwards_preg_match($array[$l][$r][0], $stems_array)) {
+                //echo "match found as stem<br>";
+            } elseif (backwards_preg_match($array[$l][$r][0], $suffixes_array)) {
+                //echo "match found as suffix<br>";
+                    //echo "suffix-pattern: " . $array[$l][$r][0] . " result: " . backwards_preg_match($array[$l][$r][0], $suffixes_array);
+            }
+            
+            /*elseif (mb_strpos(mb_strtolower($prefixes), " " . mb_strtolower($array[$l][$r][0]) . " ") !== false) { 
                 // if word is in prefix list => separate it as if it where a word!
                 //echo "word: " . $array[$l][$r][0] . " is a prefix!<br>";
                 // do nothing (leave word in array)
@@ -381,7 +671,9 @@ function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stem
             } elseif (mb_strpos(mb_strtolower($suffixes), mb_strtolower(" " . $array[$l][$r][0]) . " ") !== false) {
                 //echo "part " . $array[$l][$r][0] . " is a valid suffix!<br>";
                 
-            } else {
+            } */
+            
+            else {
                 // no match => delete string in array (use same data field for performance reason)
                 //echo "no match: " . $array[$l][$r][0] . "<br>";
                 $array[$l][$r][0] = ""; // "" means: no match!
