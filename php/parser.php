@@ -418,8 +418,10 @@ function ExecuteRule( /*$word*/ ) {
                     $result_after_last_rule = $output;
                     $global_number_of_rules_applied++;
                     $_SESSION['rules_count'][$rules_pointer]++;
-                    $wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
-                    $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
+                    if ($_SESSION['output_format'] === "debug") {
+                        $wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
+                        $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
+                    }
                 }
                 //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
@@ -452,11 +454,11 @@ function ExecuteRule( /*$word*/ ) {
                     if ($there_is_a_match) {
                         //echo "Don't apply rule!<br>";
                         $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
-                        $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     } else {
                         $global_number_of_rules_applied++;
                         $_SESSION['rules_count'][$rules_pointer]++;
-                        $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     }
                 }
             
@@ -603,7 +605,7 @@ function PreProcessGlobalParserFunctions( $text ) {
                     $matching_section = $matches[0];
                     $esc_pattern = htmlspecialchars($pattern);
                     $esc_replacement = htmlspecialchars($replacement);
-                    $global_textparser_debug_string .= "<tr><td>(..)$matching_section(..)</td><td><b>R$rules_pointer</b> $esc_pattern <b>⇨</b> $esc_replacement</td><td>" . mb_strtoupper($temp_function) . "</td></tr>";
+                    if ($_SESSION['output_format'] === "debug") $global_textparser_debug_string .= "<tr><td>(..)$matching_section(..)</td><td><b>R$rules_pointer</b> $esc_pattern <b>⇨</b> $esc_replacement</td><td>" . mb_strtoupper($temp_function) . "</td></tr>";
                 }
                 $rules_pointer++;
             //$text = preg_replace("/ es ist /", " [XEX] ", $text);
@@ -648,12 +650,27 @@ function MetaParser( $text ) {          // $text is a single word!
     
     // this is a good place to lookup words!
     // after that branch to  std2prt oder stage4
-    list($get_standard, $get_print) = Lookuper($text); // corresponds to stage1 (dictionary)
-    //echo "dictionary (metaparser): $text std: $get_standard prt: $get_print<br>"; 
-    //echo "stage4: $rules_pointer_start_stage4<br>";
-    $safe_std = mb_strtoupper($get_standard, "UTF-8");
-    $safe_prt = mb_strtoupper($get_print, "UTF-8");
-    //echo "safe_std: $safe_std start: $rules_pointer_start_std2prt<br>";
+    $text_format = $_SESSION['original_text_format'];
+    if ($text_format === "normal") {   
+            // this is a good place to lookup words!
+            // after that branch to  std2prt oder stage4
+            list($get_standard, $get_print) = Lookuper($text); // corresponds to stage1 (dictionary)
+            //echo "dictionary (metaparser): $text std: $get_standard prt: $get_print<br>"; 
+            //echo "stage4: $rules_pointer_start_stage4<br>";
+            $safe_std = mb_strtoupper($get_standard, "UTF-8");
+            $safe_prt = mb_strtoupper($get_print, "UTF-8");
+            //echo "safe_std: $safe_std start: $rules_pointer_start_std2prt<br>";
+    } elseif ($text_format === "lng") { 
+            $safe_std = "";
+            $safe_prt = "";
+    } elseif ($text_format === "std") {
+            $safe_std = mb_strtoupper($text, "UTF-8");
+            $safe_prt = "";
+    } elseif ($text_format === "prt") {
+            $safe_std = ""; 
+            $safe_prt = mb_strtoupper($text, "UTF-8");
+    }
+        
     if  ($safe_prt !== "") return $safe_prt;    // no parsing at all
     elseif ($safe_std !== "") {
         // parse from std2stage4
@@ -666,7 +683,8 @@ function MetaParser( $text ) {          // $text is a single word!
     } else {
         // word is not in dictionary => parse from stage3 (= after dictionary) to stage4 (start) using word splitting (composed words)
         //echo "word is not in dictionary<br>";
-        // first check if parsing is (partially) needed
+        // first check if parsing is (partially) needed => is done above now
+        /*
         $text_format = $_SESSION['original_text_format'];
         if ($text_format === "prt") return $text; // no parsing
         elseif ($text_format === "std") { 
@@ -679,14 +697,17 @@ function MetaParser( $text ) {          // $text is a single word!
             $actual_model = $_SESSION['actual_model'];
             $prt_form = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
             return $prt;
-        } else { 
+        } else 
+        */ 
+        
+        //{ 
             // full parsing
-            $text = preg_replace( '/\s{2,}/', ' ', ltrim( rtrim( $text )));         // eliminate all superfluous spaces
+            $text = preg_replace( '/\s{2,}/', ' ', trim( $text ));         // eliminate all superfluous spaces
             $text1 = html_entity_decode( $text );    // do it here the hardcoded way
             $text2 = GetWordSetPreAndPostTags( $text1 );
         
-            $text2 = preg_replace('/»/', '"', $text2);      // not sure if this is done in stage1 ?!
-            $text2 = preg_replace('/«/', '"', $text2);
+            //$text2 = preg_replace('/»/', '"', $text2);      // not sure if this is done in stage1 ?!
+            //$text2 = preg_replace('/«/', '"', $text2);
         
             list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
            
@@ -695,6 +716,9 @@ function MetaParser( $text ) {          // $text is a single word!
         
             switch ($_SESSION['token_type']) {
                 case "shorthand": 
+                    
+                    if ($_SESSION['original_text_format'] !== "lng") {
+                    
                     //echo "shorthand: $text<br>";
                     $temp_word = $text;
                     $pos1 = mb_strpos($text, "\\", 0, "UTF-8");
@@ -708,8 +732,6 @@ function MetaParser( $text ) {          // $text is a single word!
                         $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], false, $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
                     } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
-                    // set lin_form
-                    $lin_form = $test;
                     // write debug info
                     $parameters = "";
                     if ($_SESSION['hyphenate_yesno']) $parameters .= "syllables ";
@@ -718,16 +740,29 @@ function MetaParser( $text ) {          // $text is a single word!
                         $parameters .= " / separate: " . $_SESSION['composed_words_separate'] . " glue: " . $_SESSION['composed_words_glue'];
                     }
                     if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
-                    $global_debug_string .= "LING (raw): $temp_word => $test $parameters<br>"; 
+                    $global_debug_string .= "LNG (raw): $temp_word => $test $parameters<br>"; 
                     // now "post"process LING result applying analyzer rules from header (still stage1)
-                    $test = PostProcessDataFromLinguisticalAnalyzer($test);
+                    $lin_form = PostProcessDataFromLinguisticalAnalyzer($test);
+                    // set lin_form
+                    //$lin_form = $test;
+                    //echo "lin_form: $lin_form<br>";
+                        
                     // write debug info of postprocessing: LING (post)
-                    $global_debug_string .= "LING (post): $test<br>";
+                    $global_debug_string .= "LNG (post): $lin_form<br>";
                     //echo "test: $test<br>";
                     // calculate
-                    $word = $test;
-                    // first do stage2: parse entire word from stage2-stage3
-                    //echo "start stage2: $rules_pointer_start_stage2<br>";
+                    $word = $lin_form;
+                    
+                    } else {
+                        $lin_form = $word;
+                        //echo "lin_form: $lin_form<br>";
+                        //$word = $lin_form; // start directly with stage2 (= no linguistical analysis)
+                    }
+                    
+                    if ($_SESSION['output_format'] === "meta_lng") return $lin_form; // only execute following if formats as std and prt are needed (performance gain)
+                
+                   // first do stage2: parse entire word from stage2-stage3
+                    //echo "start stage2: $rules_pointer_start_stage2 word: $word<br>";
                     $word = ParserChain( $word, $rules_pointer_start_stage2, $rules_pointer_start_stage3 );
                     //echo "result stage2: $word<br>";
                     ///////////////////////////////////////
@@ -745,9 +780,9 @@ function MetaParser( $text ) {          // $text is a single word!
                             //echo "test: $subword i: $i<br>";
                            // $separated_std_form = ""; // reset those global variables ... otherwhise parser will add them ... ???????
                            // $separated_prt_form = "";
-                   
+                            //echo "stage3: before: $subword<br>";
                             $output = ParserChain( $subword, $rules_pointer_start_stage3, $rules_pointer_start_stage4 );
-                            //echo "output: $output<br>";
+                            //echo "output (after): $output<br>";
                             //var_dump($subword_array);
                             //if ($i<count($subword_array)-1) 
                             $subword_array[$i] = $output;
@@ -814,7 +849,6 @@ function MetaParser( $text ) {          // $text is a single word!
                    
                         } else $output .= "\\$posttokens";
                     }
-                
                     return $output;
   
                     break;
@@ -832,7 +866,7 @@ function MetaParser( $text ) {          // $text is a single word!
 */
             }
             
-        }
+        //}
     }
 }
 

@@ -42,9 +42,9 @@
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
 		"prefixes_list" := "ge, zu, un, ver, mit, ent, auf, ab, an";
-		"stems_list" := "gangen";
+		"stems_list" := "gangen, fähr";
 		"suffixes_list" := "heit, hei-t, heits, keit, keiten, keits, lich, liche, lichen, liches";
-		"title_text" := "new prefixes";
+		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		//"([Ww])ie\|der" => "$1ie-der"; 
@@ -65,6 +65,7 @@
 		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
 		"(\|)er(\|)" => "{ER}"; // infix er
 		"[Vv]or\|r" => "{VOR}|[AR]";
+		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -214,6 +215,7 @@
 		"0U-" => {  /*h*/ 5,  0,  0,  0,  0,  0,  1,  "", /**/ "",  "",  "",  "",  0,  0.5,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0.5 }
 		"PSPACE" => {  /*h*/ 2,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  5,  0,  0, /**/ 2,  0,  0,  0,  1,  5,  2,  0 }
 		"~~" => {  /*h*/ 12.5,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  1,  5,  0,  0.5, /**/ 2.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 5,  9,  0,  0,  1,  0,  0,  0.5, /**/ 7.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 10,  9,  0,  0,  1,  0,  0,  0.5, /**/ 12.5,  10,  0,  0,  1,  0,  1,  0.5 }
+		"~" => {  /*h*/ 12.5,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  1,  5,  0,  0.5, /**/ 2.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 5,  9,  0,  0,  1,  0,  0,  0.5, /**/ 7.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 10,  9,  0,  0,  1,  0,  0,  0.5, /**/ 12.5,  10,  0,  0,  1,  0,  1,  0.5 }
 		"." => {  /*h*/ 2,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0.5,  0,  0,  1,  1,  5,  0,  0, /**/ 1,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 0,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  0,  0,  0,  1,  0,  1,  0.5 }
 		"," => {  /*h*/ 3,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 2,  -2,  0,  1,  1,  5,  0,  0, /**/ 3,  1,  0,  0,  1,  0,  1,  0.5 }
 		";" => {  /*h*/ 3,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 2.5,  4.5,  0,  1,  1,  5,  0,  0, /**/ 3,  5,  0,  0,  1,  0,  1,  0.5, /**/ 2.5,  5.5,  0,  0,  1,  0,  1,  0.5, /**/ 2,  5,  0,  0,  1,  0,  1,  0.5, /**/ 2.5,  4.5,  0,  0,  1,  0,  1,  0.5, /**/ 3,  1,  0,  1,  1,  5,  0,  0, /**/ 2,  -2,  0,  0,  1,  0,  1,  0.5 }
@@ -403,20 +405,20 @@
 	#EndSubSection(shifter)
 #EndSection(font)
 #BeginSection(rules)
-	#BeginSubSection(global)
+	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
+		//"(?<!\[)=" => "[#=#]\"; // in packer before (doesn't work because of inline option tags => choose another symbol for suffix boundary!)
 		"&hellip;" => "..."; // ellipsis
 		"…" => "...";
-		"–" => "-"; // blocks calculation in layouted mode
+		"–" => "[~~]"; // blocks calculation in layouted mode
  		" &ndash; " => " [~~] "; // Gedankenstrich
-		"&ndash;" => "-"; // blocks calculation in layouted mode
+		"&ndash;" => "="; // blocks calculation in layouted mode
 		"&raquote;" => "«"; 
 		"&laquote;" => "»";
 		"›" => "»";
 		"‹" => "«";
 		"ß" => "ss";
-		//"(?<!\[)=" => "[#=#]\"; // in packer before (doesn't work because of inline option tags => choose another symbol for suffix boundary!)
-	#EndSubSection(global)
+	#EndSubSection(global,#>stage0)
 	#BeginSubSection(helvetizer) // restructure parser: word functions before parser not possible
 		//"ß" => "ss";			// anymore => transfer helvetizer to global section (stage1)
 	#EndSubSection(helvetizer,#>stage2)
@@ -600,7 +602,7 @@
 	#BeginSubSection(shortener) 
 		"un-?ter" => "{UNTER}";
 		
-		"#[hk]ei-?t" => "{HEIT}";
+		"[#-]?[hk]?ei-?t" => "{HEIT}";
 		"#li-?ch" => "{H}";
 		"zu\+" => "{ZU}";
 		"ge\+" => "{GE}";
@@ -631,7 +633,7 @@
 		"^wer-?d" => "{WERD}";
 		"^wie$" => "{WI}";
 		"wird" => "{WIRD}";
-		"vor" => "{VOR}";
+		"vor(?!})" => "{VOR}";
 		"fort" => "{FORT}";
 		"eiht" => "eit";
 		"[Pp]lanet" => "[P@L][A][N][E][T]";
@@ -772,7 +774,7 @@
 		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"(^|\|)be(un|ur)" => "$1{BE}$2";
 		"^beu" => "b[EU]";
-		"^(an)?be(?!(tte?n?s?$)|i|rn)" => "$1{BE}";
+		"^(an)?be(?!(tte?n?s?$)|i|r-?n)" => "$1{BE}";
 		"^anti" => "{ANTI}";
 		"einander" => "einand{ER}";
 		"^(un)?aus(?!-?[st])" => "$1{AUS}";
@@ -1062,6 +1064,16 @@
 
 		
 	#EndSubSection(transcriptor)
+	#BeginSubSection(separator)
+		// separates two words in one
+		// there must be a possibility to disable this function manually (i.e. via input form)!
+
+		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
+		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
+		//"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
+		//"(\[&T\]\[VR\]-?)\[&T\]\[&E\]" => "$1[T]"; // can't do that for Winterthur (if not recognized as two words!)
+
+	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
 		// at this point, all characters are upper case
 		// some token combinations need to be rewritten
@@ -1072,10 +1084,7 @@
 		// 2nd step: rewrite upper case tokens if necessary  //
 		///////////////////////////////////////////////////////
 
-		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
-		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
-		"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
-
+		
 		//"\[(CH|LL)\]T" => "[$1][&T]";
 		"{VOR}\|?\[AR\]" => "[VORAR]";
 		"^{ER}\[AR\]" => "[0N-][#N][VR+AR]"; 

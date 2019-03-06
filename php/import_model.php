@@ -603,11 +603,15 @@ function ImportModelFromText($text) {
     //ImportSession(); // do that only when loading the page for the 1st time or when reset button is clicked (not whenever a calculation is made: user must have the possibility to override session variables!)
     ImportAnalyzer();
     //var_dump($analyzer);
-    ImportBase();   // data is written to global variable $imported_base (which corresponds to $steno_tokens_master)
-    ImportCombiner(); // idem to $imported_combiner
-    ImportShifter(); // idem to $imported_shifter
-    ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
-    
+    // genious: even slower if tokens are not loaded ... :) :) :)
+    //if (($_SESSION['output_format'] === "meta_lng") || ($_SESSION['output_format'] === "meta_std") || ($_SESSION['output_format'] === "meta_prt")) {
+    //    echo "don't load tokens (for performance reasons)<br>";
+    //} else {
+        ImportBase();   // data is written to global variable $imported_base (which corresponds to $steno_tokens_master)
+        ImportCombiner(); // idem to $imported_combiner
+        ImportShifter(); // idem to $imported_shifter
+        ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
+    //}
      // if stage3 and stage4 are not set => set them for compatibility
     $actual_model = $_SESSION['actual_model'];
     if ($rules_pointer_start_stage3 === null) $rules_pointer_start_stage3 = 0; // this is wrong: should point to "after global" (= stage1) ... but which variable is that?!?

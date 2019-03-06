@@ -434,7 +434,7 @@ function recursive_search($line, $row, $array) {
         //echo "that's a good start: word exists!<br>";
         if ($row === count($array[$line])-1) {
             //echo "reached end of line => return >" . $array[$line][$row][0] . "<<br>";
-            $hit = true;
+            //$hit = true;
             return $array[$line][$row][0];
         } else {
             $temp_row = $line+$row+1;

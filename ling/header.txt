@@ -42,9 +42,9 @@
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
 		"prefixes_list" := "ge, zu, un, ver, mit, ent, auf, ab, an";
-		"stems_list" := "gangen";
+		"stems_list" := "gangen, fähr";
 		"suffixes_list" := "heit, hei-t, heits, keit, keiten, keits, lich, liche, lichen, liches";
-		"title_text" := "new prefixes";
+		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		//"([Ww])ie\|der" => "$1ie-der"; 
@@ -65,5 +65,6 @@
 		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
 		"(\|)er(\|)" => "{ER}"; // infix er
 		"[Vv]or\|r" => "{VOR}|[AR]";
+		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
 	#EndSubSection(analyzer)
 #EndSection(header)

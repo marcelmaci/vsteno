@@ -1,18 +1,18 @@
 #BeginSection(rules)
-	#BeginSubSection(global)
+	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
+		//"(?<!\[)=" => "[#=#]\"; // in packer before (doesn't work because of inline option tags => choose another symbol for suffix boundary!)
 		"&hellip;" => "..."; // ellipsis
 		"…" => "...";
-		"–" => "-"; // blocks calculation in layouted mode
+		"–" => "[~~]"; // blocks calculation in layouted mode
  		" &ndash; " => " [~~] "; // Gedankenstrich
-		"&ndash;" => "-"; // blocks calculation in layouted mode
+		"&ndash;" => "="; // blocks calculation in layouted mode
 		"&raquote;" => "«"; 
 		"&laquote;" => "»";
 		"›" => "»";
 		"‹" => "«";
 		"ß" => "ss";
-		//"(?<!\[)=" => "[#=#]\"; // in packer before (doesn't work because of inline option tags => choose another symbol for suffix boundary!)
-	#EndSubSection(global)
+	#EndSubSection(global,#>stage0)
 	#BeginSubSection(helvetizer) // restructure parser: word functions before parser not possible
 		//"ß" => "ss";			// anymore => transfer helvetizer to global section (stage1)
 	#EndSubSection(helvetizer,#>stage2)
@@ -196,7 +196,7 @@
 	#BeginSubSection(shortener) 
 		"un-?ter" => "{UNTER}";
 		
-		"#[hk]ei-?t" => "{HEIT}";
+		"[#-]?[hk]?ei-?t" => "{HEIT}";
 		"#li-?ch" => "{H}";
 		"zu\+" => "{ZU}";
 		"ge\+" => "{GE}";
@@ -227,7 +227,7 @@
 		"^wer-?d" => "{WERD}";
 		"^wie$" => "{WI}";
 		"wird" => "{WIRD}";
-		"vor" => "{VOR}";
+		"vor(?!})" => "{VOR}";
 		"fort" => "{FORT}";
 		"eiht" => "eit";
 		"[Pp]lanet" => "[P@L][A][N][E][T]";
@@ -368,7 +368,7 @@
 		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"(^|\|)be(un|ur)" => "$1{BE}$2";
 		"^beu" => "b[EU]";
-		"^(an)?be(?!(tte?n?s?$)|i|rn)" => "$1{BE}";
+		"^(an)?be(?!(tte?n?s?$)|i|r-?n)" => "$1{BE}";
 		"^anti" => "{ANTI}";
 		"einander" => "einand{ER}";
 		"^(un)?aus(?!-?[st])" => "$1{AUS}";
@@ -658,6 +658,16 @@
 
 		
 	#EndSubSection(transcriptor)
+	#BeginSubSection(separator)
+		// separates two words in one
+		// there must be a possibility to disable this function manually (i.e. via input form)!
+
+		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
+		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
+		//"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
+		//"(\[&T\]\[VR\]-?)\[&T\]\[&E\]" => "$1[T]"; // can't do that for Winterthur (if not recognized as two words!)
+
+	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
 		// at this point, all characters are upper case
 		// some token combinations need to be rewritten
@@ -668,10 +678,7 @@
 		// 2nd step: rewrite upper case tokens if necessary  //
 		///////////////////////////////////////////////////////
 
-		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
-		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
-		"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
-
+		
 		//"\[(CH|LL)\]T" => "[$1][&T]";
 		"{VOR}\|?\[AR\]" => "[VORAR]";
 		"^{ER}\[AR\]" => "[0N-][#N][VR+AR]"; 

@@ -26,9 +26,10 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <tr><td>Text</td></tr>
 <tr><td>
 <input type="radio" name="text_format_metayesno" value="normal" <?php echo ($_SESSION['original_text_format'] === "normal") ? "checked" : "";?>> Langschrift 
-<input type="radio" name="text_format_metayesno" value="std" <?php echo ($_SESSION['original_text_format'] === "std") ? "checked" : "";?>> Metaform (STD)
-<input type="radio" name="text_format_metayesno" value="prt" <?php echo ($_SESSION['original_text_format'] === "prt") ? "checked" : "";?>> Metaform (PRT)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
+<input type="radio" name="text_format_metayesno" value="lng" <?php echo ($_SESSION['original_text_format'] === "lng") ? "checked" : "";?>> Meta (LNG) 
+<input type="radio" name="text_format_metayesno" value="std" <?php echo ($_SESSION['original_text_format'] === "std") ? "checked" : "";?>> Meta (STD)
+<input type="radio" name="text_format_metayesno" value="prt" <?php echo ($_SESSION['original_text_format'] === "prt") ? "checked" : "";?>> Meta (PRT)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
 <input type="radio" name="model" value="custom" <?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "checked" : "";?>> custom<br>
 
 <textarea id="original_text" name="original_text" rows="10" cols="100"><?php echo $_SESSION['original_text_content']; ?>
@@ -133,6 +134,7 @@ Fenster:
 <br>
 <input type="radio" name="output_format" value="inline" <?php echo ($_SESSION['output_format'] === "inline") ? "checked" : "";?>> Inline 
 (<input type="checkbox" name="output_text_tags" value="text_tags_yes" <?php echo ($_SESSION['output_texttagsyesno']) ? "checked" : "";?>> Tags)
+<input type="radio" name="output_format" value="meta_lng" <?php echo ($_SESSION['output_format'] === "meta_lng") ? "checked" : "";?>> LNG
 <input type="radio" name="output_format" value="meta_std" <?php echo ($_SESSION['output_format'] === "meta_std") ? "checked" : "";?>> STD
 <input type="radio" name="output_format" value="meta_prt" <?php echo ($_SESSION['output_format'] === "meta_prt") ? "checked" : "";?>> PRT
 <input type="radio" name="output_format" value="train" <?php echo ($_SESSION['output_format'] === "train") ? "checked" : "";?>> Training
