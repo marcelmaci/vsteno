@@ -36,9 +36,43 @@
 	#EndSubSection(filter)
 	#BeginSubSection(shortener)
 
-		"((?:-)(?:.*?))(er)(e?[rnms]?)?$" => "$1{-ER}$3"; // use - to detect preceeding syllable
+		"(-|\+)dem$" => "$1{DEM}";
+		
+		"^aus$" => "{AUS}";
+		"aus(\+|#)" => "{AUS}$1";
+		"#aus$" => "#{AUS}";
+
+
+		"#li-?ch" => "{LICH}";
+		"-li-?ch((-?st)?e[rnsm]?)?$" => "{LICH}$1";
+
+		"ent\+" => "{ANT}+";
+
+		"un-?te-?r" => "{UNTER}";
+		"{UNTER}-" => "{UNTER}+";
+
+		"un\+" => "{UN}+"; 
+
+		"^wie?-?der$" => "{WIDER}";
+		"wie?-?der\+" => "{WIDER}+";
+		"(#|\+)wie?-?der" => "$1{WIDER}";
+
+		"^in$" => "{IN}";
+		"^in(\+|#)" => "{IN}$1";
+		"(\+|#)in(\+|#)" => "$1{IN}$2";
+
+		"^sich$" => "{SICH}";
+
+		"^als$" => "{ALS}"; 
+		
+		"((?:-)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{-ER}$3"; // use - to detect preceeding syllable
+
+		"^es$" => "{ES}";
 
 		"zu(\+|-|\|)sam-men" => "{ZUSAMMEN}"; 
+
+		"ver(\+)" => "{VER}$1";
+		"ver(-)" => { "{VER}$1", "Ver-?si-?on" }; // can produce wrong results
 
 		"^all$" => "{ALL}";
 		"\+all$" => "+{ALL}";
@@ -48,9 +82,11 @@
 
 		"^so(\+)" => "{SO}$1";
 		"([#-])so$" => "$1{SO}";
-
+		"^so$" => "{SO}";
+		
 		"un-?ter" => "{UNTER}";
 		"^er\+" => "{ER}";
+		"a-?ber" => "a-b{-ER}"; // frequent word, so include it as a rule
 		
 		"(\+)sel-?b" => "$1{SELB}";
 		"^sel-?b" => "{SELB}";
@@ -59,10 +95,23 @@
 
 		"an\+" => "{AN}+";
 
+		"(-(?:.*?))en$" => "$1{EN}";
+		"(-(?:.*?))em$" => "$1{EM}";
+
+		"^was$" => "{WAS}";
+		"(\||#)was$" => "$1{WAS}";
+		
 		"[#-]?[hk]?ei-?t" => "{HEIT}";
+		
 		"#li-?ch" => "{H}";
-		"zu\+" => "{ZU}";
+		
+		"zu(\+|#)" => "{ZU}$1";
 		"zu$" => "{ZU}";
+		
+		"^auf$" => "{AUF}";
+		"auf\+" => "{AUF}+";
+		"(\+|\|)auf$" => "$1{AUF}";
+
 		"ge\+" => "{GE}";
 		"(^|\|)wo(\||#|$)" => "$1{WO}$2";
 		"wil$" => "WIL";
@@ -99,7 +148,11 @@
 		"^al-?l" => "{ALL}";
 		"(\[^a-z\])all" => "{$1ALL}";
 		"^auch$" => "{AUCH}";
+		
 		"bei(\+)" => "{BEI}$1";
+		"^bei$" => "{BEI}";
+		"(\+|#)bei$" => "$1{BEI}";
+		
 		"^dar\+" => "{DA@R}";
 		"dass?(?!t)" => "{DASS}";
 		"^dem" => "{DEM}";
@@ -128,8 +181,6 @@
 		"^nicht" => "{NICHT}";
 		"^sie$" => "{SI}";
 		"^[Ss]ind$" => "{SIND}";
-		"(?<!^)lich(s?t?e?[mn]?|ere?[mn]?|keit(en)?|es)?$" => { "{LICH}$1", "Pflicht(en)?" };
-		//"^(.*?)(k?ei-?t)(et?(re?)?[nms]?)?" => "$1{HEIT}$3";
 		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
 		"(eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
 		"([ie]?tät)(en)?$" => "{HEIT}$2";
@@ -138,49 +189,19 @@
 		"([Hh])inter" => "HN[&TVR]";
 		"^([Hh])ing$" => "$1I[NG]";
 		"^hin(?![dz])" => "{HIN}";
-		"tret" => "trEt";
-		"^gebe" => "Gebe";
-		"^gern" => "Gern";
-		"^erd" => "[0N-]Erd";
-		"^angab" => "aNgab";
-		"heraus" => "her{AUS}";
-		"rosen" => "roseN";
-		"^zur$" => "[Z]ur";
+		^zur$" => "[Z]ur";
 		"^uns(er.*)?$" => "u[NS]$1";
 		"(^|\|)({?des}?)?inter" => "$1$2{INTER}";
-		"^({?des}?)?[Ii]n(?!-?n)" => { "$1{IN}", "[Ii]ndien" };
-		"damit" => "{DA}{MIT}";
-		"davon" => "{DA}{VON}";
-		"dazu" => "{DA}{ZU}";
-		"da-?[Mm][Aa][Ll][Ss]" => "{DA}mals";
 		"ü-?ber" => "{ÜBER}";
-		"dieselb" => "{DI}{SELB}";
 		
 		"^der" => "{DER}";
-		"(^|\|)(((un)?(ver|be|über))|(gegen|neben|rück|fehl|ur|nach|vor|voll))?[ae]nt([^i])" => "$1$2{ANT}$7";
-		"^unent" => "{UN}{ANT}";
-		"^aufent" => "{AUF}{ANT}";
-		"^(ein|auf|bei|an|vor|ab)?zuer" => "$1{ZU}{ER}";
-		"^[Zz]uver" => "{ZU}{VER}";
-		"^(ein|auf|bei|an|vor|ab|aus|durch|dar|hervor|mit|vorher|nieder|zusammen)zu(?![mrc])" => "$1{ZU}";
-		"^([Zz])ur([aeiouäö])" => "{ZU}r$2";
-		"^([Nn])achzu" => "$1ach{ZU}";
-		"^[Gg]ea([bcdfghjklmnpqrstvx])" => "{GE}a$1";
-		"^[Bb]eur" => "{BE}{UR}";
-		"^[Bb]eun" => "{BE}{UN}";
-		"^[Rr]ückver" => "{RÜCK}{VER}";
-		"^[Rr]ücker" => "{RÜCK}{ER}";
-		"^[Rr]ück" => { "{RÜCK}", "[Rr]ücke" };
-		"^[Mm]itver" => "{M}{VER}";
-		"^([Ss]elb(st)?|[Mm]iss|[Kk]riminal|[Ee]in)?ver" => "$1{VER}";
-		
 		
 		
 		"(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}";
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
-		"[Ww]ie?-?der" => "{WIDER}"; // from stage2
-		//"(?<!^)([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)e-?t(e?|e(n|s)?)$" => { "$1{ET}$2", "[Rr]aket" };
-		"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => "{ET}";
+		//"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => "{ET}";
+		"(-(?:.*?))(e-?t)(e[nrsm])?" => "$1{ET}$3";
+
 		"erer([se]?[nm]?)$" => "{ER}{ER}$1";
 		"rr" => "[RR]";
 		"([Bb])ech" => "$1Ech";
@@ -195,7 +216,10 @@
 		"eu([aeou]|lich)" => "[EU][&E]$1";
 		"ei([aeou]|lich)" => "[EI][&E]$1";
 		"^([Aa])n([bfghklmnprswz][aeiouäöü])" => { "$1[N]$2", ".*[Aa]nker.*" };
-		"sch(a|ä)f-?t(en|e)?$" => "{SCHAFT}$2";
+		"#sch(a|ä)f-?t" => "#{SCHAFT}";
+		"^sch(a|ä)fts$" => "{SCHAFT}"; // hm ...
+				
+
 		"t(u|ü)m(ers?|in|innen|s)?$" => "{TUM}$2";
 		"^(ein|an|au[fs]|zu|ab|nieder|auseinander)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
@@ -206,24 +230,16 @@
 		"be\+" => "{BE}+";
 
 		"^anti" => "{ANTI}";
-		"einander" => "einand{ER}";
-		"^(un)?aus(?!-?[st])" => "$1{AUS}";
 		"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
 		"(^|\|)(in|un)?[k|c]on([^n])" => "$1$2{CON}$3";
-		"^(ur|an|un|zu|selb|selbst)?ver(?!((se?n?s?$)|(sion(en)?$)))" => "$1{VER}";
 		"i-?[o|ö]-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
 		"(^|\|)(un)?zer" => "$1$1{ZER}";
 		"(^|\|)rück(?=!ens?$)" => "$1{RÜCK}";
-		"^([Aa])llerun" => "{ALL}{ER}|{UN}";
-		"(^|\|)({?ver}?)?un(?!(te|iv))" => "$1$2{UN}";
-		"(^|\|)({?ver}?)?ur" => { "$1$2{UR}", "Uri" };
 		"eien" => "[EI][&E]{EN}";
 		"^([Ss]ch|[Zz])ien$" => "$1[I]n";
 		"(?<=pb)ien$" => "[&I]{EN}";
-		"(?<!(^[Ww])|i)en$" => { "{EN}", "Eugen", "[Hh]omogen" };
-		"(?<!^[Ww])em$" => "{EM}";
 		"je" => "[J][E]";
 		"iet" => "[I]t";
 		"([^c])(haft)$" => "$1{HAFT}";
@@ -231,9 +247,15 @@
 		"{ET}t" => "e[TT]";
 		
 		"da\+" => "{DA}+";
+		"^da$" => "{DA}";
+		"#da$" => "{DA}";
 
-		"\+(?!\])" => "-";	// reduce + and # to simple - (syllable) in order to simplify following rules
-		"(?<!\[)#" => "-";
+		"-(.*?)em$" => "-$1{EM}";
+		"-(.*?)en$" => "-$1{EN}";
+
+
+		//"\+(?!\])" => "-";	// reduce + and # to simple - (syllable) in order to simplify following rules
+		//"(?<!\[)#" => "-";	// not a good idea ...
 		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
 
 	#EndSubSection(shortener,#>stage4)
@@ -270,7 +292,7 @@
 		"äh([nrl])" => "ä$1";
 		"öh-(?={LICH})" => "ö[H]"; // conserve h
 		"öh-?(?![aeiouäöüAEIOU])" => "ö";
-		"ih(-)?([r|n])" => "i$1$2";
+		"ih(-)?([rnm])" => "i$1$2";
 		"äht" => "ät";
 		"t-?z" => "z"; // conserve syllable?
 		"ph" => "f";
@@ -296,9 +318,9 @@
 		"schr" => "[SCHR]";
 		"(?<!n)ndr" => "[ND@R]";
 		"sch" => "[SCH]";
-		"(?<!m)mpfr" => "[MPFR]";
-		"(?<!m)mpfl" => "[MPFL]";
-		"(?<!m)mpf" => "[MPF]";
+		"(?<!m)m-?p-?fr" => "[MPFR]";
+		"(?<!m)m-?p-?fl" => "[MPFL]";
+		"(?<!m)m-?p-?f" => "[MPF]";
 		"s-?t[\|-]?r" => "[STR]";
 		"(?<!n)nkr" => "[NKR]";
 		"(?<!n)nk-?l" => "[NKL]";
@@ -338,13 +360,13 @@
 		"xl" => "[XL]";
 		"yl" => "[YL]";
 		"zl" => "[ZL]";
-		"br" => "[BR]";
+		"b-?r" => "[BR]";
 		"cr" => "[CR]";
 		"d[-\|]?r" => "[DR]";
-		"fr" => "[FR]";
+		"f(-?|\+|\|)r" => "[FR]";
 		"gr" => "[GR]";
 		"kr" => "[KR]";
-		"lr" => "[LR]";
+		"l-?r" => "[LR]";
 		"mr" => "[MR]";
 		"n[-\|]?r" => "[NR]"; // n+r even if two separate words!
 		"pr" => "[PR]";
@@ -404,7 +426,7 @@
 		"([bcdfghjklmnpqrvwxyz])(-)?t" => "$1$2[&T]";
 		"({HIN})-?t" => "$1[&T]";
 		"\[(CH|SCH)\]-?t" => "[$1][&T]";
-		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|PP|RR|SS|PF)\]-?t" => "[$1][&T]";
+		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF)\]-?t" => "[$1][&T]";
 
 		
 		//"\[&T\]e$" => "[&T][&E][-E]"; // hopefully not necessary any more ...
@@ -445,7 +467,10 @@
 		"{HEIT}\[ET\]" => "{HEIT}[&E][ET]";
 		"\[ET3\/4\]e$" => "[ET3/4][&E][-E]";
 		"{HEIT}e" => "{HEIT}[&E][-E]"; 
-		"e$" => "[-E]";
+
+		"^e$" => "[0N-][E][&E]";
+		"e$" => "$1[-E]";
+		
 		"i($|\|)" => "[#N][&I]$1";
 		"o($|\|)" => "[#N][&O]$1";
 		"u$" => "[#NS][&U]";
@@ -512,7 +537,10 @@
 		// separates two words in one
 		// there must be a possibility to disable this function manually (i.e. via input form)!
 
+		//"(EITS\])\|" => "$1\\";
 		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
+		"\[&T\]\|" => "[&T]\\"; // write separatedly (2 words)
+
 		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
 		//"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
 		//"(\[&T\]\[VR\]-?)\[&T\]\[&E\]" => "$1[T]"; // can't do that for Winterthur (if not recognized as two words!)
