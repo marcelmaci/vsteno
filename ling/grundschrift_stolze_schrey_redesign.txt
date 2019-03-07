@@ -41,31 +41,31 @@
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
-		"prefixes_list" := "ge, zu, un, um, ver, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut";
+		"prefixes_list" := "ge, zu, un, be, bei, ein, um, ver, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der";
 		"stems_list" := "gangen, fähr";
-		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her"; // use non caputuring groups! (?:)
+		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
-		//"([Ww])ie\|der" => "$1ie-der"; 
+		"\+de$" => "-de";
+		"([WwNn])ie\|der" => "$1ie-der";
+		"\+lie-g" => "|lie-g"; // daniederliegen
 		"([Ss])ie\|ben" => "$1ie-ben";
-		//"([Ww])er\|de" => "$1er-de";
-		//"([Ww])er\|den" => "$1er-den";
-		"\|(de[snrm]?)" => "-$1"; // all the above+ in one formula
 		"zäh\|lun-gen$" => "zäh-lun-gen";
-		"\|de([nm])" => "-de$1"; // there's a hole bunch of that stuff ... :-/ 
 		"([Mm])it\|tag" => "$1it-tag";
 		"([Vv])iel\|leicht" => "$1iel-leicht";
 		"^([Pp])ro\|" => "$1ro-";
-		"\|er(?=($|\|))" => "-er";
 		"e\|ren$" => "e-ren";	// näheren
 		"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
 		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
-		//"(?<!#)li(-?)ch" => "#li$1ch";
 		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
 		"(\|)er(\|)" => "{ER}"; // infix er
-		//"([Vv]or)\|r" => "$1+r";
 		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
+
+		// mark prefixes that have not been recognized
+		"^([Vv])er-ant-" => "$1er+ant+";
+		"\|ver-ant-" => "|ver+ant+";
+
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -419,34 +419,11 @@
 		"‹" => "«";
 		"ß" => "ss";
 		"&szlig;" => "ss";
-	#EndSubSection(global,#>stage0)
-	#BeginSubSection(helvetizer) // restructure parser: word functions before parser not possible
-		//"ß" => "ss";			// anymore => transfer helvetizer to global section (stage1)
-	#EndSubSection(helvetizer,#>stage2)
+	#EndSubSection(global,#>stage1)
 	#BeginSubSection(corrector,#>stage2)
 		// some words are erroneously separated by LING
-		// e.g.: wie|der, sie|ben ...
+		// e.g.: Au|gen, wie|der, sie|ben ...
 		// correct that by remerging them here in stage2 (where words can be treated entirely before stage3)
-		// this is a little bit more elegant than before ... ;-)
-		// (best thing would be a LING module that does everything perfectly - but this is the next best option;-)
-		//"([Ww])ie\|der" => "$1ie-der"; 
-		//"([Ss])ie\|ben" => "$1ie-ben";
-		//"([Ww])er\|de" => "$1er-de";
-		//"([Ww])er\|den" => "$1er-den";
-		//"\|(de[snrm]?)" => "-$1"; // all the above+ in one formula
-		//"zäh\|lun-gen$" => "zäh-lun-gen";
-		//"\|de([nm])" => "-de$1"; // there's a hole bunch of that stuff ... :-/ 
-		//"([Mm])it\|tag" => "$1it-tag";
-		//"([Vv])iel\|leicht" => "$1iel-leicht";
-		//"^([Pp])ro\|" => "$1ro-";
-		//"\|er(?=($|\|))" => "-er";
-		//"e\|ren$" => "e-ren";	// näheren
-		//"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
-		//"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
-		//"(?<!#)li(-?)ch" => "#li$1ch";
-		//"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
-		//"(\|)er(\|)" => "{ER}"; // infix er
-		//"[Vv]or\|r" => "{VOR}|[AR]";
 	#EndSubSection(corrector,#>stage3)
 	#BeginSubSection(packer,#>stage3)
 		// some shorthand tokens use special chars (like -#+=/ etc.) in their definition
@@ -456,143 +433,6 @@
 		// later the transcriptor converts them back into normal characters
 		"(?<!\[)=" => "[=]\";
 	#EndSubSection(packer)
-	#BeginSubSection(trickster)
-		"([Dd])ahinter" => "{DA}[H][N][&TVR]";
-		//"Athen" => "[0N-][A][T][H][E][N]";
-		"([Dd])urchaus" => "{DURCH}{AUS}";
-		"([Jj])edem" => "$1e[D]{EM}";
-		"([Gg])eradem" => "$1era[D]{EM}";
-		"[Dd]asein" => "{DA}s[EI]n";
-		"^([Oo])dem" => "[0N-]$1[D]em";
-		"^([Ee])rheiter" => "{ER}h[EI]t{ER}";
-		"^([Bb])eb(en|s?t)" => "$1Eb$2";
-		"([Hh])ohn(.+)" => "$1ohn|$2";
-		"([Pp])astete" => "$1ast[E]te";
-		"^([Ff])röhlich" => "$1rö[H]lich";
-		"^([Rr])ohh?eit" => "$1o[H]{HEIT}";
-		"^([Uu])ngetüm" => "$1nge[T]ü[M]";
-		"^([Mm])isser" => "$1iss{ER}";
-		"([Dd])iskret" => "$1iskr[E][T]";
-		"([Uu])nbeirrt" => "{UN}{BE}irrt";
-		"([Rr])echtz" => "$1e[CH][&T][Z]";
-		"([Hh])aftbar" => "$1[A]ftbar";
-		"([Ww])eltall" => "$1elt{ALL}";
-		"([Jj])enseits" => "$1en[S]eits";
-		"([Zz])entr" => "$1[E]nt[R]";
-		"([Zz])ent" => "$1[E]nt";
-		"Variete" => "var[#N][&I][E]te";
-		"Arie" => "[0N-][A]r[#N][&I][-E]";
-		"([Ss])een" => "$1e[#W][&E]en";
-		"pfent" => "pf[E]nt[&E]";
-		"[fF]alsch" => "fAlsch";
-		"([MmLl])e[eh]r" => "$1[E]r";
-		"gebe" => "Gebe";
-		"\[qQ\]uai" => "qu[&A]i";
-		"\[mM\]eter" => "m[E][T]er";
-		"û" => "ü";
-		"é" => "e";
-		"bete" => "b[E]te";
-		"Hals" => "H[A]ls";
-		"^besten$" => "best{EN}";
-		"[aA]usspr" => "{AUS}spr";
-		"ausst" => "{AUS}st";
-		"[Mm]ante" => "m[A]nte";
-		"okument" => "okumEnt";
-		"beizu" => "{BEI}{ZU}";
-		"[Bb]eiz" => { "B[EI]z", "[Bb]eizeit" };
-		"[Ss]erviet" => "servIEt";
-		"schin" => "[SCH]in";
-		"[Aa]uster" => "[AU]ster";
-		"mitinhab" => "mit{IN}hab";
-		"([Bb])esser" => "$1Esser";
-		"([Bb])enzin" => "$1Enzin";
-		"([Zz])uch" => "z[U][CH]";
-		"([Zz])uck" => "z[U][CK]";
-		"([Gg])eld" => "$1[E]ld";
-		"[Ww]ieso" => "{WI}|[0N-][SS]";
-		"([Zz]u)dem" => "{Z}{EM}";
-		"([Ii]n)dem" => "{IN}{EM}";
-		"([Vv]or)dem" => "{VOR}{EM}";
-		"([tr])los$" => "$1[L]os";
-		"([aeiouäöü])ther$" => "$1t[H]er";
-
-		// the following come from the old $dictionary_table
-		// "(ab)use" trickster as temporary replacement for dictionary/database
-		// priority 1 = create good rules
-		// priority 2 = feed the database (but it should be as small as possible ... hence priority 1)
-
-		//"^Lebenspartner$" => "LEBE[NS]|PA[VR][&TN][#N][VR]"; 
-                "^Athen$" => "[0N-][A][T][H][E][N]";
-                "^Athens$" => "[0N-][A][T][H][E][NS]";
-                "^Zuge$" => "ZUG[-E]";
-                "^Anton$" => "[0N-][A][N][&T][&E][O][N]";
-                "^eins$" => "[0D-][EI][NS]";
-                "^Familie$" => "FAMIL[#N][&I][-E]";
-                "^Familien$" => "FAMIL[#N][&I][EN]";          
-             	"^[Uu]ngern$" => "[#NS][&U][G][E][VR]N";
-                "^[Ss]ofort$" => "[0N-][SS][FORT]";
-                "^[Ww]odurch$" => "[WO][DURCH]";
-                "^[Ww]ofür$" => "[WO][F]";
-                "^[Ww]ogegen$" => "[WO][GEGEN]";
-                "^[Ss]eitdem$" => "[0N-][S][HEIT][&E][EM]";
-                "^[Ww]ozu$" => "[WO][Z]";
-                "^[Ww]o$" => "[WO]";
-                "^[Ee]r$" => "[0N-][E][VR]";
-                "^[Ee]twas$" => "[0N-][#W][T][WAS]";
-                "^[Ee]twa$" => "[0N-][#W][T][W][A][&A]";
-                "^[Ww]ir$" => "[W]";
-                "^[Uu]nion$" => "[0N-][U][N][ION]";
-                "^[Dd]enen$" => "[0N-][EN][O][&E][0N-][EN]";
-                "^[Ww]as$" => "[WAS]";
-                "^[Gg]egend$" => "[G][E][G][E][ND]";
-                "^[Uu]mso$" => "[0N-][U][M][0N-][#N][SS]";
-                "^[Kk]arriere$" => "[K][A][RR][&I][E][VR][-E]";
-                "^[Bb]este$" => "[B][E][ST][-E]";
-                "^[Oo]der$" => "[0N-][O][D][#N][VR]";
-                "^[Ss]omit$" => "[0N-][#N][SS][#N][M]";
-                "^((Ü|ü)ber)?[Aa]ll$" => "$1[ALL]";
-                "^[Aa]llein$" => "[ALL][EI][N]";
-                "^[Aa]lleine$" => "[ALL][EI][N][-E]";
-                "^[Ii]hn$" => "[0D-][I][N]";
-                "^[Ii]hm$" => "[0D-][I][M]";
-                "^[Ss]o$" => "[0N-][SS]";
-                "^[Ss]ogar$" => "[0N-][#N][SS][G][A][VR]";
-                "^[Aa]lso$" => "[0N-][A][L][SS]";
-                "^[Bb]eret$" => "[B][E][VR][E][T]"; // béret doesn't work as key ...
-                "^[Ee]benso$" => "[0N-][E][B][E][N][SS]";
-                "^[Ss]ogleich$" => "[0N-][SS][G@L3][EI][^CH]";
-                //"sozusagen" => "{so}zsagen";
-                //"soweit" => "{so}w{heit}";
-                //"solange" => "{so}lange";
-                //"worauf" => "{wor}{auf}";
-                //"wonach" => "{wo}nach";
-                //"wohin" => "{wo}hn";
-                "^[Dd]araus$" => "[DA@R][AUS]";
-                "^[Dd]arin$" => "[DA@R][IN]";
-                "^(Ü|ü)beraus$" => "[0N-][#WS][&U][AUS]";
-                "^Schaft$" => "[SCH][A][F][&T]";
-                "^[Bb]eim$" => "[B][EI][M]";
-                "^[Dd]abei$" => "[DA][BEI]";
-                "^[Ss]albei$" => "[0N-][S][A][L][B][-EI]";
-                "^[Dd]essen$" => "[D][E][SS][EN]";
-                "^[Ee]s$" => "[0N-][#N][-E]";      
-                "^[Pp]forte$" => "[PF][O][R][&T][&E][-E]";
-                "^[Dd]afür$" => "[DA]F";
-                "^[Dd]agegen$" => "[DA][GEGEN]";
-                "^[Dd]ahin$" => "[DA]HN";
-                "^[Ii]nsofern$" => "[IN][SS][F][E][VR][N]";
-                "^[Ii]ns$" => "[0D-]I[NS]";
-                "^[Ss]ich$" => "[SICH]";
-                "^[Dd]aselbst$" => "[DA][SELB][ST]";
-                "^[Bb]evorzugen$" => "[B][VOR][Z]UG[EN]";
-                "^[Zz]ug$" => "ZUG";
-                "^[Dd]a$" => "[DA]";
-                "^Wien$" => "[W][&I][E][N]";
-                "^[Hh]ier$" => "[H][I][VR]";
-                "^[Bb]eissen$" => "[B][EI][SS][EN]";
-                "^[Bb]ellen$" => "[B][E][LL][EN]";
-                "^[Zz]u$" => "[Z]";
-	#EndSubSection(trickster,=>decapitalizer,!>filter)
 	#BeginSubSection(decapitalizer)
 		"([A-Z])" => "strtolower()";
 	#EndSubSection(decapitalizer)
@@ -600,24 +440,44 @@
 		"«" => "\[#Q#]";
 		"»" => "[#Q#][#5]\";
 	#EndSubSection(filter)
-	#BeginSubSection(shortener) 
+	#BeginSubSection(shortener)
+
+		"((?:-)(?:.*?))(er)(e?[rnms]?)?$" => "$1{-ER}$3"; // use - to detect preceeding syllable
+
+		"zu(\+|-|\|)sam-men" => "{ZUSAMMEN}"; 
+
+		"^all$" => "{ALL}";
+		"\+all$" => "+{ALL}";
+
+		"^wie([+#])" => "{WI}$1";
+		"([+#])wie$" => "+{WI}";
+
+		"^so(\+)" => "{SO}$1";
+		"([#-])so$" => "$1{SO}";
+
 		"un-?ter" => "{UNTER}";
-		"^er+" => "{ER}";
+		"^er\+" => "{ER}";
 		
+		"(\+)sel-?b" => "$1{SELB}";
+		"^sel-?b" => "{SELB}";
+
+		"ant\+" => "{ANT}+";
+
+		"an\+" => "{AN}+";
+
 		"[#-]?[hk]?ei-?t" => "{HEIT}";
 		"#li-?ch" => "{H}";
 		"zu\+" => "{ZU}";
+		"zu$" => "{ZU}";
 		"ge\+" => "{GE}";
-		"(^|\|)wo(\||$)" => "$1{WO}$2";
+		"(^|\|)wo(\||#|$)" => "$1{WO}$2";
 		"wil$" => "WIL";
 		"los(igkeit)?$" => "Los$1";
-		"^[Uu]nbeirr" => "{UN}{BE}irr";
 		"ei-en" => "[EI][&E]{EN}";
 		"i-e([mn])$" => { "[&I]-e$1", "schien" };
 		"ietät" => "[&I]{HEIT}";
 		"t(u|ü)mlich" => "{TUM}{LICH}";
 		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
-		"[Uu]nbeein" => "{UN}{BE}[EI]N";
 		"h?eit-?li-?ch" => "{HEIT}{LICH}";
 		"h?ei-?tig" => "{HEIT}ig";
 		"ei-?tens" => "{HEIT}ens";
@@ -627,7 +487,7 @@
 		"^und$" => "{UND}";
 		"usw\." => "{USW\.}";
 		"viel-?leicht" => "{VILLEICHT}";
-		"von" => { "{VON}", "Yvonne" };
+		"^von$" => "{VON}";
 		"^wa-?r(st|en)?$" => "{WAR}$1";
 		"^wär(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"wel-?ch" => "{WELCH}";
@@ -638,46 +498,18 @@
 		"vor(?!})" => "{VOR}";
 		"fort" => "{FORT}";
 		"eiht" => "eit";
-		"[Pp]lanet" => "[P@L][A][N][E][T]";
-		"etektiv" => "[E]Tektiv";
-		"[Zz]u-?sam-?men" => "{ZUSAMMEN}";
-		"nieder" => "nied{ER}";
-		"f(o|ö)rder" => "f$1rd{ER}";
-		"^unange" => "{UN}an{GE}";
-		"^unt([^e])" => "{UN}t$1";
-		"^(dar|wor|her|hin|hier)?auf" => "$1{AUF}";
 		"(?<!sc)haft(e|en|es)?" => "{HAFT}$1";
 		"ge-?gen" => "{GEGEN}";
-		"zum" => "Zum";
-		"geheim" => "{GE}heim";
-		"etz" => "ez";
-		"^woher" => "{WO}her";
 		"ndwo$" => "nd{WO}";
-		"trotzdem" => "trotz{DEM}";
-		"(s|m)ehr" => "$1Er";
-		"^beid(e[n|r|s]?)" => "[B]eid$1";
 		"(?<!f)all(e[n|m|s]?)$" => "{ALL}$1";
 		"^al-?l" => "{ALL}";
-		"mal(s)" => "MAL$1";
-		"^[Aa]ls$" => "{ALS}";
-		"^zurückzu" => "{ZURÜCK}{ZU}";
-		"zurück" => { "{ZURÜCK}", "[Vv]orzurück*" };
 		"(\[^a-z\])all" => "{$1ALL}";
 		"^auch$" => "{AUCH}";
-		"^aussen" => "au[SS]en";
-		"^ausser" => "au[SS]er";
-		"^auss([aeiou])" => "{AUS}s$1";
-		"bei(nahe|zeit(en)?)" => "{BEI}$1";
-		"bein" => "[B][EI][N]";
-		"^darf" => "[D]arf";
-		"^dar" => "{DA@R}";
-		"dast(.+)" => "{DA}st$1";
-		"dasselb" => "{DASS}{SELB}";
+		"bei(\+)" => "{BEI}$1";
+		"^dar\+" => "{DA@R}";
 		"dass?(?!t)" => "{DASS}";
 		"^dem" => "{DEM}";
-		"(?<!n)(nach|zu)?dem$" => { "$1{DEM}", "Odem" };
 		"^denn" => "de[NN]";
-		"[Dd]en-?k" => "de[NK]"; 
 		"^den$" => "{DEN}";
 		"^den-" => "{DEN}";
 		"^de-nen" => "{DEN}[O][&E]{EN}"; // probably the only case where {EN} can follow {DEN} => add &E here directly
@@ -707,7 +539,6 @@
 		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
 		"(eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
 		"([ie]?tät)(en)?$" => "{HEIT}$2";
-		"bei(?!l)" => "{BEI}";
 		"geh" => "Geh";
 		"^([Mm])iss" => "$1i[SS]";
 		"([Hh])inter" => "HN[&TVR]";
@@ -732,14 +563,12 @@
 		"dieselb" => "{DI}{SELB}";
 		
 		"^der" => "{DER}";
-		"(?<!w)e-?r(e[mns]?)?$" => "{-ER}$1";
 		"(^|\|)(((un)?(ver|be|über))|(gegen|neben|rück|fehl|ur|nach|vor|voll))?[ae]nt([^i])" => "$1$2{ANT}$7";
 		"^unent" => "{UN}{ANT}";
 		"^aufent" => "{AUF}{ANT}";
 		"^(ein|auf|bei|an|vor|ab)?zuer" => "$1{ZU}{ER}";
 		"^[Zz]uver" => "{ZU}{VER}";
 		"^(ein|auf|bei|an|vor|ab|aus|durch|dar|hervor|mit|vorher|nieder|zusammen)zu(?![mrc])" => "$1{ZU}";
-		"^[Zz]u(?![mrc])" => { "$1{ZU}", "Zuoz" };
 		"^([Zz])ur([aeiouäö])" => "{ZU}r$2";
 		"^([Nn])achzu" => "$1ach{ZU}";
 		"^[Gg]ea([bcdfghjklmnpqrstvx])" => "{GE}a$1";
@@ -750,11 +579,14 @@
 		"^[Rr]ück" => { "{RÜCK}", "[Rr]ücke" };
 		"^[Mm]itver" => "{M}{VER}";
 		"^([Ss]elb(st)?|[Mm]iss|[Kk]riminal|[Ee]in)?ver" => "$1{VER}";
-		"selb" => "{SELB}";
+		
+		
+		
 		"(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}";
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
 		"[Ww]ie?-?der" => "{WIDER}"; // from stage2
-		"(?<!^)([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)e-?t(e?|e(n|s)?)$" => { "$1{ET}$2", "[Rr]aket" };
+		//"(?<!^)([AEIOUaeiouäöü\]+[bcdfghjklmnpqrstvwxyz]*)e-?t(e?|e(n|s)?)$" => { "$1{ET}$2", "[Rr]aket" };
+		"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => "{ET}";
 		"erer([se]?[nm]?)$" => "{ER}{ER}$1";
 		"rr" => "[RR]";
 		"([Bb])ech" => "$1Ech";
@@ -765,7 +597,6 @@
 		"(?<!sc)([Hh])all" => "[$1]a[LL]";
 		"(?<![Aa])e([ao])" => "[#W][&E]$1";
 		"ei-?([aeou])" => "[EI][&E]$1";
-		"(?<!i)er(?=(t(e[nmrs]?)?)?$)" => "{ER}";
 		
 		"eu([aeou]|lich)" => "[EU][&E]$1";
 		"ei([aeou]|lich)" => "[EI][&E]$1";
@@ -776,7 +607,10 @@
 		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"(^|\|)be(un|ur)" => "$1{BE}$2";
 		"^beu" => "b[EU]";
-		"^(an)?be(?!(tte?n?s?$)|i|r-?n)" => "$1{BE}";
+		//"^(an)?be(?!(tte?n?s?$)|i|r-?n)" => "$1{BE}";
+
+		"be\+" => "{BE}+";
+
 		"^anti" => "{ANTI}";
 		"einander" => "einand{ER}";
 		"^(un)?aus(?!-?[st])" => "$1{AUS}";
@@ -801,9 +635,17 @@
 		"([^c])(haft)$" => "$1{HAFT}";
 		"{ANT}{LICH}" => "en{TLICH}";
 		"{ET}t" => "e[TT]";
+		
+		"da\+" => "{DA}+";
+
+		"\+(?!\])" => "-";	// reduce + and # to simple - (syllable) in order to simplify following rules
+		"(?<!\[)#" => "-";
+		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
+
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(normalizer,#>stage4)
-		
+		"û" => "ü";
+		"é" => "e";
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
 		"{EM}(\||\\)" => "EM$1";
 
@@ -841,7 +683,10 @@
 		"ß" => "ss";
 		"üh(-)?([lr])" => "ü$1$2";
 		"uhr" => "ur";
-		"ie" => "i";
+		
+		"ie" => { "i", "fa-?mi-?li-?en?" }; // list with exceptions
+		"ie" => "i-e"; // separation (2 syllables)
+
 		"ühr" => "ür";
 		"\(" => "";
 		"\)" => "";
@@ -945,6 +790,9 @@
 		// depending on context: insert directly printable    //
 		// tokens wherever necessary
 		////////////////////////////////////////////////////////
+
+		"i^" => "[&I]";
+		"i(\||\\)" => "[&I]$1";
 
 		// initial groups
 		"^o" => "[0N-][O]";
@@ -1267,6 +1115,18 @@
 		"\[EU\]-?{LICH}" => "[EU][&E]{LICH}"; 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
+
+		"^{AN}" => "[0N-]AN";
+		"{AN}" => "AN";
+		
+		"{WI}(-)?(.?)" => "[W][/I]\\$2";
+
+		"^{SO}" => "[0n-][SS]";
+		"(\||\\){SO}" => "$1[0n-][SS]";
+		"{SO}$" => "[SS]";
+		
+		"}{DEM}" => "}[EM]";
+
 		// trickier ones
 		"\[&T\]{ER}" => "[&T][VR]";  // hopefully better this way
 		"\[&T\]{ALL}" => "{&TALL}";
@@ -1280,7 +1140,7 @@
 
 		//"{VOR}r" => "[VOR+AR]";
 		//"{ER}r" => "[VR+AR]";
-		"{DEM}n" => "[^DEM]N";
+		"{DEM}(-?)N" => "[^DEM]$1N";
 		"{DE(M|N)}j" => "[^^DE$1]J";
 		"{DE(M|N)}\[j\]" => "[^^DE$1][J]";
 		"{DE(M|N)}g" => "[^^DE$1]G";
@@ -1356,7 +1216,6 @@
 		"\[&T\]{EN}$" => "[&T][&E][EN]";
 		"\[&T\]{EM}$" => "[&T][&E][EM]";
 		"\[&T\]\[#N\]\[VR\]$" => "[&T][VR]";
-		"{-ER}" => "[VR]";
 		"{USW}" => "[A][&U][SS]";
 		"{USF}" => "[A][&U][SS][FORT]";
 		"{GEHABT}" => "[G][&T]";

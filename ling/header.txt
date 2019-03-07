@@ -41,30 +41,30 @@
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
-		"prefixes_list" := "ge, zu, un, um, ver, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut";
+		"prefixes_list" := "ge, zu, un, be, bei, ein, um, ver, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der";
 		"stems_list" := "gangen, fähr";
-		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her"; // use non caputuring groups! (?:)
+		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
-		//"([Ww])ie\|der" => "$1ie-der"; 
+		"\+de$" => "-de";
+		"([WwNn])ie\|der" => "$1ie-der";
+		"\+lie-g" => "|lie-g"; // daniederliegen
 		"([Ss])ie\|ben" => "$1ie-ben";
-		//"([Ww])er\|de" => "$1er-de";
-		//"([Ww])er\|den" => "$1er-den";
-		"\|(de[snrm]?)" => "-$1"; // all the above+ in one formula
 		"zäh\|lun-gen$" => "zäh-lun-gen";
-		"\|de([nm])" => "-de$1"; // there's a hole bunch of that stuff ... :-/ 
 		"([Mm])it\|tag" => "$1it-tag";
 		"([Vv])iel\|leicht" => "$1iel-leicht";
 		"^([Pp])ro\|" => "$1ro-";
-		"\|er(?=($|\|))" => "-er";
 		"e\|ren$" => "e-ren";	// näheren
 		"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
 		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
-		//"(?<!#)li(-?)ch" => "#li$1ch";
 		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
 		"(\|)er(\|)" => "{ER}"; // infix er
-		//"([Vv]or)\|r" => "$1+r";
 		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
+
+		// mark prefixes that have not been recognized
+		"^([Vv])er-ant-" => "$1er+ant+";
+		"\|ver-ant-" => "|ver+ant+";
+
 	#EndSubSection(analyzer)
 #EndSection(header)
