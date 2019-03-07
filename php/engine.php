@@ -1806,7 +1806,7 @@ function CalculateInlineLNG($text_array) {
         $result_after_last_rule = $bare_word;
         //echo "bare_word: $bare_word SESSION(original_text_format): " . $_SESSION['original_text_format'] . "<br>";
         if (mb_strlen($bare_word)>0) {
-            $nil = MetaParser( $bare_word );
+            $lin_form = MetaParser( $bare_word );
             $lin_form = $pretokens . $lin_form . $posttokens;
             //echo "nil: " . htmlspecialchars($nil) . "<br>";
             //echo "lin_form: $lin_form<br>";
@@ -1825,7 +1825,8 @@ function CalculateInlineLNG($text_array) {
 }
 
 function NormalText2SVG( $text ) {
-
+    global $cached_results;
+    
     $text = PreProcessNormalText( $text );
     // first apply rules to whole text (if there are any)
     //echo "preprocess (=stage1)<br>";
@@ -1833,7 +1834,9 @@ function NormalText2SVG( $text ) {
     //echo "preprocess (=stage1) finished<br>";
     $text_array = PostProcessTextArray(explode( " ", $text));
     //echo "\nText aus Normaltext2svg()<br>$text<br>\n";
-    
+    prepare_optimized_cache_array($text);
+    //var_dump($cached_results);
+
     switch ($_SESSION['output_format']) {
             case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;
             case "train" : $svg = CalculateTrainingSVG( $text_array ); break;
@@ -1991,4 +1994,5 @@ function CreateShiftedTokens() {
     global $shifter_table;
     foreach ($shifter_table as $entry ) { /*var_dump($entry);*/ TokenShifter( $entry[0], $entry[1], $entry[2], $entry[3], $entry[4], $entry[5] );}
 }
+
 ?>

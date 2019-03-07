@@ -186,6 +186,9 @@ for ($i=0; $i<count($rules[$actual_model]); $i++) $_SESSION['rules_count'][$i] =
 //$end = microtime(true);
 //$delta = $end - $start;
 //echo "performance:<br>start: $start<br>end: $end<br>difference: $delta<br>";
+//echo "cache size: " . count($cached_results) . "<br>";
+//var_dump($cached_results);
+
 //var_dump($_SESSION['rules_count']);
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();

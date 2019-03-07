@@ -32,6 +32,32 @@ $act_word = "";
 $word_at_beginning_of_function = "";
 $actual_function = "";
 
+function prepare_optimized_cache_array($text) {
+    global $cached_results;
+    $text_array = explode(" ", $text);
+    foreach ($text_array as $word) {
+        //echo "word: $word<br>";
+        if (preg_match("/<.*?>/", $word) === 1) {} // don't cache html-tags
+        else {
+            if (isset($cached_results[$word])) $cached_results[$word]++;     // count number of ocurrencies
+            else $cached_results[$word] = 0;
+        }
+    }
+    //echo "prepared temp: <br>";
+    //var_dump($cached_results);
+    //echo "<br>end<br>";
+    foreach ($cached_results as $word => $value) {
+        //echo "word = $word<br>";
+        if ($value === 0) unset($cached_results[$word]);  // don't create entry: only 1 occurrence (no worth caching)
+        else {
+            //echo "prepare >$word< for caching<br>";
+            $cached_results[$word] = false; // prepare for caching: set entry to false (will be replaced by parsing result)
+        }
+    }
+    //echo "prepared cached_results: <br>";
+    //var_dump($cached_results);
+    //echo "<br>end<br>";
+}
 
 function replace_all( $pattern, $replacement, $string ) {
     do {
@@ -647,6 +673,26 @@ function MetaParser( $text ) {          // $text is a single word!
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
     global $safe_std;       // this global variable comes from database (in purgatorium1.php)
     global $last_pretoken_list, $last_posttoken_list, $rules_pointer_start_stage4, $rules_pointer_start_stage3, $rules_pointer_start_stage2, $rules_pointer_start_std2prt;
+    global $cached_results;
+    
+    //echo "processing: $text => ";
+    // check if word has been cached
+    //echo "isset: " . isset($cached_results[$text]) . " value: " . $cached_results[$text] . " ";
+    
+    
+    if ((isset($cached_results[$text])) && ($cached_results[$text] !== false)){
+        //echo "<b>get cached: " . $cached_results[$text] . "</b><br>";
+        // due to the global variables used throughout parser and engine, these must be set accordingly to get correct results ...
+        switch ($_SESSION['output_format']) {
+            case "meta_lng" : $lin_form = $cached_results[$text]; break;
+            case "meta_std" : $std_form = $cached_results[$text]; $pretokens = ""; $posttokens = ""; $last_pretoken_list = ""; $last_posttoken_list = ""; $combined_pretags = ""; $combined_posttags = ""; 
+                            break;
+            case "meta_prt" : $prt_form = $cached_results[$text]; $pretokens = ""; $posttokens = ""; $last_pretoken_list = ""; $last_posttoken_list = ""; $combined_pretags = ""; $combined_posttags = ""; 
+                            break;
+        }
+        return $cached_results[$text];
+    }
+    
     
     // this is a good place to lookup words!
     // after that branch to  std2prt oder stage4
@@ -759,7 +805,13 @@ function MetaParser( $text ) {          // $text is a single word!
                         //$word = $lin_form; // start directly with stage2 (= no linguistical analysis)
                     }
                     
-                    if ($_SESSION['output_format'] === "meta_lng") return $lin_form; // only execute following if formats as std and prt are needed (performance gain)
+                    
+                    if ($_SESSION['output_format'] === "meta_lng") {
+                        //echo "cache: $lin_form<br>"; 
+                        if (isset($cached_results[$text])) $cached_results[$text] = $lin_form;
+                        return $lin_form; // only execute following if formats as std and prt are needed (performance gain)
+                    }
+                
                 
                    // first do stage2: parse entire word from stage2-stage3
                     //echo "start stage2: $rules_pointer_start_stage2 word: $word<br>";
@@ -849,6 +901,8 @@ function MetaParser( $text ) {          // $text is a single word!
                    
                         } else $output .= "\\$posttokens";
                     }
+                    // cache result
+                    if (isset($cached_results[$text])) $cached_results[$text] = $output;
                     return $output;
   
                     break;
