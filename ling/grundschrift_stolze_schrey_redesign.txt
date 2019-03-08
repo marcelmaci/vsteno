@@ -42,7 +42,7 @@
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?";
-		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden";
+		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?)"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
@@ -80,6 +80,16 @@
 		"zu-dem" => "zu+dem";
 		"^([Gg]e)[-+]?(gen)\|" => "$1-$2+";
 		"^(Ü|ü)(-?)ber-" => "$1$2ber+"; 
+		"([Bb]e)-?(rei-?t)" => "$1+$2";
+		"([Uu]r)-?(teil)" => "|$1+teil"; 	// isn't recognized because 2nd word starts with vowel
+		"([Jj]e)\|?(de)" => "$1-$2";
+		"([Bb]e)-(son-de)" => "$1+$2";
+		"([Ee]r)-(f[auie])" => "$1+$2";  // c'est osé ...
+		"([Ee]r)-(kl(?:[aeiou]|ä))" => "$1+$2";
+		"([Gg]e)-(n(?:u|ü))" => "$1+$2";
+		
+		"ungs-an" => "ungs|an"; // terrible "hacks" ... :-)
+		"\|an-" => "|an+";
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -427,6 +437,8 @@
 		"ZW" => { "&EITZW", 18, 30, 0, 1 }
 		"@L3" => { "&T@L3", 4, 15, 0, 1.5 }
 		"@R" => { "&T@R", 4, 15, 0, 1.5 }
+		"@L3" => { "&EIT@L3", 18, 15, 0, 1.5 }
+		"@R" => { "&EIT@R", 18, 15, 0, 1.5 }
 	#EndSubSection(shifter)
 #EndSection(font)
 #BeginSection(rules)
@@ -458,19 +470,24 @@
 	#BeginSubSection(acronymator)
 		// filter marker #acronym# out again
 		"#acronym#" => "";
-		"([A-Z]|Ä|Ö|Ü)" => "strtolower()";
-		"(?<!\[)([a-z]|ä|ö|ü)" => "[$1]";
-		"\[a\]" => "[A][&A]";
-		"\[e\]" => "[E][&E]";
-		"\[i\]" => "[E][&I]";
-		"\[o\]" => "[E][&O]";
-		"\[u\]" => "[E][&U]";
-		"\[ä\]" => "[E][&A]";
-		"\[ö\]" => "[E][&O]";
-		"\[ü\]" => "[E][&U]";
-		"^\[E\]" => "[0N-][E]";  // not sure if that should be done here
+		//"([A-Z]|Ä|Ö|Ü)" => "strtolower()";
+		// only transform upper case of potential 2nd word (suppose acronym is 1st word ...)
+		"(=(?:[A-Z]|Ä|Ö|Ü))" => "strtolower()";
+		"(?<!\|)=" => "|=\\"; // mark word as 2 words
+		"(?<!\[)=" => "[=]";	// necessary because of packer
+		// now only transform upper case words (from acronym)
+		"(?<!\[)([A-Z]|Ä|Ö|Ü)" => "[$1]";
+		"\[A\]" => "[#NS][&A]";
+		"\[E\]" => "[E][&E]";
+		"\[I\]" => "[#N][&I]";
+		"\[O\]" => "[#N][&O]";
+		"\[U\]" => "[#NS][&U]";
+		"\[Ä\]" => "[#WS][&A]";
+		"\[Ö\]" => "[E][&O]";
+		"\[Ü\]" => "[#WS][&U]";
+		//"^\[E\]" => "[0N-][E]";  // not sure if that should be done here
 		"^(\[[ns]\])" => "[0N-]$1"; // idem
-		"([a-z])" => "strtoupper()";
+		//"([a-z])" => "strtoupper()";  // leave other tokens as untreated (will be processed normally)
 	#EndSubSection(acronymater)
 	#BeginSubSection(packer)
 		// filter out all markes from acronymator
@@ -492,6 +509,7 @@
 	#EndSubSection(filter)
 	#BeginSubSection(shortener)
 
+		"(i-)?tä-?t" => "{HEIT}";
 		"ge-?gen" => "{GEGEN}";
 		
 		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
@@ -582,7 +600,9 @@
 		"(^|\|)wo(\||#|$)" => "$1{WO}$2";
 		"wil$" => "WIL";
 		"los(igkeit)?$" => "Los$1";
-		"ei-en" => "[EI][&E]{EN}";
+		"ei-?en" => "[EI][&E]{EN}";
+		"ei-?{EN}" => "[EI][&E]{EN}";
+		
 		"i-e([mn])$" => { "[&I]-e$1", "schien" };
 		"ietät" => "[&I]{HEIT}";
 		"t(u|ü)mlich" => "{TUM}{LICH}";
@@ -759,6 +779,8 @@
 		"ph" => "f";
 		"ß" => "ss";
 		"üh(-)?([lr])" => "ü$1$2";
+		"([aeiou]|ä|ö|ü)h(#|-|\+)(bar|sam|ling|sal|nis)" => "$1$2$3";  // h entfällt vor ungekürzten Nachsilben 
+
 		"uhr" => "ur";
 		
 		"ie" => { "i", "fa-?mi-?li-?en?" }; // list with exceptions
@@ -816,7 +838,7 @@
 		"^eins" => "[EI][N]s";
 		"h[-\|+]?r" => "[HR]";
 		"sp" => "[SP]";
-		"n-?s" => "[NS]";
+		"(?<!#)n-?s" => "[NS]";
 		"b-?l" => "[BL]";
 		"c-?l" => "[CL]";
 		"d-?l" => "[DL]";
@@ -909,7 +931,12 @@
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TL\]" => "$1$2[&T@L3]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TR\]" => "$1$2[&T@R]";
 
-		
+		// heit + l/r
+		"{HEIT}-?l" => "[&EIT@L3]";
+		"{HEIT}-?r" => "[&EIT@R]";
+
+
+
 		//"\[&T\]e$" => "[&T][&E][-E]"; // hopefully not necessary any more ...
 		"\[&T\]er" => "[&T][VR]";
 		"\[&T\]{EN}$" => "[&T][&E][EN]";
@@ -928,7 +955,7 @@
 		"\[&T\]\[?o\]?$" => "[&T&O]";
 		"\[&T\]o$" => "[&T][&E]O";
 		"\[&T\]u([aeiouäöü])" => "[A][&T&U]$1";
-		"\[&T\]u" => "[&T][&E]U";
+		//"\[&T\]" => "[&T][&E]U";
 		"\[&T\]\[?i\]?$" => "[&T&I]";
 		"\[&T\]i" => "[&T][&E]I";
 		"erer$" => "[VR][#N][VR]";
@@ -1025,6 +1052,10 @@
 		"(?<![&-AEIOU])\[?([AEIOU])\]?$" => "[$1][&$1]";
 		"^([NS])" => "[0N-][$1]";
 		"^\[([NS])\]" => "[0N-][$1]";
+		"(?<!&)([AEIOU]){HEIT}" => "[&$1]{HEIT}";
+		"^([{\[]&?EIT)" => "[0N-]$1"
+		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
+		"\\Ö" => "[0N-][Ö]"; 
 
 	#EndSection(completor)
 	#BeginSubSection(separator)
@@ -1034,10 +1065,13 @@
 		//"(EITS\])\|" => "$1\\";
 		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
 		"\[&T\]\|" => "[&T]\\"; // write separatedly (2 words)
+		"{HEIT}\|" => "{HEIT}\\"; // write separatedly (2 words)
+
 
 		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
 		//"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
 		//"(\[&T\]\[VR\]-?)\[&T\]\[&E\]" => "$1[T]"; // can't do that for Winterthur (if not recognized as two words!)
+		"\\{ÜBER}" => "\\[0N-]{ÜBER}"; // needs dummy token if separated
 
 	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
@@ -1050,6 +1084,9 @@
 		// 2nd step: rewrite upper case tokens if necessary  //
 		///////////////////////////////////////////////////////
 
+		// correct position for &T
+		// 1- und 2-stufige Zeichen: [&T-1]
+		"\[&T\]([\#\-\+])?([BCDFGHJKLMPTVWXY]|\[(?:ST|NK|NG|NS|MPF|PP|TT|CK|FF)\])" => "[&T-1]$1$2";
 		
 		//"\[(CH|LL)\]T" => "[$1][&T]";
 		"{VOR}(\||\+)?\[AR\]" => "[VORAR]";
