@@ -41,7 +41,7 @@
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
-		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ver, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der";
+		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?";
 		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?)"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
@@ -50,6 +50,8 @@
 		"ebe(-?)n" => "e-be$1n";  // bug in phpSyllable: eben is not hyphenated!?
 		"oder" => "o-der"; 	// same ...
 		"^([Nn])eu\|e" => "$1eu-e";
+
+		"in-ter-" => "in-ter+";
 
 		"da-ma(-?)l" => "da+ma$1l";
 		"un(-?|\||\+)te(-?)r" => "un-te$2r"; 
@@ -73,7 +75,11 @@
 		// mark prefixes that have not been recognized
 		"^([Vv])er-ant-" => "$1er+ant+";
 		"\|ver-ant-" => "|ver+ant+";
+
 		"in-dem" => "in+dem";
+		"zu-dem" => "zu+dem";
+		"^([Gg]e)[-+]?(gen)\|" => "$1-$2+";
+		"^(Ü|ü)(-?)ber-" => "$1$2ber+"; 
 
 	#EndSubSection(analyzer)
 #EndSection(header)
