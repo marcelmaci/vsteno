@@ -756,7 +756,8 @@ function MetaParser( $text ) {          // $text is a single word!
             //$text2 = preg_replace('/«/', '"', $text2);
         
             list( $pretokens, $word, $posttokens ) = GetPreAndPostTokens( $text2 );
-           
+            //echo "word: $word pretokens: $pretokens posttokens: $posttokens<br>";
+            
             $last_pretoken_list = $pretokens;
             $last_posttoken_list = $posttokens;
         

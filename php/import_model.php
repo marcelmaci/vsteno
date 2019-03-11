@@ -417,6 +417,7 @@ function ImportRulesFromGenericSubSection() {
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
         $condition = $matches[1];
         $consequence = $matches[2];
+        //if ($condition === "«") echo "consequence: >$consequence<<br>";  
         //echo "condition => consequence: $condition => $consequence<br>";
         $shrinking_generic_subsection = $matches[3];
         $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
@@ -440,7 +441,9 @@ function ImportRulesFromGenericSubSection() {
             default : 
                 // just one consequence
                 //echo "single consequence: #" . $consequence . "#<br>";
-                $result2 = preg_match( "/^[ ]*?\"(.*?)\"[ ]*?/", $consequence, $matches2);
+                $result2 = preg_match( "/^[ ]*?\"(.*)\"[ ]*?/", $consequence, $matches2);
+                // search for second " must be GREEDY (otherwise, the consequence """ wont work!)
+                
                 //echo "result2: $result2 matches1(1): " . $matches2[1] . " rulespointer: $rules_pointer<br>";
                 //$rules["$insertion_key"][] = $rules_pointer;
                 $rules["$insertion_key"][] = array( $condition, $matches2[1]);        // rules[model][x][0] = condition of rule x in model

@@ -13,6 +13,8 @@
 		"‹" => "«";
 		"ß" => "ss";
 		"&szlig;" => "ss";
+		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
+		"»" => """; //"|[#5][#Q#]|";	
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(corrector,#>stage2)
 		// some words are erroneously separated by LING
@@ -48,8 +50,6 @@
 	#EndSubSection(acronymater)
 	#BeginSubSection(packer)
 		// filter out all markes from acronymator
-		"#£#" => "";
-		"#£(\+|#|-)£#" => "$1";
 		// some shorthand tokens use special chars (like -#+=/ etc.) in their definition
 		// this can lead to confusions in the transcriptor: e.g. - might be the character - 
 		// (which has to be drawn as such) or a part of a token definition (like [0N-]
@@ -60,21 +60,24 @@
 	#BeginSubSection(decapitalizer)
 		"([A-Z])" => "strtolower()";
 	#EndSubSection(decapitalizer)
-	#BeginSubSection(filter)
-		"«" => "\[#Q#]";
-		"»" => "[#Q#][#5]\";
-	#EndSubSection(filter)
 	#BeginSubSection(shortener)
 
+		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
+		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
+		
 		"(i-)?tä-?t" => "{HEIT}";
 		"ge-?gen" => "{GEGEN}";
 		
 		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
+		"^zu(\+|-)rück$" => "{ZURÜCK}+";
 		
 		"^in-ter\+" => "{INTER}+";
 		"(\+)in-ter\+" => "$1{INTER}+";
 
-		"(-|\+)dem$" => "$1{DEM}";
+		"(\+)dem$" => "$1{DEM}";
+		"^dem$" => "{DEM}";
+		"(\+)den$" => "$1{DEN}";
+		"^den$" => "{DEN}";
 		
 		"^aus$" => "{AUS}";
 		"aus(\+|#)" => "{AUS}$1";
@@ -136,8 +139,8 @@
 
 		"an\+" => "{AN}+";
 
-		"(-(?:.*?))en$" => "$1{EN}";
-		"(-(?:.*?))em$" => "$1{EM}";
+		"((?:.*?))en$" => "$1{EN}";
+		"((?:.*?))em$" => "$1{EM}";
 
 		"^was$" => "{WAS}";
 		"(\||#)was$" => "$1{WAS}";
@@ -174,8 +177,6 @@
 		"usw\." => "{USW\.}";
 		"viel-?leicht" => "{VILLEICHT}";
 		"^von$" => "{VON}";
-		"^wa-?r(st|en)?$" => "{WAR}$1";
-		"^wär(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"wel-?ch" => "{WELCH}";
 		"wenn" => "{WENN}";
 		"^wer-?d" => "{WERD}";
@@ -201,7 +202,7 @@
 		"^dem" => "{DEM}";
 		"^denn" => "de[NN]";
 		"^den$" => "{DEN}";
-		"^den-" => "{DEN}";
+		"^den-(?!k)" => "{DEN}";
 		"^de-nen" => "{DEN}[O][&E]{EN}"; // probably the only case where {EN} can follow {DEN} => add &E here directly
 		//"\|den-" => "{DEN}";
 		"^des(?![p-])" => "{DES}";
@@ -241,7 +242,7 @@
 		"(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}";
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
 		//"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => "{ET}";
-		"(-(?:.*?))(e-?t)(e[nrsm])?" => "$1{ET}$3";
+		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => "$1{ET}$3";
 
 		"erer([se]?[nm]?)$" => "{ER}{ER}$1";
 		"erei(en)?$" => "{ER}ei$1";
@@ -296,8 +297,8 @@
 		//"(?<!\[)#" => "-";	// not a good idea ...
 		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
 
-	#EndSubSection(shortener,#>stage4)
-	#BeginSubSection(normalizer,#>stage4)
+	#EndSubSection(shortener)
+	#BeginSubSection(normalizer)
 		"û" => "ü";
 		"é" => "e";
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
@@ -314,7 +315,7 @@
 		//"\[=" => "[-";
 		"'(i|au|eu|äu|ei)" => "|[']\[0D-]$1";
 		"'(a|e|o|u)" => "|[']\[0N-]$1";
-		"'" => "|[']\";
+		"(?!<\|\[)'" => "|[']\";			// temporarily disabled
 		"th(?!of$)" => "t";
 		"th(?!er)" => "t";
 		"th(?!in)" => "t";
@@ -346,12 +347,12 @@
 		"ühr" => "ür";
 		"\(" => "";
 		"\)" => "";
-		""" => "";
+		//"\"" => "";
 		"zz" => "z";
 		"ih#" => "i#";
 
-	#EndSubSection(normalizer)
-	#BeginSubSection(bundler)
+	#EndSubSection(normalizer,#>stage4)
+	#BeginSubSection(bundler,#>stage4)
 		"([aeiouäöüAEIOUÄÖÜ]\]?)ssch((\[|{)?[aeiouäöüAEIOUÄÖÜ])" => "$1[SS][CH]$2";
 		"m-?m-?l" => "[MML]";
 		"p-?p-?l" => "[PPL]";
@@ -401,7 +402,7 @@
 		"d-?l" => "[DL]";
 		"f-?l" => "[FL]";
 		"ngl" => "[NG@L3]";
-		"^[Aa]n(-)?g(?!r)" => "AN-G"; // angestrengt: an is not recognized as a word
+		//"^[Aa]n(-)?g(?!r)" => "AN-G"; // angestrengt: an is not recognized as a word => doesn't work: angst
 		"n-?g(?!r)" => "[NG]";
 		"g-?l" => "[GL]";
 		"k-?l" => "[KL]";
@@ -423,7 +424,7 @@
 		"f(-?|\+|\|)r" => "[FR]";
 		"g-?r" => "[GR]";
 		"k-?r" => "[KR]";
-		"l-?r" => "[LR]";
+		"l[-\|]?r" => "[LR]";
 		"m[-\|+]?r" => "[MR]";
 		"{AN}\+?r" => "a[NR]"; // dissolve prefix
 		"n[-\|+]?r" => "[NR]"; // n+r even if two separate words or morphems!
@@ -465,6 +466,7 @@
 		// tokens wherever necessary
 		////////////////////////////////////////////////////////
 
+		"{HEIT}{ET}" => "{HEIT}[ET3/4]";
 		"i^" => "[&I]";
 		"i(\||\\)" => "[&I]$1";
 
@@ -529,7 +531,7 @@
 		"^a($|\|)" => "[0N-][A][&A]$1";
 		"a($|\|)" => "[A][&A]$1";
 		"{ET}e$" => "[ET][&E][-E]";
-		"{HEIT}\[ET\]" => "{HEIT}[&E][ET]";
+		"{HEIT}\[ET3\/4\]" => "{HEIT}[&E][ET3/4]";
 		"\[ET3\/4\]e$" => "[ET3/4][&E][-E]";
 		"{HEIT}e" => "{HEIT}[&E][-E]"; 
 
@@ -542,28 +544,12 @@
 		"ä$" => "[#WS][&A]";
 		"ö$" => "[#W][&O]";
 		"ü$" => "[#WS][&U]";
-		"(?<!\])\[#(N|NS|WS|W|WS)\]" => "[0N-][#3][#$1]"; // can't start with distance only => add dummy token
+		"^(?<!\])\[#(N|NS|WS|W|WS)\]" => "[0N-][#3][#$1]"; // can't start with distance only => add dummy token
 		"\[EU\]$" => "[EU][&E]";
 		"\[AU\]$" => "[AU][&E]";
-		"^a" => "[0N-][A]";
-		"^e" => "[0N-][E]";
 		"^i\[(S?CH|ZW?)" => "[0N-][I][$1";
 		"^iz" => "[0N-][I][Z]";
-		"^i" => "[0D-][I]";
-		"^o" => "[0N-][O]";
-		"^u" => "[0N-][U]";
-		"^ö" => "[0N-][#WD]";
-		"^ä" => "[0N-][#WS]";
-		"^ü" => "[0N-][#WDS]";
-		"^\[EU\]\[CH\]" => "[0N-][EU][CH]";
-		"^\[EI\]\[CH\]" => "[0N-][EI][CH]";
-		"^\[AU\]\[CH\]" => "[0N-][AU][CH]";
-		"^\[AU\]" => "[0D-][AU]";
-		"^\[EU\]" => "[0D-][EU]";
-		"^\[EI\](?!-?\[(CH|SCHW?|ZW?)\])" => "[0D-][EI]";
-		"^\[EI\](?=-?\[(CH|SCHW?|ZW?)\])" => "[0N-][EI]";
 		"öo" => "[#W][&O][O]";
-		"^a" => "[0N-]A";
 		"a" => "A";
 		"e" => "E";
 		"i" => "I";
@@ -606,7 +592,12 @@
 		// but in order to be more systematic and structured we separate this part
 		// specific function of completor: adds dummy tokens at beginning and end of a word
 		// for tokens that need this "completion" (e.g. n, s at beginning; vowels at the end etc.
+		
 		"(?<![&-AEIOU])\[?([AEIOU])\]?$" => "[$1][&$1]";
+		//"(?<![&-AEIOU])\[?([AU])\]?(\||\!|\?|\.|\:)" => "[A][&$1]$2"; // punctuators are present if they are inside a word!
+		//"(?<![&-AEIOU])\[?([E])\]?(\||\!|\?|\.|\:)" => "[E][&$1]$2"; // punctuators are present if they are inside a word!
+		//"(?<![&-AEIOU])\[?([IO])\]?(\||\!|\?|\.|\:)" => "[#N][&$1]$2"; // punctuators are present if they are inside a word!
+
 		"^([NS])" => "[0N-][$1]";
 		"^\[([NS])\]" => "[0N-][$1]";
 		"(?<!&)([AEIOU]){HEIT}" => "[&$1]{HEIT}";
@@ -614,6 +605,26 @@
 		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
 		"\\Ö" => "[0N-][Ö]"; 
 
+		"^([AEOU]|Ä|Ö|Ü)" => "[0N-][$1]";
+		"^(I)" => "[0D-][$1]";
+		
+		//"\|([AEIOU]|Ä|Ö|Ü)" => "|[0N-][$1]";
+		
+		//"^E" => "[0N-][E]";
+		//"^I" => "[0D-][I]";
+		//"^O" => "[0N-][O]";
+		//"^U" => "[0N-][U]";
+		//"^Ö" => "[0N-][#WD]";
+		//"^Ä" => "[0N-][#WS]";
+		//"^Ü" => "[0N-][#WDS]";
+		"^\[EU\]\[CH\]" => "[0N-][EU][CH]";
+		"^\[EI\]\[CH\]" => "[0N-][EI][CH]";
+		"^\[AU\]\[CH\]" => "[0N-][AU][CH]";
+		"^\[AU\]" => "[0D-][AU]";
+		"^\[EU\]" => "[0D-][EU]";
+		"^\[EI\](?!-?\[(CH|SCHW?|ZW?)\])" => "[0D-][EI]";
+		"^\[EI\](?=-?\[(CH|SCHW?|ZW?)\])" => "[0N-][EI]";
+		
 	#EndSection(completor)
 	#BeginSubSection(separator)
 		// separates two words in one
@@ -876,7 +887,8 @@
 
 		//"{VOR}r" => "[VOR+AR]";
 		//"{ER}r" => "[VR+AR]";
-		"^{DE(M|N|S)}$" => "[DE$1]";
+		"{DES}" => "[0N-][S]";
+		"^{DE(M|N)}$" => "[DE$1]";
 		"{DEM}(-?)N" => "[^DEM]$1N";
 		"{DE(M|N)}j" => "[^^DE$1]J";
 		"{DE(M|N)}\[j\]" => "[^^DE$1][J]";
@@ -967,6 +979,9 @@
 		"{INTER}" => "[I][INTER]";
 		"^{ZURÜCK}" => "[ZURÜCK]";
 		"{ZURÜCK}" => "[I][ZURÜCK]";
+		"{E(N|M)}\|" => "[E][$1]";   // dissolve ending in composed words
+		"{E(N|M)}" => "[E$1]";
+		 
 
 		//"{AN}" => "[0N-][A][N]";
 	#EndSubSection(substituter)

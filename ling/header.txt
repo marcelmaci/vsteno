@@ -91,5 +91,15 @@
 		"ungs-an" => "ungs|an"; // terrible "hacks" ... :-)
 		"\|an-" => "|an+";
 
+		"([Ww])ar\|um" => "$1a-rum";
+		"([Bb])e-?que(-?)m" => "$1e+que$2m";
+		"([Pp])fle-?ge\|r" => "$1fle-ge-r"; // Pflege-Rinnen (Computers are stupid ... :)
+
+		// trying to recognize more ge- prefixes: rule: ends with -en(..) or -t(..)
+		"\+ge-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+ge+$1$2";
+		"^ge-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "ge+$1$2";
+		"\+ge-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "+ge+$1$2";
+		"^ge-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "ge+$1$2";
+	
 	#EndSubSection(analyzer)
 #EndSection(header)
