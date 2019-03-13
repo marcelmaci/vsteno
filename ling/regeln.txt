@@ -1,7 +1,6 @@
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
-		//"(?<!\[)=" => "[#=#]\"; // in packer before (doesn't work because of inline option tags => choose another symbol for suffix boundary!)
 		"&hellip;" => "..."; // ellipsis
 		"…" => "...";
 		"–" => "[~~]"; // blocks calculation in layouted mode
@@ -16,11 +15,9 @@
 		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
 		"»" => """; //"|[#5][#Q#]|";	
 	#EndSubSection(global,#>stage1)
-	#BeginSubSection(corrector,#>stage2)
-		// some words are erroneously separated by LING
-		// e.g.: Au|gen, wie|der, sie|ben ...
-		// correct that by remerging them here in stage2 (where words can be treated entirely before stage3)
-	#EndSubSection(corrector,#>stage3)
+	#BeginSubSection(dasher,#>stage2)
+		"(?<!\[)=" => "\\[=]\\";
+	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
 		// check if word contains more then 1 upper case
 		// mark it with #£# to have a branch condition
@@ -36,11 +33,11 @@
 		"(?<!\[)=" => "[=]";	// necessary because of packer
 		// now only transform upper case words (from acronym)
 		"(?<!\[)([A-Z]|Ä|Ö|Ü)" => "[$1]";
-		"\[A\]" => "[#NS][&A]";
-		"\[E\]" => "[E][&E]";
-		"\[I\]" => "[#N][&I]";
-		"\[O\]" => "[#N][&O]";
-		"\[U\]" => "[#NS][&U]";
+		"\[A\](?!\[&A\])" => "[#NS][&A]";
+		"\[E\](?!\[&E\])" => "[E][&E]";
+		"\[I\](?!\[&I\])" => "[#N][&I]";
+		"\[O\](?!\[&O\])" => "[#N][&O]";
+		"\[U\](?!\[&U\])" => "[#NS][&U]";
 		"\[Ä\]" => "[#WS][&A]";
 		"\[Ö\]" => "[E][&O]";
 		"\[Ü\]" => "[#WS][&U]";
@@ -55,7 +52,7 @@
 		// (which has to be drawn as such) or a part of a token definition (like [0N-]
 		// in order to avoid that, "packer" bundles those characters adding brackets []
 		// later the transcriptor converts them back into normal characters
-		"(?<!\[)=" => "[=]\";
+		//"(?<!\[)=" => "[=]\";
 	#EndSubSection(packer)
 	#BeginSubSection(decapitalizer)
 		"([A-Z])" => "strtolower()";
@@ -71,6 +68,7 @@
 		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
 		"^zu(\+|-)rück$" => "{ZURÜCK}+";
 		
+		"^in-ter$" => "{INTER}";
 		"^in-ter\+" => "{INTER}+";
 		"(\+)in-ter\+" => "$1{INTER}+";
 
@@ -108,7 +106,8 @@
 
 		"^als$" => "{ALS}"; 
 		
-		"((?:-)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{-ER}$3"; // use - to detect preceeding syllable
+		"((?:-)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{ER}$3"; // use - to detect preceeding syllable
+		"{LICH}er$" => "{LICH}{ER}";
 
 		"^es$" => "{ES}";
 
@@ -129,7 +128,7 @@
 		
 		"un-?ter" => "{UNTER}";
 		"^er\+" => "{ER}";
-		"a-?ber" => "a-b{-ER}"; // frequent word, so include it as a rule
+		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
 		
 		"(\+)sel-?b" => "$1{SELB}";
 		"^sel-?b" => "{SELB}";
@@ -176,7 +175,10 @@
 		"^und$" => "{UND}";
 		"usw\." => "{USW\.}";
 		"viel-?leicht" => "{VILLEICHT}";
+		
+		"\+von$" => "+{VON}";
 		"^von$" => "{VON}";
+		
 		"wel-?ch" => "{WELCH}";
 		"wenn" => "{WENN}";
 		"^wer-?d" => "{WERD}";
@@ -366,7 +368,7 @@
 		"r-?r-?l" => "[RRL]";
 		"n-?[-\|+]?l" => "[NDL]";
 		"n-?d[-\|+]?r" => "[NDR]";
-
+		"t-?t-?l" => "[TTL]"; 
 
 		"nd-?l" => "[ND@L3]";
 		"sch-?l" => "[SCHL]";
@@ -494,12 +496,15 @@
 		"{HEIT}-?l" => "[&EIT@L3]";
 		"{HEIT}-?r" => "[&EIT@R]";
 
-
+		// yr: no combined token
+		"\[YR\]" => "[Y][AR]";
 
 		//"\[&T\]e$" => "[&T][&E][-E]"; // hopefully not necessary any more ...
 		"\[&T\]er" => "[&T][VR]";
 		"\[&T\]{EN}$" => "[&T][&E][EN]";
 		"\[&T\]{EM}$" => "[&T][&E][EM]";
+		"\[&T\]\[EI\]$" => "[&T][&E][#W][-EI]";
+
 		"\[EI\]$" => "[#W][-EI]";
 		"\[&T\]\{HEIT\}" => "[&T][&E]{HEIT}";
 		"\[EU\]({?)E" => "[EU][&E]$1E";
@@ -538,8 +543,8 @@
 		"^e$" => "[0N-][E][&E]";
 		"e$" => "$1[-E]";
 		
-		"i($|\|)" => "[#N][&I]$1";
-		"o($|\|)" => "[#N][&O]$1";
+		"i($|\\)" => "[#N][&I]$1";
+		"o($|\\)" => "[#N][&O]$1";
 		"u$" => "[#NS][&U]";
 		"ä$" => "[#WS][&A]";
 		"ö$" => "[#W][&O]";
@@ -584,6 +589,9 @@
 		"y" => "Y";
 		"z" => "Z";
 
+		"I(-?){EN}" => "[&I]$1{EN}";
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => "[&I]$1$2";
+
 		
 	#EndSubSection(transcriptor)
 	#BeginSubSection(completor)
@@ -610,7 +618,7 @@
 		
 		//"\|([AEIOU]|Ä|Ö|Ü)" => "|[0N-][$1]";
 		
-		//"^E" => "[0N-][E]";
+		"^\[E\]" => "[0N-][E]";
 		//"^I" => "[0D-][I]";
 		//"^O" => "[0N-][O]";
 		//"^U" => "[0N-][U]";
@@ -683,6 +691,8 @@
 		"\[NSL\]" => "[NS@L3]";
 		"\[RRL\]" => "[RR@L]";
 		"\[NDL\]" => "[ND@L3]";
+		"\[TTL\]" => "[TT@L3]";
+		
 		
 
 		"\[CHR\]" => "[CH@R]";
@@ -902,7 +912,7 @@
 
 		"o{HEIT}" => "[&O]{HEIT}";
 		"\[AU\]{HEIT}" => "[AU][&E]{HEIT}";
-		"{SCHAFT}ler(n|in(nen)?)?$" => "{SCHAFT}[&L]{-ER}$1";
+		"{SCHAFT}ler(n|in(nen)?)?$" => "{SCHAFT}[&L]{ER}$1";
 		"{TUM}er(s|in|innen)?$" => "{TUM}[VR]$1";
 		"{HEIT}({EN}|{EM})" => "{HEIT}[&E]$1";
 		"{HEIT}er" => "{HEIT}[VR]";
@@ -919,7 +929,7 @@
 		// trivial ones
 		"{DASS?}" => "[0N-][#NS][S]";
 		"{HEIT}{ER}" => "[&EITVR]";
-		"{ER}" => "[E][VR]";
+		//"{ER}" => "[E][VR]";
 		"{BE}" => "[B]";
 		"{GE}" => "[G]";
 		"{UND}" => "[#NS][&U]";
@@ -974,7 +984,7 @@
 		"{HAB}T" => "[HAB][&T]";
 		"{HAB}" => "[HAB]";
 		"{ZUSAMMEN}" => "[Z][A][S]";
-		"{-ER}" => "[VR]";
+		"{ER}" => "[VR]";
 		"^{INTER}" => "[INTER]";
 		"{INTER}" => "[I][INTER]";
 		"^{ZURÜCK}" => "[ZURÜCK]";

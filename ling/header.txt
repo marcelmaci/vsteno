@@ -43,7 +43,7 @@
 	#BeginSubSection(session)
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?";
 		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm";
-		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?)"; // use non caputuring groups! (?:)
+		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
@@ -51,11 +51,12 @@
 		"oder" => "o-der"; 	// same ...
 		"^([Nn])eu\|e" => "$1eu-e";
 
-		"in-ter-" => "in-ter+";
+		"([Ii])n-ter-" => "$1n-ter+";
 
 		"da-ma(-?)l" => "da+ma$1l";
 		"un(-?|\||\+)te(-?)r" => "un-te$2r"; 
 		"(\+|\|)([bd])e([nrsm]?)$" => "-$2e$3";
+		"([WwNn])ie\|de(-?)r\+" => "$1ie-de$2r|";
 		"([WwNn])ie\|de(-?)r" => "$1ie-de$2r";
 		"([Nn])ie\|ma" => "$1ie-ma";
 
@@ -94,12 +95,15 @@
 		"([Ww])ar\|um" => "$1a-rum";
 		"([Bb])e-?que(-?)m" => "$1e+que$2m";
 		"([Pp])fle-?ge\|r" => "$1fle-ge-r"; // Pflege-Rinnen (Computers are stupid ... :)
+		"([Aa])-?me-?ri-?ka\|ni" => "$1-me-ri-ka-ni";	// Amerika-Nische (Computers are stupid ... :)
+		//"([Kk])i(-?)lo\|" => "$1i$2lo+"; // Kilometer: shorting [et] ...
+		"#seits" => "|seits";
 
-		// trying to recognize more ge- prefixes: rule: ends with -en(..) or -t(..)
-		"\+ge-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+ge+$1$2";
-		"^ge-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "ge+$1$2";
-		"\+ge-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "+ge+$1$2";
-		"^ge-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "ge+$1$2";
+		// trying to recognize more ge-/be- prefixes: rule: ends with -en(..) or -t(..)
+		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
+		"^([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
+		"\+([bg])e-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
+		"^([bg])e-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
 	
 	#EndSubSection(analyzer)
 #EndSection(header)
