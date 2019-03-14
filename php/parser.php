@@ -408,6 +408,11 @@ function WrapStringAfterNCharacters($string, $n) {
     $output .= $string;
     return $output;
 }
+
+function CropStringAfterNCharacters($string, $n) {
+    if ($n > mb_strlen($string)) return $string;
+    else return mb_substr($string, 0, $n) . "[...]";
+}
 // ExecuteRule replaces GenericParser from old parser
 function ExecuteRule( /*$word*/ ) {
 
@@ -445,7 +450,8 @@ function ExecuteRule( /*$word*/ ) {
                     $global_number_of_rules_applied++;
                     $_SESSION['rules_count'][$rules_pointer]++;
                     if ($_SESSION['output_format'] === "debug") {
-                        $wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
+                        //$wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
+                        $wrapped_pattern = CropStringAfterNCharacters($pattern, 20);
                         $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
                     }
                 }

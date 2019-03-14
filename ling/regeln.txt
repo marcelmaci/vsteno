@@ -57,6 +57,17 @@
 	#BeginSubSection(decapitalizer)
 		"([A-Z])" => "strtolower()";
 	#EndSubSection(decapitalizer)
+	#BeginSubSection(accentizer)
+		"sys-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
+		"pro-?ble(-?)m" => "pro-blE$1m";
+		"(kon|dis)-?kre(-?)t" => "$1-krE$2t";
+	#EndSubSection(accentizer)
+	#BeginSubSection(phonetizer)
+		// distinguishes character groups that are written the same way but have different pronunciation
+		// e.g. ie: nie, Knie vs Familie, Linie
+		"([Ll]i-?)nie" => "$1ni-e";
+		"([Ff]a-?mi-?)lie" => "$1li-e";
+	#EndSubSection(phonetizer)
 	#BeginSubSection(shortener)
 
 		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
@@ -76,10 +87,11 @@
 		"^dem$" => "{DEM}";
 		"(\+)den$" => "$1{DEN}";
 		"^den$" => "{DEN}";
+		"^den\+" => "{DEN}";
 		
 		"^aus$" => "{AUS}";
 		"aus(\+|#)" => "{AUS}$1";
-		"#aus$" => "#{AUS}";
+		"(#|\+)aus$" => "$1{AUS}";
 
 		"ur\+" => "{UR}+";
 
@@ -144,7 +156,7 @@
 		"^was$" => "{WAS}";
 		"(\||#)was$" => "$1{WAS}";
 		
-		"[#-]?[hk]?ei-?t" => "{HEIT}";
+		"(?<![Ss]c)[#-]?[hk]?ei-?t" => "{HEIT}";
 		
 		"#li-?ch" => "{H}";
 		
@@ -171,7 +183,7 @@
 		"ei-?tens" => "{HEIT}ens";
 		"[kh]?eits" => "{HEIT}s";
 		"iet$" => "[I]T";
-		"solch" => "{SOLCH}";
+		"sol-?ch" => "{SOLCH}";
 		"^und$" => "{UND}";
 		"usw\." => "{USW\.}";
 		"viel-?leicht" => "{VILLEICHT}";
@@ -200,6 +212,8 @@
 		"(\+|#)bei$" => "$1{BEI}";
 		
 		"^dar\+" => "{DA@R}";
+		"^dar$" => "{DA@R}";
+
 		"dass?(?!t)" => "{DASS}";
 		"^dem" => "{DEM}";
 		"^denn" => "de[NN]";
@@ -218,7 +232,10 @@
 		"(?<![Cc])ha-?b" => "{HAB}";
 		"^[Hh]at(-t)?" => "{HAT}";
 		"^chin" => "[CH]in";
+
 		"^hinzu" => "{HIN}{ZU}";
+		"#hin$" => "{HIN}";
+
 		"^in$" => "{IN}";
 		"^ist$" => "{IST}";
 		"mitt" => "m1i2t3t4";
@@ -257,8 +274,10 @@
 		"eu([aeou]|lich)" => "[EU][&E]$1";
 		"ei([aeou]|lich)" => "[EI][&E]$1";
 		"^([Aa])n([bfghklmnprswz][aeiouäöü])" => { "$1[N]$2", ".*[Aa]nker.*" };
+		
+		"sch(a|ä)ft#?{LICH}" => "{SCHAFT}{LICH}";
 		"#sch(a|ä)f-?t" => "#{SCHAFT}";
-		"^sch(a|ä)fts$" => "{SCHAFT}"; // hm ...
+		"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // hm ...
 				
 
 		"t(u|ü)m(ers?|in|innen|s)?$" => "{TUM}$2";
@@ -301,6 +320,11 @@
 
 	#EndSubSection(shortener)
 	#BeginSubSection(normalizer)
+		
+
+		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
+		"y" => { "i", "York" };
+
 		"û" => "ü";
 		"é" => "e";
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
@@ -318,6 +342,7 @@
 		"'(i|au|eu|äu|ei)" => "|[']\[0D-]$1";
 		"'(a|e|o|u)" => "|[']\[0N-]$1";
 		"(?!<\|\[)'" => "|[']\";			// temporarily disabled
+		"thr" => "tHr"; // Thriller
 		"th(?!of$)" => "t";
 		"th(?!er)" => "t";
 		"th(?!in)" => "t";
@@ -369,6 +394,11 @@
 		"n-?[-\|+]?l" => "[NDL]";
 		"n-?d[-\|+]?r" => "[NDR]";
 		"t-?t-?l" => "[TTL]"; 
+		"t-?t-?r" => "[TTR]"; 
+		"f-?f-?l" => "[FFL]"; 
+		"f-?f-?r" => "[FFR]"; 
+		"c-?k-?l" => "[CKL]"; 
+		"c-?k-?l" => "[CKR]"; 
 
 		"nd-?l" => "[ND@L3]";
 		"sch-?l" => "[SCHL]";
@@ -424,7 +454,7 @@
 		"c-?r" => "[CR]";
 		"d[-\|]?r" => "[DR]";
 		"f(-?|\+|\|)r" => "[FR]";
-		"g-?r" => "[GR]";
+		"g(-?|\|)r" => "[GR]";
 		"k-?r" => "[KR]";
 		"l[-\|]?r" => "[LR]";
 		"m[-\|+]?r" => "[MR]";
@@ -468,6 +498,7 @@
 		// tokens wherever necessary
 		////////////////////////////////////////////////////////
 
+		"{HEIT}e\[NS\]" => "[&EITNS]";
 		"{HEIT}{ET}" => "{HEIT}[ET3/4]";
 		"i^" => "[&I]";
 		"i(\||\\)" => "[&I]$1";
@@ -483,6 +514,10 @@
 		"ä-?i" => "[Ä][&E][I]";
 		"o-?e" => "[&O][E]";
 		"i-?o$" => "[&I][&O]";
+		"e-?a" => "E[&E]A";
+		"u-?a" => "A[&U]A";
+		"e-?e" => "E[&E]E";
+		"i-e" => "[&I]e";
 
 		// Aufstrich-t				
 		"([bcdfghjklmnpqrvwxyz])(-)?t" => "$1$2[&T]";
@@ -499,7 +534,6 @@
 		// yr: no combined token
 		"\[YR\]" => "[Y][AR]";
 
-		//"\[&T\]e$" => "[&T][&E][-E]"; // hopefully not necessary any more ...
 		"\[&T\]er" => "[&T][VR]";
 		"\[&T\]{EN}$" => "[&T][&E][EN]";
 		"\[&T\]{EM}$" => "[&T][&E][EM]";
@@ -514,7 +548,7 @@
 		"\[&T\]\i-?g" => "[&T-1][G]";
 		"\[&T\]{ET}" => "[&T][&E][ET3/4]";
 		"\[&T\]es" => "[&TES]";
-		"\[&T\]e" => "[&T][&E][-E]";
+		"\[&T\]e$" => "[&T][&E][-E]";
 		"\[&T\]a" => "[&T][&E]A";
 		"\[&T\]\[?o\]?$" => "[&T&O]";
 		"\[&T\]o$" => "[&T][&E]O";
@@ -578,8 +612,8 @@
 		"p" => "P";
 		"q" => "Q";
 		"(^|\+|\|])r" => "$1[AR]";
-		"\|r" => "[AR]";
-		"\|r" => "[AR]";
+		"\|r" => "|[AR]";
+		"\|r" => "|[AR]";
 		"r" => "[VR]";
 		"s" => "S";
 		"t" => "T";
@@ -592,8 +626,34 @@
 		"I(-?){EN}" => "[&I]$1{EN}";
 		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => "[&I]$1$2";
 
+		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
+		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
 		
 	#EndSubSection(transcriptor)
+	#BeginSubSection(separator)
+		// separates two words in one
+		// there must be a possibility to disable this function manually (i.e. via input form)!
+
+		//"(EITS\])\|" => "$1\\";
+		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
+		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
+		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
+		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
+		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
+
+		"\[&T\]\[EI\]\|\[EI\]" => "[&T][&E]E[-EI]\\[0D-][EI]";  // parteieigener
+		"\[&T\]\[EI\]\|" => "[&T][&E]E[-EI]\\"; // Parteiprojekte
+
+		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
+		//"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
+		//"(\[&T\]\[VR\]-?)\[&T\]\[&E\]" => "$1[T]"; // can't do that for Winterthur (if not recognized as two words!)
+		"\[&T\]\[&E\]\[-E\]\|" => "[&T][&E][-E]\\";
+		"({HEIT}{ER})\|" => "$1\\";
+
+		"\\{ÜBER}" => "\\[0N-]{ÜBER}"; // needs dummy token if separated
+
+		
+	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// logically speaking the completor is part of the transcriptor
 		// i.e. it defines how tokens have to be written
@@ -601,7 +661,9 @@
 		// specific function of completor: adds dummy tokens at beginning and end of a word
 		// for tokens that need this "completion" (e.g. n, s at beginning; vowels at the end etc.
 		
-		"(?<![&-AEIOU])\[?([AEIOU])\]?$" => "[$1][&$1]";
+		"(?<![&-AEIOU])\[?([AE])\]?$" => "[$1][&$1]";
+		"(?<![&-AEIOU])\[?([IOU])\]?$" => "[#N][&$1]";
+
 		//"(?<![&-AEIOU])\[?([AU])\]?(\||\!|\?|\.|\:)" => "[A][&$1]$2"; // punctuators are present if they are inside a word!
 		//"(?<![&-AEIOU])\[?([E])\]?(\||\!|\?|\.|\:)" => "[E][&$1]$2"; // punctuators are present if they are inside a word!
 		//"(?<![&-AEIOU])\[?([IO])\]?(\||\!|\?|\.|\:)" => "[#N][&$1]$2"; // punctuators are present if they are inside a word!
@@ -632,24 +694,9 @@
 		"^\[EU\]" => "[0D-][EU]";
 		"^\[EI\](?!-?\[(CH|SCHW?|ZW?)\])" => "[0D-][EI]";
 		"^\[EI\](?=-?\[(CH|SCHW?|ZW?)\])" => "[0N-][EI]";
+		"E\\" => "[-E]\\";
 		
-	#EndSection(completor)
-	#BeginSubSection(separator)
-		// separates two words in one
-		// there must be a possibility to disable this function manually (i.e. via input form)!
-
-		//"(EITS\])\|" => "$1\\";
-		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
-		"\[&T\]\|" => "[&T]\\"; // write separatedly (2 words)
-		"{HEIT}\|" => "{HEIT}\\"; // write separatedly (2 words)
-
-
-		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
-		//"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
-		//"(\[&T\]\[VR\]-?)\[&T\]\[&E\]" => "$1[T]"; // can't do that for Winterthur (if not recognized as two words!)
-		"\\{ÜBER}" => "\\[0N-]{ÜBER}"; // needs dummy token if separated
-
-	#EndSubSection(separator)
+	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
 		// at this point, all characters are upper case
 		// some token combinations need to be rewritten
@@ -659,6 +706,8 @@
 		///////////////////////////////////////////////////////
 		// 2nd step: rewrite upper case tokens if necessary  //
 		///////////////////////////////////////////////////////
+
+		"{DEN}{EN}" => "[0N-]{DEN}[O][&E]{EN}";		// denen
 
 		// correct position for &T
 		// 1- und 2-stufige Zeichen: [&T-1]
@@ -692,6 +741,13 @@
 		"\[RRL\]" => "[RR@L]";
 		"\[NDL\]" => "[ND@L3]";
 		"\[TTL\]" => "[TT@L3]";
+		"\[TTR\]" => "[TT@R]";
+		"\[FFL\]" => "[FF@L]";
+		"\[FFR\]" => "[FF@R6]";
+		"\[CKL\]" => "[CK@L3]";
+		"\[CKR\]" => "[CK@R]";
+		"\[PPL\]" => "[PP@L]";
+		"\[PPR\]" => "[PP@R6]";
 		
 		
 
@@ -1047,6 +1103,11 @@
 		"\[&e\]\[#3\]\[o\]" => "[&E][O]";   // test: recorrect certain distances
 		"\[vr\]\[#3\]\[-e\]" => "[VR][#3-][-E]"; // just test if negative spacing is possible
 		"\[#6\](\[?i\]?\[?n\]?)" => "$1";
+		"\[#0\](\[i\])?\[ss\]" => "[#3]$1[ss]"; // just a quick fix
+		"\[#0\]\[#ns\]\[&a\]" => "[#3][#NS][&A]"; 		// idem
+		"(?<!\[&t\])#\[schaft\]" => "[#3][SCHAFT]";		// idem
+		"\[i\]\[st\]" => "[#3][I][ST]";				// idem
+		"\[i\]\[t\]" => "[I][#5][T]";				// idem
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 

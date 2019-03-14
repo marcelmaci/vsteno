@@ -712,6 +712,7 @@ function create_word_list($word) {
             //$word_list_as_array[$l][$r][1] = $single_plus_dash; // don't create dash-list for better performance
         }
     }
+    //echo "wordlist: $word_list_as_string<br>";
     return array($word_list_as_string, $array);
     //return $word_list_as_string; // return only string for performance reason => almost no gain: revert back to function parameters
 }
