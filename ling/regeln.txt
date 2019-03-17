@@ -101,7 +101,7 @@
 		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		
-		"(i-)?tä-?t" => "{HEIT}";
+		"(?<!^)(i-)?tä-?t" => "{HEIT}";
 		"ge[-+]?gen" => "{GEGEN}";
 		
 		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
@@ -388,7 +388,7 @@
 		"t-?z" => "z"; // conserve syllable?
 		"ph" => "f";
 		"ß" => "ss";
-		"üh(-)?([lr])" => "ü$1$2";
+		"üh(-)?([lrm])" => "ü$1$2";
 		"([aeiou]|ä|ö|ü)h(#|-|\+)(bar|sam|ling|sal|nis)" => "$1$2$3";  // h entfällt vor ungekürzten Nachsilben 
 
 		"uhr" => "ur";
@@ -411,7 +411,7 @@
 		"n-?n-?l" => "[NNL]";
 		"n-?k\|-?r" => "[NKR]";
 		"ns-?r" => "[NSR]";
-		"ng-?r" => "[NGR]";
+		"n-?g-?r" => "[NGR]";
 		"n-?k-?l" => "[NKL]";
 		"ns-?l" => "[NSL]";
 		"ng-?l" => "[NGL]";
@@ -503,7 +503,7 @@
 		"n-?k" => { "[NK]", "[Aa]n-?kunft" };
 		"zw" => "[ZW]";
 		"au" => "[AU]";
-		"(Ä|ä)u" => "[EU]";
+		"(Ä|ä)-?u" => "[EU]";
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"ai" => "[EI]";
@@ -591,8 +591,12 @@
 		//"{DU\[VR\]CH}" => "{DURCH}"; // du bricolage ...
 		"(\[^@\])r" => "$1[AR]";
 		"}r" => "}[AR]";
-		"^s" => "[0n-][S]";
-		"^n" => "[0n-][N]";
+		//"^s" => "[0n-][S]";
+		//"^n" => "[0n-][N]";
+		"^s" => "[S=]";
+		"^n" => "[N=]"; // try new variant
+
+
 		"u([aeiouäöü])" => "[#NS][&U]$1";
 		"oi" => "[&O][I]";
 		"^a($|\|)" => "[0N-][A][&A]$1";
@@ -683,7 +687,9 @@
 
 		"\\{ÜBER}" => "\\[0N-]{ÜBER}"; // needs dummy token if separated
 
-		
+		"(\[(EI|AU|EU)\])\|" => "$1[&E]-";
+		"{ET}\|" => "{ET}\\";
+
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// logically speaking the completor is part of the transcriptor
@@ -1055,7 +1061,9 @@
 		//"{DIS}" => "[0N-][#0][I][S]";
 		"{ZER}" => "[Z@R]";
 		"{ANTI}" => "[0N-][ANTI]";
-		"^{UNTER}" => "[0N-][N@R6]";
+		//"^{UNTER}" => "[0N-][N@R6]";
+		"^{UNTER}" => "[N=@R6]";
+		
 		"{UNTER}" => "[N@R6]";
 		"^{ÜBER}" => "[0N-][#WS][&U]";
 		"{ÜBER}" => "[#WS][&U]";
