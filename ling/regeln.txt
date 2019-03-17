@@ -14,6 +14,20 @@
 		"&szlig;" => "ss";
 		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
 		"»" => """; //"|[#5][#Q#]|";	
+		" [Ee]s( *?)ist " => " es_ist ";  // avoid "semicolon-look of "Es ist";
+	
+		// since it is not possible to include more than one function in global (for the moment)
+		// include the "abbreviator" this way 
+
+		// abbreviator: eliminates . in abbreviations (based on a list)
+		// all words conserve original upper/lower case distinction
+		"(Adr|[Aa]llg|Art|[Aa]usschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg)\." => "$1";
+		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
+		"(Nr|Prosp|Qual|[Ss]og|Tel|Jan|Febr|Apr|Jun|Jul|Aug|Sept|Okt|Nov|Dez)\." => "$1";
+		// words with two points
+		"[Dd]\.h\." => "das+h";
+		"[Uu]\.a\." => "UA";
+		"[Zz]\.B\." => "ZB";
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		"(?<!\[)=" => "\\[=]\\";
@@ -57,24 +71,38 @@
 	#BeginSubSection(decapitalizer)
 		"([A-Z])" => "strtolower()";
 	#EndSubSection(decapitalizer)
-	#BeginSubSection(accentizer)
-		"sys-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
-		"pro-?ble(-?)m" => "pro-blE$1m";
-		"(kon|dis)-?kre(-?)t" => "$1-krE$2t";
-	#EndSubSection(accentizer)
 	#BeginSubSection(phonetizer)
 		// distinguishes character groups that are written the same way but have different pronunciation
 		// e.g. ie: nie, Knie vs Familie, Linie
 		"([Ll]i-?)nie" => "$1ni-e";
 		"([Ff]a-?mi-?)lie" => "$1li-e";
+		"([Pp]or-?t)ier" => "$1i-e";
+		// phonetical treatment for y
+		//"([Ss])y(s-?tem)" => "$1i$2";
+		"([Rr])h?y(t-?)h?(-?mus)" => "$1ü$2$3";
+		"([Pp]s)y(-?c-?h-?i-?a-?t)" => "$1ü$2";
+		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
+		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
+		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy" };
 	#EndSubSection(phonetizer)
+	#BeginSubSection(accentizer)
+		"sis-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
+		"pro-?ble(-?)m" => "pro-blE$1m";
+		"(kon|dis)-?kre(-?)t" => "$1-krE$2t";
+	#EndSubSection(accentizer)
 	#BeginSubSection(shortener)
 
+		"es_ist" => "{ESIST}";
+
+		"ge[-+]?habt" => "{GEHABT}";	
+	
+		"(Ü|ü)-?ber" => "{ÜBER}";
+		
 		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		
 		"(i-)?tä-?t" => "{HEIT}";
-		"ge-?gen" => "{GEGEN}";
+		"ge[-+]?gen" => "{GEGEN}";
 		
 		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
 		"^zu(\+|-)rück$" => "{ZURÜCK}+";
@@ -139,7 +167,9 @@
 		"^so$" => "{SO}";
 		
 		"un-?ter" => "{UNTER}";
+		
 		"^er\+" => "{ER}";
+		"\+er$" => "{ER}";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
 		
 		"(\+)sel-?b" => "$1{SELB}";
@@ -253,7 +283,6 @@
 		^zur$" => "[Z]ur";
 		"^uns(er.*)?$" => "u[NS]$1";
 		"(^|\|)({?des}?)?inter" => "$1$2{INTER}";
-		"(Ü|ü)-?ber" => "{ÜBER}";
 		
 		"^der" => "{DER}";
 		
@@ -321,10 +350,6 @@
 	#EndSubSection(shortener)
 	#BeginSubSection(normalizer)
 		
-
-		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"y" => { "i", "York" };
-
 		"û" => "ü";
 		"é" => "e";
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
@@ -554,7 +579,10 @@
 		"\[&T\]o$" => "[&T][&E]O";
 		"\[&T\]u([aeiouäöü])" => "[A][&T&U]$1";
 		//"\[&T\]" => "[&T][&E]U";
+
 		"\[&T\]\[?i\]?$" => "[&T&I]";
+		"\[&T\]\[?&I\]?" => "[&T&I]";
+
 		"\[&T\]i" => "[&T][&E]I";
 		"erer$" => "[VR][#N][VR]";
 		"eres$" => "[VR][E][S]";
@@ -628,6 +656,9 @@
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
+
+		"\[VR\](\||\+|-)?\[AR\]" => "[VR+AR]";
+
 		
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
@@ -928,7 +959,10 @@
 		"\[EU\]-?{LICH}" => "[EU][&E]{LICH}"; 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
+		
+		"{ESIST}" => "[ES]\\[#0][IST]";		// spacing comes from token definition
 
+		"{GEHABT}" => "[G][&T]";
 		"^{AN}" => "[0N-]AN";
 		"{AN}" => "AN";
 		
@@ -996,7 +1030,7 @@
 		"{LICH}" => "[H]";
 		"{ALS}" => "[L]";
 		"{CON}" => "[C]";
-		"{ES}" => "[0N-][#N][-E]";
+		"{ES}" => "[ES]";
 		"{WENN}" => "[NN]";
 		"{WIR}" => "[W]";
 		"{ZU}" => "[Z]";
@@ -1068,7 +1102,7 @@
 		"-(?![0-9])" => "";	// - can now be deleted (filter out [T-1] for example ...)
 		"#=#=#" => "-";		// this still might have interferences (watch out if that occurs)
 		"\[#=#\]" => "[=]";
-		"\+" => "";  // eliminate morphem boundaries before spacer
+		"(?!<\[vr)\+(?!ar\])" => "";  // eliminate morphem boundaries before spacer
 	#EndSubSection(relancer2)
 	#BeginSubSection(spacer)
 		

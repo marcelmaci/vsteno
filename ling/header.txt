@@ -64,6 +64,8 @@
 		"\|ge$" => "-ge"; 	// correct ge- prefix (recognized as word)
 
 		"([Dd])e-?nen" => "$1en+en";
+		"([Dd])e(-?|\|)re([rn])" => "$1er+e$3";
+
 
 		"^([Nn])eu\|e" => "$1eu-e";
 
@@ -118,6 +120,7 @@
 		"([Pp])fle-?ge\|r" => "$1fle-ge-r"; // Pflege-Rinnen (Computers are stupid ... :)
 		"([Aa])-?me-?ri-?ka\|ni" => "$1-me-ri-ka-ni";	// Amerika-Nische (Computers are stupid ... :)
 		//"([Kk])i(-?)lo\|" => "$1i$2lo+"; // Kilometer: shorting [et] ...
+		"([Gg]e-?ne)\|(ral)" => "$1-$2";
 		"#seits" => "|seits";
 
 		// prefix in-
