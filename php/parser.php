@@ -660,7 +660,9 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
         //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . "($word)<br>";
         $word = replace_all( "/" . $analyzer[$i][0] . "/", $analyzer[$i][1], $word);
+        //echo "result: $word<br>";
     }
+    //echo "Word after postprocess: $word<br>";
     return $word;
 }
 

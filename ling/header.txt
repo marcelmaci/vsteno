@@ -42,7 +42,7 @@
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret";
-		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?";
+		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
@@ -63,11 +63,15 @@
 		"([Uu]n)z-([aeiou])" => "$1+z$2"; // phpSyllable does that wrong ...
 		"\|ge$" => "-ge"; 	// correct ge- prefix (recognized as word)
 
+		// ending es
+		"\|es$" => "-es";
+
 		"([Dd])e-?nen" => "$1en+en";
 		"([Dd])e(-?|\|)re([rn])" => "$1er+e$3";
 		"([Mm]i-?ne)\|(ral)" => "$1-$2";
 		"([Dd]er)\|(ben)" => "$1-$2";
-
+		
+		"([Gg]ib)\|t" => "$1t"; // what a mess ...
 
 		"^([Nn])eu\|e" => "$1eu-e";
 
@@ -88,7 +92,14 @@
 		"Lei-?b-?und-?gut" => "Leib|und|gut";
 		"([Gg]e)-?(sel-?l)" => "$1+$2";
 		"([Ww]ich)\|(ti-?ger)" => "$1-$2";
-
+		"(wir)\|(ren)" => "$1-$2";
+		"(wir)\|(ren)\|(der)?" => "$1-$2-$3";
+		"(wor)\+(ren)" => "$1-$2";
+		"([Mm]it)\+(ta-?g)" => "$1-$2";
+		"([Oo]h)\|(ren)" => "$1-$2";
+		"([Bb]al-?dri-?an)-?(?!\|)" => "$1|"; // word unknown by hunspell
+		"Au\|g" => "Au-g";
+		
 		"\+lie-g" => "|lie-g"; // daniederliegen
 		"([Ss])ie\|ben" => "$1ie-ben";
 		"zäh\|lun-gen$" => "zäh-lun-gen";
@@ -101,6 +112,8 @@
 		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
 		"(\|)er(\|)" => "{ER}"; // infix er
 		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
+		"([Gg]e)-?(räu-?sch)" => "$1+$2";
+		"([Rr]at)-?(lo-?s)" => "$1#$2";
 
 		// mark prefixes that have not been recognized
 		"^([Vv])er-ant-" => "$1er+ant+";
@@ -117,6 +130,9 @@
 		"([Ee]r)-(f[auie])" => "$1+$2";  // c'est osé ...
 		"([Ee]r)-(kl(?:[aeiou]|ä))" => "$1+$2";
 		"([Gg]e)-(n(?:u|ü))" => "$1+$2";
+		"([Gg]e)-?(litz-?t)" => "$1+$2"; // Helvetism
+		"([Gg]e)-?(f(?:a|ä)ng)" => "$1+$2";
+		"([Gg]e)-?(dach-?t)" => "$1+$2";
 		
 		"([Ee])r-folg" => "$1r+folg";
 
@@ -170,6 +186,18 @@
  
 		// -lich
 		"(?<!#)-?(lich(?:-|#)?kei-?t)" => "#$1";
+
+		// -bar(ensr)
+		"\|(ba-?r(?:(?:e-?r)?e[rsnm]?)?)" => "-$1";
+
+		// in vs inner
+		"([Ii]n)\+(ner)" => "$1-$2";
+
+		"([Gg]e)-?(stan-?d)" => "$1+$2"; 
+
+		// ent-
+		"([Ee]nt)-?(setz)" => "$1+$2";
+
 
 	#EndSubSection(analyzer)
 #EndSection(header)

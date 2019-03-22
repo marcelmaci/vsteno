@@ -25,8 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_commit_id = "5162edbbba160568e2a3e74e6dd06d5a1cac0716";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "8. März 2019";                                  // idem
+const version_commit_id = "7bb8937815300e5792065e72e7cdb5a29c276eb3";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "14. März 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
@@ -115,7 +115,7 @@ const draw_normal = 0;
 const draw_no_connection = 5;
 
 // parser
-$punctuation = ".,:;!?";                        // metaparser recognizes these tokens as punctuation and treats them differently 
+$punctuation = ".,:;!?…";                        // metaparser recognizes these tokens as punctuation and treats them differently 
 $upper_case_punctuation = ".:!?";
 $numbers = "01234567890";
 $only_pretokens = "(\[{\"\'";
