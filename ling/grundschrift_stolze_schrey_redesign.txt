@@ -42,7 +42,7 @@
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret";
-		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?";
+		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
@@ -63,6 +63,9 @@
 		"([Uu]n)z-([aeiou])" => "$1+z$2"; // phpSyllable does that wrong ...
 		"\|ge$" => "-ge"; 	// correct ge- prefix (recognized as word)
 
+		"r\|t\'s" => "rt's";	// pressiert's (cleaning up some chaos produced by linguistical analyzer ...)
+		"([Ww]eh)\|r" => "$1-r";
+
 		// ending es
 		"\|es$" => "-es";
 
@@ -78,6 +81,8 @@
 		"([Ii])n-ter-" => "$1n-ter+";
 
 		"\|dun(-?)g(s|en)?$" => "-dun$1g$2"; // Neugründung
+
+		"([Bb]e)-?(ja-?h)" => "$1+$2";
 
 		"([Hh])e-?r-?aus-?" => "$1er+aus+";
 		"da-ma(-?)l" => "da+ma$1l";
@@ -98,7 +103,12 @@
 		"([Mm]it)\+(ta-?g)" => "$1-$2";
 		"([Oo]h)\|(ren)" => "$1-$2";
 		"([Bb]al-?dri-?an)-?(?!\|)" => "$1|"; // word unknown by hunspell
-		"Au\|g" => "Au-g";
+		"([Aa])u\|g" => "$1u-g";
+		"([Aa]u)\|(tor)" => "$1-$2";
+		"([Ww]en)\|(n)" => "$1$2";  // this linguistical analyzer really does strange things (with "wenn's")
+		"([Ee]in)-?(tö-?nig)" => "$1+$2";
+		"([Ss]pan)\|(nun(?:-|\|)?g)" => "$1-$2";
+		"([Kk]om-?bi)\|(na-?ti-?o-?n)" => "$1-$2";
 		
 		"\+lie-g" => "|lie-g"; // daniederliegen
 		"([Ss])ie\|ben" => "$1ie-ben";
@@ -133,8 +143,13 @@
 		"([Gg]e)-?(litz-?t)" => "$1+$2"; // Helvetism
 		"([Gg]e)-?(f(?:a|ä)ng)" => "$1+$2";
 		"([Gg]e)-?(dach-?t)" => "$1+$2";
+		"([Gg]e)-?(fühl)" => "$1+$2";
+		"([Gg]e)-?(sin-?nung)" => "$1+$2";
+		"([Gg]e)-?(nos-?s)" => "$1+$2";
+		"([Gg]e)-?(wöh-?n)" => "$1+$2";
 		
 		"([Ee])r-folg" => "$1r+folg";
+		"([Ee]r)-?(hö-?h)" => "$1+$2";
 
 		"ungs-an" => "ungs|an"; // terrible "hacks" ... :-)
 		"\|an-" => "|an+";
@@ -149,6 +164,7 @@
 
 		// prefix in-
 		"^([Ii])n-(?!ter)" => "$1n+";
+		"^([Ii]n)\+(ne)" => "$1-$2";
 
 		// trying to recognize more ge-/be- prefixes: rule: ends with -en(..) or -t(..)
 		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
@@ -174,6 +190,7 @@
 
 		// an-
 		"([Aa]n)-(.*)-(lich)" => "$1+$2#lich";
+		"([Aa]n)-?(läs-?s)" => "$1+$2"; 
 
 		"^([Aa]uf|[Vv]er|[Zz]u)-(.*)(ung)(en)?$" => "$1+$2$3$4";
 		"\+(auf|ver|zu)-(.*)(ung)(en)?$" => "+$1+$2$3$4";
@@ -198,6 +215,9 @@
 		// ent-
 		"([Ee]nt)-?(setz)" => "$1+$2";
 
+		"([Zz]u#sam)\|(men)-?(ge)\|" => "$1-$2|$3";
+
+		"([Bb]e\+?)(auf)-" => "$1$2+";
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -277,7 +297,7 @@
 		"CK" => {  /*h*/ 4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  28.5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2,  30,  0.5,  2,  2,  0,  0,  0.5, /**/ 4,  27,  0.5,  0,  2.5,  0,  0,  0, /**/ 4,  25,  0,  0,  3,  0,  0,  0, /**/ 5,  0,  0,  0,  1,  0,  1,  0, /**/ 4,  2.5,  0,  4,  1,  0,  0,  0 }
 		"FF" => {  /*h*/ 3,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  27,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.8,  30,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  28,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  1,  0.5,  0,  1,  0,  1,  0.5 }
 		"LL" => {  /*h*/ 3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2,  8.5,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 2,  0,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 3,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  1.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 2,  0.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  2,  0.5, /**/ 3,  2,  0.5,  0,  1,  0,  1,  0.5 }
-		"MM" => {  /*h*/ 13,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  9,  0.5,  1,  1,  0,  0,  0.5, /**/ 1,  10,  0.5, 0,  1.2,  0,  0,  0.5, /**/ 8,  10,  0.5,  0,  2,  0,  0,  0.5, /**/ 10,  8.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 10,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 11.5,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 13,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"MM" => {  /*h*/ 13,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  9,  0.5,  1,  1,  0,  0,  0.5, /**/ 1,  10,  0.5, 0,  1.2,  0,  0,  0.5, /**/ 8,  10,  0.5,  0,  2,  0,  0,  0.5, /**/ 10,  8.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 10,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 12,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 12,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 13,  2,  0.5,  0,  1,  0,  1,  0.5 }
 		"NN" => {  /*h*/ 17,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  9,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2,  10,  0.5,  2.5,  2,  0,  0,  0.5, /**/ 5,  8,  0.5,  0,  3,  0,  0,  0.5, /**/ 11,  2,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 14,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 17,  2,  1,  0,  1,  0,  1,  0.5 }
 		"PP" => {  /*h*/ 6,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  3,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 3,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 6,  2,  0,  0,  1,  0,  1,  0 }
 		"RR" => {  /*h*/ 10,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  1,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  8,  0.5,  1,  1,  0,  0,  0.5, /**/ 5,  10,  0.5,  0,  2,  0,  0,  0.5, /*3*/ 8,  7.75,  0.5,  5,  3,  0,  0,  0.5, /**/ 10,  4,  0.5,  0,  3,  0,  0,  0.5, /*5*/ 9,  0.25,  0.5,  5,  2,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 0.5,  4.75,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  9,  0.5,  0,  1,  0,  0,  0.5, /**/ 5, 10,  0.5,  4,  1,  0,  0,  0.5, /**/ 5,  10,  0.5,  0,  1,  0,  1,  0.5 }
@@ -427,6 +447,7 @@
 		"B" => { "@L", 0, 0 }
 		"G" => { "@L3", 0, 0 }
 		"M" => { "@L", 0, 0 }
+		"MM" => { "@L", 0, 0 }
 		"F" => { "@L", 0, 0 }
 		"P" => { "@L", 0, 0 }
 		"PF" => { "@L", 0, 0 }
@@ -573,7 +594,8 @@
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
 		"&hellip;" => "…"; // ellipsis (try to use one character defined as global variable punctuation in php)
-		"…" => "…";
+		"\.\.\." => "…";
+		//"…" => "…";
 		"–" => "[~~]"; // blocks calculation in layouted mode
  		" &ndash; " => " [~~] "; // Gedankenstrich
 		"&ndash;" => "="; // blocks calculation in layouted mode
@@ -660,13 +682,18 @@
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
 
+		// ou = u
+		"([Tt])ou(-?ris)" => "$1u$2"; 
+
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
 		"sis-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
+		"([Pp]ro-?l)e(-?t)(?!a)" => "$1E$2";
 		"pro-?ble(-?)m" => "pro-blE$1m";
 		"(kon|dis)-?kre(-?)t" => "$1-krE$2t";
 		"^([Ww])e([rmn])$" => "$1E$2";
 		"^([Gg])e(n)$" => "$1E$2";		// distinguish Gen (noun) vs gen (preposition) ???
+		"(\+?[Gg])e(r-?ne?)" => "$1E$2";
 
 	#EndSubSection(accentizer)
 	#BeginSubSection(shortener)
@@ -736,11 +763,13 @@
 		
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{ER}$3"; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?))(e-?r-?t)(e?[rnms]?)?$" => "$1{ER}t$3"; // use - to detect preceeding syllable
+		
 		"{LICH}er$" => "{LICH}{ER}";
 
 		"^es$" => "{ES}";
 
-		"zu(\+|-|\|)sam-men" => "{ZUSAMMEN}"; 
+		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
 
 		"ver(\+)" => "{VER}$1";
 		"ver(-)" => { "{VER}$1", "Ver-?si-?on" }; // can produce wrong results
@@ -770,6 +799,8 @@
 		"an\+" => "{AN}+";
 
 		"schien" => "schin";	// hm .. ;-)
+		"(er-?)dem$" => "{ER}{DEM}";
+		"(ch-?)dem$" => "$1{DEM}"; 
 		"((?:.*?))en$" => "$1{EN}";
 		"((?:.*?))em$" => "$1{EM}";
 
@@ -825,7 +856,7 @@
 		"#wo$" => "#{WO}";	
 	
 		"(?<!f)all(e[n|m|s]?)$" => "{ALL}$1";
-		"^al-?l" => "{ALL}";
+		"^al-?l(?!e-?e)" => "{ALL}";
 		"(\[^a-z\])all" => "{$1ALL}";
 		"^auch$" => "{AUCH}";
 		
@@ -855,8 +886,9 @@
 		"^[Hh]at(-t)?" => "{HAT}";
 		"^chin" => "[CH]in";
 
-		"^hinzu" => "{HIN}{ZU}";
+		"^hin-?zu" => "{HIN}{ZU}";
 		"#hin$" => "{HIN}";
+		"\+hin\+" => "{HIN}";
 
 		"^in$" => "{IN}";
 		"^ist$" => "{IST}";
@@ -1011,7 +1043,7 @@
 		"n-?l" => "[NL]";
 		"n-?d[-\|+]?r" => "[NDR]";
 		"t-?t-?l" => "[TTL]"; 
-		"t-?t-?r" => "[TTR]"; 
+		"t-?t(-|\|)?r" => "[TTR]"; 
 		"f-?f-?l" => "[FFL]"; 
 		"f-?f(-|\|)?r" => "[FFR]"; 
 		"c-?k-?l" => "[CKL]"; 
@@ -1038,7 +1070,7 @@
 		"ch[-\|+]?r" => "[CHR]";
 		"ch-?l" => "[CHL]";
 		"p-?f" => "[PF]";
-		"(ck|kk)" => "[CK]";
+		"(ck|k-?k)" => "[CK]";
 		"s-?s" => "[SS]";
 		"n-?n" => "[NN]";
 		"s-?t" => "[ST]";
@@ -1274,6 +1306,9 @@
 		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
 		"\[&T\]S\|" => "[&T]S\\";
 		"(\[&T\]ON)\|" => "$1\\";
+		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
+		"(\[TUNG\]S)\|" => "$1\\"; // Unterhaltungsfonds
+		"(\[&T\]{ION}S)\|" => "$1\\"; // Sektionsprotokoll 
 
 		"\[&T\]\[EI\]\|\[EI\]" => "[&T][&E]E[-EI]\\[0D-][EI]";  // parteieigener
 		"\[&T\]\[EI\]\|" => "[&T][&E]E[-EI]\\"; // Parteiprojekte
@@ -1298,6 +1333,9 @@
 		// \n and \s
 		"\\N" => "\\[N=]";
 		"\\S" => "\\[S=]";
+
+		// ver-
+		"\\{VER}" => "\\[0N-]{VER}";
 		
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -1346,6 +1384,9 @@
 		"^\[EI\](?=-?\[(CH|SCHW?|ZW?)\])" => "[0N-][EI]";
 		"E\\" => "[-E]\\";
 		"\[EI\]\\" => "E[-EI]\\";
+		// \n and \s
+		"\|N" => "|[N=]";
+		"\|S" => "|[S=]";
 		
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
@@ -1360,6 +1401,7 @@
 
 		"{AUF}\+\[AR\]" => "[AUF+AR]";
 		"\[VR\]\+{AUS}" => "[VR][-AUS]";  
+		"{VOR}\+?{AUS}" => "{VOR}[-AUS]";
 		"{HEIT}U\[NG\]" => "[#NS][&EITNG]";
 		"\[EI\]-{ER}" => "[EI][&E]{ER}";
 
@@ -1367,6 +1409,7 @@
 		"(\[EI\])(-?{E[MN]})" => "$1[&E]$2";
 		"(\[EI\])((?:\+|-)?E)" => "$1[&E]$2";
 
+		"{ET}A" => "{ET}[&E]A";
 
 		// correct position for &T
 		// 1- und 2-stufige Zeichen: [&T-1]
@@ -1376,6 +1419,9 @@
 		"{VOR}(\||\+)?\[AR\]" => "[VORAR]";
 		"^{ER}\[AR\]" => "[0N-][#N][VR+AR]"; 
 		"{ER}\[AR\]" => "[#N][VR+AR]"; 
+		"^{ER}T" => "{ER}[T]";	// no Aufstrich-t at beginning!
+		"(\|){ER}T" => "$1{ER}[T]";	// no Aufstrich-t at beginning!
+
 		"{ER}T" => "{ER}[&T]";
 		"\[NK\]T" => "[NK][&T]";
 		"\[ND\]T" => "[ND][&T]";
@@ -1419,7 +1465,7 @@
 		"\[BL\]" => "[B@L]";
 		"\[XL\]" => "[X][@L]";
 		"\[MPFL\]" => "[MPF][@R]";
-		"\[MML\]" => "[MM][@L]";
+		"\[MML\]" => "[MM@L]";
 		"\[NNL\]" => "[NN][@L]";
 		"\[PPL\]" => "[PP][@L]";
 
@@ -1798,6 +1844,7 @@
 		"\[auf\]\[#3\]\[s\]" => "[auf][#2-][s]"; 		// idem
 		"\[auf\]\[ant\]" => "[auf][#6-][ant]";			// idem
 		"\[bei\]\[#3\]\[s\]" => "[bei][#2-][s]";		// idem
+		"(\[d\])(\[schaft\])" => "$1[#5]$2";			// idem
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
