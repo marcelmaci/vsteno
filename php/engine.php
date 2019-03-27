@@ -721,6 +721,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
     $pivot_exit_x = 0; $pivot_exit_y = 0; $pivot_exit_i = 0; $pivot_exit_yes = false;
     $end_of_tuplet_list = false; $length_splines = count( $splines );
     $dont_connect_flag = false;
+    //var_dump($splines);
     for ( $i = 0; $i < $length_splines; $i += tuplet_length) { // this is just a QUICK-FIX!!!!!!!!!!!!!!!!! => should be a clean solution now
         switch ( $splines[$i+offs_d1] ) {           // test, if point is entry or pivot; ignore entry if no exit is defined
             case "1" : if ($exit_yes) { $entry_x = $splines[$i+offs_x1]; $entry_y = $splines[$i+offs_y1]; $entry_i = $i; $entry_yes = true; }
@@ -753,7 +754,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
             // case 1: trivial => don't do anything
             // case 2a:
             if (($pivot_exit_yes) && (!$pivot_entry_yes)) {
-                //echo "case 2a<br>";
+                //echo "case 2a (pivot -> entry)<br>";
                 // define line going from pivot to entry point: y = m*x + c, where m = dy / dx and c = py - m * px
                 $dx = $entry_x - $pivot_exit_x;
                 $dy = $entry_y - $pivot_exit_y;
@@ -766,7 +767,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
             }
             // case 2b
             if ((!$pivot_exit_yes) && ($pivot_entry_yes)) {
-                //echo "case 2b<br>";
+                //echo "case 2b (exit -> pivot)<br>";
                 // define line going from exit point to pivot: y = m*x + c, where m = dy / dx and c = exit_y - m * exit_x
                 $dx = $pivot_entry_x - $exit_x;
                 $dy = $pivot_entry_y - $exit_y;
@@ -780,7 +781,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
             }
             // case 4:
             if (($pivot_entry_yes) && ($pivot_exit_yes)) {
-                //echo "in case 4<br>"; // define line going from pivot to pivot: y = m*x + c, where m = dy / dx and c = pivot_exit_y - m * pivot_exit_x
+                //echo "in case 4 (pivot -> pivot)<br>"; // define line going from pivot to pivot: y = m*x + c, where m = dy / dx and c = pivot_exit_y - m * pivot_exit_x
                 $dx = $pivot_entry_x - $pivot_exit_x;
                 $dy = $pivot_entry_y - $pivot_exit_y;
                 $m = $dy / $dx;
@@ -1035,6 +1036,7 @@ function GetDebugInformation( $word ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
             $bundler_table, $transcriptor_table, $substituter_table, $global_debug_string, $global_number_of_rules_applied,
             $processing_in_parser, $separated_std_form, $separated_prt_form, $global_textparser_debug_string, $std_form, $prt_form;
+        global $global_linguistical_analyzer_debug_string;
             
 /*
         $original = $word;
@@ -1051,7 +1053,9 @@ function GetDebugInformation( $word ) {
         $alternative_text = $original;
         $debug_text = "<p>Start: $original<br>==0=> $globalized<br>==1=> /$lookuped/<br>==2=> $decapitalized<br>==3=> $shortened<br>==4=> $normalized<br>==5=> $bundled<br>==6=> $transcripted<br>==7=> $substituted<br>=17=> $test_wort<br> Meta: $metaparsed<br><br>";
 */
-        $debug_text .= "<p>WORD: $word</p><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>$global_textparser_debug_string" . "$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($std_form) . "<br>PRT: $prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
+        //echo "global_linguistical_analyzer_debug_string: $global_linguistical_analyzer_debug_string<br>";
+    
+        $debug_text .= "<p>WORD: $word</p><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>$global_textparser_debug_string" . "$global_linguistical_analyzer_debug_string" . "$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($std_form) . "<br>PRT: $prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
         $global_number_of_rules_applied = 0; // suppose, this function is called at the end of the calculation (not before ... since this will give false information then ... ;-)
         return $debug_text;        
     

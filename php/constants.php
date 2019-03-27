@@ -166,6 +166,7 @@ $html_pretags = "";
 $html_posttags = "";
 $global_debug_string = "";
 $global_textparser_debug_string = "";
+$global_linguistical_analyzer_debug_string = "";
 $global_number_of_rules_applied = 0;
 $std_form = "";
 $prt_form = "";

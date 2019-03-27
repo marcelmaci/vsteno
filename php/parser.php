@@ -656,13 +656,25 @@ function PreProcessGlobalParserFunctions( $text ) {
 
 function PostProcessDataFromLinguisticalAnalyzer($word) {
     global $analyzer; // contains postprocess-rules
+    global $global_linguistical_analyzer_debug_string;
+    $number_analyzer_rules = 0;
     for ($i=0; $i<count($analyzer); $i++) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
         //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . "($word)<br>";
+        $old_word = $word;
         $word = replace_all( "/" . $analyzer[$i][0] . "/", $analyzer[$i][1], $word);
+        
+        if (($_SESSION['output_format'] === "debug") && ($old_word !== $word)) {
+            //echo "modification: $old_word => $word (rule: $i)<br>";
+            $wrapped_pattern = WrapStringAfterNCharacters($analyzer[$i][0], 30);
+            $replacement = $analyzer[$i][1];
+            $global_linguistical_analyzer_debug_string .= "<tr><td><b>[$number_analyzer_rules]</b> $word </td><td><b>[A$i]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>LNG-POST</td></tr>"; 
+            $number_analyzer_rules++;
+        }     
         //echo "result: $word<br>";
     }
     //echo "Word after postprocess: $word<br>";
+    //echo "global_linguistical_analyzer_debut_string: $global_linguistical_analyzer_debug_string<br>";
     return $word;
 }
 
@@ -682,7 +694,9 @@ function MetaParser( $text ) {          // $text is a single word!
     global $safe_std;       // this global variable comes from database (in purgatorium1.php)
     global $last_pretoken_list, $last_posttoken_list, $rules_pointer_start_stage4, $rules_pointer_start_stage3, $rules_pointer_start_stage2, $rules_pointer_start_std2prt;
     global $cached_results;
+    global $global_linguistical_analyzer_debug_string;
     
+    $global_linguistical_analyzer_debug_string = "";
     //echo "processing: $text => ";
     // check if word has been cached
     //echo "isset: " . isset($cached_results[$text]) . " value: " . $cached_results[$text] . " ";
