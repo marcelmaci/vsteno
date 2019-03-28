@@ -83,6 +83,7 @@
 		"([Dd])e(-?|\|)re([rn])" => "$1er+e$3";
 		"([Mm]i-?ne)\|(ral)" => "$1-$2";
 		"([Dd]er)\|(ben)" => "$1-$2";
+		"([Ss]au)\|(be)\+(r)" => "$1-$2-$3";
 		
 		// recognize more auf-
 		"([Aa]uf)-(kl|n)" => "$1+$2";
@@ -170,6 +171,8 @@
 		"([Gg]e)-?(nos-?s)" => "$1+$2";
 		"([Gg]e)-?(wöh-?n)" => "$1+$2";
 		"([Gg]e)-?(win-?n)" => "$1+$2";
+		"([Gg]e)-?(stal-?t)" => "$1+$2";
+		"([Gg]e)-?(ta-?n)" => "$1+$2";
 
 		
 		"([Ee])r-folg" => "$1r+folg";
@@ -219,8 +222,10 @@
 		"([Aa]n)-(.*)-(lich)" => "$1+$2#lich";
 		"([Aa]n)-?(läs-?s)" => "$1+$2"; 
 
+		// auf- / ver- / zu-
 		"^([Aa]uf|[Vv]er|[Zz]u)-(.*)(ung)(en)?$" => "$1+$2$3$4";
 		"\+(auf|ver|zu)-(.*)(ung)(en)?$" => "+$1+$2$3$4";
+		"^([Aa]uf)-(zu)-" => "$1+$2+";
 
 		// die- ist most of the times not a separate word (a part from diejenigen, dieselben)
 		"([Dd])ie\|(?!(je|se))" => "$1ie-";
@@ -242,9 +247,14 @@
 		// ent-
 		"([Ee]nt)-?(setz)" => "$1+$2";
 
+		// un-
+		"([Uu]n)-(z)(?!e)" => "$1+$2";
+
 		"([Zz]u#sam)\|(men)-?(ge)\|" => "$1-$2|$3";
 
 		"([Bb]e\+?)(auf)-" => "$1$2+";
+
+		"([Ss]on-?n)-?(t(a|ä)g)" => "$1|$2";
 
 	#EndSubSection(analyzer)
 #EndSection(header)
