@@ -42,7 +42,7 @@
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret";
-		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?";
+		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
@@ -84,12 +84,19 @@
 		"([Mm]i-?ne)\|(ral)" => "$1-$2";
 		"([Dd]er)\|(ben)" => "$1-$2";
 		"([Ss]au)\|(be)\+(r)" => "$1-$2-$3";
+
+		// in general: don't separate -ren (..)
+		"\|ren" => "-ren";
 		
 		// recognize more auf-
 		"([Aa]uf)-(kl|n)" => "$1+$2";
 
 		// don't separate -tümlich
 		"\|(tüm[-#]?li-?ch)" => "-$1";
+
+		// er-
+		"([Ee]r)-?(lau-?b)" => "$1+$2";
+		"([Ee]r)-?(staun)" => "$1+$2";
 
 		// allesamt
 		"([Aa]l-?le)\|(samt)" => "$1+$2"; 
@@ -173,7 +180,10 @@
 		"([Gg]e)-?(win-?n)" => "$1+$2";
 		"([Gg]e)-?(stal-?t)" => "$1+$2";
 		"([Gg]e)-?(ta-?n)" => "$1+$2";
-
+		"([Aa]n)-?(ge)-?(bie-?d)" => "$1+$2+$3";
+		"([Gg]e)-?(moch-?t)" => "$1+$2"; 
+		"([GgBb]e)-?(wuss-?t)" => "$1+$2";
+		"([Gg]e)-?(r(?:u|o)-?c-?h)" => "$1+$2";
 		
 		"([Ee])r-folg" => "$1r+folg";
 		"([Ee]r)-?(hö-?h)" => "$1+$2";
@@ -217,6 +227,7 @@
 		// and correct the correction ...
 		"([Bb]e)-?(geis-?ter)" => "$1+$2";
 		"([Bb]e)-?(am-?t)" => "$1+$2";
+		"([Bb]e)-?(tr(?:u|o|ü)-?g)" => "$1+$2";
 
 		// an-
 		"([Aa]n)-(.*)-(lich)" => "$1+$2#lich";
@@ -255,6 +266,23 @@
 		"([Bb]e\+?)(auf)-" => "$1$2+";
 
 		"([Ss]on-?n)-?(t(a|ä)g)" => "$1|$2";
+
+		// not recognized words
+		"([Ll]ein)-?(t(?:ü|u)-?ch)" => "$1|$2";
+		"([Ee]r)-?(qui-?ck)" => "$1+$2";
+		"([Kk]ur)\|(zer)\+h" => "$1-$2|h";
+
+		"([Hh]arm)\|l" => "$1#l";
+		
+		// who the hell invented this Aufstrich-stuff ... Stolze or Schrey (or both must have been
+		// slightly drunk (or high) when they had the idea ... it's nice for short words and in the 
+		// end of words ... but try to write something like "sentimental" or "Sentimentalität" ...
+		// you probably have to glue some additional paper on top in order to get enough space ... 
+		// anyway: I'm opting her for an etymological (romanistic) separation of this word:
+		// senti|mental and Senti|mentalität (and if a purist thinks this is not correct then come
+		// up with a better solution - or tace! :)
+		"([Ss]en-?ti)-?(men-?t)" => "$1|$2";
+		
 
 	#EndSubSection(analyzer)
 #EndSection(header)

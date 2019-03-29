@@ -107,6 +107,7 @@
 	#EndSubSection(accentizer)
 	#BeginSubSection(shortener)
 
+		"([Ss]on)-?der" => "$1d{ER}";
 		"ie(-?r(?:en?|s?t)?)$" => "i$1";	// actually a normalizer rule, but include it here to avoid {er}
 
 		"[Mm]iss-" => "{MISS}"; 	// try that
@@ -153,7 +154,7 @@
 
 		"ent\+" => "{ANT}+";
 
-		"un-?te-?r" => "{UNTER}";
+		"(?<!a)un-?te-?r" => "{UNTER}";
 		"{UNTER}-" => "{UNTER}+";
 
 		"un\+" => "{UN}+"; 
@@ -507,7 +508,7 @@
 		"l-?l" => "[LL]";
 		"m-?l" => "[ML]";
 		"n-?l" => "[NL]";
-		"pl" => "[PL]";
+		"p-?l" => "[PL]";
 		"r-?l" => "[RL]";
 		"s-?l" => "[SL]";
 		"t-?l" => "[TL]";
@@ -530,7 +531,7 @@
 		"r-?r" => "[RR]";
 		"s-?r" => "[SR]";
 		"t-?t" => "[TT]";
-		"t-?r" => "[TR]";
+		"t(-|\|)?r" => "[TR]"; // even if two words!?
 		"v-?r" => "[#VR]"; // use special name vor v+r, since [VR] can be confused with "vocal r"
 		"w-?r" => "[WR]";
 		"x-?r" => "[XR]";
@@ -717,6 +718,9 @@
 		"(\|){ER}T" => "$1{ER}[T]";	// no Aufstrich-t at beginning!
 		"{ER}T" => "{ER}[&T]";
 
+		// &t after wieder
+		"{WIDER}-?T" => "{WIDER}[&T]";
+
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
 		// separates two words in one
@@ -733,6 +737,7 @@
 		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
 		"(\[TUNG\]S)\|" => "$1\\"; // Unterhaltungsfonds
 		"(\[&T\]{ION}S)\|" => "$1\\"; // Sektionsprotokoll 
+		"\[&T&I\]\|" => "[&T&I]\\"; // Sentimentalität
 
 		"\[&T\]\[EI\]\|\[EI\]" => "[&T][&E]E[-EI]\\[0D-][EI]";  // parteieigener
 		"\[&T\]\[EI\]\|" => "[&T][&E]E[-EI]\\"; // Parteiprojekte
@@ -761,7 +766,19 @@
 		// ver-
 		"\\{VER}" => "\\[0N-]{VER}";
 
-		
+		// n- and s- where transformed to [N=] and [S=] by transcriptor
+		// now, if they don't get separated (via \) they must be retransformed to normal n and s
+		//"\|\[([NS])=\]" => "|[$1]";
+
+		// Kreuzverhör is a very rare word: ^z offers an alternative exit point; ver- asks for one
+		// and voilà: Murphy hits (and whatever can go wrong goes wrong:)
+		// separate the word in order to get around the problem ...
+		// (let's hope there aren't many words like that ... :)
+		"(\[EU\]Z)\|({VER})" => "$1\\[0N-]$2";
+		// hm ... Murphy hit's again: not a very good solution ... 
+		// ^z is written with Fussschlaufe (bug in SE?)
+		// something is odd with this \ anyway: doesn't behave like | in SmoothenEntryExitPoints either
+
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// logically speaking the completor is part of the transcriptor
@@ -810,8 +827,8 @@
 		"E\\" => "[-E]\\";
 		"\[EI\]\\" => "E[-EI]\\";
 		// \n and \s
-		"\|N" => "|[N=]";
-		"\|S" => "|[S=]";
+		"\\N" => "\\[N=]";
+		"\\S" => "\\[S=]";
 
 		// dem/den at beginning
 		"^{(DE[MN])}([-+#]?)(?=N)" => "[^$1]$2";
@@ -828,6 +845,9 @@
 		// 2nd step: rewrite upper case tokens if necessary  //
 		///////////////////////////////////////////////////////
 
+		// &t#los (furchtlos)
+		"\[&T\]#L" => "[&T#L]";
+		
 		"{AUF}\+\[AR\]" => "[AUF+AR]";
 		"\[VR\]\+{AUS}" => "[VR][-AUS]";  
 		"{VOR}\+?{AUS}" => "{VOR}[-AUS]";
@@ -851,7 +871,6 @@
 		"{VOR}(\||\+)?\[AR\]" => "[VORAR]";
 		"^{ER}\[AR\]" => "[0N-][#N][VR+AR]"; 
 		"{ER}\[AR\]" => "[#N][VR+AR]"; 
-		
 		
 		"\[NK\]T" => "[NK][&T]";
 		"\[ND\]T" => "[ND][&T]";
@@ -1268,8 +1287,8 @@
 		"\[t\]\[i\]\[\^sch\]" => "[T][#2][I][^SCH]";		// idem
 		"\[s(=?)\]\[a\]\[([lh])\]" => "[S$1][#4][A][$2]";	// idem
 		"\[s\]\[#3\]\[a\]\[h\]" => "[S][#5][A][H]";		// idem
-		"\[a\]\[ss\]" => "[A][#2][SS]";				// idem
-		"\[ch\]\[#3\]\[st\]" => "[CH][#5][ST]";			// idem
+		"\[a\]\[ss\]" => "[a][#2][ss]";				// idem
+		"\[ch\]\[#3\]\[st\]" => "[ch][#5][st]";			// idem
 		"\[rr\]\[#3\]\[n\]" => "[rr][n]";			// idem
 		"\[auf\]\[#3\]\[s\]" => "[auf][#2-][s]"; 		// idem
 		"\[auf\]\[ant\]" => "[auf][#6-][ant]";			// idem
@@ -1300,6 +1319,7 @@
 		"\[m\]\[#3\]\[i\]\[l\]" => "[m][i][l]";			// idem
 		"\[bei\]\[#0\]\[z\]" => "[bei][#3-][z]";		// idem
 		"\[\^z\]\[w\]" => "[^z][#3][w]";			// idem
+		"\[b\]\[#3\]\[i\]\[d\]" => "[b][#1][i][d]";
 		"\[b\]\[#3\]\[[Ii]\]" => "[b][#2-][i]";			// idem
 		"\[sch\]\[#3\]\[n\]" => "[sch][n]";			// idem
 		"\[k\]\[#3\]\[a\]\[st\]" => "[k][#6][a][st]";		// idem
@@ -1345,6 +1365,35 @@
 		"\[w\]\[#3\]\[i\]\[n\]" => "[w][i][n]";			// idem
 		"\[st\]\[#3\]\[i\]\[nk\]" => "[st][i][nk]";		// idem
 		"\[durch\]\[#3\]\[s\]" => "[durch][s]";			// idem
+		"\[&t#l\]\[o\]\[s\]" => "[&t#l][#3][o][s]";		// idem
+		"\[vr\]\[#3\]\[ch\]" => "[vr][ch]";			// idem
+		"\[b\]\[#3\]\[a\]\[vr\]" => "[b][a][vr]";		// idem
+		"\[vr\]\[#3\]\[k\]" => "[vr][k]";			// idem
+		"\[k\]\[#3\]\[t\]" => "[k][#5][t]";			// idem
+		"\[h\]\[#3\]\[o\]\[ch\]" => "[h][#1][o][ch]";		// idem
+		"\[st\]\[#3\]\[a\]\[p@l\]" => "[st][#4][a][p@l]";
+		"\[b\]\[#3\]\[i\]\[d\]" => "[b][#4][i][d]";
+		"\[b\]\[#3\]\[t@r\]" => "[b][t@r]";
+		"\[m\]\[#3\]\[l\]" => "[m][#1][l]";
+		"\[vr\]\[#3\]\[z\]" => "[vr][z]";
+		"\[n=@r6\]\[l\]" => "[n=@r6][#3][l]";
+		"\[s=\]\[#4\]\[a\]\[#2\]\[ss\]" => "[s=][a][ss]"; // what a mess ...
+		"\[k\]\[#3\]\[a\]\[ff\]" => "[k][#6][a][ff]";
+		"\[vr\]\[#3\]\[i\]\[n\]" => "[vr][#2-][i][n]";
+		"\[vr\]\[#3\]\[i\]\[s\]" => "[vr][#1-][i][s]";
+		"\[b\]\[#0\]\[sch@r\]" => "[b][#5-][sch@r]";
+		"\[m\]\[#3\]\[i\]\[n\]" => "[m][#2-][i][n]";
+		"\[n\]\[u\]\[#5\]\[t\]" => "[n][u][#3][t]";
+		"\[st\]\[#3\]\[u\]\[m\]" => "[st][#1][u][m]";
+		"\[l\]\[#0\]\[a\]\[ng\]" => "[l][#2][a][ng]";
+		"\[ar\]\[#3\]\[au\]\[m\]" => "[ar][#1][au][m]";
+		"\[t\]\[#3\]\[a\]\[st\]" => "[t][#5][a][st]";
+		"\[t\]\[was\]" => "[t][#2][was]";
+		"\[b\]\[#0\]\[g@r\]" => "[b][#4-][g@r]";
+		"\[v\]\[#3\]\[t@r\]" => "[v][#1][t@r]";
+		"\[t@r\]\[#3\]\[a\]\[b\]" => "[t@r][#5][a][b]";
+		"\[sch@l3\]\[#3\]\[o\]\[ss\]" => "[sch@l3][o][ss]";
+		"\[auf\]\[#3\]\[st\]" => "[auf][#1][st]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
