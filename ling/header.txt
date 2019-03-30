@@ -94,10 +94,15 @@
 		// don't separate -tümlich
 		"\|(tüm[-#]?li-?ch)" => "-$1";
 
+		// ein-
+		"([Ee]in)-?(tö-?ni-?g)" => "$1+$2";
+
 		// er-
 		"([Ee]r)-?(lau-?b)" => "$1+$2";
 		"([Ee]r)-?(staun)" => "$1+$2";
-
+		"([Ee]r)-?(le-?di-?g)" => "$1+$2"; 
+		"([Ee]r)-?(in-?ne-?r)" => "$1+$2"; 
+		
 		// allesamt
 		"([Aa]l-?le)\|(samt)" => "$1+$2"; 
 
@@ -244,6 +249,9 @@
 		// meinet, deinet, seinetwegen etc. => consider it as two words
 		"\+(we-?gen)$" => "|$1"; 
  
+		// zeit-
+		"([Zz]eit)-?(wei-?l)" => "$1|$2";
+
 		// -lich
 		"(?<!#)-?(lich(?:-|#)?kei-?t)" => "#$1";
 
@@ -257,6 +265,7 @@
 
 		// ent-
 		"([Ee]nt)-?(setz)" => "$1+$2";
+		"([Ee]nt)-?(b)" => "$1+$2";
 
 		// un-
 		"([Uu]n)-(z)(?!e)" => "$1+$2";
@@ -283,6 +292,9 @@
 		// up with a better solution - or tace! :)
 		"([Ss]en-?ti)-?(men-?t)" => "$1|$2";
 		
+		// recorrections
+		"([Gg]e[+-]?)(be)[+-]?(t)" => "$1$2-$3";
+		"([Mm]u-?se)\|(um)" => "$1-$2";
 
 	#EndSubSection(analyzer)
 #EndSection(header)
