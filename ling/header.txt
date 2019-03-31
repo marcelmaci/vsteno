@@ -89,6 +89,7 @@
 
 		// additional separations
 		"([Nn]acht)-?(tisch)" => "$1|$2";
+		"([Ww]ei-?ter)\+" => "$1|";
 
 		// in general: don't separate -ren (..)
 		"\|ren" => "-ren";
@@ -194,6 +195,7 @@
 		"([Gg]e)-?(moch-?t)" => "$1+$2"; 
 		"([GgBb]e)-?(wuss-?t)" => "$1+$2";
 		"([Gg]e)-?(r(?:u|o)-?c-?h)" => "$1+$2";
+		"([Gg]e)-?(wis-?s)" => "$1+$2";
 		
 		"([Ee])r-folg" => "$1r+folg";
 		"([Ee]r)-?(hö-?h)" => "$1+$2";
@@ -270,10 +272,11 @@
 
 		// ent-
 		"([Ee]nt)-?(setz)" => "$1+$2";
-		"([Ee]nt)-?(b)" => "$1+$2";
+		"([Ee]nt)-?(b|sch)" => "$1+$2";
 
 		// un-
 		"([Uu]n)-(z)(?!e)" => "$1+$2";
+		"([Uu]n)-?(nach-?)" => "$1+$2";
 
 		"([Zz]u#sam)\|(men)-?(ge)\|" => "$1-$2|$3";
 
@@ -300,6 +303,12 @@
 		// recorrections
 		"([Gg]e[+-]?)(be)[+-]?(t)" => "$1$2-$3";
 		"([Mm]u-?se)\|(um)" => "$1-$2";
+		"([Ss]ei)\|(den)[+-]?(en)" => "$1-$2-$3";
+
+		// final ge-
+		"([Gg]e)-?(fun-?de-?n)" => "$1+$2";
+		"([Gg]e)\+(ge)\+" => "$1+$2-"; 	// avoid 2x ge-
+
 
 	#EndSubSection(analyzer)
 #EndSection(header)

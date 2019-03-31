@@ -103,9 +103,15 @@
 		"^([Ww])e([rmn])$" => "$1E$2";
 		"^([Gg])e(n)$" => "$1E$2";		// distinguish Gen (noun) vs gen (preposition) ???
 		"(\+?[Gg])e(r-?ne?)" => "$1E$2";
+		"([Kk]on-?z)e(r-?t)" => "$1E$2"; 
 
 	#EndSubSection(accentizer)
 	#BeginSubSection(shortener)
+
+		// -et in verbs
+		"([Ww]ä-?r)et" => "{WÄR}{ET}";
+		"([Hh]ät-?t|[Ww]ür-?d)et" => "$1{ET}";
+
 
 		"([Ss]on)-?der" => "$1d{ER}";
 		"ie(-?r(?:en?|s?t)?)$" => "i$1";	// actually a normalizer rule, but include it here to avoid {er}
@@ -150,7 +156,7 @@
 		"ur\+" => "{UR}+";
 
 		"#li-?ch" => "{LICH}";
-		"-li-?ch((-?st)?e[rnsm]?)?$" => "{LICH}$1";
+		"-li-?ch((-?s-?t)?e[rnsm]?)?$" => "{LICH}$1";
 
 		"ent\+" => "{ANT}+";
 
@@ -177,6 +183,7 @@
 		"((?:-|\+)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{ER}$3"; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?))(e-?r-?t)(e?[rnms]?)?$" => "$1{ER}t$3"; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => "{ER}$1";
+		"er\+" => "{ER}";
 
 		"{LICH}er$" => "{LICH}{ER}";
 
@@ -259,6 +266,7 @@
 		"wenn" => "{WENN}";
 		"^wer-?d" => "{WERD}";
 		"{WERD}et" => "{WERD}{ET}";
+
 		"^wie$" => "{WI}";
 		"wird" => "{WIRD}";
 		"vor(?!})" => "{VOR}";
@@ -332,7 +340,9 @@
 		"(^|\|)[Aa]nti[kc]on" => "$1{ANTI}{C}";
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
 		//"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => "{ET}";
+		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => "$1{ET}$3";
+		
 
 		"erer([se]?[nm]?)$" => "{ER}{ER}$1";
 		"erei(en)?$" => "{ER}ei$1";
@@ -392,6 +402,7 @@
 	#EndSubSection(shortener)
 	#BeginSubSection(normalizer)
 		
+		"ü-?ü" => "ü"; 	// rule for swiss german
 		"û" => "ü";
 		"é" => "e";
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
@@ -622,7 +633,6 @@
 		"T}er" => "T}[VR]";
 		"\[&T\]\i-?g" => "[&T-1][G]";
 		"\[&T\]{ET}" => "[&T][&E][ET3/4]";
-		"\[&T\]es" => "[&TES]";
 		"\[&T\]e$" => "[&T][&E][-E]";
 		"\[&T\]a" => "[&T][&E]A";
 		"\[&T\]\[?o\]?$" => "[&T&O]";
@@ -725,6 +735,9 @@
 
 		"{ET}E" => "{ET}[&E]E";
 
+		"\[&T\]ES" => "[&TES]";
+		
+
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
 		// separates two words in one
@@ -740,6 +753,7 @@
 		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
 		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
 		"\[&T\]S\|" => "[&T]S\\";
+		"\[&T\]\|{ER}" => "[&T]\\[0N-]{ER}";
 		"(\[&T\]ON)\|" => "$1\\";
 		"(\[&T\]O\[NS\])\|" => "$1\\";
 
@@ -789,6 +803,10 @@
 		// hm ... Murphy hit's again: not a very good solution ... 
 		// ^z is written with Fussschlaufe (bug in SE?)
 		// something is odd with this \ anyway: doesn't behave like | in SmoothenEntryExitPoints either
+
+		// if one word is separated => separate all the words!
+		"\|(.*)\\" => "\\$1\\";
+		"\\(.*)\|" => "\\$1\\";
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -1294,7 +1312,7 @@
 		"(\[&t@l3\])\[#n\](\[&i\])" => "$1[#3]$2";		// idem
 		"\[s=\]\[o\]\[nd\]" => "[S=][#2][O][ND]";		// idem
 		"\[n=\]\[i\]\[d\]" => "[N=][#2][I][D]"; 		// idem
-		"\[0d-\]\[i\](?!\[(?:vr|VR|ns|NS)\])" => "[0D-][#4-][I]"; // idem
+		"\[0d-\]\[i\](?!\[(?:vr|VR|ns|NS)\])" => "[0d-][#4-][i]"; // idem
 		"\[t\]\[i\]\[\^sch\]" => "[T][#2][I][^SCH]";		// idem
 		"\[s(=?)\]\[a\]\[([lh])\]" => "[S$1][#4][A][$2]";	// idem
 		"\[s\]\[#3\]\[a\]\[h\]" => "[S][#5][A][H]";		// idem
@@ -1307,7 +1325,7 @@
 		"(\[d\])(\[schaft\])" => "$1[#5]$2";			// idem
 		"(\[k\])\[#3\](\[u\]\[tt\])" => "$1[#6]$2";		// idem
 		"\[t\]\[#3\]\[a\]\[l\]" => "[t][#5][a][l]";		// idem
-		"\[s=\](?!\[#)" => "[s=][#4]";				// idem
+		//"\[s=\](?!\[#)" => "[s=][#4]";				// idem
 		"\[n=@r6\]\[b@r6\]" => "[n=@r6][#4][b@r6]";		// idem
 		"\[l\]\[i\]\[\^z\]" => "[l][#3][i][^z]";		// idem
 		"\[g\]\[ar\]" => "[g][#2][ar]";				// idem
@@ -1474,6 +1492,16 @@
 		"\[\^ch\]\[#3\]\[w\]" => "[^ch][#5][w]";
 		"\[vor\]\[#3\]\[g\]" => "[vor][#2-][g]";
 		"\[g\]\[#3\]\[w\]" => "[g][#4][w]";
+		"\[0d-\]\[#4-\]\[i\]\[d\]" => "[0d-][#1][i][d]";
+		"\[nd\]\[schaft\]" => "[nd][#5][schaft]";
+		"\[s\]\[@l\]" => "[s][#3][@l]";
+		"\[ck@l3\]\[i\]\[ng\]" => "[ck@l3][#4][i][ng]";
+		"\[tt\]\[#3\]\[f\]" => "[tt][#5][f]";
+		"\[s\]\[i\]\[\^z\]" => "[s][#4][i][^z]";
+		"\[s\]\[#3\]\[p@r6\]" => "[s][#5][p@r6]";
+		"\[k\]\[#3\]\[f@l\]" => "[k][#5][f@l]";
+		"\[\^ch\]\[#3\]\[f\]" => "[^ch][#5][f]";
+		"\[&u\]\[dis\]" => "[&u][#1-][dis]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
