@@ -79,11 +79,16 @@
 		// diejenige, derjenige, desjenigen etc.
 		"([Dd](?:ie|er|es|as|em|en))-?(je-?ni-?ge)" => "$1+$2";
 
+		// correct wrong separations
 		"([Dd])e-?nen" => "$1en+en";
 		"([Dd])e(-?|\|)re([rn])" => "$1er+e$3";
 		"([Mm]i-?ne)\|(ral)" => "$1-$2";
 		"([Dd]er)\|(ben)" => "$1-$2";
 		"([Ss]au)\|(be)\+(r)" => "$1-$2-$3";
+		"([Mm]an)\|(gel)" => "$1-$2";
+
+		// additional separations
+		"([Nn]acht)-?(tisch)" => "$1|$2";
 
 		// in general: don't separate -ren (..)
 		"\|ren" => "-ren";
