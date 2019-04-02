@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass paper
@@ -12,13 +12,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family sfdefault
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -29,15 +29,24 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -65,7 +74,7 @@ VSTENO Tutorial
 \end_layout
 
 \begin_layout Date
-19.02.2019
+02.04.2019
 \end_layout
 
 \begin_layout Author
@@ -85,13 +94,12 @@ VSTENO - kurz Vector Shorthand Tool with Enhanced Notational Options oder
 
 \begin_layout Abstract
 Den Kern des Programmes bildet die so genannte Steno Engine, ein abstraktes
- - d.h.
- verallgemeinertes - Stenografiezeichen-Satzsystem, das grundsätzlich an
+ (verallgemeinertes) Stenografiezeichen-Satzsystem, das grundsätzlich an
  kein spezifisches Kurzschrift-System gebunden ist.
- Es können also eigene Zeichen und REGEX-Regeln zur Übertragung von Langschrift-
- zu Kurzschrifttexten programmiert werden.
+ Es können also eigene Zeichen und REGEX-Regeln zur Übertragung von Langschrift
+ zu Kurzschrift programmiert werden.
  In der Grundversion kommt VSTENO mit Definitionen für das deutsche System
- Stolze-Schrey in der Grundschrift.
+ Stolze-Schrey (Grundschrift).
  
 \end_layout
 
@@ -146,14 +154,14 @@ linguistinnen.pdf) vom 18.
 Höchste Zeit also, dies nachzuholen und so Ihnen, den Anwender/innen die
  Möglichkeit zu geben, eigene Stenografie-Systeme umzusetzen.
  Denn dies ist zugegebenermassen eine der primären Visionen von VSTENO:
- Stenograf/innen anderer Systeme dazu zu animieren, Ihr eigenes Stenografie-Syst
+ Stenograf/innen anderer Systeme dazu zu animieren, ihr eigenes Stenografie-Syst
 em mit VSTENO umzusetzen! 
 \end_layout
 
 \begin_layout Standard
 Wie jedes quelloffene, freie Software-Projekt strebt VSTENO danach, irgendwann
  jenes entscheidende Momentum zu gewinnen, das den Quantensprung vom Einpersonen
-- ins Community-Projekt schafft.
+- ins Community-Projekt ermöglicht.
  Mir ist sehr wohl bewusst, dass Stenografie heutzutage nicht mehr 
 \begin_inset Quotes eld
 \end_inset
@@ -168,9 +176,10 @@ so der Renner
 \end_layout
 
 \begin_layout Standard
-Aus eigener Erfahrung kann ich sagen, dass das Verwenden der Kurzschrift
- umso mehr Spass macht, je besser man sie beherrscht, und zur Beherrschung
- gehört nicht nur das Schreiben, sondern vor allem auch das flüssige Lesen.
+Diesbezüglich kann ich aus eigener Erfahrung nur sagen, dass das Verwenden
+ der Kurzschrift umso mehr Spass macht, je besser man sie beherrscht; und
+ zur Beherrschung gehört nicht nur das Schreiben, sondern vor allem auch
+ das (flüssige) Lesen.
  Gerade hier kann VSTENO mit seinem 
 \begin_inset Quotes eld
 \end_inset
@@ -245,8 +254,8 @@ target "https://de.wikipedia.org/wiki/Creative_Commons"
 \end_inset
 
 ) publiziert wurden.
- Eine Seite, die eine Sammlung solcher Bücher und Texte zur freien Verwendung
- anbietet ist das Projekt Gutenberg:
+ Eine Seite, die eine Sammlung von Büchern und Texten mit abgelaufenem Copyright
+ anbietet, ist das Projekt Gutenberg:
 \end_layout
 
 \begin_layout Quotation
@@ -260,26 +269,35 @@ target "http://gutenberg.spiegel.de/"
 \end_layout
 
 \begin_layout Standard
-Sie dürfen hier also jeden Text kopieren und für sich verwenden.
- Einige Bücher dürfen, wenn zum Beispiel via CC-Lizenz so angegeben, sogar
- modifiziert und unter Nennung der Quelle bzw.
- des/der Autor/in weiterpubliziert werden
+Sie dürfen hier also jeden Text kopieren und für sich persönlich verwenden
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Es ist dann z.B.
- möglich einen gemeinfreien Roman in Kurzschrift zu übertragen und öffentlich
- im Internet zum Download anzubieten.
+Mit 
+\begin_inset Quotes eld
+\end_inset
+
+persönlich
+\begin_inset Quotes erd
+\end_inset
+
+ ist eine nicht-kommerzielle, private Nutzung gemeint.
+ Untersagt ist ausdrücklich eine kommerzielle, öffentliche Nutzung.
+ Es gilt also zu unterscheiden, dass die ursprünglichen Texte zwar copyright-fre
+i sind, das Projekt Gutenberg (bzw.
+ deren Mitarbeitende) indes die Rechte der digitalisierten Version innehaben!
+ Nur Bücher, welche ausdrücklich durch eine CC-Lizenz freigegeben sind,
+ dürfen - unter der Berücksichtigung der angegebenen Rechte - öffentlich
+ (und zum Teil auch kommerziell) weiterverwendet werden!
 \end_layout
 
 \end_inset
 
 .
- Wenn die Verwendung zum eigenen Zweck (z.B.
- Lesen eines Romans) in jedem Fall gestattet ist, sollte die Weiterverwendung
- und die Publikation vorher gut abgeklärt werden.
- 
+ Sollten Sie die Bücher anderweitig verwenden wollen (also insbesondere
+ öffentlich oder gar kommerziell), so klären Sie bitte vorgängig ab, ob
+ und von welcher Art Copyright sie allenfalls betroffen sind!
 \end_layout
 
 \begin_layout Section*
@@ -2148,9 +2166,9 @@ Das Feld d1 steht für die Eingangs-Information (entry information), d.h.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="8" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -2347,9 +2365,9 @@ beendet
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="6" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -3061,9 +3079,9 @@ Bei all unseren Definitionen haben wir bis jetzt den Header der Einfachheit
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="25" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -3748,9 +3766,9 @@ nicht schattiert
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -4891,9 +4909,9 @@ Interpretation y-Koordinate
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -8253,101 +8271,1300 @@ Der relancer macht sich hier das vorhin erklärte Prinzip zunutze und markiert
 \end_layout
 
 \begin_layout Section*
-Text oder Wort?
+Stages
 \end_layout
 
 \begin_layout Standard
-Im Prinzip werden Regeln standardmässig auf einzelne Wörter angewandt.
- Mit dem Schlüsselwort @@txt kann dies allerdings geändert werden:
+Seit der letzten Dokumentation wurde ein komplett neues Konzept in VSTENO
+ eingeführt: so genannte Stages.
+ Diese definieren, auf welchen Teil des Textes sich die Regeln beziehen:
 \end_layout
 
 \begin_layout LyX-Code
-#BeginSubSection(global,@@txt) 
+stage 0: gesamter Text
 \end_layout
 
 \begin_layout LyX-Code
-   // global replacements in the whole text 
+stage 1: Wörterbuch und linguistische Analyse
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Der linguistical analyzer wurde ebenfalls neu eingeführt und wird unter
+ anderem hier erläutert: https://www.vsteno.ch/docs/gel_speiende_spiegel.pdf
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout LyX-Code
-   "…" => "..."; 
+stage 2: ganzes Wort (können mehrere zusammengesetzte Wörter sein)
 \end_layout
 
 \begin_layout LyX-Code
-   "–" => "-"; 
+stage 3: jedes Teilwort (= zusammengesetzte Wörter)
 \end_layout
 
 \begin_layout LyX-Code
-   "&raquote;" => "«"; 
-\end_layout
-
-\begin_layout LyX-Code
-   "&laquote;" => "»"; 
-\end_layout
-
-\begin_layout LyX-Code
-#EndSubSection(global)
+stage 4: ganzes Wort
 \end_layout
 
 \begin_layout Standard
-Diese Regeln werden also auf den gesamten Text angewendet.
- Das Schlüsselwort @@txt sollte nur am Anfang verwendet werden (bevor der
- Text nach einzelnen Wörter aufgeschlüsselt werden und steht mit Komma an
- der zweiten Stelle hinter dem Funktonsnamen (global).
- Sollen die Regeln auf ein Wort angewandt werden, muss - nur einmal innerhalb
- des Parsprozesses und nicht vor @@txt - das Schlüsselwort @@wrd verwendet
- werden:
+Einige Anwendungsbeispiele:
 \end_layout
 
-\begin_layout LyX-Code
-#BeginSubSection(helvetizer,@@wrd)
-\end_layout
-
-\begin_layout LyX-Code
-   "ß" => "ss"; 
-\end_layout
-
-\begin_layout LyX-Code
-#EndSubSection(helvetizer,@@dic)
-\end_layout
-
-\begin_layout Standard
-Die Funktion helvetizer enthält hier also nur 1 Regel, die das deutsche
- sz in ss umwandelt.
- Das Schlüsselwort @@wrd bedeutet hier, dass die Regeln von nun an nur noch
- auf einzelne Wörter angewandt werden.
- Das Schlüsselwort @@dic wiederum bedeutet, dass das Resultat anschliessend
- ans Wörterbuch (Dictionnaire) geschickt wird.
-\end_layout
-
-\begin_layout Standard
-Wie @@txt stehen @@wrd und @@dic nach Komma an zweiter Stelle.
- Die Zeichen 
+\begin_layout Itemize
+Stage 0: Die Ellipse 
 \begin_inset Quotes eld
 \end_inset
 
-@@
+...
 \begin_inset Quotes erd
 \end_inset
 
- bedeuten hier 
+ beinhaltet drei Punkte.
+ Da VSTENO Satzzeichen 
 \begin_inset Quotes eld
 \end_inset
 
-hole von
+herausfiltern
 \begin_inset Quotes erd
 \end_inset
 
- (wenn es im Beginn-Teil steht) bzw.
+ muss, um die Wörter zu bearbeiten, wären die 3 Punkte für die Regeln grundsätzl
+ich nicht sichtbar.
+ Dank der Einführung der Stage 0 können die Regeln aber auf den noch unverändert
+en Original-Text (inklusive Satzzeichen) angewandt werden.
+ Dadurch ist es zum Beispiel auch möglich, Regeln zu schreiben, die auf
+ mehrere Wörter angewandt werden: Z.B.
+ könnte 
+\begin_inset Quotes eld
+\end_inset
+
+das heisst
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+dh
+\begin_inset Quotes erd
+\end_inset
+
+ verkürzt werden (auch hier wären mehrere Wörter bzw.
+ das Leerzeichen für VSTENO nicht sichtbar, da der Text unter Verwendung
+ der Leerzeichen standardmässig in einzelne Wörter aufgeteilt wird).
+\end_layout
+
+\begin_layout Itemize
+Stage 1: Hier 
+\begin_inset Quotes eld
+\end_inset
+
+sieht
+\begin_inset Quotes erd
+\end_inset
+
+ VSTENO nur einzelne Wörter und Satzzeichen werden herausgefiltert.
  
 \begin_inset Quotes eld
 \end_inset
 
-sende an
+Teetasse.
 \begin_inset Quotes erd
 \end_inset
 
- (wenn es im End-Teil steht).
+ aus dem Originaltext, wird also zu 
+\begin_inset Quotes eld
+\end_inset
+
+Teetasse
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Dieses 
+\begin_inset Quotes eld
+\end_inset
+
+Rohwort
+\begin_inset Quotes erd
+\end_inset
+
+ (bare word) wird anschliessend ans Wörterbuch gesandt.
+ Findet VSTENO einen Eintrag für das Wort, so wird die Bearbeitung mit dem
+ Eintrag fortgesetzt (kann entweder die LNG-, STD- oder PRT-Form sein, siehe
+ später).
+ Wird kein Eintrag gefunden, wendet VSTENO anschliessend eine linguistische
+ Analyse an (auf die ebenfalls später genauer eingegangen wird).
+ In unserem Fall wird dabei 
+\begin_inset Quotes eld
+\end_inset
+
+Teetasse
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+Tee|tasse
+\begin_inset Quotes erd
+\end_inset
+
+ (d.h.
+ VSTENO erkennt, dass es sich um ein zusammengesetztes Wort mit zwei Teilen
+ handelt).
+\end_layout
+
+\begin_layout Itemize
+Stage 2: VSTENO sieht hier das gleiche wie in Stage 1, also das gesamte
+ Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Tee|tasse
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Der einzige Unterschied: Das Wort wurde nun im Wörterbuch nachgeschlagen
+ oder linguistisch analysiert und enthält zusätzliche Informationen.
+ In unserem Fall ist dies das Zeichen |, welche eine Wortgrenze angibt.
+ Wir könnten nun in Stage 2 eine Regel der Form 
+\begin_inset Quotes eld
+\end_inset
+
+Tee|tasse
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+Tee
+\backslash
+
+\backslash
+tasse
+\begin_inset Quotes erd
+\end_inset
+
+ schreiben, um VSTENO dazu zu bringen, das Wort getrennt zu schreiben.
+\end_layout
+
+\begin_layout Itemize
+Stage 3: Hier sieht VSTENO jede Teilwort (bei zusammengesetzten Wörtern)
+ einzeln.
+ Nehmen wir z.B.
+ das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+Vertragsvermittler
+\begin_inset Quotes erd
+\end_inset
+
+.
+ VSTENO wird hier zwei Teilwörter erkennen: 
+\begin_inset Quotes eld
+\end_inset
+
+Vertrags
+\begin_inset Quotes erd
+\end_inset
+
+ + 
+\begin_inset Quotes eld
+\end_inset
+
+Vermittler
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Wenn wir nun eine Regel der Form 
+\begin_inset Quotes eld
+\end_inset
+
+^Ver
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{VER}
+\begin_inset Quotes erd
+\end_inset
+
+ in Stage 3 schreiben, so wird die Kürzung ver- auf BEIDE Vorsilben angewandt:
+ 
+\begin_inset Quotes eld
+\end_inset
+
+{VER}trags|{VER}mittler
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Schreiben wir die gleiche Regel in Stage 2, so wird nur die erste (am Wortanfan
+g wegen des REGEX-Zeichens ^) ersetzt: 
+\begin_inset Quotes eld
+\end_inset
+
+{VER}trags|vermittler
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Stage 4: Hier kehren wird zur gleichen Stufe wie in Stage 2 zurück, d.h.
+ wir sehen wieder das ganze Wort, inklusive Wortgrenze |.
+ Wir können dies nutzen, um z.B.
+ Wörter zu trennen.
+ Die Regel 
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+[&T
+\backslash
+]
+\backslash
+|
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[&T]
+\backslash
+
+\backslash
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Beachten Sie, dass bestimmte Zeichen - wie [ und 
+\backslash
+ - in REGEX 
+\begin_inset Quotes eld
+\end_inset
+
+escaped
+\begin_inset Quotes erd
+\end_inset
+
+ werden müssen: 
+\backslash
+[ is also gleichbedeutend mit [ und 
+\backslash
+
+\backslash
+ bedeutet 
+\backslash
+.
+\end_layout
+
+\end_inset
+
+ trennt zum Beispiel Teilwörter, die auf Aufstrich-t (= [&T]) enden, vom
+ folgenden Wort ab.
+ 
+\end_layout
+
+\begin_layout Standard
+Wie aber definiere ich, welche Regeln in welcher Stage angewandt werden
+ sollen? Hierfür werden die #BeginSubSection() und #EndSubSection()-Statements
+ mit dem Stage-Schlüsselwort #>stageX kombiniert.
+ X steht dabei für die Nummer der Stage:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(shortener,#>stage3) 
+\end_layout
+
+\begin_layout LyX-Code
+   // hier beginnen Kürzungsregeln
+\end_layout
+
+\begin_layout LyX-Code
+   // sie werden auf jedes Teilwort einzeln angewendet
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+^ver
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{VER}
+\begin_inset Quotes erd
+\end_inset
+
+;
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(shortener,#>stage4)
+\end_layout
+
+\begin_layout Standard
+Das Beispiel zeigt also die oben bereits erwähnte Kürzungsregel
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bitte beachten Sie, dass das Beispiel - der Übersichtlichkeit halber - stark
+ vereinfacht ist.
+ Eine so formulierte Regel würde viele falsche Wörter generieren (z.B.
+ würde 
+\begin_inset Quotes eld
+\end_inset
+
+Vers
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+{VER}s
+\begin_inset Quotes erd
+\end_inset
+
+) und müsste präziser als 
+\begin_inset Quotes eld
+\end_inset
+
+^[Vv]er
+\backslash
++
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{VER}
+\begin_inset Quotes erd
+\end_inset
+
+ geschrieben werden (d.h.
+ die Kürzung wird nur angewandt, wenn ver- von der linguistischen Analyse
+ als Vorsilbe - mit einer darauffolgenden Morphemgrenze (+) - erkannt wurde.
+\end_layout
+
+\end_inset
+
+.
+ #BeginSubSection(shortener,#>stage3) bedeutet also 
+\begin_inset Quotes eld
+\end_inset
+
+die folgende Regel wird in Stage 3 ausgeführt).
+ Die Zeile #EndSubSection(shortener,#>stage4) bedeutet 
+\begin_inset Quotes eld
+\end_inset
+
+hier endet die Stage 3 und die folgende Regel wird in Stage 4 ausgeführt
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Bitte beachten Sie folgende zusätzliche Regeln im Umgang mit Stages:
+\end_layout
+
+\begin_layout Itemize
+Stages müssen der Reihe nach abgearbeitet werden (Sie können also nicht
+ von Stage 0 zu Stage 4 springen und anschliessend wieder zu Stage 3 zurückkehre
+n).
+\end_layout
+
+\begin_layout Itemize
+Stages müssen nahtlos aufeinanderfolgen (d.h.
+ wenn Stage 2 endet - z.B.
+ mit #EndSubSection(accentizer,#>stage2) - so muss die folgende Zeile mit
+ #BeginSubSection(shortener,#>stage3) beginnen).
+\end_layout
+
+\begin_layout Itemize
+Die Wörterbuch-Variablen dürfen nicht in Stage 3 definiert werden, da sie
+ sonst nicht das ganze Wort enthalten (weisen Sie sie deshalb in Stage 4
+ zu!)
+\end_layout
+
+\begin_layout Standard
+Jede andere Verwendung der Stages für zu unvorhersehbaren Resultaten
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+You've been warned ...
+ ! :)
+\end_layout
+
+\end_inset
+
+!
+\end_layout
+
+\begin_layout Section*
+Linguistische Analyse
+\end_layout
+
+\begin_layout Standard
+Die linguistische Analyse - und die ihr zugrunde liegenden Algorithmen -
+ werden in einem separaten Dokument näher beschrieben
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Siehe hier: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Gel speiende Spiegel und andere (linguistische) Probleme"
+target "https://www.vsteno.ch/docs/gel_speiende_spiegel.pdf"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ Wichtig ist an dieser Stelle nur zu wissen:
+\end_layout
+
+\begin_layout Enumerate
+Dass die linguistische Analyse automatisch in Stage 1 vorgenommen wird.
+\end_layout
+
+\begin_layout Enumerate
+Dass die linguistische Analyse fehlerhafte Resultate produzieren kann.
+\end_layout
+
+\begin_layout Enumerate
+Wie und wo die linguistische Analyse so angepasst werden kann, dass sie
+ möglichst viele richtige Resultate produziert (und falsche Resultate korrigiert
+ werden können).
+\end_layout
+
+\begin_layout Standard
+Aber der Reihe nach:
+\end_layout
+
+\begin_layout Standard
+Zu Punkt 1: Es ist zu präzisieren, dass die linguistische Analyse nur dann
+ vorgenommen wird, wenn kein Eintrag im Wörterbuch gefunden wird (sonst
+ wird die LNG-, STD- oder PRT-Form aus dem Wörterbuch verwendet).
+\end_layout
+
+\begin_layout Standard
+Zu Punkt 2: Zusammengesetzte Wörter sowie Silben- und Morphemgrenzen zu
+ erkennen ist für einen Computer alles andere als einfach.
+ Der Computer findet zuweilen absurde 
+\begin_inset Quotes eld
+\end_inset
+
+Kombinationen
+\begin_inset Quotes erd
+\end_inset
+
+ wie: Spiegel (Verb 
+\begin_inset Quotes eld
+\end_inset
+
+spie
+\begin_inset Quotes erd
+\end_inset
+
+ + Substantiv 
+\begin_inset Quotes eld
+\end_inset
+
+Gel
+\begin_inset Quotes erd
+\end_inset
+
+), Museum (Substantiv 
+\begin_inset Quotes eld
+\end_inset
+
+Muse
+\begin_inset Quotes erd
+\end_inset
+
+ + Präposition 
+\begin_inset Quotes eld
+\end_inset
+
+um
+\begin_inset Quotes erd
+\end_inset
+
+), anderen (Präposition 
+\begin_inset Quotes eld
+\end_inset
+
+an
+\begin_inset Quotes erd
+\end_inset
+
+ + Relativpronomen 
+\begin_inset Quotes eld
+\end_inset
+
+deren
+\begin_inset Quotes erd
+\end_inset
+
+) etc.
+\end_layout
+
+\begin_layout Standard
+Zu Punkt 3: Es bestehen grundsätzlich zwei Möglichkeiten, falsche Resultate
+ zu vermeiden: (1) indem man die linguistische Analyse mit zusätzlichen
+ Daten zu Präfixen, Stämmen und Suffixen versorgt und (2) indem man falsche
+ Resultate mit REGEX-Regeln korrigiert.
+ Beides wird im folgenden kurz erläutert.
+\end_layout
+
+\begin_layout Subsection*
+(1) Parameter und Variablen
+\end_layout
+
+\begin_layout Standard
+Zunächst einmal kann das Verhalten der linguistischen Analyse durch allgemeine
+ Parameter gesteuert werden, die über die Eingabemaske 
+\begin_inset Quotes eld
+\end_inset
+
+Maxi
+\begin_inset Quotes erd
+\end_inset
+
+ verfügbar sind.
+ Es sind dies
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Einige Parameter, wie Sprache und Markierung von Satzanfängen und Substantiven,
+ können im Moment noch nicht eingestellt werden.
+ Sie werden der Vollständigkeit halber dennoch bereits jetzt in die Dokumentatio
+n aufgenommen.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+Sprache: Definiert die Sprache, die für das Wörterbuch (hunspell) und den
+ Silbentrenner (phpSyllable) verwendet werden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Im Moment ist hier fix 
+\begin_inset Quotes eld
+\end_inset
+
+de_ch
+\begin_inset Quotes erd
+\end_inset
+
+ (Deutsch nach Schweizer Norm) für hunspell und 
+\begin_inset Quotes eld
+\end_inset
+
+ch
+\begin_inset Quotes erd
+\end_inset
+
+ (Deutsch allgemein) für phpSyllable voreingestellt.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Silben: Wenn angewählt, wendet VSTENO eine Silbentrennung an (Silben werden
+ durch das Zeichen - abgetrennt).
+ 
+\end_layout
+
+\begin_layout Itemize
+Wörter: Wenn angewählt, versucht VSTENO Teilwörter (zusammengesetzte Wörter)
+ zu finden (die Teilwörter werden durch | abgetrennt).
+\end_layout
+
+\begin_layout Itemize
+Trennen: Gibt an, bei welcher Länge Wörter abgetrennt werden (im Moment
+ deaktiviert).
+\end_layout
+
+\begin_layout Itemize
+Leim: Gibt an, bei welcher Länge Wörter nicht abgetrennt werden (im Moment
+ deaktiviert).
+\end_layout
+
+\begin_layout Standard
+Da im Moment die meisten Funktionen (noch) deaktiviert sind, kann man hier
+ nur einstellen, ob man Silben- und Wörtertrennung will oder nicht (werden
+ sowohl Silben- als auch Wörtererkennung abgewählt, nimmt VSTENO keine linguisti
+sche Analyse vor).
+\end_layout
+
+\begin_layout Standard
+Die zweite Möglichkeit, das Verhalten der linguistischen Analyse zu verändert,
+ besteht darin, eigene Präfixe, Stämme und Suffixe zu definieren.
+ Hierzu muss im Header-Teil ein SubSection 
+\begin_inset Quotes eld
+\end_inset
+
+session
+\begin_inset Quotes erd
+\end_inset
+
+ definiert werden:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(session) 
+\end_layout
+
+\begin_layout LyX-Code
+  "prefixes_list" := "an, ver, ge";
+\end_layout
+
+\begin_layout LyX-Code
+  "stems_list" := "gan-?gen, nann-?t(?:e[rsnm]?)?";
+\end_layout
+
+\begin_layout LyX-Code
+  "suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?";
+ #EndSubSection(session)
+\end_layout
+
+\begin_layout Standard
+Session bedeutet hier nichts anderes, als dass wir Session-Variablen der
+ Programmes verändern können (wie bei Inline-Option-Tags).
+ Die Session-Variablen für Präfixe, Stämme und Suffixe heissen prefixes_list,
+ stems_list und suffixes_list.
+ Gesetzt werden die Werte durch den Operator :=
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Pascal lässt grüssen ...
+ :)
+\end_layout
+
+\end_inset
+
+ und die einzelnen Präfixe, Suffixe und Stämme stehen innerhalb von Anführungsze
+ichen und mit Komma (falls es mehrere sind).
+ Im obigen Beispiel werden als drei Präfixe definiert (an-, ver- und ge-),
+ sowie die zusätzlichen (unregelmässigen) Stämme -gangen (z.B.
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+gegangen
+\begin_inset Quotes erd
+\end_inset
+
+) und -nannte in verschiedenen Varianten (genannte, genannter, genanntes
+ etc.) und letztlich auch die Suffixe -keit/-heit und -lich in verschiedenen
+ Varianten.
+\end_layout
+
+\begin_layout Standard
+Wie leicht zu erkennen ist, kann auch hier der REGEX-Formalismus verwendet
+ werden, allerdings gibt es eine absolut wichtige Einschränkung zu beachten:
+ Es dürfen nur so genannte 
+\begin_inset Quotes eld
+\end_inset
+
+non capturing groups
+\begin_inset Quotes erd
+\end_inset
+
+ - Zeichen (?:) statt () - verwendet werden.
+ Der Grund hierfür ist, dass VSTENO diese Formeln in eine 
+\begin_inset Quotes eld
+\end_inset
+
+Superformel
+\begin_inset Quotes erd
+\end_inset
+
+ einbettet, die einzelnen Element erkennt und entsprechend kopiert und wieder
+ einfügt.
+ Hierfür - für das Kopieren und Einfügen - muss die Superformel ihrerseits
+ capturing groups verwenden.
+ Werden in den 
+\begin_inset Quotes eld
+\end_inset
+
+Unterformeln
+\begin_inset Quotes erd
+\end_inset
+
+ also ebenfalls capturing groups verwendet, dann werden die Variablen falsch
+ zugewiesen und das Chaos ist vorprogrammiert!
+\end_layout
+
+\begin_layout Standard
+Was bewirken nun die obigen Zeilen? Wir erläutern dies mit einigen Beispielen:
+\end_layout
+
+\begin_layout Itemize
+Präfixe: Die linguistische Analyse von VSTENO wird als erstes eine Silbentrennun
+g und dann eine Worterkennung vornehmen.
+ Dadurch wird das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+angeben
+\begin_inset Quotes erd
+\end_inset
+
+ zum Beispiel zuerst in 
+\begin_inset Quotes eld
+\end_inset
+
+an-ge-ben
+\begin_inset Quotes erd
+\end_inset
+
+ und dann in zwei separate Wörter 
+\begin_inset Quotes eld
+\end_inset
+
+an|ge-ben
+\begin_inset Quotes erd
+\end_inset
+
+ umgewandelt.
+ Dank der prefix_list, weiss die linguistische Analyse nun jedoch, dass
+ 
+\begin_inset Quotes eld
+\end_inset
+
+an
+\begin_inset Quotes erd
+\end_inset
+
+ am Wortanfang als Präfix zu behandeln ist.
+ Also wird in einem dritten Schritt 
+\begin_inset Quotes eld
+\end_inset
+
+an|ge-ben
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+an+ge-ben
+\begin_inset Quotes erd
+\end_inset
+
+ umgewandelt.
+ Bitte beachten Sie, dass Präfixe nur dann als Präfixe behandelt werden,
+ wenn sie zuvor als separate Wörter erkannt wurden: In 
+\begin_inset Quotes eld
+\end_inset
+
+angeln
+\begin_inset Quotes erd
+\end_inset
+
+ zum Beispiel wird kein Präfix erkannt (weil *geln kein eigentständiger
+ Wortteil ist
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In 
+\begin_inset Quotes eld
+\end_inset
+
+Angel
+\begin_inset Quotes erd
+\end_inset
+
+ hingegen wird ein falsches Präfix erkannt, weil 
+\begin_inset Quotes eld
+\end_inset
+
+an
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+Gel
+\begin_inset Quotes erd
+\end_inset
+
+ eigentständige Wortteile sind.
+ Dies ist einer der Fälle, die nachträglich korrigiert werden müssen.
+\end_layout
+
+\end_inset
+
+).
+ Etwas unterschiedlich funktioniert das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+gegeben
+\begin_inset Quotes erd
+\end_inset
+
+: Während bei 
+\begin_inset Quotes eld
+\end_inset
+
+angeben
+\begin_inset Quotes erd
+\end_inset
+
+ die Vorsilbe 
+\begin_inset Quotes eld
+\end_inset
+
+an
+\begin_inset Quotes erd
+\end_inset
+
+ als eigenes Wort erkannt wird (weil 
+\begin_inset Quotes eld
+\end_inset
+
+an
+\begin_inset Quotes erd
+\end_inset
+
+ als Präposition im Wörterbuch von hunspell vorhanden ist), ist dies bei
+ 
+\begin_inset Quotes eld
+\end_inset
+
+ge
+\begin_inset Quotes erd
+\end_inset
+
+ nicht der Fall.
+ Hier weiss VSTENO als nur dank der prefix_list, dass ge als Vorsilbe betrachtet
+ werden kann.
+\end_layout
+
+\begin_layout Itemize
+Stämme: Bei 
+\begin_inset Quotes eld
+\end_inset
+
+angeben
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+gegeben
+\begin_inset Quotes erd
+\end_inset
+
+ funktioniert die linguistische Analyse, wie wir gesehen haben, sehr gut
+ (weil 
+\begin_inset Quotes eld
+\end_inset
+
+geben
+\begin_inset Quotes erd
+\end_inset
+
+ im Wörterbuch existiert).
+ Betrachten wir das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+gegangen
+\begin_inset Quotes erd
+\end_inset
+
+ hingegen, so wird VSTENO zunächst keine Vorsilbe finden (da *gangen kein
+ eigentständiges Wort ist).
+ Auch hier können wir der linguistischen Analyse auf die Sprünge helfen,
+ indem wir 
+\begin_inset Quotes eld
+\end_inset
+
+gangen
+\begin_inset Quotes erd
+\end_inset
+
+ als eigenständigen Stamm definieren.
+ Dadurch schlagen wir gleich zwei (oder zuweilen noch mehr) Fliegen auf
+ eine Klappe: nicht nur 
+\begin_inset Quotes eld
+\end_inset
+
+ge+gangen
+\begin_inset Quotes erd
+\end_inset
+
+ wird nun erkannt, sondern auch 
+\begin_inset Quotes eld
+\end_inset
+
+ver+gan-gen
+\begin_inset Quotes erd
+\end_inset
+
+ (weil ver- in der prefix_list steht).
+\end_layout
+
+\begin_layout Itemize
+Suffixe: Funktionieren nach dem gleichen Prinzip wie Präfixe, mit dem einzigen
+ Unterschied, dass sie durch # abgetrennt werden: 
+\begin_inset Quotes eld
+\end_inset
+
+som-mer#lich
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Im Unterschied zu Präfixen können sich Suffixe verändert (z.B.
+ durch Konjugation, Deklination).
+ Hier hilft uns REGEX, um die verschiedenen Fälle abzudecken: 
+\begin_inset Quotes eld
+\end_inset
+
+li-?ch(?:(?:e-?r)(?:e[srn]?)?)?
+\begin_inset Quotes erd
+\end_inset
+
+ erkennt 
+\begin_inset Quotes eld
+\end_inset
+
+som-mer#lich
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+sommer#lich-e
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+sommer#lich-es
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+som-mer#lich-er
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+\end_layout
+
+\begin_layout Standard
+Sie ahnen es vielleicht: Die Sache kann ziemlich schnell kompliziert werden,
+ sodass man hier wirklich sehr gute Regeln austüfteln muss, um optimale
+ Resultate zu erhalten.
+ Dennoch ist die linguistische Analyse und das 
+\begin_inset Quotes eld
+\end_inset
+
+Kalibrieren
+\begin_inset Quotes erd
+\end_inset
+
+ derselben mit zusätzlichen Variablen ein sehr potentes Mittel, um Wortteile
+ mit guter Trefferquote zu erkennen - und dadurch das Formulieren der nachfolgen
+den Stenoregeln zu vereinfachen!
+\end_layout
+
+\begin_layout Standard
+Aber so gut man die Regeln auch wählt, es werden immer falsche Resultate
+ generiert werden.
+ Diese können nun aber mit einem sogenannten Postprocessing (Nachbearbeitung)
+ wiederum korrigiert werden.
+\end_layout
+
+\begin_layout Subsection*
+(2) Postprocessing
+\end_layout
+
+\begin_layout Standard
+Ich gebe zu, dass ich Ihnen oben eine etwas heile Welt untergejubelt habe:
+ das Beispiel 
+\begin_inset Quotes eld
+\end_inset
+
+angeben
+\begin_inset Quotes erd
+\end_inset
+
+ würde tatsächlich nicht zu 
+\begin_inset Quotes eld
+\end_inset
+
+an+ge-ben
+\begin_inset Quotes erd
+\end_inset
+
+ aufgelöst, sondern zu 
+\begin_inset Quotes eld
+\end_inset
+
+an+ge+ben
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Warum? Ganz einfach: Weil Ben ein Eigenname ist, der im Wörterbuch vorkommt
+ ...
+ VSTENO wird also denken: Wenn 
+\begin_inset Quotes eld
+\end_inset
+
+Ben
+\begin_inset Quotes erd
+\end_inset
+
+ existiert und 
+\begin_inset Quotes eld
+\end_inset
+
+ge-
+\begin_inset Quotes erd
+\end_inset
+
+ eine Vorsilbe sein kann, dann muss (weil auch an- als selbständiges Wort
+ existiert) auch ge- ein Präfix sein!
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Man wäre hier vielleicht versucht, das Problem dadurch zu lösen, indem man
+ definiert, dass Präfixe strikte am Wortanfang stehen müssen, aber das wird
+ der Problemstellung nicht gerecht: 
+\begin_inset Quotes eld
+\end_inset
+
+angegeben
+\begin_inset Quotes erd
+\end_inset
+
+ zum Beispiel - hier werden die Vorsilben an- und ge- tatsächlich kombiniert
+ (und es können auch noch mehr Vorsilben kombiniert werden: 
+\begin_inset Quotes eld
+\end_inset
+
+unangefochten
+\begin_inset Quotes erd
+\end_inset
+
+ zum Beispiel hat deren drei ...)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Kurzum: Die linguistische Analyse wird uns mit dem falschen Resultat 
+\begin_inset Quotes eld
+\end_inset
+
+an+ge+ben
+\begin_inset Quotes erd
+\end_inset
+
+ beglücken.
+ Hier setzt nun das Postprocessing (Nachbearbeitung) an, die als SubSection
+ mit dem Namen analyzer ebenfalls im Header stehen muss:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(analyzer)
+\end_layout
+
+\begin_layout LyX-Code
+   
+\begin_inset Quotes eld
+\end_inset
+
+(
+\backslash
+||
+\backslash
++)(ben)$
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+-$2
+\begin_inset Quotes erd
+\end_inset
+
+;
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(analyzer)
+\end_layout
+
+\begin_layout Standard
+Diese Regel definiert nun, dass 
+\begin_inset Quotes eld
+\end_inset
+
+ben
+\begin_inset Quotes erd
+\end_inset
+
+ am Wortende nie als eigenständiges Wort (Eigenname) betrachtet wird, wenn
+ voraus eine Wort- oder eine Morphemgrenze steht.
+ Mit anderen Worten: 
+\begin_inset Quotes eld
+\end_inset
+
+an+ge+ben
+\begin_inset Quotes erd
+\end_inset
+
+ wird umgeschrieben zu 
+\begin_inset Quotes eld
+\end_inset
+
+an+ge-ben
+\begin_inset Quotes erd
+\end_inset
+
+ (Silbengrenze).
+ Diese Regel hat noch weitere ungeahnte Auswirkungen: 
+\begin_inset Quotes eld
+\end_inset
+
+sie|ben
+\begin_inset Quotes erd
+\end_inset
+
+ zum Beispiel (ja, auch hier hat VSTENO geflissentlich
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+...
+ aber ohne zu wissen, was es tut ...
+ ;-)
+\end_layout
+
+\end_inset
+
+ ein Pronomen 
+\begin_inset Quotes eld
+\end_inset
+
+sie
+\begin_inset Quotes erd
+\end_inset
+
+ und den Eigennamen 
+\begin_inset Quotes eld
+\end_inset
+
+Ben
+\begin_inset Quotes erd
+\end_inset
+
+ erkannt.
+ Auch dies wird nun 
+\begin_inset Quotes eld
+\end_inset
+
+zurückgeschrieben
+\begin_inset Quotes erd
+\end_inset
+
+ zu 
+\begin_inset Quotes eld
+\end_inset
+
+sie-ben
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Postprocessing Regeln sind also REGEX-Regeln, die im Header steht und -
+ ähnlich wie in Stage 2 und 4 - auf das ganze Wort (inklusive Satzzeichen,
+ Morphem- und Silbengrenzen) angewendet werden!
 \end_layout
 
 \begin_layout Subsection*
@@ -8355,12 +9572,12 @@ Wörterbuch
 \end_layout
 
 \begin_layout Standard
-Schickt der Regelparser ein Wort zum Wörterbuch, so wird es entweder gefunden
- oder nicht.
- Wenn es gefunden wird, enthält das Wörterbuch zwei Einträge namens STD
- (standard form) und PRT (print form).
- Der Unterschied zwischen den beiden ist grundsätzlich, dass STD eine Standard-V
-ersion von Stenogrammen darstellt.
+In Stage 1 schickt VSTENO das zu berechnende Wort zuerst zum Wörterbuch.
+ Dort wird es entweder gefunden oder nicht.
+ Wenn es gefunden wird, enthält das Wörterbuch drei Einträge namens LNG
+ (linguistical form), STD (standard form) und PRT (print form).
+ Der Unterschied zwischen STD und PRT ist grundsätzlich, dass STD eine Standard-
+Version von Stenogrammen darstellt.
  PRT wiederum entspricht quasi 1:1 dem Stenogramm, wie es am Ende generiert
  werden soll
 \begin_inset Foot
@@ -8383,15 +9600,19 @@ target "https://www.vsteno.ch/docs/mitmachen_bei_vsteno.pdf"
 \end_layout
 
 \begin_layout Standard
-Es können zwei Fälle auftreten: 
+Es können nun drei Fälle auftreten: 
 \end_layout
 
 \begin_layout Enumerate
-Das Wörterbuch enthält sowohl STD als auch PRT
+Das Wörterbuch enthält nur LNG
 \end_layout
 
 \begin_layout Enumerate
-Das Wörterbuch enthält nur STD
+Das Wörterbuch enthält sowohl LNG als auch STD
+\end_layout
+
+\begin_layout Enumerate
+Das Wörterbuch enthält sowohl LNG als auch STD als auch PRT
 \end_layout
 
 \begin_layout Standard
@@ -8399,7 +9620,10 @@ Ist das Wort in der PRT Form enthalten, werden keine weiteren Regeln mehr
  abgearbeitet, sondern direkt ein Stenogramm generiert.
  Ist das Wort in der STD Form enthalten, wird die STD-Form vom Parser in
  die PRT überführt, indem er einen Teil der Regeln anwendet.
- Hierfür muss im Parser eine Funktion mit folgendem Format definiert sein:
+ Ist nur die LNG-Form enthalten, wird zuerst die STD- und danach die PRT-Form
+ generiert.
+ Damit dies funktioniert, muss im Parser eine Funktion mit folgendem Format
+ definiert sein:
 \end_layout
 
 \begin_layout LyX-Code
@@ -8456,23 +9680,8 @@ Das Gleiche gilt für die PRT-Form, die ganz am Ende der Regelsammlung zugewiese
 \end_layout
 
 \begin_layout Standard
-Wichtig: Im Unterschied zu @@txt, @@wrd und @@dic sind =:std und =: nur
- Variablen, die gesetzt und innerhalb des Parsers und des Wörterbuchs verwendet
- werden.
- Sie können deshalb nicht im Begin-Teil einer Funktion stehen (da sie nicht
- 
-\begin_inset Quotes eld
-\end_inset
-
-angefordert
-\begin_inset Quotes erd
-\end_inset
-
- werden können - entweder sie sind gesetzt oder nicht).
- Wenn VSTENO die PRT-Form ausgehend von der STD-Form berechnen soll, verwendet
- es einfach als erstes jene Regel, welche auf die Zuweisung zur Variable
- STD folgt (es ist deshalb wichtig, innerhalb der Regeln eine solche Zuweisung
- zu definieren).
+Die Zuweisung der LNG-Form erfolgt in VSTENO automatisch: Sie ist jene Form,
+ die direkt der linguistischen Analyse + Postprocessing entstammt.
 \end_layout
 
 \begin_layout Section*
