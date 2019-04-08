@@ -1,5 +1,5 @@
-#LyX 2.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 474
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
 \begin_document
 \begin_header
 \textclass paper
@@ -12,13 +12,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
-\font_math auto
 \font_default_family sfdefault
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
+
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -29,24 +29,15 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_package amsmath 1
-\use_package amssymb 1
-\use_package cancel 1
-\use_package esint 1
-\use_package mathdots 1
-\use_package mathtools 1
-\use_package mhchem 1
-\use_package stackrel 1
-\use_package stmaryrd 1
-\use_package undertilde 1
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
 \cite_engine basic
-\cite_engine_type default
-\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
-\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -70,11 +61,11 @@
 \begin_body
 
 \begin_layout Title
-VSTENO Tutorial
+VSTENO Dokumentation
 \end_layout
 
-\begin_layout Date
-02.04.2019
+\begin_layout SubTitle
+08.04.2019
 \end_layout
 
 \begin_layout Author
@@ -139,14 +130,16 @@ target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
  August 2018 und Tutorial für Linguist/innen (https://www.vsteno.ch/docs/tutorial_
 linguistinnen.pdf) vom 18.
  August 2018.
+ Die erste Version dieser Dokumenation wurde am 10.02.19 erstellt.
 \end_layout
 
 \end_inset
 
 .
- Seitdem ist viel passiert: Datenbankfunktionen, externe Formelsprache,
- Weiterentwicklung der Steno Engine - dies alles sind Neuerungen, die bis
- heute nirgendwo erläutert wurden.
+ Seitdem ist viel passiert: Datenbankfunktionen, Formelsprache (mit Branching
+ und Stages), linguistisches Analyse-Modul (linguistical analyzer), Weiterentwic
+klung der Steno Engine - dies alles sind Neuerungen, die bis heute nirgendwo
+ erläutert wurden.
  
 \end_layout
 
@@ -2166,9 +2159,9 @@ Das Feld d1 steht für die Eingangs-Information (entry information), d.h.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="8" columns="2">
-<features rotate="0" tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -2365,9 +2358,9 @@ beendet
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="6" columns="2">
-<features rotate="0" tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -3079,9 +3072,9 @@ Bei all unseren Definitionen haben wir bis jetzt den Header der Einfachheit
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="25" columns="2">
-<features rotate="0" tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -3766,9 +3759,9 @@ nicht schattiert
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="2">
-<features rotate="0" tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -4909,9 +4902,9 @@ Interpretation y-Koordinate
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
-<features rotate="0" tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -8275,9 +8268,18 @@ Stages
 \end_layout
 
 \begin_layout Standard
-Seit der letzten Dokumentation wurde ein komplett neues Konzept in VSTENO
- eingeführt: so genannte Stages.
- Diese definieren, auf welchen Teil des Textes sich die Regeln beziehen:
+Stages wurden als neues
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Erweiterung des Metaparsers im Februar 2019.
+\end_layout
+
+\end_inset
+
+ Konzept eingeführt, um zu definieren, auf welchen Teil des Textes oder
+ Wortes sich die Regeln beziehen:
 \end_layout
 
 \begin_layout LyX-Code
@@ -8285,13 +8287,20 @@ stage 0: gesamter Text
 \end_layout
 
 \begin_layout LyX-Code
-stage 1: Wörterbuch und linguistische Analyse
+stage 1: Wörterbuch / linguistische Analyse (einzelnes Wort)
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
 Der linguistical analyzer wurde ebenfalls neu eingeführt und wird unter
- anderem hier erläutert: https://www.vsteno.ch/docs/gel_speiende_spiegel.pdf
+ anderem hier erläutert: 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://www.vsteno.ch/docs/gel_speiende_spiegel.pdf"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -8300,11 +8309,11 @@ Der linguistical analyzer wurde ebenfalls neu eingeführt und wird unter
 \end_layout
 
 \begin_layout LyX-Code
-stage 2: ganzes Wort (können mehrere zusammengesetzte Wörter sein)
+stage 2: ganzes Wort
 \end_layout
 
 \begin_layout LyX-Code
-stage 3: jedes Teilwort (= zusammengesetzte Wörter)
+stage 3: Teilwörter (in zusammengesetzten Wörtern)
 \end_layout
 
 \begin_layout LyX-Code
@@ -8312,56 +8321,35 @@ stage 4: ganzes Wort
 \end_layout
 
 \begin_layout Standard
-Einige Anwendungsbeispiele:
+Betrachten wir einen Beispieltest:
 \end_layout
 
-\begin_layout Itemize
-Stage 0: Die Ellipse 
+\begin_layout LyX-Code
+Dies ist ein Beispieltext.
+ Er enthält ganze 
 \begin_inset Quotes eld
 \end_inset
 
-...
+Sätze
 \begin_inset Quotes erd
 \end_inset
 
- beinhaltet drei Punkte.
- Da VSTENO Satzzeichen 
+ und einzelne 
 \begin_inset Quotes eld
 \end_inset
 
-herausfiltern
+Wörter
 \begin_inset Quotes erd
 \end_inset
 
- muss, um die Wörter zu bearbeiten, wären die 3 Punkte für die Regeln grundsätzl
-ich nicht sichtbar.
- Dank der Einführung der Stage 0 können die Regeln aber auf den noch unverändert
-en Original-Text (inklusive Satzzeichen) angewandt werden.
- Dadurch ist es zum Beispiel auch möglich, Regeln zu schreiben, die auf
- mehrere Wörter angewandt werden: Z.B.
- könnte 
-\begin_inset Quotes eld
-\end_inset
-
-das heisst
-\begin_inset Quotes erd
-\end_inset
-
- zu 
-\begin_inset Quotes eld
-\end_inset
-
-dh
-\begin_inset Quotes erd
-\end_inset
-
- verkürzt werden (auch hier wären mehrere Wörter bzw.
- das Leerzeichen für VSTENO nicht sichtbar, da der Text unter Verwendung
- der Leerzeichen standardmässig in einzelne Wörter aufgeteilt wird).
+, sowie Satzzeichen (Punkte und Kommas) und weitere Zeichen (zum Beispiel
+ Leerzeichen, Klammern und Anführungszeichen).
+ D.h.
+ also er enthält auch diakritische Zeichen.
 \end_layout
 
-\begin_layout Itemize
-Stage 1: Hier 
+\begin_layout Standard
+In Stage 0 
 \begin_inset Quotes eld
 \end_inset
 
@@ -8369,8 +8357,352 @@ sieht
 \begin_inset Quotes erd
 \end_inset
 
- VSTENO nur einzelne Wörter und Satzzeichen werden herausgefiltert.
+ nun VSTENO den ganzen Text.
+ D.h.
+ es ist möglich, REGEX-Regeln zu schreiben, die auf den gesamten Text und
+ sämtliche Zeichen zugreifen können:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+zum Beispiel
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+z.B.
+\begin_inset Quotes erd
+\end_inset
+
+;
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+(
+\begin_inset Quotes eld
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[
+\begin_inset Quotes eld
+\end_inset
+
+;
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+D
+\backslash
+.h
+\backslash
+.
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+dh
+\begin_inset Quotes erd
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Standard
+Hier werden also Leerzeichen zwischen zwei Wörtern entfernt und der Ausdruck
+ gekürtz (Beispiel 1: 
+\begin_inset Quotes eld
+\end_inset
+
+z.B.
+\begin_inset Quotes erd
+\end_inset
+
+), runde durch eckige Klammern ersetzt (Beispiel 2) und Punkte aus einer
+ Abkürzung entfernt (Beispiel 3).
+\end_layout
+
+\begin_layout Standard
+In Stage 1 trennt VSTENO dann den Text in einzelne Wörter, wobei 
+\begin_inset Quotes eld
+\end_inset
+
+Wort
+\begin_inset Quotes erd
+\end_inset
+
+ bedeutet: alles, was zwischen zwei Leerzeichen steht.
+ Zusätzlich werden alle Sonderzeichen (Punkte, Kommas, Klammern, Anführungszeich
+en etc.) herausgefiltert.
+ Für die Regeln 
+\begin_inset Quotes eld
+\end_inset
+
+sichtbar
+\begin_inset Quotes erd
+\end_inset
+
+ sind nunmehr nur noch so genannte 
+\begin_inset Quotes eld
+\end_inset
+
+Rohwörter
+\begin_inset Quotes erd
+\end_inset
+
+ (bare words):
+\end_layout
+
+\begin_layout LyX-Code
+Beispieltext
+\end_layout
+
+\begin_layout LyX-Code
+Kommas
+\end_layout
+
+\begin_layout LyX-Code
+D.h
+\end_layout
+
+\begin_layout Standard
+Hier wurden am Ende des Wortes also ein Punkt (
+\begin_inset Quotes eld
+\end_inset
+
+Beispieltext
+\begin_inset Quotes erd
+\end_inset
+
+) und eine Klammer (
+\begin_inset Quotes eld
+\end_inset
+
+Kommas
+\begin_inset Quotes erd
+\end_inset
+
+) entfernt.
+ Beachten Sie, dass bei 
+\begin_inset Quotes eld
+\end_inset
+
+d.h.
+\begin_inset Quotes erd
+\end_inset
+
+ nur der letzte Punkt entfernt wird (der Punkt im Innern bleibt also bestehen,
+ da VSTENO nur Sonderzeichen am Anfang und am Ende eines Wortes entfernt).
+\end_layout
+
+\begin_layout Standard
+Diese Rohwörter (bare words) werden nun (in Stage 1) an die Datenbank gesandt.
+ Findet VSTENO keinen Eintrag, geht das Wort anschliessend zur linguistischen
+ Analyse (linguistical analyzer).
+\end_layout
+
+\begin_layout Standard
+Die Stage 2 
+\begin_inset Quotes eld
+\end_inset
+
+sieht
+\begin_inset Quotes erd
+\end_inset
+
+ dann genau das gleiche wie die Stage 1, also einzelne Wörter, mit dem Unterschi
+ed, dass die Rohwörter nun durch die linguistische Analyse mit zusätzlichen
+ Informationen versehen wurden.
+ Es sind dies Silbengrenzen (-) für Silben (z.B.
  
+\begin_inset Quotes eld
+\end_inset
+
+wei-te-re
+\begin_inset Quotes erd
+\end_inset
+
+), Morphemgrenzen (+) für Vorsilben (z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+ent+hält
+\begin_inset Quotes erd
+\end_inset
+
+), Wortgrenzen (|) für zusammengesetzte Wörter (z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Bei+spiel|text
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Leer|zei-chen
+\begin_inset Quotes erd
+\end_inset
+
+) und Morphemgrenzen (#) für Nachsilben (z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+heim#lich
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Wir sprechen hier von der LNG-Form: Diese kann definiert werden als 
+\begin_inset Quotes eld
+\end_inset
+
+Rohwort, die linguistische Information enthält und unter Umständen aus mehreren
+ zusammengesetzten Wörtern besteht
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Die Stage 3 kommt dann bei zusammengesetzten Wörtern zum Zug.
+ Sie 
+\begin_inset Quotes eld
+\end_inset
+
+sieht
+\begin_inset Quotes erd
+\end_inset
+
+ - der Reihe nach - die einzelnen 
+\begin_inset Quotes eld
+\end_inset
+
+Teilwörter der LNG-Form
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Bei+spiel|text
+\begin_inset Quotes erd
+\end_inset
+
+: Regeln werden zuerst auf 
+\begin_inset Quotes eld
+\end_inset
+
+Bei+spiel
+\begin_inset Quotes erd
+\end_inset
+
+, danach auf 
+\begin_inset Quotes eld
+\end_inset
+
+text
+\begin_inset Quotes erd
+\end_inset
+
+ angewandt.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+ent+hält
+\begin_inset Quotes erd
+\end_inset
+
+: Die Regeln werden auf 
+\begin_inset Quotes eld
+\end_inset
+
+ent+hält
+\begin_inset Quotes erd
+\end_inset
+
+ angewandt (ist kein zusammengesetztes Wort).
+\end_layout
+
+\begin_layout Standard
+Teilwörter werden hier also als in einzelne, eigenstängige Wörter aufgebrochen,
+ die einen eigenen Wortanfang und ein Wortende aufweisen, welche wiederum
+ von REGEX-Regeln genutzt werden können.
+ Die Stage 3 ist damit insbesondere für die korrekte Anwendung von Kürzungen
+ wichtig.
+\end_layout
+
+\begin_layout Standard
+Zur Illustration hier nun einige konkrete Beispiele, wie die Stages genutzt
+ werden können:
+\end_layout
+
+\begin_layout Itemize
+Stage 0: In Stolze-Schrey werden Abkürzungen ohne Punkte geschrieben.
+ Da Satzzeichen in den Stages 1 bis 4 unsichtbar sind, können solche Regeln
+ nur in der Stage 0 (gesamter Text ist sichtbar) umgesetzt werden.
+ Die Regel 
+\begin_inset Quotes eld
+\end_inset
+
+[Dd]
+\backslash
+.h
+\backslash
+.
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+dh
+\begin_inset Quotes erd
+\end_inset
+
+ zum Beispiel entfernt hier beide Satzzeichen (Punkte).
+\end_layout
+
+\begin_layout Itemize
+Stage 1: Die Stage 1 ist ein spezieller Schritt und der Datenbank (Wörterbuch)
+ bzw.
+ der linguistischen Analyse vorbehalten.
+ Aber auch hier ist es möglich, REGEX-Regeln zu schreiben, die sich auf
+ ein Rohwort (bare word) beziehen.
+ D.h.
+ VSTENO sieht hier einzelne Wörter ohne Satz- und Sonderzeichen: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -8378,7 +8710,7 @@ Teetasse.
 \begin_inset Quotes erd
 \end_inset
 
- aus dem Originaltext, wird also zu 
+ aus dem Originaltext, wird somit zum Rohwort 
 \begin_inset Quotes eld
 \end_inset
 
@@ -8386,19 +8718,10 @@ Teetasse
 \begin_inset Quotes erd
 \end_inset
 
-.
- Dieses 
-\begin_inset Quotes eld
-\end_inset
-
-Rohwort
-\begin_inset Quotes erd
-\end_inset
-
- (bare word) wird anschliessend ans Wörterbuch gesandt.
- Findet VSTENO einen Eintrag für das Wort, so wird die Bearbeitung mit dem
- Eintrag fortgesetzt (kann entweder die LNG-, STD- oder PRT-Form sein, siehe
- später).
+, das ans Wörterbuch (Datenbank) gesandt wird.
+ Findet VSTENO einen Eintrag für das Rohwort, so wird die weitere Berechnung
+ des Stenogramms mit dem gefundenen Eintrag fortgesetzt (dies kann entweder
+ die LNG-, STD- oder PRT-Form sein, siehe später).
  Wird kein Eintrag gefunden, wendet VSTENO anschliessend eine linguistische
  Analyse an (auf die ebenfalls später genauer eingegangen wird).
  In unserem Fall wird dabei 
@@ -8460,7 +8783,7 @@ tasse
 \end_layout
 
 \begin_layout Itemize
-Stage 3: Hier sieht VSTENO jede Teilwort (bei zusammengesetzten Wörtern)
+Stage 3: Hier sieht VSTENO jedes Teilwort (bei zusammengesetzten Wörtern)
  einzeln.
  Nehmen wir z.B.
  das Wort 
@@ -8607,7 +8930,15 @@ Wie aber definiere ich, welche Regeln in welcher Stage angewandt werden
 \end_layout
 
 \begin_layout LyX-Code
-   // sie werden auf jedes Teilwort einzeln angewendet
+   // der Stage 3
+\end_layout
+
+\begin_layout LyX-Code
+   // sie werden auf jedes Teilwort
+\end_layout
+
+\begin_layout LyX-Code
+   // einzeln angewendet
 \end_layout
 
 \begin_layout LyX-Code
@@ -8635,7 +8966,7 @@ Wie aber definiere ich, welche Regeln in welcher Stage angewandt werden
 \end_layout
 
 \begin_layout Standard
-Das Beispiel zeigt also die oben bereits erwähnte Kürzungsregel
+Das Beispiel zeigt die oben bereits erwähnte Kürzungsregel
 \begin_inset Foot
 status open
 
@@ -8702,7 +9033,7 @@ hier endet die Stage 3 und die folgende Regel wird in Stage 4 ausgeführt
 \end_layout
 
 \begin_layout Standard
-Bitte beachten Sie folgende zusätzliche Regeln im Umgang mit Stages:
+Bitte beachten Sie folgende wichtige Regeln im Umgang mit Stages:
 \end_layout
 
 \begin_layout Itemize
@@ -8714,14 +9045,14 @@ n).
 \begin_layout Itemize
 Stages müssen nahtlos aufeinanderfolgen (d.h.
  wenn Stage 2 endet - z.B.
- mit #EndSubSection(accentizer,#>stage2) - so muss die folgende Zeile mit
- #BeginSubSection(shortener,#>stage3) beginnen).
+ mit #EndSubSection(accentizer,#>stage2) - so muss die folgende Zeile zwingend
+ mit #BeginSubSection(shortener,#>stage3) beginnen).
 \end_layout
 
 \begin_layout Itemize
-Die Wörterbuch-Variablen dürfen nicht in Stage 3 definiert werden, da sie
- sonst nicht das ganze Wort enthalten (weisen Sie sie deshalb in Stage 4
- zu!)
+Die Wörterbuch-Variablen (STD und PRT) dürfen nicht in Stage 3 definiert
+ werden, da sie sonst nicht das ganze Wort enthalten (weisen Sie sie deshalb
+ in Stage 4 zu!)
 \end_layout
 
 \begin_layout Standard
@@ -8764,7 +9095,7 @@ target "https://www.vsteno.ch/docs/gel_speiende_spiegel.pdf"
 \end_inset
 
 .
- Wichtig ist an dieser Stelle nur zu wissen:
+ Wichtig ist an dieser Stelle zu wissen:
 \end_layout
 
 \begin_layout Enumerate
@@ -8776,9 +9107,8 @@ Dass die linguistische Analyse fehlerhafte Resultate produzieren kann.
 \end_layout
 
 \begin_layout Enumerate
-Wie und wo die linguistische Analyse so angepasst werden kann, dass sie
- möglichst viele richtige Resultate produziert (und falsche Resultate korrigiert
- werden können).
+Wie die linguistische Analyse angepasst werden kann, damit möglichst wenige
+ falsche Resulate generiert werden.
 \end_layout
 
 \begin_layout Standard
@@ -8866,8 +9196,8 @@ Zu Punkt 3: Es bestehen grundsätzlich zwei Möglichkeiten, falsche Resultate
 \end_layout
 
 \begin_layout Standard
-Zunächst einmal kann das Verhalten der linguistischen Analyse durch allgemeine
- Parameter gesteuert werden, die über die Eingabemaske 
+Das Verhalten der linguistischen Analyse durch Parameter gesteuert werden,
+ die über die Eingabemaske 
 \begin_inset Quotes eld
 \end_inset
 
@@ -8876,7 +9206,21 @@ Maxi
 \end_inset
 
  verfügbar sind.
- Es sind dies
+ Die Variablen beziehen sich auf das verwendete Wörterbuch (hunspell), den
+ Silbentrenner (phpSyllable) sowie den Algorithmus, der Vor- und Nachsilben
+ analysiert
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Funktion analyze_word_linguistically() in linguistics.php, welche die einzelnen
+ Analyse-Schritte zusammnefasst und kombiniert.
+\end_layout
+
+\end_inset
+
+.
+ Die veränderbaren Parameter (Variablen) sind
 \begin_inset Foot
 status open
 
@@ -8983,7 +9327,7 @@ session
 \end_layout
 
 \begin_layout Standard
-Session bedeutet hier nichts anderes, als dass wir Session-Variablen der
+Session bedeutet hier nichts anderes, als dass wir Session-Variablen des
  Programmes verändern können (wie bei Inline-Option-Tags).
  Die Session-Variablen für Präfixe, Stämme und Suffixe heissen prefixes_list,
  stems_list und suffixes_list.
@@ -9000,7 +9344,7 @@ Pascal lässt grüssen ...
 
  und die einzelnen Präfixe, Suffixe und Stämme stehen innerhalb von Anführungsze
 ichen und mit Komma (falls es mehrere sind).
- Im obigen Beispiel werden als drei Präfixe definiert (an-, ver- und ge-),
+ Im obigen Beispiel werden also drei Präfixe definiert (an-, ver- und ge-),
  sowie die zusätzlichen (unregelmässigen) Stämme -gangen (z.B.
  in 
 \begin_inset Quotes eld
@@ -9027,37 +9371,34 @@ non capturing groups
 \end_inset
 
  - Zeichen (?:) statt () - verwendet werden.
- Der Grund hierfür ist, dass VSTENO diese Formeln in eine 
+ Der Grund hierfür ist, dass VSTENO diese Formeln zur Abarbeitung in eine
+ übergeordnete Formel (
 \begin_inset Quotes eld
 \end_inset
 
-Superformel
+Metaformel
 \begin_inset Quotes erd
 \end_inset
 
- einbettet, die einzelnen Element erkennt und entsprechend kopiert und wieder
- einfügt.
- Hierfür - für das Kopieren und Einfügen - muss die Superformel ihrerseits
- capturing groups verwenden.
- Werden in den 
-\begin_inset Quotes eld
-\end_inset
-
-Unterformeln
-\begin_inset Quotes erd
-\end_inset
-
- also ebenfalls capturing groups verwendet, dann werden die Variablen falsch
- zugewiesen und das Chaos ist vorprogrammiert!
+) einbettet: dies Metaformel erkennt die einzelnen Elemente (Vor-/Nachsilben,
+ Stämme), kopiert (trennt) die entsprechenden Wortteile und fügt sie wieder
+ zusammen (versehen mit den Markern für Wort-, Silben-, Morphemgrenze).
+ Hierfür - für das Trennen/Kopieren/Einfügen - setzt die Metaformel ihrerseits
+ capturing groups ein, um die einzelnen Teile richtig zuzuordnen.
+ Werden nun in den Definitionen für Präfixe, Stämme und Suffixe zusätzliche
+ capturing groups verwendet, so werden die Variablen falsch zugewiesen und
+ das Chaos ist vorprogrammiert!
 \end_layout
 
 \begin_layout Standard
-Was bewirken nun die obigen Zeilen? Wir erläutern dies mit einigen Beispielen:
+Was bewirken nun die obigen Zeilen? Wir erläutern dies wiederum anhand einiger
+ Beispiele:
 \end_layout
 
 \begin_layout Itemize
 Präfixe: Die linguistische Analyse von VSTENO wird als erstes eine Silbentrennun
-g und dann eine Worterkennung vornehmen.
+g (phonetische Analyse) und dann eine Worterkennung (lexikalische Analyse)
+ vornehmen.
  Dadurch wird das Wort 
 \begin_inset Quotes eld
 \end_inset
@@ -9066,7 +9407,7 @@ angeben
 \begin_inset Quotes erd
 \end_inset
 
- zum Beispiel zuerst in 
+ zum Beispiel zuerst in 3 Silben 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9074,7 +9415,7 @@ an-ge-ben
 \begin_inset Quotes erd
 \end_inset
 
- und dann in zwei separate Wörter 
+ aufgetrennt und danach als zwei separate Wörter 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9082,8 +9423,24 @@ an|ge-ben
 \begin_inset Quotes erd
 \end_inset
 
- umgewandelt.
- Dank der prefix_list, weiss die linguistische Analyse nun jedoch, dass
+ markiert (hier kommt die lexikalische Analyse zum Zug, die sowohl 
+\begin_inset Quotes eld
+\end_inset
+
+an
+\begin_inset Quotes erd
+\end_inset
+
+ als auch 
+\begin_inset Quotes eld
+\end_inset
+
+geben
+\begin_inset Quotes erd
+\end_inset
+
+ als existierende Wörter identifiziert).
+ Dank der prefix_list, weiss die linguistische Analyse nun zusätzlich, dass
  
 \begin_inset Quotes eld
 \end_inset
@@ -9156,7 +9513,7 @@ Gel
 \end_inset
 
 ).
- Etwas unterschiedlich funktioniert das Wort 
+ Etwas anders funktioniert das Wort 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9188,8 +9545,7 @@ an
 \begin_inset Quotes erd
 \end_inset
 
- als Präposition im Wörterbuch von hunspell vorhanden ist), ist dies bei
- 
+ als Präposition im Wörterbuch von hunspell exstiert), ist dies bei 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9250,7 +9606,7 @@ gangen
 
  als eigenständigen Stamm definieren.
  Dadurch schlagen wir gleich zwei (oder zuweilen noch mehr) Fliegen auf
- eine Klappe: nicht nur 
+ eine Klappe: Nicht nur 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9280,7 +9636,7 @@ som-mer#lich
 \end_inset
 
 .
- Im Unterschied zu Präfixen können sich Suffixe verändert (z.B.
+ Im Unterschied zu Präfixen können sich Suffixe verändern (z.B.
  durch Konjugation, Deklination).
  Hier hilft uns REGEX, um die verschiedenen Fälle abzudecken: 
 \begin_inset Quotes eld
@@ -9323,12 +9679,13 @@ som-mer#lich-er
 \end_inset
 
  etc.
+ Bitte beachten Sie auch hier die Verwendung von non capturing groups (?:).
 \end_layout
 
 \begin_layout Standard
-Sie ahnen es vielleicht: Die Sache kann ziemlich schnell kompliziert werden,
- sodass man hier wirklich sehr gute Regeln austüfteln muss, um optimale
- Resultate zu erhalten.
+Sie ahnen es vielleicht anhand der gezeigten Beispiele: Die Sache kann ziemlich
+ schnell kompliziert werden, sodass man hier wirklich sehr gute Regeln austüftel
+n muss, um optimale Resultate zu erhalten.
  Dennoch ist die linguistische Analyse und das 
 \begin_inset Quotes eld
 \end_inset
@@ -9354,7 +9711,7 @@ Aber so gut man die Regeln auch wählt, es werden immer falsche Resultate
 \end_layout
 
 \begin_layout Standard
-Ich gebe zu, dass ich Ihnen oben eine etwas heile Welt untergejubelt habe:
+Ich gebe zu, dass ich Ihnen oben eine etwas heile Welt vorgegaukelt habe:
  das Beispiel 
 \begin_inset Quotes eld
 \end_inset
@@ -9363,7 +9720,7 @@ angeben
 \begin_inset Quotes erd
 \end_inset
 
- würde tatsächlich nicht zu 
+ würde in Wahrheit nämlich nicht zu 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9371,7 +9728,7 @@ an+ge-ben
 \begin_inset Quotes erd
 \end_inset
 
- aufgelöst, sondern zu 
+ aufgelöst (wie oben angegeben), sondern zu 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9382,7 +9739,38 @@ an+ge+ben
 .
  Warum? Ganz einfach: Weil Ben ein Eigenname ist, der im Wörterbuch vorkommt
  ...
- VSTENO wird also denken: Wenn 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Man sieht: Computer sind hier sehr kreativ - oder eben einfach nur dumm
+ ...
+ ;-)
+\end_layout
+
+\end_inset
+
+ VSTENO wird also denken
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bzw.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+rechnen
+\begin_inset Quotes erd
+\end_inset
+
+, wie gesagt, denn es ist ein Computer ...
+ ;-)
+\end_layout
+
+\end_inset
+
+: Wenn 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9423,7 +9811,8 @@ unangefochten
 \begin_inset Quotes erd
 \end_inset
 
- zum Beispiel hat deren drei ...)
+ zum Beispiel hat deren drei ...).
+ Sprache (und hier insbesondere Präfixe) ist (sind) also tatsächlich rekursiv.
 \end_layout
 
 \end_inset
@@ -9562,7 +9951,7 @@ sie-ben
 \end_layout
 
 \begin_layout Standard
-Postprocessing Regeln sind also REGEX-Regeln, die im Header steht und -
+Postprocessing Regeln sind also REGEX-Regeln, die im Header stehen und -
  ähnlich wie in Stage 2 und 4 - auf das ganze Wort (inklusive Satzzeichen,
  Morphem- und Silbengrenzen) angewendet werden!
 \end_layout
@@ -9613,6 +10002,23 @@ Das Wörterbuch enthält sowohl LNG als auch STD
 
 \begin_layout Enumerate
 Das Wörterbuch enthält sowohl LNG als auch STD als auch PRT
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die Formen LNG, STD, PRT entsprechen der chronologischen Abfolge der Berechnung,
+ deshalb existiert im Prinzip zu jeder STD-From eine (vorhergehende) LNG-Form
+ und zu jeder PRT-Form (vorhergehende) STD- und PRT-Formen.
+ Trotzdem ist es möglich, dass in der Datenbank Einträge vorhanden sind,
+ wo frühere Formen fehlen (z.B.
+ nur PRT, ohne STD und LNG oder PRT, ohne STD aber mit LNG).
+ In diesem Fall verwendet VSTENO einfach die in der Abarbeitungsreihenfolge
+ letzte Form (hier also PRT).
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -9658,8 +10064,8 @@ weise zu
 .
  Die Zuweisung erfolgt hier der Variable std, welche der STD-Form entspricht.
  Jede Regelsammlung, die ein Stenografie-System definiert, sollte also eine
- Funktion enthalten, wo im End-Teil der Variablen STD ein Wert zugewiesen
- wird (damit diese für das Wörterbuch verwendet werden kann).
+ Funktion enthalten, wo im #EndSubSection-Teil der Variablen STD ein Wert
+ zugewiesen wird (damit diese für das Wörterbuch verwendet werden kann).
 \end_layout
 
 \begin_layout Standard
@@ -9677,6 +10083,13 @@ Das Gleiche gilt für die PRT-Form, die ganz am Ende der Regelsammlung zugewiese
 
 \begin_layout LyX-Code
 #EndSubSection(spacer,=:prt)
+\end_layout
+
+\begin_layout Standard
+Sowohl STD- als auch PRT-Form sollten erst in Stage 4 (und keines falls
+ in Stage 3) zugewiesen werden (da in Stage 3 bei zusammengesetzten Wörtern
+ nur Teilwörter bearbeitet werden und die Formen deshalb unter Umständen
+ nicht vollständig sind).
 \end_layout
 
 \begin_layout Standard
@@ -9707,6 +10120,9 @@ Hier also nochmals der berüchtigte Trickster - es bleibt zu hoffen, dass
  entledigen kann ...
  Der Trickster eignet sich deshalb als Beispiel, weil er gleich zwei bedingte
  Verzweigungen enthält.
+ Nachtrag 08.04.2019: Der Trickster ist inzwischen Geschichte - um nicht die
+ gesamte Dokumentation anpassen zu müssen, wird er hier als (nunmehr theoretisch
+es) Beispiel belassen.
 \end_layout
 
 \end_inset
@@ -9968,82 +10384,58 @@ wa(h)rhaftig
 Die konsequente Kleinschreibung - mit Ausnahme der vom Shortener eingesetzten
  Teile, wie gesagt - hat den Vorteil, dass wir Grossbuchstaben nun dazu
  benutzen können, jene Teile des Wortes zu markieren, die von bestimmten
- Regeln bereits umgeschrieben wurden.
- Wenn also der Shortener im Wort 
+ Regeln bereits umgeschrieben wurden: ein Kleinbuchstabe bedeutet also 
 \begin_inset Quotes eld
 \end_inset
 
-Andenken
+wurde noch nicht bearbeitet
 \begin_inset Quotes erd
 \end_inset
 
- das Prefix an- erkennt und gross markiert (also 
+ (= 
 \begin_inset Quotes eld
 \end_inset
 
-ANdenken
+muss bearbeitet werden
 \begin_inset Quotes erd
 \end_inset
 
-), dann 
+) ein Grossbuchstabe bedeutet 
 \begin_inset Quotes eld
 \end_inset
 
-weiss
+wurde bereits bearbeitet
 \begin_inset Quotes erd
 \end_inset
 
- der Bundler später, dass er 
+ (= 
 \begin_inset Quotes eld
 \end_inset
 
-gross N
+darf nicht noch einmal bearbeitet werden
 \begin_inset Quotes erd
 \end_inset
 
- und 
-\begin_inset Quotes eld
+)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die Umwandlung von Gross- zu Kleinbuchstaben (mittels strotlower() im consequenc
+e-Teil der Regeln) zu genau diesem Zweck erfolgt inzwischen mehrmals innerhalb
+ des Modells Stolze-Schrey (siehe hier: 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/marcelmaci/vsteno/blob/master/ling/grundschrift_stolze_schrey_redesign.txt"
+
 \end_inset
 
-klein d
-\begin_inset Quotes erd
-\end_inset
-
- nicht zum Zeichen [ND] zusammenfassen darf.
- Die Regel für den Bundler lautet nämlich:
+).
 \end_layout
 
-\begin_layout LyX-Code
-\begin_inset Quotes eld
 \end_inset
 
-nd
-\begin_inset Quotes erd
-\end_inset
-
- => 
-\begin_inset Quotes eld
-\end_inset
-
-[ND]
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Der Bundler soll also nur die unbearbeitete (d.h.
- klein geschriebene) Zeichenfolge 
-\begin_inset Quotes eld
-\end_inset
-
-nd
-\begin_inset Quotes erd
-\end_inset
-
- bündeln.
- 
+.
 \end_layout
 
 \begin_layout Part*
@@ -10148,7 +10540,7 @@ Sie sehen nun die folgende Darstellung:
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename /home/smuege/Schreibtisch/vpaint_geladenes_zeichen.png
+	filename vpaint_geladenes_zeichen.png
 	scale 50
 
 \end_inset
@@ -10184,7 +10576,7 @@ Sie können das geladene Zeichen nun editieren.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename /home/smuege/Schreibtisch/vpaint_nn_60grad.png
+	filename vpaint_nn_60grad.png
 	scale 60
 
 \end_inset
@@ -10251,7 +10643,7 @@ achse wieder auf 90 Grad aus.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename /home/smuege/Schreibtisch/vpaint_90grad.png
+	filename vpaint_90grad.png
 	scale 60
 
 \end_inset
@@ -10905,8 +11297,418 @@ target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
 .
 \end_layout
 
+\begin_layout Section*
+Lizenzen & Copyrights
+\end_layout
+
+\begin_layout Standard
+VSTENO wird unter der GPL-License veröffentlicht und ist somit Freie Software.
+ Das Programm darf also kopiert, verändert, weiterverbreitet und auch kommerziel
+l genutzt werden, sofern die Bedingungen der GPL-License beachtet werden.
+ Hierzu gehört insbesondere das Copyleft: Wird das Programm verändert und
+ kommerziell genutzt, so muss auch das veränderte Programm als Freie Software
+ unter der GPL herausgegeben und dessen Quellcode veröffentlicht werden.
+ Damit soll verhindert werden, dass VSTENO durch irgendjemanden 
+\begin_inset Quotes eld
+\end_inset
+
+vereinnahmt
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+unfrei
+\begin_inset Quotes erd
+\end_inset
+
+ gemacht werden kann.
+ VSTENO soll auch in Zukunft frei bleiben und jegliche Entwicklung an VSTENO
+ soll dem ursprünglichen Projekt vollumfänglich zugute kommen.
+\end_layout
+
+\begin_layout Standard
+Im Folgenden werden nun die für VSTENO gültigen Lizenzen in ihrer Kurzfassung
+ publiziert.
+ Nebst den allgemeinen Bestimmungen der GPL sind im Falle von VSTENO einige
+ zusätzliche Präzisierungen nötig.
+ Diese betreffen stenografische Modelle, Datenbanken, Dokumentationen, zusätzlic
+he verwendete Programme und Bibliotheken und schliesslich auch Dokumente
+ (Erzeugnisse), die mit VSTENO erstellt werden.
+\end_layout
+
 \begin_layout Subsection*
-Zum Schluss
+Grundlizenz (GPL)
+\end_layout
+
+\begin_layout Standard
+Die GPL bildet die Grundlizenz von VSTENO.
+ Sie ist für den selbst entwickelten Kernteil des Programmes, aber auch
+ für das Gesamtprojekt (mit linguistischen Modellen, Datenbanken und Bibliotheke
+n) gültig:
+\end_layout
+
+\begin_layout Quotation
+VSTENO - Vector Steno Tool with Enhanced Notational Options
+\end_layout
+
+\begin_layout Quotation
+(c) 2018-2019 - Marcel Maci (m.maci@gmx.ch)
+\end_layout
+
+\begin_layout Quotation
+This program is free software: you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the Free
+ Software Foundation, either version 3 of the License, or (at your option)
+ any laterversion.
+\end_layout
+
+\begin_layout Quotation
+This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+\end_layout
+
+\begin_layout Quotation
+You should have received a copy of the GNU General Public License along
+ with this program.
+ If not, see <http://www.gnu.org/licenses/>.
+\end_layout
+
+\begin_layout Standard
+Dies Grundlizenz umfasst sämtliche Programmteile von VSTENO, also insbesondere
+ auch VPAINT: Wann immer von VSTENO die Rede ist, so ist VPAINT mitgemeint.
+\end_layout
+
+\begin_layout Subsection*
+Modelle
+\end_layout
+
+\begin_layout Standard
+Stenografische Modelle sind eine formalisierte, strukturierte Sammlung (Sections
+/SubSections, Wenn-Dann-Konstrukte, Verzweigungen, Zuweisen von Variablen
+ etc.) von Regeln und Anweisungen, mithilfe derer ein stenografisches System
+ umgesetzt werden kann.
+ VSTENO fungiert in diesem Fall als Interpreter, der diese Regeln und Anweisunge
+n abarbeitet.
+ Mit anderen Worten: Modelle können selber als 
+\begin_inset Quotes eld
+\end_inset
+
+Programm
+\begin_inset Quotes erd
+\end_inset
+
+ betrachtet werden und werden somit nicht als 
+\begin_inset Quotes eld
+\end_inset
+
+Daten
+\begin_inset Quotes erd
+\end_inset
+
+ von VSTENO, sondern als 
+\begin_inset Quotes eld
+\end_inset
+
+Teilprogramme
+\begin_inset Quotes erd
+\end_inset
+
+ von VSTENO behandelt, die ebenfalls unter die (gleiche) GPL fallen.
+\end_layout
+
+\begin_layout Standard
+Dies bedeutet, dass sämtliche Modelle, die mit VSTENO (neu) erstellt oder
+ (in geänderter oder unveränderter Form) verwendet werden, ebenfalls unter
+ der GPL und mit den entsprechenden Hinweisen (Veröffentlichung der Lizenz
+ und Angabe des/der Autor/in) publiziert werden müssen.
+ Die Auslegung des Copylefts ist in diesem Punkt also sehr strikt: Sämtliche
+ Stenografie-Systeme, die mit VSTENO umgesetzt werden, müssen ihrerseits
+ frei sein.
+ Diese Ergänzung betrifft die öffentliche (u.U.
+ auch kommerzielle) Nutzung solcher Modelle (die private Nutzung und Umsetzung
+ von Stenografie-Systemen ist frei).
+\end_layout
+
+\begin_layout Subsection*
+Datenbank
+\end_layout
+
+\begin_layout Standard
+Die Datenbanken von VSTENO enthalten einerseits Nutzer/innen-Daten (Passwort,
+ Login etc.), andererseits Daten, die in Zusammenhang mit den Modellen stehen
+ (
+\begin_inset Quotes eld
+\end_inset
+
+unregelmässige
+\begin_inset Quotes erd
+\end_inset
+
+ Wörter, die speziell abgearbeitet werden müssen).
+\end_layout
+
+\begin_layout Standard
+Nutzer/innen-Daten sind von den folgenden Einschränkungen ausgenommen: Diese
+ Daten unterliegen dem Datenschutz.
+ Sie müssen (und sollen) nicht publiziert werden!
+\end_layout
+
+\begin_layout Standard
+Die Daten, welche im Zusammenhang mit den verwendeten Modell stehen (insbesonder
+e aus Olympus, Elysium, Purgatorium) werden analog zu den Modellen nicht
+ als 
+\begin_inset Quotes eld
+\end_inset
+
+Daten
+\begin_inset Quotes erd
+\end_inset
+
+ sondern als 
+\begin_inset Quotes eld
+\end_inset
+
+Teil des Programmes
+\begin_inset Quotes erd
+\end_inset
+
+ betrachtet: Tatsächlich kann jeder Datenbankeintrag als zusätzliche Regel
+ eines Modells verstanden werden (Wenn-Dann-Konstrukt mit ganzen Wörtern
+ statt Wortteilen).
+ In diesem Sinne unterliegen auch diese Teile der Datenbank der GPL und
+ müssen zusammen mit dem Modell publiziert werden.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Dokumentationen
+\end_layout
+
+\begin_layout Standard
+Sämliche Dokumentationen (PDF, HTML
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Webseite, was nicht Teil des Programmes ist.
+\end_layout
+
+\end_inset
+
+, TXT) von VSTENO unterliegen der Free Documentation License (FDL
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "https://static.fsf.org/nosvn/directory/fdl-1.3-standalone.html"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Quotation
+Copyright (C) 2018-2019 Marcel Maci 
+\end_layout
+
+\begin_layout Quotation
+Permission is granted to copy, distribute and/or modify this document under
+ the terms of the GNU Free Documentation License, Version 1.3 or any later
+ version published by the Free Software Foundation; with no Invariant Sections,
+ no Front-Cover Texts, and no Back-Cover Texts.
+ A copy of the license is included in the section entitled "GNU Free Documentati
+on License".
+\end_layout
+
+\begin_layout Subsection*
+Bibliotheken
+\end_layout
+
+\begin_layout Standard
+VSTENO verwendet zwei Bibliotheken: (1) paper.js (VPAINT) und (2) phpSyllable
+ (VSTENO).
+ Beide verwenden die MIT-Lizenz, die mit der GPL kompatibel ist.
+ Im Folgenden werden die Lizenzen im originalen Wortlaut wiedergegeben.
+\end_layout
+
+\begin_layout Subsubsection*
+PAPER.JS
+\end_layout
+
+\begin_layout Quotation
+Copyright (c) 2011, Juerg Lehni & Jonathan Puckey http://lehni.org/ & http://jona
+thanpuckey.com/ All rights reserved.
+ 
+\end_layout
+
+\begin_layout Quotation
+Permission is hereby granted, free of charge, to any person obtaining a
+ copy of this software and associated documentation files (the "Software"),
+ to deal in the Software without restriction, including without limitation
+ the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ and/or sell copies of the Software, and to permit persons to whom the Software
+ is furnished to do so, subject to the following conditions:
+\end_layout
+
+\begin_layout Quotation
+The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+\end_layout
+
+\begin_layout Quotation
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE
+, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+ 
+\end_layout
+
+\begin_layout Subsection*
+phpSyllable
+\end_layout
+
+\begin_layout Quotation
+Copyright © 2011-2019 Martijn van der Lee.
+ MIT Open Source license applies.
+\end_layout
+
+\begin_layout Quotation
+Permission is hereby granted, free of charge, to any person obtaining a
+ copy of this software and associated documentation files (the "Software"),
+ to deal in the Software without restriction, including without limitation
+ the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ and/or sell copies of the Software, and to permit persons to whom the Software
+ is furnished to do so, subject to the following conditions:
+\end_layout
+
+\begin_layout Quotation
+The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+\end_layout
+
+\begin_layout Quotation
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE
+, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+\end_layout
+
+\begin_layout Standard
+Die MIT-Lizenz ist eine so genannte 
+\begin_inset Quotes eld
+\end_inset
+
+permissive
+\begin_inset Quotes erd
+\end_inset
+
+ Lizenz (ohne Copyleft), die mit der GPL kompatibel ist - jedoch nicht umgekehrt.
+ Aus diesem Grund fallen diese Programmteile im Zusammenhang mit VSTENO
+ ebenfalls (zusätzlich) unter die GPL.
+\end_layout
+
+\begin_layout Subsection*
+hunspell
+\end_layout
+
+\begin_layout Standard
+Hunspell wird von VSTENO zur linguistischen Analyse genutzt.
+ Hierzu muss hunspell bereits auf dem System installiert sein.
+ Der Aufruf erfolgt via Shell.
+ Aus diesem Grund ist hunspell nicht Teil von VSTENO.
+\end_layout
+
+\begin_layout Subsection*
+Erzeugnisse
+\end_layout
+
+\begin_layout Standard
+Erzeugnisse sind Dokumente, die mit VSTENO und einem entsprechenden Modell
+ & Datenbank erstellt werden (z.B.
+ Stenografie-Lektüren).
+ Die Erstellung und Nutzung solcher Erzeugnisse zu privaten Zwecken ist
+ frei und an keine Einschränkungen gebunden.
+ Im Fall einer öffentlichen Nutzung müssen sämtliche Copyrights gewahrt
+ werden, indem folgender Hinweis an einer beliebigen Stelle im Dokument
+ (z.B.
+ Impressum) erscheint:
+\end_layout
+
+\begin_layout LyX-Code
+Erstellt mit Freier Software.
+\end_layout
+
+\begin_layout LyX-Code
+VSTENO (www.vsteno.ch)
+\end_layout
+
+\begin_layout Standard
+Der Hinweis muss zusätzlich versehen sein mit: Copyrightvermerk, Jahr und
+ Namen des/der Autors/en sowohl des Programmes als auch des Modells.
+ Weitere nützliche Angaben (wie Programmversion und genaue Angabe des verwendete
+n Modells), die es dem/der Leser/in erleichtern, transparent nachzuvollziehen,
+ wie das Dokument erstellt wurden, sollen - wenn möglich - ebenfalls aufgeführt
+ werden.
+ Gleiche Angaben können zusammengefasst werden, damit eine kompaktere und
+ ästhetischere Darstellung möglich ist, z.B.
+\end_layout
+
+\begin_layout LyX-Code
+Erstellt mit Freier Software.
+\end_layout
+
+\begin_layout LyX-Code
+VSTENO (www.vsteno.ch)
+\end_layout
+
+\begin_layout LyX-Code
+(c) 2018-2019 Marcel Maci
+\end_layout
+
+\begin_layout Standard
+als Kurzfassung oder
+\end_layout
+
+\begin_layout LyX-Code
+Erstellt mit Freier Software.
+\end_layout
+
+\begin_layout LyX-Code
+VSTENO 0.1 (www.vsteno.ch)
+\end_layout
+
+\begin_layout LyX-Code
+Stolze-Schrey Grundschrift (DESSBAS)
+\end_layout
+
+\begin_layout LyX-Code
+(c) 2018-2019 Marcel Maci
+\end_layout
+
+\begin_layout Standard
+mit zusätzlichen Angaben zur Programmversion und zum verwendeten Modell.
+\end_layout
+
+\begin_layout Subsection*
+Schluss
 \end_layout
 
 \begin_layout Standard
