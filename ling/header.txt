@@ -66,6 +66,8 @@
 	#BeginSubSection(analyzer)
 		"ebe(-?)n" => "e-be$1n";  // bug in phpSyllable: eben is not hyphenated!?
 		"oder" => "o-der"; 	// same ...
+		"^([Vv]i)a$" => "$1-a";
+
 		// probably, phpSyllable doesn't separate VCV at the beginning
 		// because it doesn't want to separate just 1 vowel (would be ugly in a text)
 		// so, it never separates the first vowel in that case
@@ -107,10 +109,23 @@
 		// additional separations
 		"([Nn]acht)-?(tisch)" => "$1|$2";
 		"([Ww]ei-?ter)\+" => "$1|";
+		"([Ss]er-?vier)-" => "$1|$2";	// Serviertochter
 
-		// in general: don't separate -ren (..)
+		// aus-
+		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
+
+		// in general: don't separate -[brt]en (..)
 		"\|ren" => "-ren";
+		"\|ten" => "-ten";  // why is "ten" recognized as a word (in german)?!?
+		"\|ben" => "-ben";
+
+		// separate repetier-
+		"([Rr]e)-(pe-tier)-" => "$1+$2|"; // Repetierpistole, Repetierstunde
 		
+		// separate "Kutte(n)-"
+		"(Kut-?ten)-" => "$1|"; // beginning
+		"-(kut-?ten?)" => "|$1";  // end (works also for "Kutter" which is correct)
+
 		// recognize more auf-
 		"([Aa]uf)-(kl|n)" => "$1+$2";
 
@@ -186,6 +201,8 @@
 		// mark prefixes that have not been recognized
 		"^([Vv])er-ant-" => "$1er+ant+";
 		"\|ver-ant-" => "|ver+ant+";
+		"([Ee]nt)-(fer-?n)" => "$1+$2";
+ 
 
 		"in-dem" => "in+dem";
 		"zu-dem" => "zu+dem";
@@ -215,8 +232,13 @@
 		"([Gg]e)-?(wis-?s)" => "$1+$2";
 		"([Gg]e)-?(setz)" => "$1+$2";
 		"([Gg]e)-?(sand-?t)" => "$1+$2";
-		
-		
+		"([Gg]e)-(dicht)" => "$1+$2"; 	// Gedichtlein isn't recognized ...
+		"([Gg]e)-(schlitz-?t)" => "$1+$2";
+		"([Gg]e)-?(frei-?t)" => "$1+$2";
+		"([Gg]e)-?(sich)" => "$1+$2"; 
+		"([Gg]e)-(spr)" => "$1+$2";
+		"([Gg]e)-(sun)" => "$1+$2";
+
 		"([Ee])r-folg" => "$1r+folg";
 		"([Ee]r)-?(hö-?h)" => "$1+$2";
 
@@ -260,6 +282,8 @@
 		"([Bb]e)-?(geis-?ter)" => "$1+$2";
 		"([Bb]e)-?(am-?t)" => "$1+$2";
 		"([Bb]e)-?(tr(?:u|o|ü)-?g)" => "$1+$2";
+		"^([Bb]e)-?(gin-?n)" => "$1+$2";
+		"([Bb]e)-?(rech)" => "$1+$2";
 
 		// an-
 		"([Aa]n)-(.*)-(lich)" => "$1+$2#lich";
@@ -269,6 +293,7 @@
 		"^([Aa]uf|[Vv]er|[Zz]u)-(.*)(ung)(en)?$" => "$1+$2$3$4";
 		"\+(auf|ver|zu)-(.*)(ung)(en)?$" => "+$1+$2$3$4";
 		"^([Aa]uf)-(zu)-" => "$1+$2+";
+		"([Zz]u)-?(k(?:u|ünf))" => "$1+$2";
 
 		// die- ist most of the times not a separate word (a part from diejenigen, dieselben)
 		"([Dd])ie\|(?!(je|se))" => "$1ie-";
@@ -297,6 +322,7 @@
 		// un-
 		"([Uu]n)-(z)(?!e)" => "$1+$2";
 		"([Uu]n)-?(nach-?)" => "$1+$2";
+		"^([Uu]n)-(er|ver|ge|be|an)-" => "$1+$2+";
 
 		"([Zz]u#sam)\|(men)-?(ge)\|" => "$1-$2|$3";
 
@@ -321,14 +347,30 @@
 		"([Ss]en-?ti)-?(men-?t)" => "$1|$2";
 		
 		// recorrections
-		"([Gg]e[+-]?)(be)[+-]?(t)" => "$1$2-$3";
+		"([Gg]e[+-]?)(be)[+-](t)" => "$1$2-$3";
+		"([Gg]e)-(bet)" => "$1+$2";
+		
 		"([Mm]u-?se)\|(um)" => "$1-$2";
 		"([Ss]ei)\|(den)[+-]?(en)" => "$1-$2-$3";
 		"([Zz]er)\+(ren)" => "$1-$2";
+		"([Tt]he-ma)\|(tisch)" => "$1-$2";
+		"([Uu]-ni)\|(for-?m)" => "$1-$2";
+		"([Zz]wei)\|(fels)" => "$1-$2"; // suppose it is never "zwei" + "Fels" (Dreifels exists;-)
+		"([Ss]ei)\|(den)" => "$1-$2";
+		"([Nn]eu)\|(fund)\|(l)" => "$1-$2|$3"; // Neu-Fund will be written separately
+		"Zu\+ge" => "Zu-ge";
+		"([Kk]lös-ter)\|(li-?ch)" => "$1#$2";
+		"\|(run-gen)" => "-run-gen"; // very strange results that have to be corrected ... ;-)
+		"([Aa]n)\+(gel)" => "$1-$2";
+		"([Ee]i)\|(ni)" => "$1-$2";
+		"([Ww]en)\|(de)" => "$1-$2";
+		"([Uu]n)\+(se-?r)" => "$1-$2";
 
 		// final ge-
 		"([Gg]e)-?(fun-?de-?n)" => "$1+$2";
 		"([Gg]e)\+(ge)\+" => "$1+$2-"; 	// avoid 2x ge-
+		"([Aa]uf(?:-|\+)?(?:ge\+)?ge)\+(be)" => "$1-$2"; 
+		"([Gg]e)\+(ben)" => "$1-$2";
 
 
 	#EndSubSection(analyzer)
