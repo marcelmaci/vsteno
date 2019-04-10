@@ -63,9 +63,18 @@ function InitializeSessionVariables() {
     $_SESSION['output_width'] = 660;
     $_SESSION['output_height'] = 1000;
     $_SESSION['output_style'] = "align_left_right";
-    $_SESSION['output_page_numberyesno'] = false;
-    $_SESSION['output_page_start_value'] = "";
-    $_SESSION['output_page_start_at'] = "";
+    $_SESSION['output_line_number_yesno'] = true;
+    $_SESSION['output_line_number_step'] = 5;
+    $_SESSION['output_line_number_posx'] = $_SESSION['output_width']-2;
+    $_SESSION['output_line_number_deltay'] = 2;
+    $_SESSION['output_line_number_color'] = 'black';
+    $_SESSION['output_page_number_yesno'] = true;
+    $_SESSION['output_page_number_first'] = 1;
+    $_SESSION['output_page_number_start'] = 1;
+    $_SESSION['output_page_number_posx'] = 330;
+    $_SESSION['output_page_number_posy'] = 985;
+    $_SESSION['output_page_number_color'] = 'black';
+    
     $_SESSION['mark_wordlist'] = "";
     
     // later additions
@@ -163,9 +172,18 @@ if ($_POST['token_size'] != "") {
     $_SESSION['output_width'] = htmlspecialchars($_POST['layout_width']);
     $_SESSION['output_height'] = htmlspecialchars($_POST['layout_height']);
     $_SESSION['output_style'] = htmlspecialchars($_POST['layout_style']);
-    $_SESSION['output_page_numberyesno'] = (htmlspecialchars($_POST['page_numbers_yesno']) === "page_numbers_yes") ? true : false;
-    $_SESSION['output_page_start_value'] = htmlspecialchars($_POST['page_numbers_start_number']);
-    $_SESSION['output_page_start_at'] = htmlspecialchars($_POST['page_numbers_start_page']);
+    $_SESSION['output_line_number_yesno'] = (htmlspecialchars($_POST['line_number_yesno']) === "yes") ? true : false;
+    $_SESSION['output_line_number_step'] = htmlspecialchars($_POST['line_number_step']);
+    $_SESSION['output_line_number_posx'] = htmlspecialchars($_POST['line_number_posx']);
+    $_SESSION['output_line_number_deltay'] = htmlspecialchars($_POST['line_number_deltay']);
+    $_SESSION['output_line_number_color'] = htmlspecialchars($_POST['line_number_color']);
+    $_SESSION['output_page_number_yesno'] = (htmlspecialchars($_POST['page_number_yesno']) === "yes") ? true : false;
+    $_SESSION['output_page_number_first'] = htmlspecialchars($_POST['page_number_first']);
+    $_SESSION['output_page_number_start'] = htmlspecialchars($_POST['page_number_start']);
+    $_SESSION['output_page_number_posx'] = htmlspecialchars($_POST['page_number_posx']);
+    $_SESSION['output_page_number_posy'] = htmlspecialchars($_POST['page_number_posy']);
+    $_SESSION['output_page_number_color'] = htmlspecialchars($_POST['page_number_color']);
+    
     $_SESSION['mark_wordlist'] = htmlspecialchars($_POST['marker_word_list']);
     
     // later additions

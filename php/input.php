@@ -161,9 +161,20 @@ Flattersatz <input type="radio" name="layout_style" value="align_left_right" <?p
 <input type="checkbox" name="show_distances" value="yes" <?php echo ($_SESSION['show_distances']) ? "checked" : "";?>> anzeigen
 
 <br>
-<input type="checkbox" name="page_numbers_yesno" value="page_numbers_yes" <?php echo ($_SESSION['output_page_numberyesno']) ? "checked" : "";?>> 
-Seitenzahlen: Beginn <input type="text" name="page_numbers_start_number"  size="10" value="<?php echo $_SESSION['output_page_start_value']; ?>"> 
-auf Seite <input type="text" name="page_numbers_start_page"  size="10" value="<?php echo $_SESSION['output_page_start_at']; ?>">
+<input type="checkbox" name="line_number_yesno" value="yes" <?php echo ($_SESSION['output_line_number_yesno']) ? "checked" : "";?>> 
+Linien: jede <input type="text" name="line_number_step"  size="1" value="<?php echo $_SESSION['output_line_number_step']; ?>">. 
+Position: x <input type="text" name="line_number_posx"  size="3" value="<?php echo $_SESSION['output_line_number_posx']; ?>">
+Anheben: <input type="text" name="line_number_deltay"  size="3" value="<?php echo $_SESSION['output_line_number_deltay']; ?>">
+Farbe: <input type="text" name="line_number_color"  size="4" value="<?php echo $_SESSION['output_line_number_color']; ?>">
+
+<br>
+<input type="checkbox" name="page_number_yesno" value="yes" <?php echo ($_SESSION['output_page_number_yesno']) ? "checked" : "";?>> 
+Seitenzahlen: Beginn <input type="text" name="page_number_first"  size="3" value="<?php echo $_SESSION['output_page_number_first']; ?>"> 
+auf Seite <input type="text" name="page_number_start"  size="3" value="<?php echo $_SESSION['output_page_number_start']; ?>">
+Position: x <input type="text" name="page_number_posx"  size="4" value="<?php echo $_SESSION['output_page_number_posx']; ?>">
+y <input type="text" name="page_number_posy"  size="4" value="<?php echo $_SESSION['output_page_number_posy']; ?>">
+Farbe <input type="text" name="page_number_color"  size="4" value="<?php echo $_SESSION['output_page_number_color']; ?>">
+
 </td></tr>
 </table>
 

@@ -145,7 +145,7 @@ $vector_value_precision = 3;                    // number of decimals (eliminate
 
 // layouted svg
 $left_margin = 5;                               // margins for layouted svg
-$right_margin = 5;
+$right_margin = 25;
 $top_margin = 5;
 $bottom_margin = 30;
 $num_system_lines = 3;                          // number of shortand system lines between two text lines (lower values = narrower)

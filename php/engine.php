@@ -1365,11 +1365,75 @@ function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
     return $width;
 }
 
+function InsertPageNumber() {
+    global $actual_page_number;
+    $output = "";
+    $first = $_SESSION['output_page_number_first'];     // first page number that has to be printed
+    $start = $_SESSION['output_page_number_start'];     // first page on which first page number has to be printed
+    $posx = $_SESSION['output_page_number_posx'];
+    $posy = $_SESSION['output_page_number_posy'];
+    $color = $_SESSION['output_page_number_color'];
+    
+    switch ($_SESSION['output_page_number_yesno']) {
+        case "yes" : if ($actual_page_number >= $start) {
+                        $print_number = $actual_page_number - $start + $first;
+                        $output = "<text x='$posx' y='$posy' fill='$color' text-anchor='middle'>$print_number</text>";
+                    }
+                    break;
+    }
+    $actual_page_number++;      // InsertPageNumber() increments page number (in order to be sure that it's incremented each time function is called and only here)
+    return $output;
+}
+
+function InsertLineNumbers() {
+    global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
+        $global_debug_string, $global_number_of_rules_applied, $actual_page_number;
+    
+    $output = "";
+    
+   if ($_SESSION['output_line_number_yesno']) {
+        $standard_height = 10; // why does standard_height get modified?!? (shouldn't!)
+        $system_line_height = $standard_height * $_SESSION['token_size'];
+        $num_system_lines = $_SESSION['num_system_lines'];
+        $line_height = $system_line_height * $num_system_lines; 
+   
+        $token_size = $_SESSION['token_size'];
+        $session_baseline = $_SESSION['baseline'];
+        $top_margin = $_SESSION['top_margin'];
+        $bottom_margin = $_SESSION['bottom_margin'];
+    
+        $top_start_on_page = $standard_height * $token_size * $session_baseline + $top_margin;
+        $starty = $top_start_on_page;
+        $bottom_limit = $max_height-$bottom_margin; // -$line_height; // baseline_y-bug: impossible to set baseline to 0 in calculation; extra_shift_y to correct bug etc. => has to be investigated!
+    
+        $step = $_SESSION['output_line_number_step'];
+        $posx = $_SESSION['output_line_number_posx'];
+        $color = $_SESSION['output_line_number_color'];
+    
+        $loop_end = (int)(($_SESSION['output_height'] - $bottom_margin - $starty) / $line_height) + 1;
+        /*
+        for ($i=1; $i<$loop_end; $i++) {
+            $posy = $starty + ($i * $line_height);
+            $output .= "<text x='$posx' y='$posy' fill='$color'>$i</text>";
+        }
+        */
+        //echo "starty: $starty line_height: $line_height standard_height: $standard_height num_system_lines: $num_system_lines SESSION[token_size]: " . $_SESSION['token_size'] . " <br>";
+        //echo "bottom_margin: $bottom_margin loop_end: $loop_end<br>";
+        for ($i=0; $i<$loop_end; $i++) {
+            $posy = $starty + $i*$line_height - $_SESSION['output_line_number_deltay'];
+            $print_i = $i+1;
+            if ($print_i%$step === 0) $output .= "<text x='$posx' y='$posy' fill='$color' font-size='10' text-anchor='end'>$print_i</text>";
+        }
+    }   
+    return $output;
+}
+
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
-        $global_debug_string, $global_number_of_rules_applied;
+        $global_debug_string, $global_number_of_rules_applied, $actual_page_number;
     // set variables
+    $actual_page_number = 1;
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
     $system_line_height = $standard_height * $_SESSION['token_size'];
@@ -1391,6 +1455,8 @@ function CalculateLayoutedSVG( $text_array ) {
     $bottom_limit = $max_height-$bottom_margin; // -$line_height; // baseline_y-bug: impossible to set baseline to 0 in calculation; extra_shift_y to correct bug etc. => has to be investigated!
     
     $svg_string = "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
+    $svg_string .= InsertPageNumber();
+    $svg_string .= InsertLineNumbers();
     
     if ($_SESSION['show_margins']) {
         // rectangle to show width&heigt of svg
@@ -1566,7 +1632,11 @@ function CalculateLayoutedSVG( $text_array ) {
                 $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
                 // reopen svg-tag 
                 $svg_string .= "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
-                // rectangle to show width&heigt of svg
+                // insert page number
+                $svg_string .= InsertPageNumber();
+                $svg_string .= InsertLineNumbers();
+    
+                 // rectangle to show width&heigt of svg
                 if ($_SESSION['show_margins']) $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
                 // insert auxiliary lines
                 $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height);
