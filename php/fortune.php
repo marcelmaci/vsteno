@@ -26,18 +26,18 @@ require_once "session.php";
 $cookie_number = 0;
 $cookie_table = array(
     // width, height, align, margin_left, margin_right, margin_top, margin_bottom, num_system_lines, baseline, shorthand_size, svgtext_size, $text
-    /*0*/ array( 370, 120, "align_left", 5, 0, 10, 0, 2.5, 3, 1.6, 14, "Man muss die Welt nicht verstehen, man muss sich nur darin zurecht\\finden.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
-    /*1*/ array( 440, 120, "align_left", 5, 0, 20, 0, 2.5, 3, 1.3, 14, "Um ein tadelloses Mitglied einer Schafherde sein zu können, muß man vor allem ein Schaf sein.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
-    /*2*/ array( 355, 120, "align_left", 5, 0, 0, 0, 2.5, 2.6, 1.3, 14, "Zwei Dinge sind unendlich, das Universum und die menschliche Dummheit, aber bei dem Universum bin ich mir noch nicht ganz sicher.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
-    /*3*/ array( 360, 120, "align_left", 5, 0, 2, 0, 2.7, 2.6, 1.05, 14, "Wenn man zwei Stunden lang mit einem Mädchen zusammensitzt, meint man, es wäre eine Minute. Sitzt man jedoch eine Minute auf einem heißen Ofen, meint man, es wären zwei Stunden. Das ist Relativität.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
+    /*0*/ array( 370, 120, "align_left", 5, 0, 10, 0, 2.5, 3, 1.5, 14, "Man muss die Welt nicht verstehen, man muss sich nur darin zurecht\\finden.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
+    /*1*/ array( 380, 120, "align_left", 5, 0, 8, 0, 2.5, 3, 1.3, 14, "Um ein tadelloses Mitglied einer Schafherde sein zu können, muß man vor allem ein Schaf sein.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
+    /*2*/ array( 370, 120, "align_left", 5, 0, 8, 0, 2.5, 2.6, 1.2, 14, "Zwei Dinge sind unendlich, das Universum und die menschliche Dummheit, aber bei dem Universum bin ich mir noch nicht ganz sicher.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
+    /*3*/ array( 380, 120, "align_left", 5, 0, 2, 0, 2.7, 2.6, 1.05, 14, "Wenn man zwei Stunden lang mit einem Mädchen zusammensitzt, meint man, es wäre eine Minute. Sitzt man jedoch eine Minute auf einem heißen Ofen, meint man, es wären zwei Stunden. Das ist Relativität.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
     /*4*/ array( 240, 120, "align_left", 5, 0, 15, 0, 2.7, 2.6, 1.6, 14, "Zeit ist das, was man an der Uhr abliest.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
     /*5*/ array( 240, 120, "align_left", 5, 0, 10, 0, 2.7, 2.6, 1.25, 14, "Logik bringt dich von A nach B. Deine Phantasie bringt dich überall hin.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
-    /*6*/ array( 300, 120, "align_left", 5, 0, 6, 0, 3.15, 2.6, 1.1, 14, "Um eine Ein|kommens\steuer[#N]rklärung abgeben zu können, muss man Philosoph sein. Für einen Mathematiker ist es zu schwierig.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
+    /*6*/ array( 360, 120, "align_left", 5, 0, 6, 0, 3.15, 2.6, 1.1, 14, "Um eine Ein|kommens\steuer[#N]rklärung abgeben zu können, muss man Philosoph sein. Für einen Mathematiker ist es zu schwierig.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
     /*7*/ array( 360, 120, "align_left", 5, 0, 20, 0, 2.7, 2.6, 1.3, 14, "Ich gebe meinem Psüchiater noch ein Jahr, dann fahre ich nach Lourdes.<@token_type=svgtext>Woody Allen<@token_type=shorthand>" ),
     /*8*/ array( 340, 120, "align_left", 5, 0, 15, 0, 2.7, 2.6, 1.05, 14, "Es gibt Schlimmeres als den Tod. Wer schon einmal einen Abend mit einem Versicherungs|ver|treter zug[#N]bracht hat, wird wissen, was ich meine.<@token_type=svgtext>Woody Allen<@token_type=shorthand>" ),
     /*9*/ array( 240, 120, "align_left", 5, 0, 20, 0, 2.7, 2.6, 1.4, 14, "Die Ewigkeit dauert lange, besonders gegen Ende.<@token_type=svgtext>Woody Allen<@token_type=shorthand>" ),
    /*10*/ array( 340, 120, "align_left", 5, 0, 2, 0, 2.7, 2.5, 1.0, 14, "Als ich vierzehn war, war mein Vater so unwissend. Ich konnte den alten Mann kaum in meiner Nähe ertragen. Aber mit einundzwanzig war ich verblüfft, wieviel er in sieben Jahren dazug[#N]lernt hatte. <@token_type=svgtext>Mark Twain<@token_type=shorthand>" ),
-   /*11*/ array( 330, 120, "align_left", 5, 0, 8, 0, 3.4, 2.6, 1.05, 14, "Getöse beweist gar nichts. Eine Henne, die gerade ein Ei gelegt hat, gackert häufig so, als hätte sie einen Asteroiden gelegt. <@token_type=svgtext>Mark Twain<@token_type=shorthand>" ),
+   /*11*/ array( 360, 120, "align_left", 5, 0, 8, 0, 3.4, 2.6, 1.05, 14, "Getöse beweist gar nichts. Eine Henne, die gerade ein Ei gelegt hat, gackert häufig so, als hätte sie einen Asteroiden gelegt. <@token_type=svgtext>Mark Twain<@token_type=shorthand>" ),
    /*12*/ array( 300, 120, "align_left", 5, 0, 6, 0, 2.7, 2.6, 1.3, 14, "Welt\\verbesserer gibt es genug, aber einen Nagel richtig einschlagen können die wenigsten.<@token_type=svgtext>Henrik Ibsen<@token_type=shorthand>" ),
    /*13*/ array( 355, 120, "align_left", 5, 0, 8, 0, 2.7, 2.6, 1.25, 14, "Was auch immer geschieht: Nie dürft ihr so tief sinken, von dem Kak[A][&A][[#N][&O], durch den man euch zieht, auch noch zu trinken.<@token_type=svgtext>Erich Kästner<@token_type=shorthand>" ),
    /*14*/ array( 320, 120, "align_left", 5, 0, 22, 0, 2.7, 2.6, 1.3, 14, "Es gibt wichtige und unwichtige Dinge im Leben. Die meisten Dinge sind unwichtig.“<@token_type=svgtext>Erich Kästner<@token_type=shorthand>" ),
@@ -108,9 +108,33 @@ if (!isset($_SESSION['fortune_cookie'])) {
     require_once "engine.php";
 }
 
-// returns a random fortune cookie
+// returns a random fortune cookie if $fortune_cookie = "be_lucky"
+// if $fortune_cookie == int number, this cookie is returned
 function fortune() {
+    global $fortune_cookie;
+   
+    switch ($fortune_cookie) {
+            case "be_lucky" : return be_lucky(); break;
+            default : return get_fortune( (int)$fortune_cookie ); break;
+    }
+}
+
+function get_fortune( $number ) {
     global $cookie_table, $cookie_number;
+    // returns fortune cookie $number
+    //$_SESSION['original_text_content'] .= "get_fortune: $number";
+    $cookie_number = $number; // use -1 to test 0 (0 doesn't work)
+    
+    prepare_engine();
+    $svg = NormalText2SVG( $cookie_table[$cookie_number][11] );
+    restore_engine();
+    return $svg;
+}
+
+function be_lucky() {
+    // return a random cookie number
+    //$_SESSION['original_text_content'] .= "be_lucky()";
+    global $cookie_table, $cookie_number;  
     $total_cookies = count($cookie_table);
     $cookie_number = (int)rand(0, $total_cookies-1);
     

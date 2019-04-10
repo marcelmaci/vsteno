@@ -30,7 +30,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
 } else {
     
     switch ($_SESSION['model_standard_or_custom']) {
-        case 'standard' : $model_name = $_SESSION['actual_model']; break; 
+        case 'standard' : $model_name = $default_model; break; //$_SESSION['actual_model']; break; 
         case 'custom' : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
     }
     //echo "model_name: $model_name<br>";
@@ -41,8 +41,10 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
         $sql = "UPDATE models
             SET rules = '$update_rules'
             WHERE name='$model_name';";
+        //echo "QUERY: $sql<br>";
+        //echo "model_name = $model_name<br>";
         $result = $conn->query($sql);
-
+        
         if ($result == TRUE) {
             echo "<p>Die neuen Regeln wurden gespeichert.</p>";    
         } else {
@@ -66,6 +68,9 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
         die_more_elegantly("Keine Regeln vorhanden.<br>");
     }
 
+    // debugging
+    //echo "Modelname: $model_name vs $default_model<br><br>";
+   
     // use javascript for textarea in order to prevent predefined function of tab to change focus (use it for indentation instead)
     echo "<form action='edit_rules.php' method='post'>
         <textarea id='rules_as_text' name='rules_as_text' rows='35' cols='120' spellcheck='false' 

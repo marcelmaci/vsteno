@@ -16,10 +16,12 @@
             <div id="purelab_title">
                 <h1>VSTENO</h1>
                 <h2>Vector Shorthand Tool with Enhanced Notational Options</h2>
+                
             </div>
            <div id="purelab_texts">
                 <?php 
                     require_once "fortune.php";
+                    //$_SESSION['original_text_content'] = $fortune_cookie;
                     echo "<center>" . fortune() . "</center>";
                 ?>
            </div>
@@ -27,7 +29,8 @@
 		</div>
 		<div id="main">
             <div id="navigation">
-                <?php require "navigation.php"; ?>
+                <?php require "navigation.php"; /*echo $fortune_cookie;*/ ?>
+                
             </div>
             <div id="content">
 
