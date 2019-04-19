@@ -32,6 +32,7 @@
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		"(?<!\[)=" => "\\[=]\\";
+		"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer"
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
 		// check if word contains more then 1 upper case
@@ -328,7 +329,7 @@
 		"mitt" => "m1i2t3t4";
 		"mit(?!(t|-t))" => { "{M}", "Eremit" };
 		"m1i2t3t4" => "mitt";
-		"^nicht" => "{NICHT}";
+		"^nicht" => "{NICHT2}";
 		"^sie$" => "{SI}";
 		"^[Ss]ind$" => "{SIND}";
 		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
@@ -802,7 +803,7 @@
 
 		// \n and \s
 		"\\N" => "\\[N=]";
-		"\\S" => "\\[S=]";
+		"(?<!\['\])\\S" => "\\[S=]";  // not separated (external correction)
 
 		// ver-
 		"\\{VER}" => "\\[0N-]{VER}";
@@ -873,7 +874,7 @@
 		"\[EI\]\\" => "E[-EI]\\";
 		// \n and \s
 		"\\N" => "\\[N=]";
-		"\\S" => "\\[S=]";
+		"(?<!\['\])\\S" => "\\[S=]";
 
 		// dem/den at beginning
 		"^{(DE[MN])}([-+#]?)(?=N)" => "[^$1]$2";
@@ -1584,6 +1585,7 @@
 		"\[t\]\[#3\]\[i\]\[f\]" => "[t][#5][i][f]";
 		"\[d\]\[#3\]\[o\]\[x\]" => "[d][#5][o][x]";
 		"\[s\]\[#3\]\[u\]\[nd\]" => "[s][#5][u][nd]";
+		"\[n=@r6\]\[n\]" => "[n=@r6][#2][n]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
