@@ -786,11 +786,17 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 // now calculate new exit point keeping x-coordinate the same (adapting just y)
                 $new_exit_y = $m * $exit_x + $c;
                 // replace y-value for exit-point in splines with new value
-                $splines[$exit_i+1] = $new_exit_y;
+                // $splines[$exit_i+1] = $new_exit_y;
+                ///////////////// experimental
+                // new: do this only, if new_exit_y > original y (goal: get smoother connection with high tokens
+                //echo "<br>EXIT: pivot: ($pivot_exit_x/$pivot_exit_y) exit: ($exit_x/$exit_y)<br>ENTRY: entry: ($entry_x/$entry_y) pivot: ($pivot_entry_x/$pivot_entry_y)<br>";
+                //echo "corrected knot: ($exit_x/$new_exit_y)<br>";
+                $splines[$exit_i+1] = ($new_exit_y > $splines[$exit_i+1]) ? $new_exit_y : $splines[$exit_i+1];
+                //echo "written knot (splines): (" . $splines[$exit_i] . "/" . $splines[$exit_i+1] . ")<br>";
             }
             // case 2b
             if ((!$pivot_exit_yes) && ($pivot_entry_yes)) {
-               // echo "=> case 2b (exit -> pivot)";
+                //echo "=> case 2b (exit -> pivot)";
                 // define line going from exit point to pivot: y = m*x + c, where m = dy / dx and c = exit_y - m * exit_x
                 $dx = $pivot_entry_x - $exit_x;
                 $dy = $pivot_entry_y - $exit_y;
@@ -800,7 +806,10 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 $new_entry_y = $m * $entry_x + $c;
                 //echo "old_entry_y = " . $splines[$entry_i+1] . " new_entry_y = $new_entry_y<br>";
                 // replace y-value for entry-point in splines with new value
-                $splines[$entry_i+1] = $new_entry_y; // why the hell + 1 ?!?!?
+                //$splines[$entry_i+1] = $new_entry_y; // why the hell + 1 ?!?!? => because it's y-coordinate!
+                ///////////////// experimental
+                // new: do this only, if new_entry_y < original y (goal: get smoother connection with high tokens
+                $splines[$entry_i+1] = ($new_entry_y < $splines[$entry_i+1]) ? $new_entry_y : $splines[$entry_i+1];
             }
             // case 4:
             if (($pivot_entry_yes) && ($pivot_exit_yes)) {
@@ -813,8 +822,15 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 $new_exit_y = $m * $exit_x + $c;
                 $new_entry_y = $m * $entry_x + $c;
                 // replace y-value for exit- and entry-points in splines with new value
-                $splines[$exit_i+1] = $new_exit_y;
-                $splines[$entry_i+1] = $new_entry_y;
+                //$splines[$exit_i+1] = $new_exit_y;
+                //$splines[$entry_i+1] = $new_entry_y;
+                // $splines[$exit_i+1] = $new_exit_y;
+                ////////////// experimental
+                // new: do this only, if new_exit_y > original y (goal: get smoother connection with high tokens
+                $splines[$exit_i+1] = ($new_exit_y > $splines[$exit_i+1]) ? $new_exit_y : $splines[$exit_i+1];
+                // new: do this only, if new_entry_y < original y (goal: get smoother connection with high tokens
+                $splines[$entry_i+1] = ($new_entry_y < $splines[$entry_i+1]) ? $new_entry_y : $splines[$entry_i+1];
+                // other possibility with two pivot would be to take average y for each entry/exit point
             }
             // reset all variables in order to gather new points for next connection
             $entry_x = 0; $entry_y = 0; $entry_i = 0; $entry_yes = false;

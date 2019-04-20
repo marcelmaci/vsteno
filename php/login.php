@@ -16,7 +16,7 @@ Password:
 </td>
 
 <td> <input type="text" name="username"  size="30" value=""><br>
-<input type="text" name="password"  size="30" value=""><br>
+<input type="password" name="password"  size="30" value=""><br>
 </td> 
 </tr>
 </table>
