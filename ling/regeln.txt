@@ -175,6 +175,7 @@
 
 		"^in$" => "{IN}";
 		"^in(\+|#)" => "{IN}$1";
+		"^in(-|\+)?str" => "{IN}$1str";
 		"(\+|#)in(\+|#)" => "$1{IN}$2";
 		"(\+|#)in$" => "$1{IN}";
 
@@ -825,6 +826,9 @@
 		// if one word is separated => separate all the words!
 		"\|(.*)\\" => "\\$1\\";
 		"\\(.*)\|" => "\\$1\\";
+
+		// if word is not separated => write vowels at the end of each word
+		"E\|" => "E[&E]";
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -1589,6 +1593,7 @@
 		"\[n=@r6\]\[n\]" => "[n=@r6][#2][n]";
 		"\[(t|d|k|g|tt|ck|st)@r3\^\]\[(a|i|o|u|au)\]" => "[$1@r3^][#3][$2]"; // general rule for new token @r3^
 		"\[ck@r3\^\]\[#3\]\[u\]\[f\]" => "[ck@r3^][#5][u][f]";
+		"\[s\]\[in\]" => "[s][#4][in]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
