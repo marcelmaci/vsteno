@@ -46,6 +46,7 @@ if ($result->num_rows > 0) {
 } else {
     die_more_elegantly("<p>Kein Eintrag für User $safe_username.</p>");
 }
+echo "<p><a href='change_password.php'>Password</a></p>";
 echo '<a href="input.php"><br><button>zurück</button></a><br><br>';   
    
 require_once "vsteno_template_bottom.php";
