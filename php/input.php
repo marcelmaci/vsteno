@@ -19,7 +19,7 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <br>
 <center>
 <?php require_once "constants.php"; echo "<i>Commit: " . version_commit_id . " (" . version_date . ")</i><br>"; ?>
-<b>HINWEIS: VSTENO ist alpha - es sind noch nicht alle Optionen implementiert!<br><br></b>
+<b>HINWEIS: VSTENO ist beta - es sind noch nicht alle Optionen implementiert!<br><br></b>
 <div id="order">
 <form action="../php/calculate.php" method="post">
 <table>
@@ -29,7 +29,8 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <input type="radio" name="text_format_metayesno" value="lng" <?php echo ($_SESSION['original_text_format'] === "lng") ? "checked" : "";?>> Meta (LNG) 
 <input type="radio" name="text_format_metayesno" value="std" <?php echo ($_SESSION['original_text_format'] === "std") ? "checked" : "";?>> Meta (STD)
 <input type="radio" name="text_format_metayesno" value="prt" <?php echo ($_SESSION['original_text_format'] === "prt") ? "checked" : "";?>> Meta (PRT)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
+<input type="checkbox" name="text_format_ascii_yesno" value="ascii" <?php echo ($_SESSION['original_text_ascii_yesno']) ? "checked" : "";?>> Breaks
+&nbsp;&nbsp;<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
 <input type="radio" name="model" value="custom" <?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "checked" : "";?>> custom<br>
 
 <textarea id="original_text" name="original_text" rows="10" cols="100"><?php echo $_SESSION['original_text_content']; ?>
@@ -99,30 +100,41 @@ Allgemein:
 Farbe <input type="text" name="auxiliary_lines_color"  size="10" value="<?php echo $_SESSION['auxiliary_color_general']; ?>"> 
 Dicke <input type="text" name="auxiliary_lines_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_thickness_general']; ?>"> 
 Stil <input type="text" name="auxiliary_lines_style"  size="10" value="<?php echo $_SESSION['auxiliary_style_general']; ?>">
+Ränder: 
+L<input type="text" name="auxiliary_lines_margin_left"  size="2" value="<?php echo $_SESSION['auxiliary_lines_margin_left']; ?>">
+R<input type="text" name="auxiliary_lines_margin_right"  size="2" value="<?php echo $_SESSION['auxiliary_lines_margin_right']; ?>">
 <br>
 <input type="checkbox" name="baseline_yesno" value="baseline_yes" <?php echo ($_SESSION['auxiliary_baselineyesno']) ? "checked" : "";?>> 
 Grundlinie: 
 Dicke <input type="text" name="baseline_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_baseline_thickness']; ?>"> 
 Farbe <input type="text" name="baseline_color"  size="10" value="<?php echo $_SESSION['auxiliary_baseline_color']; ?>">
 Stil <input type="text" name="baseline_style"  size="10" value="<?php echo $_SESSION['baseline_style']; ?>">
+<input type="checkbox" name="baseline_nomargin" value="nomargin" <?php echo ($_SESSION['baseline_nomargin_yesno']) ? "checked" : "";?>> 
+kein Rand
 <br>
 <input type="checkbox" name="upper12_yesno" value="upper12_yes" <?php echo ($_SESSION['auxiliary_upper12yesno']) ? "checked" : "";?>> 
 1./2. Oberstufe: 
 Dicke <input type="text" name="upper12_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_upper12_thickness']; ?>"> 
 Farbe <input type="text" name="upper12_color"  size="10" value="<?php echo $_SESSION['auxiliary_upper12_color']; ?>">
 Stil <input type="text" name="upper12_style"  size="10" value="<?php echo $_SESSION['upper12_style']; ?>">
+<input type="checkbox" name="upper12_nomargin" value="nomargin" <?php echo ($_SESSION['upper12_nomargin_yesno']) ? "checked" : "";?>> 
+kein Rand
 <br>
 <input type="checkbox" name="lower_yesno" value="lower_yes" <?php echo ($_SESSION['auxiliary_loweryesno']) ? "checked" : "";?>> 
 Unterstufe: 
 Dicke <input type="text" name="lower_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_lower_thickness']; ?>"> 
 Farbe <input type="text" name="lower_color"  size="10" value="<?php echo $_SESSION['auxiliary_lower_color']; ?>">
 Stil <input type="text" name="lower_style"  size="10" value="<?php echo $_SESSION['lower_style']; ?>">
+<input type="checkbox" name="lower_nomargin" value="nomargin" <?php echo ($_SESSION['lower_nomargin_yesno']) ? "checked" : "";?>> 
+kein Rand
 <br>
 <input type="checkbox" name="upper3_yesno" value="upper3_yes" <?php echo ($_SESSION['auxiliary_upper3yesno']) ? "checked" : "";?>> 
 3. Oberstufe: 
 Dicke <input type="text" name="upper3_thickness"  size="10" value="<?php echo $_SESSION['auxiliary_upper3_thickness']; ?>"> 
 Farbe <input type="text" name="upper3_color"  size="10" value="<?php echo $_SESSION['auxiliary_upper3_color']; ?>">
 Stil <input type="text" name="upper3_style"  size="10" value="<?php echo $_SESSION['upper3_style']; ?>">
+<input type="checkbox" name="upper3_nomargin" value="nomargin" <?php echo ($_SESSION['upper3_nomargin_yesno']) ? "checked" : "";?>> 
+kein Rand
 <br>
 </td></tr>
 <tr><td>Ausgabe</td></tr>

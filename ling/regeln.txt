@@ -1,6 +1,7 @@
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
+		" - " => " [~~] ";
 		"&hellip;" => "…"; // ellipsis (try to use one character defined as global variable punctuation in php)
 		"\.\.\." => "…";
 		//"…" => "…";
@@ -1374,7 +1375,7 @@
 		"\[bei\]\[#0\]\[z\]" => "[bei][#3-][z]";		// idem
 		"\[\^z\]\[w\]" => "[^z][#3][w]";			// idem
 		"\[b\]\[#3\]\[i\]\[d\]" => "[b][#1][i][d]";
-		"\[b\]\[#3\]\[[Ii]\]" => "[b][#2-][i]";			// idem
+		"\[b\]\[#3\]\[[Ii]\]" => "[b][#1][i]";			// idem
 		"\[sch\]\[#3\]\[n\]" => "[sch][n]";			// idem
 		"\[k\]\[#3\]\[a\]\[st\]" => "[k][#6][a][st]";		// idem
 		"\[b\]\[#3\]\[s\]" => "[b][s]";				// idem
@@ -1594,6 +1595,14 @@
 		"\[(t|d|k|g|tt|ck|st)@r3\^\]\[(a|i|o|u|au)\]" => "[$1@r3^][#3][$2]"; // general rule for new token @r3^
 		"\[ck@r3\^\]\[#3\]\[u\]\[f\]" => "[ck@r3^][#5][u][f]";
 		"\[s\]\[in\]" => "[s][#4][in]";
+		"\[l@l\]\[#0\]\[k\]" => "[l@l][#4][k]";
+		"\[s\]\[i\]\[\^ch\]" => "[s][#3][i][^ch]";
+		"\[w\]\[#0\]\[o\]\[ch\]" => "[w][#1][o][ch]";
+		"\[s=\]\[i\]\[\^z\]" => "[s=][#3][i][^z]";
+		"\[p\]\[s\]" => "[p][#1][s]";
+		"\[ar\]\[#3\]\[a\]\[nd@l3\]" => "[ar][#5][a][nd@l3]";
+		"\[w\]\[#0\]\[u\]\[ss\]" => "[w][#2][u][ss]";
+		"\[st@r3\^\]\[#3\]\[i\]\[\^ch\]" => "[st@r3^][#1][i][^ch]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 

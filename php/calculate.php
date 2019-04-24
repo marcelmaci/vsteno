@@ -113,6 +113,13 @@ function CalculateStenoPage() {
     
     // if there is text, insert title&introduction and SVG(s)
     if (strlen($text) > 0) {
+        // if text is ascii format insert html-tags by converting \n to <br>
+        if ($_SESSION['original_text_ascii_yesno']) { // don't insert breaks if text already contains html-tags
+            if (!preg_match("/<br>|<p>|<\/p>/", "$text")) {
+                $text = preg_replace( "/\n/", "<br>", $text);
+                //echo "after: " . htmlspecialchars($text) . "<br>";
+            }
+        }
         if ($_SESSION['output_format'] === "layout") {
             // insert introduction as text in svg if necessary, use inline/html-options
             $title_to_add = "";

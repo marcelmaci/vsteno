@@ -9,6 +9,7 @@ function InitializeSessionVariables() {
     // set standard values for use in session
     $_SESSION['initialized'] = true;
     $_SESSION['original_text_format'] = "normal";
+    $_SESSION['original_text_ascii_yesno'] = true;
     $_SESSION['original_text_content'] = "";
     $_SESSION['title_yesno'] = true;
     $_SESSION['title_text'] = "VSTENO";
@@ -44,6 +45,8 @@ function InitializeSessionVariables() {
     $_SESSION['color_background'] = "white";
     $_SESSION['auxiliary_color_general'] = "rgb(0,0,0)";
     $_SESSION['auxiliary_thickness_general'] = 0.1;
+    $_SESSION['auxiliary_lines_margin_left'] = 0; // 0 <=> lines have page width
+    $_SESSION['auxiliary_lines_margin_right'] = 15; // >0 <=> lines leave blank space of width margin
     $_SESSION['auxiliary_baselineyesno'] = true;
     $_SESSION['auxiliary_upper12yesno'] = false;
     $_SESSION['auxiliary_loweryesno'] = false;
@@ -83,12 +86,18 @@ function InitializeSessionVariables() {
     
     $_SESSION['style_nouns'] = "";
     $_SESSION['style_beginnings'] = "";
-    $_SESSION['baseline_style'] = "1,1";
+    $_SESSION['baseline_style'] = "1,2";
     $_SESSION['upper12_style'] = "1,1";
     $_SESSION['upper3_style'] = "1,1";
     $_SESSION['lower_style'] = "1,1";
     $_SESSION['auxiliary_style_general'] = "";
     $_SESSION['return_address'] = "input.php";
+    
+    // no margins for auxiliary lines
+    $_SESSION['baseline_nomargin_yesno'] = false;
+    $_SESSION['upper12_nomargin_yesno'] = false;
+    $_SESSION['upper3_nomargin_yesno'] = false;
+    $_SESSION['lower_nomargin_yesno'] = false;
     
     // layouted svg
     $_SESSION['left_margin'] = $left_margin;
@@ -122,6 +131,7 @@ if ($_POST['token_size'] != "") {
     // is to avoid execution of the code below by checking if one of the variables - $_POST['token_size'] in this case - is empty ...
     
     $_SESSION['original_text_format'] = htmlspecialchars($_POST['text_format_metayesno']);
+    $_SESSION['original_text_ascii_yesno'] = ($_POST['text_format_ascii_yesno'] === "ascii") ? true : false;
     $_SESSION['original_text_content'] = htmlspecialchars($_POST['original_text']);
     $_SESSION['title_yesno'] = (htmlspecialchars($_POST['title_yesno']) === "title_yes") ? true : false;
     $_SESSION['title_text'] = htmlspecialchars($_POST['title_text']);
@@ -153,6 +163,8 @@ if ($_POST['token_size'] != "") {
     $_SESSION['color_background'] = htmlspecialchars($_POST['background_color']);
     $_SESSION['auxiliary_color_general'] = htmlspecialchars($_POST['auxiliary_lines_color']);
     $_SESSION['auxiliary_thickness_general'] = htmlspecialchars($_POST['auxiliary_lines_thickness']);
+    $_SESSION['auxiliary_lines_margin_left'] = htmlspecialchars($_POST['auxiliary_lines_margin_left']); 
+    $_SESSION['auxiliary_lines_margin_right'] = htmlspecialchars($_POST['auxiliary_lines_margin_right']);
     $_SESSION['auxiliary_baselineyesno'] = (htmlspecialchars($_POST['baseline_yesno']) === "baseline_yes") ? true : false;
     $_SESSION['auxiliary_upper12yesno'] = (htmlspecialchars($_POST['upper12_yesno']) === "upper12_yes") ? true : false;
     $_SESSION['auxiliary_loweryesno'] = (htmlspecialchars($_POST['lower_yesno']) === "lower_yes") ? true : false;
@@ -197,6 +209,12 @@ if ($_POST['token_size'] != "") {
     $_SESSION['upper3_style'] = htmlspecialchars($_POST['upper3_style']);
     $_SESSION['lower_style'] = htmlspecialchars($_POST['lower_style']);
     $_SESSION['auxiliary_style_general'] = htmlspecialchars($_POST['auxiliary_lines_style']);
+    
+    // margins for auxiliary lines
+    $_SESSION['baseline_nomargin_yesno'] = (htmlspecialchars($_POST['baseline_nomargin']) === "nomargin") ? true : false;
+    $_SESSION['upper12_nomargin_yesno'] = (htmlspecialchars($_POST['upper12_nomargin']) === "nomargin") ? true : false;
+    $_SESSION['upper3_nomargin_yesno'] = (htmlspecialchars($_POST['upper3_nomargin']) === "nomargin") ? true : false;
+    $_SESSION['lower_nomargin_yesno'] = (htmlspecialchars($_POST['lower_nomargin']) === "nomargin") ? true : false;
     
     // layouted svg
     $_SESSION['left_margin'] = htmlspecialchars($_POST['left_margin']);

@@ -351,29 +351,34 @@ function InsertAuxiliaryLines( $width ) {
     if ($_SESSION['auxiliary_upper3yesno']) {
         $thickness = $_SESSION['auxiliary_upper3_thickness'];
         $color = $_SESSION['auxiliary_upper3_color'];
+        $stroke_dasharray = $_SESSION['upper3_style'];
         $tempy = 1 * $standard_height;
-        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+           $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
     }
     if ($_SESSION['auxiliary_upper12yesno']) {
         $thickness = $_SESSION['auxiliary_upper12_thickness'];
         $color = $_SESSION['auxiliary_upper12_color'];
+        $stroke_dasharray = $_SESSION['upper12_style'];
         for ($i = 2; $i <= 3; $i++) {
             $tempy = $i * $standard_height;
-            $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+            $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
     }
     if ($_SESSION['auxiliary_baselineyesno']) {
         $thickness = $_SESSION['auxiliary_baseline_thickness'];
         $color = $_SESSION['auxiliary_baseline_color'];
+        $stroke_dasharray = $_SESSION['baseline_style'];
         $tempy = 4 * $standard_height;
-        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
     
     }
     if ($_SESSION['auxiliary_loweryesno']) {
         $thickness = $_SESSION['auxiliary_lower_thickness'];
         $color = $_SESSION['auxiliary_lower_color'];
+        $stroke_dasharray = $_SESSION['lower_style'];
         $tempy = 5 * $standard_height;
-        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+        //echo "thickness: $thickness color: $color dasharray: $stroke_dasharray tempy: $tempy<br>";
+        $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
     }
 
 /*
@@ -804,12 +809,14 @@ function SmoothenEntryAndExitPoints( $splines ) {
                 $c = $exit_y - ( $m * $exit_x );
                 // now calculate new entry point keeping x-coordinate the same (adapting just y)
                 $new_entry_y = $m * $entry_x + $c;
+                //echo "<br>EXIT: y: " . $splines[$entry_i+1] . " ENTRY: PIVOT: y: $pivot_entry_y<br>";
                 //echo "old_entry_y = " . $splines[$entry_i+1] . " new_entry_y = $new_entry_y<br>";
                 // replace y-value for entry-point in splines with new value
                 //$splines[$entry_i+1] = $new_entry_y; // why the hell + 1 ?!?!? => because it's y-coordinate!
                 ///////////////// experimental
                 // new: do this only, if new_entry_y < original y (goal: get smoother connection with high tokens
                 $splines[$entry_i+1] = ($new_entry_y < $splines[$entry_i+1]) ? $new_entry_y : $splines[$entry_i+1];
+                //echo "new splines y: " . $splines[$entry_i+1] . "<br>"; 
             }
             // case 4:
             if (($pivot_entry_yes) && ($pivot_exit_yes)) {
@@ -927,6 +934,10 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         //echo "<br><br>var_dump(splines) after CalculateWord()<br>";
         //var_dump($splines);
         $svg_string = CreateSVG( $splines, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+        // replace space_at_end_stenogramm by distance_words at the end (necessary so that inclinated high stenogramms can be written 
+        // not possible ... stenograms with parts below need space on left side / high stenograms need space at the right
+        //$svg_string = CreateSVG( $splines, $actual_x + ($distance_words * $scaling) / 2, $width + ($distance_words * $scaling) / 2, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
+        
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
         
         return $svg_string;
@@ -1216,6 +1227,7 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
     $maxy = $_SESSION['output_height'] - $_SESSION['bottom_margin'];
     
     //echo "in Auxiliary Lines: starty: $starty maxy: $maxy line_height: $line_height ...<br>";
+    //echo "baseline_nomargin: >" . $_SESSION['baseline_nomargin_yesno'] . "< upper12_nomargin: >" . $_SESSION['upper12_nomargin_yesno'] . "< upper3_nomargin: >" . $_SESSION['upper3_nomargin_yesno'] . "< lower_nomargin: >" . $_SESSION['lower_nomargin_yesno'] . "<<br>";
     
     for ($y = $starty; $y <= $maxy; $y += $line_height) {
         //echo "drawing at: $y maxy: $maxy line_height: $line_height<br>";
@@ -1224,15 +1236,25 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
             $color = $_SESSION['auxiliary_upper3_color'];
             $stroke_dasharray = $_SESSION['upper3_style'];
             $tempy = $y - 3 * $system_line_height;
-            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
+            
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
+            if ($_SESSION['upper3_nomargin_yesno']) $rightx = $width;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            
+            $lines_string .= "<line x1=\"$leftx\" y1=\"$tempy\" x2=\"$rightx\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
         if ($_SESSION['auxiliary_upper12yesno']) {
             $thickness = $_SESSION['auxiliary_upper12_thickness'];
             $color = $_SESSION['auxiliary_upper12_color'];
             $stroke_dasharray = $_SESSION['upper12_style'];
+            
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
+            if ($_SESSION['upper12_nomargin_yesno']) $rightx = $width;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            
             for ($i = 1; $i < 3; $i++) {
                 $tempy = $y - $i * $system_line_height;
-                $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
+                $lines_string .= "<line x1=\"$leftx\" y1=\"$tempy\" x2=\"$rightx\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
             }
         }
         if ($_SESSION['auxiliary_baselineyesno']) {
@@ -1240,14 +1262,24 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
             $color = $_SESSION['auxiliary_baseline_color'];
             $stroke_dasharray = $_SESSION['baseline_style'];
             $tempy = $y;
-            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
+            
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
+            if ($_SESSION['baseline_nomargin_yesno']) $rightx = $width;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            
+            $lines_string .= "<line x1=\"$leftx\" y1=\"$tempy\" x2=\"$rightx\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
         if ($_SESSION['auxiliary_loweryesno']) {
             $thickness = $_SESSION['auxiliary_lower_thickness'];
             $color = $_SESSION['auxiliary_lower_color'];
             $stroke_dasharray = $_SESSION['lower_style'];
             $tempy = $y + $system_line_height;
-            $lines_string .= "<line x1=\"$x\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
+            
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
+            if ($_SESSION['lower_nomargin_yesno']) $rightx = $width;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            
+            $lines_string .= "<line x1=\"$leftx\" y1=\"$tempy\" x2=\"$rightx\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
     }
     //echo "auxiliary lines: ". htmlspecialchars($lines_string) . "<br><br>";
