@@ -88,8 +88,12 @@
 		// ending es
 		"\|es$" => "-es";
 
-		// gehe (erroneously recognized as ge+he)
-		"([Gg]e)\+(he)" => "$1-$2";
+		// mark all er as affix er (and filter "false positive" at the end)
+		"([Ee]r)-" => "$1+";
+		"([Ee])-r" => "$1r+"; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"-([bcdfghjklmnprstvwxyzBCDFGHJKLMNPRSTVWXYZ])er(\+|#)" => "$1-er$2"; // Schil-der+ung: reorganize syllabical structure ...
+		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
+		"er(?!\+)" => "er+"; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		// don't separate prepositions or shortings at beginning
 		"([Ff]ür)\|" => "$1+";
@@ -110,6 +114,7 @@
 		"([Nn]acht)-?(tisch)" => "$1|$2";
 		"([Ww]ei-?ter)\+" => "$1|";
 		"([Ss]er-?vier)-" => "$1|$2";	// Serviertochter
+		"-lied" => "|lied"; 	// Beresinalied
 
 		// aus-
 		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
@@ -374,6 +379,18 @@
 		"([Aa]uf(?:-|\+)?(?:ge\+)?ge)\+(be)" => "$1-$2"; 
 		"([Gg]e)\+(ben)" => "$1-$2";
 
+		// correct "false positives" for affixes
+		// prefix ge+
+		"(ge)\+(he)" => "$1-$2";
+		
+		// affix er+ 
+		"^([Uu]n)?([Gg]er)\+n" => "$2$1-n";
+		"^([Ee])r\+(s-?t)" => "$1r$2";
+		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
+		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
+		"([Ee]r)\+(ker)" => "$1-$2";
+		"r\+$" => "r";
+ 
 
 	#EndSubSection(analyzer)
 #EndSection(header)

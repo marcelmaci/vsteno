@@ -212,6 +212,7 @@
 		
 		"un-?ter" => "{UNTER}";
 		
+		"er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
 		"\+er$" => "{ER}";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
@@ -1138,6 +1139,10 @@
 		"\[O\]U" => "[&O]U";
 		"{HEIT}U\[NG\]" => "{HEIT-1}[#NS][NG]"; 
 		"\[EU\]-?{LICH}" => "[EU][&E]{LICH}"; 
+
+		// rewrite higher position [ch] (combined with @r @l or not)
+		"(I|\[(?:AU|EU)\])([-#\+])?\[CH" => "$1$2[^CH";
+
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -1603,6 +1608,9 @@
 		"\[ar\]\[#3\]\[a\]\[nd@l3\]" => "[ar][#5][a][nd@l3]";
 		"\[w\]\[#0\]\[u\]\[ss\]" => "[w][#2][u][ss]";
 		"\[st@r3\^\]\[#3\]\[i\]\[\^ch\]" => "[st@r3^][#1][i][^ch]";
+		"\[n\]\[#0\]\[a\]\[&a\]" => "[n][#3][a][&a]";
+		"\[pf\]\[#3\]\[i\]\[ff\]" => "[pf][#6][i][ff]";
+		"\[\^ch\]\[en\]" => "[^ch][#4][en]"; // correct length -en: why is this necessary for ch but not for sch?!?
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
