@@ -35,6 +35,7 @@
 		"(?<!\[)=" => "\\[=]\\";
 		"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer"
 		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
+		"(?<!\|)'" => "|'"; // apostrophizer: hat's 
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
 		// check if word contains more then 1 upper case
@@ -103,6 +104,8 @@
 		"[Pp]ie-?t-?er-?le" => "p[&I]et[VR@L]e";
 		//"[Pp]ie(-?ter-?le)" => "p[&I]e$1";	// special word (do the whole stuff for simplicity ...)
 
+		"([Aa]r-?s)en" => "$1En"; // avoid -en
+
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
 		"sis-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
@@ -139,6 +142,7 @@
 		"(Ü|ü)-?ber" => "{ÜBER}";
 
 		"^[Ww]ir$" => "{WIR}";
+		"^[Ww]ir'" => "{WIR}'";
 		
 		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
@@ -166,7 +170,7 @@
 		"ur\+" => "{UR}+";
 
 		"#li-?ch" => "{LICH}";
-		"-li-?ch((-?s-?t)?e[rnsm]?)?$" => "{LICH}$1";
+		"(-|\+)li-?ch((-?s-?t)?e[rnsm]?)?$" => "$1{LICH}$2";
 
 		"ent\+" => "{ANT}+";
 
@@ -183,7 +187,7 @@
 		"^in(\+|#)" => "{IN}$1";
 		"^in(-|\+)?str" => "{IN}$1str";
 		"(\+|#)in(\+|#)" => "$1{IN}$2";
-		"(\+|#)in$" => "$1{IN}";
+		"(?<!er)(\+|#)in$" => "$1{IN}";
 
 		"^sich$" => "{SICH}";
 
@@ -220,6 +224,7 @@
 		"er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
 		"\+er$" => "{ER}";
+		"(n-?d)er\+" => "$1{ER}+";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
 		
 		"(\+)sel-?b" => "$1{SELB}";
@@ -345,7 +350,7 @@
 		"([ie]?tät)(en)?$" => "{HEIT}$2";
 		"([Hh])inter" => "HN[&TVR]";
 		//"^([Hh])ing$" => "$1I[NG]";
-		"^[Hh]in" => { "{HIN}", "[Hh]in-?[dgz]" };
+		"^[Hh]in" => { "{HIN}", "[Hh]in-?[dgz]", "^[Hh]in(?:k-?t|-?ke)" };
 		^zur$" => "[Z]ur";
 		"^uns(er.*)?$" => "u[NS]$1";
 		"(^|\|)({?des}?)?inter" => "$1$2{INTER}";
@@ -1155,6 +1160,7 @@
 		//"{ER}\[#W\]\[-EI\]" => "{ER}[#W][-EI2]"; // recorrect height -ei // not sure if ei is higher after vr ...
 		"{HEIT}A" => "{HEIT}[&E]A";
 		"{SCHAFT}-?L" => "{SCHAFT}[@L]";
+		"\[EU\]-{ET}" => "[EU][&E]{ET}";
 
 		
 	#EndSubSection(rewriter)
@@ -1289,6 +1295,9 @@
 
 		//"{AN}" => "[0N-][A][N]";
 	#EndSubSection(substituter)
+	#BeginSubSection(rewriter2)
+		"\[&T\]-?\[H\]" => "[&T3/4][H]";
+	#EndSubSection(rewriter2)
 	#BeginSubSection(separator)
 		// separator decides wether or not a word should be written separatedly
 		"\[&EITS\](\|)\[?T\]?" => "[&EITS][#5]]\\T";
@@ -1626,6 +1635,13 @@
 		"\[\^ch\]\[en\]" => "[^ch][#4][en]"; // correct length -en: why is this necessary for ch but not for sch?!?
 		"\[s=\]\[au\]\[&e\]" => "[s=][#2][au][&e]";
 		"\[n\]\[#0\]\[au\]\[&e\]" => "[n][#3][au][&e]";
+		"\[0d-\]\[#4-\]\[i\]\[l@l\]" => "[0d-][#1][i][l@l]";
+		"\[l@l\]\[u\]\[st@r3\^\]" => "[l@l][#1][u][st@r3^]";
+		"\[&t3\/4\]\[h\]" => "[&t3/4][#1][h]";
+		"\[b@l\]\[i\]\[b\]" => "[b@l][#2][i][b]";
+		"\[zurück\]\[b@l\]" => "[zurück][#3][b@l]";
+		"\[d\]\[i\]\[\^z\]" => "[d][#4][i][^z]";
+		"\[\^z\]\[i\]\[l\]" => "[^z][#5][i][l]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 

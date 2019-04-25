@@ -90,6 +90,18 @@
 
 		////////////////////////// new approach for affixes ge-, be-, -er- //////////////////////////////
 		///////////// mark all er as affix and filter out "false positive" at the end //////////////////
+		// be- and ge- must be done before -er (because of ber- ger-)
+		// be-
+		"^([Bb]e)-" => "$1+";
+		"(\|[Bb]e)-" => "$1+";
+
+		// ge-
+		"^([Gg]e)-" => "$1+";
+		"(\|[Gg]e)-" => "$1+";
+
+		//ein-ge (eingebrockt)
+		"^([Ee]in)-(ge)-" => "$1+$2+";
+
 		// -er-
 		"([Ee]r)-" => "$1+";
 		"([Ee])-r" => "$1r+"; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
@@ -99,15 +111,12 @@
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
 		"er(?!\+)" => "er+"; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
-		// be-
-		"^([Bb]e)-" => "$1+";
-		"(\|[Bb]e)-" => "$1+";
-
-		// ge-
-		"^([Gg]e)-" => "$1+";
-		"(\|[Gg]e)-" => "$1+";
-
 		////////////////////////////////////// end new approach ///////////////////////////////////////
+
+		// early filter
+		"([Ss]er)\+(vier)\+?" => "$1-$2-";
+		
+		////////////////////////////////// end early filter //////////////////////////////////////////
 
 		// don't separate prepositions or shortings at beginning
 		"([Ff]ür)\|" => "$1+";
@@ -123,15 +132,25 @@
 		"([Dd]er)\|(ben)" => "$1-$2";
 		"([Ss]au)\|(be)\+(r)" => "$1-$2-$3";
 		"([Mm]an)\|(gel)" => "$1-$2";
+		"([Hh]eu)\|(e-?t)" => "$1-$2";
+		"([Ff]ol-gen)\|(der)" => "$1-$2";
+		"([Ss]pie)\|(gel)" => "$1-$2";
+		"([Hh]a)-?t's" => "$1t's"; 
+		"([Aa]-?m-?e-?r\+?i-?ka)\|(ni-?schen)" => "$1-$2"; // computers are stupid ... :)
+		"([Jj]e)\|(doch)" => "$1-$2";
+		"([Vv]or\+ei)\|(li-g)" => "$1-$2"; // voreiligen
 
 		// additional separations
 		"([Nn]acht)-?(tisch)" => "$1|$2";
 		"([Ww]ei-?ter)\+" => "$1|";
 		"([Ss]er-?vier)-" => "$1|$2";	// Serviertochter
 		"-lied" => "|lied"; 	// Beresinalied
+		"Erb-l" => "Erb|l";	// Erb-lassers (most probable decision for noun vs Er-blasser)
+		"erb-l" => "er+bl";	// er-blassen (most probable decision for Verb)
 
 		// aus-
 		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
+		"([Aa]us)-([kr])" => "$1+$2";
 
 		// in general: don't separate -[brt]en (..)
 		"\|ren" => "-ren";
@@ -276,6 +295,9 @@
 		"^([Ii])n-(?!ter)" => "$1n+";
 		"^([Ii]n)\+(ne)" => "$1-$2";
 
+		//un-ent-
+		"^([Uu]n)-?(ent)-?" => "$1+$2+";
+
 		// trying to recognize more ge-/be- prefixes: rule: ends with -en(..) or -t(..)
 		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
 		"^([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
@@ -313,6 +335,11 @@
 		"\+(auf|ver|zu)-(.*)(ung)(en)?$" => "+$1+$2$3$4";
 		"^([Aa]uf)-(zu)-" => "$1+$2+";
 		"([Zz]u)-?(k(?:u|ünf))" => "$1+$2";
+
+		// additional separations
+		"([Ww]eih)-?(nach-?t)" => "$1|$2";
+		"Pri-?vat\|?de-?tek-?tiv" => "Pri-vat[#4]\\de-tek-tiv"; // to high (produces lines all over the place ... :) One of the ugliest words in steno I think ... :)
+		"([Nn]as)-?(t(?:u|ü)-?ch)" => "$1|$2";	// Helvetism
 
 		// die- ist most of the times not a separate word (a part from diejenigen, dieselben)
 		"([Dd])ie\|(?!(je|se))" => "$1ie-";
@@ -415,11 +442,15 @@
 		"([Gg]e)\+(le(?:-|\+)?n(?:d?e[mrsn]?)?)" => "$1-$2"; // eingelen (if it exists ... ;-)
 		"([Gg]e)\+(l-?t(?:e[mrsn]?)?)" => "$1-$2";
 		"([Gg]e)\+(ne?[sn]?)" => "$1-$2";
-		
+		"([Gg]e)-?(no)" => "$1+$2";	// re-correction of re-correction
+		"([Gg]e)-?(hei)" => "$1+$2"; // rere
+		"([Gg]e)-(nü)" => "$1+$2"; // rere
+		"([Gg]e)-(na)" => "$1+$2"; // rere
+		"([Aa]n\+ge)-(nehm)" => "$1+$2"; // rerere
 		
 		// affix er+ 
-		"^([Uu]n)?([GgBb]er)\+n" => "$2$1-n";
-		"^([Ee])r\+(s-?t)" => "$1r$2";
+		"^([Uu]n\+?)?([GgBb]er)\+n" => "$1$2-n";
+		"^([Ee])r\+(s-?t)(?!au)" => "$1r$2";
 		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
 		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
 		"([Ee]r)\+(ker)" => "$1-$2";
@@ -437,10 +468,15 @@
 		"([Ee]r)\+(ns)" => "$1$2"; 	// ernst
 		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
 		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
-		"([Ee]r)\+(le)(?![dsbghmprtwz])" => "$1$2"; 	// Erle
+		"(?<![Vv])([Ee]r)\+(le)(?![dsbghmprtwz])" => "$1$2"; 	// Erle
 		"([Ll]er)\+n" => "$1n";
+		"([Ww]er)\+?(-?de)" => "$1$2";
+		"([Hh]er)\+r" => "$1r";
+		"([Ee]r)\+(i-?ka)(?!-?ni-?sch)" => "$1$2"; // Erika, Amerika; amerikanisch
+		"([Ff]er)\+t" => "$1t";
+		"([Ww]er)\+d" => "$1d";
+		"([Mm]er)\+c" => "$1c";
 		
  
-
 	#EndSubSection(analyzer)
 #EndSection(header)
