@@ -88,12 +88,26 @@
 		// ending es
 		"\|es$" => "-es";
 
-		// mark all er as affix er (and filter "false positive" at the end)
+		////////////////////////// new approach for affixes ge-, be-, -er- //////////////////////////////
+		///////////// mark all er as affix and filter out "false positive" at the end //////////////////
+		// -er-
 		"([Ee]r)-" => "$1+";
 		"([Ee])-r" => "$1r+"; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstvwxyzBCDFGHJKLMNPRSTVWXYZ])er(\+|#)" => "$1-er$2"; // Schil-der+ung: reorganize syllabical structure ...
+		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
+		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
 		"er(?!\+)" => "er+"; // generalization of preceeding rule (because also valid for other cases: Pflegern
+
+		// be-
+		"^([Bb]e)-" => "$1+";
+		"(\|[Bb]e)-" => "$1+";
+
+		// ge-
+		"^([Gg]e)-" => "$1+";
+		"(\|[Gg]e)-" => "$1+";
+
+		////////////////////////////////////// end new approach ///////////////////////////////////////
 
 		// don't separate prepositions or shortings at beginning
 		"([Ff]ür)\|" => "$1+";
@@ -355,6 +369,9 @@
 		// recorrections
 		"([Gg]e[+-]?)(be)[+-](t)" => "$1$2-$3";
 		"([Gg]e)-(bet)" => "$1+$2";
+		"([Ww]o)#(chen)" => "$1-$2";
+		"([Ff]rei)\+(tag)" => "$1-$2";
+		"([Ss]ams)\|(tag)" => "$1-$2";
 		
 		"([Mm]u-?se)\|(um)" => "$1-$2";
 		"([Ss]ei)\|(den)[+-]?(en)" => "$1-$2-$3";
@@ -379,17 +396,50 @@
 		"([Aa]uf(?:-|\+)?(?:ge\+)?ge)\+(be)" => "$1-$2"; 
 		"([Gg]e)\+(ben)" => "$1-$2";
 
-		// correct "false positives" for affixes
+		/////////////////////////////////////// new approach prefixes ///////////////////////
+		// filter out "false positives" for affixes
+		
+		// prefix be+
+		"([Bb]e)\+(te(?:n|st|t(?:en?)?|nd(?:en?)?))" => "$1-$2";
+		"([Bb]e)\+(b(?:en|e?st|e?t(?:en?)?|nd(?:en?)?))" => "$1-$2";
+		"([Bb]e)\+(sens?)" => "$1-$2";
+		"([Bb]e)\+(ne)" => "$1-$2";
+		"([Bb]e)\+(x)" => "$1$2";
+		
+
 		// prefix ge+
-		"(ge)\+(he)" => "$1-$2";
+		"([Gg]e)\+(he)" => "$1-$2";
+		"([Gg]e)\+(gen)" => "$1-$2";
+		"([Gg]e)\+(be(?:-|\+)?n(?:d?(?:st)?e[mrsn]?)?)" => "$1-$2";
+		"([Gg]e)\+(cko)" => "$1-$2";
+		"([Gg]e)\+(le(?:-|\+)?n(?:d?e[mrsn]?)?)" => "$1-$2"; // eingelen (if it exists ... ;-)
+		"([Gg]e)\+(l-?t(?:e[mrsn]?)?)" => "$1-$2";
+		"([Gg]e)\+(ne?[sn]?)" => "$1-$2";
+		
 		
 		// affix er+ 
-		"^([Uu]n)?([Gg]er)\+n" => "$2$1-n";
+		"^([Uu]n)?([GgBb]er)\+n" => "$2$1-n";
 		"^([Ee])r\+(s-?t)" => "$1r$2";
 		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
 		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
 		"([Ee]r)\+(ker)" => "$1-$2";
 		"r\+$" => "r";
+		"([TtGg]er)\+m" => "$1-m";
+		"([Zz]er)\+(be-?r\+)" => "$1-$2";	// Zerberus
+		"([Zz]e-?r)\+(e-?mo-?n)" => "$1-$2";	// Zeremonie
+		"([Zz]er)\+(ti-?fi)" => "$1-$2";	// Zertifikat, zertifizieren
+		"([Kk]on-?zer)\+(t)" => "$1$2";		// Konzert (syllables are not handled very cleanly ...)
+		"(Zer)\+(matt)" => "$1-$2";
+		"(ie-?r)\+" => "$1";
+		"(er)\+(i-?e)" => "$1$2";
+		"([Bb]er)\+(e-?si-?na)" => "$1$2";
+		"([Mm]er)\+k" => "$1k";
+		"([Ee]r)\+(ns)" => "$1$2"; 	// ernst
+		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
+		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
+		"([Ee]r)\+(le)(?![dsbghmprtwz])" => "$1$2"; 	// Erle
+		"([Ll]er)\+n" => "$1n";
+		
  
 
 	#EndSubSection(analyzer)

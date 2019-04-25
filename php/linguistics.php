@@ -471,6 +471,7 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
     
     $several_words = explode("-", $word);  // if word contains - => split it into array
     $result = "";
+    //echo "prefixes: $prefixes";
     //echo "stems: $stems<br>";
     //echo "suffixes: $suffixes<br>";
     for ($i=0;$i<count($several_words);$i++) {
@@ -591,8 +592,13 @@ function backwards_preg_match($wordpart, $array) {
     //echo "<br>wordpart: $wordpart<br>";
     //var_dump($array);
     for ($i=0; $i<count($array); $i++) {
-        $pattern = $array[$i];
-        $result = preg_match("/^$pattern$/i", $wordpart); 
+        $pattern = mb_strtolower($array[$i]);
+        $wordpart_lower = mb_strtolower($wordpart);
+        // maybe I fixed a bug that wasn't there ... because SESSION-variables weren't actualized ...
+        // if any strange behaviour of pre/suffixes => revert back to previous commit
+        // i.e. do not use strtolower but i-flag for regex instead ...
+        //if ($pattern === "be") echo "pattern: $pattern wordpart_lower: $wordpart_lower<br>";
+        $result = preg_match("/^$pattern$/", $wordpart_lower); 
         //echo "result $i: $result<br>";
         if ($result === 1) return true;
     }
@@ -632,6 +638,7 @@ function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stem
     $stems = " " . implode(" ", $stems_array) . " ";
     $suffixes = " " . implode(" ", $suffixes_array) . " ";
     //echo "<br>suffixes(eliminate): $suffixes<br>";
+    //var_dump($prefixes_array);
     
     //echo "$shell_command<br>";
     //echo "hunspell: ";

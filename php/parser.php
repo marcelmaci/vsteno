@@ -664,6 +664,15 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
         $old_word = $word;
         $word = replace_all( "/" . $analyzer[$i][0] . "/", $analyzer[$i][1], $word);
         
+        /*
+        if ($old_word !== $word) {
+                echo "rule: " . $analyzer[$i][0] . " => " . $analyzer[$i][1] . " has been applied ($old_word => $word).<br>";
+        } else {
+          echo "no match: " . $analyzer[$i][0] . " => " . $analyzer[$i][1] . "<br>";
+          
+        }
+        */
+        
         if (($_SESSION['output_format'] === "debug") && ($old_word !== $word)) {
             //echo "modification: $old_word => $word (rule: $i)<br>";
             $wrapped_pattern = WrapStringAfterNCharacters($analyzer[$i][0], 30);

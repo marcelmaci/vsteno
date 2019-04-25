@@ -34,6 +34,7 @@
 	#BeginSubSection(dasher,#>stage2)
 		"(?<!\[)=" => "\\[=]\\";
 		"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer"
+		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
 		// check if word contains more then 1 upper case
@@ -72,7 +73,8 @@
 		//"(?<!\[)=" => "[=]\";
 	#EndSubSection(packer)
 	#BeginSubSection(decapitalizer)
-		"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // from shortener: must be done before decapitalizer
+		"sch(a|ä)ft(s|-?l?er)?$" => "{SCHAFT}$2"; // from shortener: must be done before decapitalizer
+		
 		"([A-Z])" => "strtolower()";
 		"{schaft}" => "{SCHAFT}"; // restore upper case (.. yeah yeah ... start messing up ... :)
 	#EndSubSection(decapitalizer)
@@ -97,6 +99,9 @@
 		"([Tt])ou(-?ris)" => "$1u$2"; 
 
 		"([Dd]i)eu" => "$1ö";	// french word
+		
+		"[Pp]ie-?t-?er-?le" => "p[&I]et[VR@L]e";
+		//"[Pp]ie(-?ter-?le)" => "p[&I]e$1";	// special word (do the whole stuff for simplicity ...)
 
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
@@ -188,7 +193,7 @@
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{ER}$3"; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?))(e-?r-?t)(e?[rnms]?)?$" => "$1{ER}t$3"; // use - to detect preceeding syllable
-		"er(-?ne[nsmr]?)$" => "{ER}$1";
+		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n"};
 		"(?<![VvZzDdWwHh])er\+" => "{ER}";
 
 		"{LICH}er$" => "{LICH}{ER}";
@@ -756,6 +761,7 @@
 		"{ET}E" => "{ET}[&E]E";
 
 		"\[&T\]ES" => "[&TES]";
+		"\[&T\]-E" => "[&T][&E]E";
 		
 
 	#EndSubSection(transcriptor)
@@ -779,7 +785,8 @@
 		"\[&T\]E\|" => "[&T]E\\";  // Produktepalette 
 
 		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
-		"(\[TUNG\]S)\|" => "$1\\"; // Unterhaltungsfonds
+		"(\[TUNG\]S)\|F" => "$1[#3]\\F"; // Unterhaltungsfonds
+		"(\[TUNG\]S)\|" => "$1\\"; 
 		"(\[&T\]{ION}S)\|" => "$1\\"; // Sektionsprotokoll 
 		"\[&T&I\]\|" => "[&T&I]\\"; // Sentimentalität
 
@@ -831,6 +838,8 @@
 
 		// if word is not separated => write vowels at the end of each word
 		"E\|" => "E[&E]";
+		"(\[FR\]\[EI\])\+" => "$1[&E]+"; 	// special case Freizeit (separated by +)
+		
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -1142,6 +1151,10 @@
 
 		// rewrite higher position [ch] (combined with @r @l or not)
 		"(I|\[(?:AU|EU)\])([-#\+])?\[CH" => "$1$2[^CH";
+		"\[VR@L\]\[-E\]" => "[VR@L][O][-E]"; // recorrect height -e
+		//"{ER}\[#W\]\[-EI\]" => "{ER}[#W][-EI2]"; // recorrect height -ei // not sure if ei is higher after vr ...
+		"{HEIT}A" => "{HEIT}[&E]A";
+		"{SCHAFT}-?L" => "{SCHAFT}[@L]";
 
 		
 	#EndSubSection(rewriter)
@@ -1442,7 +1455,7 @@
 		"\[vr\]\[#3\]\[i\]\[n\]" => "[vr][#2-][i][n]";
 		"\[vr\]\[#3\]\[i\]\[s\]" => "[vr][#1-][i][s]";
 		"\[b\]\[#0\]\[sch@r\]" => "[b][#5-][sch@r]";
-		"\[m\]\[#3\]\[i\]\[n\]" => "[m][#2-][i][n]";
+		"\[m\]\[#3\]\[i\]\[n\]" => "[m][#0][i][n]";
 		"\[n\]\[u\]\[#5\]\[t\]" => "[n][u][#3][t]";
 		"\[st\]\[#3\]\[u\]\[m\]" => "[st][#1][u][m]";
 		"\[l\]\[#0\]\[a\]\[ng\]" => "[l][#2][a][ng]";
@@ -1611,12 +1624,16 @@
 		"\[n\]\[#0\]\[a\]\[&a\]" => "[n][#3][a][&a]";
 		"\[pf\]\[#3\]\[i\]\[ff\]" => "[pf][#6][i][ff]";
 		"\[\^ch\]\[en\]" => "[^ch][#4][en]"; // correct length -en: why is this necessary for ch but not for sch?!?
+		"\[s=\]\[au\]\[&e\]" => "[s=][#2][au][&e]";
+		"\[n\]\[#0\]\[au\]\[&e\]" => "[n][#3][au][&e]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
 		// fix spacing bug for \
 		"\\" => "[#S#]";
 		"\[VR@L\]\[EN\]" => "[VR@L][O][EN]"; // figh vertical position -en with combined token vrl (bug?)
+
+		"\[VR@L\]\[#3\]\[O\]\[-E\]" => "[VR@L][#2-][O][-E]"; // re-recorrect re-corrections ...
 
 	#EndSubSection(spacer,=:prt)
 #EndSection(rules)
