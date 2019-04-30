@@ -139,6 +139,11 @@
 		"([Aa]-?m-?e-?r\+?i-?ka)\|(ni-?schen)" => "$1-$2"; // computers are stupid ... :)
 		"([Jj]e)\|(doch)" => "$1-$2";
 		"([Vv]or\+ei)\|(li-g)" => "$1-$2"; // voreiligen
+		"([Ee])i\|ge\+ne" => "$1i-ge-ne":   // eigene
+
+		// "resyllabation"
+		"([Zz]wei)-t" => "$1t|";  // zweitoberst
+		"([Jj]u-li)n-" => "$1|n"; // Julinacht
 
 		// additional separations
 		"([Nn]acht)-?(tisch)" => "$1|$2";
@@ -147,6 +152,8 @@
 		"-lied" => "|lied"; 	// Beresinalied
 		"Erb-l" => "Erb|l";	// Erb-lassers (most probable decision for noun vs Er-blasser)
 		"erb-l" => "er+bl";	// er-blassen (most probable decision for Verb)
+		"([Bb]reit)-" => "$1|"; // breitbeinig, breitschultrig etc.
+		"([Kk]o-kos)-" => "$1|";
 
 		// aus-
 		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
@@ -165,7 +172,7 @@
 		"-(kut-?ten?)" => "|$1";  // end (works also for "Kutter" which is correct)
 
 		// recognize more auf-
-		"([Aa]uf)-(kl|n)" => "$1+$2";
+		"([Aa]uf)-(kl|n|o|a)" => "$1+$2";
 
 		// don't separate -tümlich
 		"\|(tüm[-#]?li-?ch)" => "-$1";
@@ -295,9 +302,11 @@
 		"^([Ii])n-(?!ter)" => "$1n+";
 		"^([Ii]n)\+(ne)" => "$1-$2";
 
-		//un-ent-
+		// un-
+		"^([Uu]n)-([bcdfghjklmnprstvwxz])" => "$1+$2";
+		// un-ent-
 		"^([Uu]n)-?(ent)-?" => "$1+$2+";
-
+	
 		// trying to recognize more ge-/be- prefixes: rule: ends with -en(..) or -t(..)
 		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
 		"^([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
@@ -449,12 +458,18 @@
 		"([Aa]n\+ge)-(nehm)" => "$1+$2"; // rerere
 		
 		// affix er+ 
-		"^([Uu]n\+?)?([GgBb]er)\+n" => "$1$2-n";
+		"^([Uu]n\+?)?([GgBbFf]er)\+n" => "$1$2-n";
+		"^([Uu]n\+?)?([Ss]ter)\+n" => "$1$2-n";
+
 		"^([Ee])r\+(s-?t)(?!au)" => "$1r$2";
 		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
+		"^([Bb]er)\+k" => "$1-k";		// Berkeley
+		
 		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
 		"([Ee]r)\+(ker)" => "$1-$2";
+		"([Ee]r)\+(bt)" => "$1$2";
 		"r\+$" => "r";
+		"r\+\|" => "r|";
 		"([TtGg]er)\+m" => "$1-m";
 		"([Zz]er)\+(be-?r\+)" => "$1-$2";	// Zerberus
 		"([Zz]e-?r)\+(e-?mo-?n)" => "$1-$2";	// Zeremonie

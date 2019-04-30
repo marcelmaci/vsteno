@@ -91,10 +91,11 @@
 		"([Pp]s)y(-?c-?h)" => "$1ü$2";
 		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er" };
+		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
+		"ieu$" => "iö";  // french: Milieu
 
 		// ou = u
 		"([Tt])ou(-?ris)" => "$1u$2"; 
@@ -105,6 +106,8 @@
 		//"[Pp]ie(-?ter-?le)" => "p[&I]e$1";	// special word (do the whole stuff for simplicity ...)
 
 		"([Aa]r-?s)en" => "$1En"; // avoid -en
+
+		"e-ta-ge-re" => "E-ta-gE-re";
 
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
@@ -197,8 +200,8 @@
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{ER}$3"; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?))(e-?r-?t)(e?[rnms]?)?$" => "$1{ER}t$3"; // use - to detect preceeding syllable
-		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n"};
-		"(?<![VvZzDdWwHh])er\+" => "{ER}";
+		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n" };
+		"(?<![VvZzDdWwHh])er\+" => { "{ER}", "[Ss]ter(?:-|\+)?n" };
 
 		"{LICH}er$" => "{LICH}{ER}";
 
@@ -362,6 +365,7 @@
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
 		//"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => { "{ET}", "[Rr]e[-+]pe-?t" };
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
+		"et-z" => "Et-z"; // avoid et in following rule
 		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => { "$1{ET}", "[Rr]e[-+]pe-?t" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
@@ -452,7 +456,7 @@
 		"aa" => "a";
 		"ah(-?)(?=[lmnrstz])" => "a$1";
 		"äh-?(?=[lmnrstz])" => "ä";
-		"uh(?=[lmnrstz])" => "u";
+		"uh(-?)(?=[lmnrstz])" => "u$1";
 		"o[oh](-)?([flmnrst])" => "o$1$2";
 		"ö[oh](-)?([flmnrst])" => "ö$1$2";
 		"ieh([tmn])" => "i$1";
@@ -767,7 +771,9 @@
 
 		"\[&T\]ES" => "[&TES]";
 		"\[&T\]-E" => "[&T][&E]E";
-		
+
+		// heit + unterlänge
+		"{HEIT}-?\[(SCH|CH|Z|ZW)\]" => "{HEIT&UL}[$1]";
 
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
@@ -1162,6 +1168,8 @@
 		"{SCHAFT}-?L" => "{SCHAFT}[@L]";
 		"\[EU\]-{ET}" => "[EU][&E]{ET}";
 
+		"U-{EN}" => "A[&U]{EN}";
+
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -1200,9 +1208,9 @@
 		"{DEM}(-?)N" => "[^DEM]$1N";
 		"{DE(M|N)}j" => "[^^DE$1]J";
 		"{DE(M|N)}\[j\]" => "[^^DE$1][J]";
-		"{DE(M|N)}g" => "[^^DE$1]G";
-		"{DE(M|N)}{G" => "[^^DE$1]{G";
-		"{DE(M|N)}{GE}" => "[^^DE$1]{GE}";
+		"{DE(M|N)}[-+]?g" => "[^^DE$1]G";
+		"{DE(M|N)}[-+]?{G" => "[^^DE$1]{G";
+		"{DE(M|N)}[-+]?{GE}" => "[^^DE$1]{GE}";
 		"{DE(M|N)}z" => "[^^DE$1]Z";
 		"{DE(M|N)}{ZU}" => "[^^DE$1]{ZU}";
 		"{DE(M|N)}" => "[E$1]";
@@ -1642,6 +1650,11 @@
 		"\[zurück\]\[b@l\]" => "[zurück][#3][b@l]";
 		"\[d\]\[i\]\[\^z\]" => "[d][#4][i][^z]";
 		"\[\^z\]\[i\]\[l\]" => "[^z][#5][i][l]";
+		"\[\^z\]\[l\]" => "[^z][#4][l]";
+		"\[n=@r6\]\[t\]" => "[n=@r6][#4][t]";
+		"\[ch\]\[vr\+ar\]" => "[ch][#4]][vr+ar]";
+		"\[\^z\]\[&i\]" => "[^z][#4][&i]";
+		"\[ff\]\[i\]\[\^z\]" => "[ff][#3]][i][^z]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
