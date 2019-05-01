@@ -127,6 +127,7 @@ $posttokenlist = $punctuation . $only_posttokens . $numbers;  // treat punctuati
 $standard_height = 10;                          // height of one token like b, g, m etc.
 $svg_height = 6 * $standard_height;             // height for svg image
 $height_above_baseline = 4 * $standard_height;  // number of lines available above baseline
+$height_for_delta_array = $height_above_baseline + 4 * $standard_height; // create more deltas for words that go beyond system lines
 $baseline_y = 40;                               // baseline for steno tokens
 $half_upordown = $standard_height / 2;          // value for tokens that have to be placed 1/2 line higher or lower
 $one_upordown = $standard_height;               //   "                                 "     1   "

@@ -64,9 +64,13 @@
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
+		
+		// additional syllables
 		"ebe(-?)n" => "e-be$1n";  // bug in phpSyllable: eben is not hyphenated!?
 		"oder" => "o-der"; 	// same ...
 		"^([Vv]i)a$" => "$1-a";
+		"([Hh]y-gi)(e-n)" => "$1-$2";
+		"([Ii])-?(ta-)(li)(e-n)" => "$1-$2-$3-$4";
 
 		// probably, phpSyllable doesn't separate VCV at the beginning
 		// because it doesn't want to separate just 1 vowel (would be ugly in a text)
@@ -92,8 +96,8 @@
 		///////////// mark all er as affix and filter out "false positive" at the end //////////////////
 		// be- and ge- must be done before -er (because of ber- ger-)
 		// be-
-		"^([Bb]e)-" => "$1+";
-		"(\|[Bb]e)-" => "$1+";
+		"^([Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
+		"(\|[Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
 
 		// ge-
 		"^([Gg]e)-" => "$1+";
@@ -105,7 +109,7 @@
 		// -er-
 		"([Ee]r)-" => "$1+";
 		"([Ee])-r" => "$1r+"; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
-		"-([bcdfghjklmnprstvwxyzBCDFGHJKLMNPRSTVWXYZ])er(\+|#)" => "$1-er$2"; // Schil-der+ung: reorganize syllabical structure ...
+		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => "$1-er$2"; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
@@ -125,11 +129,14 @@
 		// diejenige, derjenige, desjenigen etc.
 		"([Dd](?:ie|er|es|as|em|en))-?(je-?ni-?ge)" => "$1+$2";
 
+		// don't separate -zer, -der, -er at end of words
+		"(.?)\|([dz]?er)\+?$" => "$1-$2";
+
 		// correct wrong separations
 		"([Dd])e-?nen" => "$1en+en";
-		"([Dd])e(-?|\|)re([rn])" => "$1er+e$3";
+		"([Dd])e(-?|\|)r\+?e([rn])" => "$1er+e$3";
 		"([Mm]i-?ne)\|(ral)" => "$1-$2";
-		"([Dd]er)\|(ben)" => "$1-$2";
+		"([Dd]er\+?)\|(ben)" => "$1-$2";
 		"([Ss]au)\|(be)\+(r)" => "$1-$2-$3";
 		"([Mm]an)\|(gel)" => "$1-$2";
 		"([Hh]eu)\|(e-?t)" => "$1-$2";
@@ -139,7 +146,14 @@
 		"([Aa]-?m-?e-?r\+?i-?ka)\|(ni-?schen)" => "$1-$2"; // computers are stupid ... :)
 		"([Jj]e)\|(doch)" => "$1-$2";
 		"([Vv]or\+ei)\|(li-g)" => "$1-$2"; // voreiligen
-		"([Ee])i\|ge\+ne" => "$1i-ge-ne":   // eigene
+		"([Ee])i\|ge\+ne" => "$1i-ge-ne";   // eigene
+		"([Ss]prit)\|(ze-?r)" => "$1-$2";
+		"([Gg]e)-?(le)\|(ge)\+" => "$1-$2-$3"; // abgelegene
+		"([Aa]m)\|(her)\+(d)" => "$1-$2$3"; // Swiss name
+		"([Ee]-he)\|(ma)" => "$1-$2"; // ehemalig
+		"([Mm]ai)\|(l(?:a|ä)n-?d)" => "$1-$2";
+		"(t)\|(nis-?se)" => "$1-$2";
+		"(sich)\|(ti-?ge-?r)" => "$1-$2"; // durchsichtiger
 
 		// "resyllabation"
 		"([Zz]wei)-t" => "$1t|";  // zweitoberst
@@ -154,6 +168,8 @@
 		"erb-l" => "er+bl";	// er-blassen (most probable decision for Verb)
 		"([Bb]reit)-" => "$1|"; // breitbeinig, breitschultrig etc.
 		"([Kk]o-kos)-" => "$1|";
+		"([Ss]chank)-" => "$1|";
+		"([Kk]lein)-" => "$1|"; // kleinkalibrig, Kleinkunst etc.
 
 		// aus-
 		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
@@ -202,6 +218,7 @@
 		"([Hh])e-?r-?aus-?" => "$1er+aus+";
 		"da-ma(-?)l" => "da+ma$1l";
 		"un(-?|\||\+)te(-?)r" => "un-te$2r"; 
+		"([Aa]u-?s-?ser)\+(\|dem)" => "$1$2";	// special: recorrect +| before following rule 
 		"(\+|\|)([bd])e([nrsm]?)$" => "-$2e$3";
 		"([WwNn])ie\|de(-?)r\+" => "$1ie-de$2r|";
 		"([WwNn])ie\|de(-?)r" => "$1ie-de$2r";
@@ -304,8 +321,9 @@
 
 		// un-
 		"^([Uu]n)-([bcdfghjklmnprstvwxz])" => "$1+$2";
-		// un-ent-
-		"^([Uu]n)-?(ent)-?" => "$1+$2+";
+		"([Uu]n)\+(ter)" => "$1-$2"; // recorrect unter
+		// un-ent/ver-
+		"^([Uu]n)-?(ent|ver)(-|\+)?" => "$1+$2+";
 	
 		// trying to recognize more ge-/be- prefixes: rule: ends with -en(..) or -t(..)
 		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
@@ -483,7 +501,10 @@
 		"([Ee]r)\+(ns)" => "$1$2"; 	// ernst
 		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
 		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
-		"(?<![Vv])([Ee]r)\+(le)(?![dsbghmprtwz])" => "$1$2"; 	// Erle
+		
+		"(?<![Vv])([Ee]r)\+(le)" => "$1$2"; 			// Erle: first transform all
+		"([Ee]r)(le-)(?=[dsbghmprtwz])" => "$1+$2"; 	// reseparate: erlesen, erledigen etc.
+		
 		"([Ll]er)\+n" => "$1n";
 		"([Ww]er)\+?(-?de)" => "$1$2";
 		"([Hh]er)\+r" => "$1r";
@@ -491,7 +512,24 @@
 		"([Ff]er)\+t" => "$1t";
 		"([Ww]er)\+d" => "$1d";
 		"([Mm]er)\+c" => "$1c";
-		
+		"([Ee]r)\+b(e|in)" => "$1-b$2";
+		"([Ee]r)\+(b\|)" => "$1$2"; // erbberechtigt
+		"([Vv]er)\+(s-)" => "$1$2";
+		"([Vv]er)\+(s$)" => "$1$2";
+		"([Vv]er)\+(si-?on)" => "$1-$2";
+		"([Vv]er)\+(s)(chen)" => "$1$2-$3";
+		"([Ff]er)\+(se?n?)" => "$1$2";
+		"([Ss]chmer)\+z" => "$1z";
+		"([Hh]er)\+z" => "$1z";
+		"([Hh]er)\+nach" => "$1-nach";
+		"([Hh]er)\+aus" => "$1|aus";
+		"([Ee]nt)-?(f-?er)\+" => "$1+$2";
+		"(Ger)\+(zen)" => "$1-$2"; // Gerzenstein (Glauser, der Chinese)
+
+		// er+ and in+
+		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
+		"([Ii]n)-?di-?e([rn])" => "$1-di-e$2";
+ 		"([Ii])n-?di-?erin" => "$1-di-e-rin";
  
 	#EndSubSection(analyzer)
 #EndSection(header)

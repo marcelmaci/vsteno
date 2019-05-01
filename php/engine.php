@@ -139,9 +139,9 @@ function SetGlobalScalingVariables( $factor ) {
 }
 
 function CreateDeltaList( $angle ) {
-    global $height_above_baseline;
+    global $height_above_baseline, $height_for_delta_array;
     $deltalist = array();
-    for ($y = 0; $y < $height_above_baseline+1; $y++) {
+    for ($y = 0; $y < $height_for_delta_array+1/*$height_above_baseline+1*/; $y++) {
         $deltalist[$y] = $y / tan( deg2rad( $angle ));
     }
     return $deltalist;
