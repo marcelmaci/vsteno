@@ -87,6 +87,7 @@
 		"\|ge$" => "-ge"; 	// correct ge- prefix (recognized as word)
 
 		"r\|t\'s" => "rt's";	// pressiert's (cleaning up some chaos produced by linguistical analyzer ...)
+		"\|t'" => "t'"; // geh|t's
 		"([Ww]eh)\|r" => "$1-r";
 
 		// ending es
@@ -154,10 +155,14 @@
 		"([Mm]ai)\|(l(?:a|ä)n-?d)" => "$1-$2";
 		"(t)\|(nis-?se)" => "$1-$2";
 		"(sich)\|(ti-?ge-?r)" => "$1-$2"; // durchsichtiger
+		"[Ss]tau\|den" => "Stau-den"; // Staudenkultur (|den not recognized in interior of word ...)
+		"([Tt]e-le)\|(phon)" => "$1-$2"; // avoid separation of old orthography
 
 		// "resyllabation"
-		"([Zz]wei)-t" => "$1t|";  // zweitoberst
+		"([Zz]wei)-to" => "$1t|o";  // zweitoberst
+		"([Zz]wei)t\|(ens)" => "$1-t$2"; // recorrection
 		"([Jj]u-li)n-" => "$1|n"; // Julinacht
+		"([Vv]i-si-ten)k-" => "$1|k";
 
 		// additional separations
 		"([Nn]acht)-?(tisch)" => "$1|$2";
@@ -170,6 +175,8 @@
 		"([Kk]o-kos)-" => "$1|";
 		"([Ss]chank)-" => "$1|";
 		"([Kk]lein)-" => "$1|"; // kleinkalibrig, Kleinkunst etc.
+		"ti-ons-" => "ti-ons|"; // Deflagrationsspuren, Reaktionszeit etc.
+		"([Bb]ar-chent)-" => "$1|"; // Barchentteppich, -unterrock etc.
 
 		// aus-
 		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
@@ -317,11 +324,13 @@
 
 		// prefix in-
 		"^([Ii])n-(?!ter)" => "$1n+";
+		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
+		"\|([Ii]n)-(s[tp])" => "|$1+$2"; // idem in separated words
 		"^([Ii]n)\+(ne)" => "$1-$2";
 
 		// un-
 		"^([Uu]n)-([bcdfghjklmnprstvwxz])" => "$1+$2";
-		"([Uu]n)\+(ter)" => "$1-$2"; // recorrect unter
+		"([Uu]n)\+(te[rn])" => "$1-$2"; // recorrect unter, unten
 		// un-ent/ver-
 		"^([Uu]n)-?(ent|ver)(-|\+)?" => "$1+$2+";
 	
@@ -504,6 +513,8 @@
 		
 		"(?<![Vv])([Ee]r)\+(le)" => "$1$2"; 			// Erle: first transform all
 		"([Ee]r)(le-)(?=[dsbghmprtwz])" => "$1+$2"; 	// reseparate: erlesen, erledigen etc.
+		"([Ee]r)(ler\+)" => "$1+$2"; 	// reseparate: erlernen, erlernt etc.
+		"([Ee]r)(le-?b)" => "$1+$2"; 	// reseparate: erleben, erlebte etc.
 		
 		"([Ll]er)\+n" => "$1n";
 		"([Ww]er)\+?(-?de)" => "$1$2";
@@ -525,6 +536,13 @@
 		"([Hh]er)\+aus" => "$1|aus";
 		"([Ee]nt)-?(f-?er)\+" => "$1+$2";
 		"(Ger)\+(zen)" => "$1-$2"; // Gerzenstein (Glauser, der Chinese)
+		"([Mm])a-?t-e-?ri-?e" => "Ma-te-ri-e"; // recorrection/resyllabation
+		"er\+v" => "er-v"; // audacious rule ... Nerven, Verve
+		"([Bb]er)\+(lin)" => "$1-$2";
+		"([Ss]cher)\+?-?(be)" => "$1-$2"; // +- because of recorrected |ben ... (et l'horreur continue ... :)
+		"([Vv]or\+der)-" => "$1+"; 
+		"([Ll]a-?t-?er)\+(n)" => "$1$2";
+		"([Ww]er)\+k" => "$1k";
 
 		// er+ and in+
 		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
