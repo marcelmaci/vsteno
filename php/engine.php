@@ -1960,11 +1960,11 @@ function CalculateInlineLNG($text_array) {
         $bare_word = /*html_entity_decode(*/GetWordSetPreAndPostTags( $bare_word )/*)*/;           // decode html manually ...
         //list( $pretokens, $bare_word, $posttokens ) = GetPreAndPostTokens( $bare_word );
            
-        //echo "bare_word: $bare_word pretokens: $pretokens posttokens: $posttokens<br>";
+        //echo "bare_word: >$bare_word< pretokens: $pretokens posttokens: $posttokens<br>";
         $html_pretags = ParseAndSetInlineOptions( $combined_pretags );
         $original_word = $bare_word;
         $result_after_last_rule = $bare_word;
-        //echo "bare_word: $bare_word SESSION(original_text_format): " . $_SESSION['original_text_format'] . "<br>";
+        //echo "bare_word: >$bare_word< SESSION(original_text_format): " . $_SESSION['original_text_format'] . "<br>";
         if (mb_strlen($bare_word)>0) {
             $lin_form = MetaParser( $bare_word );
             $lin_form = $pretokens . $lin_form . $posttokens;
@@ -1977,7 +1977,9 @@ function CalculateInlineLNG($text_array) {
        
             //$output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($separated_prt_form) . $last_posttoken_list . $combined_posttags . " ";
         } else {
-            $output .= $combined_pretags . $combined_posttags . " ";
+            // fix bug: words consisting only of pre/posttokens and/or numbers are returned as empty strings when LNG-form is calculated
+            // => if $bare_word is empty, add pre/posstokens here
+            $output .= $combined_pretags . $pretokens . $posttokens . $combined_posttags . " ";
         }
     }
     //echo "<pre>$output</pre><br>";
