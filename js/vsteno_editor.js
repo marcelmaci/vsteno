@@ -4408,7 +4408,7 @@ function writeDataToDB() {
 		// WRONG: it's not the session that is lost (user is still logged-in and user data available - must be something else ...)
 		// OK: fixed, problem was the session variables were reinitialized with an empty post variable ... see session.php
 		
-		document.getElementById("whole_page_content").innerHTML = "<h1>Speichern</h1><p><i>Untenstehend das Font, wie es direkt aus dem Grafikeditor exportiert wurde. Es besteht die Möglichkeit, es manuell nachzueditieren (falls gewünscht oder nötig, z.B. im Bereich Shifter oder Combiner). Um das Font definitiv in die Datenbank zu schreiben, klicken Sie auf 'speichern'.<i></p><form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='110' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
+		document.getElementById("whole_page_content").innerHTML = "<h1>Speichern</h1><p><b>WARNING: USING AUTO-EXPORT TO DATABASE IS EXPERIMENTAL AND WILL PROBABLY DAMAGE YOUR DATA. YOU ALSO LOOSE ALL HANDMADE COMMENTS. USE THIS AT YOUR OWN RISK!!!</b></p><p><i>Untenstehend das Font, wie es direkt aus dem Grafikeditor (VPAINT) exportiert wurde. Es besteht die Möglichkeit, es manuell nachzueditieren (falls gewünscht oder nötig, z.B. im Bereich Shifter oder Combiner). Um das Font definitiv in die Datenbank zu schreiben, klicken Sie auf 'speichern'.<i></p><form action='edit_font.php' method='post'><textarea id='font_as_text' name='font_as_text' rows='35' cols='110' spellcheck='false'>" + textArea + "</textarea><br><input type='submit' name='action' value='speichern'></form>";
 		
 		
 		// use the following ode to send new model to data base:
@@ -4490,6 +4490,18 @@ function calculateDRFieldForRevision1(knotType, calcType, raNumber) {
 	
 	return output;
 }
+
+function calculateLegacyDRField(knotType, calcType, raNumber) {
+    var output = 0;
+    switch (knotType.connect) {
+		case true : break; // output += 0; // default
+		case false : output += 5; break;
+	}
+	// ignore calcType (horizontal/proportional/orthogonal) and raNumber (RotatingAxisNumber) for legacy export
+	
+	return output;
+}
+
 /*
 function determineRotatingAxisNumber(rotatingAxisList, findShiftX) {
 	var number = -1;
@@ -4595,7 +4607,8 @@ function getBaseSectionSE1() {
 				if (tempKey == "SP") {
 					console.log("key: ", tempKey, "i: ", i, "axisNumber: ", axisNumber);
 				}
-				var dr = calculateDRFieldForRevision1(actualFont.tokenList[key].tokenData[i].knotType, actualFont.tokenList[key].tokenData[i].calcType, axisNumber);
+				//var dr = calculateDRFieldForRevision1(actualFont.tokenList[key].tokenData[i].knotType, actualFont.tokenList[key].tokenData[i].calcType, axisNumber);
+				var dr = calculateLegacyDRField(actualFont.tokenList[key].tokenData[i].knotType, actualFont.tokenList[key].tokenData[i].calcType, axisNumber);
 				
 				
 				var actualShiftX = rotatingAxisArray[axisNumber-1]; 
