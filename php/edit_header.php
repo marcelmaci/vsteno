@@ -27,8 +27,9 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
     echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
 } else { 
     switch ($_SESSION['model_standard_or_custom']) {
-        case "standard" : $model_name = $default_model; break; //$_SESSION['actual_model']; break; 
-        case "custom" : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
+        //case "standard" : $model_name = $default_model; break; //$_SESSION['actual_model']; break; 
+        case "standard" : $model_name = $_SESSION['selected_std_model']; break; 
+        case "custom" : $model_name = GetDBUserModelName(); break;
     }
 
     if ($_POST['action'] == 'speichern') {
@@ -48,7 +49,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
         }
     } else {
         echo "<p>Hier können Sie den Header Ihres eigenen Stenosystems editieren und speichern.</p><p><b>ACHTUNG:</b><br><i>Es wird KEINE Syntax-Prüfung vorgenommen. Falls die Definitionen
-        Fehler aufweisen, werden Sie NICHT darauf hingewiesen! (Sorry guys ... technisch (noch nicht) möglich;-)</i></p>";
+        Fehler aufweisen, werden Sie NICHT darauf hingewiesen!</i></p>";
     }
 
     // check if account exists already

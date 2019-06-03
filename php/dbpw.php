@@ -17,10 +17,11 @@
  */
  
 // contains login and password for database
-const db_servername = "127.0.0.1";
+const db_servername = "";
 const db_username = "";
 const db_password = "";
 const db_dbname = "";
+
 
 const master_pwhash = "ee79976c9380d5e337fc1c095ece8c8f22f91f306ceeb161fa51fecede2c4ba1";
 
@@ -45,7 +46,7 @@ function connect_or_die() {
 
 function GetPurgatoriumDBName() {
     switch ($_SESSION['model_standard_or_custom']) {
-        case "standard" : return "purgatorium"; breakt;
+        case "standard" : return "purgatorium"; break;
         case "custom" : 
             $purgatorium = "XP" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
             return $purgatorium;
@@ -78,7 +79,7 @@ function GetDBName( $type ) {
         }
         switch ($_SESSION['model_standard_or_custom']) {
             case "standard" : $model_char = "Z"; 
-                              $identifier = $_SESSION['actual_model'];
+                              $identifier = $_SESSION['selected_std_model'];
                               break;
             case "custom" : $model_char = "X"; 
                             $identifier = str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
@@ -101,5 +102,9 @@ function GetOptimalStdPrtForm( $row ) {
     } else return array($row['single_std'], $row['single_prt']); 
 }
 
+function getDBUserModelName() {
+    $output = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT);
+    return $output;
+}
 
 ?>

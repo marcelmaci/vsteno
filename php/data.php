@@ -52,8 +52,10 @@ if ($_SESSION['user_logged_in']) {
 
     if (isset($_POST['model'])) {    // if POST-variable is set via maxi.php, this selection has priority (i.e. disregard SESSION-variable)
         switch ($_POST['model']) {
-            case "custom" : $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
-            default : $_SESSION['actual_model'] = $default_model; break;
+            case "custom" : $_SESSION['actual_model'] = getDBUserModelName(); break;
+            default : //$_SESSION['actual_model'] = $default_model; 
+                $_SESSION['actual_model'] = $_POST['std_model_name'];
+                break;
         } 
     } else {    
         switch ($_SESSION['model_standard_or_custom']) {
@@ -89,7 +91,8 @@ switch ($_SESSION['model_standard_or_custom']) {
 */
 
 
-//echo "<p>Actual model: " . $_SESSION['actual_model'] . "</p>";
+// DO NOT ECHO DEBUG INFORMATION HERE => THATS BEFORE HTML HEAD!!!!!!!!!!
+//echo "<p>Model to load: " . $_SESSION['actual_model'] . "</p>";
 // old version!!!!!
  $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
 //$text_to_parse = LoadModelFromDatabase($model_name);
@@ -120,7 +123,7 @@ $shifter_table = $shifter[$actual_model];
 
 CreateCombinedTokens();
 CreateShiftedTokens();
-
+          
 
 //var_dump($steno_tokens_master);
 //echo "--------------------------------------------------------------";

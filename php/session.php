@@ -116,8 +116,10 @@ function InitializeSessionVariables() {
         $_SESSION['user_id'] = 0;
     }
     $_SESSION['actual_model'] = $default_model;
+     $_SESSION['selected_std_model'] = $default_model;
     $_SESSION['model_standard_or_custom'] = "standard";
     $_SESSION['rules_count'] = null;
+   
 }
 
 
@@ -226,8 +228,11 @@ if ($_POST['token_size'] != "") {
     $_SESSION['show_margins'] = (htmlspecialchars($_POST['show_margins']) === "yes") ? true : false;
     $_SESSION['show_distances'] = (htmlspecialchars($_POST['show_distances']) === "yes") ? true : false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
-    //$_SESSION['actual_model'] = "99999_default";
     $_SESSION['model_custom_or_standard'] = (htmlspecialchars($_POST['model']) === "standard") ? "standard" : "custom";
+    $_SESSION['actual_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['std_model_name'] : getDBUserModelName();
+    // additional session variable necessary to keep track of selected std model (in input form)
+    // will be used by toggle_model
+    $_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['std_model_name'] : $_SESSION['selected_std_model'];
 }
 }
 
@@ -240,6 +245,7 @@ function CopyFormToSessionVariablesMini() {
 function CopyFormToSessionVariables() {
     if ($_SESSION['return_address'] === "input.php") CopyFormToSessionVariablesMaxi();
     else CopyFormToSessionVariablesMini();
+
 }
 
 // backup all session variables except some specific ones

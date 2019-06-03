@@ -29,9 +29,7 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <input type="radio" name="text_format_metayesno" value="lng" <?php echo ($_SESSION['original_text_format'] === "lng") ? "checked" : "";?>> Meta (LNG) 
 <input type="radio" name="text_format_metayesno" value="std" <?php echo ($_SESSION['original_text_format'] === "std") ? "checked" : "";?>> Meta (STD)
 <input type="radio" name="text_format_metayesno" value="prt" <?php echo ($_SESSION['original_text_format'] === "prt") ? "checked" : "";?>> Meta (PRT)
-<input type="checkbox" name="text_format_ascii_yesno" value="ascii" <?php echo ($_SESSION['original_text_ascii_yesno']) ? "checked" : "";?>> Breaks
-&nbsp;&nbsp;<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
-<input type="radio" name="model" value="custom" <?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "checked" : "";?>> custom<br>
+<input type="checkbox" name="text_format_ascii_yesno" value="ascii" <?php echo ($_SESSION['original_text_ascii_yesno']) ? "checked" : "";?>> Breaks<br>
 
 <textarea id="original_text" name="original_text" rows="10" cols="100"><?php echo $_SESSION['original_text_content']; ?>
 </textarea>
@@ -50,6 +48,17 @@ Farbe <input type="Text" name="introduction_color"  size="10" value="<?php echo 
 <br>
 <textarea name="introduction_text" value="" rows="4" cols="100"><?php echo $_SESSION['introduction_text']; ?></textarea>
 </td></tr>
+
+<tr><td>Engine</td></tr>
+<tr><td>Modell: <?php echo $_SESSION['selected_std_model']; ?>
+<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
+<input type="radio" name="model" value="custom" <?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "checked" : "";?>> custom
+<?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "(" . $_SESSION['actual_model'] . ")" : "";?><br>
+<input type="radio" name="std_model_name" value="DESSBAS" <?php echo ($_SESSION['selected_std_model'] === "DESSBAS") ? "checked" : "";?>>Deutsch: Stolze-Schrey Grundschrift (DESSBAS)<br>
+<input type="radio" name="std_model_name" value="SPSSBAS" <?php echo ($_SESSION['selected_std_model'] === "SPSSBAS") ? "checked" : "";?>>Spanisch: Stolze-Schrey Grundschrift (SPSSBAS)
+
+</td></tr>
+
 <tr><td>Zeichen</td></tr>
 <tr><td>
 Grösse <input type="text" name="token_size"  size="10" value="<?php echo $_SESSION['token_size']; ?>">

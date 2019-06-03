@@ -106,7 +106,18 @@ function InsertDatabaseButton() {
 function CalculateStenoPage() {
     global $global_debug_string;
     $global_debug_string = "";
+    //echo "BEFORE:" . $_SESSION['model_standard_or_custom'];
+    //echo $_POST['model'];
+    
     CopyFormToSessionVariables();
+    // normally, CopyFormToSessionVariables() should copy new model to session variables
+    // but for an unknown reason that doesn't happen ....
+    // correct it here as a temporary fix
+    // BUG!!!
+    $_SESSION['model_standard_or_custom'] = $_POST['model'];
+    
+ //echo "AFTER:" . $_SESSION['model_standard_or_custom'];
+
     InsertHTMLHeader();
     
     $text = isset($_POST['original_text']) ? $_POST['original_text'] : "";
