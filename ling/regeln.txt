@@ -1,11 +1,6 @@
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
-		// global replacements in the whole text
-		"(-)([.,!?;:])" => "$1 $2"; // separate for later rule " - "
-		"([.,!?;:])(-)" => "$1 $2"; // separate for later rule " - "
-		"-$" => " - "; // end of text
-		"^-" => " - "; // beginning of text
-		" - " => " [~~] ";
+		// global replacements in the whole text standard
 		"&hellip;" => "…"; // ellipsis (try to use one character defined as global variable punctuation in php)
 		"\.\.\." => "…";
 		//"…" => "…";
@@ -37,9 +32,6 @@
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		"(?<!\[)=" => "\\[=]\\";
-		"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer"
-		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
-		"(?<!\|)'" => "|'"; // apostrophizer: hat's 
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
 		// check if word contains more then 1 upper case
@@ -78,9 +70,7 @@
 		//"(?<!\[)=" => "[=]\";
 	#EndSubSection(packer)
 	#BeginSubSection(decapitalizer)
-		"sch(a|ä)ft(s|-?l?er)?$" => "{SCHAFT}$2"; // from shortener: must be done before decapitalizer
-		"schaf-te" => "{SCHAFT}e"; // gewirtschaftet
-		
+		"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // from shortener: must be done before decapitalizer
 		"([A-Z])" => "strtolower()";
 		"{schaft}" => "{SCHAFT}"; // restore upper case (.. yeah yeah ... start messing up ... :)
 	#EndSubSection(decapitalizer)
@@ -96,24 +86,15 @@
 		"([Pp]s)y(-?c-?h)" => "$1ü$2";
 		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on" };
+		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
-		"ieu$" => "iö";  // french: Milieu
 
 		// ou = u
 		"([Tt])ou(-?ris)" => "$1u$2"; 
 
 		"([Dd]i)eu" => "$1ö";	// french word
-		
-		"[Pp]ie-?t-?er-?le" => "p[&I]et[VR@L]e";
-		//"[Pp]ie(-?ter-?le)" => "p[&I]e$1";	// special word (do the whole stuff for simplicity ...)
-
-		"([Aa]r-?s)en" => "$1En"; // avoid -en
-
-		"e-ta-ge-re" => "E-ta-gE-re";
-		"pa-ke(-?t)" => "pa-kE$1";
 
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
@@ -126,16 +107,9 @@
 		"^([Gg])e(n)$" => "$1E$2";		// distinguish Gen (noun) vs gen (preposition) ???
 		"(\+?[Gg])e(r-?ne?)" => "$1E$2";
 		"([Kk]on-?z)e(r-?t)" => "$1E$2"; 
-		"([Ll]a-?t-?)e(r-?n)" => "$1E$2";
 
 	#EndSubSection(accentizer)
 	#BeginSubSection(shortener)
-
-		"zer\+" => "{ZER}+";
-
-		"^in-?t-?er$" => "{INTER}";
-		"^in-?t-?er\+" => "{INTER}+";
-		"(\+)in-?t-?er\+" => "$1{INTER}+";
 
 		// -et in verbs
 		"([Ww]ä-?r)et" => "{WÄR}{ET}";
@@ -158,17 +132,20 @@
 		"(Ü|ü)-?ber" => "{ÜBER}";
 
 		"^[Ww]ir$" => "{WIR}";
-		"^[Ww]ir'" => "{WIR}'";
 		
 		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		
 		"(?<!^|s)(i-)?tä-?t" => "{HEIT}";
-		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
+		"ge[-+]?gen" => "{GEGEN}";
 		
 		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
 		"^zu(\+|-)rück$" => "{ZURÜCK}+";
 		
+		"^in-ter$" => "{INTER}";
+		"^in-ter\+" => "{INTER}+";
+		"(\+)in-ter\+" => "$1{INTER}+";
+
 		"(\+)dem$" => "$1{DEM}";
 		"^dem$" => "{DEM}";
 		"(\+)den$" => "$1{DEN}";
@@ -182,7 +159,7 @@
 		"ur\+" => "{UR}+";
 
 		"#li-?ch" => "{LICH}";
-		"(-|\+)li-?ch((-?s-?t)?e[rnsm]?)?$" => "$1{LICH}$2";
+		"-li-?ch((-?s-?t)?e[rnsm]?)?$" => "{LICH}$1";
 
 		"ent\+" => "{ANT}+";
 
@@ -191,15 +168,14 @@
 
 		"un\+" => "{UN}+"; 
 
-		"^wie?-?d-?er($|-)" => "{WIDER}";
-		"wie?-?d-?er(\+|#|{)" => "{WIDER}$1";
-		"(#|\+)wie?-?d-?er" => "$1{WIDER}";
+		"^wie?-?der($|-)" => "{WIDER}";
+		"wie?-?der(\+|#|{)" => "{WIDER}$1";
+		"(#|\+)wie?-?der" => "$1{WIDER}";
 
 		"^in$" => "{IN}";
 		"^in(\+|#)" => "{IN}$1";
-		"^in(-|\+)?str" => "{IN}$1str";
 		"(\+|#)in(\+|#)" => "$1{IN}$2";
-		"(?<!er)(\+|#)in$" => "$1{IN}";
+		"(\+|#)in$" => "$1{IN}";
 
 		"^sich$" => "{SICH}";
 
@@ -209,8 +185,8 @@
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{ER}$3"; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?))(e-?r-?t)(e?[rnms]?)?$" => "$1{ER}t$3"; // use - to detect preceeding syllable
-		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n" };
-		"(?<![VvZzDdWwHh])er\+" => { "{ER}", "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+" };
+		"er(-?ne[nsmr]?)$" => "{ER}$1";
+		"(?<![VvZzDdWwHh])er\+" => "{ER}";
 
 		"{LICH}er$" => "{LICH}{ER}";
 
@@ -233,11 +209,8 @@
 		
 		"un-?ter" => "{UNTER}";
 		
-		"er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
-		"(?<!d)er\+" => { "{ER}", "[Ww]ie?-?d-?er" }; // more general rule
 		"\+er$" => "{ER}";
-		"(n-?d)er\+" => "$1{ER}+";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
 		
 		"(\+)sel-?b" => "$1{SELB}";
@@ -281,7 +254,6 @@
 		"ietät" => "[&I]{HEIT}";
 		"t(u|ü)m[-#]?li-?ch" => "{TUM}{LICH}";
 		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
-		"^[Rr]ück" => "{RÜCK}";
 		"h?eit-?li-?ch" => "{HEIT}{LICH}";
 		"h?ei-?tig" => "{HEIT}ig";
 		"ei-?tens" => "{HEIT}ens";
@@ -289,7 +261,6 @@
 		"iet$" => "[I]T";
 		"sol-?ch" => "{SOLCH}";
 		"^und$" => "{UND}";
-		"\+und#" => "{UND}";
 		"usw\." => "{USW\.}";
 		"viel-?leicht" => "{VILLEICHT}";
 		
@@ -306,9 +277,8 @@
 		"vor(?!})" => "{VOR}";
 		"fort" => "{FORT}";
 		"eiht" => "eit";
-		//"^([Hh])a(f-?t)" => "$1A$2"; // avoid application of following rule
-		"(?<!sc|\+)haf-?t(e|en|es)?" => { "{HAFT}$1", "^[Hh]af-?t" }; // not: ver+haften
-		//"ge-?gen" => "{GEGEN}";
+		"(?<!sc|\+)haf-?t(e|en|es)?" => "{HAFT}$1"; // not: ver+haften
+		"ge-?gen" => "{GEGEN}";
 		//"ndwo$" => "nd{WO}";
 		"#wo$" => "#{WO}";	
 	
@@ -358,7 +328,7 @@
 		"mitt" => "m1i2t3t4";
 		"mit(?!(t|-t))" => { "{M}", "Eremit" };
 		"m1i2t3t4" => "mitt";
-		"^nicht" => "{NICHT2}";
+		"^nicht" => "{NICHT}";
 		"^sie$" => "{SI}";
 		"^[Ss]ind$" => "{SIND}";
 		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
@@ -366,8 +336,8 @@
 		"([ie]?tät)(en)?$" => "{HEIT}$2";
 		"([Hh])inter" => "HN[&TVR]";
 		//"^([Hh])ing$" => "$1I[NG]";
-		"^[Hh]in" => { "{HIN}", "[Hh]in-?[dgz]", "^[Hh]in(?:k-?t|-?ke)" };
-		^zur$" => "[Z]ur";
+		"^[Hh]in" => { "{HIN}", "[Hh]in-?[dgz]" };
+		"^zur$" => "[Z]ur";
 		"^uns(er.*)?$" => "u[NS]$1";
 		"(^|\|)({?des}?)?inter" => "$1$2{INTER}";
 		
@@ -377,9 +347,7 @@
 		"(^|\|)[Aa]n-?ti[kc]on" => "$1{ANTI}{C}";
 		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
 		//"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => { "{ET}", "[Rr]e[-+]pe-?t" };
-		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
-		"et-z" => "Et-z"; // avoid et in following rule
 		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => { "$1{ET}", "[Rr]e[-+]pe-?t" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
@@ -396,7 +364,7 @@
 		"ei([aeou]|lich)" => "[EI][&E]$1";
 		"^([Aa])n([bfghklmnprswz][aeiouäöü])" => { "$1[N]$2", ".*[Aa]nker.*" };
 		
-		"sch(a|ä)ft[#-]?{LICH}" => "{SCHAFT}{LICH}";
+		"sch(a|ä)ft#?{LICH}" => "{SCHAFT}{LICH}";
 		"#sch(a|ä)f-?t" => "#{SCHAFT}";
 		//"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // hm ... must be placed before decapitalizer!
 				
@@ -439,14 +407,11 @@
 		//"(?<!\[)#" => "-";	// not a good idea ...
 		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
 
-		"er\+" => "{ER}"; // Studers (hasn't been recognized until now)
-
 	#EndSubSection(shortener)
 	#BeginSubSection(normalizer)
 		
 		"rrh$" => "rr";		// Katarrh
 		"ü-?ü" => "ü"; 	// rule for swiss german
-		"uu" => "u"; // gruusam (dialect)
 		"û" => "ü";
 		"î" => "i";
 		"é" => "e";
@@ -473,14 +438,14 @@
 		"aa" => "a";
 		"ah(-?)(?=[lmnrstz])" => "a$1";
 		"äh-?(?=[lmnrstz])" => "ä";
-		"uh(-?)(?=[lmnrstz])" => "u$1";
+		"uh(?=[lmnrstz])" => "u";
 		"o[oh](-)?([flmnrst])" => "o$1$2";
 		"ö[oh](-)?([flmnrst])" => "ö$1$2";
 		"ieh([tmn])" => "i$1";
 		"e([eh])(-)?([flmnrst])" => "e$2$3";
 		"äh([nrl])" => "ä$1";
 		"öh-(?={LICH})" => "ö[H]"; // conserve h
-		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
+		"öh-?(?![aeiouäöüAEIOU])" => "ö";
 		"ih(-)?([rnm])" => "i$1$2";
 		"äht" => "ät";
 		"t-?z" => "z"; // conserve syllable?
@@ -528,7 +493,7 @@
 		"sch-?l" => "[SCHL]";
 		"schm" => "[SCHM]";
 		"schw" => "[SCHW]";
-		"sch(-|\|)?r" => "[SCHR]";
+		"sch-?r" => "[SCHR]";
 		"(?<!n)ndr" => "[ND@R]";
 		"sch" => "[SCH]";
 		"(?<!m)m-?p-?f-?r" => "[MPFR]"; // everything goes ha ha ... :)
@@ -545,10 +510,8 @@
 		"ch[-\|+]?r" => "[CHR]";
 		"ch-?l" => "[CHL]";
 		"p-?f" => "[PF]";
-		"(ck|k-?k)(\\|\||-|\+|#)?r" => "[CK@R3^]";
 		"(ck|k-?k)" => "[CK]";
-		"s-?s-?l" => "[SSL]";
-		"s-?s(?![ptlr])" => "[SS]";
+		"s-?s" => "[SS]";
 		"n-?n" => "[NN]";
 		"s-?t" => "[ST]";
 		//"^eins" => "[EI][N]s";
@@ -636,8 +599,6 @@
 		"^ag" => "[0N-][A][G]";
 
 		// vowel combinations
-		"ou" => "[#N][&O][#NS][&U]";   // wou (dialect)
-		"u-e" => "[#NS][&U]E"; // mues (dialect)
 		"i-?a$" => "[&I]A[&A]"; // via
 		"i-?ö$" => "[&I]E[&O]"; // adieu (adiö)
 		"a-i" => "A[&A]I"; 
@@ -662,7 +623,6 @@
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF|MPF|NG|ND)\]-?t" => "[$1][&T]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TL\]" => "$1$2[&T@L3]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TR\]" => "$1$2[&T@R]";
-		//"(r\+?)t" => "$1[&T]";
 
 		// -ter
 		"\[&T\]e-?r" => "[&T][VR]";
@@ -764,7 +724,7 @@
 		"\|r" => "|[AR]";
 		"r" => "[VR]";
 		"s" => "S";
-		"(?<!\+)t" => "T";
+		"t" => "T";
 		"v" => "V";
 		"w" => "W";
 		"x" => "X";
@@ -791,10 +751,7 @@
 		"{ET}E" => "{ET}[&E]E";
 
 		"\[&T\]ES" => "[&TES]";
-		"\[&T\]-E" => "[&T][&E]E";
-
-		// heit + unterlänge
-		"{HEIT}-?\[(SCH|CH|Z|ZW)\]" => "{HEIT&UL}[$1]";
+		
 
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
@@ -817,8 +774,7 @@
 		"\[&T\]E\|" => "[&T]E\\";  // Produktepalette 
 
 		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
-		"(\[TUNG\]S)\|F" => "$1[#3]\\F"; // Unterhaltungsfonds
-		"(\[TUNG\]S)\|" => "$1\\"; 
+		"(\[TUNG\]S)\|" => "$1\\"; // Unterhaltungsfonds
 		"(\[&T\]{ION}S)\|" => "$1\\"; // Sektionsprotokoll 
 		"\[&T&I\]\|" => "[&T&I]\\"; // Sentimentalität
 
@@ -834,7 +790,7 @@
 
 		"\\{ÜBER}" => "\\[0N-]{ÜBER}"; // needs dummy token if separated
 
-		"(\[(EI|AU|EU)\])\|" => "$1[&E]|";
+		"(\[(EI|AU|EU)\])\|" => "$1[&E]-";
 		"{ET}\|" => "{ET}\\";
 		"{ET}{EN}\|" => "{ET}{EN}\\";
  
@@ -846,7 +802,7 @@
 
 		// \n and \s
 		"\\N" => "\\[N=]";
-		"(?<!\['\])\\S" => "\\[S=]";  // not separated (external correction)
+		"\\S" => "\\[S=]";
 
 		// ver-
 		"\\{VER}" => "\\[0N-]{VER}";
@@ -864,22 +820,9 @@
 		// ^z is written with Fussschlaufe (bug in SE?)
 		// something is odd with this \ anyway: doesn't behave like | in SmoothenEntryExitPoints either
 
-		// more general rule: if word contains &t => separate
-		"^(.*?)(\[&T\])(.*?)\|" => "$1$2$3\\"; // ex: Manteltaschen
-
-		// sein => separate
-		"\|{SEIN}" => "\\{SEIN}";
-
 		// if one word is separated => separate all the words!
 		"\|(.*)\\" => "\\$1\\";
 		"\\(.*)\|" => "\\$1\\";
-
-		// if word is not separated => write vowels at the end of each word
-		"E\|" => "E[&E]";
-		"(\[FR\]\[EI\])\+" => "$1[&E]+"; 	// special case Freizeit (separated by +)
-		
-		// Raupenvernichtung
-		"{EN}\|{VER}" => "EN|{VER}"; 	// if not separated by \ => write -en as en
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -899,7 +842,7 @@
 		"^([NS])" => "[0N-][$1]";
 		"^\[([NS])\]" => "[0N-][$1]";
 		"(?<!&)([AEIOU]){HEIT}" => "[&$1]{HEIT}";
-		"^([{\[]&?EIT)" => "[0N-]$1"
+		"^([{\[]&?EIT)" => "[0N-]$1";
 		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
 		"\\Ö" => "[0N-][Ö]"; 
 
@@ -927,11 +870,10 @@
 		"^\[EI\](?!-?\[(CH|SCHW?|ZW?)\])" => "[0D-][EI]";
 		"^\[EI\](?=-?\[(CH|SCHW?|ZW?)\])" => "[0N-][EI]";
 		"E\\" => "[-E]\\";
-		"A\\" => "A[&A]\\";
 		"\[EI\]\\" => "E[-EI]\\";
 		// \n and \s
 		"\\N" => "\\[N=]";
-		"(?<!\['\])\\S" => "\\[S=]";
+		"\\S" => "\\[S=]";
 
 		// dem/den at beginning
 		"^{(DE[MN])}([-+#]?)(?=N)" => "[^$1]$2";
@@ -950,10 +892,6 @@
 		///////////////////////////////////////////////////////
 		// 2nd step: rewrite upper case tokens if necessary  //
 		///////////////////////////////////////////////////////
-
-		"E-I" => "E[&E]I";		// Koffein
-		"I\[SCHL\]" => "I[^SCH@L3]";	// Tischli
-
 
 		// &t#los (furchtlos)
 		"\[&T\]#L" => "[&T#L]";
@@ -986,7 +924,7 @@
 		"\[ND\]T" => "[ND][&T]";
 		"\[NG\]T" => "[NG][&T]";
 		"\[#VR\]" => "[V@R6]";
-		"\[GR\]" => "[G@R3^]";
+		"\[GR\]" => "[G@R]";
 		"\[XR\]" => "[X@R]";
 		"\[MPFR\]" => "[MPF][@R]";
 		"\[MMR\]" => "[MM][@R]";
@@ -1005,7 +943,7 @@
 		"\[RRL\]" => "[RR@L]";
 		"\[NDL\]" => "[ND@L3]";
 		"\[TTL\]" => "[TT@L3]";
-		"\[TTR\]" => "[TT@R3^]";
+		"\[TTR\]" => "[TT@R]";
 		"\[FFL\]" => "[FF@L]";
 		"\[FFR\]" => "[FF@R6]";
 		"\[CKL\]" => "[CK@L3]";
@@ -1016,10 +954,10 @@
 		
 
 		"\[CHR\]" => "[CH@R]";
-		"\[KR\]" => "[K@R3^]";
-		"\[TR\]]" => "[T@R3^]";
+		"\[KR\]" => "[K@R]";
+		"\[TR\]]" => "[T@R]";
 		"\[SCHR\]" => "[SCH@R]";
-		"\[STR\]" => "[ST@R3^]";
+		"\[STR\]" => "[ST@R]";
 		"\[LL\]" => "[L@L]";
 		"\[BL\]" => "[B@L]";
 		"\[XL\]" => "[X][@L]";
@@ -1040,9 +978,9 @@
 		
 		"\[TL\]" => "[T@L3]";
 		"([bcdfghjklmnpqrvwxyzs])\[T" => "$1][&T][";
-		"\[TT\]r" => "[TT@R3^]";
-		"\[TR\]" => "[T@R3^]";
-		"\[DR\]" => "[D@R3^]";
+		"\[TT\]r" => "[TT@R]";
+		"\[TR\]" => "[T@R]";
+		"\[DR\]" => "[D@R]";
 		"\[CR\]" => "[C@R]";
 		"\[CK\]l" => "[CK@L]";
 		"\[GNL\]" => "[NG@L3]";
@@ -1068,8 +1006,6 @@
 		"\[CL\]" => "[C@L3]";
 		"\[STL\]" => "[ST@L3]";
 		"\[SL\]" => "s[@L]";
-		"\[SSL\]" => "[SS][@L]";
-		
 
 		"(\[VR@L\])\[?I\]?(\[?N\]?)" => "$1$2";
 		"^\[EI\]$" => "[0D-][EI][&E]";
@@ -1195,17 +1131,6 @@
 		"\[O\]U" => "[&O]U";
 		"{HEIT}U\[NG\]" => "{HEIT-1}[#NS][NG]"; 
 		"\[EU\]-?{LICH}" => "[EU][&E]{LICH}"; 
-
-		// rewrite higher position [ch] (combined with @r @l or not)
-		"(I|\[(?:AU|EU)\])([-#\+])?\[CH" => "$1$2[^CH";
-		"\[VR@L\]\[-E\]" => "[VR@L][O][-E]"; // recorrect height -e
-		//"{ER}\[#W\]\[-EI\]" => "{ER}[#W][-EI2]"; // recorrect height -ei // not sure if ei is higher after vr ...
-		"{HEIT}A" => "{HEIT}[&E]A";
-		"{SCHAFT}-?L" => "{SCHAFT}[@L]";
-		"\[EU\]-{ET}" => "[EU][&E]{ET}";
-
-		"U-{EN}" => "A[&U]{EN}";
-
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -1244,9 +1169,9 @@
 		"{DEM}(-?)N" => "[^DEM]$1N";
 		"{DE(M|N)}j" => "[^^DE$1]J";
 		"{DE(M|N)}\[j\]" => "[^^DE$1][J]";
-		"{DE(M|N)}[-+]?g" => "[^^DE$1]G";
-		"{DE(M|N)}[-+]?{G" => "[^^DE$1]{G";
-		"{DE(M|N)}[-+]?{GE}" => "[^^DE$1]{GE}";
+		"{DE(M|N)}g" => "[^^DE$1]G";
+		"{DE(M|N)}{G" => "[^^DE$1]{G";
+		"{DE(M|N)}{GE}" => "[^^DE$1]{GE}";
 		"{DE(M|N)}z" => "[^^DE$1]Z";
 		"{DE(M|N)}{ZU}" => "[^^DE$1]{ZU}";
 		"{DE(M|N)}" => "[E$1]";
@@ -1309,15 +1234,13 @@
 		"{ANTI}" => "[0N-][ANTI]";
 		//"^{UNTER}" => "[0N-][N@R6]";
 		"^{UNTER}" => "[N=@R6]";
-		"\\{UNTER}" => "\\[N=@R6]";
+		
 		"{UNTER}" => "[N@R6]";
 		"^{ÜBER}" => "[0N-][#WS][&U]";
 		"{ÜBER}" => "[#WS][&U]";
 		"{WI}" => "[W][/I]";
 		"{WIDER}" => "[W@R6]";
-		//"{SOLCH}" => "[SOLCH]"; // with following rules token [solch] probably becomes obsolete
-		"^{SOLCH}" => "[S=]O[CH]";
-		"{SOLCH}" => "SO[CH]";
+		"{SOLCH}" => "[SOLCH]";
 		"{WELCH}" => "[CH]";
 		"{HEIT}{HIN}" => "[&EITH][#0][N]";
 		"{HIN}" => "[H][#0][N]";
@@ -1341,9 +1264,6 @@
 
 		//"{AN}" => "[0N-][A][N]";
 	#EndSubSection(substituter)
-	#BeginSubSection(rewriter2)
-		"\[&T\]-?\[H\]" => "[&T3/4][H]";
-	#EndSubSection(rewriter2)
 	#BeginSubSection(separator)
 		// separator decides wether or not a word should be written separatedly
 		"\[&EITS\](\|)\[?T\]?" => "[&EITS][#5]]\\T";
@@ -1407,11 +1327,11 @@
 		"\[#0\]\[#ns\]\[&a\]" => "[#3][#NS][&A]"; 		// idem
 		"(?<!\[&t\])#\[schaft\]" => "[#3][schaft]";		// idem
 		"\[i\]\[st\]" => "[#3][I][ST]";				// idem
-		"\[i\]\[t\]" => "[i][#5][t]";				// idem
+		"\[i\]\[t\]" => "[I][#5][T]";				// idem
 		"(\[&t@l3\])\[#n\](\[&i\])" => "$1[#3]$2";		// idem
 		"\[s=\]\[o\]\[nd\]" => "[S=][#2][O][ND]";		// idem
 		"\[n=\]\[i\]\[d\]" => "[N=][#2][I][D]"; 		// idem
-		"\[0d-\]\[i\](?!\[(?:vr|VR|ns|NS)\])" => "[0d-][#1][i]"; // idem
+		"\[0d-\]\[i\](?!\[(?:vr|VR|ns|NS)\])" => "[0d-][#4-][i]"; // idem
 		"\[t\]\[i\]\[\^sch\]" => "[t][#2][i][^sch]";		// idem
 		"\[s(=?)\]\[a\]\[([lh])\]" => "[S$1][#4][A][$2]";	// idem
 		"\[s\]\[#3\]\[a\]\[h\]" => "[S][#5][A][H]";		// idem
@@ -1448,7 +1368,7 @@
 		"\[bei\]\[#0\]\[z\]" => "[bei][#3-][z]";		// idem
 		"\[\^z\]\[w\]" => "[^z][#3][w]";			// idem
 		"\[b\]\[#3\]\[i\]\[d\]" => "[b][#1][i][d]";
-		"\[b\]\[#3\]\[[Ii]\]" => "[b][#1][i]";			// idem
+		"\[b\]\[#3\]\[[Ii]\]" => "[b][#2-][i]";			// idem
 		"\[sch\]\[#3\]\[n\]" => "[sch][n]";			// idem
 		"\[k\]\[#3\]\[a\]\[st\]" => "[k][#6][a][st]";		// idem
 		"\[b\]\[#3\]\[s\]" => "[b][s]";				// idem
@@ -1510,19 +1430,19 @@
 		"\[vr\]\[#3\]\[i\]\[n\]" => "[vr][#2-][i][n]";
 		"\[vr\]\[#3\]\[i\]\[s\]" => "[vr][#1-][i][s]";
 		"\[b\]\[#0\]\[sch@r\]" => "[b][#5-][sch@r]";
-		"\[m\]\[#3\]\[i\]\[n\]" => "[m][#0][i][n]";
+		"\[m\]\[#3\]\[i\]\[n\]" => "[m][#2-][i][n]";
 		"\[n\]\[u\]\[#5\]\[t\]" => "[n][u][#3][t]";
 		"\[st\]\[#3\]\[u\]\[m\]" => "[st][#1][u][m]";
 		"\[l\]\[#0\]\[a\]\[ng\]" => "[l][#2][a][ng]";
 		"\[ar\]\[#3\]\[au\]\[m\]" => "[ar][#1][au][m]";
 		"\[t\]\[#3\]\[a\]\[st\]" => "[t][#5][a][st]";
 		"\[t\]\[was\]" => "[t][#2][was]";
-		"\[b\]\[#0\]\[g@r3\^\]" => "[b][#4-][g@r3^]";
+		"\[b\]\[#0\]\[g@r\]" => "[b][#4-][g@r]";
 		"\[v\]\[#3\]\[t@r\]" => "[v][#1][t@r]";
 		"\[t@r\]\[#3\]\[a\]\[b\]" => "[t@r][#5][a][b]";
 		"\[sch@l3\]\[#3\]\[o\]\[ss\]" => "[sch@l3][o][ss]";
 		"\[auf\]\[#3\]\[st\]" => "[auf][#1][st]";
-		"\[m\]\[#0\]\[i\]\[g@r3\^\]" => "[m][#4-][i][g@r3^]";
+		"\[m\]\[#0\]\[i\]\[g@r\]" => "[m][#4-][i][g@r]";
 		"\[vor\]\[#3\]\[sch\]" => "[vor][#2-][sch]";
 		"\[g\]\[#3\]\[o\]\[tt\]" => "[g][#5][o][tt]";
 		"\[s\]\[ar\]" => "[s][#3][ar]";
@@ -1554,7 +1474,7 @@
 		"\[b\]\[a\]\[#5\]\[d\]" => "[b][a][#4][d]";
 		"\[g\]\[#3\]\[sch\]" => "[g][#1][sch]";
 		"\[m\]\[#0\]\[sch\]" => "[m][#1-][sch]";
-		"\[d\]\[#3\]\[k@r3\^\]" => "[d][#0][k@r3^]";
+		"\[d\]\[#3\]\[k@r\]" => "[d][#0][k@r]";
 		"\[ch\]\[#3\]\[a\]\[b\]" => "[ch][#5][a][b]";
 		"\[vr\]\[e\]\[s\]" => "[vr][#3-][e][s]";
 		"\[n=\]\[a\]\[h\]" => "[n=][#3][a][h]";
@@ -1632,14 +1552,14 @@
 		"\[t@r\]\[#3\]\[i\]\[tt\]" => "[t@r][#5][i][tt]";
 		"\[t\]\[o\]\[vr\+ar\]" => "[t][#3][o][vr+ar]";
 		"\[m\]\[o\]\[#5\]\[t\]" => "[m][o][#3][t]";
-		"\[n\]\[#3\]\[d@r3\^\]" => "[n][#1][d@r3^]";
+		"\[n\]\[#3\]\[d@r\]" => "[n][#1][d@r]";
 		"\[t\]\[au\]\[\^ch\]" => "[t][#2][au][^ch]";
 		"\[s\]\[#3\]\[d\]" => "[s][#5][d]";
 		"\[in\]\[#3\]\[sch@r\]" => "[in][#3-][sch@r]";
 		"\[vor\]\[#3\]\[k\]" => "[vor][#2-][k]";
 		"\[ar\]\[#3\]\[schw\]" => "[ar][#0][schw]";
 		"\[durch\]\[#3\]\[b@r6\]" => "[durch][#1-][b@r6]";
-		"\[st@r3\^\]\[#3\]\[a\]\[#2\]\[ss\]" => "[st@r3^][#1][a][ss]";
+		"\[st@r\]\[#3\]\[a\]\[#2\]\[ss\]" => "[st@r][#1][a][ss]";
 		"\[b\]\[#2-\]\[i\]\[tt\]" => "[b][#1][i][tt]";
 		"\[vor\]\[#3\]\[sch@r\]" => "[vor][#4-][sch@r]";
 		"\[\^z\]\[b\]" => "[^z][#5][b]";
@@ -1664,73 +1584,12 @@
 		"\[t\]\[#3\]\[i\]\[f\]" => "[t][#5][i][f]";
 		"\[d\]\[#3\]\[o\]\[x\]" => "[d][#5][o][x]";
 		"\[s\]\[#3\]\[u\]\[nd\]" => "[s][#5][u][nd]";
-		"\[n=@r6\]\[n\]" => "[n=@r6][#2][n]";
-		"\[(t|d|k|g|tt|ck|st)@r3\^\]\[(a|i|o|u|au)\]" => "[$1@r3^][#3][$2]"; // general rule for new token @r3^
-		"\[ck@r3\^\]\[#3\]\[u\]\[f\]" => "[ck@r3^][#5][u][f]";
-		"\[s\]\[in\]" => "[s][#4][in]";
-		"\[l@l\]\[#0\]\[k\]" => "[l@l][#4][k]";
-		"\[s\]\[i\]\[\^ch\]" => "[s][#3][i][^ch]";
-		"\[w\]\[#0\]\[o\]\[ch\]" => "[w][#1][o][ch]";
-		"\[s=\]\[i\]\[\^z\]" => "[s=][#3][i][^z]";
-		"\[p\]\[s\]" => "[p][#1][s]";
-		"\[ar\]\[#3\]\[a\]\[nd@l3\]" => "[ar][#5][a][nd@l3]";
-		"\[w\]\[#0\]\[u\]\[ss\]" => "[w][#2][u][ss]";
-		"\[st@r3\^\]\[#3\]\[i\]\[\^ch\]" => "[st@r3^][#1][i][^ch]";
-		"\[n\]\[#0\]\[a\]\[&a\]" => "[n][#3][a][&a]";
-		"\[pf\]\[#3\]\[i\]\[ff\]" => "[pf][#6][i][ff]";
-		"\[\^ch\]\[en\]" => "[^ch][#4][en]"; // correct length -en: why is this necessary for ch but not for sch?!?
-		"\[s=\]\[au\]\[&e\]" => "[s=][#2][au][&e]";
-		"\[n\]\[#0\]\[au\]\[&e\]" => "[n][#3][au][&e]";
-		"\[0d-\]\[#4-\]\[i\]\[l@l\]" => "[0d-][#1][i][l@l]";
-		"\[l@l\]\[u\]\[st@r3\^\]" => "[l@l][#1][u][st@r3^]";
-		"\[&t3\/4\]\[h\]" => "[&t3/4][#1][h]";
-		"\[b@l\]\[i\]\[b\]" => "[b@l][#2][i][b]";
-		"\[zurück\]\[b@l\]" => "[zurück][#3][b@l]";
-		"\[d\]\[i\]\[\^z\]" => "[d][#4][i][^z]";
-		"\[\^z\]\[i\]\[l\]" => "[^z][#5][i][l]";
-		"\[\^z\]\[l\]" => "[^z][#4][l]";
-		"\[n=@r6\]\[t\]" => "[n=@r6][#4][t]";
-		"\[ch\]\[vr\+ar\]" => "[ch][#4]][vr+ar]";
-		"\[\^z\]\[&i\]" => "[^z][#4][&i]";
-		"\[ff\]\[i\]\[\^z\]" => "[ff][#3]][i][^z]";
-		"\[s=\]\[u\]\[b\]" => "[s=][#3][u][b]";
-		"\[b\]\[#0\]\[j\]" => "[b][#1][j]";
-		"\[sp@r6\]\[i\]\[\^z\]" => "[sp@r6][#2][i][^z]";
-		"\[t\]\[vr\+ar\]" => "[t][#3][vr+ar]";
-		"\[ck\]\[#3\]\[p\]" => "[ck][#6][p]";
-		"\[nn\]\[#0\]\[a\]\[&a\]" => "[nn][#2][a][&a]";
-		"\[w\]\[o\]\[tt@l3\]" => "[w][#4][o][tt@l3]";
-		"\[tt@l3\]\[i\]\[s\]" => "[tt@l3][#3][i][s]";
-		"\[&tion\]\[s\]" => "[&tion][#2][s]";
-		"\[0n-\]\[#0\]\[a\]" => "[0n-][#4][a]";
-		"\[st\]\[#3\]\[i\]\[#5\]\[t\]" => "[st][#4][i][t]"; // correct completely wrong rule from above ...
-		"\[s=\]\[a\]\[f\]" => "[s=][#4][a][f]";
-		"\[&u\]\[#3\]\[i\]\[inter\]" => "[&u][#1-][i][inter]"; // recorrect distance 3 introduced automatically
-		"\[n=@r6\]\[ar\]" => "[n=@r6][#2][ar]";
-		"\[t\]\[#3\]\[u\]\[pf\]" => "[t][#5][u][pf]";
-		"\[d\]\[#3\]\[i\]\[d\]" => "[d][#5][i][d]"; 
-		"\[d\]\[#3\]\[a\]\[k\]" => "[d][#5][a][k]";
-		"\[0d-\]\[au\]\[t\]" => "[0d-][#2][au][t]";
-		"\[n=@r6\]\[st\]" => "[n=@r6][#3]][st]";
-		"\[zurück\]\[f\]" => "[zurück][#3][f]";
-		"\[t@r3\^\]\[#3\]\[i\]\[tt\]" => "[t@r3^][#5][i][tt]";
-		"\[f\]\[#0\]\[u\]\[ss\]" => "[f][#1][u][ss]";
-		"\[st\]\[#3\]\[sch\]" => "[st][#0][sch]";
-		"\[ck\]\[#3\]\[h\]" => "[ck][#5][h]";
-		"\[l\]\[#0\]\[y\]" => "[l][#2][y]";
-		"\[b\]\[#1\]\[i\]\[tt\]" => "[b][#3][i][tt]";
-		"\[mm\]\[#0\]\[a\]\[&a\]" => "[mm][#3][a][&a]";
-		"\[t\]\[i\]\[\^sch@l3\]" => "[t][#3][i][^sch@l3]";
-		"\[\^z\]\[i\]\[n\]" => "[^z][#3][i][n]";
-		"\[\^ch\]\[&t\]" => "[^ch][#2][&t]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
 		// fix spacing bug for \
 		"\\" => "[#S#]";
 		"\[VR@L\]\[EN\]" => "[VR@L][O][EN]"; // figh vertical position -en with combined token vrl (bug?)
-
-		"\[VR@L\]\[#3\]\[O\]\[-E\]" => "[VR@L][#2-][O][-E]"; // re-recorrect re-corrections ...
 
 	#EndSubSection(spacer,=:prt)
 #EndSection(rules)
