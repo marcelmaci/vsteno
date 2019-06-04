@@ -158,7 +158,7 @@ function ParseAndSetInlineOptions( $tags ) {
                 //if (isset($_SESSION[$variable])) $_SESSION[$variable] = $value; 
                 if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
                     if (mb_strpos($whitelist_variables, " $variable ") === FALSE) {
-                        $global_error_string .= "ERROR: you are not allowed to set variable '$variable'!";
+                        $global_error_string .= "ERROR: you are not allowed to set variable '$variable' to '$value'!<br>";
                     } else {
                         //echo "Session($variable) = $value<br>";
                         $_SESSION[$variable] = $value; 

@@ -59,8 +59,8 @@ if ($_SESSION['user_logged_in']) {
         } 
     } else {    
         switch ($_SESSION['model_standard_or_custom']) {
-            case "custom" : $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
-            default : $_SESSION['actual_model'] = $default_model; break;
+            case "custom" : $_SESSION['actual_model'] = GetDBUserModelName(); break;
+            default : $_SESSION['actual_model'] = $_SESSION['selected_std_model']; break;
         }
     }
 
@@ -74,8 +74,8 @@ require_once "parser.php";
 global $font, $combiner, $shifter;
 global $rules, $functions_table;
 global $insertion_key;
-
-
+global $global_error_string;
+$global_error_string = "";
 //require_once "old_font.php";
 
 // main

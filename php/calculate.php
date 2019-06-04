@@ -104,7 +104,7 @@ function InsertDatabaseButton() {
 }
 
 function CalculateStenoPage() {
-    global $global_debug_string;
+    global $global_debug_string, $global_error_string;
     $global_debug_string = "";
     //echo "BEFORE:" . $_SESSION['model_standard_or_custom'];
     //echo $_POST['model'];
@@ -148,6 +148,7 @@ function CalculateStenoPage() {
             //echo "title_to_add: $title_to_add<br>";
             $text = $title_to_add . $text;
             echo NormalText2SVG( $text ); 
+               
             InsertReturnButton();
         } elseif ($_SESSION['output_format'] === "train") {
             echo "<h1>Training</h1>";
@@ -167,7 +168,16 @@ function CalculateStenoPage() {
         } else {
             InsertTitle();
             InsertIntroduction();
+            if ($_SESSION['output_format'] === "debug") {
+                $model_name = ($_SESSION['model_standard_or_custom'] === "standard") ? $_SESSION['selected_std_model'] : GetDBUserModelName();
+                echo "<h2>DEBUGGING</h2>MODEL: $model_name";
+            }
             echo NormalText2SVG( $text );
+            if ($_SESSION['output_format'] === "debug") {
+                if (mb_strlen($global_error_string)>0)
+                    echo  "<h2>RUNTIME ERRORS & WARNINGS</h2><p>$global_error_string</p>";
+                else echo "<h2>NO RUNTIME ERRORS.</h2>";
+            } 
             InsertReturnButton();
         }
         //echo "\nText aus CalculateStenoPage()<br>$text<br>\n";
@@ -181,7 +191,6 @@ function CalculateStenoPage() {
 }
 
 // main
-global $global_error_string;
 // just create combined/shifted-tokens once per call of calculate.php (performace)
 
 // dont know if this is correct .................................................... should be done in data.php now .................................. !!!!!!!!!!!!!!!!!!!!!!!!
@@ -190,7 +199,7 @@ global $global_error_string;
 // do it in data.php?
 
 if ($_POST['action'] === "abschicken") {
-    $global_error_string = "";
+    //$global_error_string = "";
     $_SESSION['rules_count'] = null;
     // reset rules statistics
 $_SESSION['rules_count'] = array();

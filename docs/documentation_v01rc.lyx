@@ -488,6 +488,158 @@ Drucken in Datei
 \end_layout
 
 \begin_layout Subsubsection*
+Längere Texte
+\end_layout
+
+\begin_layout Standard
+Texte bis zu einer Länge von etwa 20 Stenografieseiten können im Moment
+ mit VSTENO problemlos verarbeitet werden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bezieht sich auf www.vsteno.ch und die jetzige Server-Konfiguration
+\end_layout
+
+\end_inset
+
+.
+ Bei längeren Texten tritt der Fehler 
+\begin_inset Quotes eld
+\end_inset
+
+Gateway timeout
+\begin_inset Quotes erd
+\end_inset
+
+ auf, da die Generierung zu lange dauert.
+ Als Faustregel: VSTENO benötigt etwa 20 Sekunden für das Generieren einer
+ Stenografie-Seite.
+ Der Fehler 
+\begin_inset Quotes eld
+\end_inset
+
+Gateway timeout
+\begin_inset Quotes erd
+\end_inset
+
+ tritt somit in etwa nach 7 Minuten auf.
+\end_layout
+
+\begin_layout Standard
+Der grösste Teil der Rechenzeit, nämlich etwa 80%, entfällt hierbei nicht
+ auf das Generieren der Stenografie-Zeichen als solche, sondern auf die
+ vorgeschaltete, linguistische Analyse.
+ Damit trotzdem auch längere Texte (wie z.B.
+ Romane) mit VSTENO bearbeitet werden können, empfiehlt es sich, die linguistisc
+he Analyse abzukoppeln bzw.
+ die Generierung zu Portionieren.
+ Zwei Vorgehen bieten sich hierfür an:
+\end_layout
+
+\begin_layout Enumerate
+Verwenden der LNG-Form: Kopieren Sie den Langschrift-Text ins Textfeld des
+ Maxi-Formulars, wählen Sie anschliessend unter Ausgabe die LNG-Form (zusätzlich
+ empfiehlt es sich auch, die Optionen 
+\begin_inset Quotes eld
+\end_inset
+
+Vollseite
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+ohne Button
+\begin_inset Quotes erd
+\end_inset
+
+ zu markieren) und anschliessend 
+\begin_inset Quotes eld
+\end_inset
+
+abschicken
+\begin_inset Quotes erd
+\end_inset
+
+.
+ VSTENO wendet nun nur die linguistische Analyse an und gibt das Resultat
+ im Browser aus.
+ Achten Sie auch hier darauf, dass die Berechnung des eingegebenen Textes
+ ungefähr 7 Minuten Rechnzeit nicht überschreitet.
+ Wiederholen Sie anschliessend die Berechnung mit weiteren Textteilen und
+ kopieren Sie das Resultat fortlaufend in eine ASCII-Textdatei (hierfür
+ kann ein ganz normaler Texteditor verwendet werden).
+ Kopieren Sie am Schluss den kompletten Text in LNG-Form ins Textfeld des
+ Maxi-Formulars, wählen Sie unter 
+\begin_inset Quotes eld
+\end_inset
+
+Text
+\begin_inset Quotes erd
+\end_inset
+
+ das Format 
+\begin_inset Quotes eld
+\end_inset
+
+Meta (LNG)
+\begin_inset Quotes erd
+\end_inset
+
+ und als Ausgabe-Format 
+\begin_inset Quotes eld
+\end_inset
+
+Layout
+\begin_inset Quotes erd
+\end_inset
+
+ (mit entsprechenden Werten) und generieren Sie anschliessend das komplette
+ PDF.
+ Da VSTENO nun die linguistische Analyse nicht mehr anwenden muss, läuft
+ die Generierung des Stenografie-Dokuments sehr schnell ab (wenige Minuten
+ für 150-200 Seiten).
+\end_layout
+
+\begin_layout Enumerate
+Generieren separater PDFs: Falls der Ursprungstext in Kapitel unterteilt
+ ist, die eine Länge von 20 Seiten nicht überschreiten, können Sie auch
+ jedes Kapitel einzeln als PDF generieren und anschliessend mit dem nachfolgende
+n Kommandozeilen-Befehl zusammenfügen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dies funktioniert unter Linux mit dem Programm GhostScript (gs).
+ Andere Betriebssystem bieten vermutlich ähnliche Hilfsprogramme, mit denen
+ PDFs zusammengeführt werden können.
+\end_layout
+
+\end_inset
+
+.
+ Beachten Sie, dass VSTENO hier in jedem PDF mit der Seitennummerierung
+ neu beginnt (falls Sie also eine fortlaufende Seitennummerierung möchten,
+ so müssen Sie diese manuell für jedes PDF unter 
+\begin_inset Quotes eld
+\end_inset
+
+Layout
+\begin_inset Quotes erd
+\end_inset
+
+ anpassen):
+\end_layout
+
+\begin_layout LyX-Code
+gs -q -sPAPERSIZE=a4 -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=pdf_komple
+tt.pdf pdf_teil1.pdf pdf_teil2.pdf
+\end_layout
+
+\begin_layout Subsubsection*
 Tipps
 \end_layout
 

@@ -1026,7 +1026,8 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     //echo "Singleword2svg(): text = $text<br>";
     
     $tokenlist = NormalText2TokenList( $text );
-    //echo "Singleword2svg(): tokenlist = $tokenlist<br>";
+    //echo "Singleword2svg(): text: $text tokenlist = $tokenlist<br>";
+    //var_dump($tokenlist); echo "<br>";
     
     //echo "SingleWord2SVG(): tokenlist dump: "; var_dump($tokenlist);
     $pre = $combined_pretags;

@@ -403,7 +403,7 @@ function ImportRulesFromSubSection() {
 }
 */
 function ImportRulesFromGenericSubSection() {
-    global $shrinking_generic_subsection, $rules, $rules_pointer, $insertion_key;
+    global $shrinking_generic_subsection, $rules, $rules_pointer, $insertion_key, $global_error_string;
     //$result = preg_match( "/^[ ]*?\"(.*?)\"[ ]*?=>(.*?)[,;](.*)/", $shrinking_generic_subsection, $matches);
   //$result = preg_match( "/\"(.)\"[ ]*?=>[ ]*?(.*?)[,;](.*)/", $shrinking_generic_subsection, $matches);
   while ($shrinking_generic_section !== "") {
@@ -417,6 +417,9 @@ function ImportRulesFromGenericSubSection() {
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
         $condition = $matches[1];
         $consequence = $matches[2];
+        if (preg_match("/=>/", $condition) === 1) $global_error_string .= "WARNING: \"$condition\" => \"$consequence\" (possibly malformed rule)<br>";
+        if (preg_match("/=>/", $consequence) === 1) $global_error_string .= "WARNING: \"$condition\" => \"$consequence\" (possibly malformed rule)<br>";
+        //if (mb_strlen($global_error_string)>0) echo $global_error_string;
         //if ($condition === "«") echo "consequence: >$consequence<<br>";  
         //echo "condition => consequence: $condition => $consequence<br>";
         $shrinking_generic_subsection = $matches[3];
