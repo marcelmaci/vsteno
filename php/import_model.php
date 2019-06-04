@@ -169,14 +169,17 @@ function ImportSession() {
         $value = trim(preg_replace("/\"(.*)\"/", "$1", $matches[2]));
         //echo "variable := value: $variable => $value<br>";
         $session_subsection = $matches[3];
-        if (mb_strpos($whitelist_variables, " $variable ") === FALSE) {
+        CheckAndSetSessionVariable( $variable, $value );
+       /*
+       if (mb_strpos($whitelist_variables, " $variable ") === FALSE) {
             //echo "Error! variable not in whitelist!<br>";
             $global_error_string .= "ERROR: you are not allowed to set variable '$variable'!";
         } else {
             //echo "assign \$_SESSION[$variable] = >$value<<br>";
             $_SESSION["$variable"] = $value; 
             //var_dump($_SESSION);
-        } 
+        }
+        */
     } else return null;
   }
 }

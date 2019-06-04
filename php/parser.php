@@ -797,6 +797,9 @@ function MetaParser( $text ) {          // $text is a single word!
                     
                     if ($_SESSION['original_text_format'] !== "lng") {
                     
+         //echo  $_SESSION['hyphenate_yesno'] . "<br>" . $_SESSION['composed_words_yesno'];
+         
+if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                     //echo "shorthand: $text<br>";
                     $temp_word = $text;
                     $pos1 = mb_strpos($text, "\\", 0, "UTF-8");
@@ -827,6 +830,12 @@ function MetaParser( $text ) {          // $text is a single word!
                         
                     // write debug info of postprocessing: LING (post)
                     $global_debug_string .= "LNG (post): $lin_form<br>";
+} else {
+        $lin_form = $text;
+        //echo "lin: $lin_form";
+        $global_debug_string .= "LNG: $lin_form (linguistical analysis disabled)<br>";
+}
+                    
                     //echo "test: $test<br>";
                     // calculate
                     $word = $lin_form;

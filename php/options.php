@@ -50,7 +50,7 @@ $whitelist_variables .= " auxiliary_upper12_color auxiliary_lower_color auxiliar
 $whitelist_variables .= " auxiliary_upper3_thickness output_texttagsyesno output_width output_height output_style output_page_numberyesno output_page_start_value ";
 $whitelist_variables .= " output_page_start_at mark_wordlist distance_words space_before_word style_nouns style_beginnings baseline_style upper12_style upper3_style lower_style ";
 $whitelist_variables .= " auxiliary_style_general left_margin right_margin top_margin bottom_margin num_system_lines baseline show_margins show_distances svgtext_size ";
-$whitelist_variables .= " actual_model model_custom_or_standard prefixes_list stems_list suffixes_list ";
+$whitelist_variables .= " actual_model model_custom_or_standard prefixes_list stems_list suffixes_list hyphenate_yesno composed_words_yesno ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
@@ -154,16 +154,8 @@ function ParseAndSetInlineOptions( $tags ) {
             }
             else {                                                              // match is inline-tag => set values
                 list( $variable, $value ) = GetTagVariableAndValue($match);
-                //echo "Match: " . htmlspecialchars($match) . " => Variable: #$variable# Value: #$value#<br>";
-                //if (isset($_SESSION[$variable])) $_SESSION[$variable] = $value; 
-                if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
-                    if (mb_strpos($whitelist_variables, " $variable ") === FALSE) {
-                        $global_error_string .= "ERROR: you are not allowed to set variable '$variable' to '$value'!<br>";
-                    } else {
-                        //echo "Session($variable) = $value<br>";
-                        $_SESSION[$variable] = $value; 
-                    } 
-                }
+                // echo "Match: " . htmlspecialchars($match) . " => Variable: #$variable# Value: #$value#<br>";
+                CheckAndSetSessionVariable( $variable, $value );
             }
        }
        //$esc_html_tag_list = htmlspecialchars( $html_tag_list );
@@ -171,5 +163,25 @@ function ParseAndSetInlineOptions( $tags ) {
        return $html_tag_list;
 }
 
+function CheckAndSetSessionVariable( $variable, $value ) {
+    global $whitelist_variables, $global_error_string;
+    if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
+                    if (mb_strpos($whitelist_variables, " $variable ") === false) {
+                        $global_error_string .= "ERROR: you are not allowed to set variable '$variable' to '$value'!<br>";
+                    } else {
+                        //echo "Session($variable) = $value<br>";
+                        switch ($value) {
+                            case "true" : $_SESSION[$variable] = true; break;
+                            case "false" : $_SESSION[$variable] = false; break;
+                            case "yes" : $_SESSION[$variable] = true; break;
+                            case "no" : $_SESSION[$variable] = false; break;
+                            default : $_SESSION[$variable] = $value; break;
+                        }
+                    } 
+    } else {
+            $global_error_string .= "ERROR: session-variable '$variable' doesn't exist.<br>";
+    }
+    
+}
 
 ?>
