@@ -60,7 +60,7 @@ const offs_vertical = 19;                       // offset 19: variable $vertical
 const offs_distance = 20;                       // offset 20: variable $distance (string): "narrow" or "none" = no distance / "wide" = distance defined in constants $horizontal_distance_narrow/wide (connected to offset 12)
 const offs_shadowed = 21;                       // offset 21: variable $shadowed (string): "yes" = shadowed / "no" = not shadowed
 const offs_dont_connect = 22;                   // offset 22: 0 = default, 1 = don't connect to the following token (i.e. insert it without connection to previous token)
-                                                // offset 23: not used
+const offs_group = 23;                          // offset 23: group of the token (used for regex_helper.php and spacer)
 
 // data tuplets: each tuplets contains 8 entries like so:  [x1, y1, t1, d1, th, dr, d2, t2 ]
 //

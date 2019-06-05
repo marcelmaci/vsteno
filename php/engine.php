@@ -2129,6 +2129,8 @@ function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $inc
     for ($i = 0; $i < header_length; $i++) {
         $new_token[] = $steno_tokens_master[$base_token][$i]; //echo "Offset $i: " . $steno_tokens_master[$base_token][$i] . "<br>";
     }
+    $new_token[offs_group] = ""; // delete group information in shifter => for regex_helper.php
+    
     // now adjust inconditional_deltay_before/after (offsets 13 & 14) and new width (add delta_x to width)
     //echo "<br>Adjustments:<br>";
     $new_token[offs_token_width] += $delta_x;
