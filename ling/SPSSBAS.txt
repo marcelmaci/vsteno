@@ -1,6 +1,13 @@
 #BeginSection(header)
 	// spanisch
 	#BeginSubSection(session)
+		// disable linguistical analysis
+		"hyphenate_yesno" := "no";
+		"composed_words_yesno" := "no";
+		// set language
+		"language_hunspell" := "es";		// set it, even if not used
+		"language_hyphenator" := "es";
+		// set morphological parameters
 		"prefixes_list" := "";
 		"stems_list" := "";
 		"suffixes_list" := ""; // use non caputuring groups! (?:)
@@ -393,7 +400,7 @@
 		"([.,;:?!])" => " $1\";
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
-		"(\+|#|\|)" => "-"; // ignore linguistical analysis completely
+		"(\+|#|\|)" => "-"; // ignore linguistical analysis (if not already disabled in header)
 		
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)

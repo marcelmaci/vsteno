@@ -116,10 +116,11 @@ function InitializeSessionVariables() {
         $_SESSION['user_id'] = 0;
     }
     $_SESSION['actual_model'] = $default_model;
-     $_SESSION['selected_std_model'] = $default_model;
+    $_SESSION['selected_std_model'] = $default_model;
     $_SESSION['model_standard_or_custom'] = "standard";
     $_SESSION['rules_count'] = null;
-   
+    $_SESSION['language_hunspell'] = "de_CH"; // do not initialize these variables, so that they can be initialized by model!
+    $_SESSION['language_hyphenator'] = "de"; // correction: can be done here, since toggle_model now actualizes session variables for specific model
 }
 
 
@@ -155,8 +156,9 @@ if ($_POST['token_size'] != "") {
     $_SESSION['token_color'] = htmlspecialchars($_POST['token_color']);
     $_SESSION['hyphenate_yesno'] = (htmlspecialchars($_POST['hyphenate_yesno']) === "hyphenate_yes") ? true : false;
     $_SESSION['composed_words_yesno'] = (htmlspecialchars($_POST['composed_words_yesno']) === "composed_words_yes") ? true : false;
-    $_SESSION['composed_words_separate'] = htmlspecialchars($_POST['composed_words_separate']);
-    $_SESSION['composed_words_glue'] = htmlspecialchars($_POST['composed_words_glue']);
+    // disable these two paramaters => can only be used via inline-options in the future (because dependant on model)
+    //$_SESSION['composed_words_separate'] = htmlspecialchars($_POST['composed_words_separate']);
+    //$_SESSION['composed_words_glue'] = htmlspecialchars($_POST['composed_words_glue']);
     $_SESSION['color_nounsyesno'] = (htmlspecialchars($_POST['colored_nouns_yesno']) === "colored_nouns_yes") ? true : false;
     $_SESSION['color_nouns'] = htmlspecialchars($_POST['nouns_color']);
     $_SESSION['color_beginningsyesno'] = (htmlspecialchars($_POST['colored_beginnings_yesno']) === "colored_beginnings_yes") ? true : false;
@@ -233,6 +235,8 @@ if ($_POST['token_size'] != "") {
     // additional session variable necessary to keep track of selected std model (in input form)
     // will be used by toggle_model
     $_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['std_model_name'] : $_SESSION['selected_std_model'];
+    $_SESSION['language_hunspell'] = $_POST['language_hunspell'];
+    $_SESSION['language_hyphenator'] = $_POST['language_hyphenator'];
 }
 }
 

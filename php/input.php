@@ -50,7 +50,7 @@ Farbe <input type="Text" name="introduction_color"  size="10" value="<?php echo 
 </td></tr>
 
 <tr><td>Engine</td></tr>
-<tr><td>Modell: <?php echo $_SESSION['selected_std_model']; ?>
+<tr><td>Modell: 
 <input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
 <input type="radio" name="model" value="custom" <?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "checked" : "";?>> custom
 <?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "(" . $_SESSION['actual_model'] . ")" : "";?><br>
@@ -87,9 +87,10 @@ Stil:
 <tr><td>
 Analysieren: 
 <input type="checkbox" name="hyphenate_yesno" value="hyphenate_yes" <?php echo ($_SESSION['hyphenate_yesno']) ? "checked" : "";?>> Silben
+<input type="text" name="language_hyphenator"  size="6" value="<?php echo $_SESSION['language_hyphenator']; ?>">
 <input type="checkbox" name="composed_words_yesno" value="composed_words_yes" <?php echo ($_SESSION['composed_words_yesno']) ? "checked" : "";?>> Wörter
-&nbsp;&nbsp;&nbsp;Trennen: ><input type="text" name="composed_words_separate"  size="4" value="<?php echo $_SESSION['composed_words_separate']; ?>">
-Leim: <<input type="text" name="composed_words_glue"  size="4" value="<?php echo $_SESSION['composed_words_glue']; ?>"><br>
+<input type="text" name="language_hunspell"  size="6" value="<?php echo $_SESSION['language_hunspell']; ?>">
+(<a href="show_analyzer_parameters.php">parameters</a>)<br>
 Markieren:<br>
 <input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 
 Hauptwörter: 

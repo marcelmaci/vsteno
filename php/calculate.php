@@ -170,7 +170,9 @@ function CalculateStenoPage() {
             InsertIntroduction();
             if ($_SESSION['output_format'] === "debug") {
                 $model_name = ($_SESSION['model_standard_or_custom'] === "standard") ? $_SESSION['selected_std_model'] : GetDBUserModelName();
-                echo "<h2>DEBUGGING</h2>MODEL: $model_name";
+                $hunspell_yesno = ($_SESSION['composed_words_yesno']) ? "yes" : "no";
+                $hyphens_yesno = ($_SESSION['hyphenate_yesno']) ? "yes" : "no";
+                echo "<h2>DEBUGGING</h2>MODEL: $model_name<br>HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)<br>HYPHENATOR: " . $_SESSION['language_hyphenator'] . " ($hyphens_yesno)";
             }
             echo NormalText2SVG( $text );
             if ($_SESSION['output_format'] === "debug") {

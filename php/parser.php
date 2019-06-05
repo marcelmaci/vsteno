@@ -814,6 +814,7 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                     } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
                     // write debug info
+                    /*
                     $parameters = "";
                     if ($_SESSION['hyphenate_yesno']) $parameters .= "syllables ";
                     if ($_SESSION['composed_words_yesno']) $parameters .= "words ";
@@ -821,7 +822,8 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                         $parameters .= " / separate: " . $_SESSION['composed_words_separate'] . " glue: " . $_SESSION['composed_words_glue'];
                     }
                     if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
-                    $global_debug_string .= "LNG (raw): $temp_word => $test $parameters<br>"; 
+                    */
+                    $global_debug_string .= "LNG (raw): $temp_word<br>"; // => $test $parameters<br>"; 
                     // now "post"process LING result applying analyzer rules from header (still stage1)
                     $lin_form = PostProcessDataFromLinguisticalAnalyzer($test);
                     // set lin_form

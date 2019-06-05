@@ -27,12 +27,12 @@ $value_glue = 2;
 
 // phpSyllable: include and prepare
 require_once("../phpSyllable-master" . '/classes/autoloader.php');
-$phpSyllable_dictionary = "de";                             //"de_CH";
+$phpSyllable_dictionary = $_SESSION['language_hyphenator']; // "de";                             //"de_CH";
 $syllable = new Syllable($phpSyllable_dictionary);          // 'en-us'
 $syllable->setHyphen(new Syllable_Hyphen_Dash());           // get all syllables, with a dash
 
 // hunspell: dictionary
-$hunspell_dictionary = "de_CH"; //"de_DE"; //"de_CH";
+$hunspell_dictionary = $_SESSION['language_hunspell']; //"de_CH"; //"de_DE"; //"de_CH";
 
 // functions
 
