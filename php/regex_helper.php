@@ -8,118 +8,98 @@
 
 <?php
 
-// regex definitions
-$first_token_type_a_single = "1a_single"; //"blmnpvwfsxy";
-$first_token_type_a_multi = "1a_multi"; //"ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|";
-$first_token_type_a_special = "0n-|"; 
-$first_token_type_a_combined = "l@l|b@l|m@l|f@l|p@l|pf@l|v@l|sp@l|w@l|";
-$first_token_type_a_combined .= "b@r6|sp@r6|m@r6|p@r6|pf@r6|n@r6|n@l|l@r6|";
-$first_token_type_a_single = "blmnpvwfxy";
-$first_token_type_a_multi = "$first_token_type_a_special" . "$first_token_type_a_combined" . "rr|ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|";
-
-//(\[(ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|[blmnpvwfsxy])\])
-
-$first_token_type_b_single = "1b_single"; // "gkhjcdtqz";
-$first_token_type_b_special = "";
-$first_token_type_b_multi = "1b_multi"; // "mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|vor|inter|rück|ion|durch|ch|solch|";
-$first_token_type_b_combined = "vr@l|d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|";
-$first_token_type_b_combined .= "k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|";
-$first_token_type_b_single = "gkjcdstqzh";
-$first_token_type_b_multi = "$first_token_type_b_special" . "$first_token_type_b_combined" . "mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|";
-
-// (\[(mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|vor|inter|rück|ion|durch|ch|solch|[gkhjcdtqz])\])
-//$first_token_type_b_combined = "d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|b@l|g@l3|m@l|f@l|p@l|pf@l|v@l|sp@l|w@l|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|";
-//$first_token_type_b_combined .= "k@l3|z@l3|sch@l3|ch@l3|b@r6|sp@r6|f@r6|m@r6|p@r6|pf@r6|v@r6|w@r6|z@r|z@l3|da@r|n@r6|n@l|vr@l|ck@l|l@r6|tt@r|";
-	
-// vowel
-$vowel_type_a = "(\[(i|au)\])";
-$vowel_type_b = "(\[a\])?";
-$all_narrow_vowels = "(\[(a|u|o|i|au|#n|#ns)\])?"; 
-
-// second token type a:
-$second_token_type_a_single = "2a_single"; // "bdcfwlxptvq";
-$second_token_type_a_multi = "2a_multi"; // "pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|";
-$second_token_type_a_combined = "d@r|nd@r|t@r|st@r|l@l|b@l|f@l|p@l|pf@l|v@l|w@l|t@l3|d@l3|nd@l3|st@l3|";
-$second_token_type_a_combined .= "k@l3|b@r6|f@r6|p@r6|pf@r6|v@r6|w@r6|da@r|n@r6|n@l|vr@l|l@r6|tt@r|";
-$second_token_type_a_single = "bdcfwlxptvqhns";
-$second_token_type_a_multi = "$second_token_type_a_combined" . "pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|";
-
-// (\[(pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|[bdcfwlxptvq])\])
-
-$second_token_type_b_single = "2b_single"; // "jzghmykn";
-$second_token_type_b_multi = "2b_multi"; //"ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|";
-$second_token_type_b_combined = "g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|";
-$second_token_type_b_combined .= "k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|";
-$second_token_type_b_single = "jzgmyk";
-$second_token_type_b_multi = "$second_token_type_b_combined" . "&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|";
-
-// combine
-$condition_aa = "(\\[($first_token_type_a_multi" . "[" . "$first_token_type_a_single" . "]" . ")\\])$all_narrow_vowels(\\[($second_token_type_a_multi" . "[" . "$second_token_type_a_single" . "]" . ")\\])";
-$consequence_aa = "$1[#3]$3$5";
-$rule_aa = "\"$condition_aa\" => \"$consequence_aa\";";
-echo "// case: aa<br>$rule_aa<br>";
-
-$condition_ab = "(\\[($first_token_type_a_multi" . "[" . "$first_token_type_a_single" . "]" . ")\\])$all_narrow_vowels(\\[($second_token_type_b_multi" . "[" . "$second_token_type_b_single" . "]" . ")\\])";
-$consequence_ab = "$1[#0]$3$5";
-$rule_ab = "\"$condition_ab\" => \"$consequence_ab\";";
-echo "// case: ab<br>$rule_ab<br>";
-
-$condition_ba = "(\\[($first_token_type_b_multi" . "[" . "$first_token_type_b_single" . "]" . ")\\])$all_narrow_vowels(\\[($second_token_type_a_multi" . "[" . "$second_token_type_a_single" . "]" . ")\\])";
-$consequence_ba = "$1[#6]$3$5";
-$rule_ba = "\"$condition_ba\" => \"$consequence_ba\";";
-echo "// case: ba<br>$rule_ba<br>";
-
-$condition_bb = "(\\[($first_token_type_b_multi" . "[" . "$first_token_type_b_single" . "]" . ")\\])$all_narrow_vowels(\\[($second_token_type_b_multi" . "[" . "$second_token_type_b_single" . "]" . ")\\])";
-$consequence_bb = "$1[#3]$3$5";
-$rule_bb = "\"$condition_bb\" => \"$consequence_bb\";";
-echo "// case: bb<br>$rule_bb<br>";
+// functions
+function GetRegexOrString($array) {
+    $temp1 = "";
+    foreach ($array as $element)
+         $temp1 .= ($element === end($array)) ? "$element" : "$element|";
+    return $temp1;
+}
 
 
-// (\[(ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzghmykn)\])
-/*
-// combine
-// case: aba
-$case_aba_condition = "(\\[($first_token_type_a_multi\[$first_token_type_a_single\])\\])$vowel_type_b(\\[($second_token_type_a_multi\[$second_token_type_a_single\])\\])";
-$case_aba_consequence = "$1[#2]$3$4";
-$case_aba_rule = "\"$case_aba_condition\" => \"$case_aba_consequence\"";
-//$case_aba_condition = "$first_token_type_a_multi $first_token_type_a_single $vowel_type_b $second_token_type_a_multi $second_token_type_a_single";
-//$case_aba_consequence = "cons";
-//$case_aba_rule = "$case_aba_condition $case_aba_consequence";
- 
-// case aab, bba, bbb => aab, bb(ab)
-// aab
-$case_aab_condition = "(\\[($first_token_type_a_multi\[$first_token_type_a_single\])\\])$vowel_type_a(\\[($second_token_type_b_multi\[$second_token_type_b_single\])\\])";
-$case_aab_consequence = "$1\[#4\]$3$5";
-$case_aab_rule = "\"$case_aab_condition\" => \"$case_aab_consequence\"";
-// bba
-$case_bba_condition = "(\\[($first_token_type_b_multi\[$first_token_type_b_single\])\\])$vowel_type_b(\\[($second_token_type_a_multi\[$second_token_type_a_single\])\\])";
-$case_bba_consequence = "$1\[#4\]$3$4";
-$case_bba_rule = "\"$case_bba_condition\" => \"$case_bba_consequence\"";
-// bbb
-$case_bbb_condition = "(\\[($first_token_type_b_multi\[$first_token_type_b_single\])\\])$vowel_type_b(\\[($second_token_type_b_multi\[$second_token_type_b_single\])\\])";
-$case_bbb_consequence = "$1\[#4\]$3$4";
-$case_bbb_rule = "\"$case_bbb_condition\" => \"$case_bbb_consequence\"";
+// define data
+// groups of consonants that share same (or similar) as to distance needed between tokens
+// example: b, p, pp as a preceeding consonant (all have a straight line to the left and have a round bottom)
+$token_groups = array(
+    "G1" => array( "a1", "a2", "a3"),
+    "G2" => array( "b1", "b2" ),
+    "G3" => array( "c1" )
+);
 
-// case aaa, baa, bab => (ab)aa, bab
-// aaa
-$case_aaa_condition = "(\\[($first_token_type_a_multi\[$first_token_type_a_single\])\\])$vowel_type_a(\\[($second_token_type_a_multi\[$second_token_type_a_single\])\\])";
-$case_aaa_consequence = "$1\[#4\]$3$5";
-$case_aaa_rule = "\"$case_aaa_condition\" => \"$case_aaa_consequence\"";
-// baa
-$case_baa_condition = "(\\[($first_token_type_b_multi\[$first_token_type_b_single\])\\])$vowel_type_a(\\[($second_token_type_a_multi\[$second_token_type_a_single\])\\])";
-$case_baa_consequence = "$1\[#4\]$3$5";
-$case_baa_rule = "\"$case_baa_condition\" => \"$case_baa_consequence\"";
-// bab
-$case_bab_condition = "(\\[($first_token_type_b_multi\[$first_token_type_b_single\])\\])$vowel_type_a(\\[($second_token_type_b_multi\[$second_token_type_b_single\])\\])";
-$case_bab_consequence = "$1\[#4]\$3$4";
-$case_bab_rule = "\"$case_bab_condition\" => \"$case_bab_consequence\"";
+// allows to check for combined tokens (check is optional, i.e. combined token "identifier" may or may not be present)
+// example: @[lr].? checks for combinations like b@r, b@l, p@r, p@l etc.
+$token_variants = array(
+    "G1" => array( "X", "Y" ),
+    "G2" => array( "Y" )
+);
 
-//"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|zw|ff|mm|nn|pp|sp|ant|haft|[blmnpvwf])\])(\[(i|au)\])?(\[(pf|st|rr|ll|nd|ff|pp|tt|ss|[bdycfwlxptvq])\])" => "$1[#6]$3$5";
-//"(\[(tt|nd|st|in|ng|ns|nk|ur|sch|schw|[cdtqblmnpvwf])\])(\[(i|au)\])(\[(ng|nk|sch|^sch|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|pf|st|rr|ll|nd|ff|pp|tt|[bdycfwlxptvqjzghmkn])\])" => "$1[#6]$3$5";
-echo "$case_aba_rule<br>$case_aab_rule<br>$case_bba_rule<br>$case_bbb_rule<br>$case_aaa_rule<br>$case_baa_rule<br>$case_bab_rule<br>";
+// combination = preceeding + following token that can then be combined with different vowels (see rules_list)
+$group_combinations = array(
+    "C1" => array( "G1", "G2" ),
+    "C2" => array( "G1", "G3" ),
+    "C3" => array( "G2", "G3" )
+);
 
-*/
+// like token groups but for vowels
+$vowel_groups = array(
+    "V1" => array( "v1", "v2", "v3" ),
+    "V2" => array( "v2", "v4"),
+    "V3" => array( "v5", "v6")
+);
+
+// rules: combination + vowel + distance (string)
+// for each combination (2 tokens out of groups) a vowel group can be given a specific distance
+$rules_list = array( 
+    "R1" => array( "C1", "V2", "2" ),
+    "R2" => array( "C1", "V3", "4" ),
+    "R3" => array( "C3", "V1", "6" )
+);
+
+// generate rules
+$regex_rules = array();
+
+// generate variants
+// token groups
+$token_groups_string = array();
+foreach ($token_groups as $key => $tokens) {
+    // calculate regex or-chain
+    $temp1 = GetRegexOrString($tokens);
+    $temp2 = GetRegexOrString($token_variants[$key]);
+    // write full regex and insert (use non capturing groups ?:)
+    $token_groups_string[$key] = (mb_strlen($temp2) === 0) ? "[(?:$temp1)]" : "[(?:$temp1)(?:$temp2)?]";
+}
+
+// vowels
+$vowel_groups_string = array();
+foreach ($vowel_groups as $key => $vowels) {
+    $temp1 = "";
+    // calculate or-string
+    $temp1 = GetRegexOrString($vowels);
+    // write full regex and insert
+    $vowel_groups_string[$key] = "[$temp1]";
+}
+
+// show result
+//foreach ($token_groups_string as $key => $string) echo "$key: $string<br>";
+//foreach ($vowel_groups_string as $key => $string) echo "$key: $string<br>";
+
+// generate rules
+$rules_list_string = array();
+foreach ($rules_list as $key => $rule) {
+    // get combinations
+    list($combination_key, $vowel_key, $distance) = $rule;
+    list($group1_key, $group2_key) = $group_combinations[$combination_key];
+    $group1 = $token_groups_string[$group1_key];
+    $group2 = $token_groups_string[$group2_key];
+    $vowel = $vowel_groups_string[$vowel_key];
+    // write rule and insert
+    $rules_list_string[$key] = "\"($group1)($vowel)($group2)\" => \"$1[#$distance]$2$3\"; // $key";
+}
+
+// show result (copy it to VSTENO model)
+foreach ($rules_list_string as $key => $string) echo "$string<br>";
+
+
 ?>
-
   </body>
 </html>
