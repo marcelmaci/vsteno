@@ -65,6 +65,7 @@
 		"AUS" => { /*header*/ 20, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R1", /*data*/ 0, 0, 0, 1, 1, 0, 0, 0.5,  /**/ 3, 3, 0.5, 0, 1, 0, 0, 0.5,  /**/ 10, 5, 0.5, 2, 1.5, 0, 0, 0.5,  /**/ 17, 3, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 19, 1, 0.5, 0, 3, 0, 0, 0.5,  /**/ 20, 0, 0.5, 0, 1, 0, 1, 0 }
 		"-AUS" => { /*header*/ 20, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "R1", /*data*/ 10, 5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 17, 3, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 19, 1, 0.5, 0, 3, 0, 0, 0.5,  /**/ 20, 0, 0.5, 0, 1, 0, 1, 0 }
 		"BEI" => { /*header*/ 18, 0.5, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R1", /*data*/ 0, 5, 0, 1, 3, 0, 0, 0.5,  /**/ 3, 2, 0.5, 0, 2, 0, 0, 0.5,  /**/ 9, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 15, 2, 0.5, 0, 1, 0, 0, 0.5,  /**/ 18, 5, 0.5, 0, 1, 0, 1, 0 }
+		"BEI+AR" => { /*header*/ 23, 0.5, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R1", /*data*/ 0, 5, 0, 1, 3, 0, 0, 0.5,  /**/ 3, 2, 0.5, 0, 2, 0, 0, 0.5,  /**/ 9, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 17, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 17, 5, 0.5, 0, 1, 0, 0, 0.5, /**/ 14.5, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 17, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 20, 2, 0.5, 0, 1, 0, 2, 0.5,  /**/ 23, 5, 0.5, 0, 1, 0, 1, 0 }
 		"DURCH" => { /*header*/ 10, 0.5, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R2", /*data*/ 3, 10, 0, 1, 1, 0, 0, 0.3,  /**/ 0.5, 5, 0.3, 0, 1, 0, 0, 0,  /**/ 8, 0, 0, 0, 1, 0, 1, 0 }
 		"DIS" => { /*header*/ 8, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 0, 0, 1, 1, 0, 0, 0.5,  /**/ -1, 7.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 10, 0.5, 0, 1, 0, 0, 0,  /**/ 6.5, 5, 0, 0, 1, 0, 1, 0 }
 		"SICH" => { /*header*/ 11.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 1, 0, 0, 0.5,  /**/ 2, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3, 10, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 9.5, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 5, 0, 0, 1, 0, 1, 0 }
@@ -95,6 +96,9 @@
 		"#4-" => { /*header*/ -4, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, /*data*/ 0, 0, 0, 0, 1, 0, 0, 0 }
 		"#5-" => { /*header*/ -5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, /*data*/ 0, 0, 0, 0, 1, 0, 0, 0 }
 		"#6-" => { /*header*/ -6, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, /*data*/ 0, 0, 0, 0, 1, 0, 0, 0 }
+		"#7-" => { /*header*/ -7, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, /*data*/ 0, 0, 0, 0, 1, 0, 0, 0 }
+		"#8-" => { /*header*/ -8, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, /*data*/ 0, 0, 0, 0, 1, 0, 0, 0 }
+		"#9-" => { /*header*/ -9, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, /*data*/ 0, 0, 0, 0, 1, 0, 0, 0 }
 		"SCHM" => { /*header*/ 6, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R1", /*data*/ 2, 9, 0.5, 1, 1, 0, 0, 0.5,  /**/ 4, 10, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 6, 9, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5, 5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 3, 2.5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 3, 1.5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 5, 0.5, 0.5, 0, 3, 0, 0, 0,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0 }
 		"SCHW" => { /*header*/ 7, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L2:R1", /*data*/ 5, 17, 0.5, 1, 1, 0, 0, 0.5,  /**/ 7, 19, 0.5, 0, 1, 0, 0, 0.5,  /**/ 9, 20, 0.5, 98, 1.5, 0, 0, 0.5,  /**/ 7, 19, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5, 17, 0.5, 0, 3, 0, 0, 0.5,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0 }
 		"MPF" => { /*header*/ 6, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L2:R1", /*data*/ 0, 9, 0.5, 1, 1.5, 0, 0, 0,  /**/ 1.5, 10, 0.5, 2, 2.5, 0, 0, 0.5,  /**/ 3, 8, 0.5, 0, 3, 0, 0, 0.5,  /**/ 3, 2, 0.5, 0, 2.5, 0, 0, 0,  /**/ 4.5, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 5.75, 2, 0.5, 0, 1, 0, 0, 0.5,  /**/ 4.5, 3.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1.5, 3.1, 0.5, 0, 1, 0, 0, 0.8,  /**/ 0.75, 2.6, 0.8, 0, 1, 0, 0, 0.5,  /**/ 1.5, 2, 0.5, 0, 1, 0, 0, 0.5,  /**/ 4.5, 2, 0.5, 0, 1, 0, 2, 0.5,  /**/ 5.75, 2, 0.5, 0, 1, 0, 1, 0 }
@@ -115,6 +119,7 @@
 		"RR" => { /*header*/ 10, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R3", /*data*/ 0, 8, 0.5, 1, 1, 0, 0, 0.5,  /**/ 5, 10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 8, 7.75, 0.5, 5, 3, 0, 0, 0.5,  /**/ 10, 4, 0.5, 0, 3, 0, 0, 0.5,  /**/ 9, 0.25, 0.5, 5, 2, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 4.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 10, 0.5, 4, 1, 0, 0, 0.5,  /**/ 5, 10, 0.5, 0, 1, 0, 1, 0 }
 		"RR6" => { /*header*/ 10, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L4", /*data*/ /*1*/ 5, 0, 0.5, 1, 1, 0, 0, 0.5, /*2*/ 9, 0.25, 0.5, 0, 1.0, 0, 0, 0.5, /*3*/ 10, 4, 0.5, 0, 1, 0, 0, 0.5, /*4*/ 8, 7.75, 0.5, 0, 1, 0, 0, 0.5, /*5*/ 5, 10, 0.5, 0, 1.5, 0, 0, 0.5, /*6*/ 1, 9, 0.5, 0, 2.5, 0, 0, 0.5, /*7*/ 0.5, 4.75, 0.5, 0, 2.5, 0, 0, 0.5, /*8*/ 5, 0, 0.5, 0, 1, 0, 1, 0.5 }
 		"SS" => { /*header*/ 14, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R1", /*data*/ 0, 9, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 3, 10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 7.5, 8, 0, 0, 3, 0, 0, 0,  /**/ 9.5, 6, 0, 0, 3, 0, 0, 0,  /**/ 14, 0, 0, 0, 1, 0, 1, 0 }
+		"SOBRE" => { /*spanish*/ 15.5, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 13, 5, 0, 0, 0, 0, 0, 0, "L1:R1", /*data*/ 0, 0, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 3, 9, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 6, 10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 10.5, 8, 0.5, 0, 3, 0, 0, 0.5,  /**/ 12.5, 6, 0.5, 0, 3, 0, 0, 0.5, /**/ 15.5, 2.5, 0.5, 0, 3, 0, 0, 0.5, /**/ 13, 0, 0.5, 0, 3, 0, 0, 0.5, /**/ 10.5, 2.5, 0.5, 0, 3, 0, 0, 0.5, /**/ 13, 5, 0.5, 0, 3, 0, 1, 0.5 }
 		"TT" => { /*header*/ 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R3", /*data*/ 0, 30, 0, 1, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 2.5, 0, 4, 1, 0, 0, 0 }
 		"CH" => { /*header*/ 5, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R1", /*data*/ 0, 8.5, 0.5, 1, 1.3, 0, 0, 0.5,  /**/ 2.5, 10, 0.7, 2, 2.5, 0, 0, 0.8,  /**/ 5, 7, 0.8, 0, 3, 0, 0, 0.5,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 99, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0.5,  /**/ 5, 2.5, 0, 4, 1, 0, 0, 0 }
 		"ND" => { /*header*/ 3.5, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L2:R2", /*data*/ 0, 5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 3.5, 7, 0.5, 2, 2, 0, 0, 0.5,  /**/ 1.1, 10, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 7, 0, 0, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 2.5, 0, 4, 1, 0, 0, 0 }
@@ -162,7 +167,7 @@
 		"=ES" => { /*header*/ 18.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 2, 5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 6, 5.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 10, 5.5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 12, 5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 14, 4, 0.5, 0, 3, 0, 0, 0,  /**/ 18.75, 0, 0, 0, 1, 0, 1, 0 }
 		"S=" => { /*header*/ 9.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, "L1", /*data*/ 0, 0, 0.5, 1, 1, 0, 0, 0.5,  /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 4, 0.5, 0, 1, 0, 0, 0.5,  /**/ 2, 5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3, 5, 0.5, 0, 2, 0, 0, 0,  /**/ 5, 4, 0.5, 0, 3, 0, 0, 0,  /**/ 9.75, 0, 0, 0, 1, 0, 1, 0 }
 		"SER" => { /*spanisch*/ 9.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, "L1", /*data*/ 0, 0, 0.5, 1, 1, 0, 0, 0.5,  /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1.25, 4, 0.5, 0, 1, 0, 0, 0.5,  /**/ 2.75, 5, 0.5, 0, 1, 0, 0, 0.5,  /**/  5, 5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 5.5, 5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 8, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 5.5, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 3, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 5.5, 5, 0.5, 0, 1, 0, 1, 0 }
-		"T" => { /*header*/ 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R3", /*data*/ 0, 20, 0, 1, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 5, 0, 4, 1, 0, 0, 0 }
+		"T" => { /*header*/ 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L1:R3", /*data*/ 0, 20, 0, 1, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 2.5, 0, 4, 1, 0, 0, 0 }
 		"&T" => { /*header*/ 4, 0, 1.5, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 20, 0, 1, 1, 0, 0, 0,  /**/ 4, 20, 0, 0, 1, 0, 1, 0 }
 		"&T-1" => { /*header*/ 4, 0, 1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 20, 0, 1, 1, 0, 1, 0,  /**/ 4, 20, 0, 0, 1, 0, 1, 0 }
 		"&T3/4" => { /*header*/ 4, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 15, 0, 1, 1, 0, 1, 0,  /**/ 4, 15, 0, 0, 1, 0, 1, 0,  /**/ 4, 15, 0, 4, 1, 0, 1, 0 }
@@ -444,6 +449,8 @@
 		"r-?r" => "r";
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
+		"^extra$" => "{EXTRA}";
+		"^coin" => "{CON}{IN}";
 		"^la$" => "{LA}";
 		"^da$" => "{DA}";
 		"^le$" => "{LE}";
@@ -465,7 +472,7 @@
 		"^lo$" => "{LO}";
 		"^des-?de$" => "{DESDE}";
 		"^ya$" => "{YA}";
-		"^bi-?en$" => "{BIEN}";
+		"^bi-?en" => "{BIEN}";
 		"^bu-?e-?n([oa]s?)$" => "{BUEN}$1";
 		"^ca-?da$" => "{CADA}";
 		"^c(o|ó)-?mo$" => "{COMO}";
@@ -483,7 +490,7 @@
 		"^t(u|ú)(s)?$" => "{TU}$2";
 		"^tam-?bi-?(é|e)n$" => "{TAMBIEN}"; // é already reduced at this point
 		"^tam-?po-?co$" => "{TAMPOCO}";
-		"^ti-?em-?po$" => "{TIEMPO}";
+		"ti-?em-?p" => "{TIEMPO}";
 		"^yo$" => "{YO}";
 		"^cual$" => "{CUAL}";
 		"^cuant" => "{CUANT}";
@@ -509,18 +516,32 @@
 		"(?<!^)mi?ent" => "{MENT}";
 		"ex(?!(?:c[rluao]|[pt]))" => "{EX}$1";
 		"^(in)?sub" => "$1{SUB}";
-		"^(im)?per" => "$1{PER}";
+		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd" }; // not perder and all its forms
 		"^(in)?tran?s" => "$1{TRAS}";
-		"^(des)?inte?r" => "$1{INTER}";
-		"^(des)?in" => "$1{IN}";
+		"^(des)?inte?r" => { "$1{INTER}", "intermin", "intrad" }; // not: interminable, intraducible
 		"^estar$" => "{ESTAR}";
 		"^estuv" => "{ESTUV}";
 		"^est(?!r)" => { "{EST}", "estac" }; // does not apply to estación
 		"^ser(é|á[ns]?|emos|éis|ía(?:[sn]|amos|ais)?)$" => "{SER}$1";
 		"^son$" => "{SON}";
 		"^uno?$" => "{UNO}";
-		"^una?$" => "{UNA}";
-
+		"^una$" => "{UNA}";
+		"^ant[ei]" => { "{ANTE}", "antena", "ant(í|i)g" };
+		"^circun?" => "{CIRCUN}";
+		"^aco[mn]" => "{ACOM}";
+		"^contr" => "{CONTR}";
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "comer", "cometa" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^sobre?|sor" => { "{SOBRE}", "sobri" }; // sobrio/as
+		"^gener" => "{GENER}";
+		"^necesar" => "{NECESAR}";
+		"^porque$" => "{PORQUE}";
+		"^por" => "{POR}";
+		"^sin$" => "{SIN}";
+		"^señor$" => "{SENOR}";
+		"^señora$" => "{SENORA}";
+		"^suiz" => "{SUIZ}";
+		"^(des)?in" => "$1{IN}";
+		
 		// rewrite words that have to been written literally (no abreviations)
 		"%(.*?)%" => "$1";
   
@@ -630,9 +651,9 @@
 		"a([aeou])" => "A[&A]$1";
 		"e([aeiou])" => "E[&E]$1";
 		"o([aeéiu])" => "[&O]$1";
-		"u([i])" => "A[&U]$1";
+		"u([io])" => "A[&U]$1";
 		// other sounds
-		"^({SUB})r" => "$1[AR]"; // initial r (Anlaut-r)
+		"^({SUB})?r" => "$1[AR]"; // initial r (Anlaut-r)
 		"\[(RT|MP)\]r" => "[$1][AR]";
 		
 		"r" => "[VR]";	// vocalic r
@@ -648,7 +669,8 @@
  
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
-		// empty
+		//"{CONTR}A" => "{CONTR}\A";
+		"{CONTR}[Aa](?!\[&A])" => { "{CONTR}A[&A]", "^{CONTR}[Aa]$" }; // problem is more complex, solve it like that for now
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// vowels at beginning of word
@@ -659,6 +681,9 @@
 		"^u" => "[0N-]u";
 		"^\[&O]" => "[0N-][&O]";
 		"^\[AI]" => "[0N-][AI]";
+
+		// vowels after prefix
+		"({(?:PER|BIEN)})([aeiouAEIOU])" => "$1[LES]$2";
 
 		// n, s at beginning of word
 		"^s" => "[S=]";
@@ -675,7 +700,7 @@
 		// vowels at end of the words
 		"e$" => "[-E]";
 		"a$" => "[EN]"; // keep token names as in original (mother) system
-		"(?<!\[&E])o$" => { "", "pa-?ro" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
+		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
 		"o$" => "[EM]";
 		"i$" => "[-I]";
 		"u$" => "A[&U]";
@@ -823,6 +848,22 @@
 		"{SON}" => "O[SEIN]";
 		"{UNO}" => "A[&U]";
 		"{UNA}" => "[AUF]";
+		"{ANTE}" => "[0N-][#N][ANT]";
+		"{CIRCUN}" => "C";
+		"{CON}" => "[BEI][#N]"; // avoid later insertion of distance by adding #n as distance
+		"{ACOM}" => "[0N-][#1][BEI]";
+		"{CONTR}" => "[BEI+AR]";
+		"{SOBRE}" => "[SOBRE]";
+		"{EXTRA}" => "[0N-]A[LES]";
+		"{GENER}" => "H[VR]";
+		"{NECESAR}" => "[N=]A[VR]";
+		"{POR}" => "[VOR]";
+		"{PORQUE}" => "[VOR]K";
+		"{SIN}" => "[SEIN]";
+		"{SENOR}" => "O[SOBRE]";
+		"{SENORA}" => "O[SOBRE][#9-][EN]";
+		"{SUIZ}" => "[0U-][#0][SS]";
+		
 		//"{}" => "";
 		//"{}" => "";
 
@@ -852,29 +893,33 @@
 		// convert all to lower
 		"(.*)" => "strtolower()";
 
+		// special
+		"\[#n\]\[o\]" => "[o]"; // filter out wrong doubling of distances
+
+
 		// generated with regex_helper.php	
 
-// statistics: these rules cover approximately 125028 token combinations.
-"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|durch|solch|selb|wo|schm|ck|lt|rr|ss|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d1]$2$3"; // R1|C1: L1#V1:D1#R1 (10400)
-"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|durch|solch|selb|wo|schm|ck|lt|rr|ss|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d2]$2$3"; // R2|C1: L1#V2:D2#R1 (5200)
-"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|durch|solch|selb|wo|schm|ck|lt|rr|ss|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:a|o|u)\])?(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d3]$2$3"; // R3|C2: L1#V1:D3#R2 (16900)
-"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|durch|solch|selb|wo|schm|ck|lt|rr|ss|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:i|au)\])(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d4]$2$3"; // R4|C2: L1#V2:D4#R2 (8450)
-"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|durch|solch|selb|wo|schm|ck|lt|rr|ss|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:a|o|u)\])?(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d5]$2$3"; // R5|C3: L1#V1:D5#R3 (8580)
-"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|durch|solch|selb|wo|schm|ck|lt|rr|ss|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:i|au)\])(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d6]$2$3"; // R6|C3: L1#V2:D6#R3 (4290)
-"(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d7]$2$3"; // R7|C4: L2#V1:D7#R1 (7680)
-"(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d7]$2$3"; // R8|C4: L2#V2:D7#R1 (3840)
+// statistics: these rules cover approximately 128520 token combinations.
+"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|bei+ar|durch|solch|selb|wo|schm|ck|lt|rr|ss|sobre|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d1]$2$3"; // R1|C1: L1#V1:D1#R1 (11256)
+"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|bei+ar|durch|solch|selb|wo|schm|ck|lt|rr|ss|sobre|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d2]$2$3"; // R2|C1: L1#V2:D2#R1 (5628)
+"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|bei+ar|durch|solch|selb|wo|schm|ck|lt|rr|ss|sobre|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:a|o|u)\])?(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d3]$2$3"; // R3|C2: L1#V1:D3#R2 (17420)
+"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|bei+ar|durch|solch|selb|wo|schm|ck|lt|rr|ss|sobre|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:i|au)\])(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d4]$2$3"; // R4|C2: L1#V2:D4#R2 (8710)
+"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|bei+ar|durch|solch|selb|wo|schm|ck|lt|rr|ss|sobre|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:a|o|u)\])?(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d5]$2$3"; // R5|C3: L1#V1:D5#R3 (8844)
+"(\[(?:in|sein|gegen|da|schaft|auf|aus|bei|bei+ar|durch|solch|selb|wo|schm|ck|lt|rr|ss|sobre|tt|ch|zw|d|g|h|j|k|s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)\])(\[(?:i|au)\])(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d6]$2$3"; // R6|C3: L1#V2:D6#R3 (4422)
+"(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d7]$2$3"; // R7|C4: L2#V1:D7#R1 (8064)
+"(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d7]$2$3"; // R8|C4: L2#V2:D7#R1 (4032)
 "(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:a|o|u)\])?(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d8]$2$3"; // R9|C5: L2#V1:D8#R2 (12480)
 "(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:i|au)\])(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d9]$2$3"; // R10|C5: L2#V2:D9#R2 (6240)
 "(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:a|o|u)\])?(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d10]$2$3"; // R11|C6: L2#V1:D10#R3 (6336)
 "(\[(?:est|werd|les|hab|sind|ant|anti|ion|haft|fort|schw|mpf|sch|ff|ll|mm|nn|nd|ng|nk|ns|pf|mp|st|c|q|&e|c@r|nd@r|nk@r|ng@r|ns@r|sch@r|st@r|mm@l|pf@l|ff@l|ng@l3|ns@l3|nk@l3|c@l3|nd@l3|st@l3|sch@l3|pf@r6|nn@l|nn@r6|ff@r6)\])(\[(?:i|au)\])(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d11]$2$3"; // R12|C6: L2#V2:D11#R3 (3168)
-"(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d12]$2$3"; // R13|C7: L3#V1:D12#R1 (4160)
-"(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d14]$2$3"; // R14|C7: L3#V2:D14#R1 (2080)
+"(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d12]$2$3"; // R13|C7: L3#V1:D12#R1 (4368)
+"(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d14]$2$3"; // R14|C7: L3#V2:D14#R1 (2184)
 "(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:a|o|u)\])?(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d15]$2$3"; // R15|C8: L3#V1:D15#R2 (6760)
 "(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:i|au)\])(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d16]$2$3"; // R16|C8: L3#V2:D16#R2 (3380)
 "(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:a|o|u)\])?(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d17]$2$3"; // R17|C9: L3#V1:D17#R3 (3432)
 "(\[(?:pp|sp|b|f|l|m|n|n=|p|l@l|b@l|m@l|f@l|p@l|sp@l|pp@l|b@r6|sp@r6|f@r6|m@r6|p@r6|n@r6|n=@r6|n@l|l@r6|pp@r6)\])(\[(?:i|au)\])(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d18]$2$3"; // R18|C9: L3#V2:D18#R3 (1716)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|rr6|vr+ar|vr|ar|auf+ar|vr@l)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d19]$2$3"; // R19|C10: L4#V1:D19#R1 (1920)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|rr6|vr+ar|vr|ar|auf+ar|vr@l)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|fort|schm|schw|mpf|sch|ll|mm|ss|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d20]$2$3"; // R20|C10: L4#V2:D20#R1 (960)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|rr6|vr+ar|vr|ar|auf+ar|vr@l)\])(\[(?:a|o|u)\])?(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d19]$2$3"; // R19|C10: L4#V1:D19#R1 (2016)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|rr6|vr+ar|vr|ar|auf+ar|vr@l)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hab|da|sind|haft|schaft|auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)\])" => "$1[#d20]$2$3"; // R20|C10: L4#V2:D20#R1 (1008)
 "(\[(?:vor|vorar|rück|ur|zurück|inter|rr6|vr+ar|vr|ar|auf+ar|vr@l)\])(\[(?:a|o|u)\])?(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d21]$2$3"; // R21|C11: L4#V1:D21#R2 (3120)
 "(\[(?:vor|vorar|rück|ur|zurück|inter|rr6|vr+ar|vr|ar|auf+ar|vr@l)\])(\[(?:i|au)\])(\[(?:les|vor|vorar|ant|rück|ur|anti|ion|durch|selb|wo|ff|nn|nd|ng|nk|ns|st|vr+ar|b|c|d|f|g|h|j|l|m|n|q|vr|s|x|d@r|c@r|nd@r|g@r|nk@r|ng@r|ns@r|h@r|st@r|l@l|b@l|g@l3|m@l|f@l|ff@l|ng@l3|ns@l3|nk@l3|d@l3|c@l3|nd@l3|st@l3|b@r6|f@r6|m@r6|n@r6|n@l|nn@l|nn@r6|vr@l|l@r6|ff@r6)\])" => "$1[#d22]$2$3"; // R22|C11: L4#V2:D22#R2 (1560)
 "(\[(?:vor|vorar|rück|ur|zurück|inter|rr6|vr+ar|vr|ar|auf+ar|vr@l)\])(\[(?:a|o|u)\])?(\[(?:solch|ck|lt|pp|rr|tt|sp|k|p|t|v|w|t@r|k@r|p@l|v@l|sp@l|w@l|t@l3|tt@l3|pp@l|ck@l3|k@l3|sp@r6|p@r6|v@r6|w@r6|rr@l|ck@l|tt@r|pp@r6|ck@r|lt@r6)\])" => "$1[#d23]$2$3"; // R23|C12: L4#V1:D23#R3 (1584)
@@ -888,6 +933,8 @@
 "\[#d4\]" => "[#4]";
 "\[#d8\]" => "[#4]";
 
+// special
+"(\[bei\])\[#n\](\[les\])" => "$1[#2-]$2"; // adjust for coexistencia
 
 // assign 5 to the rest (standard value)
 "\[#d..?\]" => "[#5]";
