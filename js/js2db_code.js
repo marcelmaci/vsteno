@@ -190,7 +190,7 @@ function getBaseSectionSE1() {
 			// add header
 			output += " /*header*/ ";
 			for (var i=0; i<24; i++) {
-				if (i==23) console.log("offset 23: " + actualFont.tokenList[key].header[i]);
+				if (i==22) console.log("Token: " + key + " offset 22: " + actualFont.tokenList[key].header[i]);
 				switch (actualFont.tokenList[key].header[i]) {
 					case "undefined" : output += "0, "; break;
 					case "" : output += "\"\", "; break;

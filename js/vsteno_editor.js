@@ -663,7 +663,16 @@ function loadTokenAndEditorData(token) {
 	}
 }
 function saveTokenAndEditorData(token) {		// saves actual token to this.tokenList["token"]
-	//console.log("save token and editor data");
+	console.log("freehand_code: saveTokenAndEditorData()");
+	// ok, guess what: when this function is invoked, instead of writing the data, it deletes it ... meaning that token in actualFont.tokenList
+	// is set to null. Don't even know how I got a working data export the last time ...
+	// This editor is a nightmare ... ! 3 months of development and still completely useless (good for a screenshot in the best case ...)
+	// Anyway: I discovered why . , : ; ? ! were drawn wrong (with connection) in spanisch model: because offset 22 in header was deleted
+	// (0 instead of 1). But no idea how to fix that for the moment: nothing works ...
+	// In freehand_code.js: function TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 isn't even able to read correct values from
+	// HTML-elements (it's always the same value - clicking on radio buttons has no effect at all ... !!!)
+	// God ... I hate JS ... :)
+	
 	if ((token != "select") && (token != "empty")) {
 		deleteTokenAndEditorData(token);
 		//console.log("token and editor data deleted");
@@ -1455,8 +1464,8 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	// connect
 	var connectToPreceeding = 0;
 	switch (document.getElementById('connect').value) {
-		case "yes" : connectToPreceeding = 0; break;
-		case "no" : connectToPreceeding = 1; break;
+		case "yes" : connectToPreceeding = 0; console.log("copyTextFieldsToHeaderArraySE1: connectToPreceeding = " + connectToPreceeding + " HTML-element: value(connect): " + document.getElementById('whichExit').value);  break;
+		case "no" : connectToPreceeding = 1; console.log("copyTextFieldsToHeaderArraySE1: connectToPreceeding = " + connectToPreceeding + " HTML-element: value(connect): " + document.getElementById('whichExit').value); break;
 	}
 	var tokenGroup = document.getElementById('group').value;
 		
@@ -4573,7 +4582,7 @@ function getBaseSectionSE1() {
 			// add header
 			output += " /*header*/ ";
 			for (var i=0; i<24; i++) {
-				if (i==23) console.log("offset 23: " + actualFont.tokenList[key].header[i]);
+				if (i==22) console.log("Token: " + key + " offset 22: " + actualFont.tokenList[key].header[i]);
 				switch (actualFont.tokenList[key].header[i]) {
 					case "undefined" : output += "0, "; break;
 					case "" : output += "\"\", "; break;

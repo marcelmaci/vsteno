@@ -658,8 +658,8 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	// connect
 	var connectToPreceeding = 0;
 	switch (document.getElementById('connect').value) {
-		case "yes" : connectToPreceeding = 0; break;
-		case "no" : connectToPreceeding = 1; break;
+		case "yes" : connectToPreceeding = 0; console.log("copyTextFieldsToHeaderArraySE1: connectToPreceeding = " + connectToPreceeding + " HTML-element: value(connect): " + document.getElementById('whichExit').value);  break;
+		case "no" : connectToPreceeding = 1; console.log("copyTextFieldsToHeaderArraySE1: connectToPreceeding = " + connectToPreceeding + " HTML-element: value(connect): " + document.getElementById('whichExit').value); break;
 	}
 	var tokenGroup = document.getElementById('group').value;
 		

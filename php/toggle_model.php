@@ -32,12 +32,12 @@ ImportSession(); // initialize with values specified by model
 echo "<h1>Model</h1>
 <p>Das aktive Model wurde geändert auf: <b><i>$model</i></b><br>($model_name:$model_purgatorium/$model_elysium/$model_olympus).<br>";
 // additionally, give the user the possibility to select another model
-echo $_SESSION['actual_model'] . "----" . $_SESSION['model_standard_or_custom'];
+//echo $_SESSION['actual_model'] . "----" . $_SESSION['model_standard_or_custom'];
 
 $cu_checked = ($_SESSION['model_standard_or_custom'] === "custom") ? "checked" : "";
 $de_checked = ($_SESSION['actual_model'] === "DESSBAS") ? "checked" : "";
 $sp_checked = ($_SESSION['actual_model'] === "SPSSBAS") ? "checked" : "";
- echo "<br>$cu_checked-$de_checked-$sp_checked";
+// echo "<br>$cu_checked-$de_checked-$sp_checked";
  
 echo "<form action=\"../php/select_model.php\" method=\"post\">";
 echo "<input type=\"radio\" name=\"model_name\" value=\"" . GetDBUserModelName() . "\" " . $cu_checked . ">Custom: von User/in editierbares Modell (" . GetDBUserModelName() . ")<br>";
