@@ -1457,8 +1457,9 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	switch (document.getElementById('connect').value) {
 		case "yes" : connectToPreceeding = 0; break;
 		case "no" : connectToPreceeding = 1; break;
-	}	
-	
+	}
+	var tokenGroup = document.getElementById('group').value;
+		
 	
 	// write values to header array
 	this.header[0] = Number(document.getElementById('width_middle').value);
@@ -1489,7 +1490,7 @@ TEEditableToken.prototype.copyTextFieldsToHeaderArraySE1 = function() {
 	this.header[20] = distance;
 	this.header[21] = shadowed;
 	this.header[22] = connectToPreceeding;
-	this.header[23] = ""; // not used
+	this.header[23] = tokenGroup;
 	//console.log("editableToken: ", this);
 	//console.log("new font: ", actualFont);
 
@@ -1597,6 +1598,11 @@ TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
 	var O6 = this.header[6];
 	
 	// prepare HTML
+	// don't know why this part is implemented dynamically here, but the it is included as raw-html format from editor_raw_html_code.html in export_se1data_to_editor.php ?!
+	// so any changes here won't be visible in editor!!!
+	// ok, got it ... : raw-html code is used to show an empty headertable when VPAINT loads, this section then dynamically updates the headertable when a token is loaded
+	// would be better to create headertable dynamically from beginning (with empty values as long as no token is loaded), but leave it like that for the moment
+	// (until it is changed, both files - js and html - must be modified manually!)
 	output += "<td>\n"; 	// open first table cell
 	output += "type: <select id='tokentypepulldown'><option value='normal'" + TTS[0] + ">normal</option><option value='shadowed'" + TTS[1] + ">shadowed</option><option value='virtual'" + TTS[2] + ">virtual</option></select><br>\n";
 	output += "width: before <input id='width_before' type='text' size='4' value='" + WB + "'> token <input id='width_middle' type='text' size='4' value='" + WM + "'> after <input id='width_after' type='text' size='4' value='" + WA + "'><br>\n";
@@ -1608,8 +1614,8 @@ TEEditableToken.prototype.copyHeaderArrayToTextFieldsSE1 = function() {
 	output += "2nd: x <input id='altx' type='text' size='4' value='" + AX + "'> y <input id='alty' type='text' size='4' value='" + AY + "'> <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='relative'" + CS[0] + "> relative <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='absolute'" + CS[1] + "> absolute<br>\n";
 	output += "use: <input type='radio' name='whichexit' id='whichexit' value='normal'" + ES[0] + "> normal <input type='radio' name='whichexit' id='whichexit' value='alternative'" + ES[1] + "> alternative <br>\n";
 	output += "connect: <input type='radio' name='connect' id='connect' value='yes'" + CTS[0] + "> yes <input type='radio' name='connect' id='connect' value='no'" + CTS[1] + "> no <br>\n";
+	output += "group: <input type='text' id='group' size='4' value='" + this.header[23] + "'>\n";
 	output += "offset 6: <input type='text' id='offset6' size='4' value='" + O6 + "'><br>\n";
-
 	output += "</td>\n</tr>\n"; // close table cell and last row
 	
 	//console.log(output);
@@ -4461,7 +4467,7 @@ function getRotatingAxisArrayForSE1(token) {
 		}
 		if (tempKey == "SP") {
 			    if (i==0) console.log("tokenDataList: ", tokenDataList);
-				console.log("Key: ", tempKey, "data-i: ", i, "shiftX: ", shiftX, "rotatingAxisArray: ", rotatingAxisArray, "token: ", token)
+				console.log("Key: ", tempKey, "DATA-i: ", i, "shiftX: ", shiftX, "rotatingAxisArray: ", rotatingAxisArray, "token: ", token)
 		}
 		
 	} 
@@ -4567,6 +4573,7 @@ function getBaseSectionSE1() {
 			// add header
 			output += " /*header*/ ";
 			for (var i=0; i<24; i++) {
+				if (i==23) console.log("offset 23: " + actualFont.tokenList[key].header[i]);
 				switch (actualFont.tokenList[key].header[i]) {
 					case "undefined" : output += "0, "; break;
 					case "" : output += "\"\", "; break;
@@ -4580,6 +4587,8 @@ function getBaseSectionSE1() {
 									if ((actualFont.tokenList[key].tokenData[0] != undefined) && (actualFont.tokenList[key].tokenData[0] != null)) {
 									output += humanReadableEditor(actualFont.tokenList[key].tokenData[0].tensions[2]) + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
 									} else output += "0, ";		// if there's no 1st knot, write 0
+								} else if (i==23) { 
+										output += humanReadableEditor(actualFont.tokenList[key].header[i]) + ", ";	
 								} else output += actualFont.tokenList[key].header[i] + ", "; 
 							
 							break;

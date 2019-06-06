@@ -84,7 +84,7 @@ function getRotatingAxisArrayForSE1(token) {
 		}
 		if (tempKey == "SP") {
 			    if (i==0) console.log("tokenDataList: ", tokenDataList);
-				console.log("Key: ", tempKey, "data-i: ", i, "shiftX: ", shiftX, "rotatingAxisArray: ", rotatingAxisArray, "token: ", token)
+				console.log("Key: ", tempKey, "DATA-i: ", i, "shiftX: ", shiftX, "rotatingAxisArray: ", rotatingAxisArray, "token: ", token)
 		}
 		
 	} 
@@ -190,6 +190,7 @@ function getBaseSectionSE1() {
 			// add header
 			output += " /*header*/ ";
 			for (var i=0; i<24; i++) {
+				if (i==23) console.log("offset 23: " + actualFont.tokenList[key].header[i]);
 				switch (actualFont.tokenList[key].header[i]) {
 					case "undefined" : output += "0, "; break;
 					case "" : output += "\"\", "; break;
@@ -203,6 +204,8 @@ function getBaseSectionSE1() {
 									if ((actualFont.tokenList[key].tokenData[0] != undefined) && (actualFont.tokenList[key].tokenData[0] != null)) {
 									output += humanReadableEditor(actualFont.tokenList[key].tokenData[0].tensions[2]) + ", ";		// incoming tension (offset 2) of first knot has to be written to header (offset 3) in SE1 ...
 									} else output += "0, ";		// if there's no 1st knot, write 0
+								} else if (i==23) { 
+										output += humanReadableEditor(actualFont.tokenList[key].header[i]) + ", ";	
 								} else output += actualFont.tokenList[key].header[i] + ", "; 
 							
 							break;

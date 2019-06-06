@@ -39,6 +39,8 @@
             2nd: x <input id='altx' type='text' size='4' value='0'> y <input id='alty' type='text' size='4' value='0'> <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='relative' checked> relative <input type='radio' name='relative_or_absolute' id='relative_or_absolute' value='absolute'> absolute<br>
             use: <input type='radio' name='whichexit' id='whichexit' value='normal' checked> normal <input type='radio' name='whichexit' id='whichexit' value='alternative'> alternative <br>
             connect: <input type='radio' name='connect' id='connect' value='yes' checked> yes <input type='radio' name='connect' id='connect' value='no'> no <br>
+            group: <input type='text' id='group' size='4' value=''>
+	
             offset 6: <input type='text' id='offset6' size='4' value='0'><br>
         </td>
     </tr>
