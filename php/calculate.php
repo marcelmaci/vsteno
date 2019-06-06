@@ -178,7 +178,7 @@ function CalculateStenoPage() {
             if ($_SESSION['output_format'] === "debug") {
                 if (mb_strlen($global_error_string)>0)
                     echo  "<h2>RUNTIME ERRORS & WARNINGS</h2><p>$global_error_string</p>";
-                else echo "<h2>NO RUNTIME ERRORS.</h2>";
+                else echo "<h2>NO KNOWN* RUNTIME ERRORS.</h2><p style='font-size:10'>* ... but there's a tremendously high chance for unknown unknowns ... ;-)</p>";
             } 
             InsertReturnButton();
         }
