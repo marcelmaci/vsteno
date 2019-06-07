@@ -50,13 +50,41 @@ Farbe <input type="Text" name="introduction_color"  size="10" value="<?php echo 
 </td></tr>
 
 <tr><td>Engine</td></tr>
-<tr><td>Modell: 
-<input type="radio" name="model" value="standard" <?php echo ($_SESSION['model_standard_or_custom'] === "standard") ? "checked" : "";?>> standard
-<input type="radio" name="model" value="custom" <?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "checked" : "";?>> custom
-<?php echo ($_SESSION['model_standard_or_custom'] === "custom") ? "(" . $_SESSION['actual_model'] . ")" : "";?><br>
-<input type="radio" name="std_model_name" value="DESSBAS" <?php echo ($_SESSION['selected_std_model'] === "DESSBAS") ? "checked" : "";?>>Deutsch: Stolze-Schrey Grundschrift (DESSBAS)<br>
-<input type="radio" name="std_model_name" value="SPSSBAS" <?php echo ($_SESSION['selected_std_model'] === "SPSSBAS") ? "checked" : "";?>>Spanisch: Stolze-Schrey Grundschrift (SPSSBAS)
+<tr><td>Modell:<br>
+<?php 
 
+if ($_SESSION['user_logged_in']) {
+    $cu_checked = ($_SESSION['model_standard_or_custom'] === "custom") ? " checked" : ""; 
+    
+    echo "<input type='radio' name='model_to_load' value='" . GetDBUserModelName() . "'$cu_checked>Custom: editierbares Modell (" . GetDBUserModelName(). ")<br>";
+}
+$de_checked = ($_SESSION['actual_model'] === "DESSBAS") ? "checked" : "";
+$sp_checked = ($_SESSION['actual_model'] === "SPSSBAS") ? "checked" : "";
+?>
+<input type="radio" name="model_to_load" value="DESSBAS" <?php echo $de_checked;?>>Deutsch: Stolze-Schrey Grundschrift (DESSBAS)<br>
+<input type="radio" name="model_to_load" value="SPSSBAS" <?php echo $sp_checked;?>>Spanisch: Stolze-Schrey Grundschrift (SPSSBAS)
+
+</td></tr>
+<tr><td>Sprache</td></tr>
+<tr><td>
+Analysieren: 
+<input type="checkbox" name="hyphenate_yesno" value="hyphenate_yes" <?php echo ($_SESSION['hyphenate_yesno']) ? "checked" : "";?>> Silben
+<input type="text" name="language_hyphenator"  size="6" value="<?php echo $_SESSION['language_hyphenator']; ?>">
+<input type="checkbox" name="composed_words_yesno" value="composed_words_yes" <?php echo ($_SESSION['composed_words_yesno']) ? "checked" : "";?>> Wörter
+<input type="text" name="language_hunspell"  size="6" value="<?php echo $_SESSION['language_hunspell']; ?>">
+(<a href="show_analyzer_parameters.php">parameters</a>)<br>
+Markieren:<br>
+<input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 
+Hauptwörter: 
+Farbe <input type="text" name="nouns_color"  size="10" value="<?php echo $_SESSION['color_nouns']; ?>">
+Stil <input type="text" name="nouns_style"  size="10" value="<?php echo $_SESSION['nouns_style']; ?>">
+<br>
+<input type="checkbox" name="colored_beginnings_yesno" value="colored_beginnings_yes" <?php echo ($_SESSION['color_beginningsyesno']) ? "checked" : "";?>> 
+Satzanfänge: 
+Farbe <input type="text" name="beginnings_color"  size="10" value="<?php echo $_SESSION['color_beginnings']; ?>">
+Stil <input type="text" name="beginnings_style" size="10" value="<?php echo $_SESSION['beginnings_style']; ?>">
+<br>
+Andere: <input type="text" name="marker_word_list" size="100" value="<?php echo $_SESSION['mark_wordlist']; ?>"><br>
 </td></tr>
 
 <tr><td>Zeichen</td></tr>
@@ -82,27 +110,6 @@ Stil:
 <input type="radio" name="token_line_style" value="custom" <?php echo ($_SESSION['token_style_type'] === "custom") ? "checked" : "";?>> benutzerdefiniert:
 <input type="text" name="token_line_style_custom_value"  size="10" value="<?php echo $_SESSION['token_style_custom_value'];?>">
 <br>
-</td></tr>
-<tr><td>Sprache</td></tr>
-<tr><td>
-Analysieren: 
-<input type="checkbox" name="hyphenate_yesno" value="hyphenate_yes" <?php echo ($_SESSION['hyphenate_yesno']) ? "checked" : "";?>> Silben
-<input type="text" name="language_hyphenator"  size="6" value="<?php echo $_SESSION['language_hyphenator']; ?>">
-<input type="checkbox" name="composed_words_yesno" value="composed_words_yes" <?php echo ($_SESSION['composed_words_yesno']) ? "checked" : "";?>> Wörter
-<input type="text" name="language_hunspell"  size="6" value="<?php echo $_SESSION['language_hunspell']; ?>">
-(<a href="show_analyzer_parameters.php">parameters</a>)<br>
-Markieren:<br>
-<input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 
-Hauptwörter: 
-Farbe <input type="text" name="nouns_color"  size="10" value="<?php echo $_SESSION['color_nouns']; ?>">
-Stil <input type="text" name="nouns_style"  size="10" value="<?php echo $_SESSION['nouns_style']; ?>">
-<br>
-<input type="checkbox" name="colored_beginnings_yesno" value="colored_beginnings_yes" <?php echo ($_SESSION['color_beginningsyesno']) ? "checked" : "";?>> 
-Satzanfänge: 
-Farbe <input type="text" name="beginnings_color"  size="10" value="<?php echo $_SESSION['color_beginnings']; ?>">
-Stil <input type="text" name="beginnings_style" size="10" value="<?php echo $_SESSION['beginnings_style']; ?>">
-<br>
-Andere: <input type="text" name="marker_word_list" size="100" value="<?php echo $_SESSION['mark_wordlist']; ?>"><br>
 </td></tr>
 <tr><td>Hilfslinien</td></tr>
 <tr><td>

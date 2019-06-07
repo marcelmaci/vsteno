@@ -28,6 +28,7 @@ if ($_POST['model_name'] === GetDBUserModelName()) {
 } else {
     $_SESSION['model_standard_or_custom'] = "standard";
     $_SESSION['selected_std_model'] = $_POST['model_name'];
+    $_SESSION['actual_model'] = $_POST['model_name']; // needed for input form
 }
 $model_name = $_SESSION['selected_std_model'];
 $model_purgatorium = GetDBName( "purgatorium" );

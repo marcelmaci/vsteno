@@ -601,7 +601,7 @@ function ImportModelFromText($text) {
     // get subsections
     // header
     $analyzer_subsection = GetSubSection($header_section, "analyzer");
-    //$session_subsection = GetSubSection($header_section, "session");
+    $session_subsection = GetSubSection($header_section, "session");
     //echo "analyzer: $analyzer_subsection<br>"; 
     //echo "session: $session_subsection<br>";
     // font
@@ -626,7 +626,6 @@ function ImportModelFromText($text) {
     if ($rules_pointer_start_stage3 === null) $rules_pointer_start_stage3 = 0; // this is wrong: should point to "after global" (= stage1) ... but which variable is that?!?
     if ($rules_pointer_start_stage2 === null) $rules_pointer_start_stage2 = 0; // idem
     if ($rules_pointer_start_stage4 === null) $rules_pointer_start_stage4 = count($rules[$actual_model]); // set stage4 to end of rules (== stage4 inexistant!)
-    
     
     return $output;
 }

@@ -27,17 +27,27 @@ $value_glue = 2;
 
 // phpSyllable: include and prepare
 require_once("../phpSyllable-master" . '/classes/autoloader.php');
-$phpSyllable_dictionary = $_SESSION['language_hyphenator']; // "de";                             //"de_CH";
-$syllable = new Syllable($phpSyllable_dictionary);          // 'en-us'
-$syllable->setHyphen(new Syllable_Hyphen_Dash());           // get all syllables, with a dash
 
-// hunspell: dictionary
-$hunspell_dictionary = $_SESSION['language_hunspell']; //"de_CH"; //"de_DE"; //"de_CH";
+
+// initialize hunspell and phpSy
+
+global $syllable;
+global $hunspell_dictionary;
+
+function InitializeHunspellAndPHPSyllable() {
+    global $syllable;
+    global $hunspell_dictionary; 
+    //echo "initialize hunspell etc.";
+    $phpSyllable_dictionary = $_SESSION['language_hyphenator']; // "de";                             //"de_CH";
+    $syllable = new Syllable($phpSyllable_dictionary);          // 'en-us'
+    $syllable->setHyphen(new Syllable_Hyphen_Dash());           // get all syllables, with a dash
+    // hunspell: dictionary
+    $hunspell_dictionary = $_SESSION['language_hunspell']; //"de_CH"; //"de_DE"; //"de_CH";
+}
+if (!isset($_SESSION['fortune_cookie'])) InitializeHunspellAndPHPSyllable(); // use this for first initialization (cookie) and make sure phpSyllable doesn't get initialized 2x ...
+
 
 // functions
-
-
-
 
 // ***************************************************** unused code **********************************
 // pspell: dictionary

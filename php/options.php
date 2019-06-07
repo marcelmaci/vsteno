@@ -169,7 +169,7 @@ function CheckAndSetSessionVariable( $variable, $value ) {
                     if (mb_strpos($whitelist_variables, " $variable ") === false) {
                         $global_error_string .= "ERROR: you are not allowed to set variable '$variable' to '$value'!<br>";
                     } else {
-                        //echo "Session($variable) = $value<br>";
+                        //echo "session[$variable] = $value<br>";
                         switch ($value) {
                             case "true" : $_SESSION[$variable] = true; break;
                             case "false" : $_SESSION[$variable] = false; break;

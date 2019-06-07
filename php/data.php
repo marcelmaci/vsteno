@@ -76,25 +76,32 @@ global $rules, $functions_table;
 global $insertion_key;
 global $global_error_string;
 $global_error_string = "";
-//require_once "old_font.php";
 
 // main
 
-/*
-require_once "vsteno_fullpage_template_top.php";
-*/
-/*
-switch ($_SESSION['model_standard_or_custom']) {
-        case "standard" : $model_name = $_SESSION['actual_model']; break; 
-        case "custom" : $model_name = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); break;
-}
-*/
+// ok, when I implemented data.php (which evolved from php-file with data as variables included to
+// and include that loaded the same variables from db via a parser) I was too lazy to implement a proper
+// "import_from_database"-function ... As a result, data.php relied on session-variables to load the actual
+// model. This worked fine as long as only one model was used (and the model never change). Now, with two
+// models (german and spanish), this "autoloading via include" makes it impossible to switch between the
+// models since whenever you include data.php the models gets loaded before you can change it. Which means:
+// you cannot start the calculation (via input form) and then change the model according to what you selected
+// in the input form. The fastest and easiest (= with as little work as possible) way around that for the moment
+// is to "intercept" the post-variable in data.php in order to change the session-variables beforehand
+// (pretending the model has already been selected before the form is evaluated).
+// Of course: This is not good programming style at all ... (looks more like BASIC with spaghetti-code-gotos here
+// and there ... :)
 
+// adjust session variable so that correct model gets loaded
+// session-variable is also used to set correct rules pointers for regex-parser-functions!!!
+$model_to_load = (isset($_POST['model_to_load'])) ? $_POST['model_to_load'] : $_SESSION['actual_model'];
+$_SESSION['actual_model'] = $model_to_load;
+$_SESSION['model_standard_or_custom'] = ($model_to_load === GetDBUserModelName()) ? "custom" : "standard";   // is used via calculate.php
 
 // DO NOT ECHO DEBUG INFORMATION HERE => THATS BEFORE HTML HEAD!!!!!!!!!!
-//echo "<p>Model to load: " . $_SESSION['actual_model'] . "</p>";
+//echo "<p>Model to load: " . $model_to_load . "</p>";
 // old version!!!!!
- $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+ $text_to_parse = LoadModelFromDatabase($model_to_load);
 //$text_to_parse = LoadModelFromDatabase($model_name);
 //echo "<p>$text_to_parse</p>";
 

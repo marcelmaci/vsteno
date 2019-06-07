@@ -36,6 +36,7 @@ require_once "constants.php";
 require_once "data.php";
 require_once "parser.php";
 require_once "engine.php";
+require_once "linguistics.php";
 //require_once "words.php";     // revert back to procedural-only version
 
 
@@ -110,11 +111,17 @@ function CalculateStenoPage() {
     //echo $_POST['model'];
     
     CopyFormToSessionVariables();
+    /*
+    echo "language_hyphenator: " . $_SESSION['language_hyphenator'] . "<br>";
+    echo "language_hunspell: " . $_SESSION['language_hunspell'] . "<br>";
+    */
+    InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
+    
     // normally, CopyFormToSessionVariables() should copy new model to session variables
     // but for an unknown reason that doesn't happen ....
     // correct it here as a temporary fix
     // BUG!!!
-    $_SESSION['model_standard_or_custom'] = $_POST['model'];
+    //$_SESSION['model_standard_or_custom'] = $_POST['model'];
     
  //echo "AFTER:" . $_SESSION['model_standard_or_custom'];
 
@@ -169,6 +176,8 @@ function CalculateStenoPage() {
             InsertTitle();
             InsertIntroduction();
             if ($_SESSION['output_format'] === "debug") {
+                //echo "model_standard_or_custom: " . $_SESSION['model_standard_or_custom'] . "<br>";
+
                 $model_name = ($_SESSION['model_standard_or_custom'] === "standard") ? $_SESSION['selected_std_model'] : GetDBUserModelName();
                 $hunspell_yesno = ($_SESSION['composed_words_yesno']) ? "yes" : "no";
                 $hyphens_yesno = ($_SESSION['hyphenate_yesno']) ? "yes" : "no";
