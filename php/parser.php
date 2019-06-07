@@ -823,7 +823,7 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                     }
                     if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
                     */
-                    $global_debug_string .= "LNG (raw): $temp_word<br>"; // => $test $parameters<br>"; 
+                    $global_debug_string .= "PRE: \"$pretokens\" - POST: \"$posttokens\"<br>LNG (raw): $temp_word<br>"; // => $test $parameters<br>"; 
                     // now "post"process LING result applying analyzer rules from header (still stage1)
                     $lin_form = PostProcessDataFromLinguisticalAnalyzer($test);
                     // set lin_form
@@ -833,9 +833,11 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                     // write debug info of postprocessing: LING (post)
                     $global_debug_string .= "LNG (post): $lin_form<br>";
 } else {
-        $lin_form = $text;
+        //$lin_form = $text;
+        $lin_form = $word;
+        
         //echo "lin: $lin_form";
-        $global_debug_string .= "LNG: $lin_form (linguistical analysis disabled)<br>";
+        $global_debug_string .= "PRE: \"$pretokens\" - POST: \"$posttokens\"<br>LNG: $lin_form (linguistical analysis disabled)<br>";
 }
                     
                     //echo "test: $test<br>";

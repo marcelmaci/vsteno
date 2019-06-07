@@ -1,5 +1,5 @@
 #BeginSection(header)
-	/* standard
+	/* 
 	DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)
     	(c) 2018-2109  Marcel Maci
 	
@@ -58,22 +58,19 @@
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
-		// enable linguistical analyzer
-		"hyphenate_yesno" := "yes";
-		"composed_words_yesno" := "yes";
-		// set language
-		"language_hunspell" := "de_CH";
-		"language_hyphenator" := "de";
-		// set morphological data
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret";
 		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
+		
+		// additional syllables
 		"ebe(-?)n" => "e-be$1n";  // bug in phpSyllable: eben is not hyphenated!?
 		"oder" => "o-der"; 	// same ...
 		"^([Vv]i)a$" => "$1-a";
+		"([Hh]y-gi)(e-n)" => "$1-$2";
+		"([Ii])-?(ta-)(li)(e-n)" => "$1-$2-$3-$4";
 
 		// probably, phpSyllable doesn't separate VCV at the beginning
 		// because it doesn't want to separate just 1 vowel (would be ugly in a text)
@@ -90,13 +87,41 @@
 		"\|ge$" => "-ge"; 	// correct ge- prefix (recognized as word)
 
 		"r\|t\'s" => "rt's";	// pressiert's (cleaning up some chaos produced by linguistical analyzer ...)
+		"\|t'" => "t'"; // geh|t's
 		"([Ww]eh)\|r" => "$1-r";
 
 		// ending es
 		"\|es$" => "-es";
 
-		// gehe (erroneously recognized as ge+he)
-		"([Gg]e)\+(he)" => "$1-$2";
+		////////////////////////// new approach for affixes ge-, be-, -er- //////////////////////////////
+		///////////// mark all er as affix and filter out "false positive" at the end //////////////////
+		// be- and ge- must be done before -er (because of ber- ger-)
+		// be-
+		"^([Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
+		"(\|[Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
+
+		// ge-
+		"^([Gg]e)-" => "$1+";
+		"(\|[Gg]e)-" => "$1+";
+
+		//ein-ge (eingebrockt)
+		"^([Ee]in)-(ge)-" => "$1+$2+";
+
+		// -er-
+		"([Ee]r)-" => "$1+";
+		"([Ee])-r" => "$1r+"; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => "$1-er$2"; // Schil-der+ung: reorganize syllabical structure ...
+		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
+		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
+		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
+		"er(?!\+)" => "er+"; // generalization of preceeding rule (because also valid for other cases: Pflegern
+
+		////////////////////////////////////// end new approach ///////////////////////////////////////
+
+		// early filter
+		"([Ss]er)\+(vier)\+?" => "$1-$2-";
+		
+		////////////////////////////////// end early filter //////////////////////////////////////////
 
 		// don't separate prepositions or shortings at beginning
 		"([Ff]ür)\|" => "$1+";
@@ -105,21 +130,63 @@
 		// diejenige, derjenige, desjenigen etc.
 		"([Dd](?:ie|er|es|as|em|en))-?(je-?ni-?ge)" => "$1+$2";
 
+		// don't separate -zer, -der, -er at end of words
+		"(.?)\|([dz]?er)\+?$" => "$1-$2";
+
 		// correct wrong separations
 		"([Dd])e-?nen" => "$1en+en";
-		"([Dd])e(-?|\|)re([rn])" => "$1er+e$3";
+		"([Dd])e(-?|\|)r\+?e([rn])" => "$1er+e$3";
 		"([Mm]i-?ne)\|(ral)" => "$1-$2";
-		"([Dd]er)\|(ben)" => "$1-$2";
+		"([Dd]er\+?)\|(ben)" => "$1-$2";
 		"([Ss]au)\|(be)\+(r)" => "$1-$2-$3";
 		"([Mm]an)\|(gel)" => "$1-$2";
+		"([Hh]eu)\|(e-?t)" => "$1-$2";
+		"([Ff]ol-gen)\|(der)" => "$1-$2";
+		"([Ss]pie)\|(gel)" => "$1-$2";
+		"([Hh]a)-?t's" => "$1t's"; 
+		"([Aa]-?m-?e-?r\+?i-?ka)\|(ni-?schen)" => "$1-$2"; // computers are stupid ... :)
+		"([Jj]e)\|(doch)" => "$1-$2";
+		"([Vv]or\+ei)\|(li-g)" => "$1-$2"; // voreiligen
+		"([Ee])i\|ge\+ne" => "$1i-ge-ne";   // eigene
+		"([Ss]prit)\|(ze-?r)" => "$1-$2";
+		"([Gg]e)-?(le)\|(ge)\+" => "$1-$2-$3"; // abgelegene
+		"([Aa]m)\|(her)\+(d)" => "$1-$2$3"; // Swiss name
+		"([Ee]-he)\|(ma)" => "$1-$2"; // ehemalig
+		"([Mm]ai)\|(l(?:a|ä)n-?d)" => "$1-$2";
+		"(t)\|(nis-?se)" => "$1-$2";
+		"(sich)\|(ti-?ge-?r)" => "$1-$2"; // durchsichtiger
+		"[Ss]tau\|den" => "Stau-den"; // Staudenkultur (|den not recognized in interior of word ...)
+		"([Tt]e-le)\|(phon)" => "$1-$2"; // avoid separation of old orthography
+		"\|(haf-?t)" => "-$1";
+		"(ungs)-(haf-?t)" => "$1|$2"; // recorrection: Untersuchungshaft
+		"([Ee]i)\|(gen)" => "$1-$2";
+
+		// "resyllabation"
+		"([Zz]wei)-to" => "$1t|o";  // zweitoberst
+		"([Zz]wei)t\|(ens)" => "$1-t$2"; // recorrection
+		"([Jj]u-li)n-" => "$1|n"; // Julinacht
+		"([Vv]i-si-ten)k-" => "$1|k";
+
+		// resyllabation -ie
+		"([Kk]o-mö-di)e" => "$1-e";
 
 		// additional separations
 		"([Nn]acht)-?(tisch)" => "$1|$2";
 		"([Ww]ei-?ter)\+" => "$1|";
 		"([Ss]er-?vier)-" => "$1|$2";	// Serviertochter
+		"-lied" => "|lied"; 	// Beresinalied
+		"Erb-l" => "Erb|l";	// Erb-lassers (most probable decision for noun vs Er-blasser)
+		"erb-l" => "er+bl";	// er-blassen (most probable decision for Verb)
+		"([Bb]reit)-" => "$1|"; // breitbeinig, breitschultrig etc.
+		"([Kk]o-kos)-" => "$1|";
+		"([Ss]chank)-" => "$1|";
+		"([Kk]lein)-" => "$1|"; // kleinkalibrig, Kleinkunst etc.
+		"ti-ons-" => "ti-ons|"; // Deflagrationsspuren, Reaktionszeit etc.
+		"([Bb]ar-chent)-" => "$1|"; // Barchentteppich, -unterrock etc.
 
 		// aus-
 		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
+		"([Aa]us)-([kr])" => "$1+$2";
 
 		// in general: don't separate -[brt]en (..)
 		"\|ren" => "-ren";
@@ -134,7 +201,7 @@
 		"-(kut-?ten?)" => "|$1";  // end (works also for "Kutter" which is correct)
 
 		// recognize more auf-
-		"([Aa]uf)-(kl|n)" => "$1+$2";
+		"([Aa]uf)-(kl|n|o|a)" => "$1+$2";
 
 		// don't separate -tümlich
 		"\|(tüm[-#]?li-?ch)" => "-$1";
@@ -164,6 +231,7 @@
 		"([Hh])e-?r-?aus-?" => "$1er+aus+";
 		"da-ma(-?)l" => "da+ma$1l";
 		"un(-?|\||\+)te(-?)r" => "un-te$2r"; 
+		"([Aa]u-?s-?ser)\+(\|dem)" => "$1$2";	// special: recorrect +| before following rule 
 		"(\+|\|)([bd])e([nrsm]?)$" => "-$2e$3";
 		"([WwNn])ie\|de(-?)r\+" => "$1ie-de$2r|";
 		"([WwNn])ie\|de(-?)r" => "$1ie-de$2r";
@@ -262,8 +330,16 @@
 
 		// prefix in-
 		"^([Ii])n-(?!ter)" => "$1n+";
+		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
+		"\|([Ii]n)-(s[tp])" => "|$1+$2"; // idem in separated words
 		"^([Ii]n)\+(ne)" => "$1-$2";
 
+		// un-
+		"^([Uu]n)-([bcdfghjklmnprstvwxz])" => "$1+$2";
+		"([Uu]n)\+(te[rn])" => "$1-$2"; // recorrect unter, unten
+		// un-ent/ver-
+		"^([Uu]n)-?(ent|ver)(-|\+)?" => "$1+$2+";
+	
 		// trying to recognize more ge-/be- prefixes: rule: ends with -en(..) or -t(..)
 		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
 		"^([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
@@ -302,6 +378,11 @@
 		"^([Aa]uf)-(zu)-" => "$1+$2+";
 		"([Zz]u)-?(k(?:u|ünf))" => "$1+$2";
 
+		// additional separations
+		"([Ww]eih)-?(nach-?t)" => "$1|$2";
+		"Pri-?vat\|?de-?tek-?tiv" => "Pri-vat[#4]\\de-tek-tiv"; // to high (produces lines all over the place ... :) One of the ugliest words in steno I think ... :)
+		"([Nn]as)-?(t(?:u|ü)-?ch)" => "$1|$2";	// Helvetism
+
 		// die- ist most of the times not a separate word (a part from diejenigen, dieselben)
 		"([Dd])ie\|(?!(je|se))" => "$1ie-";
 
@@ -328,6 +409,7 @@
 
 		// un-
 		"([Uu]n)-(z)(?!e)" => "$1+$2";
+		"([Uu]n)-(b)" => "$1+$2";
 		"([Uu]n)-?(nach-?)" => "$1+$2";
 		"^([Uu]n)-(er|ver|ge|be|an)-" => "$1+$2+";
 
@@ -356,6 +438,9 @@
 		// recorrections
 		"([Gg]e[+-]?)(be)[+-](t)" => "$1$2-$3";
 		"([Gg]e)-(bet)" => "$1+$2";
+		"([Ww]o)#(chen)" => "$1-$2";
+		"([Ff]rei)\+(tag)" => "$1-$2";
+		"([Ss]ams)\|(tag)" => "$1-$2";
 		
 		"([Mm]u-?se)\|(um)" => "$1-$2";
 		"([Ss]ei)\|(den)[+-]?(en)" => "$1-$2-$3";
@@ -372,6 +457,7 @@
 		"([Ee]i)\|(ni)" => "$1-$2";
 		"([Ww]en)\|(de)" => "$1-$2";
 		"([Uu]n)\+(se-?r)" => "$1-$2";
+		"([Mm]uss)\|(test)" => "$1-$2";
 
 		// final ge-
 		"([Gg]e)-?(fun-?de-?n)" => "$1+$2";
@@ -379,7 +465,103 @@
 		"([Aa]uf(?:-|\+)?(?:ge\+)?ge)\+(be)" => "$1-$2"; 
 		"([Gg]e)\+(ben)" => "$1-$2";
 
+		/////////////////////////////////////// new approach prefixes ///////////////////////
+		// filter out "false positives" for affixes
+		
+		// prefix be+
+		"([Bb]e)\+(te(?:n|st|t(?:en?)?|nd(?:en?)?))" => "$1-$2";
+		"([Bb]e)\+(b(?:en|e?st|e?t(?:en?)?|nd(?:en?)?))" => "$1-$2";
+		"([Bb]e)\+(sens?)" => "$1-$2";
+		"([Bb]e)\+(ne)" => "$1-$2";
+		"([Bb]e)\+(x)" => "$1$2";
+		
 
+		// prefix ge+
+		"([Gg]e)\+(he)" => "$1-$2";
+		"([Gg]e)\+(gen)" => "$1-$2";
+		"([Gg]e)\+(be(?:-|\+)?n(?:d?(?:st)?e[mrsn]?)?)" => "$1-$2";
+		"([Gg]e)\+(cko)" => "$1-$2";
+		"([Gg]e)\+(le(?:-|\+)?n(?:d?e[mrsn]?)?)" => "$1-$2"; // eingelen (if it exists ... ;-)
+		"([Gg]e)\+(l-?t(?:e[mrsn]?)?)" => "$1-$2";
+		"([Gg]e)\+(ne?[sn]?)" => "$1-$2";
+		"([Gg]e)-?(no)" => "$1+$2";	// re-correction of re-correction
+		"([Gg]e)-?(hei)" => "$1+$2"; // rere
+		"([Gg]e)-(nü)" => "$1+$2"; // rere
+		"([Gg]e)-(na)" => "$1+$2"; // rere
+		"([Aa]n\+ge)-(nehm)" => "$1+$2"; // rerere
+		
+		// affix er+ 
+		"^([Uu]n\+?)?([GgBbFf]er)\+n" => "$1$2-n";
+		"^([Uu]n\+?)?([Ss]ter)\+n" => "$1$2-n";
+
+		"^([Ee])r\+(s-?t)(?!au)" => "$1r$2";
+		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
+		"^([Bb]er)\+k" => "$1-k";		// Berkeley
+		
+		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
+		"([Ee]r)\+(ker)" => "$1-$2";
+		"([Ee]r)\+(bt)" => "$1$2";
+		"r\+$" => "r";
+		"r\+\|" => "r|";
+		"([TtGg]er)\+m" => "$1-m";
+		"([Zz]er)\+(be-?r\+)" => "$1-$2";	// Zerberus
+		"([Zz]e-?r)\+(e-?mo-?n)" => "$1-$2";	// Zeremonie
+		"([Zz]er)\+(ti-?fi)" => "$1-$2";	// Zertifikat, zertifizieren
+		"([Kk]on-?zer)\+(t)" => "$1$2";		// Konzert (syllables are not handled very cleanly ...)
+		"(Zer)\+(matt)" => "$1-$2";
+		"(ie-?r)\+" => "$1";
+		"(er)\+(i-?e)" => "$1$2";
+		"([Bb]er)\+(e-?si-?na)" => "$1$2";
+		"([Mm]er)\+k" => "$1k";
+		"([Ee]r)\+(ns)" => "$1$2"; 	// ernst
+		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
+		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
+		
+		"(?<![Vv])([Ee]r)\+(le)" => "$1$2"; 			// Erle: first transform all
+		"([Ee]r)(le-)(?=[dsbghmprtwz])" => "$1+$2"; 	// reseparate: erlesen, erledigen etc.
+		"([Ee]r)(ler\+)" => "$1+$2"; 	// reseparate: erlernen, erlernt etc.
+		"([Ee]r)(le-?b)" => "$1+$2"; 	// reseparate: erleben, erlebte etc.
+		
+		"([Ll]er)\+n" => "$1n";
+		"([Ww]er)\+?(-?de)" => "$1$2";
+		"([Hh]er)\+r" => "$1r";
+		"([Ee]r)\+(i-?ka)(?!-?ni-?sch)" => "$1$2"; // Erika, Amerika; amerikanisch
+		"([Ff]er)\+t" => "$1t";
+		"([Ww]er)\+d" => "$1d";
+		"([Mm]er)\+c" => "$1c";
+		"([Ee]r)\+b(e|in)" => "$1-b$2";
+		"([Ee]r)\+(b\|)" => "$1$2"; // erbberechtigt
+		"([Vv]er)\+(s-)" => "$1$2";
+		"([Vv]er)\+(s$)" => "$1$2";
+		"([Vv]er)\+(si-?on)" => "$1-$2";
+		"([Vv]er)\+(s)(chen)" => "$1$2-$3";
+		"([Ff]er)\+(se?n?)" => "$1$2";
+		"([Ss]chmer)\+z" => "$1z";
+		"([Hh]er)\+z" => "$1z";
+		"([Hh]er)\+nach" => "$1-nach";
+		"([Hh]er)\+aus" => "$1|aus";
+		"([Ee]nt)-?(f-?er)\+" => "$1+$2";
+		"(Ger)\+(zen)" => "$1-$2"; // Gerzenstein (Glauser, der Chinese)
+		"([Mm])a-?t-e-?ri-?e" => "Ma-te-ri-e"; // recorrection/resyllabation
+		"er\+v" => "er-v"; // audacious rule ... Nerven, Verve
+		"([Bb]er)\+(lin)" => "$1-$2";
+		"([Ss]cher)\+?-?(be)" => "$1-$2"; // +- because of recorrected |ben ... (et l'horreur continue ... :)
+		"([Vv]or\+der)-" => "$1+"; 
+		"([Ll]a-?t-?er)\+(n)" => "$1$2";
+		"([Ww]er)\+k" => "$1k";
+		"([Zz]er)\+r(e|t(?:e|en|est|et)?)" => "$1r$2"; 
+		"([Ww]er)\+(t)" => "$1$2";
+		"([Ww]er)(te)" => "$1-$2"; // resyllabation
+		"([Bb]er)\+g" => "$1g";
+		"([Bb]er)(ge)" => "$1-$2"; // resyllabation
+		"([Ee]r)(leuch)" => "$1+$2"; // erleuchtet
+		"([Ss]per)\+r" => "$1r";
+
+		// er+ and in+
+		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
+		"([Ii]n)-?di-?e([rn])" => "$1-di-e$2";
+ 		"([Ii])n-?di-?erin" => "$1-di-e-rin";
+ 
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -762,6 +944,7 @@
 		"N=" => { "NICHT2", 0, 5, 0, 0.5 }
 	#EndSubSection(shifter)
 #EndSection(font)
+
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
@@ -1665,7 +1848,7 @@
 		"^([NS])" => "[0N-][$1]";
 		"^\[([NS])\]" => "[0N-][$1]";
 		"(?<!&)([AEIOU]){HEIT}" => "[&$1]{HEIT}";
-		"^([{\[]&?EIT)" => "[0N-]$1"
+		"^([{\[]&?EIT)" => "[0N-]$1";
 		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
 		"\\Ö" => "[0N-][Ö]"; 
 
@@ -2500,3 +2683,4 @@
 
 	#EndSubSection(spacer,=:prt)
 #EndSection(rules)
+

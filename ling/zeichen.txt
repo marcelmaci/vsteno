@@ -378,3 +378,4 @@
 		"N=" => { "NICHT2", 0, 5, 0, 0.5 }
 	#EndSubSection(shifter)
 #EndSection(font)
+
