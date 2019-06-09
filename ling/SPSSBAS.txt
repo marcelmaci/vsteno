@@ -1,8 +1,52 @@
 #BeginSection(header)
-	// SPSSBAS - VSTENO shorthand model for spanisch 
-	// System: Stolze/Schrey (adapted from german mother system)
-	// Based on: Arthur Meier, Lehrbuch der Spanischen Stenografie, Verlag und Buchhandlung des Allgemeinen
-	// Schweizerischen Stenografenvereins, Druckerei Weitzikon AG, 8620 Wetzikon ZH, 1. Auflage 1981 (32 Seiten)
+	//
+	// SPSSBAS - VSTENO shorthand model for spanisch
+	// Set of rules interpreted and processed by VSTENO (www.vsteno.ch) 
+	// (c) 2019 - Marcel Maci (m.maci@gmx.ch)
+ 	//
+	// This program* is free software: you can redistribute it and/or modify it under	
+	// the terms of the GNU General Public License as published by the Free Software
+ 	// Foundation, either version 3 of the License, or (at your option) any later
+ 	// version.
+	//
+ 	// This program is distributed in the hope that it will be useful, but WITHOUT
+	// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+	// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+	// details.
+	// 
+ 	// You should have received a copy of the GNU General Public License along with
+	// this program. If not, see <http://www.gnu.org/licenses/>.
+ 	//
+	// * As explained in the documentation of VSTENO, shorthand models are considered
+	// as interpreted code (and thus code licensed under the same terms as the main 
+	// program).
+	//
+	// Model naming:
+	// SP = Spanisch, SS = Stolze-Schrey, BAS = basic system (Grundsystem)
+	//
+	// Based on:
+	//  
+	// [1] Arthur Meier, Lehrbuch der Spanischen Stenografie, Verlag und Buchhandlung
+	// des Allgemeinen Schweizerischen Stenografenvereins, Druckerei Weitzikon AG, 
+	// 8620 Wetzikon ZH, 1. Auflage 1981 (32 Seiten)
+	// 
+	// [2] Allgemeiner Schweizerischer Stenographenverein (Zentralverein Stolze-Schrey), 
+	// Systemurkunden der französischen, italienischen, englischen, spanischen 
+	// Stenographie Stolze-Schrey, aufgestellt durch die Kommission für die Übertragungen 
+	// auf Fremdsprachen, 1953 (Seiten 25 - 31).
+	//
+	// When there are differences between the two systems, the variant in [1] is
+	// preferred:
+	//
+	//  	         |           [1]             |            [2]
+	// -----------------------------------------------------------------------------
+	// cu[áa]n(to)   |           AQ              |            A[NN]
+	// así           |           AS[-I]          |            ASI[&E]
+	// año           |           AN              |            AHN
+	// reía          |           [AR]E[&E]I[&E]  |            [AR]E[&E][AU][&E]
+	// bienvenida    |           baseline        |            half up
+	// este/estas/estos |        [EST][-E] etc.  |            [ST][-E] etc. (!!!)
+	//      
 	#BeginSubSection(session)
 		// disable linguistical analysis
 		"hyphenate_yesno" := "no";
@@ -466,6 +510,7 @@
 		"^d(e|é)$" => "{DE}";
 		"^qu(e|é)$" => "{QUE}";
 		"^t(e|é)$" => "{TE}";
+		"^s(e|é)$" => "{SE}"; // sé y se
 		"^mi$" => "{MI}";
 		"^ni$" => "{NI}";
 		"^si$" => "{SI}";
@@ -528,9 +573,10 @@
 		"(?<!c)[cs](ion)" => "{SION}";
 		"(cc|x)(ion)" => "k{SION}";
 		"(?<!^)mi?ent" => "{MENT}";
+		"^(re)?ex(ped)" => "re{EX}ped";	// (re)expedición
 		"^(in|co)?ex(?!(?:c[rluao]|[pt]))" => "$1{EX}$2";
 		"^(in)?sub" => { "$1{SUB}", "s(ú|u)bit" };
-		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)" }; // not perder and all its forms
+		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl" }; // not perder and all its forms
 		"^(in)?tran?s" => "$1{TRAS}";
 		"^(des)?inte?r" => { "$1{INTER}", "intermin", "intrad" }; // not: interminable, intraducible
 		"^(bien)?estar$" => "$1{ESTAR}";
@@ -543,8 +589,8 @@
 		"^una$" => "{UNA}";
 		"^ant[ei]" => { "{ANTE}", "antena", "ant(í|i)g" };
 		"^circun?" => "{CIRCUN}";
-		"^aco[mn]" => "{ACOM}";
-		"^contr" => "{CONTR}";
+		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
+		"^(en)?contr" => "$1{CONTR}";
 		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "comer", "cometa", "color", "colega" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobre?|sor" => { "{SOBRE}", "sobri" }; // sobrio/as
 		"^gener" => "{GENER}";
@@ -587,6 +633,7 @@
 		"c([ei]|{IT)" => "s$1";
 		"c([aou])" => "k$1";
 		"z" => "s";
+		"([aeiou])h([aeiou])" => "$1[H']$2]"; // preserve h 
 		"(?<!c)h" => "";
 		"ñ" => "n";
 		"g([ei])" => "h$1";
@@ -604,6 +651,7 @@
 		"[sx]cr" => "[SCR]";
 		"[sx]tr" => "[STR]";
 		"[sx]pl" => "[SPL]";
+		"ndr" => "[NDR]";
 		
 		// 2 consonants
 		"[sx][ck]" => "[SC]";
@@ -672,6 +720,7 @@
 		"i-?(o|ó)" => "[IO]";
 		"u-?a" => "[UA]";
 		"i-?(e|é)" => "[IE]"; // no difference if accentuated or not
+		"i-?ais" => "I[LES][AI]s";
 		"i-?a" => "[IA]";
 		"a-?i" => "[AI]";
 	#EndSubSection(bundler,=:std)
@@ -681,13 +730,15 @@
 	#BeginSubSection(transcriptor)
 		// double vowels
 		"(?<!^)a([aeou])" => "A[&A]$1";
-		"e([aeiou])" => "E[&E]$1";
-		"o([aeéiu])" => "[&O]$1";
-		"u([io])" => "A[&U]$1";
+		"e([aeiou]|\[IA\])" => "E[&E]$1";
+		"o([aeéiu]|\[IA\])" => "[&O]$1";
+		"u([io]|\[IA\])" => "A[&U]$1";
 		// other sounds
 		"^({SUB})?r" => "$1[AR]"; // initial r (Anlaut-r)
 		"\[(RT|MP)\]r" => "[$1][AR]";
 		
+		"({ANTE})r" => "$1[AR]";
+
 		"r" => "[VR]";	// vocalic r
 		// remap spanish bundled consonant combinations to german system
 		"\[CT\]" => "[CK]";
@@ -702,7 +753,7 @@
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
 		//"{CONTR}A" => "{CONTR}\A";
-		"{CONTR}[Aa](?!\[&A])" => { "{CONTR}A[&A]", "^{CONTR}[Aa]$" }; // problem is more complex, solve it like that for now
+		"{CONTR}[Aa]([aeiouAEIOU])" => { "{CONTR}A[&A]$1", "^{CONTR}[Aa]$" }; // problem is more complex, solve it like that for now
 		"({BIEN})({ESTAR})" => "$1[LES]$2";
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -734,7 +785,7 @@
 		// vowels at end of the words
 		"e$" => "[-E]";
 		"a$" => "[EN]"; // keep token names as in original (mother) system
-		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
+		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "paso" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
 		"o$" => "[EM]";
 		"i$" => "[-I]";
 		"u$" => "A[&U]";
@@ -767,6 +818,7 @@
 		"\[STR\]" => "[ST@R]";
 		"\[LTR\]" => "[LT@R6]";
 		"\[NTR\]" => "[NN@R6]";
+		"\[NDR\]" => "[ND@R]";
 		"\[CTR\]" => "[CK@R]";
 		"\[NDR\]" => "[ND@R]";
 		"\[TR\]" => "[T@R]";
@@ -805,9 +857,15 @@
 		"\[STL\]" => "[ST@L3]";
 		"\[SL\]" => "s[@L]";
 
+		// hochgestellte Unterlänge
+		"(i|\[AU\]|\[AU\])\[CH\]" => "$1[^CH]";
+
 		// abbreviations
 		"{TAD}es" => "{TAD}S";
 		"e{TAD}" => "[E][LES]{TAD}";
+
+		// preserved h
+		"\[H'\]" => "[LES]";
 
 		// 2nd step rewriting (= rewrite rewritten tokens)
 		"\[VR@L\]\[-E\]" => "[VR@L][#2-][O][-E]";
@@ -821,6 +879,7 @@
 		"{DE}" => "D";
 		"{QUE}" => "K";
 		"{TE}" => "T";
+		"{SE}" => "[S=]";	
 		"{MI}" => "IM";
 		"{NI}" => "I[N=]";
 		"{SI}" => "I[S=]";
@@ -1006,4 +1065,3 @@
 		
 	#EndSubSection(spacer,=:prt)
 #EndSection(rules)
-
