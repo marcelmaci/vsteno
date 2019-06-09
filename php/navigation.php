@@ -26,8 +26,9 @@
                 <ul>
                 <li><A href="mini.php">->Mini</a></li>
                 <li><A href="input.php">->Maxi</a></li>
-                <?php require_once "session.php";
-                      if ($_SESSION['user_logged_in']) {
+                </ul>
+                <?php   require_once "session.php";
+                        if (isset($_SESSION['user_logged_in']) && ($_SESSION['user_logged_in'])) {
                         $username_string = (mb_strlen($_SESSION['user_username']) > 10) ? $username_string = mb_substr( $_SESSION['user_username'], 0, 10) . "…" : $username_string = $_SESSION['user_username'];
                         //$link_toggle_model = ($_SESSION['model_standard_or_custom'] === 'standard') ? "<a href='toggle_model.php'>standard</a>" : "<a href='toggle_model.php'>custom</a>";
                         echo "<p><b>User</b></p><ul><li><a href='show_account_information.php'>" . $username_string . "(" . $_SESSION['user_privilege'] . ")</a></li>";

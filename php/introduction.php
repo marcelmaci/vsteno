@@ -1,4 +1,12 @@
 <?php require "vsteno_template_top.php"; ?>
+<h1>Oooops ...</h1>
+<p><b>[07.06.2019]</b> Tja, Technik ... der letzte Upload lief nicht wie geplant. VSTENO bekam einige neue Funktionen, sowie ein Modell für Spanisch, das bei mir lokal wunderbar läuft 
+(aber auf dem Server nicht).</p>
+<p><b>[Update 08.07.2019]</b> Das Problem scheint gelöst - ich lasse die Warnung noch einen Moment stehen, falls noch weitere Probleme auftauchen. </p>
+<p>Nun sollten also Deutsch und Spanisch laufen. Hier ein kleiner <a href="../docs/donquijote1.pdf">Preview</a> auf das spanische System 
+(Stolze-Schrey).</p>
+<p>Stay hungry - stay foolish ;) mm</p>
+
 <h1>Einführung</h1>
 <p>Herzlich willkommen bei VSTENO!</p>
 <p>Der Name VSTENO ist ein Acronym und bedeutet "Vector Shorthand Tool with Enhanced Notational Options", frei übersetzt also in etwa 
@@ -20,7 +28,7 @@ her, dass die erste Codezeile für VSTENO entstand. Die früheste "archäologisc
 zwei aneinander anschliessende Bezierkurven durch 3 beliebige Punkte. Dieser Algorithmus der so genannten Splines (<i>splines interpolation</i>)
 bildet bis heute das Kernstück von VSTENO.</p>
 <p><b>Zeit somit für eine kurze Bilanz und einige Eckdaten zu VSTENO.</b></p>
-</li>
+
 <ul>
 <li><p><b>Code:</b> VSTENO besteht inzwischen aus rund 10'500 Zeilen PHP-Code und 5000 Zeilen JavaScript (VPAINT). Das Gesamtprogramm enthält
 zusätzlich die Bibliotheken phpSyllable und PAPERS.JS, die im Rahmen freier Lizenzen integriert wurden. Insgesamt wurden in 220 Commits 
@@ -28,27 +36,26 @@ zusätzlich die Bibliotheken phpSyllable und PAPERS.JS, die im Rahmen freier Liz
 
 <li><p><b>Dokumentation</b>: Nebst der Webseite (die etwa 800 Zeilen HTML/CSS-Code enthält) wurden mehrere Dokumentationen erstellt. Im
 Hinblick auf die erste offizielle Version 0.1 wurde eine <a href="../docs/documentation_v01rc.pdf">Gesamtdokumentation</a> begonnen, 
-die mittlerweile 65 Seiten umfasst.</b> 
+die mittlerweile 65 Seiten umfasst.
 </li>
 <li><b>Stolze-Schrey</b>: Die Datei mit den Definitionen für die Grundschrift Stolze-Schrey umfasst inzwischen 2343 Zeilen. Darin enthalten
-sind etwa 1400 Regeln und 360 Zeichen (wovon 200 Grundzeichen, 70 kombinierte Zeichen und 90 verschobene Zeichen).</p></li>
+sind etwa 1400 Regeln und 360 Zeichen (wovon 200 Grundzeichen, 70 kombinierte Zeichen und 90 verschobene Zeichen).</li>
 
 <li><b>Datenbanken</b>: Die Datenbanken (Purgatorium, Olympus, Elysium) von VSTENO sind nach wie vor leer - und das ist gut so! Das Programm
 soll möglichst weit gehend in der Lage sein, Stenogramme anhand von Regeln zu berechnen (die Gruppe an "Ausnahmen" soll also klein gehalten
 werden).
-</b></p></li>
+</li>
 <li><b>Performance</b>: Die zunehmende Komplexität von VSTENO fordert ihren Preis: Die Berechnung einer Stenoseite dauert nun im Schnitt ca.
 20 Sekunden. Der Server schafft im Moment maximal rund 20 Seiten aufs Mal. Die Hauptrechenzeit wird nicht zur Generierung der Stenogramme, sondern
 für die linguistische Analyse verwendet (diese benötigt rund 80% der Rechenzeit*).
-</b></p></li>
+</li>
 <li><b>Zeit</b>: Rein auf der Informatikseite flossen rund 740 Stunden Entwicklungszeit in VSTENO. Hinzuzurechnen sind ferner Handkorrekturen, 
 welche vor allem zwei "gute Seelen" (Mitglieder des Schweizerischen Stenografenverbands) auf Papier vornahmen, um das Schriftbild zu 
 verbessern (diese Arbeit war zum Teil sehr detailreich, professionell und hat wesentlich zur Verbesserung von VSTENO beigetragen).
-</b></p></li>
+</li>
 <li><b>Finanziell</b>: Im Laufe des Jahres gingen zwei Spenden in der Höhe von 220.- CHF ein. Damit können ungefähr die Infrastrukturkosten 
-für das vergangene und das kommende Jahr gedeckt werden (15.- CHF für die Internet-Adresse und ca. 100.- für den Server).</p></li>
+für das vergangene und das kommende Jahr gedeckt werden (15.- CHF für die Internet-Adresse und ca. 100.- für den Server).</li>
 </ul>
-</p>
 </i>
 <p>Ganz herzlich bedanken möchte ich mich am Ende des ersten Jahres beim <a href="http://www.steno.ch">Schweizer Stenografenverband</a>, 
 einerseits beim Verband (der dem Projekt von Anfang an sehr offen gegenüberstand und -steht), andererseits aber auch bei den erwähnten 
@@ -64,7 +71,7 @@ besonders ästhetische Klaue ... ;-)
 <a href="http://www.purelab-tefc.ch/test/input.php">cling on - Klingon</a>-Version vom September 2018 werfen;-).<br>
 <b>**</b> ... es dürfte zwischenzeitlich wohl klar sein, dass ein Projekt wie VSTENO niemals "fertig" (sondern - wie Valserwasser ... im besten Fall - 
 ständig besser) wird ... ;-)</p></i>
-<p><center>* * *</center></p>
+<center>* * *</center>
 <p>=> Hier finden Sie <a href="old_news.php">ältere News-Einträge</a>.
 <br>
 

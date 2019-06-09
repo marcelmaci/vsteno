@@ -1019,12 +1019,13 @@ function NormalText2TokenList( $text ) {
     } else {
         return null;
     }
+
 }
 
 function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $combined_pretags, $combined_posttags, $html_pretags, $html_posttags;
     //echo "Singleword2svg(): text = $text<br>";
-    
+   
     $tokenlist = NormalText2TokenList( $text );
     //echo "Singleword2svg(): text: $text tokenlist = $tokenlist<br>";
     //var_dump($tokenlist); echo "<br>";
@@ -1096,6 +1097,8 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
             } else return $svg;
             break;
     } 
+
+return "bla1";
 }
 
 function GetDebugInformation( $word ) {

@@ -89,8 +89,8 @@ Den Kern des Programmes bildet die so genannte Steno Engine, ein abstraktes
  kein spezifisches Kurzschrift-System gebunden ist.
  Es können also eigene Zeichen und REGEX-Regeln zur Übertragung von Langschrift
  zu Kurzschrift programmiert werden.
- In der Grundversion kommt VSTENO mit Definitionen für das deutsche System
- Stolze-Schrey (Grundschrift).
+ In der Grundversion kommt VSTENO mit Definitionen für das deutsche und
+ spanische System Stolze-Schrey (Grundschrift).
  
 \end_layout
 
@@ -138,8 +138,20 @@ linguistinnen.pdf) vom 18.
 .
  Seitdem ist viel passiert: Datenbankfunktionen, Formelsprache (mit Branching
  und Stages), linguistisches Analyse-Modul (linguistical analyzer), Weiterentwic
-klung der Steno Engine - dies alles sind Neuerungen, die bis heute nirgendwo
- erläutert wurden.
+klung der Steno Engine, spanisches System
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Das spanische System wurde ab 3.
+ Juni 2019 entwickelt und am 8.
+ Juni erstmals auf www.vsteno.ch aufgeschaltet.
+ Es wird fortan parallel zum deutschen System weiterentwickelt.
+\end_layout
+
+\end_inset
+
+ - dies alles sind Neuerungen, die bis heute nirgendwo erläutert wurden.
  
 \end_layout
 
@@ -635,8 +647,11 @@ Layout
 \end_layout
 
 \begin_layout LyX-Code
-gs -q -sPAPERSIZE=a4 -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=pdf_komple
-tt.pdf pdf_teil1.pdf pdf_teil2.pdf
+gs -q -sPAPERSIZE=a4 -dNOPAUSE -dBATCH -sDEVICE=pdfwrite
+\end_layout
+
+\begin_layout LyX-Code
+-sOutputFile=pdf_komplett.pdf pdf_teil1.pdf pdf_teil2.pdf
 \end_layout
 
 \begin_layout Subsubsection*
@@ -652,7 +667,42 @@ Sie werden vielleicht bereits bemerkt haben, dass VSTENO normalen Text als
  fortlaufend betrachtet (es nützt also nichts, wenn Sie im Textfenster zusätzlic
 he Zeilenumbrüche und Leerzeilen einfügt - VSTENO wird diese einfach ignorieren).
  Um einen Zeileneinbruch einzufügen müssen Sie die HTML-Tags <br> (break)
- und <p></p> (paragraph) verwenden:
+ und <p></p> (paragraph) verwenden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Neu bietet VSTENO die Option 
+\begin_inset Quotes eld
+\end_inset
+
+Breaks
+\begin_inset Quotes erd
+\end_inset
+
+ gleich oberhalb des Textfeldes: Ist 
+\begin_inset Quotes eld
+\end_inset
+
+Breaks
+\begin_inset Quotes erd
+\end_inset
+
+ gesetzt (Standard) übernimmt VSTENO die eingegebenen Zeilenumbrüche, FALLS
+ der Text keine HTML-Tags enthält (sonst - oder wenn 
+\begin_inset Quotes eld
+\end_inset
+
+Breaks
+\begin_inset Quotes erd
+\end_inset
+
+ nicht markiert ist - werden Zeilenumbrüche wie beschrieben ignoriert).
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Quotation
@@ -804,7 +854,10 @@ Inline-Option-Tags
 \begin_layout Standard
 Die Layouts können mit so genannten Inline-Option-Tags bis zu einem gewissen
  Grad noch weiter verfeinert werden.
- Info hierzu finden Sie unter 
+ Infos hierzu finden Sie unter:
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset href
 LatexCommand href
 target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
@@ -818,6 +871,58 @@ target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
 Die Unterstützung von Inline-Option-Tags ist in der Version 0.1rc allerdings
  noch rudimentär und funktioniert insbesondere im Layout-Modus nur sehr
  eingeschränkt.
+\end_layout
+
+\begin_layout Subsubsection*
+Sprache
+\end_layout
+
+\begin_layout Standard
+Im Abschnitt 
+\begin_inset Quotes eld
+\end_inset
+
+Engine
+\begin_inset Quotes erd
+\end_inset
+
+ kann die Sprache gewählt werden.
+ Im Moment stehen Deutsch (standard
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die 
+\begin_inset Quotes eld
+\end_inset
+
+Glückskekse
+\begin_inset Quotes erd
+\end_inset
+
+ (fortune cookies) rechts oben werden immer auf Deutsch angezeigt.
+\end_layout
+
+\end_inset
+
+) und Spanisch (als weitere Option
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Das Spanische System funktioniert erst rudimentär, es wird sich in den laufenden
+ Monaten weiter verbessern
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Wenn Sie als Benutzer/in eingeloggt sind, wird hier zusätzlich ihr eigenes
+ (editierbares) Modell angezeigt und diese Auswahl selektiert auch automatisch
+ das aktive Modell, mit dem Sie arbeiten.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -3735,7 +3840,7 @@ don't connect (nicht verbinden)
 \begin_inset Text
 
 \begin_layout Plain Layout
-nicht verwendet
+token group
 \end_layout
 
 \end_inset
@@ -9238,6 +9343,687 @@ You've been warned ...
 \end_layout
 
 \begin_layout Section*
+Zeichenabstände
+\end_layout
+
+\begin_layout Standard
+Eine grosse Herausforderung bei stenografischen Systemen stellt der Abstand
+ zwischen den einzelnen Zeichen dar.
+ Zu Beginn definierte VSTENO pro Zeichen fixe Abstände vor und nach den
+ Zeichen (
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dies sind die Offsets 4 und 5 im Zeichenheader (also offs_additional_x_before
+ und offs_additional_x_after), die als legacy-Variablen für dei SE1 weiterhin
+ unterstützt werden, aber im Grunde obsolet sind.
+\end_layout
+
+\end_inset
+
+).
+ Aber anders als bei normalen Fonts, wo die Abstände zwischen zwei Zeichen
+ immer gleich gross sind
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bei so genannten 
+\begin_inset Quotes eld
+\end_inset
+
+monospaced
+\begin_inset Quotes erd
+\end_inset
+
+ Fonts ist der Abstand unabhängig von der Zeichenabfolge, also fix und gleich
+ zwischen allen Zeichen.
+ Bei proportionalen Fonts variieren zwar die Abstände je nach Zeichen, sind
+ aber - spezifisch für die Zeichenkombination - grundsätzlich ebenfalls
+ fix, es sei denn es kommen weitere typografische Feinheiten wie Kerning
+ und Stegausgleich (z.B.
+ in Verbindung mit Blocksatz) hinzu.
+\end_layout
+
+\end_inset
+
+, können - bzw.
+ müssen - Stenografiezeichen normal, hoch oder tief oder eng und weit verbunden
+ werden.
+ Ausserdem können Stenografiezeichen auch sehr hoch (z.B.
+ tt, pp, ff) oder sehr klein (s, n oder Häkchen) sein.
+ Zu guter Letzt gibt es Zeichen, die rund oder spitz enden oder beginnen,
+ das heisst es gibt Verbindungstypen spitz-spitz, spitz-rund, rund-spitz,
+ rund-rund - und auch die Rundung selber kann je nach Zeichen ganz anders
+ sein (z.B.
+ weite Rundung in Vorsilbe ent-, hingegen enge Rundung in b, n, m).
+\end_layout
+
+\begin_layout Standard
+Kurzum, wenn man all diese Parameter zusammen nimmt, ergibt sich eine ganz
+ stattliche Summe an Möglichkeiten
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Ich ging ursprünglich von etwa 50000 Fällen aus, aber die Sache ist weit
+ schlimmer als angenommen: Das System Stolze-Schrey besteht zwar offiziell
+ nur aus 43 Zeichen, aber viele Zeichen müssen in verschiedenen Ausführungen
+ hinterlegt werden, was die Zahl also erhöht.
+ Ausserdem können sich sehr viele Zeichen mit R und L zu Sekundärzeichen
+ kombinieren (z.B.
+ br, bl, cr, cl, dr, dl etc.), was die Zahl noch einmal signifikant erhöht.
+ Meine Schätzung geht im Moment dahin, dass es rein theoretisch mehrere
+ 100'000 Möglichkeiten gibt! Nicht alle dieser 
+\begin_inset Quotes eld
+\end_inset
+
+theoretischen
+\begin_inset Quotes erd
+\end_inset
+
+ Kombinationen müssen speziell definiert werden.
+ Insbesondere stellen weite Abstände grundsätzlich überhaupt kein Problem
+ dar (da 
+\begin_inset Quotes eld
+\end_inset
+
+ein bisschen weiter
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+ein bisschen weniger weit
+\begin_inset Quotes erd
+\end_inset
+
+ optisch wenig Unterschied macht).
+ Aber wenn nur schon die engen Abstände in den Varianten hoch (Vokale au,
+ i = 2 Möglichkeiten), normal (Vokal a oder kein Vokal = 2 Möglichkeiten)
+ und tief (Vokale o, u = 2 Möglichkeiten) in Verbindung mit all den Sekundärzeic
+hen definiert werden müssen, ergibt sich sich schnell eine 6-stellige Zahl
+ an Verbindungen.
+ Aktuell sind z.B.
+ im spanischen System 128520 Kombinationen durch spezifische Regeln definiert!
+\end_layout
+
+\end_inset
+
+.
+ Daraus folgt auch, dass es eigentlich unmöglich ist, die Abstandsproblematik
+ innerhalb der Zeichendefinitionen zu lösen.
+ Als Alternative bot sich an, das Ganze in den Parser zu transferieren,
+ sprich die Abstände über REGEX-Regeln zu definieren.
+ Aufgrund der schieren Anzahl an Möglichkeiten, ist es jedoch praktisch
+ unmöglich, entsprechende Regeln von Hand zu definieren.
+ Die beste Lösung scheint somit, die Zeichen zu Gruppieren und die Generierung
+ entsprechender Regeln zu automatisieren.
+ Mit dem spanischen Modell wird nun erstmals das folgende Verfahren getestet,
+ das in drei Schritten stattfindet:
+\end_layout
+
+\begin_layout Enumerate
+Als erstes werden die Zeichen in Gruppen eingeteilt.
+\end_layout
+
+\begin_layout Enumerate
+Danach werden Kombinationen und entsprechende Abstände definiert.
+\end_layout
+
+\begin_layout Enumerate
+Schliesslich werden daraus Abstandsregeln generiert (die - wie andere Regeln
+ - in das Modell eingefügt werden können).
+\end_layout
+
+\begin_layout Standard
+Im Folgenden nun die Beschreibung, wie die einzelnen Schritte vorgenommen
+ werden.
+\end_layout
+
+\begin_layout Subsection*
+Gruppierung
+\end_layout
+
+\begin_layout Standard
+Um die Zeichen zu gruppieren wird der Offset 23 im Header genutzt.
+ Hier zwei Beispiele:
+\end_layout
+
+\begin_layout LyX-Code
+"B" => { /*header*/ 5, 0.5, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, "", "", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, 0, 0, 0, 0, 0, "L3:R2", /*data*/ ...
+ }
+\end_layout
+
+\begin_layout LyX-Code
+"D" => { /*header*/ 0, 0.5, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, "", "", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, 0, 0, 0, 0, 0, "L1:R2", /*data*/ ...
+ }
+\end_layout
+
+\begin_layout Standard
+Wichtig ist hier zuerst einmal, dass jedes Zeichen theoretisch mehreren
+ Gruppen zugeordnet werden kann (hierfür werden die einzelnen Gruppen durch
+ Doppelpunkt : voneinander abgetrennt).
+ Allerdings wird empfohlen, jedes Zeichen nur einer oder zwei Gruppen zuzuteilen
+, nächlich einer linken (L) und einer rechten (R) Gruppe.
+ Links und rechts meint hier: Das Zeichen steht links (als erstes Zeichen)
+ oder rechts (als zweites, nachfolgendes Zeichen).
+ Die Zahlen bezeichnen dann die Gruppennummer: Die Zeichen B und D werden
+ zum Beispiel beide der rechten Gruppe R2 zugeordnet, weil beide spitz und
+ einstufig beginnen (in diesem Sinne verhalten sich also B und D als Folgezeiche
+n gleich).
+ Hingegen haben sie verschiedene linke Gruppen: B endet rund auf der Grundlinie
+ (Gruppe L3), D endet zwar auch auf der Grundlinie, ist aber spitz und ausserdem
+ 
+\begin_inset Quotes eld
+\end_inset
+
+schlanker
+\begin_inset Quotes erd
+\end_inset
+
+ als das Zeichen B, deshalb Gruppe L2 (wo auch Zeichen wie t oder tt dazugehören
+, weil sie alle spitz auf der Grundlinie enden).
+\end_layout
+
+\begin_layout Subsection*
+Kombinationen
+\end_layout
+
+\begin_layout Standard
+Danach können Kombinationen definiert werden.
+ Dies funktioniert im Moment nur mit Variablen, die direkt als PHP-Code
+ innerhalb der Datei regex_helper.php definiert werden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Ziel wäre es natürlich, die Definitionen als Variablen in der Section session
+ im Header abzulegen und diese dann automatisch zu importieren, dies ist
+ jedoch erst später geplant, wenn sicher ist, dass das Verfahren funktioniert
+ bzw.
+ das Abstandsproblem zufriedenstellend löst.
+\end_layout
+
+\end_inset
+
+.
+ Die Variablen heissen $vowel_groups, $group_combinations und $rules_list.
+ Wir erläutern sie hier anhand von gekürzten Beispielen:
+\end_layout
+
+\begin_layout LyX-Code
+$vowel_groups = array( 
+\end_layout
+
+\begin_layout LyX-Code
+     "V1" => array( "A", "O", "U" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "V2" => array( "I", "AU" ) 
+\end_layout
+
+\begin_layout LyX-Code
+);
+\end_layout
+
+\begin_layout Standard
+Hier werden zwei Vokalgruppen (V1, V2) definiert, welche zwischen normal
+ und tiefen (a, o, u) und hochgestellten (i, au) Vokalen unterscheiden.
+ Wir definieren hier nur zwei Gruppen, d.h.
+ wir gehen davon aus, dass zum Beispiel die Abstände in den Kombinationen
+ dd, dad, dod, dud gleich gross sind
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wenn wir dies nicht wollen, müssen wir für normale und tiefgestellte Vokale
+ separate Gruppen definieren, was durchaus möglich ist.
+ Es ist aber zu beachten, dass die Zahl der Kombinationen mit jeder zusätzlichen
+ Gruppen exponentiell anwächst (deshalb der Versuch, möglichst wenige Gruppen
+ zu definieren).
+\end_layout
+
+\end_inset
+
+.
+ Speziell definieren müssen wir sicher die Hochstellung, da hier gerade
+ beim Aufeinandertreffen von breiten linken und hohen rechten Zeichen mehr
+ Abstand benötigt wird (ein Beispiel ist hier 
+\begin_inset Quotes eld
+\end_inset
+
+stritt
+\begin_inset Quotes erd
+\end_inset
+
+: das ST in Kombination mit dem R und der Kopfschlaufe kommt dem 
+\begin_inset Quotes eld
+\end_inset
+
+Aufstrich
+\begin_inset Quotes erd
+\end_inset
+
+ Richtung TT in die Quere, weshalb es etwas weiter auseinander geschrieben
+ werden muss als zum Beispiel die Verbindung d-i-d in Didier).
+\end_layout
+
+\begin_layout Standard
+Als zweites werden Zeichenkombinationen definiert:
+\end_layout
+
+\begin_layout LyX-Code
+$group_combinations = array( 
+\end_layout
+
+\begin_layout LyX-Code
+     "C1" => array( "L1", "R1" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "C2" => array( "L1", "R2" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "C3" => array( "L2", "R1" ),
+\end_layout
+
+\begin_layout LyX-Code
+     "C4" => array( "L2", "R2" )
+\end_layout
+
+\begin_layout LyX-Code
+)
+\end_layout
+
+\begin_layout Standard
+C1 steht also für ein linkes Zeichen aus der Gruppe L1 plus ein rechtes
+ Zeichen aus der Gruppe R1, C2 für ein linkes Zeichen aus der Gruppe L1
+ plus ein rechtes Zeichen aus der Gruppe R2 etc.
+\end_layout
+
+\begin_layout Standard
+Schliesslich werden 
+\begin_inset Quotes eld
+\end_inset
+
+Regelprototypen
+\begin_inset Quotes erd
+\end_inset
+
+ definiert, welche die Kombinationen (in Verbindung mit den Vokalen) spezifische
+n Abständen zuordnen:
+\end_layout
+
+\begin_layout LyX-Code
+$rules_list = array( 
+\end_layout
+
+\begin_layout LyX-Code
+     "R1" => array( "C1", "V1", "D1", "?" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "R2" => array( "C1", "V2", "D2", "" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "R3" => array( "C2", "V1", "D3", "?" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "R4" => array( "C2", "V2", "D4", "" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "R5" => array( "C3", "V1", "D5", "?" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "R6" => array( "C3", "V2", "D6", "" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "R7" => array( "C4", "V1", "D7", "?" ), 
+\end_layout
+
+\begin_layout LyX-Code
+     "R8" => array( "C4", "V2", "D7", "" ) 
+\end_layout
+
+\begin_layout LyX-Code
+)
+\end_layout
+
+\begin_layout Standard
+Eine erste Regel (R1) beschreibt hier die Zeichenkombinationen C1 in Verbindung
+ mit Vokalen aus der Gruppe V1.
+ Diese Kombination erhält den Abstand D1.
+ Eine zweite Regel (R2) beschreibt die gleiche Zeichenkombination C1 in
+ Verbindung mit den Vokalen aus der Gruppe V2.
+ Diese Kombination erhält den Abstand D2 etc.
+ Beachten Sie: Da wir 2 Vokalgruppen definiert haben, ergeben sich für die
+ 4 Kombinationen 8 Regeln.
+ Das Zeichen ? bedeutet, dass der Vokal optional ist.
+ Dies ist bei der Vokalgruppe V1 der Fall, da der Abstand zwischen dd (kein
+ Vokal) und dad (Vokal a) genau gleich gross sein soll.
+\end_layout
+
+\begin_layout Subsection*
+REGEX-Helper
+\end_layout
+
+\begin_layout Standard
+Sobald wir die drei Variablen wie oben beschrieben definiert haben, können
+ wir daraus automatisch REGEX-Regeln generieren.
+ Hierfür muss einfach die Adresse www.vsteno.ch/php/regex_helper.php im Browser
+ aufgerufen werden.
+ Dieser so genannte REGEX-Helper liest nun die Zeichendefinitionen aus dem
+ aktuell gewählten Modell (deutsch, spanisch oder custom), generiert die
+ Regeln und zeigt diese zusammen mit der Anzahl Zeichenkombinationen im
+ Browser an.
+ Als Beispiel
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bitte beachten Sie, dass die Regel im Original keine Zeilenumbrüche enthält;
+ diese wurden hier nur layouttechnisch eingefügt.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout LyX-Code
+"(
+\backslash
+[(?:in|sein|gegen|da|schaft|auf|aus|bei|bei+ar|durch|
+\end_layout
+
+\begin_layout LyX-Code
+solch|selb|wo|schm|ck|lt|rr|ss|sobre|tt|ch|zw|d|g|h|j|k|
+\end_layout
+
+\begin_layout LyX-Code
+s|s=|ser|t|v|w|x|y|z|&a|&u|&o|0n-|0d-|0u-|d@r|t@r|g@r|k@r|
+\end_layout
+
+\begin_layout LyX-Code
+ch@r|h@r|g@l3|v@l|w@l|t@l3|tt@l3|ck@l3|d@l3|k@l3|z@l3|
+\end_layout
+
+\begin_layout LyX-Code
+ch@l3|v@r6|w@r6|z@r|da@r|rr@l|ck@l|tt@r|ck@r|lt@r6)
+\backslash
+])
+\end_layout
+
+\begin_layout LyX-Code
+(
+\backslash
+[(?:a|o|u)
+\backslash
+])?(
+\backslash
+[(?:in|sein|gegen|hab|da|sind|haft|schaft|
+\end_layout
+
+\begin_layout LyX-Code
+auf|aus|-aus|bei|bei+ar|fort|schm|schw|mpf|sch|ll|mm|ss|
+\end_layout
+
+\begin_layout LyX-Code
+sobre|ch|pf|mp|zw|y|z|&e|&a|&u|&o|ch@r|sch@r|mm@l|pf@l|
+\end_layout
+
+\begin_layout LyX-Code
+z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)
+\backslash
+])" 
+\end_layout
+
+\begin_layout LyX-Code
+=> "$1[#d1]$2$3"; // R1|C1: L1#V1:D1#R1 (11256)
+\end_layout
+
+\begin_layout Standard
+Wie man unschwer erkennt: Diese REGEX-Regeln werden schnell kompliziert
+ und sind für einen Menschen kaum mehr zu überblicken.
+ Und dies ist nur eine Regel von vielen! Im konkreten Fall handelt es sich
+ um die Regel R1, welche die Kombination L1+V1+R1 mit dem Abstand D1 definiert
+ (es wird - um der Nachvollziehbarkeit willen - am Schluss der Regel immer
+ angegeben, um welche Kombination es sich handelt).
+ Diese Regel erstreckt sich auf 11256 Kombinationen.
+\end_layout
+
+\begin_layout Standard
+Die von regex_helper.php generierten und im Browser angezeigten Regeln können
+ wir nun auswählen, kopieren und in unsere eigenen Regeln einfügen, zum
+ Beispiel am Schluss in einer eigenen SubSection 
+\begin_inset Quotes eld
+\end_inset
+
+spacer
+\begin_inset Quotes erd
+\end_inset
+
+ (wie in den Beispielmodellen für Deutsch und Spanisch geschehen).
+ Danach generiert die obige Regel dann unter anderem folgende Kombinationen:
+\end_layout
+
+\begin_layout LyX-Code
+[da@r][#d1][l]      Beispiel: darlegen
+\end_layout
+
+\begin_layout LyX-Code
+[t@r][#d1][vr]      Beispiel: trinken
+\end_layout
+
+\begin_layout Standard
+Um den Abstand nun einfügen zu lassen haben wir nun zwei Möglichkeiten:
+ (1) entweder wir definieren das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+#d1
+\begin_inset Quotes erd
+\end_inset
+
+ als leeres Zeichen mit einem Breitewert (Offset 1 im Zeichenheader), der
+ den konkreten Abstand (in Pixeln) definiert, oder (2) wir definieren mit
+ der gleichen Methode (Zeichenbreite im Offset 1) andere Zeichen - z.B.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+#1
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+#2
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+#3
+\begin_inset Quotes erd
+\end_inset
+
+ bzw.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+#1-
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+#2-
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+3#-
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+ - mit fixen Abständen (hier also 1, 2, 3 bzw.
+ -1, -2, -3 Pixel) und verwenden die Abstände 
+\begin_inset Quotes eld
+\end_inset
+
+#d1
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+#d2
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+#d3
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+ nur als Platzhalter, die wir erst ganz am Schluss diesen fixen Abständen
+ zuordnen.
+ Die zweite Vorgehensweise hat einen entscheidenden Vorteil: Hier können
+ nämlich die Abstände auch im Nachhinein noch angepasst werden, ohne die
+ REGEX-Regeln noch einmal neu zu generieren.
+ Dies kann zum Beispiel über REGEX-Regeln der folgenden Art geschehen:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+[#d1
+\backslash
+]
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+[#5]
+\begin_inset Quotes erd
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Standard
+Hier wird dem Platzhalter 
+\begin_inset Quotes eld
+\end_inset
+
+#d1
+\begin_inset Quotes erd
+\end_inset
+
+ (der in unserer Gruppierung für D1 steht) also definitiv der Abstand 5
+ zugewiesen, da das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+#5
+\begin_inset Quotes erd
+\end_inset
+
+ im Header als 
+\begin_inset Quotes eld
+\end_inset
+
+leeres Zeichen mit Breite 5
+\begin_inset Quotes erd
+\end_inset
+
+ definiert wurde.
+\end_layout
+
+\begin_layout Standard
+Konkrete Beispiele finden sich im File SPSSBAS.TXT (Verzeichnis ling/).
+ Hier wird das 2.
+ Vorgehen angewandt, also Definition von Abstandszeichen 
+\begin_inset Quotes eld
+\end_inset
+
+#1
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+#2
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+#3
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+ und Zuweisung derselben in der SubSection(spacer) am Ende (im Anschluss
+ an die automatisch generierten Abstandsregeln).
+\end_layout
+
+\begin_layout Section*
 Linguistische Analyse
 \end_layout
 
@@ -9279,7 +10065,7 @@ Wie die linguistische Analyse angepasst werden kann, damit möglichst wenige
 \end_layout
 
 \begin_layout Standard
-Aber der Reihe nach:
+Der Reihe nach:
 \end_layout
 
 \begin_layout Standard
@@ -9473,7 +10259,18 @@ session
 \begin_inset Quotes erd
 \end_inset
 
- definiert werden:
+ definiert werden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Im Original enthält der Text keine Zeilenumbrüche, diese wurden nur layouttechni
+sch eingefügt.
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout LyX-Code
@@ -9489,8 +10286,15 @@ session
 \end_layout
 
 \begin_layout LyX-Code
-  "suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?";
- #EndSubSection(session)
+  "suffixes_list" := "[kh]ei-?t(?:s|en)?, 
+\end_layout
+
+\begin_layout LyX-Code
+  li-?ch(?:(?:e-?r)(?:e[srn]?)?)?"; 
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(session)
 \end_layout
 
 \begin_layout Standard
@@ -10971,6 +11775,25 @@ Weil es ja seit August schon eine Weile her ist, dass das Programm das letzte
 
 \begin_layout Subsection*
 Installieren
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die folgenden Ausführungen geben nur einen groben Überblick.
+ Für eine sehr detaillierte Anleitung kann das Dokument 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/marcelmaci/vsteno/blob/master/docs/install_vsteno.txt"
+
+\end_inset
+
+ konsultiert werden.
+ 
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -11007,32 +11830,11 @@ mySQL (ebenfalls nützlich: MySQL Workbench)
 
 \begin_layout Enumerate
 hunspell
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Ich füge hunspell bereits an, weil es voraussichtlich bald in VSTENO integriert
- wird: benötigt wird ein deutsches Wörterbuch (am besten de_CH).
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
 Klonen Sie anschliessend die Programme VSTENO und VPAINT (sowie verwendete
- Libraries wie paper.js und phpSyllable
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Auch phpSyllable wird voraussichtlich bald in VSTENO integriert.
-\end_layout
-
-\end_inset
-
-:
+ Libraries wie paper.js und phpSyllable):
 \end_layout
 
 \begin_layout Enumerate
@@ -11872,6 +12674,155 @@ Stolze-Schrey Grundschrift (DESSBAS)
 
 \begin_layout Standard
 mit zusätzlichen Angaben zur Programmversion und zum verwendeten Modell.
+\end_layout
+
+\begin_layout Subsection*
+Lizenzkonflikte und Relizenzierung
+\end_layout
+
+\begin_layout Standard
+Die Lizenzierung unter der GPL erfolgt hauptsächlich aus zwei Gründen: (1)
+ es ist sichergestellt, dass Programmcode (und weitere Teile von VSTENO
+ wie stenografische Modelle etc.) grundsätzlich frei verwendet werden können
+ und (2) es wird ausgeschlossen, dass VSTENO von irgend jemandem 
+\begin_inset Quotes eld
+\end_inset
+
+vereinnahmt
+\begin_inset Quotes erd
+\end_inset
+
+ (d.h.
+ unfrei gemacht) und zum Beispiel in kommerziellen, proprietären Produkten
+ verwendet werden kann, ohne allfällige weitere Entwicklungsarbeit daran
+ (und insbesondere den Quellcode) offen zu legen.
+\end_layout
+
+\begin_layout Standard
+In den meisten Fällen bedeutet dies für freie Software-Lizenzen ohne Copyleft
+ (z.B.
+ MIT, BSD), dass nur dann Teile aus VSTENO übernommen können, wenn das daraus
+ entstehende Projekt inskünftig unter der GPL herausgegeben wird (weil besagte
+ Lizenzen aufgrund des nicht vorhandenen Copylefts den obgenannten Punkt
+ 2 missachten bzw.
+ nicht sicherstellen).
+ Dies mag für die Anhänger/innen dieser Lizenzen (die im übrigen durchaus
+ ihre Berechtigungen haben) zwar bedauerlich sein, dennoch halte ich als
+ Autor von VSTENO ganz klar am Copyleft fest.
+ Ausserdem erachte ich das Problem als nicht so gravierend, da aufgrund
+ der (wenngleich nur einseitigen) Kompatibilität der Lizenzen hier immerhin
+ die Möglichkeit der Lizenzierung unter der GPL besteht, um ein entsprechendes
+ Projekt weiterzuführen (wodurch also der Punkt 1 - wenn auch in etwas eingeschr
+änkterer Form - sichergestellt ist).
+\end_layout
+
+\begin_layout Standard
+In anderen Fällen ist die GPL - als sehr eng gefasste Lizenz - jedoch grundsätzl
+ich inkompatibel, d.h.
+ es besteht keine Möglichkeit, Code aus zwei (oder mehreren) Projekten zusammenz
+uführen und daraus ein neues Projekt mit einer konfliktfreien Lizenz zu
+ erstellen.
+ Dies trifft konkret auf die APL (AROS Public License) zu, die für das freie
+ Betriebssystem AROS (eine Nachprogrammierung von AmigaOS auf Amiga Computern)
+ verwendet wird.
+ Als grosser Amiga-Fan - der zu Weihnachten 1987 einen Amiga 500 geschenkt
+ bekam und von der Begeisterung für diese Computer bis heute nicht losgekommen
+ ist
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+zumal voraussichtlich 2019 mit der so genannten Vampire V4 Standalone erstmals
+ nach über 25 Jahren wieder ein wirklich als solcher zu bezeichnender, 
+\begin_inset Quotes eld
+\end_inset
+
+neuer Amiga
+\begin_inset Quotes erd
+\end_inset
+
+ herauskommt, siehe hier: 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://www.apollo-accelerators.com/"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+ - ist mir dies ein Dorn im Auge.
+ Gerade der Fall Amiga hat überdeutlich gezeigt, dass einschränkende und
+ proprietäre Lizenzen, verbunden mit den daraus folgenden Rechtsstreitigkeiten
+ und der Unmöglichkeit, bestehende Software zu übernehmen und weiterzuentwickeln
+, massgeblich mitverantwortlich waren und sind für den Untergang und die
+ Blockierung dieser Plattform seit spätestens 1996! Freie Software sollte
+ gerade das Gegenteil sein, d.h.
+ den freien Austausch ermöglichen.
+ Dies haben auch die Gründer von AROS erkannt und die APL unter Punkt 3.2.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://aros.sourceforge.net/license.html
+\end_layout
+
+\end_inset
+
+ mit dem Hinweis versehen, dass der Quellcode zur Verfügung gestellt werden
+ muss.
+ Da dies das Copyleft aus Punkt 2 in seinem wichtigsten Punkt (und somit
+ ausreichend) wahrt, ist die Inkompatibilität von GPL und APL ein Stolperstein,
+ der aus meiner Sicht weder sein soll, noch muss.
+\end_layout
+
+\begin_layout Standard
+In diesem Sinne erhält VSTENO diesen zusätzlichen Relizensierungs-Hinweis:
+ Sämtliche Teile von VSTENO dürfen in ein unter der APL stehendes Projekt
+ übernommen und unter der APL relizensiert werden.
+ Das Relizensierungsrecht wird jedoch nur eingeschränkt verliehen: (1) Einerseit
+s gilt es nur für die einmalige Relizenzierung unter der APL, nicht jedoch
+ für den Fall, dass ein unter der APL stehendes und Teile von VSTENO enthaltende
+s Projekt ein weiteres Mal unter einer anderen Lizenz herausgegeben wird
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Soweit ich verstehe, ist die Relizenzierung von APL-Code unter einer anderen
+ Lizenz grundsätzlich nicht möglich (ausser die Autoren stimmen dem zu),
+ dennoch soll diese Einschränkung hier sicherheitshalber explizit festgehalten
+ werden: Jegliche Relizenzierung unter einer Lizenz ohne Copyleft ist nicht
+ in meinem Sinne.
+ Ob man (ich) eine Relizenzierung erlauben aber gleichzeitig einschränken
+ kann, ist eine rechtliche Frage, die mein Fassungsvermögen übersteigt.
+ Deshalb hier einfach die generelle Anmerkungen, was bei einer Relizenzierung
+ erlaubt sein soll und was nicht.
+\end_layout
+
+\end_inset
+
+ und (2) andererseits, gilt die Relizensierung ausschliesslich für die APL
+ (und ausdrücklich nicht für andere Software-Lizenzen).
+ 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Bei allfälligen Lizenzkonflikten besteht aber jederzeit die Möglichkeit,
+ mich zu kontaktieren (m.maci@gmx.ch) und allfällige Zusatzklauseln zu vereinbaren
+, um die Konflikte bereinigen.
+\end_layout
+
+\end_inset
+
+.
+ Das Relizensierungsrecht ist unabhängig von der Prozessorarchitektur (m68k,
+ x86, ppc etc.), auf denen AROS läuft (und gilt somit für sämtliche aktuellen
+ und zukünftigen Architekturen).
+ Im Sinne der Einfachheit, wird dieses Relizensierungsrecht nur an dieser
+ Stelle (und nicht in sämtlichen Projektteilen) aufgeführt.
 \end_layout
 
 \begin_layout Subsection*

@@ -18,31 +18,18 @@
 
 global $default_model;
 
-/* do model selection directly in data.php
 require_once "session.php";
-if ($_SESSION['user_logged_in']) {
-    echo "<p>POST(model): " . $_POST['model'] . "</p>";  // why is $_POST['model'] === "" in mini.php??? => ok, in input.php it's a post variable, in mini.php it's not ... should be taken from the session variable!!!  $_SESSION['model_standard_or_custom']
-    // fix that: $_SESSION['model_standard_or_custom'] 
-    // now the name is correct, but nothing works ...
-
-    if (($_POST['model'] === "custom") || ($_SESSION['model_standard_or_custom'] === "custom")) $_SESSION['actual_model'] = "XM" . str_pad($_SESSION['user_id'], 7, '0', STR_PAD_LEFT); 
-    else $_SESSION['actual_model'] = $default_model;
-    echo "Model = " . $_SESSION['actual_model'] . "<br>";
-}
-*/
-
-// include external data and code
 require_once "constants.php";
 require_once "data.php";
 require_once "parser.php";
 require_once "engine.php";
 require_once "linguistics.php";
-//require_once "words.php";     // revert back to procedural-only version
-
 
 function InsertHTMLHeader() {
     if ($_SESSION['output_integratedyesno']) {
+      
         require "vsteno_template_top.php";
+      
     } else {
         require "vsteno_fullpage_template_top.php";
     }
@@ -111,10 +98,7 @@ function CalculateStenoPage() {
     //echo $_POST['model'];
     
     CopyFormToSessionVariables();
-    /*
-    echo "language_hyphenator: " . $_SESSION['language_hyphenator'] . "<br>";
-    echo "language_hunspell: " . $_SESSION['language_hunspell'] . "<br>";
-    */
+    
     InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
     
     // normally, CopyFormToSessionVariables() should copy new model to session variables
@@ -195,39 +179,18 @@ function CalculateStenoPage() {
         
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
    
-    
-    //echo '<a href="input.php"><br><button>"Nochmals!"</button></a>';
-   
     InsertHTMLFooter();
 }
 
 // main
-// just create combined/shifted-tokens once per call of calculate.php (performace)
-
-// dont know if this is correct .................................................... should be done in data.php now .................................. !!!!!!!!!!!!!!!!!!!!!!!!
-//CreateCombinedTokens();
-//CreateShiftedTokens();
-// do it in data.php?
-
 if ($_POST['action'] === "abschicken") {
-    //$global_error_string = "";
+    
+    // reset rules statistics    
     $_SESSION['rules_count'] = null;
-    // reset rules statistics
-$_SESSION['rules_count'] = array();
-//echo "count rules: " . count($rules) . "<br>";
-for ($i=0; $i<count($rules[$actual_model]); $i++) $_SESSION['rules_count'][$i] = 0;
-//var_dump($_SESSION['rules_count']);
-   // analyze_word_linguistically_optimized_set_variables($prefixes, $stems, $suffixes); // speed optimization
-//$start = microtime(true);
-
+    $_SESSION['rules_count'] = array();
+    for ($i=0; $i<count($rules[$actual_model]); $i++) $_SESSION['rules_count'][$i] = 0;
+    
     CalculateStenoPage();
-//$end = microtime(true);
-//$delta = $end - $start;
-//echo "performance:<br>start: $start<br>end: $end<br>difference: $delta<br>";
-//echo "cache size: " . count($cached_results) . "<br>";
-//var_dump($cached_results);
-
-//var_dump($_SESSION['rules_count']);
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();
 }

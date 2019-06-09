@@ -21,7 +21,7 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <?php require_once "constants.php"; echo "<i>Commit: " . version_commit_id . " (" . version_date . ")</i><br>"; ?>
 <b>HINWEIS: VSTENO ist beta - es sind noch nicht alle Optionen implementiert!<br><br></b>
 <div id="order">
-<form action="../php/calculate.php" method="post">
+<form action="calculate.php" method="post">
 <table>
 <tr><td>Text</td></tr>
 <tr><td>

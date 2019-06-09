@@ -1,5 +1,5 @@
 <?php session_start(); ?>
-<!-- <!DOCTYPE HTML> -->
+<!DOCTYPE HTML>
 <html>
 <head>
     <meta charset='utf-8'>
@@ -19,7 +19,9 @@
                 
             </div>
            <div id="purelab_texts">
+                
                 <?php 
+                    //echo "hithere";
                     require_once "fortune.php";
                     //$_SESSION['original_text_content'] = $fortune_cookie;
                     echo "<center>" . fortune() . "</center>";
@@ -29,6 +31,7 @@
 		</div>
 		<div id="main">
             <div id="navigation">
+                
                 <?php require "navigation.php"; /*echo $fortune_cookie;*/ ?>
                 
             </div>

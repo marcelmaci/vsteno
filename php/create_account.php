@@ -39,7 +39,16 @@ Infos*:
 
 <td> <input type="text" name="username"  size="30" value="<?php echo RandomString(8); ?>"><br>
 <input type="text" name="password"  size="30" value="<?php echo RandomString(8); ?>"><br>
-<input type="text" name="captcha"  size="30" value="<?php $temp = GetShorthandCaptcha(4); /*echo $_SESSION['captcha'];*/ ?>"><br>
+<input type="text" name="captcha"  size="30" value="<?php 
+$temp_composed = $_SESSION['composed_words_yesno'];
+$_SESSION['composed_words_yesno'] = false;
+$temp_hyphenate = $_SESSION['hyphenate_yesno'];
+$_SESSION['hyphenate_yesno'] = false;
+$temp = GetShorthandCaptcha(4); 
+$_SESSION['composed_words_yesno'] = $temp_composed;
+$_SESSION['hyphenate_yesno'] = $temp_hyphenate;
+
+/*echo $_SESSION['captcha'];*/ ?>"><br>
 <input type="radio" name="model" value="standard" checked>std
 <input type="radio" name="model" value="template">template
 <input type="radio" name="model" value="empty">leer<br>

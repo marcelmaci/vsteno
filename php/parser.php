@@ -747,7 +747,7 @@ function MetaParser( $text ) {          // $text is a single word!
             $safe_std = ""; 
             $safe_prt = mb_strtoupper($text, "UTF-8");
     }
-        
+//////////////////        
     if  ($safe_prt !== "") return $safe_prt;    // no parsing at all
     elseif ($safe_std !== "") {
         // parse from std2stage4
@@ -761,21 +761,7 @@ function MetaParser( $text ) {          // $text is a single word!
         // word is not in dictionary => parse from stage3 (= after dictionary) to stage4 (start) using word splitting (composed words)
         //echo "word is not in dictionary<br>";
         // first check if parsing is (partially) needed => is done above now
-        /*
-        $text_format = $_SESSION['original_text_format'];
-        if ($text_format === "prt") return $text; // no parsing
-        elseif ($text_format === "std") { 
-            // partial parsing: std => prt
-            $safe_std = mb_strtoupper($text, "UTF-8");
-            $std_form = $safe_std; // not sure if this variable has to be set to get infos in the debugger?!
-            $std2stage4 = ParserChain($safe_std, $rules_pointer_start_std2prt, $rules_pointer_start_stage4);
-            // parse from stage4 to end (= prt)
-            //echo "go to stage4";
-            $actual_model = $_SESSION['actual_model'];
-            $prt_form = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
-            return $prt;
-        } else 
-        */ 
+       
         
         //{ 
             // full parsing
@@ -794,7 +780,7 @@ function MetaParser( $text ) {          // $text is a single word!
         
             switch ($_SESSION['token_type']) {
                 case "shorthand": 
-                    
+//////////
                     if ($_SESSION['original_text_format'] !== "lng") {
                     
          //echo  $_SESSION['hyphenate_yesno'] . "<br>" . $_SESSION['composed_words_yesno'];
@@ -814,15 +800,7 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                     } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list']);    
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
                     // write debug info
-                    /*
-                    $parameters = "";
-                    if ($_SESSION['hyphenate_yesno']) $parameters .= "syllables ";
-                    if ($_SESSION['composed_words_yesno']) $parameters .= "words ";
-                    if (mb_strlen($parameters) > 0) {
-                        $parameters .= " / separate: " . $_SESSION['composed_words_separate'] . " glue: " . $_SESSION['composed_words_glue'];
-                    }
-                    if (mb_strlen($parameters) > 0) $parameters = "($parameters)";
-                    */
+                   
                     $global_debug_string .= "PRE: \"$pretokens\" - POST: \"$posttokens\"<br>LNG (raw): $temp_word<br>"; // => $test $parameters<br>"; 
                     // now "post"process LING result applying analyzer rules from header (still stage1)
                     $lin_form = PostProcessDataFromLinguisticalAnalyzer($test);
@@ -832,15 +810,16 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                         
                     // write debug info of postprocessing: LING (post)
                     $global_debug_string .= "LNG (post): $lin_form<br>";
+
 } else {
         //$lin_form = $text;
         $lin_form = $word;
         
         //echo "lin: $lin_form";
         $global_debug_string .= "PRE: \"$pretokens\" - POST: \"$posttokens\"<br>LNG: $lin_form (linguistical analysis disabled)<br>";
+
 }
-                    
-                    //echo "test: $test<br>";
+                   //echo "test: $test<br>";
                     // calculate
                     $word = $lin_form;
                     
@@ -850,7 +829,7 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                         //$word = $lin_form; // start directly with stage2 (= no linguistical analysis)
                     }
                     
-                    
+                   
                     if ($_SESSION['output_format'] === "meta_lng") {
                         //echo "cache: $lin_form<br>"; 
                         if (isset($cached_results[$text])) $cached_results[$text] = $lin_form;
@@ -863,7 +842,7 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                     $word = ParserChain( $word, $rules_pointer_start_stage2, $rules_pointer_start_stage3 );
                     //echo "result stage2: $word<br>";
                     ///////////////////////////////////////
-                    $separated_word_parts_array = explode( "\\", /*GenericParser( $helvetizer_table, */ $word ); // helvetizer must be replaced 
+                    $separated_word_parts_array = explode( "\\", $word ); // helvetizer must be replaced 
                     //var_dump($separated_word_parts_array);echo"<br";
                     $output = ""; 
                     $separated_std_form = "";
@@ -895,21 +874,9 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                         //echo "<br>subword_array:<br>";
                         //var_dump($subword_array);
                         $word_part = implode("|", $subword_array);
-                        /*
-                        echo "word_part: $word_part<br>";
-                        echo "separated_std_form: $separated_std_form<br>";
-                        echo "separated_prt_form: $separated_prt_form<br>";
-                        echo "std_form: $std_form<br>";
-                        echo "prt_form: $prt_form<br>";
-                        */
+                       
                         $separated_word_parts_array[$w] = $word_part;
-                    /*
-                        if ( $word_part !== end($separated_word_parts_array)) { 
-                            $output .= "\\";  // shouldn't be hardcoded?!
-                            $separated_std_form .= "\\";        // eh oui ... l'horreur continue ... ;-)
-                            $separated_prt_form .= "\\";
-                        }
-                    */
+                   
                     }
                     //echo "<br>end result: <br>";
                     //var_dump($separated_word_parts_array);
@@ -957,16 +924,11 @@ if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
                     $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-]", $output ); // lower case
                     $output = mb_strtoupper( $output );
                     return $output;
-/*
-                case "htmlcode":
-                    $_SESSION['token_type'] = "shorthand";
-                    //return( $pre, $word, $post); 
-                    break; // break necessary? 
-*/
             }
-            
-        //}
-    }
+
+
+}
+
 }
 
 

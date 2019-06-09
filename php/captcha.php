@@ -5,6 +5,7 @@ require_once "engine.php";
 require_once "parser.php";
 
 function GetShorthandCaptcha( $length ) {
+    
         $vowels = array( "a", "e", "i", "o", "u", "au", "ei"); // don't use umlaut for simplicity: "ö", "ü", "ä" ); // don't use äu / eu (ambigous)
         $beginning = array( "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "w", "x", "y", "z", 
             "br", "bl", "dr", "dl", "fr", "gr", "gl", "kr", "kl", "pl", "pr", "rr", "tr", "tl", "sch", "schm", "schw", "zw");
@@ -18,11 +19,12 @@ function GetShorthandCaptcha( $length ) {
         $_SESSION['captcha'] = $captcha;
         //$token_list = NormalText2TokenList( $captcha );
         //$svg_captcha = TokenList2SVG( $token_list, 60, 0.8, 1.6, "black", "", "" );
-        CreateCombinedTokens();
-        CreateShiftedTokens();
+        CreateCombinedTokens(); // ????
+        CreateShiftedTokens();  //// ???? necessary?
         
         $svg_captcha = SingleWord2SVG( $captcha, 60, 0.8, 1.6, "black", "", "" );
         return $svg_captcha;
+      
 }
 
 
