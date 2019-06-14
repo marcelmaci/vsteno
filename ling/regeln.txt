@@ -490,6 +490,7 @@
 		"ß" => "ss";
 		"üh(-)?([lrmn])" => "ü$1$2";
 		"([aeiou]|ä|ö|ü)h(#|-|\+)(bar|sam|ling|sal|nis)" => "$1$2$3";  // h entfällt vor ungekürzten Nachsilben 
+		"([Mm]ü)h((?:-|\|)?se-?li-?g)" => "$1$2";
 
 		"uhr" => "ur";
 		
@@ -552,7 +553,7 @@
 		"s-?s-?l" => "[SSL]";
 		"s-?s" => "[SS]";
 		"n-?n" => "[NN]";
-		"s-?t" => "[ST]";
+		"s-?t" => { "[ST]", "[Gg]rin-?s-?t" };
 		//"^eins" => "[EI][N]s";
 		"ch" => "[CH]";
 		"h[-\|+]?r" => "[HR]";
@@ -660,7 +661,7 @@
 		// Aufstrich-t				
 		"([bcdfghjklmnpqrvwxyz])(-)?t" => "$1$2[&T]";
 		"({HIN})-?t" => "$1[&T]";
-		"\[(CH|SCH)\]-?t" => "[$1][&T]";
+		"\[(CH|SCH|NS)\]-?t" => "[$1][&T]";
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF|MPF|NG|ND)\]-?t" => "[$1][&T]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TL\]" => "$1$2[&T@L3]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TR\]" => "$1$2[&T@R]";
@@ -881,7 +882,10 @@
 		"(\[FR\]\[EI\])\+" => "$1[&E]+"; 	// special case Freizeit (separated by +)
 		
 		// Raupenvernichtung
-		"{EN}\|{VER}" => "EN|{VER}"; 	// if not separated by \ => write -en as en
+		//"{EN}\|{VER}" => "EN|{VER}"; 	// if not separated by \ => write -en as en
+		"{EN}\|{VER}" => "{EN}\[0N-]{VER}"; 	// separate
+
+		"(\[AR\]E\[CH\]\[&T\])\+Z" => "$1\Z";  // rechtzeitig
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -1744,12 +1748,23 @@
 		"\[l\]\[au\]\[\^sch\]" => "[l][#3][au][^sch]";
 		"\[n\]\[au\]\[\^z\]" => "[n][#3][au][^z]";
 		"\[d@r3\^\]\[#3\]\[i\]\[tt\]" => "[d@r3^][#6][i][tt]";
+		"\[t@r3\^\]\[#3\]\[au\]\[m\]" => "[t@r3^][#5][au][m]";
+		"\[w\]\[#0\]\[a\]\[&a\]" => "[w][#3][a][&a]";
+		"\[ar\]\[t@r3\^\]" => "[ar][#3][t@r3^]";
+		"\[g\]\[#3\]\[d\]" => "[g][#5][d]";
+		"\[d\]\[#3\]\[a\]\[nk\]" => "[d][#5][a][nk]";
+		"\[h\]\[#3\]\[au\]\[t\]" => "[h][#5][au][t]";
+		"\[ng\]\[#3\]\[t\]" => "[ng][#6][t]";
+		"\[g\]\[#3\]\[a\]\[ng\]" => "[g][#5][a][ng]";
+		"\[s=\]\[h\]" => "[s=][#4][h]";
+		"\[s=\]\[u\]\[tt\]" => "[s=][#4][u][tt]";
 
-		// experimental: generic -&i
+		// experimental: generic -&i, -&a
 		"\[#5\]\[&i\]$" => "[#2][&i]";
+		"\[#3\]\[a\]\[&a\]" => "[#5][a][&a]";
 
 		// experimental: draw-arround-knot _._
-		"\[(sch|d)@(r|l.?|r3\^)\]\[#(.*?)\]\[(i|u)\]\[(tt|ck|pp)\]" => "[$1@$2][_._][#$3][$4][$5]";
+		"\[(sch|d|t)@(r|l.?|r3\^)\]\[#(.*?)\]\[(i|u)\]\[(tt|ck|pp|b)\]" => "[$1@$2][_._][#$3][$4][$5]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 

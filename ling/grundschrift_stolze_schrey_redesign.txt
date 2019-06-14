@@ -15,49 +15,30 @@
 
     	You should have received a copy of the GNU General Public License
     	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+	
+	Special thanks go to Yvonne Reith for external corrections which
+	helped to improve the model substantially.
+	
+	This file was originately generated as export from old parser, then 
+	later completed with manual additions to form DESSBAS (DD=Deutsch, 
+	SS=Stolze-Schrey, BAS=Grundschrift) 
+	
+	Model is based on SE1 rev0 exclusively. Tokens were optimized for an
+	inclination of 60 degrees.
 	*/
-	/* this file was originately generated as export from old parser, then later completed with manual additions to form DESSBAS (DD=Deutsch SS=Stolze-Schrey BAS=Grundschrift) */
-	//
-	// Die Grundschrift Stolze-Schrey soll nun nach folgenden Prinzipien neu designt werden:
-	// 
-	// Zeichen:
-	// Prinzipiell sollen schönere Zeichen gestaltet werden. Dies wird erreicht durch:
-	// - bessere Platzierung der Zeichenknoten (Verwendung von VPAINT wo möglich, der Rest wird nach wie vor handeditiert)
-	// - Korrektur der Spannungen (geradere Modellierung von Zeichen-Rücken, schönere Anfangs- und Endbögen)
-	// - bessere Zeichenabstände in Engschreibung: Zeichen werden neu als "Rohzeichen" modelliert, d.h. nur mit width (offset 0) ohne additional width before/after (offsets 4 + 5).
-	//   Die Regeln werden um einen "spacer" ergänzt, der individuelle Abstände zwischen den Zeichen einfügt.
-	//
-	// Technisch sollen folgende Prinzipien eingehalten werden:
-	// - es soll nur die SE1 rev0 genutzt werden (also keine parallelen Rotationsachsen und keine proportionalen/orthogonalen Punkte), dies um sicherzustellen, dass die Definitionen 100% mit der
-	//   SE1 kompatibel sind)
-	// - die Zeichen werden für eine Neigung von 60 Grad optimiert (dies damit die Knoten trotz horizontaler Schiebung möglichst optimal platziert werden)
-	//
-	// Wenn nötig (d.h. wenn damit keine schönen Zeichen generiert werden können) soll auf spezielle Funktionen der SE1, die darauf ausgerichtet waren, den Editionsaufwand und die Datenmengen 
-	// zu reduzieren, verzichtet werden:
-	// - auf late entry und early exit knots wird verzichtet => stattdessen wird für jede Variante ein eigenes Zeichen definiert
-	// - auf token combiner und shifter wird verzichtet => stattdessen wird für jede Variante ein eigenes Zeichen definiert
-	// - eventuell sollen die Zeichen auch um neue Knoten erweitert werden, um eine feinere Ausgestaltung zu erreichen (z.B. bei der Schattierung), allerdings soll dies vorsichtig gehandhabt
-	//   werden, da es allenfalls Sinn macht, Optimierung der Schattierung später automatisch vorzunehmen (ähnlich wie bei der geplanten SE2)
-	//
-	// Regeln:
-	// - es soll konsequent darauf geachtet werden, mit der STD-Form einen Kompatibilitätspunkt im Parsprozess zu generieren
-	// - da mehr Zeichen definiert werden, soll konsequent darauf geachtet werden, dass die Bezeichnungen der Tokens einer einheitlichen Schreibweise folgen (diese soll im Font und innerhalb
-	//   der Regeln verwendet werden)
-	// - Reste aus dem alten "Trickster" sollen entfernt werden
-	// - generelles Ausmisten und Ausräumen der Regeln
-	/  - es wird ein Spacer ergänzt, der individuelle Abstände zwischen Zeichen (in Abhängikeit auch von Hoch-/Tiefstellung etc. einfügen kann)
-	//
 	// Schreibweise:
 	// = ein Zeichen am Wortanfang (z.B. [F=]) oder Wortende (z.B. [=NG])
 	// ^ ein höher gestelltes Zeichen (z.B. [^CH]) oder Variante vor höhergestelltem Zeichen (z.B. [AR5^])
 	// _ ein tiefer gestelltes Zeichen (z.B. [_N])
 	// @ ein Verbundzeichen (z.B. [@L] oder [@R], die mit anderen Zeichen verbunden werden)
 	// 0..9 bei runden Zeichen: Anknüpfpunkt (z.B. [@R6] = Zeichen R mit Anknüpfpunkt bei 6 Uhr, also im Fusspunkt)
-	// # technische Zeichen (z.B. [#WS] = wide shadowed, eine weite, schattierte Verbindung, also ä im System Stolze-Schrey; [#5] = spacer mit Abstand 5px)
+	// # technische Zeichen (z.B. [#WS] = wide shadowed, eine weite, schattierte Verbindung, also ä im System 
+	//   Stolze-Schrey; [#5] = spacer mit Abstand 5px)
 	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
+		"token_distance_wide" := "17";
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen";
 		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?, seits, voll"; // use non caputuring groups! (?:)
@@ -330,7 +311,7 @@
 		"#seits" => "|seits";
 
 		// prefix in-
-		"^([Ii])n-(?!ter)" => "$1n+";
+		"^(Volks\|)?([Ii])n-(?!ter)" => "$1$2n+";
 		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
 		"\|([Ii]n)-(s[tp])" => "|$1+$2"; // idem in separated words
 		"^([Ii]n)\+(ne)" => "$1-$2";
@@ -519,7 +500,8 @@
 		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
 		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
 		
-		"(?<![Vv])([Ee]r)\+(le)" => "$1$2"; 			// Erle: first transform all
+		"(?<![Vv])([Ee]r)\+(le)(?!i)" => "$1$2"; 			// Erle: first transform all
+
 		"([Ee]r)(le-)(?=[dsbghmprtwz])" => "$1+$2"; 	// reseparate: erlesen, erledigen etc.
 		"([Ee]r)(ler\+)" => "$1+$2"; 	// reseparate: erlernen, erlernt etc.
 		"([Ee]r)(le-?b)" => "$1+$2"; 	// reseparate: erleben, erlebte etc.
@@ -527,7 +509,7 @@
 		"([Ll]er)\+n" => "$1n";
 		"([Ww]er)\+?(-?de)" => "$1$2";
 		"([Hh]er)\+r" => "$1r";
-		"([Hh]er)\+(ein)" => "$1-$2";
+		"([Hh]er)\+(ein|aus|auf|un-?ter|nach)" => "$1-$2";
 		"([Ee]r)\+(i-?ka)(?!-?ni-?sch)" => "$1$2"; // Erika, Amerika; amerikanisch
 		"([Ff]er)\+t" => "$1t";
 		"([Ww]er)\+d" => "$1d";
@@ -559,6 +541,8 @@
 		"([Bb]er)(ge)" => "$1-$2"; // resyllabation
 		"([Ee]r)(leuch)" => "$1+$2"; // erleuchtet
 		"([Ss]per)\+r" => "$1r";
+		"([Rr]e-?cher)\+(ch)" => "$1-$2";
+		"Ber\+s" => "Ber-s"; // name Berset
 
 		// er+ and in+
 		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
@@ -666,7 +650,7 @@
 		"CH" => {  /*h*/ 5,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  8.5,  0.5,  1,  1.3,  0,  0,  0.5, /**/ 2.5,  10,  0.7,  2,  2.5,  0,  0,  0.8, /**/ 5,  7,  0.8,  0,  3,  0,  0,  0.5, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  99,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5, /**/ 5,  2.5,  0,  4,  1,  0,  0,  0.5 }
 		"ND" => {  /*h*/ 3.5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3.5,  7,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0,  0,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
 		"NG" => {  /*h*/ 4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 1,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.5,  7.5,  0.5,  1,  1.3,  0,  0,  0.5, /**/ 3,  9.25,  0.5,  0,  1.3,  0,  0,  0.5, /**/ 5,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  9.25,  0.5,  0,  3,  0,  0,  0.5, /**/ 2.5,  7.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3.5,  1.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  2.25,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 3.5,  4,  0.5,  0,  1,  0,  1,  0.5, /**/ 3.5,  4,  0,  4,  1,  0,  0,  0.5 }
-		"NK" => {  /*h*/ 6,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 4,  0,  0,  0,  0,  0,  0,  0, /*d*/ 3,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 6,  17,  0.5,  2,  2,  0,  0,  0.5, /**/ 4.8,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 3,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  5,  0.5,  0,  1,  0,  1,  0.5, /**/ 4,  5.5,  0,  4,  1,  0,  0,  0.5 }
+		"NK" => {  /*h*/ 6,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 3,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 6,  17,  0.5,  2,  2,  0,  0,  0.5, /**/ 4.8,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 3,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  5,  0.5,  0,  1,  0,  1,  0.5, /**/ 4,  5.5,  0,  4,  1,  0,  0,  0.5 }
 		"NS" => {  /*h*/ 5,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2,  5.5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 5,  7.75,  0.5,  2,  2,  0,  0,  0.5, /**/ 4,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2.5,  9,  0.5,  0,  3,  0,  0,  0.5, /**/ 2.75,  1.25,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  99,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 2.5,  2.75,  0.5,  0,  1,  0,  1,  0.5, /**/ 3,  3.5,  0,  4,  1,  0,  0,  0.5 }
 		"PF" => {  /*h*/ 8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  7,  0.5,  1,  1.0,  0,  0,  0.5, /**/ 0.5,  7,  0.5,  2,  1.0,  0,  0,  0.5, /**/ 6,  9,  0.5,  0,  1,  0,  0,  0.5, /**/ 9,  11.1,  0.5,  0,  1.0,  0,  0,  0.5, /**/ 7.5,  16.5,  0.5,  0,  1.25,  0,  0,  0.5, /**/ 2,  20,  0.5,  0,  2.25,  0,  0,  0.5, /**/ 0,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 2,  0,  0.5,  4,  1.25,  0,  0,  0.5, /**/ 3,  0,  0.5,  0,  1.25,  0,  2,  0.5, /**/ 6,  2,  0.5,  0,  1,  0,  1,  0.5 }
 		"SP" => {  /*h*/ 8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d1*/ 0,  18,  0.5,  1,  1.5,  0,  0,  0.5, /*2*/ 2,  20,  0.5,  2,  2,  0,  0,  0.5, /*3*/ 4,  18,  0.5,  0,  2.5,  0,  0,  0.5, /*4*/ /*4,  15,  0.5,  0,  3,  0,  0,  0.5,*/ /*5*/ /*4,  5,  0.5,  0,  2.5,  0,  0,  0.5,*/ /*6*/ 4,  3,  0.5,  0,  2,  0,  0,  0.5, /*7*/ 6,  0,  0.5,  4,  1.5,  0,  0,  0.5, /*8*/ 6,  0,  0.5,  0,  1.5,  0,  2,  0.5, /*9*/ 8,  2,  0.5,  0,  1,  0,  1,  0 }
@@ -1452,6 +1436,7 @@
 		"ß" => "ss";
 		"üh(-)?([lrmn])" => "ü$1$2";
 		"([aeiou]|ä|ö|ü)h(#|-|\+)(bar|sam|ling|sal|nis)" => "$1$2$3";  // h entfällt vor ungekürzten Nachsilben 
+		"([Mm]ü)h((?:-|\|)?se-?li-?g)" => "$1$2";
 
 		"uhr" => "ur";
 		
@@ -1514,7 +1499,7 @@
 		"s-?s-?l" => "[SSL]";
 		"s-?s" => "[SS]";
 		"n-?n" => "[NN]";
-		"s-?t" => "[ST]";
+		"s-?t" => { "[ST]", "[Gg]rin-?s-?t" };
 		//"^eins" => "[EI][N]s";
 		"ch" => "[CH]";
 		"h[-\|+]?r" => "[HR]";
@@ -1622,7 +1607,7 @@
 		// Aufstrich-t				
 		"([bcdfghjklmnpqrvwxyz])(-)?t" => "$1$2[&T]";
 		"({HIN})-?t" => "$1[&T]";
-		"\[(CH|SCH)\]-?t" => "[$1][&T]";
+		"\[(CH|SCH|NS)\]-?t" => "[$1][&T]";
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF|MPF|NG|ND)\]-?t" => "[$1][&T]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TL\]" => "$1$2[&T@L3]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TR\]" => "$1$2[&T@R]";
@@ -1843,7 +1828,10 @@
 		"(\[FR\]\[EI\])\+" => "$1[&E]+"; 	// special case Freizeit (separated by +)
 		
 		// Raupenvernichtung
-		"{EN}\|{VER}" => "EN|{VER}"; 	// if not separated by \ => write -en as en
+		//"{EN}\|{VER}" => "EN|{VER}"; 	// if not separated by \ => write -en as en
+		"{EN}\|{VER}" => "{EN}\[0N-]{VER}"; 	// separate
+
+		"(\[AR\]E\[CH\]\[&T\])\+Z" => "$1\Z";  // rechtzeitig
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -2706,12 +2694,23 @@
 		"\[l\]\[au\]\[\^sch\]" => "[l][#3][au][^sch]";
 		"\[n\]\[au\]\[\^z\]" => "[n][#3][au][^z]";
 		"\[d@r3\^\]\[#3\]\[i\]\[tt\]" => "[d@r3^][#6][i][tt]";
+		"\[t@r3\^\]\[#3\]\[au\]\[m\]" => "[t@r3^][#5][au][m]";
+		"\[w\]\[#0\]\[a\]\[&a\]" => "[w][#3][a][&a]";
+		"\[ar\]\[t@r3\^\]" => "[ar][#3][t@r3^]";
+		"\[g\]\[#3\]\[d\]" => "[g][#5][d]";
+		"\[d\]\[#3\]\[a\]\[nk\]" => "[d][#5][a][nk]";
+		"\[h\]\[#3\]\[au\]\[t\]" => "[h][#5][au][t]";
+		"\[ng\]\[#3\]\[t\]" => "[ng][#6][t]";
+		"\[g\]\[#3\]\[a\]\[ng\]" => "[g][#5][a][ng]";
+		"\[s=\]\[h\]" => "[s=][#4][h]";
+		"\[s=\]\[u\]\[tt\]" => "[s=][#4][u][tt]";
 
-		// experimental: generic -&i
+		// experimental: generic -&i, -&a
 		"\[#5\]\[&i\]$" => "[#2][&i]";
+		"\[#3\]\[a\]\[&a\]" => "[#5][a][&a]";
 
 		// experimental: draw-arround-knot _._
-		"\[(sch|d)@(r|l.?|r3\^)\]\[#(.*?)\]\[(i|u)\]\[(tt|ck|pp)\]" => "[$1@$2][_._][#$3][$4][$5]";
+		"\[(sch|d|t)@(r|l.?|r3\^)\]\[#(.*?)\]\[(i|u)\]\[(tt|ck|pp|b)\]" => "[$1@$2][_._][#$3][$4][$5]";
 
 		"^(.*?)$" => "strtoupper()";	// all to upper
 
