@@ -58,9 +58,9 @@
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	#BeginSubSection(session)
-		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret";
-		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm";
-		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?"; // use non caputuring groups! (?:)
+		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen";
+		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts";
+		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?, seits, voll"; // use non caputuring groups! (?:)
 		//"title_text" := "new prefixes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
@@ -160,6 +160,7 @@
 		"\|(haf-?t)" => "-$1";
 		"(ungs)-(haf-?t)" => "$1|$2"; // recorrection: Untersuchungshaft
 		"([Ee]i)\|(gen)" => "$1-$2";
+		"([Pp]la-?to)\|(ni-?sch)" => "$1-$2";
 
 		// "resyllabation"
 		"([Zz]wei)-to" => "$1t|o";  // zweitoberst
@@ -497,6 +498,7 @@
 		"^([Ee])r\+(s-?t)(?!au)" => "$1r$2";
 		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
 		"^([Bb]er)\+k" => "$1-k";		// Berkeley
+		"b-?er\+g" => "ber-g";			// Aarberg(er) (Berg)
 		
 		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
 		"([Ee]r)\+(ker)" => "$1-$2";
@@ -525,6 +527,7 @@
 		"([Ll]er)\+n" => "$1n";
 		"([Ww]er)\+?(-?de)" => "$1$2";
 		"([Hh]er)\+r" => "$1r";
+		"([Hh]er)\+(ein)" => "$1-$2";
 		"([Ee]r)\+(i-?ka)(?!-?ni-?sch)" => "$1$2"; // Erika, Amerika; amerikanisch
 		"([Ff]er)\+t" => "$1t";
 		"([Ww]er)\+d" => "$1d";
@@ -561,6 +564,14 @@
 		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
 		"([Ii]n)-?di-?e([rn])" => "$1-di-e$2";
  		"([Ii])n-?di-?erin" => "$1-di-e-rin";
+
+		// affix er- => er+ (additional affixes)
+		"Schwie-?g-?er-" => "Schwie-ger+";
+		// additional ge+
+		"^([Gg]e)-?(n(?:u|ü)-?g)" => "$1+$2";
+
+		// einmal, zweimal, dreimal etc. (where's the logic anyway ... ?:)
+		"(ein|zwei|drei|vier|fünf|sechs|sie-?ben|acht|neun|zehn|elf|zwölf)\|mal" => "$1-mal";
  
 	#EndSubSection(analyzer)
 #EndSection(header)
