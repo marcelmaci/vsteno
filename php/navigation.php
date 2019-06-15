@@ -41,6 +41,9 @@
                         echo "<li><a href='edit_header.php'>->Header</a></li>";
                         echo "<li><a href='edit_font.php'>->Zeichen</a></li>";
                         echo "<li><a href='edit_rules.php'>->Regeln</a></li>";
+                        echo "</ul>";
+                        echo "<ul><p><b>Tools</b></p>";
+                        echo "<li><a href='regex_helper_variable.php'>->RX-GEN</a></li>";
                         echo "<li><a href='export_se1data_to_editor.php'>->VPAINT</a></li>";
                         echo "</ul>";
                       }

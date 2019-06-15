@@ -1,10 +1,5 @@
-<html lang="de">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Titel</title>
-  </head>
-  <body>
+<?php require "vsteno_fullpage_template_top.php"; ?>
+
 <h1>RULE-GENERATOR</h2>
 <p>This programm creates spacer rules based on tokens of the actual model. Copy them to the rules file.</p>
 
@@ -26,7 +21,12 @@ require_once "regex_helper_import.php"; // $token_groups array
 $token_variants = array(); // nice side-effect: not necessary since token_combiner copies offset 23 of token header (and hence the group!)
 
 // combination = preceeding + following token that can then be combined with different vowels (see rules_list)
-$group_combinations = array(
+//$group_combinations_variable = "C1:[L1,R1],C2:[L1,R2],C3:[L1,R3],C4:[L2,R1],C5:[L2,R2],C6:[L2,R3],C7:[L3,R1],C8:[L3,R2],C9:[L3,R3],C10:[L4,R1],C11:[L4,R2],C12:[L4,R3]";
+$group_combinations_variable = $_SESSION['spacer_token_combinations'];
+$group_combinations = ImportGroupCombinationsFromVariable( $group_combinations_variable );
+
+
+/*array(
     "C1" => array( "L1", "R1" ),
     "C2" => array( "L1", "R2" ),
     "C3" => array( "L1", "R3" ),
@@ -40,16 +40,29 @@ $group_combinations = array(
     "C11" => array( "L4", "R2" ),
     "C12" => array( "L4", "R3" )
 );
+*/
 
 // like token groups but for vowels
-$vowel_groups = array(
+// $vowel_groups_variable = "V1:[A,O,U],V2:[I,AU]";
+$vowel_groups_variable = $_SESSION['spacer_vowel_groups'];
+
+$vowel_groups = ImportVowelGroupsFromVariable($vowel_groups_variable);
+/*
+array(
     "V1" => array( "A", "O", "U" ),
     "V2" => array( "I", "AU" )
 );
+*/
 
 // rules: combination + vowel + distance (string) + mandatory/optional
 // for each combination (2 tokens out of groups) a vowel group can be given a specific distance
-$rules_list = array( 
+//$rules_list_variable = "R1:[C1,V1,D1,?],R2:[C1,V2,D2,],R3:[C2,V1,D3,?],R4:[C2,V2,D4,],R5:[C3,V1,D5,?],R6:[C3,V2,D6,],R7:[C4,V1,D7,?],R8:[C4,V2,D7,],R9:[C5,V1,D8,?],R10:[C5,V2,D9,],R11:[C6,V1,D10,?],R12:[C6,V2,D11,],R13:[C7,V1,D12,?],R14:[C7,V2,D14,],R15:[C8,V1,D15,?],R16:[C8,V2,D16,],R17:[C9,V1,D17,?],R18:[C9,V2,D18,],R19:[C10,V1,D19,?],R20:[C10,V2,D20,],R21:[C11,V1,D21,?],R22:[C11,V2,D22,],R23:[C12,V1,D23,?],R24:[C12,V2,D24,]";
+$rules_list_variable = $_SESSION['spacer_rules_list'];
+
+$rules_list = ImportRulesListFromVariable( $rules_list_variable);
+
+
+/* array( 
     "R1" => array( "C1", "V1", "D1", "?" ), // "?" means optional (used as regex token)
     "R2" => array( "C1", "V2", "D2", "" ),   // "" means mandatory
     "R3" => array( "C2", "V1", "D3", "?" ),
@@ -76,6 +89,7 @@ $rules_list = array(
     "R24" => array( "C12", "V2", "D24", "" ),
      
 );
+*/
 
 /*
 // abstract examples and description
@@ -175,34 +189,73 @@ echo "<h2>RULES</h2><p>// statistics: these rules cover approximately <b>$total_
 // statistics
 echo "<h2>STATISTICS</h2>"; 
 echo "<p>These rules cover approximately <b>$total_permutations</b> token combinations.</p>";
+    
+function ImportRulesListFromVariable( $string ) {
+    // $test_string = "R1: [C1, V1, D1, ?], R2: [C1, V2, D2,], R3:[C1,V2,D3, ]";
+    $test_string = $string;
+    $test_string1 = preg_replace("/ /", "", $test_string); // strip out spaces
+    $test_string2 = preg_replace("/(.*?):\[(.*?),(.*?),(.*?),(.*?)\](,|$)/", "\"$1\":[\"$2\",\"$3\",\"$4\",\"$5\"]$6", $test_string1);
+    $test_string3 = "{" . $test_string2 . "}";
+    //echo "<h2>TEST (rules list)</h2>";
+    //echo "<p>$test_string</p>";
+    //echo "<p>$test_string1</p>";
+    //echo "<p>$test_string2</p>";
+    //echo "<p>$test_string3</p>";
+    $test_string_php = array();
+    $test_string_php = json_decode($test_string3, true); // parameter true = decode to an associative array (instead of std_object)
+    //$test_string_boomerang = json_encode($test_string_php);
+    //echo "<p>$test_string_boomerang (should be equal to preceeding)</p>";
+    //var_dump($test_string_php);
+    //echo "<br><br>";
+    //var_dump($rules_list);
+    return $test_string_php;
+}
 
-// serialize test
-$rules_list_serialized = serialize($rules_list);
-$rules_list_JSON = json_encode($rules_list);
-echo "<h2>SERIALIZED</h2>";
-echo "<p>$rules_list_serialized</p>";
+function ImportGroupCombinationsFromVariable( $string ) {
+    $test_string = $string;
+    $test_string1 = preg_replace("/ /", "", $test_string); // strip out spaces
+    $test_string2 = preg_replace("/(.*?):\[(.*?),(.*?)](,|$)/", "\"$1\":[\"$2\",\"$3\"]$4", $test_string1);
+    $test_string3 = "{" . $test_string2 . "}";
+    //echo "<h2>TEST (group combinations)</h2>";
+    //echo "<p>$test_string</p>";
+    //echo "<p>$test_string1</p>";
+    //echo "<p>$test_string2</p>";
+    //echo "<p>$test_string3</p>";
+    $test_string_php = array();
+    $test_string_php = json_decode($test_string3, true); // parameter true = decode to an associative array (instead of std_object)
+    //$test_string_boomerang = json_encode($test_string_php);
+    //echo "<p>$test_string_boomerang (should be equal to preceeding)</p>";
+    //var_dump($test_string_php);
+    //echo "<br><br>";
+    //var_dump($rules_list);
+    return $test_string_php;
+}
 
-echo "<h2>JSON</h2>";
-echo "<p>$rules_list_JSON</p>";
-
-$test_string = "R1: [C1, V1, D1, ?], R2: [C1, V2, D2,], R3:[C1,V2,D3, ]";
-$test_string1 = preg_replace("/ /", "", $test_string); // strip out spaces
-$test_string2 = preg_replace("/(.*?):\[(.*?),(.*?),(.*?),(.*?)\](,|$)/", "\"$1\":[\"$2\",\"$3\",\"$4\",\"$5\"]$6", $test_string1);
-$test_string3 = "{" . $test_string2 . "}";
-echo "<h2>TEST</h2>";
-echo "<p>$test_string</p>";
-echo "<p>$test_string1</p>";
-echo "<p>$test_string2</p>";
-echo "<p>$test_string3</p>";
-$test_string_php = array();
-$test_string_php = json_decode($test_string3, true); // parameter true = decode to an associative array (instead of std_object)
-$test_string_boomerang = json_encode($test_string_php);
-echo "<p>$test_string_boomerang (should be equal to preceeding)</p>";
-var_dump($test_string_php);
-echo "<br><br>";
-var_dump($rules_list);
-
+function ImportVowelGroupsFromVariable($string ) {
+    $test_string = $string;
+    $test_string1 = preg_replace("/ /", "", $test_string); // strip out spaces
+    // several steps needed, because the number of vowels is undefined
+    //echo "<h2>TEST (vowel groups)</h2>";
+    $test_string2 = preg_replace("/(^|,)([^,]*?):/", "$1\"$2\":", $test_string1); // add "
+    //echo "<p>1:$test_string2</p>";
+    $test_string2 = preg_replace("/(\[)([a-zA-Z0-9]*?),/", "$1\"$2\",", $test_string2); // add "
+    //echo "<p>2:$test_string2</p>";
+    $test_string2 = preg_replace("/(?<=,)([a-zA-Z0-9]*?)(?=\])/", "\"$1\"", $test_string2); // add "
+    //echo "<p>3:$test_string2</p>";
+    $test_string3 = preg_replace("/(?<=,)([a-zA-Z0-9]*?)(?=,)/", "\"$1\"", $test_string2); // add "
+    //echo "<p>4:$test_string3</p>";
+    /////////////////////////////////
+    $test_string3 = "{" . $test_string3 . "}";
+    //echo "<p>5:$test_string3</p>";
+    $test_string_php = array();
+    $test_string_php = json_decode($test_string3, true); // parameter true = decode to an associative array (instead of std_object)
+    //$test_string_boomerang = json_encode($test_string_php);
+    //echo "<p>$test_string_boomerang (should be equal to preceeding)</p>";
+    //var_dump($test_string_php);
+    //echo "<br><br>";
+    //var_dump($rules_list);
+    return $test_string_php;
+}
 
 ?>
-  </body>
-</html>
+<?php require "vsteno_fullpage_template_bottom.php"; ?>

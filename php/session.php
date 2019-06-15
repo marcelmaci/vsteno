@@ -122,6 +122,10 @@ function InitializeSessionVariables() {
     $_SESSION['rules_count'] = null;
     $_SESSION['language_hunspell'] = "de_CH"; // do not initialize these variables, so that they can be initialized by model!
     $_SESSION['language_hyphenator'] = "de"; // correction: can be done here, since toggle_model now actualizes session variables for specific model
+    // spacer variables
+    $_SESSION['spacer_token_combinations'] = "";
+    $_SESSION['spacer_vowel_groups'] = "";
+    $_SESSION['spacer_rules_list'] = "";
 }
 
 
