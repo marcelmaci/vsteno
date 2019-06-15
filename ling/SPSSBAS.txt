@@ -62,6 +62,42 @@
 		"token_distance_wide" := "18";
 		"title_text" := "Spanisch";
 		"introduction_text" := "Spanisches System 'SPSSBAS' (Stolze-Schrey, Grundschrift)";
+		"spacer_token_combinations" := 
+			"C1:[L1,R1],C2:[L1,R2],
+			C3:[L1,R3],C4:[L2,R1],
+			C5:[L2,R2],C6:[L2,R3],
+			C7:[L3,R1],C8:[L3,R2],
+			C9:[L3,R3],C10:[L4,R1],
+			C11:[L4,R2],
+			C12:[L4,R3]";
+		"spacer_vowel_groups" := 
+			"V1:[A,O,U],
+			V2:[I,AU]";
+		"spacer_rules_list" := 
+			"R1:[C1,V1,D1,?],
+			R2:[C1,V2,D2,],
+			R3:[C2,V1,D3,?],
+			R4:[C2,V2,D4,],
+			R5:[C3,V1,D5,?],
+			R6:[C3,V2,D6,],
+			R7:[C4,V1,D7,?],
+			R8:[C4,V2,D7,],
+			R9:[C5,V1,D8,?],
+			R10:[C5,V2,D9,],
+			R11:[C6,V1,D10,?],
+			R12:[C6,V2,D11,],
+			R13:[C7,V1,D12,?],
+			R14:[C7,V2,D14,],
+			R15:[C8,V1,D15,?],
+			R16:[C8,V2,D16,],
+			R17:[C9,V1,D17,?],
+			R18:[C9,V2,D18,],
+			R19:[C10,V1,D19,?],
+			R20:[C10,V2,D20,],
+			R21:[C11,V1,D21,?],
+			R22:[C11,V2,D22,],
+			R23:[C12,V1,D23,?],
+			R24:[C12,V2,D24,]";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		// empty
@@ -591,7 +627,7 @@
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
 		"^(en)?contr" => "$1{CONTR}";
-		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "comer", "cometa", "color", "colega" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "comer", "cometa", "color", "colega", "cosa" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobre?|sor" => { "{SOBRE}", "sobri" }; // sobrio/as
 		"^gener" => "{GENER}";
 		"^necesar" => "{NECESAR}";
