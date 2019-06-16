@@ -62,7 +62,8 @@ $de_checked = ($_SESSION['actual_model'] === "DESSBAS") ? "checked" : "";
 $sp_checked = ($_SESSION['actual_model'] === "SPSSBAS") ? "checked" : "";
 ?>
 <input type="radio" name="model_to_load" value="DESSBAS" <?php echo $de_checked;?>>Deutsch: Stolze-Schrey Grundschrift (DESSBAS)<br>
-<input type="radio" name="model_to_load" value="SPSSBAS" <?php echo $sp_checked;?>>Spanisch: Stolze-Schrey Grundschrift (SPSSBAS)
+<input type="radio" name="model_to_load" value="SPSSBAS" <?php echo $sp_checked;?>>Spanisch: Stolze-Schrey Grundschrift (SPSSBAS)<br>
+Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch
 
 </td></tr>
 <tr><td>Sprache</td></tr>

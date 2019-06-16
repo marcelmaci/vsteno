@@ -70,6 +70,7 @@ if ($_SESSION['user_logged_in']) {
 require_once "import_model.php";
 require_once "engine.php";
 require_once "parser.php";
+require_once "regex_helper_functions.php";
 
 global $font, $combiner, $shifter;
 global $rules, $functions_table;
@@ -105,7 +106,6 @@ $_SESSION['model_standard_or_custom'] = ($model_to_load === GetDBUserModelName()
 //$text_to_parse = LoadModelFromDatabase($model_name);
 //echo "<p>$text_to_parse</p>";
 
-
 //echo "text: $text_to_parse<br><br>";
 /*
 
@@ -128,10 +128,13 @@ $steno_tokens_master = $font[$actual_model];
 $combiner_table = $combiner[$actual_model];
 $shifter_table = $shifter[$actual_model];
 
+// try to place that earlier in import so that rules can be patched ...
 CreateCombinedTokens();
 CreateShiftedTokens();
-          
 
+  
+  
+  
 //var_dump($steno_tokens_master);
 //echo "--------------------------------------------------------------";
 //var_dump($steno_tokens_master);

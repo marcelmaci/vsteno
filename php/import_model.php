@@ -598,6 +598,7 @@ function ImportModelFromText($text) {
     $header_section = GetSection($output, "header");
     $font_section = GetSection($output, "font");
     $rules_section = GetSection($output, "rules");
+    
     // get subsections
     // header
     $analyzer_subsection = GetSubSection($header_section, "analyzer");
@@ -619,6 +620,28 @@ function ImportModelFromText($text) {
         ImportBase();   // data is written to global variable $imported_base (which corresponds to $steno_tokens_master)
         ImportCombiner(); // idem to $imported_combiner
         ImportShifter(); // idem to $imported_shifter
+ 
+/*
+    // patch spacer in rules section if autoinsert is selected
+    // since ImportModelFromText() can be called from different sources (form or other, i.e. with POST-variable set or not) first make sure to update
+    // session-variable if POST-variable is set (= data.php is called from a form)
+    if (isset($_POST['spacer_autoinsert'])) $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
+        // afterward check session variable
+        if ($_SESSION['spacer_autoinsert']) {
+        echo "<p>AUTOGENERATE</p>";
+        $spacer_rules = GenerateSpacerRules();
+        echo "<p>$spacer_rules</p>";
+        // discovered that in php-regex .*? doesn't include line breaks \n
+        // which means that .*? can't find spacer rules that span over several lines
+        // workaround: (?:.|[\n\t\r])*? inludes \n, \t, \s (or whatever is needed)
+        // inside the "allowed" characters
+        $rules_section_test = preg_replace("/(#BeginSubSection\(spacer)(.*?\))((?:.|[\n\t\r])*?)(#EndSubSection\(spacer)/", "$1$2\n$spacer_rules\n$4", $rules_section);   
+        echo "<br>rules_section(test):<br><br><pre>$rules_section_test</pre>";
+    }
+
+  */      
+        
+        
         ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
     //}
      // if stage3 and stage4 are not set => set them for compatibility

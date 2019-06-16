@@ -126,6 +126,7 @@ function InitializeSessionVariables() {
     $_SESSION['spacer_token_combinations'] = "";
     $_SESSION['spacer_vowel_groups'] = "";
     $_SESSION['spacer_rules_list'] = "";
+    $_SESSION['spacer_autoinsert'] = false;
 }
 
 
@@ -243,6 +244,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : $_SESSION['selected_std_model'];
     $_SESSION['language_hunspell'] = $_POST['language_hunspell'];
     $_SESSION['language_hyphenator'] = $_POST['language_hyphenator'];
+    $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";
     echo "actual_model: " . $_SESSION['actual_model'] . "<br>";
