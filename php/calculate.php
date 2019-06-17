@@ -58,7 +58,7 @@ function ResetSessionGetBackPage() {
     ImportSession();
     
     InsertHTMLHeader();
-    echo "<p>Die Optionen wurden zurückgesetzt.</p>";
+    echo "<p>Die Optionen wurden aktualisiert (= zurückgesetzt und neu geladen).</p>";
     echo '<a href="input.php"><br><button>"zurück"</button></a>';
     InsertHTMLFooter();
 }

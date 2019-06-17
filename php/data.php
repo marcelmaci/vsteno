@@ -70,7 +70,7 @@ if ($_SESSION['user_logged_in']) {
 require_once "import_model.php";
 require_once "engine.php";
 require_once "parser.php";
-require_once "regex_helper_functions.php";
+//require_once "regex_helper_functions.php";
 
 global $font, $combiner, $shifter;
 global $rules, $functions_table;
@@ -95,12 +95,13 @@ $global_error_string = "";
 
 // adjust session variable so that correct model gets loaded
 // session-variable is also used to set correct rules pointers for regex-parser-functions!!!
+if (!(isset($_SESSION['actual_model']))) $_SESSION['actual_model'] = $default_model;
 $model_to_load = (isset($_POST['model_to_load'])) ? $_POST['model_to_load'] : $_SESSION['actual_model'];
 $_SESSION['actual_model'] = $model_to_load;
 $_SESSION['model_standard_or_custom'] = ($model_to_load === GetDBUserModelName()) ? "custom" : "standard";   // is used via calculate.php
 
 // DO NOT ECHO DEBUG INFORMATION HERE => THATS BEFORE HTML HEAD!!!!!!!!!!
-//echo "<p>Model to load: " . $model_to_load . "</p>";
+//echo "<p>Model to load: >" . $model_to_load . "<</p>";
 // old version!!!!!
  $text_to_parse = LoadModelFromDatabase($model_to_load);
 //$text_to_parse = LoadModelFromDatabase($model_name);
@@ -117,6 +118,7 @@ $actual_model = $_SESSION['actual_model'];
 
 //echo "Imported:  actual_model = $actual_model font[actual_model][Z][4] = " . $font[$actual_model]["Z"][4] . "<br>";
 
+/*
 
 // connect old variables
 // note: this is the easy (or should i say "quick and dirty";-) method to reuse old parser functions with new data
@@ -128,11 +130,14 @@ $steno_tokens_master = $font[$actual_model];
 $combiner_table = $combiner[$actual_model];
 $shifter_table = $shifter[$actual_model];
 
+*/
+
+/*
 // try to place that earlier in import so that rules can be patched ...
 CreateCombinedTokens();
 CreateShiftedTokens();
 
-  
+  */
   
   
 //var_dump($steno_tokens_master);

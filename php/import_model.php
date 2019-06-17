@@ -96,6 +96,7 @@ $start_word_parser = 0;     // contains rules pointer to first rule that has to 
 //require_once "vsteno_fullpage_template_top.php";
 require_once "dbpw.php";
 require_once "options.php";  // for whitelist (session variables)
+//require_once "regex_helper_functions.php";
 //require_once "data.php";
 
 //////////////////////////////////////// load from database ///////////////////////////////////////////////
@@ -127,7 +128,8 @@ function LoadModelFromDatabase($name) {
 //////////////////////////////////////// import functions /////////////////////////////////////////////////
 function StripOutComments($text) {
     $output = preg_replace("/\/\*.*?\*\//", "", $text);     // replace /* ... */ comments by empty string
-    $output = preg_replace("/\/\/.*?\n/", "[\n\r]", $output);     // replace // ... \n comments by \n
+    //$output = preg_replace("/\/\/.*?\n/", "[\n\r]", $output);     // replace // ... \n comments by \n
+     $output = preg_replace("/\/\/.*?(?=\n)/", "", $output);     // replace // ... \n comments empty string followed by \n (careful with that modification ...
     return $output;
 }
 
@@ -620,29 +622,75 @@ function ImportModelFromText($text) {
         ImportBase();   // data is written to global variable $imported_base (which corresponds to $steno_tokens_master)
         ImportCombiner(); // idem to $imported_combiner
         ImportShifter(); // idem to $imported_shifter
+
+
+// connect old variables
+// note: this is the easy (or should i say "quick and dirty";-) method to reuse old parser functions with new data
+// it works as long as you reassign the new data to the old variables whenever (each time!) the model changes!
+// there's still a bug: exported array has 170 elements, imported one 161 => why?!?
+global $font, $combiner, $shifter;
+global $steno_tokens_master, $combiner_table, $shifter_table, $steno_tokens_type; // $steno_tokens_type: table to mark tokens created by shifter/combiner
+$actual_model = $_SESSION['actual_model'];
+
+//echo "actual_model: $actual_model<br>";
+$steno_tokens_master = $font[$actual_model];
+$combiner_table = $combiner[$actual_model];
+$shifter_table = $shifter[$actual_model];
+
+ global $token_groups, $group_combinations, $vowel_groups, $token_variants, $rules_list;
+  
+  CreateCombinedTokens();
+CreateShiftedTokens();
+
+ //var_dump($steno_tokens_master);
+ GenerateTokenGroups($steno_tokens_master);
+ GenerateGroupCombinations();
+ GenerateVowelGroups();
+ GenerateRulesList();
+ //$group_combinations_variable = $_SESSION['spacer_token_combinations'];
+ //$group_combinations = ImportGroupCombinationsFromVariable( $group_combinations_variable );
+
+  //var_dump($_SESSION['spacer_vowel_groups']);
+  //var_dump($vowel_groups);
  
-/*
+
     // patch spacer in rules section if autoinsert is selected
     // since ImportModelFromText() can be called from different sources (form or other, i.e. with POST-variable set or not) first make sure to update
     // session-variable if POST-variable is set (= data.php is called from a form)
     if (isset($_POST['spacer_autoinsert'])) $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
-        // afterward check session variable
-        if ($_SESSION['spacer_autoinsert']) {
-        echo "<p>AUTOGENERATE</p>";
-        $spacer_rules = GenerateSpacerRules();
-        echo "<p>$spacer_rules</p>";
+    else $_SESSION['spacer_autoinsert'] = false;
+    /*
+    echo $_SESSION['spacer_autoinsert'] . $_POST['spacer_autoinsert'];
+    $_SESSION['spacer_autoinsert'] = false;
+    */  
+    // afterward check session variable
+    if ($_SESSION['spacer_autoinsert']) {
+        //echo "<p>AUTOGENERATE</p>";
+        $spacer_rules = /*utf8_encode(*/GenerateSpacerRules()/*)*/;
+        $spacer_rules = StripOutTabsAndNewLines(StripOutComments($spacer_rules));
+        //echo "<p>$spacer_rules</p>";
         // discovered that in php-regex .*? doesn't include line breaks \n
         // which means that .*? can't find spacer rules that span over several lines
         // workaround: (?:.|[\n\t\r])*? inludes \n, \t, \s (or whatever is needed)
         // inside the "allowed" characters
-        $rules_section_test = preg_replace("/(#BeginSubSection\(spacer)(.*?\))((?:.|[\n\t\r])*?)(#EndSubSection\(spacer)/", "$1$2\n$spacer_rules\n$4", $rules_section);   
-        echo "<br>rules_section(test):<br><br><pre>$rules_section_test</pre>";
+        //$rules_section_test = preg_replace("/(#BeginSubSection\(spacer)(.*?\))((?:.|[\n\t\r])*?)(#EndSubSection\(spacer)/", "$1$2$spacer_rules$4", $rules_section);   
+        
+        //preg_match("/#BeginSubSection\(spacer)(.*?\))((?:.|[\n\t\r])*?)(#EndSubSection\(spacer)/", $rules_section, $matches);
+        preg_match("/^(.*?)(#BeginSubSection\(spacer.*?\))(?:.*?)(#EndSubSection\(spacer.*?\))(.*?)$/", $rules_section, $matches);
+      
+        //var_dump($matches);
+        $firstpart = $matches[1];
+        $functionstart = $matches[2];
+        $functionend = $matches[3];
+        $lastpart = $matches[4];
+        
+        $rules_section = $firstpart . $functionstart . $spacer_rules . $functionend . $lastpart;
+        //echo "<br>rules_section(test):<br><br><pre>" . htmlspecialchars($rules_section_test) . "</pre>";
+        //echo "spacer_rules: " . htmlspecialchars($spacer_rules) . "<br>";
+        //echo "<br>rules_section(original):<br><br><pre>" . htmlspecialchars($rules_section) . "</pre><br>";
     }
 
-  */      
-        
-        
-        ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
+    ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
     //}
      // if stage3 and stage4 are not set => set them for compatibility
     $actual_model = $_SESSION['actual_model'];
@@ -653,6 +701,7 @@ function ImportModelFromText($text) {
     return $output;
 }
 
+require_once "regex_helper_functions.php";
 
 /*
 // main

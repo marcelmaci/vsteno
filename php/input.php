@@ -208,7 +208,7 @@ Farbe <input type="text" name="page_number_color"  size="4" value="<?php echo $_
 </td></tr>
 </table>
 
-<input type="submit" name="action" value="abschicken"><input type="submit" name="action" value="zurücksetzen">
+<input type="submit" name="action" value="abschicken"><input type="submit" name="action" value="aktualisieren">
 </form>
 </div>
 </center>

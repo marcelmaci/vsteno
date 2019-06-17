@@ -1,5 +1,18 @@
 <?php
+// create token groups
+$token_groups = array();
 
+function GenerateTokenGroups( $steno_tokens_master ) {
+    global $token_groups;
+    foreach ($steno_tokens_master as $token => $definition) {
+        $group = $definition[23];
+        if (($group !== 0) && (mb_strlen($group)>0)) {
+            //echo "assign $token to group $group<br>";
+            $group_array = explode(":", $group); // same token can be attributed to different groups
+            foreach ($group_array as $group_name) $token_groups[$group_name][] .= $token;   
+        }
+    }
+}
 
 function GetRegexOrString($array) {
     $temp1 = "";
@@ -12,20 +25,31 @@ function GetRegexOrString($array) {
 $permutations = array();
 
 // define data
-require_once "regex_helper_import.php"; // $token_groups array
+//require_once "regex_helper_import.php"; // $token_groups array
 $token_variants = array(); // nice side-effect: not necessary since token_combiner copies offset 23 of token header (and hence the group!)
 
-$group_combinations_variable = $_SESSION['spacer_token_combinations'];
-$group_combinations = ImportGroupCombinationsFromVariable( $group_combinations_variable );
+function GenerateGroupCombinations() {
+    global $group_combinations;
+    $group_combinations_variable = $_SESSION['spacer_token_combinations'];
+    $group_combinations = ImportGroupCombinationsFromVariable( $group_combinations_variable );
+}
+//echo "group_combinations: $group_combinations_variable";
+//var_dump($group_combinations);
 
 // like token groups but for vowels
-$vowel_groups_variable = $_SESSION['spacer_vowel_groups'];
-$vowel_groups = ImportVowelGroupsFromVariable($vowel_groups_variable);
+function GenerateVowelGroups() {
+    global $vowel_groups;
+    $vowel_groups_variable = $_SESSION['spacer_vowel_groups'];
+    $vowel_groups = ImportVowelGroupsFromVariable($vowel_groups_variable);
+}
 
 // rules: combination + vowel + distance (string) + mandatory/optional
 // for each combination (2 tokens out of groups) a vowel group can be given a specific distance
-$rules_list_variable = $_SESSION['spacer_rules_list'];
-$rules_list = ImportRulesListFromVariable( $rules_list_variable);
+function GenerateRulesList() {
+    global $rules_list;
+    $rules_list_variable = $_SESSION['spacer_rules_list'];
+    $rules_list = ImportRulesListFromVariable( $rules_list_variable);
+}
 
 // generate rules
 //$rules_for_patching = GenerateSpacerRulesAndPrintData();
@@ -34,6 +58,7 @@ $rules_list = ImportRulesListFromVariable( $rules_list_variable);
 function GenerateSpacerRules() {
     global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations;
     $regex_rules = array();
+    //var_dump($vowel_groups);
     
     // generate variants
     // token groups
