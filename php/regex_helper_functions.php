@@ -21,6 +21,15 @@ function GetRegexOrString($array) {
     return $temp1;
 }
 
+function GetRegexOrStringAndPrint($array) {
+    $temp1 = "";
+    foreach ($array as $element) {
+         $temp1 .= ($element === end($array)) ? "$element" : "$element|";
+         echo "$element ";
+    }
+    return $temp1;
+}
+
 // permutations
 $permutations = array();
 
@@ -121,13 +130,23 @@ function GenerateSpacerRulesAndPrintData() {
     global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations;
     $regex_rules = array();
 
+    // sort arrays for easier reading (only when results are printed)
+    ksort($token_groups); // ascending by key
+    ksort($vowel_groups);
+    ksort($rules_list);
+    ksort($token_variants);
+    ksort($group_combinations);
+    
     // generate variants
     // token groups
+    echo "<h2>IMPORT</h2>";
     $token_groups_string = array();
     foreach ($token_groups as $key => $tokens) {
         // calculate regex or-chain
-        $temp1 = GetRegexOrString($tokens);
-        $temp2 = GetRegexOrString($token_variants[$key]);
+        echo "$key: ";
+        $temp1 = GetRegexOrStringAndPrint($tokens);
+        $temp2 = GetRegexOrStringAndPrint($token_variants[$key]);
+        echo "<br>";
         // write full regex and insert (use non capturing groups ?:)
         $token_groups_string[$key] = (mb_strlen($temp2) === 0) ? "\[(?:$temp1)\]" : "\[(?:$temp1)(?:$temp2)?\]";
         // calculate permutations

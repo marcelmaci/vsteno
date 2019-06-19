@@ -9489,8 +9489,9 @@ Gruppierung
 \end_layout
 
 \begin_layout Standard
-Um die Zeichen zu gruppieren wird der Offset 23 im Header genutzt.
- Hier zwei Beispiele:
+Um die Zeichen zu gruppieren wird der Offset 23 im Header der Zeichendefinitione
+n genutzt.
+ Hier vier Beispiele:
 \end_layout
 
 \begin_layout LyX-Code
@@ -9502,7 +9503,7 @@ Um die Zeichen zu gruppieren wird der Offset 23 im Header genutzt.
 \end_layout
 
 \begin_layout LyX-Code
-0, 0, 0, 0, 0, 0, 0, "L3:R2", /*data*/ ...
+0, 0, 0, 0, 0, 0, 0, "L3:L3A:R1:R1A", /*data*/ ...
  }
 \end_layout
 
@@ -9515,25 +9516,65 @@ Um die Zeichen zu gruppieren wird der Offset 23 im Header genutzt.
 \end_layout
 
 \begin_layout LyX-Code
-0, 0, 0, 0, 0, 0, 0, "L1:R2", /*data*/ ...
+0, 0, 0, 0, 0, 0, 0, "L1:L1A:R1:R1A", /*data*/ ...
+ }
+\end_layout
+
+\begin_layout LyX-Code
+"P" => { /*header*/ 5, 0.5, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, "", "", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, 0, 0, 0, 0, 0, "L3:L3A:R1:R1B", /*data*/ ...
+ }
+\end_layout
+
+\begin_layout LyX-Code
+"T" => { /*header*/ 0, 0.5, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, "", "", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+0, 0, 0, 0, 0, 0, 0, "L1:L1A:R1:R1B", /*data*/ ...
  }
 \end_layout
 
 \begin_layout Standard
-Wichtig ist hier zuerst einmal, dass jedes Zeichen theoretisch mehreren
- Gruppen zugeordnet werden kann (hierfür werden die einzelnen Gruppen durch
- Doppelpunkt : voneinander abgetrennt).
- Allerdings wird empfohlen, jedes Zeichen nur einer oder zwei Gruppen zuzuteilen
-, nächlich einer linken (L) und einer rechten (R) Gruppe.
- Links und rechts meint hier: Das Zeichen steht links (als erstes Zeichen)
- oder rechts (als zweites, nachfolgendes Zeichen).
- Die Zahlen bezeichnen dann die Gruppennummer: Die Zeichen B und D werden
- zum Beispiel beide der rechten Gruppe R2 zugeordnet, weil beide spitz und
- einstufig beginnen (in diesem Sinne verhalten sich also B und D als Folgezeiche
-n gleich).
- Hingegen haben sie verschiedene linke Gruppen: B endet rund auf der Grundlinie
- (Gruppe L3), D endet zwar auch auf der Grundlinie, ist aber spitz und ausserdem
+Wichtig ist hier zuerst einmal, dass jedes Zeichen mehreren Gruppen zugeordnet
+ werden kann (hierfür werden die einzelnen Gruppen durch Doppelpunkt : voneinand
+er abgetrennt).
+ In der obigen Gruppe ordnen wir die Zeichen B, P, D, T je 4 Gruppen zu,
+ wobei wir zwischen Hauptgruppen, Hauptkategorien und Unterkategorien unterschei
+den, die jeweils durch einen Buchstaben oder eine Zahl bezeichnet werden.
  
+\end_layout
+
+\begin_layout Standard
+Die Buchstaben L und R bedeuten linke und rechte Hauptgruppe, d.h.
+ der entsprechende Fall tritt ein, wenn das Zeichen links (als erstes Zeichen)
+ oder rechts (als zweites, nachfolgendes Zeichen) steht.
+ 
+\end_layout
+
+\begin_layout Standard
+Die Zahlen bezeichnen dann die Gruppennummer bzw.
+ die Zeichenkategorie.
+ Die Zeichen B, D, P und TT werden zum Beispiel alle derselben rechten Gruppe
+ R1 zugeordnet, weil alle spitz und mit einem vertikalen String beginnen
+ (in diesem Sinne verhalten sie sich als Folgezeichen gleich).
+\end_layout
+
+\begin_layout Standard
+Hingegen haben B, P und D, T verschiedene linke Gruppen: B und P enden rund
+ auf der Grundlinie (Gruppe L3), D, T endet zwar auch auf der Grundlinie,
+ ist aber spitz und ausserdem 
 \begin_inset Quotes eld
 \end_inset
 
@@ -9541,50 +9582,121 @@ schlanker
 \begin_inset Quotes erd
 \end_inset
 
- als das Zeichen B, deshalb Gruppe L2 (wo auch Zeichen wie t oder tt dazugehören
-, weil sie alle spitz auf der Grundlinie enden).
-\end_layout
-
-\begin_layout Subsection*
-Kombinationen
+ als das Zeichen B, deshalb Gruppe L1.
+ D.h.
+ diese zwei Gruppen (L1, L3) verhalten sich als linke Zeichen (d.h.
+ wenn sie zuerst stehen) anders.
 \end_layout
 
 \begin_layout Standard
-Danach können Kombinationen definiert werden.
- Dies funktioniert im Moment nur mit Variablen, die direkt als PHP-Code
- innerhalb der Datei regex_helper.php definiert werden
+Schliesslich unterscheiden wir durch den Buchstaben A und B weitere Unterkategor
+ien, in diesem Falle nämlich, ob die Zeichen ein- oder zweistufig sind:
+ A bedeutet hier einstufig (hierzu gehören B und D, sowohl als linke Zeichen
+ L1A und L3A als auch als rechte Zeichen R1A und R3A), B bedeutet zweistufig
+ (hierzu gehören P und T, sowohl als linke Zeichen L1B und L3B als auch
+ als rechte Zeichen R1B und R3B).
+ 
+\end_layout
+
+\begin_layout Standard
+Wir können die Klassifizierung der Zeichen in Haupt- und Untergruppen beliebig
+ weiterführen und z.B.
+ PP und TT mit einer weiteren Bezeichnung C analog dreistufigen Gruppen
+ L1C, L3C, R1C, R3C zuordnen.
+ 
+\end_layout
+
+\begin_layout Standard
+Sämtliche Bezeichnungen können frei gewählt werden und beliebig lang sein.
+ Es besteht auch kein Unterschied, ob Buchstaben oder Zahlen verwendet werden.
+ Die obgenannten Fälle sind also nur Beispiele (und statt L1A könnte man
+ die Gruppe grad so gut 
+\begin_inset Quotes eld
+\end_inset
+
+linkeschlankeeinstufigezeichen
+\begin_inset Quotes erd
+\end_inset
+
+ nennen).
+ Die Empfehlung lautet hier einfach: möglichst kurze Zeichen verwenden (der
+ Übersichtlichkeit halber) und Untergruppen sollten kein überschneidenden
+ Mengen bilden
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Ziel wäre es natürlich, die Definitionen als Variablen in der Section session
- im Header abzulegen und diese dann automatisch zu importieren, dies ist
- jedoch erst später geplant, wenn sicher ist, dass das Verfahren funktioniert
- bzw.
- das Abstandsproblem zufriedenstellend löst.
+Wenn die Hauptgruppe R1 = { D, B, T, P, TT, PP } ist, dann sind Untergruppen
+ R1 = { R1A = { D, B }, R1B ={ T, P }, R1C = { TT, PP } } korrekt.
+ Falsch wäre R1 = { R1A = { D, B, T }, R1B ={ T, P, D }, R1C = { TT, PP
+ } }, da sich R1A und R1B überschneiden.
+ 
 \end_layout
 
 \end_inset
 
 .
- Die Variablen heissen $vowel_groups, $group_combinations und $rules_list.
- Wir erläutern sie hier anhand von gekürzten Beispielen:
+ 
+\end_layout
+
+\begin_layout Standard
+Die Zuordnung zu den Gruppen wird vom PARSER selbständig vorgenommen.
+ Sämtliche Zeichen werden intern der Variable $token_groups zugeordnet.
+ Es wird also nicht unterschieden, ob ein Zeichen zum Beispiel ein Vokal
+ oder ein Konsonant ist.
+ Aus diesem Grund sollte die automatische Zuweisung nur für Konsonanten
+ verwendet werden.
+ Für 
+\begin_inset Quotes eld
+\end_inset
+
+Zwischenzeichen
+\begin_inset Quotes erd
+\end_inset
+
+ (also Zeichen, die zwischen zwei anderen Zeichen vorkommen können, im System
+ Stolze-Schrey typischerweise Vokal und Diphtonge) sollten manuell durch
+ das Setzen der SESSION-Variable $vowel_groups im Header-Teil der Modell-Definit
+ion definiert werden, also innerhalb der Schlüsselwörter #BeginSubSection(sessio
+n) und #EndSubSection(session)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Das genaue Format wird im folgenden Abschnitt 
+\begin_inset Quotes eld
+\end_inset
+
+Kombinationen
+\begin_inset Quotes erd
+\end_inset
+
+ erklärt.
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout LyX-Code
-$vowel_groups = array( 
+#BeginSubSection(session)
 \end_layout
 
 \begin_layout LyX-Code
-     "V1" => array( "A", "O", "U" ), 
+    "spacer_vowel_groups" := "
 \end_layout
 
 \begin_layout LyX-Code
-     "V2" => array( "I", "AU" ) 
+        V1:[A,O,U], 
 \end_layout
 
 \begin_layout LyX-Code
-);
+        V2:[I,AU]";
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(session)
 \end_layout
 
 \begin_layout Standard
@@ -9629,38 +9741,169 @@ Aufstrich
  werden muss als zum Beispiel die Verbindung d-i-d in Didier).
 \end_layout
 
-\begin_layout Standard
-Als zweites werden Zeichenkombinationen definiert:
-\end_layout
-
-\begin_layout LyX-Code
-$group_combinations = array( 
-\end_layout
-
-\begin_layout LyX-Code
-     "C1" => array( "L1", "R1" ), 
-\end_layout
-
-\begin_layout LyX-Code
-     "C2" => array( "L1", "R2" ), 
-\end_layout
-
-\begin_layout LyX-Code
-     "C3" => array( "L2", "R1" ),
-\end_layout
-
-\begin_layout LyX-Code
-     "C4" => array( "L2", "R2" )
-\end_layout
-
-\begin_layout LyX-Code
-)
+\begin_layout Subsection*
+Kombinationen
 \end_layout
 
 \begin_layout Standard
-C1 steht also für ein linkes Zeichen aus der Gruppe L1 plus ein rechtes
- Zeichen aus der Gruppe R1, C2 für ein linkes Zeichen aus der Gruppe L1
- plus ein rechtes Zeichen aus der Gruppe R2 etc.
+Sobald die Zeichen in Gruppen und Unterguppen eingeteilt sind, können Zeichenkom
+binationen definiert werden.
+ Dies kann durch Setzen von SESSION-Variablen im Header-Teil der Modell-Definiti
+on erreicht werden, also innerhalb der Schlüsselwörter #BeginSubSection(session)
+ und #EndSubSection(session):
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(session)
+\end_layout
+
+\begin_layout LyX-Code
+    "spacer_token_combinations" := "
+\end_layout
+
+\begin_layout LyX-Code
+        C1:[L1,R1], 
+\end_layout
+
+\begin_layout LyX-Code
+        C2:[L3,R1A], 
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(session)
+\end_layout
+
+\begin_layout Standard
+Nach dem Format 
+\begin_inset Quotes eld
+\end_inset
+
+variable
+\begin_inset Quotes erd
+\end_inset
+
+ := 
+\begin_inset Quotes eld
+\end_inset
+
+wert
+\begin_inset Quotes erd
+\end_inset
+
+; kann hier also Variablen spacer_token_combinations ein Wert zugewiesen
+ werden.
+ Der Wert hat das Format:
+\end_layout
+
+\begin_layout LyX-Code
+X1:[Y1,Z1],X2:[Y2,Z2],...,Xn:[Yn,Zn]
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dies entspricht im Wesentlichen einem JSON-Format, bei dem aus Gründen der
+ Lesbarkeit die Anführungszeichen und die geschweifte Klammer {} weggelassen
+ werden.
+ Intern konvertiert VSTENO die Definitionen in ein gültiges JSON-Format
+ und parst sie mit der Funktion json_decode().
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+X entspricht der Bezeichnung der Zeichenkombination (also welchen 
+\begin_inset Quotes eld
+\end_inset
+
+Namen
+\begin_inset Quotes erd
+\end_inset
+
+ wir ihr geben), Y und Z verweisen auf die zuvor definierten Zeichengruppen.
+ 
+\end_layout
+
+\begin_layout Standard
+Im obigen Beispiel definieren wir 2 Zeichenkombinationen: die Kombination
+ C1, die aus einem ersten Zeichen aus der Gruppe L1 und einem Folgezeichen
+ aus der Gruppe R1 und die Kombination C2 mit Zeichen aus den Gruppen L3
+ und R1A.
+ Diese Kombinationen definieren also die folgenden Zeichenfolgen: 
+\end_layout
+
+\begin_layout LyX-Code
+C1 = db, dd, dp, dt; tb, td, tp, tt
+\end_layout
+
+\begin_layout LyX-Code
+C2 = bb, bd; pb, bd
+\end_layout
+
+\begin_layout Standard
+C1 verbindet Zeichen aus Hauptkategorien (L1, R1), wohingegen C2 Zeichen
+ aus einer Hauptkaterie (L3) mit einem Zeichen einer Unterkategorie (R1A)
+ verbindet (weshalb es in C2 weniger Kombinationen gibt.
+\end_layout
+
+\begin_layout Standard
+Beachten Sie bitte, dass es möglich ist, Kombinationen zu definieren, die
+ sich überschneiden.
+ Zum Beispiel:
+\end_layout
+
+\begin_layout LyX-Code
+C1:[L1,R1], 
+\end_layout
+
+\begin_layout LyX-Code
+C3:[L1,R1A]
+\end_layout
+
+\begin_layout Standard
+Aufgelistet entspricht dies den Zeichenfolgen
+\end_layout
+
+\begin_layout LyX-Code
+C1 = db, dd, dp, dt; tb, td, tp, tt
+\end_layout
+
+\begin_layout LyX-Code
+C3 = db, dd; tb, td
+\end_layout
+
+\begin_layout Standard
+Solche Definitionen sind nicht per se unzulässig, denn Zeichenkombinationen
+ definieren an sich noch keine Abstände (die geschieht erst später bei den
+ Abstandsregeln).
+ Dennoch ist hier Vorsicht geboten: Überschneidungen dieser Art können dazu
+ führen, dass gleiche Zeichenfolgen mehrfach definiert werden (und dann
+ hinsichtlich des zu verwendenden Abstandes zu einem Widerspruch führen).
+ Hier könnte eine andere Bezeichnung helfen zum Beispiel:
+\end_layout
+
+\begin_layout LyX-Code
+C1:[L1,R1], 
+\end_layout
+
+\begin_layout LyX-Code
+C1A:[L1,R1A],
+\end_layout
+
+\begin_layout LyX-Code
+C1B:[L1,R1B]
+\end_layout
+
+\begin_layout Standard
+Dadurch wäre klar, dass C1A und C1B Unterkombinationen von C1 sind (wobei
+ sich die Unterkombinationen C1A und C1B nicht überschneiden und Untermengen
+ von C1 sind).
+\end_layout
+
+\begin_layout Subsection*
+Prototypen
 \end_layout
 
 \begin_layout Standard
@@ -9677,43 +9920,35 @@ n Abständen zuordnen:
 \end_layout
 
 \begin_layout LyX-Code
-$rules_list = array( 
+#BeginSubSection(session)
 \end_layout
 
 \begin_layout LyX-Code
-     "R1" => array( "C1", "V1", "D1", "?" ), 
+    "spacer_rules_list" := "
 \end_layout
 
 \begin_layout LyX-Code
-     "R2" => array( "C1", "V2", "D2", "" ), 
+        R1:[C1,V1,D1,?],
 \end_layout
 
 \begin_layout LyX-Code
-     "R3" => array( "C2", "V1", "D3", "?" ), 
+        R2:[C1,V2,D2,], 
 \end_layout
 
 \begin_layout LyX-Code
-     "R4" => array( "C2", "V2", "D4", "" ), 
+        R3:[C2,V1,D3,?],
 \end_layout
 
 \begin_layout LyX-Code
-     "R5" => array( "C3", "V1", "D5", "?" ), 
+	    R4:[C2,V2,D4,]
+\begin_inset Quotes erd
+\end_inset
+
+;
 \end_layout
 
 \begin_layout LyX-Code
-     "R6" => array( "C3", "V2", "D6", "" ), 
-\end_layout
-
-\begin_layout LyX-Code
-     "R7" => array( "C4", "V1", "D7", "?" ), 
-\end_layout
-
-\begin_layout LyX-Code
-     "R8" => array( "C4", "V2", "D7", "" ) 
-\end_layout
-
-\begin_layout LyX-Code
-)
+#EndSubSection(session)
 \end_layout
 
 \begin_layout Standard
@@ -9724,25 +9959,58 @@ Eine erste Regel (R1) beschreibt hier die Zeichenkombinationen C1 in Verbindung
  Verbindung mit den Vokalen aus der Gruppe V2.
  Diese Kombination erhält den Abstand D2 etc.
  Beachten Sie: Da wir 2 Vokalgruppen definiert haben, ergeben sich für die
- 4 Kombinationen 8 Regeln.
+ 4 Kombinationen die doppelte Anzahl also 8 Regeln.
  Das Zeichen ? bedeutet, dass der Vokal optional ist.
  Dies ist bei der Vokalgruppe V1 der Fall, da der Abstand zwischen dd (kein
  Vokal) und dad (Vokal a) genau gleich gross sein soll.
 \end_layout
 
 \begin_layout Subsection*
-REGEX-Helper
+RX-GEN
 \end_layout
 
 \begin_layout Standard
-Sobald wir die drei Variablen wie oben beschrieben definiert haben, können
- wir daraus automatisch REGEX-Regeln generieren.
- Hierfür muss einfach die Adresse www.vsteno.ch/php/regex_helper.php im Browser
- aufgerufen werden.
- Dieser so genannte REGEX-Helper liest nun die Zeichendefinitionen aus dem
- aktuell gewählten Modell (deutsch, spanisch oder custom), generiert die
- Regeln und zeigt diese zusammen mit der Anzahl Zeichenkombinationen im
- Browser an.
+Sobald Daten (Zeichengruppen, Zeichenkombinationen, Regelprototypen) wie
+ oben beschrieben definiert haben, können wir daraus automatisch REGEX-Regeln
+ generieren.
+ Beachten Sie zuvor aber folgenden wichtigen Hinweise: Wenn Sie Definitionen
+ im Header-Teil des Modells ändern, dann müssen Sie die nach dem Speichern
+ (welche die Änderungen in die Datenbank schreibt) zusätzlich die SESSION-Variab
+len aktualisieren, indem Sie unterhalb des Formulars auf 
+\begin_inset Quotes eld
+\end_inset
+
+aktualisieren
+\begin_inset Quotes erd
+\end_inset
+
+ klicken.
+ Tun Sie dies nicht, arbeitet RX-GEN mit den bestehenden (alten) Werten
+ und sie erhalten falsche Resultate!
+\end_layout
+
+\begin_layout Standard
+Klicken Sie nach dem Aktualisieren der SESSION-Variablen links unter 
+\begin_inset Quotes eld
+\end_inset
+
+Tools
+\begin_inset Quotes erd
+\end_inset
+
+ auf RX-GEN.
+ Dieser 
+\begin_inset Quotes eld
+\end_inset
+
+REGEX-Generator
+\begin_inset Quotes erd
+\end_inset
+
+ liest nun die Zeichendefinitionen aus dem aktuell gewählten Modell (deutsch,
+ spanisch oder custom) sowie aus den SESSION-Variablen, generiert daraus
+ die Regeln und zeigt diese zusammen mit der Anzahl Zeichenkombinationen
+ im Browser an.
  Als Beispiel
 \begin_inset Foot
 status open
@@ -9750,6 +10018,8 @@ status open
 \begin_layout Plain Layout
 Bitte beachten Sie, dass die Regel im Original keine Zeilenumbrüche enthält;
  diese wurden hier nur layouttechnisch eingefügt.
+ Die gezeigte Regel entspricht nicht den obigen Beispielen sondern ist einem
+ realen Modell (Spanisch) entnommen.
 \end_layout
 
 \end_inset
@@ -9811,18 +10081,20 @@ z@l3|sch@l3|ch@l3|pf@r6|z@r|da@r)
 
 \begin_layout Standard
 Wie man unschwer erkennt: Diese REGEX-Regeln werden schnell kompliziert
- und sind für einen Menschen kaum mehr zu überblicken.
- Und dies ist nur eine Regel von vielen! Im konkreten Fall handelt es sich
- um die Regel R1, welche die Kombination L1+V1+R1 mit dem Abstand D1 definiert
- (es wird - um der Nachvollziehbarkeit willen - am Schluss der Regel immer
- angegeben, um welche Kombination es sich handelt).
+ und sind für einen Menschen kaum bzw.
+ nicht mehr zu überblicken (zumal das gezeigte Beispiel nur eine von vielen
+ Regeln ist, die generiert werden).
+ Im konkreten Fall handelt es sich um die Regel R1, welche die Kombination
+ L1+V1+R1 mit dem Abstand D1 definiert (es wird - um der Nachvollziehbarkeit
+ willen - am Schluss der Regel immer angegeben, um welche Kombination es
+ sich handelt).
  Diese Regel erstreckt sich auf 11256 Kombinationen.
 \end_layout
 
 \begin_layout Standard
-Die von regex_helper.php generierten und im Browser angezeigten Regeln können
- wir nun auswählen, kopieren und in unsere eigenen Regeln einfügen, zum
- Beispiel am Schluss in einer eigenen SubSection 
+Die von RX-GEN generierten und im Browser angezeigten Regeln können wir
+ nun auswählen, kopieren und in unsere eigenen Regeln einfügen, zum Beispiel
+ am Schluss in einer eigenen SubSection 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10021,6 +10293,134 @@ Konkrete Beispiele finden sich im File SPSSBAS.TXT (Verzeichnis ling/).
  etc.
  und Zuweisung derselben in der SubSection(spacer) am Ende (im Anschluss
  an die automatisch generierten Abstandsregeln).
+\end_layout
+
+\begin_layout Subsection*
+Automatisieren
+\end_layout
+
+\begin_layout Standard
+Die Generierung der Abstandsregeln lässt sich auch automatsieren.
+ Dies ist besonders dann praktisch, wenn Sie an präzisen Zeichenabständen
+ herumfeilen und die Abstandsregeln mehrfach abändern und testen wollen.
+ VSTENO bietet hier im Formular Maxi unter Engine => Spacer die Option 
+\begin_inset Quotes eld
+\end_inset
+
+automatisch
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Wenn Sie diese anklicken generiert VSTENO bei jeder Berechnung neue Spacer-Rege
+ln und fügt diese automatisch ins aktuelle Modell ein.
+\end_layout
+
+\begin_layout Standard
+Damit dies funktioniert, müssen jedoch einige Regeln beachtet werden.
+ Zum ersten muss der Regel-Teil des Modells in diesem Fall zwingend einen
+ spacer-Teil enthalten, zum Beispiel in der folgenden Art:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(spacer)
+\end_layout
+
+\begin_layout LyX-Code
+    // no rules
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(spacer)
+\end_layout
+
+\begin_layout Standard
+Dadurch weiss VSTENO, wo - d.h.
+ zu welchem Zeitpunkt der Berechnung - er die Spacer-Regeln einfügen soll.
+ Die Spacer-Regeln stellen also eine eigene SubSection dar, die durch VSTENO
+ vollständig ersetzt wird.
+ Fall die Spacer-Section zusätzliche Argumente enthält - z.B.
+ eine Zuweisung oder eine Verzweigung der Art #EndSubSection(spacer,=:prt)
+ - so bleibt diese erhalten.
+\end_layout
+
+\begin_layout Standard
+Wie bereits im vorhergehenden Abschnitt erwähnt, müssen Sie bei Änderungen
+ in den Spacer-Definition zwingend die SESSION-Variablen aktualisieren,
+ indem Sie unten im Formular auf 
+\begin_inset Quotes eld
+\end_inset
+
+aktualisieren
+\begin_inset Quotes erd
+\end_inset
+
+ klicken.
+ Sonst verwendet VSTENO die bestehenden (alten) Werte und Sie erhalten falsche
+ Resultate (was die ohnehin schwierige Fehlersuche zusätzlich erschwert).
+\end_layout
+
+\begin_layout Standard
+Die Generierung von Spacer-Regeln on-the-fly ist eine gute Möglichkeit,
+ um präzise Formeln zu entwickeln.
+ Allerdings wirkt sich dies schlecht auf die Performance des Programmes
+ aus.
+ Deshalb sollten Sie am Schluss, wenn Ihre Regeln also fertig sind, die
+ Regeln wie bereits beschrieben mit RX-GEN generieren und fix innerhalb
+ Ihrer Regeln einfügen, also:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(spacer)
+\end_layout
+
+\begin_layout LyX-Code
+    // insert
+\end_layout
+
+\begin_layout LyX-Code
+    // your
+\end_layout
+
+\begin_layout LyX-Code
+    // spacer
+\end_layout
+
+\begin_layout LyX-Code
+    // rules
+\end_layout
+
+\begin_layout LyX-Code
+    // here
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(spacer)
+\end_layout
+
+\begin_layout Standard
+Beachten Sie bitte, dass sie hier KEINE handgeschriebenen, sondern NUR die
+ automatisiert generierten Regex-Regeln einfügen dürfen, wenn Sie handgeschriebe
+ne Regeln benötigen, die zum Spacer gehören, und vor oder nach den automatisiert
+en Regeln ausgeführt werden soll, dann erstellen Sie hierfür separate SubSection
+s - zum Beispiel #BeginSubSection(prespacer) - #EndSubSection(prespacer)
+ und #BeginSubSection(postspacer) - #EndSubSection(postspacer) - und fügen
+ Sie die Regeln dort ein.
+ Dadurch ist sichergestellt, dass VSTENO nur automatisch generierte Regeln
+ ersetzt, wenn die Option 
+\begin_inset Quotes eld
+\end_inset
+
+automatisch
+\begin_inset Quotes erd
+\end_inset
+
+ gewählt ist.
+\end_layout
+
+\begin_layout Standard
+Grundsätzlich wird empfohlen, immer ein Spacer-Section vorzusehen und diese
+ mit gültigen statischen Regeln zu füllen.
 \end_layout
 
 \begin_layout Section*
