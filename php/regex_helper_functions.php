@@ -129,7 +129,7 @@ function GenerateSpacerRules() {
 function GenerateSpacerRulesAndPrintData() {
     global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations;
     $regex_rules = array();
-
+    
     // sort arrays for easier reading (only when results are printed)
     ksort($token_groups); // ascending by key
     ksort($vowel_groups);

@@ -1,6 +1,6 @@
 <?php require "vsteno_fullpage_template_top.php"; ?>
 
-<h1>RULE-GENERATOR</h2>
+<h1>RULE-GENERATOR</h1>
 <p>This programm creates spacer rules based on tokens of the actual model. Copy them to the rules file.</p>
 
 <?php

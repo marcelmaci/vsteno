@@ -1,5 +1,4 @@
 <?php
-
 /* VSTENO - Vector Steno Tool with Enhanced Notational Options
  * (c) 2018 - Marcel Maci (m.maci@gmx.ch)
  
@@ -43,7 +42,7 @@ where:     a is the original B (i.e. replacement for REGEX)
  
 // 25. September 2018: read data from database
 
-//require_once "session.php";
+require_once "session.php";
 
 if ($_SESSION['user_logged_in']) {
     //echo "<p>POST(model): " . $_POST['model'] . "</p>";  // why is $_POST['model'] === "" in mini.php??? => ok, in input.php it's a post variable, in mini.php it's not ... should be taken from the session variable!!!  $_SESSION['model_standard_or_custom']
