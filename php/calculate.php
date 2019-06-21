@@ -125,14 +125,39 @@ function InsertDatabaseButton() {
     echo '<center><input type="submit" name="action" value="speichern"></center><br>';
 }
 
+function AddMarkings($text) {
+    // Don't know why I thought markings are a good idea ...
+    // Makes the whole thing even more complicated ...
+    // I'm probably going to leave it here (= only color functional)
+    // and/or even take it out later ...
+    $old_color = $_SESSION['token_color'];
+    if ($_SESSION['color_nounsyesno']) $noun_color = $_SESSION['color_nouns'];
+    if ($_SESSION['color_beginningsyesno']) $beginning_color = $_SESSION['color_beginnings'];
+    $replace_beginning = "$1<@token_color='$beginning_color'>$3<@token_color='$old_color'>";
+    // if ($_SESSION['style_beginnings'] !== "") {}
+    if ($_SESSION['color_beginningsyesno']) $step1 = preg_replace("/(\.|\?|\!)( *?)((?:[A-Z]).*?(?:\.|\?|\!| |$))/", $replace_beginning, $text);
+    else $step1 = $text;
+    //echo "$step1<br><br>";
+    // if ($_SESSION['style_nouns'] !== "") {}
+    if ($_SESSION['color_beginningsyesno']) $replace_noun = "<@token_color='$noun_color'>$2<@token_color='$old_color'>";
+    else $replace_noun = "$1<@token_color='$noun_color'>$2<@token_color='$old_color'>";
+    if ($_SESSION['color_nounsyesno']) $step2 = preg_replace("/(\.|\?|\!)?((?: +?)(?:[A-Z]).*?(?:\.|\?|\!| |$))/", $replace_noun, $step1);
+    else $step2 = $step1;
+    //echo "$step2<br><br>";
+    
+    return $step2;
+}
+
 function CalculateStenoPage() {
     global $global_debug_string, $global_error_string;
     $global_debug_string = "";
     CopyFormToSessionVariables();
-    InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
+   InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
     InsertHTMLHeader();
-  
+    
     $text = isset($_POST['original_text']) ? $_POST['original_text'] : "";
+    $text = AddMarkings($text);
+    echo "<pre>$text</pre>";
     
     // if there is text, insert title&introduction and SVG(s)
     if (strlen($text) > 0) {

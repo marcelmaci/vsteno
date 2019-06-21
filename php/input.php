@@ -32,6 +32,7 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <input type="checkbox" name="text_format_ascii_yesno" value="ascii" <?php echo ($_SESSION['original_text_ascii_yesno']) ? "checked" : "";?>> Breaks<br>
 <!-- There's seems to be a bug in the textarea element ?! Any number of linebreaks \n at the beginning disappear when string is reinserted -->
 <!-- Adding an additional \n when reinserting the string seems to help ?! (Exact number of linebreaks is preserved.) -->
+
 <textarea id="original_text" name="original_text" rows="10" cols="100"><?php echo "\n" . $_SESSION['original_text_content']; ?>
 </textarea>
 </td></tr>
