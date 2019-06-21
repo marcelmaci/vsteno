@@ -32,8 +32,8 @@ $hunspell_yesno = ($_SESSION['composed_words_yesno']) ? "yes" : "no";
 $hyphens_yesno = ($_SESSION['hyphenate_yesno']) ? "yes" : "no";
 echo "<h2>General</h2>";
 echo "MODEL: $model_name<br>HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)<br>HYPHENATOR: " . $_SESSION['language_hyphenator'] . " ($hyphens_yesno)";
-echo "SEPARATE: " . $_SESSION['composed_words_separate'];
-echo "GLUE: " . $_SESSION['composed_words_glue'];
+echo "<br>SEPARATE: " . $_SESSION['composed_words_separate'];
+echo "<br>GLUE: " . $_SESSION['composed_words_glue'];
 
 echo "<h2>Prefixes</h2>";
 echo ShowListOrEmpty($_SESSION['prefixes_list']);

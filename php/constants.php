@@ -190,7 +190,13 @@ $global_error_string = "";
 
 // declarations
 $splines = array();                             // not really necessary in php
+
+// models
 $default_model = "DESSBAS";
+$standard_models_list = array(
+    "$default_model" => "Deutsch Grundschrift (Stolze-Schrey)",
+    "SPSSBAS" => "Spanisch Grundschrift (Stolze-Schrey)"
+);
 //$default_model = "99999_default_backup";
 
 // caching

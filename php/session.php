@@ -5,8 +5,12 @@ require_once "import_model.php";
 
 function InitializeSessionVariables() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
-    $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model;
+    $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model, $standard_models_list;
     // set standard values for use in session
+    $_SESSION['standard_models_list'] = $standard_models_list;
+    $_SESSION['license'] = "";
+    $_SESSION['release_notes'] = "";
+    $_SESSION['copyrigt_footer'] = "";
     $_SESSION['initialized'] = true;
     $_SESSION['original_text_format'] = "normal";
     $_SESSION['original_text_ascii_yesno'] = true;
@@ -123,9 +127,7 @@ function InitializeSessionVariables() {
     $_SESSION['language_hunspell'] = "de_CH"; // do not initialize these variables, so that they can be initialized by model!
     $_SESSION['language_hyphenator'] = "de"; // correction: can be done here, since toggle_model now actualizes session variables for specific model
     // spacer variables
-    $_SESSION['spacer_token_combinations'] = "";
-    $_SESSION['spacer_vowel_groups'] = "";
-    $_SESSION['spacer_rules_list'] = "";
+    
     $_SESSION['spacer_autoinsert'] = false;
 }
 
@@ -237,11 +239,11 @@ if ($_POST['token_size'] != "") {
     $_SESSION['show_distances'] = (htmlspecialchars($_POST['show_distances']) === "yes") ? true : false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
     
-    $_SESSION['model_custom_or_standard'] = (htmlspecialchars($_POST['model_to_load']) === GetDBUserModelName()) ? "custom" : "standard";
-    $_SESSION['actual_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : getDBUserModelName();
+    //$_SESSION['model_custom_or_standard'] = (htmlspecialchars($_POST['model_to_load']) === GetDBUserModelName()) ? "custom" : "standard";
+    //$_SESSION['actual_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : getDBUserModelName();
     // additional session variable necessary to keep track of selected std model (in input form)
     // will be used by toggle_model
-    $_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : $_SESSION['selected_std_model'];
+    //$_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : $_SESSION['selected_std_model'];
     $_SESSION['language_hunspell'] = $_POST['language_hunspell'];
     $_SESSION['language_hyphenator'] = $_POST['language_hyphenator'];
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;

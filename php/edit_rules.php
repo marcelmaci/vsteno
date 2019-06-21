@@ -29,10 +29,13 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
     echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
 } else {
     
+    $model_name = $_SESSION['actual_model'];
+    /* 
     switch ($_SESSION['model_standard_or_custom']) {
         case 'standard' : $model_name = $_SESSION['selected_std_model']; break; 
         case 'custom' : $model_name = GetDBUserModelName(); break;
     }
+    */
     //echo "model_name: $model_name<br>";
     
     if ($_POST['action'] == 'speichern') {
@@ -52,7 +55,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
             die_more_elegantly("Fehler beim Speichern der Regeln.<br>");
         }
     } else {
-        echo "<p>Hier können Sie die Regeln Ihres eigenen Stenosystems editieren und speichern.</p><p><b>ACHTUNG:</b><br><i>Es wird KEINE Syntax-Prüfung vorgenommen. Falls die Regeln
+        echo "<p>Hier können Sie die Regeln des Stenosystems $model_name editieren und speichern.</p><p><b>ACHTUNG:</b><br><i>Es wird KEINE Syntax-Prüfung vorgenommen. Falls die Regeln
         Fehler aufweisen, werden Sie NICHT darauf hingewiesen!</i></p>";
     }
 

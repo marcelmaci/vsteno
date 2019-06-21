@@ -51,20 +51,38 @@ Farbe <input type="Text" name="introduction_color"  size="10" value="<?php echo 
 
 <tr><td>Engine</td></tr>
 <tr><td>Modell:<br>
-<?php 
 
-if ($_SESSION['user_logged_in']) {
-    $cu_checked = ($_SESSION['model_standard_or_custom'] === "custom") ? " checked" : ""; 
-    
-    echo "<input type='radio' name='model_to_load' value='" . GetDBUserModelName() . "'$cu_checked>Custom: editierbares Modell (" . GetDBUserModelName(). ")<br>";
-}
-$de_checked = ($_SESSION['actual_model'] === "DESSBAS") ? "checked" : "";
-$sp_checked = ($_SESSION['actual_model'] === "SPSSBAS") ? "checked" : "";
+<?php
+    $models_list = $_SESSION['standard_models_list'];
+    foreach($models_list as $name => $description) {
+        if ($name === $_SESSION['actual_model']) {
+                $tag_start = "<b>*";
+                $tag_end = "</b>"; 
+        } else {
+                $tag_start = "";
+                $tag_end = "";
+        }
+        echo "<input type='submit' name='action' value='$name'> $tag_start$description$tag_end";
+        if (mb_strlen($tag_start)>0) echo " => <a href='model_info.php'>Info</a><br>";
+        else echo "<br>";
+    }
+    if ($_SESSION['user_logged_in']) {
+        if ($_SESSION['actual_model'] === GetDBUserModelName()) {
+                $tag_start = "<b>*";
+                $tag_end = "</b>"; 
+        } else {
+                $tag_start = "";
+                $tag_end = "";
+        }
+        //$cu_checked = ($_SESSION['model_standard_or_custom'] === "custom") ? " checked" : ""; 
+        echo "<input type='submit' name='action' value='" . GetDBUserModelName() . "'> $tag_start" . "Custom (editierbares Modell)$tag_end";
+        if (mb_strlen($tag_start)>0) echo " => <a href='model_info.php'>Info</a><br>";
+        else echo "<br>";
+    }
+
 ?>
-<input type="radio" name="model_to_load" value="DESSBAS" <?php echo $de_checked;?>>Deutsch: Stolze-Schrey Grundschrift (DESSBAS)<br>
-<input type="radio" name="model_to_load" value="SPSSBAS" <?php echo $sp_checked;?>>Spanisch: Stolze-Schrey Grundschrift (SPSSBAS)<br>
-Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch
 
+Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch
 </td></tr>
 <tr><td>Sprache</td></tr>
 <tr><td>
@@ -73,7 +91,7 @@ Analysieren:
 <input type="text" name="language_hyphenator"  size="6" value="<?php echo $_SESSION['language_hyphenator']; ?>">
 <input type="checkbox" name="composed_words_yesno" value="composed_words_yes" <?php echo ($_SESSION['composed_words_yesno']) ? "checked" : "";?>> Wörter
 <input type="text" name="language_hunspell"  size="6" value="<?php echo $_SESSION['language_hunspell']; ?>">
-(<a href="show_analyzer_parameters.php">parameters</a>)<br>
+=> <a href="show_analyzer_parameters.php">Parameter</a><br>
 Markieren:<br>
 <input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 
 Hauptwörter: 
@@ -169,7 +187,7 @@ Fenster:
 <input type="radio" name="output_format" value="meta_prt" <?php echo ($_SESSION['output_format'] === "meta_prt") ? "checked" : "";?>> PRT
 <input type="radio" name="output_format" value="train" <?php echo ($_SESSION['output_format'] === "train") ? "checked" : "";?>> Training
 <input type="radio" name="output_format" value="debug" <?php echo ($_SESSION['output_format'] === "debug") ? "checked" : "";?>> Debug 
-(<a href="rules_statistics.php">Regeln</a>)
+=> <a href="rules_statistics.php">Regeln</a>
 <br>
 
 <input type="radio" name="output_format" value="layout" <?php echo ($_SESSION['output_format']) === "layout" ? "checked" : "";?>> Layout 

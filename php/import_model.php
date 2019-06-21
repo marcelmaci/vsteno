@@ -155,10 +155,33 @@ function GetSubSection($text, $name) {
 }
 
 /////////////////////////////////////////////////// import header //////////////////////////////////////////////////
+function ResetRestrictedSessionVariables() {
+        // restricted session variables are variables that are not accessible via the input form
+        // the only way to set them is via inline-option tags
+        // they are typically used for data that is specific for the model like affix and stems
+        // definitions for linguistical anlyzer and license and release information
+        // make sure these variables get reseted everytime a new model is loaded
+        //$_SESSION['language_hunspell'] = ""; // these can be modified via form => leave it up to the user if he/she set and/or deletes (cleans) the variable
+        //$_SESSION['language_hyphenator'] = "";
+        // $_SESSION['hyphenate_yesno'] = true;  // same goes for these two variables
+        // $_SESSION['composed_words_yesno'] = true;
+        $_SESSION['prefixes_list'] = ""; 
+        $_SESSION['stems_list'] = ""; 
+        $_SESSION['suffixes_list'] = ""; 
+        $_SESSION['spacer_token_combinations'] = "";
+        $_SESSION['spacer_vowel_groups'] = "";
+        $_SESSION['spacer_rules_list'] = "";
+        $_SESSION['license'] = "";
+        $_SESSION['release_notes'] = "";
+        $_SESSION['copyright_footer'] = "";
+}
+
 
 // session
 function ImportSession() {
     global $session_subsection, $whitelist_variables;
+    
+    ResetRestrictedSessionVariables();
     
     while ($session_subsection !== "") {
     $result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?:=[ ]*?({?[ ]*?\".*?\"[ ]*?}?)[ ]*?;(.*)/", $session_subsection, $matches);
@@ -641,7 +664,7 @@ $shifter_table = $shifter[$actual_model];
   
   CreateCombinedTokens();
 CreateShiftedTokens();
-
+  
  //var_dump($steno_tokens_master);
  GenerateTokenGroups($steno_tokens_master);
  GenerateGroupCombinations();
@@ -652,8 +675,7 @@ CreateShiftedTokens();
 
   //var_dump($_SESSION['spacer_vowel_groups']);
   //var_dump($vowel_groups);
- 
-
+  
     // patch spacer in rules section if autoinsert is selected
     // since ImportModelFromText() can be called from different sources (form or other, i.e. with POST-variable set or not) first make sure to update
     // session-variable if POST-variable is set (= data.php is called from a form)
@@ -663,6 +685,7 @@ CreateShiftedTokens();
     echo $_SESSION['spacer_autoinsert'] . $_POST['spacer_autoinsert'];
     $_SESSION['spacer_autoinsert'] = false;
     */  
+ 
     // afterward check session variable
     if ($_SESSION['spacer_autoinsert']) {
         //echo "<p>AUTOGENERATE</p>";
@@ -689,7 +712,7 @@ CreateShiftedTokens();
         //echo "spacer_rules: " . htmlspecialchars($spacer_rules) . "<br>";
         //echo "<br>rules_section(original):<br><br><pre>" . htmlspecialchars($rules_section) . "</pre><br>";
     }
-
+ 
     ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
     //}
      // if stage3 and stage4 are not set => set them for compatibility
@@ -697,7 +720,7 @@ CreateShiftedTokens();
     if ($rules_pointer_start_stage3 === null) $rules_pointer_start_stage3 = 0; // this is wrong: should point to "after global" (= stage1) ... but which variable is that?!?
     if ($rules_pointer_start_stage2 === null) $rules_pointer_start_stage2 = 0; // idem
     if ($rules_pointer_start_stage4 === null) $rules_pointer_start_stage4 = count($rules[$actual_model]); // set stage4 to end of rules (== stage4 inexistant!)
-    
+ 
     return $output;
 }
 

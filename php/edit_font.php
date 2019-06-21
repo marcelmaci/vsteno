@@ -27,11 +27,15 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Modell auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
     echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
 } else { 
+
+    $model_name = $_SESSION['actual_model'];
+    /* 
     switch ($_SESSION['model_standard_or_custom']) {
         case "standard" : $model_name = $_SESSION['selected_std_model']; break; 
         case "custom" : $model_name = GetDBUserModelName(); break;
     }
-
+    */
+    
     if ($_POST['action'] == 'speichern') {
         $update_font = $conn->real_escape_string($_POST['font_as_text']);
         $sql = "UPDATE models
@@ -48,7 +52,7 @@ if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_p
             die_more_elegantly("Fehler beim Speichern der Zeichen.<br>");
         }
     } else {
-        echo "<p>Hier können Sie die Zeichen (Font) Ihres eigenen Stenosystems editieren und speichern.</p><p><b>ACHTUNG:</b><br><i>Es wird KEINE Syntax-Prüfung vorgenommen. Falls die Definitionen
+        echo "<p>Hier können Sie die Zeichen (Font) des Stenosystems $model_name editieren und speichern.</p><p><b>ACHTUNG:</b><br><i>Es wird KEINE Syntax-Prüfung vorgenommen. Falls die Definitionen
         Fehler aufweisen, werden Sie NICHT darauf hingewiesen!</i></p>";
     }
 

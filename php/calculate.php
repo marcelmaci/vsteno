@@ -43,23 +43,57 @@ function InsertHTMLFooter() {
     }
 }
 
+function IsStandardModel($check) {
+    $output = false;
+    $models_list = $_SESSION['standard_models_list'];
+    //var_dump($models_list);
+    foreach($models_list as $name => $description) {
+        if ($check === $name) $output = true;
+        //echo "check: $check =?= $name >" . ($check === $name) . "< => ouptut: >$output<<br>";
+    }
+    return $output;
+}
+
+function IsCustomModel($check) {
+    if ($check === GetDBUserModelName()) return true;
+    else return false;
+}
+
+function CustomOrStandard($check) {
+    if (IsStandardModel($check)) return "standard";
+    elseif (IsCustomModel($check)) return "custom";
+    else return false;  // yeah, let's build one of those php-function that can return string or boolean (and drive you crazy due to implicit type cast if you don't pay attention ... :)
+}
+
 function ResetSessionGetBackPage() {
     global $session_subsection;
-    //InitializeSessionVariables();   // output is reseted to integrated, so that the following message will appear integrated
-    //echo "model: " . $_SESSION['actual_model'];
-    $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
-    //echo "text_to_parse: $text_to_parse<br>";
-    $output = StripOutComments($text_to_parse);
-    $output = StripOutTabsAndNewlines($output);
-    $header_section = GetSection($output, "header");
-    //echo "header: $header_subsection<br>";
-    $session_subsection = GetSubSection($header_section, "session");
-    //echo "session_text: $session_subsection<br>";
-    ImportSession();
-    
     InsertHTMLHeader();
-    echo "<p>Die Optionen wurden aktualisiert (= zurückgesetzt und neu geladen).</p>";
-    echo '<a href="input.php"><br><button>"zurück"</button></a>';
+    //InitializeSessionVariables();   // output is reseted to integrated, so that the following message will appear integrated
+    $posted_model = $_POST['action'];
+    $model_type = CustomOrStandard($posted_model);
+    //echo "posted: $posted_model type: $model_type<br>";
+    if ($model_type !== false) {
+        // set session variables beforehand
+        $_SESSION['actual_model'] = $posted_model;
+        $_SESSION['model_custom_or_standard'] = $model_type;
+        if ($model_type === "standard") $_SESSION['selected_std_model'] = $posted_model;
+        // now load model based on session-variables
+        //echo "model: " . $_SESSION['actual_model'];
+        $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+        //echo "text_to_parse: $text_to_parse<br>";
+        $output = StripOutComments($text_to_parse);
+        $output = StripOutTabsAndNewlines($output);
+        $header_section = GetSection($output, "header");
+        //echo "header: $header_subsection<br>";
+        $session_subsection = GetSubSection($header_section, "session");
+        //echo "session_text: $session_subsection<br>";
+        ImportSession();
+        echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . " wurde geladen und die Optionen aktualisiert.</p>";
+    } else {
+        // check if it's a valid model cause post-variable can (might) be tampered ... :)
+        echo "<h1>Aktualisieren</h1><p>Fehler: Das Model " . $_POST['action'] . " existiert nicht.</p>";
+    }
+    echo '<a href="input.php"><br><button>zurück</button></a>';
     InsertHTMLFooter();
 }
 
@@ -96,11 +130,11 @@ function CalculateStenoPage() {
     $global_debug_string = "";
     //echo "BEFORE:" . $_SESSION['model_standard_or_custom'];
     //echo $_POST['model'];
-    
+  
     CopyFormToSessionVariables();
-    
+     
     InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
-    
+   
     // normally, CopyFormToSessionVariables() should copy new model to session variables
     // but for an unknown reason that doesn't happen ....
     // correct it here as a temporary fix
@@ -110,7 +144,7 @@ function CalculateStenoPage() {
  //echo "AFTER:" . $_SESSION['model_standard_or_custom'];
 
     InsertHTMLHeader();
-    
+  
     $text = isset($_POST['original_text']) ? $_POST['original_text'] : "";
     
     // if there is text, insert title&introduction and SVG(s)
