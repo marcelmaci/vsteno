@@ -69,7 +69,11 @@ function ResetSessionGetBackPage() {
     global $session_subsection;
     InsertHTMLHeader();
     //InitializeSessionVariables();   // output is reseted to integrated, so that the following message will appear integrated
-    $posted_model = $_POST['action'];
+    switch ($_POST['action']) {
+        case "aktualisieren" : $posted_model = $_SESSION['actual_model']; break;
+        default : $posted_model = $_POST['action']; break;
+    }
+    
     $model_type = CustomOrStandard($posted_model);
     //echo "posted: $posted_model type: $model_type<br>";
     if ($model_type !== false) {
@@ -91,7 +95,7 @@ function ResetSessionGetBackPage() {
         echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . " wurde geladen und die Optionen aktualisiert.</p>";
     } else {
         // check if it's a valid model cause post-variable can (might) be tampered ... :)
-        echo "<h1>Aktualisieren</h1><p>Fehler: Das Model " . $_POST['action'] . " existiert nicht.</p>";
+        echo "<h1>Aktualisieren</h1><p>Fehler: Das Model '" . $_POST['action'] . "' existiert nicht.</p>";
     }
     echo '<a href="input.php"><br><button>zurück</button></a>';
     InsertHTMLFooter();
@@ -157,7 +161,6 @@ function CalculateStenoPage() {
     
     $text = isset($_POST['original_text']) ? $_POST['original_text'] : "";
     $text = AddMarkings($text);
-    echo "<pre>$text</pre>";
     
     // if there is text, insert title&introduction and SVG(s)
     if (strlen($text) > 0) {
