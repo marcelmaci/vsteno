@@ -1343,7 +1343,8 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
 }
 
 function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, $force_left_align ) {
-    global $distance_words, $vector_value_precision, $baseline_y;
+    global $distance_words, $vector_value_precision, $baseline_y, $word_tags;
+    //var_dump($word_tags);
     $angle = $_SESSION['token_inclination'];
     $stroke_width = $_SESSION['token_thickness'];
     $scaling = $_SESSION['token_size'];
@@ -1368,7 +1369,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
         $width_without_correction -= $normal_distance;  // first word has no distance
         $leftover_right_side = $_SESSION['output_width'] - $_SESSION['left_margin'] - $_SESSION['right_margin'] - $width_without_correction;
         $additional_distance = $leftover_right_side / $number_of_gaps;
-        // echo "number_of_words: $number_of_words number_of_gaps: $number_of_gaps width_without_correction: $width_without_correction leftover_right_side: $leftover_right_side additional_distance: $additional_distance<br>";
+        //echo "number_of_words: $number_of_words number_of_gaps: $number_of_gaps width_without_correction: $width_without_correction leftover_right_side: $leftover_right_side additional_distance: $additional_distance<br>";
     } else $additional_distance = 0;
     
     for ($i = 0; $i < $last_word; $i++) {
@@ -1402,12 +1403,24 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
          //echo "type_of_first_element: $type_of_first_element first_element: $first_element token_type: " . $_SESSION['token_type'] . "<br>";
           switch ($type_of_first_element) {
             case "string" : // treat it as svgtext (...)
-                            //echo "Treat it as svgtext ... <br>";
+                            //echo "Treat it as svgtext ... word_tags($i): " . $word_tags[$i] . "<br>";
+                            // process word tags
+            //echo "before: " . $_SESSION['token_color'] . "<br>";
+            ParseAndSetInlineOptions($word_tags[$i]);
+            //echo "after: " . $_SESSION['token_color'] . "<br>";
+            $angle = $_SESSION['token_inclination'];
+            $stroke_width = $_SESSION['token_thickness'];
+            $scaling = $_SESSION['token_size'];
+            $svg_color = "black";  // fix this with a hardcoded value for the moment (too complicated otherwhise to fix this bug ...)
+            $stroke_dasharray = $_SESSION['token_style_custom_value']; 
+            
                             $scale = 1;
                             $tsize = $word_splines[$i][1] ;                         // element 1 contains size
                             $tx = ($word_position_x + $align_shift_x) / $scale;
                             $ty = $word_position_y / $scale; // + $extra_shift_y;
-                            $svg_color = $_SESSION['token_color'];                  // use same color as shorthand text
+                            // $svg_color = $_SESSION['token_color'];                  // use same color as shorthand text (that was a bad idea by the way ... :)
+                            $svg_color = "black";  // fix this with a hardcoded value for the moment (too complicated otherwhise to fix this bug ...)
+          
                             $ttext = $word_splines[$i][2];                          // element 2 contains text
                             //echo "SVG: height=$svg_height width=$svg_width baseline=$svg_baseline color=$svg_color text=$text<br>";
                             //$to_add = "<text x=\"$0\" y=\"0\" fill=\"$svg_color\" font-size=\"14px\" transform=\"scale($scale) translate($tx $ty)\" font-family=\"Courier\">$ttext Fuck</text>";
@@ -1417,6 +1430,17 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                             $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
                             break; 
             default :       // treat it as splines
+            //echo "treated as spline ... word_tags($i): " . $word_tags[$i] . "<br>";
+            // process word tags
+            //echo "before: " . $_SESSION['token_color'] . "<br>";
+            ParseAndSetInlineOptions($word_tags[$i]);
+            //echo "after: " . $_SESSION['token_color'] . "<br>";
+            $angle = $_SESSION['token_inclination'];
+            $stroke_width = $_SESSION['token_thickness'];
+            $scaling = $_SESSION['token_size'];
+            $color_htmlrgb = $_SESSION['token_color'];
+            $stroke_dasharray = $_SESSION['token_style_custom_value']; 
+            
             for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
             
                 $x1 = round($word_splines[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
@@ -1521,7 +1545,7 @@ function InsertLineNumbers() {
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
-        $global_debug_string, $global_number_of_rules_applied, $actual_page_number;
+        $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $word_tags;
     // set variables
     $actual_page_number = 1;
     //$left_margin = 5; $right_margin = 5;
@@ -1573,6 +1597,7 @@ function CalculateLayoutedSVG( $text_array ) {
     $temp_width = 0;
     $actual_word = 0;
     $text_array_length = count($text_array);
+    $collected_inline_option_tags = "";
     
     foreach ( $text_array as $key => $single_word ) {
             $global_debug_string = ""; // even if there is no debug output in layouted svg, set $debug_string = "" in order to avoid accumulation of data in this variable by parser functions
@@ -1581,7 +1606,9 @@ function CalculateLayoutedSVG( $text_array ) {
             //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
             $bare_word = GetWordSetPreAndPostTags( $single_word ); // ???"<@token_type=\"svgtext\">" );
             $temp_pre = $combined_pretags;
+            $collected_inline_option_tags .= $temp_pre;
             $temp_post = $combined_posttags;
+            //echo "$temp_pre - $bare_word - $temp_post<br>";
             $result_after_last_rule = $bare_word;
             //echo "CalculateLayouted(): bare_word = $bare_word pretags: $temp_pre posttags: $temp_post<br>";
             /*
@@ -1616,7 +1643,14 @@ function CalculateLayoutedSVG( $text_array ) {
             if ((count($tokenlist) > 0) || ($_SESSION['token_type'] === "svgtext")) { // adapt this for svgtext!
                 //echo "Processing tokenlist ...<br>";
                 //echo "inserting: key: $key word: $single_word => word_splines($actual_word)<br>";
+                //echo "collected inline-option tags: $collected_inline_option_tags<br>"; 
                 //echo "token_type: " . $_SESSION['token_type'] . "<br>";
+                // build a "parallel" array: $word_tags[$actual_word] contains all inline-options belonging to 
+                // (preceeding the) $word_splines[$actual_word]
+                $word_tags[$actual_word] = $collected_inline_option_tags;
+                $collected_inline_option_tags = ""; // reset variable for next word
+                //var_dump($word_tags);
+                
                 if ($_SESSION['token_type'] === "shorthand") {
                     list( $word_splines[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
                     $word_width[$actual_word] = $delta_width;

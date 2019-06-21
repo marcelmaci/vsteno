@@ -128,21 +128,8 @@ function InsertDatabaseButton() {
 function CalculateStenoPage() {
     global $global_debug_string, $global_error_string;
     $global_debug_string = "";
-    //echo "BEFORE:" . $_SESSION['model_standard_or_custom'];
-    //echo $_POST['model'];
-  
     CopyFormToSessionVariables();
-     
     InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
-   
-    // normally, CopyFormToSessionVariables() should copy new model to session variables
-    // but for an unknown reason that doesn't happen ....
-    // correct it here as a temporary fix
-    // BUG!!!
-    //$_SESSION['model_standard_or_custom'] = $_POST['model'];
-    
- //echo "AFTER:" . $_SESSION['model_standard_or_custom'];
-
     InsertHTMLHeader();
   
     $text = isset($_POST['original_text']) ? $_POST['original_text'] : "";
@@ -212,7 +199,7 @@ function CalculateStenoPage() {
         //echo "\nText aus CalculateStenoPage()<br>$text<br>\n";
         
     } else echo "<h1>Optionen</h2><p>Die neuen Optionen wurden gesetzt.</p>";
-   
+    
     InsertHTMLFooter();
 }
 
