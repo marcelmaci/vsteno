@@ -470,34 +470,46 @@ function recursive_search_optimized($line, $row, $array) {
 
 
 function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes) {
-    // explode strings to get rid of commas
-    $prefixes_array = explode(",", $prefixes);
-    $stems_array = explode(",", $stems);
-    $suffixes_array = explode(",", $suffixes);
-    // trim
-    $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
-    $stems_array = array_map('trim',$stems_array);
-    $suffixes_array = array_map('trim',$suffixes_array);
-    
-    $several_words = explode("-", $word);  // if word contains - => split it into array
-    $result = "";
-    //echo "prefixes: $prefixes";
-    //echo "stems: $stems<br>";
-    //echo "suffixes: $suffixes<br>";
-    for ($i=0;$i<count($several_words);$i++) {
-        $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes);
-        //echo "single result: $single_result<br>";
-       
-        $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
-    }
-    //echo "result: $result<br>";
-    if ($result === "Array") {
-        if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
-        else return $word;
+    if ($_SESSION['analysis_type'] === "phonetics") {
+        // analyze phonetically (just for testing => write own function later
+        $language = $_SESSION['language_espeak'];
+        $alphabet_option = ($_SESSION['phonetical_alphabet'] === "espeak") ? "-x" : "--ipa"; 
+        $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
+        //echo "$shell_command";
+        
+        exec("$shell_command",$o);
+        //var_dump($o);
+        return $o[0];
     } else {
-        $result = mark_affixes($result, $prefixes_array, $suffixes_array);
+        // explode strings to get rid of commas
+        $prefixes_array = explode(",", $prefixes);
+        $stems_array = explode(",", $stems);
+        $suffixes_array = explode(",", $suffixes);
+        // trim
+        $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
+        $stems_array = array_map('trim',$stems_array);
+        $suffixes_array = array_map('trim',$suffixes_array);
+    
+        $several_words = explode("-", $word);  // if word contains - => split it into array
+        $result = "";
+        //echo "prefixes: $prefixes";
+        //echo "stems: $stems<br>";
+        //echo "suffixes: $suffixes<br>";
+        for ($i=0;$i<count($several_words);$i++) {
+            $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes);
+            //echo "single result: $single_result<br>";
+       
+            $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
+        }
         //echo "result: $result<br>";
-        return $result;
+        if ($result === "Array") {
+            if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
+            else return $word;
+        } else {
+            $result = mark_affixes($result, $prefixes_array, $suffixes_array);
+            //echo "result: $result<br>";
+            return $result;
+        }
     }
 }
     

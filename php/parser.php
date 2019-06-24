@@ -785,7 +785,7 @@ function MetaParser( $text ) {          // $text is a single word!
                     
          //echo  $_SESSION['hyphenate_yesno'] . "<br>" . $_SESSION['composed_words_yesno'];
          
-if (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) {
+if ((($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno'])) || ($_SESSION['analysis_type !== "none"'])) {
                     //echo "shorthand: $text<br>";
                     $temp_word = $text;
                     $pos1 = mb_strpos($text, "\\", 0, "UTF-8");

@@ -34,6 +34,7 @@ function InitializeSessionVariables() {
     $_SESSION['token_style_type'] = "solid"; // solid line
     $_SESSION['token_style_custom_value'] = ""; 
     $_SESSION['token_color'] = "black";
+    $_SESSION['analysis_type'] = "written";
     $_SESSION['hyphenate_yesno'] = true;
     $_SESSION['composed_words_yesno'] = true;
     $_SESSION['composed_words_separate'] = 99; // don't separate words by default (leave that to model rules)
@@ -126,8 +127,9 @@ function InitializeSessionVariables() {
     $_SESSION['rules_count'] = null;
     $_SESSION['language_hunspell'] = "de_CH"; // do not initialize these variables, so that they can be initialized by model!
     $_SESSION['language_hyphenator'] = "de"; // correction: can be done here, since toggle_model now actualizes session variables for specific model
+    $_SESSION['language_espeak'] = "de";
+    $_SESSION['phonetical_alphabet'] = "espeak";
     // spacer variables
-    
     $_SESSION['spacer_autoinsert'] = false;
 }
 
@@ -162,6 +164,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['token_style_type'] = htmlspecialchars($_POST['token_line_style']); 
     $_SESSION['token_style_custom_value'] = htmlspecialchars($_POST['token_line_style_custom_value']); 
     $_SESSION['token_color'] = htmlspecialchars($_POST['token_color']);
+    $_SESSION['analysis_type'] = htmlspecialchars($_POST['analysis_type']);
     $_SESSION['hyphenate_yesno'] = (htmlspecialchars($_POST['hyphenate_yesno']) === "hyphenate_yes") ? true : false;
     $_SESSION['composed_words_yesno'] = (htmlspecialchars($_POST['composed_words_yesno']) === "composed_words_yes") ? true : false;
     // disable these two paramaters => can only be used via inline-options in the future (because dependant on model)
@@ -244,8 +247,10 @@ if ($_POST['token_size'] != "") {
     // additional session variable necessary to keep track of selected std model (in input form)
     // will be used by toggle_model
     //$_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : $_SESSION['selected_std_model'];
-    $_SESSION['language_hunspell'] = $_POST['language_hunspell'];
-    $_SESSION['language_hyphenator'] = $_POST['language_hyphenator'];
+    $_SESSION['language_hunspell'] = htmlspecialchars($_POST['language_hunspell']);
+    $_SESSION['language_hyphenator'] = htmlspecialchars($_POST['language_hyphenator']);
+    $_SESSION['language_espeak'] = htmlspecialchars($_POST['language_espeak']);
+    $_SESSION['phonetical_alphabet'] = htmlspecialchars($_POST['phonetical_alphabet']);
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";

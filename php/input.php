@@ -88,12 +88,19 @@ Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo (
 </td></tr>
 <tr><td>Sprache</td></tr>
 <tr><td>
-Analysieren: 
+Analyse:<br>
+<input type="radio" name="analysis_type" value="none"<?php echo ($_SESSION['analysis_type'] === "none") ? " checked" : "";?>> keine<br>
+<input type="radio" name="analysis_type" value="written"<?php echo ($_SESSION['analysis_type'] === "written") ? " checked" : "";?>> Schrift: 
 <input type="checkbox" name="hyphenate_yesno" value="hyphenate_yes" <?php echo ($_SESSION['hyphenate_yesno']) ? "checked" : "";?>> Silben
 <input type="text" name="language_hyphenator"  size="6" value="<?php echo $_SESSION['language_hyphenator']; ?>">
 <input type="checkbox" name="composed_words_yesno" value="composed_words_yes" <?php echo ($_SESSION['composed_words_yesno']) ? "checked" : "";?>> Wörter
 <input type="text" name="language_hunspell"  size="6" value="<?php echo $_SESSION['language_hunspell']; ?>">
 => <a href="show_analyzer_parameters.php">Parameter</a><br>
+<input type="radio" name="analysis_type" value="phonetics"<?php echo ($_SESSION['analysis_type'] === "phonetics") ? " checked" : "";?>> Phonetik: 
+<input type="text" name="language_espeak"  size="6" value="<?php echo $_SESSION['language_espeak']; ?>">
+<input type="radio" name="phonetical_alphabet" value="espeak"<?php echo ($_SESSION['phonetical_alphabet'] === "espeak") ? " checked" : "";?>>espeak
+<input type="radio" name="phonetical_alphabet" value="ipa"<?php echo ($_SESSION['phonetical_alphabet'] === "ipa") ? " checked" : "";?>>IPA
+<br>
 Markieren:<br>
 <input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 
 Hauptwörter: 
