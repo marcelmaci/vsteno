@@ -34,8 +34,13 @@ function InitializeSessionVariables() {
     $_SESSION['token_style_type'] = "solid"; // solid line
     $_SESSION['token_style_custom_value'] = ""; 
     $_SESSION['token_color'] = "black";
-    $_SESSION['analysis_type'] = "written";
+    $_SESSION['analysis_type'] = "selected";
     $_SESSION['hyphenate_yesno'] = true;
+    $_SESSION['phonetics_yesno'] = false;
+    $_SESSION['affixes_yesno'] = true;
+    $_SESSION['filter_out_prefixes_yesno'] = false;
+    $_SESSION['filter_out_suffixes_yesno'] = false;
+    $_SESSION['filter_out_words_yesno'] = false;
     $_SESSION['composed_words_yesno'] = true;
     $_SESSION['composed_words_separate'] = 99; // don't separate words by default (leave that to model rules)
     $_SESSION['composed_words_glue'] = 0;
@@ -166,6 +171,11 @@ if ($_POST['token_size'] != "") {
     $_SESSION['token_color'] = htmlspecialchars($_POST['token_color']);
     $_SESSION['analysis_type'] = htmlspecialchars($_POST['analysis_type']);
     $_SESSION['hyphenate_yesno'] = (htmlspecialchars($_POST['hyphenate_yesno']) === "hyphenate_yes") ? true : false;
+    $_SESSION['phonetics_yesno'] = (htmlspecialchars($_POST['phonetics_yesno']) === "yes") ? true : false;
+    $_SESSION['filter_out_prefixes_yesno'] = (htmlspecialchars($_POST['filter_out_prefixes_yesno']) === "yes") ? true : false;
+    $_SESSION['filter_out_suffixes_yesno'] = (htmlspecialchars($_POST['filter_out_suffixes_yesno']) === "yes") ? true : false;
+    $_SESSION['filter_out_words_yesno'] = (htmlspecialchars($_POST['filter_out_words_yesno']) === "yes") ? true : false;
+    $_SESSION['affixes_yesno'] = (htmlspecialchars($_POST['affixes_yesno']) === "yes") ? true : false;
     $_SESSION['composed_words_yesno'] = (htmlspecialchars($_POST['composed_words_yesno']) === "composed_words_yes") ? true : false;
     // disable these two paramaters => can only be used via inline-options in the future (because dependant on model)
     //$_SESSION['composed_words_separate'] = htmlspecialchars($_POST['composed_words_separate']);

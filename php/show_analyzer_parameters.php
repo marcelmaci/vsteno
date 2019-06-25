@@ -30,19 +30,35 @@ echo "<h1>Parameters</h1>";
 $model_name = ($_SESSION['model_standard_or_custom'] === "standard") ? $_SESSION['selected_std_model'] : GetDBUserModelName();
 $hunspell_yesno = ($_SESSION['composed_words_yesno']) ? "yes" : "no";
 $hyphens_yesno = ($_SESSION['hyphenate_yesno']) ? "yes" : "no";
+$phonetics_yesno = ($_SESSION['phonetics_yesno']) ? "yes" : "no";
+$analysis_text = ($_SESSION['analysis_type'] === "none") ? "DISABLED" : "SELECTED";
+if ($_SESSION['affixes_yesno']) $hunspell_options = "OPTIONS: affixes & words";
+else {
+    $hunspell_options = "FILTER: " . (($_SESSION['filter_out_prefixes_yesno']) ? "prefixes " : "") . (($_SESSION['filter_out_suffixes_yesno']) ? "suffixes " : "") . (($_SESSION['filter_out_words_yesno']) ? "words " : "");
+}
 echo "<h2>General</h2>";
-echo "MODEL: $model_name<br>HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)<br>HYPHENATOR: " . $_SESSION['language_hyphenator'] . " ($hyphens_yesno)";
-echo "<br>SEPARATE: " . $_SESSION['composed_words_separate'];
-echo "<br>GLUE: " . $_SESSION['composed_words_glue'];
+echo "MODEL: $model_name";
+echo "<br>ANALYSIS: $analysis_text";
 
-echo "<h2>Prefixes</h2>";
-echo ShowListOrEmpty($_SESSION['prefixes_list']);
+if ($_SESSION['analysis_type'] === "selected") {
+    echo "<br>HYPHENS: " . $_SESSION['language_hyphenator'] . " ($hyphens_yesno)";
+    echo "<br>HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)";
+    echo "<br>$hunspell_options";
+    echo "<br>PHONETICS: " . $_SESSION['language_espeak'] . " ($phonetics_yesno)";
+    echo "<br>ALPHABET: " . $_SESSION['phonetical_alphabet']; 
+    echo "<br>SEPARATE: " . $_SESSION['composed_words_separate'];
+    echo "<br>GLUE: " . $_SESSION['composed_words_glue'];
 
-echo "<h2>Stems</h3>";
-echo ShowListOrEmpty($_SESSION['stems_list']);
 
-echo "<h2>Suffixes</h3>";
-echo ShowListOrEmpty($_SESSION['suffixes_list']);
+    echo "<h2>Prefixes</h2>";
+    echo ShowListOrEmpty($_SESSION['prefixes_list']);
+
+    echo "<h2>Stems</h3>";
+    echo ShowListOrEmpty($_SESSION['stems_list']);
+
+    echo "<h2>Suffixes</h3>";
+    echo ShowListOrEmpty($_SESSION['suffixes_list']);
+}
 
 echo '<p><a href="input.php"><br><button>zurück</button></a></p>';
 

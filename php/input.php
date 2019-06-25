@@ -30,7 +30,7 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <input type="radio" name="text_format_metayesno" value="std" <?php echo ($_SESSION['original_text_format'] === "std") ? "checked" : "";?>> Meta (STD)
 <input type="radio" name="text_format_metayesno" value="prt" <?php echo ($_SESSION['original_text_format'] === "prt") ? "checked" : "";?>> Meta (PRT)
 <input type="checkbox" name="text_format_ascii_yesno" value="ascii" <?php echo ($_SESSION['original_text_ascii_yesno']) ? "checked" : "";?>> Breaks<br>
-<!-- There's seems to be a bug in the textarea element ?! Any number of linebreaks \n at the beginning disappear when string is reinserted -->
+<!-- There seems to be a bug in the textarea element ?! Any number of linebreaks \n at the beginning disappear when string is reinserted -->
 <!-- Adding an additional \n when reinserting the string seems to help ?! (Exact number of linebreaks is preserved.) -->
 
 <textarea id="original_text" name="original_text" rows="10" cols="100"><?php echo "\n" . $_SESSION['original_text_content']; ?>
@@ -88,17 +88,25 @@ Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo (
 </td></tr>
 <tr><td>Sprache</td></tr>
 <tr><td>
-Analyse:<br>
-<input type="radio" name="analysis_type" value="none"<?php echo ($_SESSION['analysis_type'] === "none") ? " checked" : "";?>> keine<br>
-<input type="radio" name="analysis_type" value="written"<?php echo ($_SESSION['analysis_type'] === "written") ? " checked" : "";?>> Schrift: 
+Analyse:
+<input type="radio" name="analysis_type" value="none"<?php echo ($_SESSION['analysis_type'] === "none") ? " checked" : "";?>> keine
+<input type="radio" name="analysis_type" value="selected"<?php echo ($_SESSION['analysis_type'] === "selected") ? " checked" : "";?>> Auswahl => <a href="show_analyzer_parameters.php">Parameter</a><br>
+ 
 <input type="checkbox" name="hyphenate_yesno" value="hyphenate_yes" <?php echo ($_SESSION['hyphenate_yesno']) ? "checked" : "";?>> Silben
-<input type="text" name="language_hyphenator"  size="6" value="<?php echo $_SESSION['language_hyphenator']; ?>">
+<input type="text" name="language_hyphenator"  size="6" value="<?php echo $_SESSION['language_hyphenator']; ?>"><br>
+
 <input type="checkbox" name="composed_words_yesno" value="composed_words_yes" <?php echo ($_SESSION['composed_words_yesno']) ? "checked" : "";?>> Wörter
 <input type="text" name="language_hunspell"  size="6" value="<?php echo $_SESSION['language_hunspell']; ?>">
-=> <a href="show_analyzer_parameters.php">Parameter</a><br>
-<input type="radio" name="analysis_type" value="phonetics"<?php echo ($_SESSION['analysis_type'] === "phonetics") ? " checked" : "";?>> Phonetik: 
+<input type="radio" name="affixes_yesno" value="yes"<?php echo ($_SESSION['affixes_yesno']) ? " checked" : "";?>>Affixe
+<input type="radio" name="affixes_yesno" value="no"<?php echo ($_SESSION['affixes_yesno']) ? "" : " checked";?>>keine:
+<input type="checkbox" name="filter_out_prefixes_yesno" value="yes"<?php echo ($_SESSION['filter_out_prefixes_yesno']) ? " checked" : "";?>> Präfixe
+<input type="checkbox" name="filter_out_suffixes_yesno" value="yes"<?php echo ($_SESSION['filter_out_suffixes_yesno']) ? " checked" : "";?>> Suffixe
+<input type="checkbox" name="filter_out_words_yesno" value="yes"<?php echo ($_SESSION['filter_out_words_yesno']) ? " checked" : "";?>> Wortgrenzen<br>
+
+
+<input type="checkbox" name="phonetics_yesno" value="yes"<?php echo ($_SESSION['phonetics_yesno']) ? " checked" : "";?>> Phonetik
 <input type="text" name="language_espeak"  size="6" value="<?php echo $_SESSION['language_espeak']; ?>">
-<input type="radio" name="phonetical_alphabet" value="espeak"<?php echo ($_SESSION['phonetical_alphabet'] === "espeak") ? " checked" : "";?>>espeak
+<input type="radio" name="phonetical_alphabet" value="espeak"<?php echo ($_SESSION['phonetical_alphabet'] === "espeak") ? " checked" : "";?>>eSpeak
 <input type="radio" name="phonetical_alphabet" value="ipa"<?php echo ($_SESSION['phonetical_alphabet'] === "ipa") ? " checked" : "";?>>IPA
 <br>
 Markieren:<br>

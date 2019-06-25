@@ -468,19 +468,19 @@ function recursive_search_optimized($line, $row, $array) {
 
 /////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
 
+function GetPhoneticalTranscription($word) {
+    $language = $_SESSION['language_espeak'];
+    $alphabet_option = ($_SESSION['phonetical_alphabet'] === "espeak") ? "-x" : "--ipa"; 
+    $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
+    //echo "$shell_command";
+        
+    exec("$shell_command",$o);
+    //var_dump($o);
+    return $o[0];
+}
 
 function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes) {
-    if ($_SESSION['analysis_type'] === "phonetics") {
-        // analyze phonetically (just for testing => write own function later
-        $language = $_SESSION['language_espeak'];
-        $alphabet_option = ($_SESSION['phonetical_alphabet'] === "espeak") ? "-x" : "--ipa"; 
-        $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
-        //echo "$shell_command";
-        
-        exec("$shell_command",$o);
-        //var_dump($o);
-        return $o[0];
-    } else {
+    
         // explode strings to get rid of commas
         $prefixes_array = explode(",", $prefixes);
         $stems_array = explode(",", $stems);
@@ -503,14 +503,35 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
         }
         //echo "result: $result<br>";
         if ($result === "Array") {
-            if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
-            else return $word;
+            if ($_SESSION['hyphenate_yesno']) $result = hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
+            else $result = $word;
+            if ($_SESSION['phonetics_yesno']) $result = GetPhoneticalTranscription($result);
+            return $result;
+            //if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
+            //else return $word;
         } else {
-            $result = mark_affixes($result, $prefixes_array, $suffixes_array);
-            //echo "result: $result<br>";
+            //echo "<br>result(BEFORE): $result<br>";
+            if ($_SESSION['affixes_yesno']) $result = mark_affixes($result, $prefixes_array, $suffixes_array);
+            else {
+                // if affixes should not be marked, it's better to:
+                // (1) mark them
+                // (2) filter out markings (+, #, |)
+                // Reason: parts recognized as words that actually are prefixes (and thus syllables) 
+                // will appear as separate words otherwhise 
+                // Example: Ein|ga-be
+                // Will be processed: Ein|ga-be => Ein+ga-be => Ein-ga-be
+                $result = mark_affixes($result, $prefixes_array, $suffixes_array);
+                //echo "<br>result(MARKED): $result<br>";
+                if ($_SESSION['filter_out_prefixes_yesno']) $result = preg_replace("/(\+)/", "-", $result);
+                if ($_SESSION['filter_out_suffixes_yesno']) $result = preg_replace("/(#)/", "-", $result);
+                if ($_SESSION['filter_out_words_yesno']) $result = preg_replace("/(\||\|)/", "-", $result);
+            }
+            //echo "<br>result(AFTER): $result<br>";
+            if ($_SESSION['phonetics_yesno']) $result = GetPhoneticalTranscription($result);
+            //echo "<br>result(PHONETICS): $result<br>";
+            
             return $result;
         }
-    }
 }
     
 function mark_prefixes($word, $prefixes) {

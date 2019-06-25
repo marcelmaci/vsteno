@@ -1,5 +1,4 @@
 #BeginSection(header)
-	/* 
 	DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)
     	(c) 2018-2109  Marcel Maci
 	
@@ -18,14 +17,35 @@
 	
 	Special thanks go to Yvonne Reith for external corrections which
 	helped to improve the model substantially.
+	#BeginSubSection(session)
+	"license" := "<p>DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)<br>
+    	(c) 2018-2109  Marcel Maci</p>
 	
-	This file was originately generated as export from old parser, then 
+	<p>This program is free software: you can redistribute it and/or modify
+    	it under the terms of the GNU General Public License as published by
+    	the Free Software Foundation, either version 3 of the License, or
+    	(at your option) any later version.</p>
+
+    	<p>This program is distributed in the hope that it will be useful,
+    	but WITHOUT ANY WARRANTY; without even the implied warranty of
+    	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    	GNU General Public License for more details.<p>
+
+    	<p>You should have received a copy of the GNU General Public License
+    	along with this program.  If not, see www.gnu.org/licenses.<p>
+	
+	<p>Special thanks go to Yvonne Reith for external corrections which 
+	helped to improve the model substantially.</p>
+	";
+	"release_notes" := "
+	<jp>This file was originately generated as export from old parser, then 
 	later completed with manual additions to form DESSBAS (DD=Deutsch, 
-	SS=Stolze-Schrey, BAS=Grundschrift) 
+	SS=Stolze-Schrey, BAS=Grundschrift).</p> 
 	
-	Model is based on SE1 rev0 exclusively. Tokens were optimized for an
-	inclination of 60 degrees.
-	*/
+	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
+	inclination of 60 degrees.</p>
+	";
+
 	// Schreibweise:
 	// = ein Zeichen am Wortanfang (z.B. [F=]) oder Wortende (z.B. [=NG])
 	// ^ ein höher gestelltes Zeichen (z.B. [^CH]) oder Variante vor höhergestelltem Zeichen (z.B. [AR5^])
@@ -37,12 +57,32 @@
 	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
-	#BeginSubSection(session)
+	"copyright_footer" = "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		"token_distance_wide" := "17";
+		// use linguistical analysis
+		"analysis_type" := "selected";
+		// hyphenation (phpSyllable)
+		"hyphenate_yesno" := "yes";
+		"language_hyphenator" := "de";
+		// composed words + affixes (hunspell)
+		"composed_words_yesno" := "yes";
+		"language_hunspell" := "de_CH";
+		// generate affixes in composed words
+		"affixes_yesno" := "yes";
+		// set variables for filter option (not selected)
+		"filter_out_prefixes_yesno" := "yes";
+		"filter_out_suffixes_yesno" := "yes";
+		"filter_out_words_yesno" := "yes";
+		// disable phonetic analysis
+		"phonetics_yesno" := "no";
+		"language_espeak" := "de";
+		"phonetical_alphabet" := "espeak";
+		// define prefixes, suffixes and stems for hunspell
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen";
 		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?, seits, voll"; // use non caputuring groups! (?:)
-		//"title_text" := "new prefixes";
+		"title_text" := "Deutsch";
+		"introduction_text" := "Grundschrift (Stolze-Schrey)";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		
@@ -509,7 +549,7 @@
 		"([Ll]er)\+n" => "$1n";
 		"([Ww]er)\+?(-?de)" => "$1$2";
 		"([Hh]er)\+r" => "$1r";
-		"([Hh]er)\+(ein|aus|auf|un-?ter|nach)" => "$1-$2";
+		"([Hh]er)\+(ein|aus|auf|un-?ter|nach)" => "$1-+$2"; // well, -+ is audacious ...
 		"([Ee]r)\+(i-?ka)(?!-?ni-?sch)" => "$1$2"; // Erika, Amerika; amerikanisch
 		"([Ff]er)\+t" => "$1t";
 		"([Ww]er)\+d" => "$1d";
