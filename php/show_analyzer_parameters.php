@@ -58,6 +58,12 @@ if ($_SESSION['analysis_type'] === "selected") {
 
     echo "<h2>Suffixes</h3>";
     echo ShowListOrEmpty($_SESSION['suffixes_list']);
+    
+    echo "<h2>Filter</h3>";
+    echo ShowListOrEmpty($_SESSION['filter_list']);
+    
+    echo "<h2>Blocklist</h3>";
+    echo ShowListOrEmpty($_SESSION['block_list']);
 }
 
 echo '<p><a href="input.php"><br><button>zurück</button></a></p>';

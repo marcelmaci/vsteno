@@ -479,16 +479,18 @@ function GetPhoneticalTranscription($word) {
     return $o[0];
 }
 
-function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes) {
-    
+function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
+        //echo "analyze_word_linguistically=>block: $block<br>";
         // explode strings to get rid of commas
         $prefixes_array = explode(",", $prefixes);
         $stems_array = explode(",", $stems);
         $suffixes_array = explode(",", $suffixes);
+        //$block_array = explode(",", $block);
         // trim
         $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
         $stems_array = array_map('trim',$stems_array);
         $suffixes_array = array_map('trim',$suffixes_array);
+        //$block_array = array_map('trim',$suffixes_array);
     
         $several_words = explode("-", $word);  // if word contains - => split it into array
         $result = "";
@@ -496,7 +498,7 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
         //echo "stems: $stems<br>";
         //echo "suffixes: $suffixes<br>";
         for ($i=0;$i<count($several_words);$i++) {
-            $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes);
+            $single_result = analyze_one_word_linguistically($several_words[$i], $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block);
             //echo "single result: $single_result<br>";
        
             $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
@@ -572,7 +574,28 @@ function mark_affixes($word, $prefixes, $suffixes) {
     return $word;
 }
 
-function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes) {
+function ApplyFilter($word) {
+    $filter_list = $_SESSION['filter_list'];
+    $filter_array = explode(",", $filter_list);
+    $filter_array = array_map('trim',$filter_array);
+    
+    foreach ($filter_array as $key => $element) {
+        //$replacement = preg_replace("/(\||\\)?(.*?)(\||\\)?/", "$1-$3", $element);
+        //$element = preg_replace("/(?<!\\)\|/", "bla", $element); // escape | if it is not escaped! (prevent infitie preg_replace-loop)
+        
+        $replacement = preg_replace("/(\|)/", "-", $element);
+        $element = preg_quote($element);
+        //$replacement = preg_replace("/(\|)/", "-", "|des");
+        
+        //echo "filter element: #$element# => #$replacement# in word: $word<br>";
+        $word = preg_replace("/$element/", "$replacement", $word);
+        //echo "result: $word<br>";
+    }
+    
+    return $word;
+}
+
+function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
     //echo "analyze: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
     
     // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)
@@ -607,7 +630,7 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
             //echo "stems: $stems<br>";
             //echo "suffixes (one word): $suffixes<br>";
    
-            $array = eliminate_inexistent_words_from_array($word_list_as_string, $array, $prefixes, $stems, $suffixes);
+            $array = eliminate_inexistent_words_from_array($word_list_as_string, $array, $prefixes, $stems, $suffixes, $block);
             //var_dump($array);
             $result = recursive_search(0,0, $array);
             
@@ -624,8 +647,8 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
             $result = capitalize($result);
             //echo "3:$result<br>";
            
-        } else $result = mb_strtolower($result);
-        return $result;
+        } else $result = ApplyFilter(mb_strtolower($result));
+        return ApplyFilter($result);
     }
 }
 
@@ -641,6 +664,7 @@ function backwards_preg_match($wordpart, $array) {
         // if any strange behaviour of pre/suffixes => revert back to previous commit
         // i.e. do not use strtolower but i-flag for regex instead ...
         //if ($pattern === "be") echo "pattern: $pattern wordpart_lower: $wordpart_lower<br>";
+        //echo "preg_match: #$pattern# in wordpart: $wordpart_lower<br>";
         $result = preg_match("/^$pattern$/", $wordpart_lower); 
         //echo "result $i: $result<br>";
         if ($result === 1) return true;
@@ -656,8 +680,7 @@ function backwards_preg_replace_all($word, $array, $type) {
         //echo "pattern: $pattern<br>";
         switch ($type) {
             case "prefix" : $result = preg_replace("/(^|\||\+)($pattern)(\|)/i", "$1$2+", $word); break;
-            case "suffix" : $result = preg_replace("/(\||\+)($pattern)(#|\||$)/i", "#$2$3", $word); 
-                            break;
+            case "suffix" : $result = preg_replace("/(\||\+)($pattern)(#|\||$)/i", "#$2$3", $word); break;
         }
         //if ($result !== $wordpart) return $result;
         $word = $result;
@@ -666,22 +689,30 @@ function backwards_preg_replace_all($word, $array, $type) {
     return $word;
 }
 
-function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stems, $suffixes) {
+function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stems, $suffixes, $block) {
     $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
     // explode strings to get rid of commas
     $prefixes_array = explode(",", $prefixes);
     $stems_array = explode(",", $stems);
     $suffixes_array = explode(",", $suffixes);
+    $block_array = explode(",", $block);
     // trim
     $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
     $stems_array = array_map('trim',$stems_array);
     $suffixes_array = array_map('trim',$suffixes_array);
+    $block_array = array_map('trim',$block_array);
     // implode to add spaces for string comparison
     $prefixes = " " . implode(" ", $prefixes_array) . " ";
     $stems = " " . implode(" ", $stems_array) . " ";
     $suffixes = " " . implode(" ", $suffixes_array) . " ";
     //echo "<br>suffixes(eliminate): $suffixes<br>";
     //var_dump($prefixes_array);
+    $block_string = implode(" ", $block_array);
+    //echo "block: $block<br>";
+    //echo "block_string: $block_string<br>";
+    //echo "block_array: <br>";
+    //var_dump($block_array);
+    //echo "<br>";
     
     //echo "$shell_command<br>";
     //echo "hunspell: ";
@@ -709,26 +740,71 @@ function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stem
             } elseif (backwards_preg_match($array[$l][$r][0], $suffixes_array)) {
                 //echo "match found as suffix<br>";
                     //echo "suffix-pattern: " . $array[$l][$r][0] . " result: " . backwards_preg_match($array[$l][$r][0], $suffixes_array);
-            }
-            
-            /*elseif (mb_strpos(mb_strtolower($prefixes), " " . mb_strtolower($array[$l][$r][0]) . " ") !== false) { 
-                // if word is in prefix list => separate it as if it where a word!
-                //echo "word: " . $array[$l][$r][0] . " is a prefix!<br>";
-                // do nothing (leave word in array)
-            } elseif (mb_strpos(mb_strtolower($stems), mb_strtolower(" " . $array[$l][$r][0]) . " ") !== false) {
-                //echo "part " . $array[$l][$r][0] . " is a valid (irregular) stem!<br>";
-                
-            } elseif (mb_strpos(mb_strtolower($suffixes), mb_strtolower(" " . $array[$l][$r][0]) . " ") !== false) {
-                //echo "part " . $array[$l][$r][0] . " is a valid suffix!<br>";
-                
-            } */
-            
-            else {
+            } else {
                 // no match => delete string in array (use same data field for performance reason)
                 //echo "no match: " . $array[$l][$r][0] . "<br>";
                 $array[$l][$r][0] = ""; // "" means: no match!
-                
             }
+            // explications blocklist (= variable $_SESSION['block_list']):
+            //
+            // format: "a, b, c, d, ..." (list of elements, like prefix_list, suffix_list etc.)
+            //
+            // signification: 
+            // - elements in blocklist are not considered as words
+            // - means: they are eliminated from $array and are not sent to hunspell for testing
+            //
+            // examples:
+            //
+            // la-chen-des: 
+            // - list: "la chen des lachen des la chendes lachendes"
+            // - reduced to: "la chen lachen la chender lachendes"
+            // - raw-LNG: la-chen-des (if "des" is not in blocklist,
+            // the result is "la-chen|des")
+            //
+            // des-we-gen:
+            // - list: "des we gen deswe gen des wegen deswegen"
+            // - reduced to: "we gen deswe gen wegen deswegen"
+            // - raw-LNG: des-we-gen (if "des is not in blocklist, 
+            // the result is "des|wegen")
+            //
+            // NOTE: 
+            // Even if the blocklist allows you to filter out unwanted
+            // suffixes (false positives) in the above examples it 
+            // completely destroys the possibility to detect pre-
+            // fixes:
+            // - des-we-gen: since "des" and "wegen" are not tested 
+            // individually, even if you add "des" to the prefix list
+            // it won't be recognized by the analyzer (since "des" is
+            // no "independent" part of the word)
+            //
+            // If you want both advantages (i.e. recognition of
+            // prefixes and no false positives at the end of the word)
+            // you should use the filter_list instead:
+            //
+            // how-to:
+            // - don't add "des" to blocklist (=> des will be processed
+            // individually and can be recognized as prefixes; but
+            // this also produces false positives like la-chen|des)
+            // - add "des" to prefixes_list (the analyzer will mark
+            // des|we-gen as des+we-gen)
+            // - add "|des" to filter_list (la-chen|des will be re-
+            // written as la-chen-des)
+            //
+            // As of writing these lines, the implementation of
+            // filter_list is only partial (no full regex can be 
+            // used, but only | either at the beginning or at
+            // the end of the element that has to be filtered) 
+            // and will probably be adapted/extended in the future.
+            
+            // test blocklist
+            //echo "<br>test blocklist<br>";
+            //echo "array:<br>";
+            //print_r($array);
+            //echo "<br>block_array:<br>";
+            //print_r($block_array);
+            //echo "test($l,$r): #" . $array[$l][$r][0] . "#<br>";
+            if (backwards_preg_match($array[$l][$r][0], $block_array)) $array[$l][$r][0] = "";
+            //echo "result($l,$r): #" . $array[$l][$r][0] . "#<br>";
             $offset+=1;
         }
     }
