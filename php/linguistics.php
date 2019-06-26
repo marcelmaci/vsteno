@@ -584,11 +584,42 @@ function ApplyFilter($word) {
         //$element = preg_replace("/(?<!\\)\|/", "bla", $element); // escape | if it is not escaped! (prevent infitie preg_replace-loop)
         
         $replacement = preg_replace("/(\|)/", "-", $element);
-        $element = preg_quote($element);
+        //$element = preg_quote($element);
         //$replacement = preg_replace("/(\|)/", "-", "|des");
         
-        //echo "filter element: #$element# => #$replacement# in word: $word<br>";
-        $word = preg_replace("/$element/", "$replacement", $word);
+        // test the whole and horribly complicated escape sequence to be able to use regex inside filter_list
+        //$test_element = "|de[rsmn]";
+        //$test_element = "de[rsmn]|";
+        $test_element = $element;
+        //echo "test_element: $test_element<br>";
+        
+        $test_replacement = preg_replace("/\|/", "", $test_element);
+        //echo "test_replacement: $test_replacement<br>";
+        
+        $test_replacement_regex = preg_quote($test_replacement);
+        //echo "test_replacement_regex: $test_replacement_regex<br>";
+        
+        $test_condition = preg_replace("/$test_replacement_regex/", "($test_replacement)", $test_element);
+        $test_condition = preg_replace("/\|/", "\|", $test_condition);
+        //echo "test_condition: $test_condition<br>";
+        
+        $test_replacement_with_dash = preg_replace("/\|/", "-", $test_element);
+        //echo "test_replacement_with_dash: $test_replacement_with_dash<br>";
+        
+        // impossible to insert $1 ... no idea how that has to be escaped ... ?!! use space followed by trim instead ..
+        $test_replacement_with_variable = preg_replace("/$test_replacement_regex/", "\$ 1", $test_replacement_with_dash);
+        $test_replacement_with_variable = preg_replace("/ /", "", $test_replacement_with_variable);
+        //echo "test_replacement_with_variable: $test_replacement_with_variable<br>";
+        
+        $test_word = preg_replace("/$test_condition/", "$test_replacement_with_variable", $word);
+        
+        //echo "real: filter element: #$element# => #$replacement# in word: $word<br>";
+        //echo "test: \"$test_condition\" => \"$test_replacement_with_variable\"<br>word: $word => result: $test_word<br>";
+        
+        $word = $test_word;
+        
+        // old preg_replace
+        //$word = preg_replace("/$element/", "$replacement", $word);
         //echo "result: $word<br>";
     }
     

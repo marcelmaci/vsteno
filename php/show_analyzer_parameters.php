@@ -62,7 +62,7 @@ if ($_SESSION['analysis_type'] === "selected") {
     echo "<h2>Filter</h3>";
     echo ShowListOrEmpty($_SESSION['filter_list']);
     
-    echo "<h2>Blocklist</h3>";
+    echo "<h2>Block</h3>";
     echo ShowListOrEmpty($_SESSION['block_list']);
 }
 
