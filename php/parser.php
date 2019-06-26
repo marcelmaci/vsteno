@@ -60,10 +60,11 @@ function prepare_optimized_cache_array($text) {
 }
 
 function replace_all( $pattern, $replacement, $string ) {
-    do {
-        $old_string = $string;
+/*    do { // extended_preg_replace repeats rule (= applies it 2x in order to avoid non application if contexts of condition overlap
+        $old_string = $string; // so it is probably not necessary (and even "pernicious" (risk of infinite loop)) to include a while-loop here => watch this carefully (if errors ocurr in calculation, this might be the cause)
+*/
         $string = extended_preg_replace( $pattern, $replacement, $string );
-    } while ($old_string !== $string );
+//    } while ($old_string !== $string );
     return $string;
 }
 /*
@@ -662,16 +663,37 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
         //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . "($word)<br>";
         $old_word = $word;
-        $word = replace_all( "/" . $analyzer[$i][0] . "/", $analyzer[$i][1], $word);
+        $condition = "/" . $analyzer[$i][0] . "/";
+        //echo "execute rule($i): #" . $condition . "# => #" . $analyzer[$i][1] . "#<br>";
+        $word = replace_all( $condition, $analyzer[$i][1], $word);
+        //echo "word: $word<br>old_word: $old_word<br>";
         
-        /*
-        if ($old_word !== $word) {
-                echo "rule: " . $analyzer[$i][0] . " => " . $analyzer[$i][1] . " has been applied ($old_word => $word).<br>";
-        } else {
-          echo "no match: " . $analyzer[$i][0] . " => " . $analyzer[$i][1] . "<br>";
-          
+        $len = count($analyzer[$i]);
+        if (($word !== $old_word) && ($len>2)) {
+            $not_applied_comment = "";
+            //echo "multiple:<br>"; //var_dump($analyzer[$i]);
+            // multiple consequences: check if one of the multiple consequences matches
+            $hit = false;
+            $j = 2;
+            while (($j<=$len-1) && (!$hit)) {
+                if (preg_match("/" . $analyzer[$i][$j] . "/", $old_word)) $hit = true;
+                //echo "check($i,$j): #" . $analyzer[$i][$j] . "# result: #$hit#<br>";
+                if ($hit) { 
+                    $not_applied_comment = "<b>NOT APPLIED (MATCH: " . $analyzer[$i][$j] . ")</b>";
+                    $word = $old_word; // don't apply rule (revert back to $old_word)
+                }
+                $j++;
+            }
+            if ($_SESSION['output_format'] === "debug") {
+                $wrapped_pattern = WrapStringAfterNCharacters($analyzer[$i][0], 30);
+                $replacement = $analyzer[$i][1];
+                $global_linguistical_analyzer_debug_string .= "<tr><td><b>[$number_analyzer_rules]</b> $word </td><td><b>[A$i]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "<br>$not_applied_comment</td><td>LNG-POST</td></tr>"; 
+                //if ($hit) $global_linguistical_analyzer_debug_string .= "<tr><td></td><td>NOT APPLIED</td><td></td></tr>"; 
+                $number_analyzer_rules++;
+            }     
         }
-        */
+        //if ($hit) echo "rule not applied<br>";
+        //else echo "rule applied<br>";
         
         if (($_SESSION['output_format'] === "debug") && ($old_word !== $word)) {
             //echo "modification: $old_word => $word (rule: $i)<br>";

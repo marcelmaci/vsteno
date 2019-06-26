@@ -216,9 +216,10 @@ function ImportAnalyzer() {
     $i = 0;
     
     while ($analyzer_subsection !== "") {
+    // read rule with condition => single or multiple consequence (as second part = $matches[2])
     $result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?=>[ ]*?({?[ ]*?\".*?\"[ ]*?}?)[ ]*?;(.*)/", $analyzer_subsection, $matches);
     
-    //echo "analyer: $analyzer_subsection result: $result<br>";
+    //echo "analyzer: $analyzer_subsection result: $result<br>";
     
     if ($result == 1) {
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
@@ -227,6 +228,7 @@ function ImportAnalyzer() {
         //echo "condition => consequence: $condition => $consequence<br>";
         $analyzer_subsection = $matches[3];
         ///////////////////////// not sure if multiple consequences is needed - leave it for the moment //////////////////////
+        // check if consequence is multiple consequence (= inside {}) 
         $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
         //echo "rule $rules_pointer: $condition => $consequence<br>";
         switch ($result1) {
@@ -237,13 +239,14 @@ function ImportAnalyzer() {
                 //echo "multiple: #" . $matches1[1] . "#<br>";
                 $consequence_list = explode( ",", $matches1[1] );
                 foreach ($consequence_list as $element) {
+                    // filter out spaces at beginning and end
                     $bare_element = preg_replace("/^[ ]*?\"(.*?)\"[ ]*?/", "$1", $element);
                     //echo "element: #$element# => bare_element: #$bare_element#<br>";
-                    //$rules["$insertion_key"][] = $rules_pointer;
-                
+                    
                     $analyzer[$i][] = $bare_element;
                 }
-                $i++;
+                //echo "rule($i) written: #" . $analyzer[$i][0] . "# => #" . $analyzer[$i][1] . "#-#" . $analyzer[$i][2] . "#<br>";
+                $i++; // point to next analyzer-rule entry in array $analyzer
                 break;
             default : 
                 // just one consequence
