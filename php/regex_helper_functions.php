@@ -15,19 +15,22 @@ function GenerateTokenGroups( $steno_tokens_master ) {
 }
 
 function GetRegexOrString($array) {
-    $temp1 = "";
-    foreach ($array as $element)
-         $temp1 .= ($element === end($array)) ? "$element" : "$element|";
-    return $temp1;
+    $output = "";
+    foreach ($array as $element) {
+         $escaped = preg_quote($element); // in tokens like ^CH escaping is necessary => escape it always! 
+         $output .= ($element === end($array)) ? "$escaped" : "$escaped|";
+    }
+    return $output;
 }
 
 function GetRegexOrStringAndPrint($array) {
-    $temp1 = "";
+    $output = "";
     foreach ($array as $element) {
-         $temp1 .= ($element === end($array)) ? "$element" : "$element|";
+         $escaped = preg_quote($element); // in tokens like ^CH escaping is necessary => escape it always! 
+         $output .= ($element === end($array)) ? "$escaped" : "$escaped|";
          echo "$element ";
     }
-    return $temp1;
+    return $output;
 }
 
 // permutations
@@ -50,6 +53,7 @@ function GenerateVowelGroups() {
     global $vowel_groups;
     $vowel_groups_variable = $_SESSION['spacer_vowel_groups'];
     $vowel_groups = ImportVowelGroupsFromVariable($vowel_groups_variable);
+    //var_dump($vowel_groups);
 }
 
 // rules: combination + vowel + distance (string) + mandatory/optional
@@ -65,7 +69,7 @@ function GenerateRulesList() {
 //echo "$rules_for_patching";
 
 function GenerateSpacerRules() {
-    global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations;
+    global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations, $vowel_groups_string, $token_groups_string;
     $regex_rules = array();
     //var_dump($vowel_groups);
     
@@ -87,13 +91,14 @@ function GenerateSpacerRules() {
     foreach ($vowel_groups as $key => $vowels) {
         $temp1 = "";
         // calculate or-string
-        $temp1 = GetRegexOrString($vowels);
+        $temp1 = GetRegexOrString($vowel_groups[$key]);
         // write full regex and insert
         $vowel_groups_string[$key] = "\[(?:$temp1)\]";
         // calculate permutations
         $permutations[$key] = count($vowels);
     }
-
+    //var_dump($vowel_groups_string);
+    
     // show result
     //echo "<h2>TOKENS</h2>"; foreach ($token_groups_string as $key => $string) echo "$key: $string (" . $permutations[$key]. ")<br>";
     //echo "<h2>VOWELS</h2>"; foreach ($vowel_groups_string as $key => $string) echo "$key: $string (" . $permutations[$key]. ")<br>";
@@ -127,7 +132,7 @@ function GenerateSpacerRules() {
 }
     
 function GenerateSpacerRulesAndPrintData() {
-    global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations;
+    global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations, $token_groups_string, $vowel_groups_string;
     $regex_rules = array();
     
     // sort arrays for easier reading (only when results are printed)
@@ -136,6 +141,7 @@ function GenerateSpacerRulesAndPrintData() {
     ksort($rules_list);
     ksort($token_variants);
     ksort($group_combinations);
+    var_dump($vowel_groups); // this is correct!
     
     // generate variants
     // token groups
@@ -157,8 +163,11 @@ function GenerateSpacerRulesAndPrintData() {
     $vowel_groups_string = array();
     foreach ($vowel_groups as $key => $vowels) {
         $temp1 = "";
+        //echo "calculate vowel group: $key<br>";
         // calculate or-string
-        $temp1 = GetRegexOrString($vowels);
+        var_dump($vowel_groups[$key]);
+        $temp1 = GetRegexOrString($vowel_groups[$key]);
+        //echo "result(temp1): $temp1<br>";
         // write full regex and insert
         $vowel_groups_string[$key] = "\[(?:$temp1)\]";
         // calculate permutations
@@ -166,6 +175,7 @@ function GenerateSpacerRulesAndPrintData() {
     }
 
     // show result
+    //var_dump($vowel_groups_string);
     echo "<h2>TOKENS</h2>"; foreach ($token_groups_string as $key => $string) echo "$key: $string (" . $permutations[$key]. ")<br>";
     echo "<h2>VOWELS</h2>"; foreach ($vowel_groups_string as $key => $string) echo "$key: $string (" . $permutations[$key]. ")<br>";
 

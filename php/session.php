@@ -263,6 +263,12 @@ if ($_POST['token_size'] != "") {
     //$_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : $_SESSION['selected_std_model'];
     $_SESSION['language_hunspell'] = htmlspecialchars($_POST['language_hunspell']);
     $_SESSION['language_hyphenator'] = htmlspecialchars($_POST['language_hyphenator']);
+    // echo "language_espeak:<br>SESSION: " . $_SESSION['language_espeak'] . "<br>POST: " . $_POST['language_espeak'] . "<br>";
+    // there's an annoying bug: when vsteno is newly started, changing the espeak-language and other analyzer options has no effect
+    // meaning: old values are used for calculation and to show input form again after the calculation
+    // the options are only changed the 2nd time, i.e. when you change the settings again an perform a calculation ...
+    // no idea why that happens (and it is completely strange ...) - everything works and both the session- and post-variables
+    // are exactly the same in the 1st and 2nd run ... ?!
     $_SESSION['language_espeak'] = htmlspecialchars($_POST['language_espeak']);
     $_SESSION['phonetical_alphabet'] = htmlspecialchars($_POST['phonetical_alphabet']);
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
