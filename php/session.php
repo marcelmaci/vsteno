@@ -137,7 +137,7 @@ function InitializeSessionVariables() {
     $_SESSION['language_hunspell'] = "de_CH"; // do not initialize these variables, so that they can be initialized by model!
     $_SESSION['language_hyphenator'] = "de"; // correction: can be done here, since toggle_model now actualizes session variables for specific model
     $_SESSION['language_espeak'] = "de";
-    $_SESSION['phonetical_alphabet'] = "espeak";
+    $_SESSION['phonetic_alphabet'] = "espeak";
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
 }
@@ -270,7 +270,7 @@ if ($_POST['token_size'] != "") {
     // no idea why that happens (and it is completely strange ...) - everything works and both the session- and post-variables
     // are exactly the same in the 1st and 2nd run ... ?!
     $_SESSION['language_espeak'] = htmlspecialchars($_POST['language_espeak']);
-    $_SESSION['phonetical_alphabet'] = htmlspecialchars($_POST['phonetical_alphabet']);
+    $_SESSION['phonetic_alphabet'] = htmlspecialchars($_POST['phonetic_alphabet']);
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";

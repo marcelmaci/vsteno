@@ -55,7 +55,7 @@ $whitelist_variables .= " output_page_start_at mark_wordlist distance_words spac
 $whitelist_variables .= " auxiliary_style_general left_margin right_margin top_margin bottom_margin num_system_lines baseline show_margins show_distances svgtext_size ";
 $whitelist_variables .= " actual_model model_custom_or_standard prefixes_list stems_list suffixes_list hyphenate_yesno composed_words_yesno language_hyphenator language_hunspell ";
 $whitelist_variables .= " spacer_token_combinations spacer_vowel_groups spacer_rules_list spacer_autoinsert license release_notes copyright_footer language_espeak analysis_type ";
-$whitelist_variables .= " phonetical_alphabet filter_out_prefixes_yesno filter_out_suffixes_yesno filter_out_words_yesno affixes_yesno phonetics_yesno block_list filter_list ";
+$whitelist_variables .= " phonetic_alphabet filter_out_prefixes_yesno filter_out_suffixes_yesno filter_out_words_yesno affixes_yesno phonetics_yesno block_list filter_list ";
 $whitelist_variables .= " model_version model_date ";
 
 

@@ -468,15 +468,21 @@ function recursive_search_optimized($line, $row, $array) {
 
 /////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
 
-function GetPhoneticalTranscription($word) {
-    $language = $_SESSION['language_espeak'];
-    $alphabet_option = ($_SESSION['phonetical_alphabet'] === "espeak") ? "-x" : "--ipa"; 
-    $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
-    //echo "$shell_command";
+function GetPhoneticTranscription($word) {
+    if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
+        $language = $_SESSION['language_espeak'];
+        $alphabet_option = ($_SESSION['phonetic_alphabet'] === "espeak") ? "-x" : "--ipa"; 
+        $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
+        //echo "$shell_command";
         
-    exec("$shell_command",$o);
-    //var_dump($o);
-    return $o[0];
+        exec("$shell_command",$o);
+        //var_dump($o);
+        $output = trim($o[0]); // trim is necessary because espeak adds additional spaces
+    } else {
+        echo "don't transcribe: $word<br>";
+        $output = $word;
+    }
+    return $output;
 }
 
 function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
@@ -507,7 +513,7 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
         if ($result === "Array") {
             if ($_SESSION['hyphenate_yesno']) $result = hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
             else $result = $word;
-            if ($_SESSION['phonetics_yesno']) $result = GetPhoneticalTranscription($result);
+            if ($_SESSION['phonetics_yesno']) $result = GetPhoneticTranscription($result);
             return $result;
             //if ($_SESSION['hyphenate_yesno']) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
             //else return $word;
@@ -529,7 +535,7 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
                 if ($_SESSION['filter_out_words_yesno']) $result = preg_replace("/(\||\|)/", "-", $result);
             }
             //echo "<br>result(AFTER): $result<br>";
-            if ($_SESSION['phonetics_yesno']) $result = GetPhoneticalTranscription($result);
+            if ($_SESSION['phonetics_yesno']) $result = GetPhoneticTranscription($result);
             //echo "<br>result(PHONETICS): $result<br>";
             
             return $result;

@@ -106,8 +106,8 @@ Analyse:
 
 <input type="checkbox" name="phonetics_yesno" value="yes"<?php echo ($_SESSION['phonetics_yesno']) ? " checked" : "";?>> Phonetik
 <input type="text" name="language_espeak"  size="6" value="<?php echo $_SESSION['language_espeak']; ?>">
-<input type="radio" name="phonetical_alphabet" value="espeak"<?php echo ($_SESSION['phonetical_alphabet'] === "espeak") ? " checked" : "";?>>eSpeak
-<input type="radio" name="phonetical_alphabet" value="ipa"<?php echo ($_SESSION['phonetical_alphabet'] === "ipa") ? " checked" : "";?>>IPA
+<input type="radio" name="phonetic_alphabet" value="espeak"<?php echo ($_SESSION['phonetic_alphabet'] === "espeak") ? " checked" : "";?>>eSpeak
+<input type="radio" name="phonetic_alphabet" value="ipa"<?php echo ($_SESSION['phonetic_alphabet'] === "ipa") ? " checked" : "";?>>IPA
 <br>
 Markieren:<br>
 <input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 

@@ -42,7 +42,7 @@ $cookie_table = array(
    /*13*/ array( 355, 120, "align_left", 5, 0, 8, 0, 2.7, 2.6, 1.25, 14, "Was auch immer geschieht: Nie dürft ihr so tief sinken, von dem Kak[A][&A][[#N][&O], durch den man euch zieht, auch noch zu trinken.<@token_type=svgtext>Erich Kästner<@token_type=shorthand>" ),
    /*14*/ array( 320, 120, "align_left", 5, 0, 22, 0, 2.7, 2.6, 1.3, 14, "Es gibt wichtige und unwichtige Dinge im Leben. Die meisten Dinge sind unwichtig.“<@token_type=svgtext>Erich Kästner<@token_type=shorthand>" ),
    /*15*/ array( 320, 120, "align_left", 5, 0, 2, 0, 2.7, 2.6, 1.3, 14, "Der Mensch: ein Wesen, das am Ende einer Woche Arbeit entstand, als Gott bereits sehr müde war.<@token_type=svgtext>Mark Twain<@token_type=shorthand>" ),
-   /*16*/ array( 360, 120, "align_left", 5, 0, 8, 0, 3.3, 3.5, 1.2, 14, "Seit jenem Tag, an dem der erste Schuft seinen ersten Dummkopf fand, gibt es Quacksalber.<@token_type=svgtext>Voltaire<@token_type=shorthand>" ),
+   /*16*/ array( 300, 160, "align_left", 5, 0, -5, 0, 3.1, 3.5, 1.2, 14, "Seit jenem Tag, an dem der erste Schuft seinen ersten Dummkopf fand, gibt es Quacksalber.<@token_type=svgtext>Voltaire<@token_type=shorthand>" ),
    
    
  /*  

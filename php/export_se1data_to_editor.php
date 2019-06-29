@@ -125,11 +125,13 @@ class JSTokenEditorDataElement {
 // model selection is done in data.php now => should probably be disabled!?
 global $default_model;
 require_once "session.php";
+/*
 if ($_SESSION['user_logged_in']) {
     if ($_POST['model'] === "custom") $_SESSION['actual_model'] = GetDBUserModelName(); 
     else $_SESSION['actual_model'] = $_SESSION['selected_std_model'];
     //echo "Model = " . $_SESSION['actual_model'] . "<br>";
 }
+*/
 
 // include external data and code
 require_once "constants.php";
