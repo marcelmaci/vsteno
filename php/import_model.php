@@ -94,6 +94,7 @@ $actual_function = "";
 $start_word_parser = 0;     // contains rules pointer to first rule that has to be applied to a word only (before: global parser that has to be applied to whole text)
 
 //require_once "vsteno_fullpage_template_top.php";
+require_once "constants.php";
 require_once "dbpw.php";
 require_once "options.php";  // for whitelist (session variables)
 //require_once "regex_helper_functions.php";
@@ -168,29 +169,38 @@ function ResetRestrictedSessionVariables() {
         $_SESSION['prefixes_list'] = ""; 
         $_SESSION['stems_list'] = ""; 
         $_SESSION['suffixes_list'] = ""; 
+        $_SESSION['block_list'] = "";
+        $_SESSION['filter_list'] = "";
+        $_SESSION['analysis_type'] = "none";
         $_SESSION['spacer_token_combinations'] = "";
         $_SESSION['spacer_vowel_groups'] = "";
         $_SESSION['spacer_rules_list'] = "";
         $_SESSION['license'] = "";
         $_SESSION['release_notes'] = "";
         $_SESSION['copyright_footer'] = "";
+        $_SESSION['model_version'] = "";
+        $_SESSION['model_date'] = "";
 }
 
 
 // session
 function ImportSession() {
-    global $session_subsection, $whitelist_variables;
+    global $session_subsection, $whitelist_variables, $global_error_string, $global_warnings_string;
     
     ResetRestrictedSessionVariables();
     
+    //echo "session_subsection: $session_subsection<br>";
     while ($session_subsection !== "") {
     $result = preg_match( "/[ ]*?\"(.*?)\"[ ]*?:=[ ]*?({?[ ]*?\".*?\"[ ]*?}?)[ ]*?;(.*)/", $session_subsection, $matches);
     
-    //echo "session: $session_subsection result: $result<br>";
+    //echo "<br>----------------------------------------------<br>session: $session_subsection result: $result<br>";
     
     if ($result == 1) {
+        //echo "matches:<br>1: " . $matches[1] . "<br>2:" . $matches[2] . "<br>3: " . $matches[3] . "<br>";
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
         $variable = $matches[1];
+        if (preg_match("/ = /", $matches[1])) AddWarning("WARNING: = instead of := ?!<br>SECTION: " . htmlspecialchars($matches[1]) . "<br>"); 
+        
         $value = trim(preg_replace("/\"(.*)\"/", "$1", $matches[2]));
         //echo "variable := value: $variable => $value<br>";
         $session_subsection = $matches[3];

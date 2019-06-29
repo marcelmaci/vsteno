@@ -187,6 +187,7 @@ $rules_pointer_start_stage4 = null;
 
 // error handling
 $global_error_string = "";
+$global_warnings_string = "";
 
 // declarations
 $splines = array();                             // not really necessary in php

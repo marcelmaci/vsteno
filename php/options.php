@@ -39,6 +39,9 @@
 //
 // <@token_color="red"><br>Achtung!<br><@token_color="black">
 //
+
+require_once "errors_and_warnings.php";
+
 // The HTML-tags can stand at any position (before or after inline tags or mixed), but not inside words (like inline-option-tags)
 // HTML-tags will be inserted into HTML-page without modifications when stenograms are generated. Any HTML-tag is allowed (it's up to the user
 // to provide correct and working tags).
@@ -53,6 +56,7 @@ $whitelist_variables .= " auxiliary_style_general left_margin right_margin top_m
 $whitelist_variables .= " actual_model model_custom_or_standard prefixes_list stems_list suffixes_list hyphenate_yesno composed_words_yesno language_hyphenator language_hunspell ";
 $whitelist_variables .= " spacer_token_combinations spacer_vowel_groups spacer_rules_list spacer_autoinsert license release_notes copyright_footer language_espeak analysis_type ";
 $whitelist_variables .= " phonetical_alphabet filter_out_prefixes_yesno filter_out_suffixes_yesno filter_out_words_yesno affixes_yesno phonetics_yesno block_list filter_list ";
+$whitelist_variables .= " model_version model_date ";
 
 
 function GetWordSetPreAndPostTags( $text ) {
@@ -170,7 +174,7 @@ function CheckAndSetSessionVariable( $variable, $value ) {
     global $whitelist_variables, $global_error_string;
     if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
                     if (mb_strpos($whitelist_variables, " $variable ") === false) {
-                        $global_error_string .= "ERROR: you are not allowed to set variable '$variable' to '$value'!<br>";
+                        AddError("ERROR: you are not allowed to set variable '" . htmlspecialchars($variable) . "' to '" . htmlspecialchars($value) . "'!");
                     } else {
                         //echo "session[$variable] = $value<br>";
                         switch ($value) {
@@ -182,7 +186,7 @@ function CheckAndSetSessionVariable( $variable, $value ) {
                         }
                     } 
     } else {
-            $global_error_string .= "ERROR: session-variable '$variable' doesn't exist.<br>";
+            AddError("ERROR: session-variable '" . htmlspecialchars($variable) . "' doesn't exist.");
     }
     
 }

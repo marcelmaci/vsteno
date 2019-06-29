@@ -18,6 +18,7 @@
 
 global $default_model;
 
+require_once "errors_and_warnings.php";
 require_once "session.php";
 require_once "constants.php";
 require_once "data.php";
@@ -66,7 +67,7 @@ function CustomOrStandard($check) {
 }
 
 function ResetSessionGetBackPage() {
-    global $session_subsection;
+    global $session_subsection, $global_error_string, $global_warnings_string;
     InsertHTMLHeader();
     //InitializeSessionVariables();   // output is reseted to integrated, so that the following message will appear integrated
     switch ($_POST['action']) {
@@ -93,6 +94,13 @@ function ResetSessionGetBackPage() {
         //echo "session_text: $session_subsection<br>";
         ImportSession();
         echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . " wurde geladen und die Optionen aktualisiert.</p>";
+        echo GetErrorAndWarningSection();
+        /*
+        if ((mb_strlen($global_error_string)>0) || ((mb_strlen($global_warnings_string)>0))) {
+            echo "<h2>ERRORS & WARNINGS</h2>";
+            echo "<p>$global_error_string</p><p>$global_warnings_string</p>";
+        }
+        */
     } else {
         // check if it's a valid model cause post-variable can (might) be tampered ... :)
         echo "<h1>Aktualisieren</h1><p>Fehler: Das Model '" . $_POST['action'] . "' existiert nicht.</p>";
@@ -218,9 +226,15 @@ function CalculateStenoPage() {
             }
             echo NormalText2SVG( $text );
             if ($_SESSION['output_format'] === "debug") {
-                if (mb_strlen($global_error_string)>0)
-                    echo  "<h2>RUNTIME ERRORS & WARNINGS</h2><p>$global_error_string</p>";
-                else echo "<h2>NO KNOWN* RUNTIME ERRORS.</h2><p style='font-size:10'>* ... but there's a tremendously high chance for unknown unknowns ... ;-)</p>";
+                if ((mb_strlen($global_error_string)>0) || (mb_strlen($global_warnings_string)>0)) {
+                    echo  "<h2>RUNTIME</h2>";
+                    echo "<h2>ERRORS</h2>";
+                    if (mb_strlen($global_error_string)>0) echo "<p>$global_error_string</p>";
+                    else echo "<p>(empty)</p>";
+                    echo "<h2>WARNINGS</h2>";
+                    if (mb_strlen($global_warnings_string)>0) echo "<p>$global_warnings_string</p>";
+                    else echo "<p>(empty)</p>";
+                } else echo "<h2>NO KNOWN* RUNTIME ERRORS.</h2><p style='font-size:10'>* ... but there's a tremendously high chance for unknown unknowns ... ;-)</p>";
             } 
             InsertReturnButton();
         }

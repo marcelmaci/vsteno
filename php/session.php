@@ -128,6 +128,8 @@ function InitializeSessionVariables() {
         $_SESSION['user_id'] = 0;
     }
     $_SESSION['actual_model'] = $default_model;
+    $_SESSION['model_version'] = "";
+    $_SESSION['model_date'] = "";
     $_SESSION['selected_std_model'] = $default_model;
     $_SESSION['last_updated_model'] = "";
     $_SESSION['model_standard_or_custom'] = "standard";
