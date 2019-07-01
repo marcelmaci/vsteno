@@ -479,7 +479,7 @@ function GetPhoneticTranscription($word) {
         //var_dump($o);
         $output = trim($o[0]); // trim is necessary because espeak adds additional spaces
     } else {
-        echo "don't transcribe: $word<br>";
+        //echo "don't transcribe: $word<br>";
         $output = $word;
     }
     return $output;

@@ -22,7 +22,9 @@
     if (mb_strlen($_SESSION['copyright_footer'])>0) echo "<p>" . $_SESSION['copyright_footer'] . "</p>";
     else echo "<p>empty</p>";
     echo "<h1>Weitere</h1>";
-    echo "<p><a href='show_analyzer_parameters.php'>Linguistische Parameter</a></p>";
+    echo "<p><a href='show_analyzer_parameters.php'>Linguistische Parameter</a><br>
+    <a href='model_show_in_browser.php'>Quellcode</a></p>";
+    
     echo '<a href="input.php"><br><button>zurück</button></a>';
 ?>
 <?php require "vsteno_template_bottom.php"; ?>
