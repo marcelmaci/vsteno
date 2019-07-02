@@ -37,7 +37,7 @@ global $hunspell_dictionary;
 function InitializeHunspellAndPHPSyllable() {
     global $syllable;
     global $hunspell_dictionary; 
-    //echo "initialize hunspell etc.";
+    //echo "Initialize linguistics: hyphenator: " . $_SESSION['language_hyphenator'] . " hunspell: " . $_SESSION['language_hunspell'] . " espeak: " . $_SESSION['language_espeak'] . "<br>";
     $phpSyllable_dictionary = $_SESSION['language_hyphenator']; // "de";                             //"de_CH";
     $syllable = new Syllable($phpSyllable_dictionary);          // 'en-us'
     $syllable->setHyphen(new Syllable_Hyphen_Dash());           // get all syllables, with a dash

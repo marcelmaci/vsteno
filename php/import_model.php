@@ -602,9 +602,11 @@ function ImportRules() {
     global $rules_section, $shrinking_rules_section, $shrinking_generic_subsection, $rules, $rules_pointer;
     $shrinking_rules_section = $rules_section;
     $rules_pointer = 0;
+    $number_subsections = 0;
     //echo "rules_section: " . htmlspecialchars($rules_section) . "<br>";
     while /*($rules_pointer < 5) { */ ($shrinking_rules_section !== "") {
         //echo "rulessection: $shrinking_rules_section<br>";
+        $number_subsections++;
         list( $parameters1, $shrinking_generic_subsection, $parameters2) = GetNextRulesSubSection();
         //echo "SubSectionParams1: $parameters1<br>";
         //echo "SubSectionParams2: $parameters2<br>";
@@ -622,6 +624,7 @@ function ImportRules() {
     ImportRulesFromGenericSubSection();
     //SetValuesEndFunction( $parameters2 );
 */
+    $_SESSION['statistics_subsections'] = $number_subsections;
 
 }
 
@@ -675,9 +678,12 @@ $shifter_table = $shifter[$actual_model];
 
  global $token_groups, $group_combinations, $vowel_groups, $token_variants, $rules_list;
   
-  CreateCombinedTokens();
+$number_base = count($steno_tokens_master);
+CreateCombinedTokens();
+$number_combined = count($steno_tokens_master) - $number_base; 
 CreateShiftedTokens();
-  
+$number_shifted = count($steno_tokens_master) - $number_base - $number_combined;
+
  //var_dump($steno_tokens_master);
  GenerateTokenGroups($steno_tokens_master);
  GenerateGroupCombinations();
@@ -685,6 +691,10 @@ CreateShiftedTokens();
  GenerateRulesList();
  //$group_combinations_variable = $_SESSION['spacer_token_combinations'];
  //$group_combinations = ImportGroupCombinationsFromVariable( $group_combinations_variable );
+$_SESSION['statistics_tokens'] = count($steno_tokens_master);
+$_SESSION['statistics_base'] = $number_base;
+$_SESSION['statistics_combined'] = $number_combined;
+$_SESSION['statistics_shifted'] = $number_shifted;
 
   //var_dump($_SESSION['spacer_vowel_groups']);
   //var_dump($vowel_groups);
@@ -727,6 +737,9 @@ CreateShiftedTokens();
     }
  
     ImportRules();  // idem to $imported + name of the original table (shortener, bundler, transcriptor etc.)
+
+    $_SESSION['statistics_rules'] = count($rules[$actual_model]);
+
     //}
      // if stage3 and stage4 are not set => set them for compatibility
     $actual_model = $_SESSION['actual_model'];

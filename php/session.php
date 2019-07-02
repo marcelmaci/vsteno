@@ -11,6 +11,12 @@ function InitializeSessionVariables() {
     $_SESSION['license'] = "";
     $_SESSION['release_notes'] = "";
     $_SESSION['copyrigt_footer'] = "";
+    $_SESSION['statistics_rules'] = 0;  // use these variables for statistics
+    $_SESSION['statistics_tokens'] = 0;
+    $_SESSION['statistics_base'] = 0;
+    $_SESSION['statistics_combined'] = 0;
+    $_SESSION['statistics_shifted'] = 0;
+    $_SESSION['statistics_subsections'] = 0;
     $_SESSION['initialized'] = true;
     $_SESSION['original_text_format'] = "normal";
     $_SESSION['original_text_ascii_yesno'] = true;
@@ -269,6 +275,13 @@ if ($_POST['token_size'] != "") {
     // the options are only changed the 2nd time, i.e. when you change the settings again an perform a calculation ...
     // no idea why that happens (and it is completely strange ...) - everything works and both the session- and post-variables
     // are exactly the same in the 1st and 2nd run ... ?!
+    // Ok, found the bug: problem was that when data.php loaded a new model, the session variable last_updated_model wasn't set to the
+    // new model. Consequence: when making the first calculation, the program reseted all session variables (erasing post variables) and
+    // setting only then last_updated_model correctly.
+    // The whole concept of last_updated_model is a relict from the time, model selection was possible via input form. This approach has
+    // been abandoned (too complicated to keep all variables correctly updated) and therefore the whole stuff is obsolete and should be
+    // eliminated in the next code cleaning ...
+    
     $_SESSION['language_espeak'] = htmlspecialchars($_POST['language_espeak']);
     $_SESSION['phonetic_alphabet'] = htmlspecialchars($_POST['phonetic_alphabet']);
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
@@ -291,9 +304,14 @@ function CopyFormToSessionVariables() {
     global $session_subsection; // necessary, because ImportSession() works with this global variable
     if ($_SESSION['return_address'] === "input.php") CopyFormToSessionVariablesMaxi();
     else CopyFormToSessionVariablesMini();
+    
+/* I think this whole section is obsolete ... models cannot be selected via input form any more
+
     // actualize header session values if model is loaded for the first time
     $actual_model = $_SESSION['actual_model'];
+    echo "CopyFormToSessionVariables(): actual_model: $actual_model<br>";
     if ($actual_model !== $_SESSION['last_updated_model']) {
+            echo "Model has to be updated ... <br>";
             $model_name = ($_SESSION['model_standard_or_custom'] === "custom") ? getDBUserModelName() : $_SESSION['selected_std_model'] ;
             $model = $_SESSION['model_standard_or_custom'];
             $last_updated = $_SESSION['last_updated_model'];
@@ -318,7 +336,7 @@ function CopyFormToSessionVariables() {
             ImportSession(); // initialize with values specified by model
             $_SESSION['last_updated_model'] = $actual_model;
     }
-
+*/
 }
 
 // backup all session variables except some specific ones

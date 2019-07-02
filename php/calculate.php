@@ -164,8 +164,9 @@ function CalculateStenoPage() {
     global $global_debug_string, $global_error_string;
     $global_debug_string = "";
     CopyFormToSessionVariables();
-   InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
+    InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
     InsertHTMLHeader();
+    //LoadModel();
     
     $text = isset($_POST['original_text']) ? $_POST['original_text'] : "";
     $text = AddMarkings($text);

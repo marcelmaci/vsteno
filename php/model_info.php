@@ -1,6 +1,9 @@
 <?php require "vsteno_template_top.php"; ?>
 <?php
-    echo "<h1>" . $_SESSION['actual_model'] . "</h1>";
+    require_once "data.php"; // unfortunately, this is necessary to have correct statistics data ...
+    $actual_model = $_SESSION['actual_model'];
+    
+    echo "<h1>$actual_model</h1>";
     echo "<h1>Version</h1>";
     if ((mb_strlen($_SESSION['model_version'])==0) && (mb_strlen($_SESSION['model_date'])==0)) echo "<p>(empty)</p>"; 
     else {
@@ -21,7 +24,15 @@
     echo "<h1>Footer</h1>";
     if (mb_strlen($_SESSION['copyright_footer'])>0) echo "<p>" . $_SESSION['copyright_footer'] . "</p>";
     else echo "<p>empty</p>";
-    echo "<h1>Weitere</h1>";
+    echo "<h1>Stats</h1>";
+    $number_rules = $_SESSION['statistics_rules'];
+    $number_tokens = $_SESSION['statistics_tokens'];
+    $number_base = $_SESSION['statistics_base'];
+    $number_combined = $_SESSION['statistics_combined'];
+    $number_shifted = $_SESSION['statistics_shifted'];
+    $number_subsections = $_SESSION['statistics_subsections'];
+    echo "<p>Tokens: $number_tokens (base: $number_base / combined: $number_combined / shifted: $number_shifted)<br>Rules: $number_rules (subsections: $number_subsections)<br></p>";
+    echo "<h1>More</h1>";
     echo "<p><a href='show_analyzer_parameters.php'>Linguistische Parameter</a><br>
     <a href='model_show_in_browser.php'>Quellcode</a></p>";
     
