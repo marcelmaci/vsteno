@@ -203,7 +203,7 @@
 		"ANTI" => { /*header*/ 25, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNB:RN", /*data*/ 4, 4.5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 8, 5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 11, 4, 0.5, 0, 3, 0, 0, 0.5,  /**/ 18, 1, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 22, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 22.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 23.5, 2, 0.5, 0, 1, 0, 0, 0.5,  /**/ 24.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 23.5, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 22.5, 1, 0.5, 0, 1, 0, 1, 0 }
 		"ZURÜCK" => { /*header*/ 5, 0.5, 0, 0.5, 2, 1, 0, 0, 0, 0, "", "", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LKA:LK", /*data*/ -2, -4, 0.5, 1, 1, 0, 0, 0.5,  /**/ 1.5, -3, 0.5, 0, 1, 0, 0, 0.5,  /**/ 4.25, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 2.5, 0.7, 0, 1, 0, 0, 0.7,  /**/ 2.5, 5, 0.7, 0, 2, 0, 0, 0.5,  /**/ 1, 5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 0, 2.5, 0.7, 0, 3, 0, 0, 0.5,  /**/ 1, 1, 0.5, 0, 2, 0, 0, 0.5,  /**/ 2.5, 0, 0.5, 0, 1, 0, 0, 0,  /**/ 3.5, 0, 0.5, 1, 1, 0, 1, 0 }
 		"INTER" => { /*header*/ 5, 0.5, 0, 0.5, 2, 1, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LKA:LK", /*data*/ -2, -4, 0.5, 1, 1, 0, 0, 0.5,  /**/ 1.5, -3, 0.5, 0, 1, 0, 0, 0.5,  /**/ 4, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 2.5, 0.7, 0, 1, 0, 0, 0.7,  /**/ 2.5, 5, 0.7, 0, 3, 0, 0, 0.5,  /**/ 0, 2.5, 0.7, 0, 3, 0, 0, 0.5,  /**/ 2.5, 0, 0.5, 0, 1, 0, 0, 0,  /**/ 3.5, 0, 0.5, 1, 1, 0, 1, 0 }
-		"ION" => { /*header*/ 25, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNB:RN", /*data*/ 4, 4.5, 0.5, 1, 1.5, 5, 0, 0.5,  /**/ 8, 5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 11, 4, 0.5, 0, 3, 0, 0, 0.5,  /**/ 18, 1, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 22, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 25, 2, 0.5, 0, 1, 0, 1, 0 }
+		"ION" => { /*header*/ 25, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNB:RN", /*data*/ 4, 4.5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 8, 5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 11, 4, 0.5, 0, 3, 0, 0, 0.5,  /**/ 18, 1, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 22, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 25, 2, 0.5, 0, 1, 0, 1, 0 }
 		"ON" => { /*header:french*/ 25, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNB:RN", /*data*/ 4, 4.5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 8, 5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 11, 4, 0.5, 0, 3, 0, 0, 0.5,  /**/ 18, 1, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 22, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 25, 2, 0.5, 0, 1, 0, 1, 0 }
 		"HAFT" => { /*header*/ 4, 0.5, 0, 0, 4, 1, 0, 0, 0, 0, "", "", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNC:RN", /*data*/ 0, 10, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 3, 17, 0.5, 2, 2, 0, 0, 0.5,  /**/ 1.8, 20, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 18, 0.5, 0, 3, 0, 0, 0.5,  /**/ 0, 2, 0.5, 0, 3, 0, 0, 0.5,  /**/ 2, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 2, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 4, 2, 0.5, 0, 1, 0, 1, 0 }
 		"SCHAFT" => { /*header*/ 20, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNB:RN", /*data*/ 0, 5, 0, 1, 1.5, 0, 0, 0.5,  /**/ 0.75, 3, 0.5, 0, 3, 0, 0, 0.5,  /**/ 19.25, 2.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 20, 0, 0.5, 0, 1, 0, 1, 0 }
@@ -563,6 +563,7 @@
 		// global replacements in the whole text french
 		" (?:I|i)ls? " => " #il "; // some abbreviated words have to be marked before phonetic transcriptions (use # to inform analyzer that it should not be transcribed)
 		" [Ee]st-ce qu(?:e|')?" => " #estceque ";
+		"(?<=^| )ce qu'ils?(?= |$)" => "#cequil";	
 		"(?<=^| )[Cc]e qui(?<= |$)" => "#ce_qui";
 		"(?<=^| )[Cc]e qu(e|')" => "#ce_que ";
 		"(?<=^| )[Cc]e qu'a " => "#ce_qua ";
@@ -582,8 +583,30 @@
 		"(?<=^| )ser(a[is]?|on[st]|ez|ai[st]|ions|iez|aient)(?= |$)" => "#ser$1";
 		"(?<=^| )plus(ieurs)?(?= |$)" => "#plus$1";
 		"(?<=^| )plupart(?= |$)" => "#plupart";
+		"(?<=^| )les(?= |$)" => "#les";
+		"(?<=^| )av(ai[st]|ions|iez|aient|oir)(?= |$)" => "#av$1";
+		"(?<=^| )([clsmt]es|[vn]os|leurs) #avions(?= |$)" => "$1 avions"; // don't mark it (delete mark again)
+		"(?<=^| )y(?= |$)" => "#y";
+		"(?<=^| )pouv(oir|ai[st]|ions|iez|aient)(?= |$)" => "#pouv$1";
+		"(?<=^| )beaucoup(?= |$)" => "#beaucoup";
+		"(?<=^| )pour(?= |$)" => "#pour";
+		"(?<=^| )pourr(ai[st]?|i?ons|i?ez|aient|as?|ont)(?= |$)" => "#pourr$1";
+		"(?<=^| )doi[st](?= |$)" => "#doit";		
+		"(?<=^| )quoi(?= |$)" => "#quoi";		
+		"(?<=^| )soi([st]|ent)?(?= |$)" => "#soit";		
+		"(?<=^| )mois?(?= |$)" => "#moi";		
+		"(?<=^| )fois?(?= |$)" => "#fois";	
+		"(?<=^| )fixions(?= |$)" => "#fixions"; // fiction vs fixions (phoneticly indistinguishable)	
+		"(?<=^| )s'ils?(?= |$)" => "#sil";	
+		"(?<=^| )d'il(?= |$)" => "#dil";	
+		"(?<=^| )qu'ils?(?= |$)" => "#kil";	
+		"(?<=^| )moi-même(?= |$)" => "#moimeme";	
+		"(?<=^| )toi-même(?= |$)" => "#toimeme";	
+		"(?<=^| )soi-même(?= |$)" => "#soimeme";	
+		"(?<=^| )eux-mêmes(?= |$)" => "#euxmemes";	
+		"(?<=^| )quand même(?= |$)" => "#quandmeme";	
 		
-
+		
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		// "'" => ""; // filter out stress
@@ -633,7 +656,7 @@
 		"([bflmnpv])@r" => "$1[AR]"; // use this for all tokens that finish with a round bow on the baseline
 		// in all other cases, @ falls out and [VR] is used (?)
 		"(?<!\[)@" => { "", "^r@" }; // e muet falls out => all abbreviations with 1 syllable are automatically handled correctly: se, ce, me, ne, te etc.
-		"y" => "[ü]";
+		"(?<!#)y" => "[ü]";
 		"^([sn])a$" => "[#NS]$1";
 		"^([sn])o$" => "[#ND]$1";
 		"^([sn])u$" => "[#NDS]$1";
@@ -684,17 +707,73 @@
 		"^#plusieurs$" => "{PLUS}[ö]r";
 		"^#plupart$" => "{PLUS}par";
 		"^l\[ü\]i$" => "{LUI}";
+		"^#les$" => "{LES}";
+		"^#av(ai[st]|aient)" => "{AV}e";
+		"^#avions" => "{AV}j[o~]";
+		"^#aviez" => "{AV}je";
+		"^#avoir" => "{AV}war";
+		"^#y$" => "{#Y}";
+		"^\[ü\]$" => "{EUT}";
+		"^#pouvoir" => "{POUV}war";
+		"^#pouv(ai[st]|aient)" => "{POUV}e";
+		"^#pouv(ions)" => "{POUV}j[O~]";
+		"^#pouv(iez)" => "{POUV]je";
+		"^#beaucoup$" => "{BCP}"; 
+		"^otr$" => "{AUTRE}";
+		"^#pour$" => "{POUR}";
+		"^#pourr(ai[st]?|aient|ez)$" => "{POUR}e";
+		"^#pourr(as?)$" => "{POUR}a";
+		"^#pourron[st]" => "{POUR}[O~]";
+		"^#pourrion[st]" => "{POUR}j[O~]";
+		"^#pourriez" => "{POUR}je";
+		"^#doit$" => "{DOIT}";
+		"^#quoi$" => "{QUOI}";
+		"^#soit$" => "{SOIT}";
+		"^#moi$" => "{MOI}";
+		"^#fois$" => "{FOIS}";
+		"^a~t[ie]" => "{ANTI}";
+		"sirko~" => "{CIRCON}";
+		"ko~" => { "{CON}", "^ko[nm]" };
+		"^(?<=r@|r|)e[kg][sz]" => "{EX}";
+		"(?<=^[mtsl])e[kg][sz]" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
+		"e~ter" => "{INTER}";
+		"^e~tr" => "{INTER}";
+		"^in|e~(?!$)" => "{IN}";
+		"s\[ü\]b" => "{SUB}";
+		"tra~skr" => "{TRANS}skr"; // transcrire
+		"tra~s" => "{TRANS}";
+		"([aeiou])?[sz]j(o~|on)" => "$1{TION}";
+		"#fixions" => "fiks[ION]";
+		"ma~(t)?" => "{MENT}";
+		"#moimeme$" => "{MOIMEME}";
+		"#toimeme$" => "{TOIMEME}";
+		"#soimeme$" => "{SOIMEME}";
+		"#euxmemes$" => "{EUXMEMES}";
+		"#quandmeme$" => "{QUANDMEME}";
 
+		"^mem$" => "{MEME}";
+		"^avek$" => "{AVEC}";
+		"^a~kor$" => "{ENCORE}";
+		"^pa~da~$" => "{PENDANT}";
+		"^s@?pa~da~$" => "{CEPENDANT}";
+		"#sil$" => "{SIL}";
+		"#dil$" => "{DIL}";
+		"#quil$" => "{KIL}";
+		"#cequil$" => "{CEQUIL}";
+		
+		// recorrection
+		"{MENT}r" => "{MENT}[VR]"; // where's the logic anyway ... :) :) :) (or - as I use to say - stenographs aren't linguists ... :o)
+		"}\[@L\]" => "}l"; // normal l after prefix
 
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(phonetizer,#>stage4)
 		// empty
 	#EndSubSection(phonetizer)
 	#BeginSubSection(bundler)
-		"a~" => "[A~]";
-		"o~" => "[O~]";
-		"(e|w)~" => "[E~]"; // no distinction: dinde vs humble
-		"wa" => "[WA]";
+		"(?<!\[)a~" => "[A~]";
+		"(?<!\[)o~" => "[O~]";
+		"(?<!\[)(e|w)~" => "[E~]"; // no distinction: dinde vs humble
+		"(?<!\[)wa" => "[WA]";
 		"w" => "[Ö]";  // wa vs W (lower vs upper case) => if it leads to confusion here, put this rule inside early bundler
 		
 		"(?<!\[)ks(?!\])" => "x";
@@ -746,6 +825,7 @@
 	#BeginSubSection(transcriptor)
 		//"^(.*)$" => "strtolower()";
 		"^r@?" => "[AR]";
+		"}r" => "}[AR]"; // p.ex.: subroger
 		"r" => "[VR]";
 		"z" => "s";
 		
@@ -791,16 +871,34 @@
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// transform all to lower
-		"^(.*)$" => "strtoupper()"; 
 		"^(.*)$" => "strtolower()"; 
+		"({.*?})" => "strtoupper()"; 
+		
+
+		// double vowels
+		"ee" => "e[&E]e";
+		"e(\[o~\])" => "e[&E]$1";
+		"i(e|\[e~\]|\[ö\])" => "i[&E]$1";
+		"j(e|\[e~\])" => "i[&E]$1"; // hier => _|jer
+		"j(\[o~\]|on)" => "[ION]"; // camion, camionne
+		"\[ü\]({?i)" => "[ü][&E]$1";
+		"(a)i" => "$1[&A]i";
+		"(e)i" => "$1[&E]i";
+		"u([ae])" => "A[&U]$1";
+		"o(e|\[ü\])" => "[&O]$1";
+
 		// vowels at beginning of word
 		"^e" => "[0N-]e";
 		"^ae" => "[0N-]A[&A]e";
 		"^a" => "[0N-]a";
 		"^(\[a~\])" => "[0N-]$1";
+		"^j\[ö\]$" => "[0N-][EI][&O]";
+		"^([ij]\[&E\](?:e|\[ö\]))" => "[0N-]$1"; // hier => same for other words? => yes for ö
 		"^i" => "[0D-]i";
 		"^o" => "[0N-]o";
 		
+		"j(\[ö\])(?!$)" => "i[&E]$1";
+
 		"^\[e~\]$" => "[0N-]E[-EI]"; // un (must be placed here)
 		
 		"^(\[ü\])(?!\[(sch)\])" => "[0D-]$1";
@@ -832,18 +930,24 @@
 		
 		
 		// vowels at end of the words
+		"jo$" => "I[&O]";
+		"j\[ö\]$" => "[EI][&O]";
+		"ju$" => "[AU][&U]";
+
 		"e$" => "[-E]";
 		"a$" => "[EN]"; // keep token names as in original (mother) system
-		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "(?<!.)paso" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
+	
 		"\[a~\]$" => "[EM]";
 		"i$" => "[-I]";
 		"u$" => "A[&U]";
-		"é$" => "E[&E]";	// la madre que lo parió ... 
-		"(?<!i)ó$" => "[&O]";	// idem
-		"á$" => "A[&A]";	// holy cow ... they're serious about that one ... ;-)
+		"o$" => "[&O]";	
+		"\[ö\]$" => "E[&O]";
+		"\[wa\]$" => "[AUF]";
 
 		"\[IE\]$" => "[IE][LES]";
 		
+		
+
 		
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
@@ -917,6 +1021,45 @@
 		"{SUR}" => "[SOBRE]";
 		"{PLUS}" => "[0N-][#2]A[@L]";
 		"{LUI}" => "[0N-]I[@L]";
+		"{LES}" => "[LES]";
+		"{AV}" => "A[LES]";
+		"{#Y}" => "I[LES]";
+		"{EUT}" => "[AU][LES]";
+		"{POUV}" => "A[&U]";
+		"{BCP}" => "U[&U]";
+		"{AUTRE}" => "[VOR]";
+		"{POUR}" => "[UR]";
+		"{DOIT}" => "D[EN]";
+		"{QUOI}" => "K[EN]";
+		"{SOIT}" => "[S=][EN]";
+		"{MOI}" => "M[EN]";
+		"{FOIS}" => "F[EN]";
+		"^{ANTI}" => "[0N-][ANT]";
+		"{CIRCON}" => "C";
+		"{CON}" => "[BEI]";
+		"{EX}" => "[LES]";
+		"{IN}" => "[IN]";
+		"(?<!^){INTER}" => "[I][INTER]";
+		"{INTER}" => "[INTER]";
+		"{SUB}" => "[&U]";
+		"{TRANS}" => "A[T@R]";
+		"{TION}" => "[SS]";
+		"{MENT}" => "[MPF]";
+		"{MEME}" => "[0N-]M";
+		"{AVEC}" => "[0N-]G";
+		"{ENCORE}" => "[0N-]ÄG";
+		"{PENDANT}" => "[0N-]ÄD";
+		"{CEPENDANT}" => "[S=]ÄD";
+		"{SIL}" => "I[S=][-E]";
+		"{DIL}" => "ID[-E]";
+		"{KIL}" => "IK[-E]";
+		"{CEQUIL}" => "IC[-E]";
+		"{MOIMEME}" => "MÜM";
+		"{TOIMEME}" => "TÜM";
+		"{SOIMEME}" => "[S=]ÜM";
+		"{EUXMEMES}" => "[0D-][EU]M";
+		"{QUANDMEME}" => "KÄM";
+
 
 
 	#EndSubSection(substituter)
