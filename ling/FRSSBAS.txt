@@ -30,6 +30,37 @@
 	// Schweizerischen Stenografenvereins), Druckerei Wetzikon AG, 1983 (8. Auflage)
 	//
 	#BeginSubSection(session)
+		"license" := "
+	<p>FRSSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Französisch)<br>
+    	(c) 2018-2109  Marcel Maci</p>
+	
+	<p>This program is free software: you can redistribute it and/or modify
+    	it under the terms of the GNU General Public License as published by
+    	the Free Software Foundation, either version 3 of the License, or
+    	(at your option) any later version.</p>
+
+    	<p>This program is distributed in the hope that it will be useful,
+    	but WITHOUT ANY WARRANTY; without even the implied warranty of
+    	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    	GNU General Public License for more details.<p>
+
+    	<p>You should have received a copy of the GNU General Public License
+    	along with this program.  If not, see www.gnu.org/licenses.<p>
+	";
+		"release_notes" := "
+	<p>This is based on the german and spanish models (DESSBAS, SPSSBAS). 
+	Meaning of the characters: FR = french, SS=Stolze-Schrey, BAS=Grundschrift).</p> 
+	
+	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
+	inclination of 60 degrees.</p>
+	";
+		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
+		// model version
+		"model_version" := "0.0";
+		"model_date" := "3. Juli 2019";
+		// wide distance
+		"token_distance_wide" := "17";
+
 		// enable phonetics
 		// VSTENO uses eSpeak to generate phonetic transcription
 		// eSpeak uses (more or less) the Kirschenbaum alphabet
@@ -692,7 +723,7 @@
 		"Y" => "[Ö]";
 	#EndSubSection(earlybundler)
 	#BeginSubSection(decapitalizer)
-		
+		"(?<!#)w" => "#w"; // préserve original w
 		"([A-Z])" => "strtolower()";
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(accentizer)
@@ -881,7 +912,9 @@
 		"(?<!\[)(e|w)~" => "[E~]"; // no distinction: dinde vs humble
 		"(?<!\[)wa" => "[WA]";
 		"(?<!\[)w\[E~\]" => "[WE~]";
-		"w" => "[Ö]";  // wa vs W (lower vs upper case) => if it leads to confusion here, put this rule inside early bundler
+		"(?<!#)w" => "[Ö]";  // wa vs W (lower vs upper case) => if it leads to confusion here, put this rule inside early bundler
+		// restore original #w
+		"#w" => "w";
 		
 		"(?<!\[)ks(?!\])" => "x";
 		"(?<!\[)br(?!\])" => "[BR]";
