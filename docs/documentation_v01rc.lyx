@@ -89,8 +89,8 @@ Den Kern des Programmes bildet die so genannte Steno Engine, ein abstraktes
  kein spezifisches Kurzschrift-System gebunden ist.
  Es können also eigene Zeichen und REGEX-Regeln zur Übertragung von Langschrift
  zu Kurzschrift programmiert werden.
- In der Grundversion kommt VSTENO mit Definitionen für das deutsche und
- spanische System Stolze-Schrey (Grundschrift).
+ In der Grundversion kommt VSTENO mit Definitionen für das deutsche, spanische
+ und französische System Stolze-Schrey (Grundschrift).
  
 \end_layout
 
@@ -138,7 +138,7 @@ linguistinnen.pdf) vom 18.
 .
  Seitdem ist viel passiert: Datenbankfunktionen, Formelsprache (mit Branching
  und Stages), linguistisches Analyse-Modul (linguistical analyzer), Weiterentwic
-klung der Steno Engine, spanisches System
+klung der Steno Engine, spanisches und französisches System
 \begin_inset Foot
 status open
 
@@ -147,6 +147,7 @@ Das spanische System wurde ab 3.
  Juni 2019 entwickelt und am 8.
  Juni erstmals auf www.vsteno.ch aufgeschaltet.
  Es wird fortan parallel zum deutschen System weiterentwickelt.
+ Idem für das französische System, das Anfang Juli 2019 aufgeschaltet wurde.
 \end_layout
 
 \end_inset
@@ -852,25 +853,376 @@ Inline-Option-Tags
 \end_layout
 
 \begin_layout Standard
-Die Layouts können mit so genannten Inline-Option-Tags bis zu einem gewissen
- Grad noch weiter verfeinert werden.
- Infos hierzu finden Sie unter:
+Inline-Option-Tags bieten Ihnen eine weitere Möglichkeit, die Gestaltung
+ eines Stenografie-Textes anzupassen.
+ Inline-Option-Tags sehen HTML-Tags sehr ähnlich und können wie diese an
+ jeder beliebigen Textstelle eingefügt werden.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+<p>Dies ist ein 
+\end_layout
+
+\begin_layout LyX-Code
+<@token_color=red>
+\end_layout
+
+\begin_layout LyX-Code
+rotes
+\end_layout
+
+\begin_layout LyX-Code
+<@token_color=black>
+\end_layout
+
+\begin_layout LyX-Code
+Wort.</p> 
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.vsteno.ch/docs/vsteno_tutorial.pdf"
+Beachten Sie, dass VSTENO den Text “Dies ist ein rotes Wort” auch hier als
+ fortlaufende Stenogramme in einer einzigen Zeil ausgibt (Zeilenumbrüche
+ haben keine Bedeutung
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dies gilt, solange sie HTML-Tags, wie hier z.B.
+ <p> und </p>, verwenden.
+ Wenn Sie <p> und </p> weglassen, fügt VSTENO automatisch Zeilenumbrüche
+ ein.
+ Deaktivieren Sie in diesem Fall die Option 
+\begin_inset Quotes eld
+\end_inset
+
+breaks
+\begin_inset Quotes erd
+\end_inset
+
+ oben im Formular, um einen fortlaufenden Text zu erhalten.
+\end_layout
 
 \end_inset
 
-
+).
+ Mit dem Inline-Option-Tag <@token color=red > wird die Zeichenfarbe nach
+ “dies ist ein” auf rot gesetzt und das Wort “rotes” somit in roter Farbe
+ ausgegeben.
+ Analog wechselt <@token_color=black> die Schriftfarbe wieder zurück auf
+ schwarz.
+ 
 \end_layout
 
 \begin_layout Standard
-Die Unterstützung von Inline-Option-Tags ist in der Version 0.1rc allerdings
- noch rudimentär und funktioniert insbesondere im Layout-Modus nur sehr
- eingeschränkt.
+Inline-Option-Tags weisen somit folgendes Format auf: 
+\end_layout
+
+\begin_layout Standard
+<@variable=
+\begin_inset Quotes erd
+\end_inset
+
+Wert
+\begin_inset Quotes erd
+\end_inset
+
+> 
+\end_layout
+
+\begin_layout Standard
+<@variable=’neuer Wert’ > 
+\end_layout
+
+\begin_layout Standard
+<@variable=Wert > 
+\end_layout
+
+\begin_layout Standard
+Die Variable bezeichnet die Option, die angepasst wird, indem sie den Wert
+ “Wert” zugewiesen erhält.
+ Der Wert kann in doppelten oder einfachen Anführungszeichen oder auch direkt
+ zwischen = und > stehen (wählen Sie hier die Form, die Ihnen persönlich
+ am besten gefällt).
+\end_layout
+
+\begin_layout Subsubsection*
+Variablen 
+\end_layout
+
+\begin_layout Standard
+Grundsätzlich können sämtliche Optionen der Steno-Engine - insbesondere
+ also auch jene, welche in der Vollversion per Webformular zur Verfügung
+ stehen - mit Inline-Option-Tags dynamisch, d.h.
+ innerhalb des Textes, verändert werden.
+ Die wichtigsten Variablen sind:
+\end_layout
+
+\begin_layout Itemize
+token_size: Grösse der Stenozeichen (Zoomfaktor, Standard: Standard 1.6).
+ 
+\end_layout
+
+\begin_layout Itemize
+token_type: Kann die Werte “shorthand” (Standard), “handwriting”, “html-
+ text” und “svgtext” annehmen.
+ Dadurch kann kann Text in Langschrift und Stenografie gemischt werden (mehr
+ dazu im Abschnitt “gemischte Texte”).
+ 
+\end_layout
+
+\begin_layout Itemize
+token_thickness: Liniendicke der Stenozeichen (Standard: 1.25).
+ 
+\end_layout
+
+\begin_layout Itemize
+token_inclination: Neigung der Stenozeichen (Standard: 60 Grad).
+ 
+\end_layout
+
+\begin_layout Itemize
+token_shadow: Stärke der Schattierung (Standard: 1.0).
+ 
+\end_layout
+
+\begin_layout Itemize
+token_distance_wide: Abstand zwischen zwei weiten Stenozeichen (Standard:
+ 15)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Der weite Abstand entspricht im deutschen System den Vokalen e, ä (horizontal);
+ ei, eu (1/2 Stufe höher); ü, ö (1/2 Stufe tiefer).
+ Die enge Verbindung token_distance_narrow kann zwar ebenfalls eingestellt
+ werden.
+ Da Stenozeichen jedoch sehr individuelle Abstände benötigen, sollte hierfür
+ stattdessen mithilfe des Spacers und des RX-GEN entsprechende Regeln definiert
+ werden (siehe hierzu das entsprechende Kapitel).
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+token_color: Farbe der Stenozeichen (Standard: “black” bzw.
+ rgb(0,0,0)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Hier kann aus HTML entweder die rgb-Notierung rgb(r,g,b) oder die vordefinierten
+ Standarfarben (wie black, green, white, red, blue, purple etc.) verwendet
+ werden.
+\end_layout
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+token_style_type: Linientyp mit dem Wert 
+\begin_inset Quotes eld
+\end_inset
+
+solid
+\begin_inset Quotes erd
+\end_inset
+
+ (durchgehend), 
+\begin_inset Quotes eld
+\end_inset
+
+dotted
+\begin_inset Quotes erd
+\end_inset
+
+ (gepunktet) oder 
+\begin_inset Quotes eld
+\end_inset
+
+dashed
+\begin_inset Quotes erd
+\end_inset
+
+ (gestrichelt).
+\end_layout
+
+\begin_layout Itemize
+token_style_custom_value: benutzerdefinierter Wert für den Linientyp
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Hier können zwei durch Komma abgetrennte Werte zugewiesen werden: <@token_style_
+custom_value=1,1> bedeutet zum Beispiel: 1 Punkt zeichnen, einen Punkt leerlasse
+n etc.
+ (was einer eng punktierten Linie entspricht).
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+svgtext_size: Grösse der Zeichen in Normalschrift in px (Standard: 30, es
+ wird die Schrift Courier verwendet).
+\end_layout
+
+\begin_layout Standard
+Sämtliche von VSTENO verwendeten Variablen sind in der Datei session.php
+ aufgeführt.
+ Nicht alle können durch den Nutzer geändert werden und bei anderen macht
+ es wenig Sinn, sie im Laufe einer Berechnung zu verändern
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die Variable actual_model zum Beispiel kann nicht verändert werden, da VSTENO
+ gleichzeitig immer nur 1 Kurschriftsystem verwenden kann.
+ Die Variable token_size hingegen kann zwar angepasst werden, dennoch sollte
+ dies mit Vorsicht getan werden: Wir die grösse der Stenozeichen während
+ der Berechnung verändert, dann sollte dies nicht innerhalb der gleichen
+ Zeile geschehen (da sonst die Grundlinie der Zeichen nicht mehr auf gleicher
+ Höhe liegt) und im Layout-Modus sollte dies gar nicht verwendet werden
+ (da der Layout-Modus mit fixen Zeilenabständen arbeitet, die dann nicht
+ mehr zur Zeichengrösse passen).
+ Variablen, die vom/von der Nutzer/in verändert werden können, sind in der
+ Datei options.php in der Variable $whitelist aufgefüht.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Gemischte Texte
+\end_layout
+
+\begin_layout Standard
+Mithilfe der Inline-Option-Tags bietet VSTENO auch die Möglichkeit, Stenogramme
+ und Langschrift zu mischen: 
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+<p>Einige Kürzungen:
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=svgtext>
+\end_layout
+
+\begin_layout LyX-Code
+gegen
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=shorthand>
+\end_layout
+
+\begin_layout LyX-Code
+gegen
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=svgtext>
+\end_layout
+
+\begin_layout LyX-Code
+mit
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=shorthand>
+\end_layout
+
+\begin_layout LyX-Code
+mit</p> 
+\end_layout
+
+\begin_layout Standard
+Hier wird also nach den Wörtern 
+\begin_inset Quotes eld
+\end_inset
+
+gegen
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+mit
+\begin_inset Quotes erd
+\end_inset
+
+ in Langschrift die entsprechende Abkürzung als Stenogramm angezeigt.
+ 
+\end_layout
+
+\begin_layout Standard
+Die Variable “token_type” kann folgende Werte annehmen:
+\end_layout
+
+\begin_layout Itemize
+shorthand: Kurzschrift (es wird das vorselektierte Modell verwendet).
+\end_layout
+
+\begin_layout Itemize
+handwriting: Langschrift handgeschrieben (Blockschrift im ähnlichen Stil
+ wie die Stenozeichen)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dies ist im Moment noch nicht umgesetzt: Erst Zahlen und der Grossbuchstabe
+ A können verwendet werden.
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+htmltext: Langschrift als HTML-Text 9
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Diese Variante bietet nur sehr eingeschränkte Möglichkeiten und wir in zukünftig
+en Versionen vermutlich wieder verschwinden.
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+svgtext: Langschrift als SVG-Grafik dargestellt.
+\end_layout
+
+\begin_layout Standard
+Wie bereits angedeutet sind gewisse Optionen (darunter auch token_type)
+ im Layout-Modus nicht oder nur eingeschränkt verfügbar.
+ Zuverlässig verwendet werden können aber in beiden Modi: Schriftdicke (token_th
+ickness), Schattierungsstärke (token_shadow), Farbe (token_color).
 \end_layout
 
 \begin_layout Subsubsection*
@@ -10428,8 +10780,164 @@ Linguistische Analyse
 \end_layout
 
 \begin_layout Standard
-Die linguistische Analyse - und die ihr zugrunde liegenden Algorithmen -
- werden in einem separaten Dokument näher beschrieben
+Die linguistische Analyse geht vom Schriftbild des Textes aus und bedient
+ sich grundsätzlich dreier externer Programme mit unterschiedlichen Aufgabenbere
+ichen:
+\end_layout
+
+\begin_layout Enumerate
+phpSyllable: Silbentrennung
+\end_layout
+
+\begin_layout Enumerate
+hunspell: Erkennung zusammengesetzter Wörter und Affixe (Vor- und Nachsilben)
+\end_layout
+
+\begin_layout Enumerate
+eSpeak: Phonetische Transkription
+\end_layout
+
+\begin_layout Standard
+Die Verwendung der linguistischen kann zunächst einmal über das Eingabe-Formular
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Maxi
+\begin_inset Quotes erd
+\end_inset
+
+ unter 
+\begin_inset Quotes eld
+\end_inset
+
+Sprache
+\begin_inset Quotes erd
+\end_inset
+
+ eingestellt bzw.
+ definiert werden:
+\end_layout
+
+\begin_layout Itemize
+Option Analyse: keine = die Analyse bleibt ausgeschaltet; Auswahl = die
+ externen Programme (1-3) können einzeln an- und abgewählt werden.
+\end_layout
+
+\begin_layout Itemize
+Programmoptionen
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Silbentrennung: Es kann die Sprache angegeben werden (de: Deutsch, es: Spanisch,
+ fr: Französisch, en: English).
+\end_layout
+
+\begin_layout Itemize
+Wörter/Affixe: Es kann ebenfalls die Sprache angegeben werden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dies funktioniert im Prinzip gleich wie bei der Silbentrennung.
+ Allerdings bietet hunspell nebst der Wahl der Hauptsprache (zum Beispiel
+ 
+\begin_inset Quotes eld
+\end_inset
+
+de
+\begin_inset Quotes erd
+\end_inset
+
+ für Deutsch) zusätzlich regionale Varianten an (zum Beispiel 
+\begin_inset Quotes eld
+\end_inset
+
+de_CH
+\begin_inset Quotes erd
+\end_inset
+
+ für in der Schweiz verwendete Schreibweisen; 
+\begin_inset Quotes eld
+\end_inset
+
+de_CH
+\begin_inset Quotes erd
+\end_inset
+
+ ist die Standardeinstellung für das Modell DESSBAS).
+\end_layout
+
+\end_inset
+
+.
+ Ausserdem kann gewählt werden, ob Affixe grundsätzlich generiert werden
+ sollen (Option Affixe) oder ob auf die Markierung einzelner Affixtypen
+ (Präfixe, Suffixe) oder von Wortgrenzen verzichtet werden soll (in diesem
+ Fall 
+\begin_inset Quotes eld
+\end_inset
+
+keine
+\begin_inset Quotes erd
+\end_inset
+
+ anwählen und auszuschliessende Markierungen selektieren).
+\end_layout
+
+\begin_layout Itemize
+Phonetik: Es kann wiederum die Sprache angegeben werden sowie das Alphabet,
+ das für die Transkription verwendet werden soll (eSpeak = Kirschenbaum
+ Alphabet
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Siehe hier: https://en.wikipedia.org/wiki/Kirshenbaum.
+ Das Kirschenbaum-Alphabet hat den Vorteil, dass es ASCII-kompatibel ist,
+ also mit jeder Tastatur zuverlässig eingegeben und auf jeder Textkonsole
+ angezeigt werden kann.
+ Das französische Modell FRSSBAS verwendet das Kirschenbaum-Alphabet.
+\end_layout
+
+\end_inset
+
+ oder IPA = Internationales Phonetisches Alphabet).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Obwohl es sich um drei externe und unabhängige Programme handelt, bestehen
+ zwischen ihnen im Kontekt von VSTENO Abhängikeiten, die dazu führen, dass
+ nicht alle Kombinationen möglich sind bzw.
+ Sinn machen.
+ Empfohlen werden folgende Kombinationen:
+\end_layout
+
+\begin_layout Enumerate
+Keine linguistische Analyse: Das Spansiche Modell SPSSBAS zum Beispiel verwendet
+ keine linguistische Analyse, da die spanische Orthografie sehr regelmässig
+ und Spanisch - im Unterschied zum Deutschen - nur wenige zusammengesetzte
+ Wörter enthält.
+ Die Regeln können dadurch direkt (und effizient) beim Schriftbild ansetzen
+ (ohne sich zum Beispiel um Silbengrenzen zu kümmern).
+ Ein Modell, das keine linguistische Analyse benötigt, ist auch sehr schnell.
+\end_layout
+
+\begin_layout Enumerate
+Nur Silbentrennung: In diesem Fall ruft VSTENO nur phpSyllable auf, um eine
+ Silbentrennung durchzuführen.
+ Silben werden als - in den Text eingefügt und die Regeln müssen dies berücksich
+tigen.
+ Auch hier kann mit dem Schriftbild gearbeitet werden und Übertragung ist
+ recht schnell.
+\end_layout
+
+\begin_layout Enumerate
+Silbentrennung + Wort/Affixanalyse: In diesem Fall ruft VSTENO zuerst phpSyllabl
+e auf, um Silben zu generieren, und verwendet danach hunspell (und einen
+ speziellen Algorithmus
 \begin_inset Foot
 status open
 
@@ -10447,8 +10955,204 @@ target "https://www.vsteno.ch/docs/gel_speiende_spiegel.pdf"
 
 \end_inset
 
+) um zusammengesetzte Wörter und Affixe zu erkennen.
+ Diese Analyse ist relativ langsam und es gibt grundsätzlich zwei Varianten
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Vollanalyse: Präfixe (+), Suffixe (#), Silben (-) und Wortgrenzen (|) werden
+ mit den enstprechenden Zeichen markiert und die Regeln müssen diese berücksicht
+igen.
+\end_layout
+
+\begin_layout Enumerate
+Teilanalyse: Präfixe (+), Suffixe (#) und Silben (-) zum Beispiel werden
+ abgewählt: in diesem Fall müssen sich die Regeln nur noch um die verbleibenden
+ Markierungen (Wortgrenzen = |) kümmern.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Nur Phonetik: Der Text wird vom Schriftbild ins Lautbild übertragen.
+ Die nachfolgenden Regeln haben deshalb keine Möglichkeit mehr, sich am
+ Schriftbild zu orientieren
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Wie wir später sehen werden, besteht die Möglichkeit in der Stage 0 gewisse
+ Wörter von der Transkription auszunehmen, indem sie mit #wort markiert
+ werden.
+ Die Regeln des Modells basieren aber zum grössten Teil - und ausschliesslich
+ - auf dem Lautbild der Wörter.
+\end_layout
+
+\end_inset
+
 .
- Wichtig ist an dieser Stelle zu wissen:
+ Diese Art der Übertragung ist mittelschnell.
+\end_layout
+
+\begin_layout Standard
+Wichtig ist somit anzumerken, dass insbesondere folgende Kombinationen NICHT
+ möglich sind: (A) Wort/Affixanalyse ohne Silbentrennung (da die Wort/Affixanaly
+se auf der Silbentrennung basiert) und (B) Phonetische Analyse in Verbindung
+ mit den anderen beiden Analysen (es kann also nur die phonetische Analyse
+ allein verwendet werden).
+\end_layout
+
+\begin_layout Subsection*
+Vorselektion
+\end_layout
+
+\begin_layout Standard
+Wenn Sie selber ein Modell (= stenografisches System) mit VSTENO umsetzen,
+ macht es natürlich Sinn, die für das Modell notwendigen Optionen direkt
+ vorzuselektieren, dies kann geschehen, indem Sie im HEADER-Teil des Modells
+ folgende Variablen direkt setzen.
+ Hier das Beispiel für das deutsche System DESSBAS:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(session)
+\end_layout
+
+\begin_layout LyX-Code
+    // use linguistical analysis 
+\end_layout
+
+\begin_layout LyX-Code
+    "analysis_type" := "selected"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // hyphenation (phpSyllable) 
+\end_layout
+
+\begin_layout LyX-Code
+    "hyphenate_yesno" := "yes"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "language_hyphenator" := "de"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // composed words + affixes (hunspell) 
+\end_layout
+
+\begin_layout LyX-Code
+    "composed_words_yesno" := "yes"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "language_hunspell" := "de_CH"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // generate affixes in composed words 
+\end_layout
+
+\begin_layout LyX-Code
+    "affixes_yesno" := "yes"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // set variables for filter option (not selected) 
+\end_layout
+
+\begin_layout LyX-Code
+    "filter_out_prefixes_yesno" := "yes"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "filter_out_suffixes_yesno" := "yes"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "filter_out_words_yesno" := "yes"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // disable phonetic analysis 
+\end_layout
+
+\begin_layout LyX-Code
+    "phonetics_yesno" := "no"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "language_espeak" := "de"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "phonetic_alphabet" := "espeak";
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(session)
+\end_layout
+
+\begin_layout Standard
+Hier werden also die weiter oben genannten Einstellungen direkt mit 
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ selektiert bzw.
+ die Sprache voreingestellt.
+ Dies führt dazu, dass VSTENO diese Werte automatische lädt, wenn im Eingabeform
+ular 
+\begin_inset Quotes eld
+\end_inset
+
+Maxi
+\begin_inset Quotes erd
+\end_inset
+
+ das Modell angewählt wird.
+ Beachten Sie bitte, dass die Zuweisen mit dem Operator := erfolgt und dass
+ sowohl Variablen wie Werte in doppelten Anführungszeichen stehen müssen.
+\end_layout
+
+\begin_layout Standard
+Im folgenden werden wir nun auf diese linguistischen Analysen genauer eingehen.
+ Da die phonetische Analyse nur separat verwendet werden kann macht, es
+ Sinn, die Betrauchtung auf zwei Kapitel zu verteilen.
+ Ausschlaggebend ist dabei, dass am Schluss der Analyse für die Regeln zur
+ Verfügung steht, nämlich entweder eine mehr oder weniger (A) Morphologische
+ Analyse oder als (B) Phonetische Transkription des Textes.
+\end_layout
+
+\begin_layout Section*
+Morphologische Analyse
+\end_layout
+
+\begin_layout Standard
+Die von VSTENO verwendete morphologische Analyse verwendet die externen
+ Programm phpSyllable (Silbenerkennung) und hunspell (Wort/Affixanalyse)
+ und basiert mehr oder minder auf einem speziellen Algorithmus, der 
+\begin_inset CommandInset href
+LatexCommand href
+name "hier"
+target "https://www.vsteno.ch/docs/gel_speiende_spiegel.pdf"
+
+\end_inset
+
+ genauer erläutert wird.
+ Als einleitende und erste grobe Übersicht ist wichtig zu wissen:
 \end_layout
 
 \begin_layout Enumerate
@@ -10545,7 +11249,7 @@ Zu Punkt 3: Es bestehen grundsätzlich zwei Möglichkeiten, falsche Resultate
 \end_layout
 
 \begin_layout Subsection*
-(1) Parameter und Variablen
+Parameter und Variablen
 \end_layout
 
 \begin_layout Standard
@@ -10573,46 +11277,33 @@ Funktion analyze_word_linguistically() in linguistics.php, welche die einzelnen
 \end_inset
 
 .
- Die veränderbaren Parameter (Variablen) sind
+ Die veränderbaren Parameter (wie Sprache und Auswahl gezielter Elemente
+ der Analyse) wurden bereits in den beiden vorhergehenden Kapiteln erklärt
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Einige Parameter, wie Sprache und Markierung von Satzanfängen und Substantiven,
- können im Moment noch nicht eingestellt werden.
- Sie werden der Vollständigkeit halber dennoch bereits jetzt in die Dokumentatio
-n aufgenommen.
-\end_layout
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Itemize
-Sprache: Definiert die Sprache, die für das Wörterbuch (hunspell) und den
- Silbentrenner (phpSyllable) verwendet werden
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Im Moment ist hier fix 
+Nachzureichen wären hier nur noch die Optionen 
 \begin_inset Quotes eld
 \end_inset
 
-de_ch
+Trennen
 \begin_inset Quotes erd
 \end_inset
 
- (Deutsch nach Schweizer Norm) für hunspell und 
+ (separate) und 
 \begin_inset Quotes eld
 \end_inset
 
-ch
+Leim
 \begin_inset Quotes erd
 \end_inset
 
- (Deutsch allgemein) für phpSyllable voreingestellt.
+ (glue): Diese wurden ursprünglich verwendet, um anzugeben, bei welcher
+ Länge Wörter abgetrennt oder nicht abgetrennt (d.h.
+ als eigenständige Wörter betrachtet) werden sollten.
+ Diese vorgehen hat sich aber nicht bewährt und die Optionen werden voraussichtl
+ich in einer späteren Version wieder entfernt.
 \end_layout
 
 \end_inset
@@ -10620,37 +11311,10 @@ ch
 .
 \end_layout
 
-\begin_layout Itemize
-Silben: Wenn angewählt, wendet VSTENO eine Silbentrennung an (Silben werden
- durch das Zeichen - abgetrennt).
- 
-\end_layout
-
-\begin_layout Itemize
-Wörter: Wenn angewählt, versucht VSTENO Teilwörter (zusammengesetzte Wörter)
- zu finden (die Teilwörter werden durch | abgetrennt).
-\end_layout
-
-\begin_layout Itemize
-Trennen: Gibt an, bei welcher Länge Wörter abgetrennt werden (im Moment
- deaktiviert).
-\end_layout
-
-\begin_layout Itemize
-Leim: Gibt an, bei welcher Länge Wörter nicht abgetrennt werden (im Moment
- deaktiviert).
-\end_layout
-
 \begin_layout Standard
-Da im Moment die meisten Funktionen (noch) deaktiviert sind, kann man hier
- nur einstellen, ob man Silben- und Wörtertrennung will oder nicht (werden
- sowohl Silben- als auch Wörtererkennung abgewählt, nimmt VSTENO keine linguisti
-sche Analyse vor).
-\end_layout
-
-\begin_layout Standard
-Die zweite Möglichkeit, das Verhalten der linguistischen Analyse zu verändert,
- besteht darin, eigene Präfixe, Stämme und Suffixe zu definieren.
+Im Zusammenhang mit der morphologischen Analyse interessiert uns nun die
+ Möglichkeit, Präfixe, Stämme und Suffixe zu definieren und markieren zu
+ lassen.
  Hierzu muss im Header-Teil ein SubSection 
 \begin_inset Quotes eld
 \end_inset
@@ -11073,12 +11737,268 @@ den Stenoregeln zu vereinfachen!
 \begin_layout Standard
 Aber so gut man die Regeln auch wählt, es werden immer falsche Resultate
  generiert werden.
- Diese können nun aber mit einem sogenannten Postprocessing (Nachbearbeitung)
- wiederum korrigiert werden.
+ Diese können nun aber auf zwei Arten korrigiert werden: (1) mit der Blockliste/
+Filterliste oder (2) mit einem sogenannten Postprocessing (Nachbearbeitung
+ mithilfe von REGEX-Regeln).
 \end_layout
 
 \begin_layout Subsection*
-(2) Postprocessing
+Blockliste / Filterliste
+\end_layout
+
+\begin_layout Standard
+Blocklist und Filterlist sind Session-Variablen die genau gleich gesetzt
+ werden können wie Präfixe, Suffixe und Stämme, nämlich:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(session) 
+\end_layout
+
+\begin_layout LyX-Code
+  "block_list" := "des, der, den, dem";
+\end_layout
+
+\begin_layout LyX-Code
+  "filter_list" := "de[snrm]";
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(session)
+\end_layout
+
+\begin_layout Standard
+Hier wird also der Blockliste eine Liste mit 4 Wörtern (des, der, den, dem)
+ zugeordnet, die 
+\begin_inset Quotes eld
+\end_inset
+
+blockiert
+\begin_inset Quotes erd
+\end_inset
+
+ werden sollen.
+ Als zweites Beispiel wird der Filterliste 1 REGEX-Ausdruck (de[snrm]) zugeordne
+t (der im Prinzip die gleichen 4 Wörter - des, den, der, dem - abdeckt -
+ es wird anstelle der Aufzählung einfach ein REGEX-Ausdruck verwendet).
+\end_layout
+
+\begin_layout Standard
+Was aber bewirken nun diese Angaben? Ein Eintrag in der Blockliste bedeutet
+ grundsätzlich: VSTENO wird diese Buchstabenfolge nicht mehr als eigenes
+ Wort betrachten.
+ Nehmen wir als Beispiel das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+lachendes
+\begin_inset Quotes erd
+\end_inset
+
+.
+ VSTENO wird dieses in Silben trennen (la-chen-des) und schliesslich versuchen,
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Teilwörter
+\begin_inset Quotes erd
+\end_inset
+
+ (also zusammengesetzte Wörter) zu finden.
+ Dazu generiert es zunächst eine Liste sämtlicher möglicher Silbenpermutationen,
+ in diesem Fall also Kombinationen mit ein, zwei oder drei Silben (la, chen,
+ des; lachen, chendes; lachendes).
+ Danach verwendet die linguistische Analyse hunspell und die Präfix-, Stämme-,
+ Suffixlisten, um zu entscheiden, welche Kombinationen als eigene Wortteil
+ existieren bzw.
+ möglich sind.
+ Alle anderen Möglichkeiten werden 
+\begin_inset Quotes eld
+\end_inset
+
+gestrichen
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In unserem Fall ergäbe das also: -, -, des; lachen, -; lachendes.
+ Aufgrund dieser Analyse kann VSTENO schliesslich annehmen, dass das Wort
+ 
+\begin_inset Quotes eld
+\end_inset
+
+lachendes
+\begin_inset Quotes erd
+\end_inset
+
+ aus zwei Teilwörtern (lachen + des) besteht und markiert dieses mit einer
+ Wortgrenze (lachen|des).
+ 
+\end_layout
+
+\begin_layout Standard
+Fügen wir nun 
+\begin_inset Quotes eld
+\end_inset
+
+des
+\begin_inset Quotes erd
+\end_inset
+
+ zur Blockliste hinzu, wird auch 
+\begin_inset Quotes eld
+\end_inset
+
+des
+\begin_inset Quotes erd
+\end_inset
+
+ aus der Liste gestrichen und es bleibt somit nur noch: -, -, -; lachen,
+ chendes; lachendes.
+ VSTENO findet in diesem Fall also keine kleinere Unterteilung des Wortes
+ und wird deshalb 
+\begin_inset Quotes eld
+\end_inset
+
+lachendes
+\begin_inset Quotes erd
+\end_inset
+
+ als ein einziges, unaufteilbares Wort betrachten - was in diesem Fall richtig
+ ist.
+\end_layout
+
+\begin_layout Standard
+Ähnlich verfährt VSTENO dann auch mit dem Wort 
+\begin_inset Quotes eld
+\end_inset
+
+deswegen
+\begin_inset Quotes erd
+\end_inset
+
+: Die Silbentrennung ergibt: des-we-gen.
+ Die möglichen Permutationen somit: des, we, gen; deswe, wegen; deswegen.
+ Streichung mit hunspell: des, -, -; -, wegen; deswegen.
+ Zusätzliche Streichung mit der Blockliste: -, -, -; -, wegen; deswegen.
+ Auch hier kommt VSTENO zum Schluss, dass 
+\begin_inset Quotes eld
+\end_inset
+
+deswegen
+\begin_inset Quotes erd
+\end_inset
+
+ keine Teilwörter mehr enthält - und wird somit auch keine Präfix 
+\begin_inset Quotes eld
+\end_inset
+
+des
+\begin_inset Quotes erd
+\end_inset
+
+ markieren.
+ In diesem Fall ist das schade, denn das Wort enthält tatsächlich die Vorsilbe
+ des- mit entsprechender Kürzung im System Stolze-Schrey.
+ 
+\end_layout
+
+\begin_layout Standard
+Kurzum: Zwar konnte wir im Fall von 
+\begin_inset Quotes eld
+\end_inset
+
+lachendes
+\begin_inset Quotes erd
+\end_inset
+
+ ein richtiges Resultat produzieren, dafür erkennt VSTENO nun die Vorsilbe
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+deswegen
+\begin_inset Quotes erd
+\end_inset
+
+ nicht mehr.
+ Aus diesem Grund gibt es die Filterliste.
+ Wenn wir im Falle von 
+\begin_inset Quotes eld
+\end_inset
+
+des
+\begin_inset Quotes erd
+\end_inset
+
+ beide Fälle abdecken wollen, dann empfiehlt sich folgendes Vorgehen:
+\end_layout
+
+\begin_layout Enumerate
+"des" wird nicht zur Blockliste hinzugefügt => dadurch wird es als eigenständige
+r Wortteil erkannt 
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+des
+\begin_inset Quotes erd
+\end_inset
+
+ wird zur Präfix-Liste hinzugefügt => dadurch wird der selbständige Wortteil
+ als Präfix markiert
+\end_layout
+
+\begin_layout Enumerate
+Wir fügen nun den REGEX-Ausdruck 
+\begin_inset Quotes eld
+\end_inset
+
+|de[rsmn]
+\begin_inset Quotes erd
+\end_inset
+
+ zur Filterliste hinzu => dadurch wird das falsche Resultat (false positive)
+ 
+\begin_inset Quotes eld
+\end_inset
+
+la-chen|des
+\begin_inset Quotes erd
+\end_inset
+
+ korrigiert (und wieder zu 
+\begin_inset Quotes eld
+\end_inset
+
+la-chen-des
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+Bitte beachten, dass in der Filterliste nur eine eingeschränkte REGEX-Notation
+ verwendet werden darf.
+ Grundsätzlich dürfen das Zeichen |, eckige Klammern [] und Quantifier wie
+ *+? verwendet werden, jedoch - wie bereits in der Präfix-Liste keine 
+\begin_inset Quotes eld
+\end_inset
+
+markierenden
+\begin_inset Quotes erd
+\end_inset
+
+ runden Klammern und keine Variablen (z.B.
+ $1).
+\end_layout
+
+\begin_layout Subsection*
+Postprocessing
 \end_layout
 
 \begin_layout Standard
