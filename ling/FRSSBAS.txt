@@ -622,70 +622,90 @@
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text french
 		
+		// the problem with regexes like "(?<=^| )example(?= |$)" is that they don't apply to
+		// words like (example), "example", example. etc.
+		// to solve this, first add spaces (later filter them out again)
+		"(\(|\[|\"|'|\?|!)([a-zA-Zàáâéèêïòôùû])" => "$1#># $2"; 
+		"([a-zA-Zàáâéèêïòôùû])(\)|\]|\"|'|!|\?)" => "$1 #<#$2"; 
+	
+		// à is transcribed as "a accent grave" by eSpeak ...
+		// filter out accent
+		"(?<=^| )à(?= |$)" => "a";
+
+		// mark all monosyllabic words with apostrophes
+		"(?<=^| )([DdLlMmSsTtNn]) #<#'" => "#$1";
+
 		// special words
-		"(?<=^| )parce qu'il(?= |$)" => "#parcequil";
-		"(?<=^| )quelques?(?= |$)" => "#quelque";
-		"(?<=^| )quelqu'un?(?= |$)" => "#quelquun";
-		"(?<=^| )quelques-uns?(?= |$)" => "#quelquesuns";
-		"(?<=^| )quelques-unes?(?= |$)" => "#quelquesunes";
-		"(?<=^| )quel(le)?|qu'elles?(?= |$)" => "#quel";
-		"(?<=^| )bien-être(?= |$)" => "#bienetre";
-		"(?<=^| )toujours(?= |$)" => "#toujours";
+		"(?<=^| )[Pp]arce qu'il(?= |$)" => "#parcequil";
+		"(?<=^| )[Qq]uelques?(?= |$)" => "#quelque";
+		"(?<=^| )[Qq]uelqu'un?(?= |$)" => "#quelquun";
+		"(?<=^| )[Qq]uelques-uns?(?= |$)" => "#quelquesuns";
+		"(?<=^| )[Qq]uelques-unes?(?= |$)" => "#quelquesunes";
+		"(?<=^| )[Qq]uel(le)?|qu'elles?(?= |$)" => "#quel";
+		"(?<=^| )[Bb]ien-être(?= |$)" => "#bienetre";
+		"(?<=^| )[Tt]oujours(?= |$)" => "#toujours";
 
 		" (?:I|i)ls? " => " #il "; // some abbreviated words have to be marked before phonetic transcriptions (use # to inform analyzer that it should not be transcribed)
 		" [Ee]st-ce qu(?:e|')?" => " #estceque ";
-		"(?<=^| )ce qu'ils?(?= |$)" => "#cequil";	
+		"(?<=^| )[Cc]e qu'ils?(?= |$)" => "#cequil";	
 		"(?<=^| )[Cc]e qui(?<= |$)" => "#ce_qui";
 		"(?<=^| )[Cc]e qu(e|')" => "#ce_que ";
 		"(?<=^| )[Cc]e qu'a " => "#ce_qua ";
-		"(?<=^| )(le|un) son(?= |$)" => "$1_son";
-		"(?<=^| )sont?(?= |$)" => " #son ";
+		"(?<=^| )([Ll]e|[Uu]n) son(?= |$)" => "$1_son";
+		"(?<=^| )[Ss]ont?(?= |$)" => " #son ";
 		"(le|un)_son" => "$1 son";
-		"(?<=^| )sans(?= |$)" => "#sans";
-		"(?<=^| )dans(?= |$)" => "#dans";
-		"(?<=^| )tous ([mtsl]es|[nv]os|leurs)(?= |$)" => "#tout $1";
-		"(?<=^| )cet(te)?(?= |$)" => "#cet";
-		"(?<=^| )par(?= |$)" => "#par";
-		"(?<=^| )leurs?(?= |$)" => "#leur";
+		"(?<=^| )[Ss]ans(?= |$)" => "#sans";
+		"(?<=^| )[Dd]ans(?= |$)" => "#dans";
+		"(?<=^| )[Tt]ous ([mtsl]es|[nv]os|leurs)(?= |$)" => "#tout $1";
+		"(?<=^| )[Cc]et(te)?(?= |$)" => "#cet";
+		"(?<=^| )[Pp]ar(?= |$)" => "#par";
+		"(?<=^| )[Ll]eurs?(?= |$)" => "#leur";
 		"(?<=^| )[Mm]onsieur(?= |$)" => "#monsieur";
 		"(?<=^| )M\.(?= |$)" => "#monsieur";
 		"(?<=^| )[Mm]essieurs(?= |$)" => "#messieurs";
 		"(?<=^| )MM\.(?= |$)" => "#messieurs";
-		"(?<=^| )ser(a[is]?|on[st]|ez|ai[st]|ions|iez|aient)(?= |$)" => "#ser$1";
-		"(?<=^| )plus(ieurs)?(?= |$)" => "#plus$1";
-		"(?<=^| )plupart(?= |$)" => "#plupart";
-		"(?<=^| )les(?= |$)" => "#les";
-		"(?<=^| )av(ai[st]|ions|iez|aient|oir)(?= |$)" => "#av$1";
-		"(?<=^| )([clsmt]es|[vn]os|leurs) #avions(?= |$)" => "$1 avions"; // don't mark it (delete mark again)
-		"(?<=^| )y(?= |$)" => "#y";
-		"(?<=^| )pouv(oir|ai[st]|ions|iez|aient)(?= |$)" => "#pouv$1";
-		"(?<=^| )beaucoup(?= |$)" => "#beaucoup";
-		"(?<=^| )pour(?= |$)" => "#pour";
-		"(?<=^| )pourr(ai[st]?|i?ons|i?ez|aient|as?|ont)(?= |$)" => "#pourr$1";
-		"(?<=^| )doi[st](?= |$)" => "#doit";		
-		"(?<=^| )quoi(?= |$)" => "#quoi";		
-		"(?<=^| )soi([st]|ent)?(?= |$)" => "#soit";		
-		"(?<=^| )mois?(?= |$)" => "#moi";		
-		"(?<=^| )fois?(?= |$)" => "#fois";	
-		"(?<=^| )fixions(?= |$)" => "#fixions"; // fiction vs fixions (phoneticly indistinguishable)	
-		"(?<=^| )s'ils?(?= |$)" => "#sil";	
+		"(?<=^| )[Ss]er(a[is]?|on[st]|ez|ai[st]|ions|iez|aient)(?= |$)" => "#ser$1";
+		"(?<=^| )[Pp]lus(ieurs)?(?= |$)" => "#plus$1";
+		"(?<=^| )[Pp]lupart(?= |$)" => "#plupart";
+		"(?<=^| )[Ll]es(?= |$)" => "#les";
+		"(?<=^| )[Aa]v(ai[st]|ions|iez|aient|oir)(?= |$)" => "#av$1";
+		"(?<=^| )([CLSMTclsmt]es|[VNvn]os|[Ll]eurs) #avions(?= |$)" => "$1 avions"; // don't mark it (delete mark again)
+		"(?<=^| )[Yy](?= |$)" => "#y";
+		"(?<=^| )[Pp]ouv(oir|ai[st]|ions|iez|aient)(?= |$)" => "#pouv$1";
+		"(?<=^| )[Bb]eaucoup(?= |$)" => "#beaucoup";
+		"(?<=^| )[Pp]our(?= |$)" => "#pour";
+		"(?<=^| )[Pp]ourr(ai[st]?|i?ons|i?ez|aient|as?|ont)(?= |$)" => "#pourr$1";
+		"(?<=^| )[Dd]oi[st](?= |$)" => "#doit";		
+		"(?<=^| )[Qq]uoi(?= |$)" => "#quoi";		
+		"(?<=^| )[Ss]oi([st]|ent)?(?= |$)" => "#soit";		
+		"(?<=^| )[Mm]ois?(?= |$)" => "#moi";		
+		"(?<=^| )[Ff]ois?(?= |$)" => "#fois";	
+		"(?<=^| )[Ff]ixions(?= |$)" => "#fixions"; // fiction vs fixions (phoneticly indistinguishable)	
+		"(?<=^| )[Ss]'ils?(?= |$)" => "#sil";	
 		"(?<=^| )d'il(?= |$)" => "#dil";	
-		"(?<=^| )qu'ils?(?= |$)" => "#kil";	
-		"(?<=^| )moi-même(?= |$)" => "#moimeme";	
-		"(?<=^| )toi-même(?= |$)" => "#toimeme";	
-		"(?<=^| )soi-même(?= |$)" => "#soimeme";	
-		"(?<=^| )eux-mêmes(?= |$)" => "#euxmemes";	
-		"(?<=^| )quand même(?= |$)" => "#quandmeme";	
-		"(?<=^| )peut-être(?= |$)" => "#peutetre";	
-		"(?<=^| )toutefois(?= |$)" => "#toutefois";
-		"(?<=^| )dûment(?= |$)" => "#dument";
-		"(?<=^| )ceci(?= |$)" => "#ceci";
-		"(?<=^| )ceux-ci(?= |$)" => "#ceuxci";
-		"(?<=^| )sinon(?= |$)" => "#sinon";
-		"(?<=^| )aujourd'hui(?= |$)" => "#aujourdhui";	
-		"(?<=^| )maintenant(?= |$)" => "#maintenant";	
-		"(?<=^| )sui[st](?= |$)" => "#suis";	
+		"(?<=^| )[Qq]u'ils?(?= |$)" => "#kil";	
+		"(?<=^| )[Mm]oi-même(?= |$)" => "#moimeme";	
+		"(?<=^| )[Tt]oi-même(?= |$)" => "#toimeme";	
+		"(?<=^| )[Ss]oi-même(?= |$)" => "#soimeme";	
+		"(?<=^| )[Ee]ux-mêmes(?= |$)" => "#euxmemes";	
+		"(?<=^| )[Qq]uand même(?= |$)" => "#quandmeme";	
+		"(?<=^| )[Pp]eut-être(?= |$)" => "#peutetre";	
+		"(?<=^| )[Tt]outefois(?= |$)" => "#toutefois";
+		"(?<=^| )[Dd]ûment(?= |$)" => "#dument";
+		"(?<=^| )[Cc]eci(?= |$)" => "#ceci";
+		"(?<=^| )[Cc]eux-ci(?= |$)" => "#ceuxci";
+		"(?<=^| )[Ss]inon(?= |$)" => "#sinon";
+		"(?<=^| )[Aa]ujourd'hui(?= |$)" => "#aujourdhui";	
+		"(?<=^| )[Mm]aintenant(?= |$)" => "#maintenant";	
+		"(?<=^| )[Ss]ui[st](?= |$)" => "#suis";	
 				
+		// filter out inserted spaces
+		"#># " => "";
+		" #<#" => "";
+		"#([DdLlMmSsTtNn])" => "$1"; // filter out # in monosyllabic words
+
+		// do that only in stage 4, otherwhise n'#avais won't be transcribed correctly ...
+		// wrong: must be done here - otherwhise in "n #<#'#># #avais", n will get transcribed as "en" ... 
 
 		// regular treatment
 		// composed words
@@ -819,11 +839,11 @@
 		"^#plupart$" => "{PLUS}par";
 		"^l\[ü\]i$" => "{LUI}";
 		"^#les$" => "{LES}";
-		"^#av(ai[st]|aient)" => "{AV}e";
-		"^#avions" => "{AV}j[o~]";
-		"^#aviez" => "{AV}je";
-		"^#avoir" => "{AV}war";
-		"^#y$" => "{#Y}";
+		"#av(ai[st]|aient)" => "{AV}e";
+		"#avions" => "{AV}j[o~]";
+		"#aviez" => "{AV}je";
+		"#avoir" => "{AV}war";
+		"#y$" => "{#Y}";
 		"^\[ü\]$" => "{EUT}";
 		"^#pouvoir" => "{POUV}war";
 		"^#pouv(ai[st]|aient)" => "{POUV}e";
@@ -852,7 +872,7 @@
 		"e~ter" => "{INTER}";
 		"^e~tr" => "{INTER}";
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
-		"^in|e~(?!$)" => "{IN}";
+		"^in|e~(?!$)" => { "{IN}", "e~si ?$" };
 		"s\[ü\]b" => "{SUB}";
 		"tra~skr" => "{TRANS}skr"; // transcrire
 		"tra~s" => "{TRANS}";
@@ -906,6 +926,11 @@
 	#BeginSubSection(phonetizer,#>stage4)
 		// empty
 	#EndSubSection(phonetizer)
+	#BeginSubSection(specialtokensfilter)
+		" #<#'#># " => ""; // n'#avais
+		"#># " => "";
+		" #<#" => "";
+	#EndSubSection(specialtokensfilter)
 	#BeginSubSection(bundler)
 		"(?<!\[)a~" => "[A~]";
 		"(?<!\[)o~" => "[O~]";

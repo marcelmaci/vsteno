@@ -65,6 +65,7 @@ function replace_all( $pattern, $replacement, $string ) {
 */
         $string = extended_preg_replace( $pattern, $replacement, $string );
 //    } while ($old_string !== $string );
+    //echo "replace_all: string = $string";
     return $string;
 }
 /*
@@ -147,6 +148,7 @@ function GenericParser( $table, $word ) {
 // nonetheless, it would have been much simpler, if php offered a regex-syntax like: "([A-Z])" => "\L$1" ...
 
 function extended_preg_replace( $pattern, $replacement, $string) {
+        global $global_warnings_string;
         switch ($replacement) {
                 case "strtolower()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtolower($word[1], "UTF-8"); }, $string); 
                                       break;
@@ -169,7 +171,9 @@ function extended_preg_replace( $pattern, $replacement, $string) {
                             $result = preg_replace( $pattern, $replacement, $string);
                             if ($result !== $string) $result = preg_replace( $pattern, $replacement, $result);
                         break;
-        }       
+        }   
+        //echo "extended_preg_replace: result = $result<br>";
+        if ($result === "") $global_warnings_string .= "REGEX: RETURNS EMPTY STRING (\"$pattern\" => \"$replacement\")<br>";
         return $result;
 };
 
@@ -498,6 +502,8 @@ function ExecuteRule( /*$word*/ ) {
             }
     }
     //if ($output === "") echo "output = null / rule = $rules_pointer<br>";
+    //echo "$output<br>";
+    if ($output === "") $global_warnings_string .= "R[$rules_pointer]: RETURNS EMPTY STRING (\"" . $rules[$rules_pointer][0] . "\" => \"" . $rules[$rules_pointer][1] . ")<br>"; 
     $act_word = $output;
     //if ($result === "") {echo "return output: $output"; return $output;}
     //else { echo "return result $result"; return $result; }
@@ -778,6 +784,7 @@ function MetaParser( $text ) {          // $text is a single word!
         //echo "go to stage4";
         $actual_model = $_SESSION['actual_model'];
         $final_prt = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
+        //echo "final_prt: $final_prt<br>";
         return $final_prt;
     } else {
         // word is not in dictionary => parse from stage3 (= after dictionary) to stage4 (start) using word splitting (composed words)
@@ -803,6 +810,8 @@ function MetaParser( $text ) {          // $text is a single word!
             switch ($_SESSION['token_type']) {
                 case "shorthand": 
 //////////
+ 
+      
                     if ($_SESSION['original_text_format'] !== "lng") {
                     
          //echo  $_SESSION['hyphenate_yesno'] . "<br>" . $_SESSION['composed_words_yesno'];

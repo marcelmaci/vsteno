@@ -1098,7 +1098,7 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
             break;
     } 
 
-return "bla1";
+return "bla1"; // ???
 }
 
 function GetDebugInformation( $word ) {
@@ -1195,6 +1195,7 @@ function CalculateInlineSVG( $text_array ) {
             $output .= $html_pretags;
         }
     }
+    //echo "output: #$output#<br>";
     return $output;
 }
 
@@ -1958,7 +1959,7 @@ function CalculateInlinePRT( $text_array ) {
     global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied;
     global $separated_prt_form, $prt_form, $std_form, $separated_std_form, $combined_posttags, $last_pretoken_list, $last_posttoken_list;
     $output = "";
-    
+   
     foreach ( $text_array as $this_word ) {
         //echo "this word: $this_word<br>";
         $global_debug_string = "";
@@ -2028,15 +2029,19 @@ function NormalText2SVG( $text ) {
     global $cached_results;
     
     $text = PreProcessNormalText( $text );
+    
     // first apply rules to whole text (if there are any)
     //echo "preprocess (=stage1)<br>";
     $text = PreProcessGlobalParserFunctions( $text ); // corresponds to stage1 (full text)
+    if ($text === "") $global_warnings_string .= "STAGE0 (Preprocessing): RETURNS EMPTY STRING<br>";
+    
     //echo "preprocess (=stage1) finished<br>";
     $text_array = PostProcessTextArray(explode( " ", $text));
     //echo "\nText aus Normaltext2svg()<br>$text<br>\n";
     prepare_optimized_cache_array($text);
     //var_dump($cached_results);
-
+    //var_dump($text_array);
+    //echo "session(ouptut_format): " . $_SESSION['output_format'] . "<br>"; 
     switch ($_SESSION['output_format']) {
             case "layout" : $svg = CalculateLayoutedSVG( $text_array ); break;
             case "train" : $svg = CalculateTrainingSVG( $text_array ); break;

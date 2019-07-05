@@ -469,7 +469,11 @@ function recursive_search_optimized($line, $row, $array) {
 /////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
 
 function GetPhoneticTranscription($word) {
-    if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
+    //echo "word to transcribe: $word<br>";
+    //if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
+    $check = mb_strpos($word, "#");
+    if ($check === false) {  // do not transcribe words containing # (at any position)
+        //echo "transcribe: $word<br>";
         $language = $_SESSION['language_espeak'];
         $alphabet_option = ($_SESSION['phonetic_alphabet'] === "espeak") ? "-x" : "--ipa"; 
         $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
@@ -478,8 +482,14 @@ function GetPhoneticTranscription($word) {
         exec("$shell_command",$o);
         //var_dump($o);
         $output = trim($o[0]); // trim is necessary because espeak adds additional spaces
+        //echo "trimmed output: >$output<<br>";
     } else {
         //echo "don't transcribe: $word<br>";
+         // extend rule to not transcribe words to any position of #
+         // shortened words with vowels at beginning might have preceeding phonems
+         // example (french): n#avais 
+         // separating n and #avais is not an option since n will get transcribed "en"
+         // in n#avais, n can be treated as phonem and the abbreviation #avais can be applied normally
         $output = $word;
     }
     return $output;
