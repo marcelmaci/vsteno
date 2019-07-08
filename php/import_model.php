@@ -328,6 +328,7 @@ function ImportBase() {
             list($element, $last) = GetNextTokenDefinitionElementAndShrink();
             //if ($element !== null) if ($last !== true) echo "$element,"; else echo "$element";
             $font[$insertion_key][$actual_key][] = StripOutQuotesAndCast( StripOutSpaces($element));    // add definition data to actual token (symbolically: font["model"]["token"])
+            //if ($actual_key === "@#/") echo "element: $element (last: $last)<br>";
         } while ($last !== true);
         //echo "}<br><br>";
     }
@@ -683,6 +684,8 @@ CreateCombinedTokens();
 $number_combined = count($steno_tokens_master) - $number_base; 
 CreateShiftedTokens();
 $number_shifted = count($steno_tokens_master) - $number_base - $number_combined;
+
+StripOutUnusedTuplets();
 
  //var_dump($steno_tokens_master);
  GenerateTokenGroups($steno_tokens_master);

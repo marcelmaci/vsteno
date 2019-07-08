@@ -64,6 +64,11 @@ const offs_group = 23;                          // offset 23: group of the token
 
 // data tuplets: each tuplets contains 8 entries like so:  [x1, y1, t1, d1, th, dr, d2, t2 ]
 //
+// Data tuplets are used inside token definitions definitions and inside splines list. 
+// The meaning of the data inside the tuplets is slightly different.
+//
+// (1) TOKEN DEFINITIONS
+//
 // x1: x coordinate of knot
 // y1: y coordinate of knot
 // t1: tension following the knot (bezier curve, tension preceeding the knot is stored in preceeding knot at offset 7)
@@ -72,12 +77,42 @@ const offs_group = 23;                          // offset 23: group of the token
 //                       3 = conditional pivot point: if token is in normal position this point will be ignored/considered as a normal point (= value 0)
 //                      98 = late entry point (= if token is first token in tokenlist then don't draw points before late entry point; consider this point as entry point)
 // th: relative thickness of knot: 1.0 = normal thickness (lower values = thinner / higher values = thicker)
-// dr: data field for drawing function: 0 = normal (i.e. connect points) / 5 = don't connect to this point from preceeding point
+// dr: data field for drawing function: 0 = normal (i.e. connect points) / 5 = don't connect to this point from preceeding point / 
+//     2 = knots belonging to diacritic token (must be transferred to separate spline)
+//     higer values = combined values for knot type and parallel rotating axis (see se1_backports.php)
 // d2: exit data field: 0 = regular point / 1 = exit point / 2 = pivot point / 99 = early exit point (= this point is the last one inserted into splines if token is the last one in tokenlist)
 //                      3 = conditional pivot point: if token is in normal position this point will be ignored/considered as a normal point (= value 0)
 // t2: tension preceeding the following knot (bezier kurve)
 //
 // tensions: 0 = "sharp" connection (not rounded) / other floating point values between 0 and 1 (typically 0.5) = smooth connection
+//
+// (2) SPLINES LIST
+//
+// As a first step, tuplets from tokens are copied over to splines list, so that they are similar. Nonetheless several fields change
+// their signification due to later operations on the data:
+//
+// (a) InsertTokenInSplinesList(): Modifies the dr field by (i) filtering out eventual rev1-backport data and inserting values
+//     to mark knots belonging to diacritic tokens (value 2) and combined tokens (string = vector for knot corrections), only values
+//     1 (normal dot) and 5 (don't connect) from original rev0 are preserved. In order to avoid confusions, this new dr field will
+//     be called drx ("modified dr").
+// (b) CalculateWord() calculates the control points for the bezier curves (qx1, qy1; qx2, qy2) and writes them into offsets 2,3 (t1, d1) 
+//     and 6,7 (d2, t2).
+//
+// offset 0: x1
+// offset 1: y1
+// offset 2: t1 => qx1*
+// offset 3: d1 => qy1*
+// offset 4: th
+// offset 5: dr => drx**
+// offset 6: d2 => qx2*
+// offset 4: t2 => qy2*
+//
+// Notes:
+// * Values t1, d1 (offsets 2+3) and d2, t2 (offsets 6+7) are later overwritten by function CalculateWord()
+//   The new values written to the tuplet correspond to the control points for the bezier curve (qx1, qy1, qx2, qy2)
+// ** Modified dr-field containing value 2 (knot belonging to diacritic token, that must be transferred to a separated spline),
+//    a string with the vector for knot correction in combined tokens or the original values 1 and 5 of the dr-field
+//
 
 const tuplet_length = 8; // each tuplet contains 8 entries
 const offs_x1 = 0;       // offset 0: x1
@@ -85,13 +120,11 @@ const offs_y1 = 1;       // offset 1: y1
 const offs_t1 = 2;       // offset 2: t1 => qx1*
 const offs_d1 = 3;       // offset 3: d1 => qy1*
 const offs_th = 4;       // offset 4: th
-const offs_dr = 5;       // offset 5: dr 
+const offs_dr = 5;       // offset 5: dr => drx
 const offs_d2 = 6;       // offset 6: d2 => qx2*
 const offs_t2 = 7;       // offset 4: t2 => qy2*
 
-// * IMPORTANT:
-// Values t1, d1 (offsets 2+3) and d2, t2 (offsets 6+7) are later overwritten by function CalculateWord()
-// The new values written to the tuplet correspond to the control points for the bezier curve (qx1, qy1, qx2, qy2)
+
 const bezier_offs_qx1 = 3;
 const bezier_offs_qy1 = 4;
 const bezier_offs_qx2 = 6;
@@ -191,6 +224,7 @@ $global_warnings_string = "";
 
 // declarations
 $splines = array();                             // not really necessary in php
+$separate_spline = array();
 
 // models
 $default_model = "DESSBAS";

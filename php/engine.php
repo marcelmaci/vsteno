@@ -393,13 +393,13 @@ function InsertAuxiliaryLines( $width ) {
 
 function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
-    $combined_pretags;
+    $combined_pretags, $separate_spline;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
     
     //list( $splines, $width ) = TrimSplines( $splines );
     $pre = $combined_pretags;
     // if ($_SESSION['token_type'] !== "htmlcode") {
-        // echo "CreateSVG: Pre: $pre Post: $post<br>";
+        //echo "CreateSVG: Pre: $pre Post: $post<br>";
         list( $variable, $newcolor_htmlrgb ) = GetTagVariableAndValue( $pre ); 
         //if (mb_strlen($newcolor_htmlrgb) > 0) $color_htmlrgb = $newcolor_htmlrgb;
         //echo "CreateSVG:<br>Pre: $pre<br>Post: $post<br>colorhtmlrgb: $color_htmlrgb<br>";
@@ -407,8 +407,10 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
         $svg_string = "<svg width=\"$width\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
         // draw auxiliary lines
         $svg_string .= InsertAuxiliaryLines( $width );
+        $svg_string .= "\n"; // separate line from curves in html
         $array_length = count( $splines );
 
+        // add word to svg
         for ($n = 0; $n <= $array_length - (tuplet_length*2); $n += tuplet_length) {
             
             $x1 = round($splines[$n] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
@@ -421,20 +423,7 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             $q2y = round($splines[$n+7], $vector_value_precision, PHP_ROUND_HALF_UP);
             $x2 = round($splines[$n+8] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $y2 = round($splines[$n+9], $vector_value_precision, PHP_ROUND_HALF_UP);
-            //echo "n($n): y2 = $y2<br>";
-            /*
-            $x1 = $splines[$n] + $shift_x;
-            $y1 = $splines[$n+1];
-            $q1x = $splines[$n+2] + $shift_x;
-            $q1y = $splines[$n+3];
-            $relative_thickness = $splines[$n+4];
-            $unused = $splines[$n+5];
-            $q2x = $splines[$n+6] + $shift_x;
-            $q2y = $splines[$n+7];
-            $x2 = $splines[$n+8] + $shift_x;
-            $y2 = $splines[$n+9];
-            echo "n($n): y2 = $y2<br>";
-            */
+            
             $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
             // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
             // this method doesn't work with n, m, b ... why???
@@ -444,6 +433,42 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             if ($splines[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
             $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
         }
+        // add separate_spline to svg
+        //echo "create svg for separate_spline<br>";
+        //var_dump($separate_spline); echo "<br>";
+        $array_length = count( $separate_spline );
+        for ($n = 0; $n <= $array_length - (tuplet_length*2); $n += tuplet_length) {
+            
+            $x1 = round($separate_spline[$n] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $y1 = round($separate_spline[$n+1], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q1x = round($separate_spline[$n+2] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q1y = round($separate_spline[$n+3], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $relative_thickness = $separate_spline[$n+4];
+            $unused = $separate_spline[$n+5];
+            $q2x = round($separate_spline[$n+6] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $q2y = round($separate_spline[$n+7], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $x2 = round($separate_spline[$n+8] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $y2 = round($separate_spline[$n+9], $vector_value_precision, PHP_ROUND_HALF_UP);
+          
+          
+            $x1 += 5;
+            $q1x += 5;
+            $x2 += 5;
+            $q2x += 5;
+            
+            
+            
+            $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+            // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+            // this method doesn't work with n, m, b ... why???
+            if ($separate_spline[$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; } //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+            // correct control points if following point is non-connecting (see CalculateWord() for more detail)
+            // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
+            if ($separate_spline[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
+            // red instead of $color_htmlrgb
+            $svg_string .= "<!-- separate --><path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
+        }
+       
         $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
     // } 
@@ -465,7 +490,7 @@ function GetLateEntryPoint( $token ) {
 
 function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_token, $actual_x, $actual_y, $vertical, $distance, $shadowed, $factor ) {
         global $steno_tokens, $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $half_upordown, $one_upordown, 
-        $standard_height, $baseline_y, $dont_connect;
+        $standard_height, $baseline_y, $dont_connect, $separate_spline;
         $token_definition_length = count( $steno_tokens[$token] );           // continue splines-list
         //echo "stenotokens($token) - DUMP: ";
        // var_dump($steno_tokens["IST"]);
@@ -620,47 +645,85 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                 if (($steno_tokens[$token][offs_token_type] !== 4) || 
                     ($steno_tokens[$token][offs_token_type] === 4) && (!(($preceeding_point_x === $new_x) && ($preceeding_point_y === $new_y)))) {
                 
-                    //echo "insert knot...<br>";
+                    $x1_t = $steno_tokens[$token][$i+offs_x1];
+                    $y1_t = $steno_tokens[$token][$i+offs_y1];
+                    $t1_t = $steno_tokens[$token][$i+offs_t1];
+                    $d1_t = $steno_tokens[$token][$i+offs_d1];
+                    $th_t = $steno_tokens[$token][$i+offs_th];
+                    $dr_t = $steno_tokens[$token][$i+offs_dr];
+                    $d2_t = $steno_tokens[$token][$i+offs_d2];
+                    $t2_t = $steno_tokens[$token][$i+offs_t2];
                     
-                    $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
-                    $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
-            
-                    $splines[] = $steno_tokens[$token][$i+offs_t1];                        // tension following the point
-                   // echo "insert tension t1: " . $steno_tokens[$token][$i+offs_t1] . "<br>";
-                    // pivot point: if entry/exit point is conditional pivot (= value 3) 
-                    // (1) if token in normal position or down => insert pivot as normal point (= value 0)
-                    // (2) if token in up position => insert normal pivot point (= value 2)
-                    $value_to_insert = $steno_tokens[$token][$i+offs_d1];
-                    
-                    //if ($value_to_insert == conditional_pivot_point) {
-                      //  if ($vertical !== "up") $value_to_insert = 0;
-                        //else $value_to_insert = 2;
-                    //}
-                    
-                    $splines[] = $value_to_insert;                        // d1
-                    if (($shadowed == "yes") || ($steno_tokens[$token][offs_token_type] == "1")) $splines[] = $steno_tokens[$token][$i+offs_th];  // th = relative thickness of following spline (1.0 = normal thickness)
-                    else $splines[] = 1.0;
-                    $tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
-                    //echo "token = $token / i = $i / old_dont_connect = $old_dont_connect / tempdr = $tempdr<br>";
-                    $value_to_insert = $exit_point_type;
-                    
-                    //if ($value_to_insert == conditional_pivot_point) {
-                      //  if ($vertical !== "up") $value_to_insert = 0;
-                        //else $value_to_insert = 2;
-                    //}
-                    
-                    $splines[] = $value_to_insert; //$exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
-                    //$splines[] = $token_list[$token][$i+7];                          // tension before next point // this line is WRONG !!!!???
-                    //echo "i = $i / token_definition_length = $token_definition_length / position = $position<br>";
-                    $splines[] = $steno_tokens[$token][$i+offs_t2];
-                    //echo "insert tension t2: " . $steno_tokens[$token][$i+offs_t2] . "<br>";
+                    //echo "insert knot: { $x1_t, $y1_t, $t1_t, $d1_t, $th_t, $dr_t, $d2_t, $t2_t } <br>";
+                    if ($dr_t == 2) {
+                        // this knot belongs to a diacritic token => insert it into separate spline
+                        //echo "insert this knot into separate spline<br>";
+                        
+                        $x1_t = $x1_t + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
+                        $y1_t = $y_interpretation - $y1_t;            // calculate coordinates inside splines (svg) $actual_y is wrong!
+                        $t1_t = $t1_t;                        // tension following the point
+                        $d1_t = $d1_t; // diacritic tokens CANNOT contain pivot points
+                        if (($shadowed == "yes") || ($steno_tokens[$token][offs_token_type] == "1")) $th_t = $th_t;  // th = relative thickness of following spline (1.0 = normal thickness)
+                        else $th_t = 1.0;
+                        //$tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
+                        //$value_to_insert = $exit_point_type;
+                        // $splines[] = $value_to_insert; //$exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
+                        $dr_t = 0; //$dr_t; ?
+                        $d2_t = $d2_t;
+                        $t2_t = $t2_t;
                 
-                    // duplicate last point of last token in order to avoid weired lines before punctuation
-                    //if (($position === "last") && ($i == ($token_definition_length - tuplet_length))) {
-                      //  $splines_actual_length = count( $splines );
-                        //$start_last_point = $splines_actual_length - tuplet_length;
-                        //for ($t = 0; $t < 8; $t++) $splines[] = $splines[$start_last_point + $t];
-                    //}
+                        //echo "final tuplet for separate_spline: { $x1_t, $y1_t, $t1_t, $d1_t, $th_t, $dr_t, $d2_t, $t2_t } <br>";
+                        $separate_spline[] = $x1_t;
+                        $separate_spline[] = $y1_t;
+                        $separate_spline[] = $t1_t;
+                        $separate_spline[] = $d1_t;
+                        $separate_spline[] = $th_t;
+                        $separate_spline[] = $dr_t;
+                        $separate_spline[] = $d2_t;
+                        $separate_spline[] = $t2_t;
+                        
+                    } else {
+                        
+                        $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
+                        $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
+            
+                        $splines[] = $steno_tokens[$token][$i+offs_t1];                        // tension following the point
+                        // echo "insert tension t1: " . $steno_tokens[$token][$i+offs_t1] . "<br>";
+                        // pivot point: if entry/exit point is conditional pivot (= value 3) 
+                        // (1) if token in normal position or down => insert pivot as normal point (= value 0)
+                        // (2) if token in up position => insert normal pivot point (= value 2)
+                        $value_to_insert = $steno_tokens[$token][$i+offs_d1];
+                    
+                        //if ($value_to_insert == conditional_pivot_point) {
+                        //  if ($vertical !== "up") $value_to_insert = 0;
+                        //else $value_to_insert = 2;
+                        //}
+                    
+                        $splines[] = $value_to_insert;                        // d1
+                        if (($shadowed == "yes") || ($steno_tokens[$token][offs_token_type] == "1")) $splines[] = $steno_tokens[$token][$i+offs_th];  // th = relative thickness of following spline (1.0 = normal thickness)
+                        else $splines[] = 1.0;
+                        $tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
+                        //echo "token = $token / i = $i / old_dont_connect = $old_dont_connect / tempdr = $tempdr<br>";
+                        $value_to_insert = $exit_point_type;
+                    
+                        //if ($value_to_insert == conditional_pivot_point) {
+                        //  if ($vertical !== "up") $value_to_insert = 0;
+                            //else $value_to_insert = 2;
+                        //}
+                    
+                        $splines[] = $value_to_insert; //$exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
+                        //$splines[] = $token_list[$token][$i+7];                          // tension before next point // this line is WRONG !!!!???
+                        //echo "i = $i / token_definition_length = $token_definition_length / position = $position<br>";
+                        $splines[] = $steno_tokens[$token][$i+offs_t2];
+                        //echo "insert tension t2: " . $steno_tokens[$token][$i+offs_t2] . "<br>";
+                
+                        // duplicate last point of last token in order to avoid weired lines before punctuation
+                            //if (($position === "last") && ($i == ($token_definition_length - tuplet_length))) {
+                            //  $splines_actual_length = count( $splines );
+                            //$start_last_point = $splines_actual_length - tuplet_length;
+                            //for ($t = 0; $t < 8; $t++) $splines[] = $splines[$start_last_point + $t];
+                            //}
+                    }
                 } else {
                         //echo "don't insert knot<br>";
                         // preceeding and new points are identical and type is 4 (<=> part of a token)
@@ -864,7 +927,7 @@ function SmoothenEntryAndExitPoints( $splines ) {
 
 function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
         // initialize variables
-        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
+        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words, $separate_spline;
         SetGlobalScalingVariables( $scaling );
         //echo "TokenList2SVG(): tokenlist dump: "; var_dump($TokenList);
     
@@ -930,8 +993,16 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         list( $splines, $width) = TrimSplines( $splines );
         //echo "<br><br>TokenList2SVG(): var_dump(splines) before CalculateWord() after TrimSplines()<br>";
         //var_dump($splines);
+        $copy = $splines;
         $splines = CalculateWord( $splines );
+        //$separate_spline = CalculateWord( $copy );
+        $separate_spline = CalculateWord( $separate_spline );
+       
+        //echo "separate_spline;<br>";
+        //var_dump($separate_spline);
         //echo "<br><br>var_dump(splines) after CalculateWord()<br>";
+        //$separate_spline = CalculateWort( $separate_spline );
+        
         //var_dump($splines);
         $svg_string = CreateSVG( $splines, $actual_x + $distance_words * $scaling, $width + $space_at_end_of_stenogramm * $scaling, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
         // replace space_at_end_stenogramm by distance_words at the end (necessary so that inclinated high stenogramms can be written 
@@ -1292,8 +1363,11 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
 }
 
 function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $line_style) {
-        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words;
+        global $baseline_y, $steno_tokens_master, $steno_tokens, $punctuation, $space_at_end_of_stenogramm, $distance_words, $separate_spline;
         SetGlobalScalingVariables( $scaling );
+        // reset separate_spline for every word!
+        $separate_spline = null;
+        
         
         $actual_x = 1;                      // start position x
         $actual_y = $baseline_y;                      // start position y => set this to 0 since it will be shifted later!!! => does't work: why?!
@@ -1337,13 +1411,14 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
         $splines = SmoothenEntryAndExitPoints( $splines );
         list($splines, $width) = TrimSplines( $splines );        
         $splines = CalculateWord( $splines );
+        $separate_spline = CalculateWord( $separate_spline );
         
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
         
-        return array( $splines, $width );
+        return array( $splines, $separate_spline, $width );
 }
 
-function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, $force_left_align ) {
+function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, $force_left_align ) {
     global $distance_words, $vector_value_precision, $baseline_y, $word_tags;
     //var_dump($word_tags);
     $angle = $_SESSION['token_inclination'];
@@ -1442,6 +1517,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             $color_htmlrgb = $_SESSION['token_color'];
             $stroke_dasharray = $_SESSION['token_style_custom_value']; 
             
+            // insert word
             for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
             
                 $x1 = round($word_splines[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
@@ -1465,6 +1541,32 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 //echo "ins: wrd($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
                 $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
             }    
+            // insert separate spline 
+            // (note: there's only one separate spline per word ... which means: only one token can use a diacritic token per word ...
+            for ($n=0; $n<count($word_separate_spline[$i])-tuplet_length; $n+=tuplet_length) {
+                
+                $x1 = round($word_separate_spline[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $y1 = round($word_separate_spline[$i][$n+1] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q1x = round($word_separate_spline[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q1y = round($word_separate_spline[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $relative_thickness = $word_separate_spline[$i][$n+4];
+                $unused = $word_separate_spline[$i][$n+5];
+                $q2x = round($word_separate_spline[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q2y = round($word_separate_spline[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $x2 = round($word_separate_spline[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $y2 = round($word_separate_spline[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+                // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+                // this method doesn't work with n, m, b ... why???
+                if ($word_separate_spline[$i][$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
+                // correct control points if following point is non-connecting (see CalculateWord() for more detail)
+                // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
+                if ($word_separate_spline[$i][$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
+            
+                //echo "ins: wrd($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
+                $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
+                
+            }
             $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
         }
       }
@@ -1653,7 +1755,7 @@ function CalculateLayoutedSVG( $text_array ) {
                 //var_dump($word_tags);
                 
                 if ($_SESSION['token_type'] === "shorthand") {
-                    list( $word_splines[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
+                    list( $word_splines[$actual_word], $word_separate_spline[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
                     $word_width[$actual_word] = $delta_width;
                     //var_dump($word_splines[$actual_word]);
                     $temp_width += $distance_words + $delta_width;
@@ -1700,7 +1802,7 @@ function CalculateLayoutedSVG( $text_array ) {
                 // echo "num_linebreaks: $number_linebreaks => inserting linebreak ...<br>";
                 $last_word = $actual_word;
                 // echo "Drawoneline: word_position_x: $word_position_x word_position_y: $word_position_y word_splines: $word_splines word_width: $word_width last_word: $last_word <br>";
-                $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, true );
+                $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, true );
                 //$last_word_splines = $word_splines[$actual_word-1];
                 unset($word_splines);
                 //$word_splines[0] = $last_word_splines;
@@ -1733,10 +1835,10 @@ function CalculateLayoutedSVG( $text_array ) {
                 if (($temp_width < $max_width-$right_margin) && ($key == $text_array_length-1)) {
                     //echo "Draw shorter (incomplete) line before leaving foreach-loop<br>";
                     $last_word = $actual_word;
-                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, true );
+                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, true );
                 } else {
                     $last_word = (($key == $text_array_length-1) && ($temp_width <= $max_wdith-$right_margin)) ? $actual_word : $actual_word-1;
-                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, false );
+                    $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, false );
                 }
                 $last_word_splines = $word_splines[$actual_word-1];
                 unset($word_splines);
@@ -1798,7 +1900,7 @@ function CalculateLayoutedSVG( $text_array ) {
         }
         //echo "insert last line<br>";
         //var_dump($word_splines);
-        $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_width, $last_word, true );
+        $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, true );
     } 
     /*elseif ($old_temp_width <= $max_width-$right_margin) {
         echo "Draw shorter (incomplete) line<br>";
@@ -2068,7 +2170,80 @@ function NormalText2SVG( $text ) {
 // New feature: TokenCombiner accepts two more parameters: inconditional_deltay_before & inconditional_deltay_after like TokenShifter
 // Values are written to header of new token
 
-function TokenCombiner( $first_token, $second_token, $deltay_before, $deltay_after ) {
+function TokenCombiner( $first_token, $second_token, $arg1, $arg2 ) {
+    // user same TokenCombiner function for legacy token combination (connecting point, d1 == 4) and diacritics
+    // call functions from here according to type
+    if ((is_integer($arg1)) || (is_integer($arg2))) TokenCombinerClassic( $first_token, $second_token, $arg1, $arg2);
+    else TokenCombinerDiacritics( $first_token, $second_token, $arg1, $arg2 );
+}
+
+function TokenCombinerDiacritics( $first_token, $second_token, $pattern, $replacement ) {
+    global $steno_tokens_master;
+    // Add diacritic token to base token
+    //echo "add diacritics<br>";
+    $new_definition = array();
+    // copy header
+    $header =  array_slice( $steno_tokens_master[$first_token], 0 , header_length , true ); // true = preserve keys
+    $new_definition = $header;
+    //echo "copy header<br>";
+    //var_dump($new_definition); echo "<br>";
+    // copy tuplets up to insertion point
+    $length = count($steno_tokens_master[$first_token]);
+    for ($i=header_length; $i<$length-1; $i+=tuplet_length) {
+        $type = $steno_tokens_master[$first_token][$i+offs_d1];
+        if ($type === $second_token) {
+            // read first token x,y coordinates for diacritics
+            $dx1 = $steno_tokens_master[$first_token][$i+offs_x1];
+            $dy1 = $steno_tokens_master[$first_token][$i+offs_y1];
+            //echo "dx1=$dx1 / dy1=$dy1<br>";
+            // start insertion
+            //echo "start insertion<br>";
+            //echo "original second_token: $second_token<br>";
+            //var_dump($steno_tokens_master[$second_token]); echo "<br>";
+            //var_dump($new_definition); echo "<br>";
+            $length_j = count($steno_tokens_master[$second_token]);
+            for ($j=header_length; $j<$length_j-1; $j+=tuplet_length) {
+                //echo "steno_tokens_master[second_token][$j]: " . $steno_tokens_master[$second_token][$j] . " (= x1)<br>";
+                $tuplet = array_slice( $steno_tokens_master[$second_token], $j, tuplet_length);
+                $x1 = $tuplet[offs_x1] + $dx1;
+                $y1 = $tuplet[offs_y1] + $dy1;
+                //echo "insert j($j): x1 = x1 + dx1 <=> " . $tuplet[offs_x1] . " + $dx1<br>";
+                $t1 = $tuplet[offs_t1];
+                $d1 = $tuplet[offs_d1];
+                $th = $tuplet[offs_th];
+                $dr = 2; // value 2 = knot belonging to a diacritic token that must be transferred to a separate spline before CalculateWord is called
+                $d2 = $tuplet[offs_d2];
+                $t2 = $tuplet[offs_t2];
+                // correct values in tuplet
+                $tuplet[offs_x1] = $x1;
+                $tuplet[offs_y1] = $y1;
+                $tuplet[offs_dr] = $dr;
+                foreach ($tuplet as $element) $new_definition[] = $element;
+            }
+            //echo "result<br>";
+            //var_dump($new_definition); echo "<br>";
+        } else {
+            // copy first_token tuplet
+            $tuplet = array_slice( $steno_tokens_master[$first_token], $i, tuplet_length);
+            //echo "copy tuplet<br>";
+            //var_dump($tuplet); echo "<br>";
+            //$copy_array = $new_definition;
+            //$new_definition = array_merge($copy_array, $tuplet);
+            //$new_definition += $tuplet;
+            foreach ($tuplet as $element) $new_definition[] = $element;
+            //echo "result<br>";
+            //var_dump($new_definition); echo "<br>";
+         
+        }
+    }
+    // insert new token
+    $key = $first_token . $second_token;
+    //echo "insert new key: $key<br>";
+    //var_dump($new_definition);
+    $steno_tokens_master[$key] = $new_definition;
+}
+
+function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $deltay_after ) {
     global $steno_tokens_master, $steno_tokens_type;
     $new_token = array();
     $new_token_key = $first_token . $second_token;
@@ -2200,6 +2375,51 @@ function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $inc
 function CreateShiftedTokens() {
     global $shifter_table;
     foreach ($shifter_table as $entry ) { /*var_dump($entry);*/ TokenShifter( $entry[0], $entry[1], $entry[2], $entry[3], $entry[4], $entry[5] );}
+}
+
+function StripOutUnusedTuplets() {
+    global $steno_tokens_master;
+    //var_dump($steno_tokens_master);
+    //$actual_model = $_SESSION['actual_model'];
+    foreach ($steno_tokens_master/*['actual_model']*/ as $key => $definition) {
+        //echo "Stripping out $key ...<br>";
+        //if ($key === "#0") var_dump($definition);
+        $new_definition = null;
+        $length = count($definition);
+        //echo "copy header:";
+        for ($i=0; $i<header_length; $i++) {
+            //echo " $i";
+            $new_definition[] = $definition[$i];
+        }
+        //echo "<br>";
+        for ($i=header_length; $i<$length-1; $i+=tuplet_length) {
+            $type = $definition[$i+offs_d1];
+            if (($type !== 4) && (!(is_string($type)))) {
+                // this tuplet has to be inserted
+                $new_definition[] = $definition[$i+offs_x1];
+                $new_definition[] = $definition[$i+offs_y1];
+                $new_definition[] = $definition[$i+offs_t1];
+                $new_definition[] = $definition[$i+offs_d1];
+                $new_definition[] = $definition[$i+offs_th];
+                $new_definition[] = $definition[$i+offs_dr];
+                $new_definition[] = $definition[$i+offs_d2];
+                $new_definition[] = $definition[$i+offs_t2];
+            } else {
+                // tuplets of type 4 or string (diacritics) are not copied 
+                $x1 = $definition[$i+offs_x1];
+                $x2 = $definition[$i+offs_y1];
+                $t1 = $definition[$i+offs_t1];
+                $d1 = $definition[$i+offs_d1];
+                $th = $definition[$i+offs_th];
+                $dr = $definition[$i+offs_dr];
+                $d2 = $definition[$i+offs_d2];
+                $t2 = $definition[$i+offs_t2];
+                //echo "strip out tuplet($i): { $x1, $x2, $t1, $d1, $th, $dr, $d2, $t2 }<br>";
+            }
+        }
+        
+        $steno_tokens_master/*[$actual_model]*/[$key] = $new_definition;
+    }
 }
 
 ?>

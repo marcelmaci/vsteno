@@ -449,7 +449,7 @@ function ExecuteRule( /*$word*/ ) {
                 $replacement = $rules["$actual_model"][$rules_pointer][1];
                 $output = extended_preg_replace( "/$pattern/", $replacement, $output );
                 //echo "\nStandardProcedureForRule: pattern: #$pattern# => replacement: #$replacement#<br>word: $preceeding_result result: $output last: $result_after_last_rule<br>";
-            
+                //echo "$pattern => $replacement // $preceeding_result => $output<br>";
                 if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
                     $result_after_last_rule = $output;
                     $global_number_of_rules_applied++;
@@ -639,6 +639,7 @@ function PreProcessGlobalParserFunctions( $text ) {
                 $replacement = $rules["$actual_model"][$rules_pointer][1]; // only simple replacements are allowed for global parser ... 
                 $temp_text = $text;
                 $text = preg_replace( "/$pattern/", "$replacement", $text); // use only preg_replace (i.e. not extended_preg_replace)
+                //echo "\"$pattern\" => \"$replacement\" // word: $temp_text => $text<br>";
                 if ($temp_text !== $text) {
                     $nil = preg_match( "/$pattern/", $temp_text, $matches);
                     $matching_section = $matches[0];
@@ -685,6 +686,7 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
                 if (preg_match("/" . $analyzer[$i][$j] . "/", $old_word)) $hit = true;
                 //echo "check($i,$j): #" . $analyzer[$i][$j] . "# result: #$hit#<br>";
                 if ($hit) { 
+                    //echo "not applied<br>";
                     $not_applied_comment = "<b>NOT APPLIED (MATCH: " . $analyzer[$i][$j] . ")</b>";
                     $word = $old_word; // don't apply rule (revert back to $old_word)
                 }
