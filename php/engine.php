@@ -663,8 +663,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         $y1_t = $y_interpretation - $y1_t;            // calculate coordinates inside splines (svg) $actual_y is wrong!
                         $t1_t = $t1_t;                        // tension following the point
                         $d1_t = $d1_t; // diacritic tokens CANNOT contain pivot points
-                        if (($shadowed == "yes") || ($steno_tokens[$token][offs_token_type] == "1")) $th_t = $th_t;  // th = relative thickness of following spline (1.0 = normal thickness)
-                        else $th_t = 1.0;
+                        if (($shadowed == "yes") /*|| ($steno_tokens[$token][offs_token_type] == "1")*/) {
+                            $th_t = $th_t;  // th = relative thickness of following spline (1.0 = normal thickness)
+                        } else $th_t = 1.0;
                         //$tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
                         //$value_to_insert = $exit_point_type;
                         // $splines[] = $value_to_insert; //$exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
@@ -684,9 +685,29 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         
                     } else {
                         
-                        $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before];     // calculate coordinates inside splines (svg) adding pre-offset for x
-                        $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1];            // calculate coordinates inside splines (svg) $actual_y is wrong!
-            
+                        // if shadowed and combined => compensate x/y with border vector (offsets 10 and 11)
+                        // only do this from the second knot on (first knot has to stay where it is otherwhise base token will be deformed ...)
+                        $actual_length = count($splines);
+                        $preceeding_knot_type = $splines[$actual_length-tuplet_length+offs_d1];
+                        if (($d1_t == 3) && ($preceeding_knot_type === 3) && ($shadowed === "yes")) {
+                            //echo "insert knot: { $x1_t, $y1_t, $t1_t, $d1_t, $th_t, $dr_t, $d2_t, $t2_t } <br>";
+                            //echo "knot type: $d1_t<br>";  
+                            $raw_x = $steno_tokens[$token][offs_bvectx];
+                            $raw_y = $steno_tokens[$token][offs_bvecty];
+                            //echo "rawx/y: ($raw_x, $raw_y)<br>";
+                            $compensation_x = $raw_x * $_SESSION['token_shadow'] * $_SESSION['token_thickness'];
+                            $compensation_y = (-$raw_y) * $_SESSION['token_shadow'] * $_SESSION['token_thickness'];
+                            $delta_x = (-$compensation_y) / tan( deg2rad( $_SESSION['token_inclination'] ));
+                            $compensation_x += $delta_x;
+                            //echo "compensation: ($compensation_x, $compensation_y)<br>";
+                        } else {
+                            $compensation_x = 0;
+                            $compensation_y = 0;
+                        }
+                        
+                        $splines[] = $steno_tokens[$token][$i] + $actual_x + $steno_tokens[$token][offs_additional_x_before] + $compensation_x;     // calculate coordinates inside splines (svg) adding pre-offset for x
+                        $splines[] = $y_interpretation - $steno_tokens[$token][$i+offs_y1] + $compensation_y;            // calculate coordinates inside splines (svg) $actual_y is wrong!
+                        
                         $splines[] = $steno_tokens[$token][$i+offs_t1];                        // tension following the point
                         // echo "insert tension t1: " . $steno_tokens[$token][$i+offs_t1] . "<br>";
                         // pivot point: if entry/exit point is conditional pivot (= value 3) 
@@ -700,8 +721,9 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         //}
                     
                         $splines[] = $value_to_insert;                        // d1
-                        if (($shadowed == "yes") || ($steno_tokens[$token][offs_token_type] == "1")) $splines[] = $steno_tokens[$token][$i+offs_th];  // th = relative thickness of following spline (1.0 = normal thickness)
-                        else $splines[] = 1.0;
+                        if (($shadowed == "yes")/* || ($steno_tokens[$token][offs_token_type] == "1")*/) {
+                            $splines[] = $steno_tokens[$token][$i+offs_th];  // th = relative thickness of following spline (1.0 = normal thickness)
+                        } else $splines[] = 1.0;
                         $tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
                         //echo "token = $token / i = $i / old_dont_connect = $old_dont_connect / tempdr = $tempdr<br>";
                         $value_to_insert = $exit_point_type;
@@ -2277,13 +2299,14 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
  
         } else {
                 // point is a connection point => copy it over marking it as a normal point (= value 0)
+                // new: mark it as type 3 (for later compensation if shadowed)
                 // first copy over data without modifications
                 for ($j = 0; $j < 8; $j++) $new_token[] = $steno_tokens_master[$first_token][$i+$j];
                 // change type from 4 to 0 in $newtoken
 
                 $base = count($new_token) - 8;
                 $type_offset = $base + offs_d1; // offset 3 in the data tuplet
-                $new_token[$type_offset] = 0;
+                $new_token[$type_offset] = 3; // former type = 0; new: 3 for compensation with shadowed combined token
                 // store connection_x and connection_y to calculate relative coordinates of second token
                 $connection_x = $steno_tokens_master[$first_token][$i+offs_x1]; //$new_token[$base+0];    // x
                 $connection_y = $steno_tokens_master[$first_token][$i+offs_y1]; //$new_token[$base+1];    // y
@@ -2296,11 +2319,15 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
                         $new_token[] = $connection_x + $steno_tokens_master[$second_token][$n+offs_x1]; // - $steno_tokens_master[$first_token][4];
                         $new_token[] = $connection_y + $steno_tokens_master[$second_token][$n+offs_y1];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_t1];
-                        $new_token[] = $steno_tokens_master[$second_token][$n+offs_d1];
+                        $new_token[] = 3; // see above // $steno_tokens_master[$second_token][$n+offs_d1];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_th];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_dr];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_d2];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_t2];
+                }
+                if (($first_token === "P") && ($second_token === "@L")) {
+                    echo "token P@L<br>";
+                    var_dump($new_token); echo "<br>";
                 }
         }
     }
@@ -2327,6 +2354,10 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
             $first_pivot = $i;
         }
     }
+            if (($first_token === "P") && ($second_token === "@L")) {
+                    echo "token $new_token_key (final)<br>";
+                    var_dump($new_token); echo "<br>";
+                }
     $steno_tokens_master["$new_token_key"] = $new_token; 
 }
 

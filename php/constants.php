@@ -44,6 +44,11 @@ const offs_additional_delta_y = 6;              // offset 6: additional delta y 
                                                 //           0 = use standard baseline, positive values: 1 = place token 1 line higher
                                                 //           negative values: -0.5: place token 1/2 line lower => can be used for [&T] + consonant
                                                 // offsets 7-11: unused (obsolete, free for reuse)
+const offs_parrotaxis1 = 7;                     // offset 7: reused for parallel rotating axis 1 (rev1)
+const offs_parrotaxis2 = 8;                     // offset 8: idem ............................ 2 
+const offs_parrotaxis3 = 9;                     // offset 9: idem ............................ 3
+const offs_bvectx = 10;                         // offset 10: border vector x (shadowed combined tokens)
+const offs_bvecty = 11;                         // offset 11: border vector y (shadowed combined tokens)
 const offs_token_type = 12;                     // offset 12: token type: 0 = normal token (with/without shadows) / 
                                                 //            1 = always shadowed / 2 = "virtual" tokens (defines how the following 
                                                 //            token has to be placed (values at offsets 19-21)
