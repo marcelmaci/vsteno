@@ -6729,6 +6729,415 @@ AUCH
 .
 \end_layout
 
+\begin_layout Subsection*
+Diakritische Zeichen
+\end_layout
+
+\begin_layout Standard
+Diakritische Zeichen sind Zeichen, welche Wörtern, einzelnen Zeichen oder
+ Vokalen hinzugefügt werden, um Zweifelsfälle (also zum Beispiel gleichlautende
+ oder gleichgeschriebene) Wörter oder Silben (insbesondere zum Beispiel
+ Präfixe) mit mehrfacher Bedeutung voneinander zu unterscheiden.
+ Beispiele in Stolze-Schrey sind: das Aufheben von Kürzungen (kleiner, schräger
+ Strich unterhalb von b oder g zur Aufhebung der Vorsilben be- und ge-),
+ Unterscheidung Gross/Kleinschreibung (flacher Strich unterhalb b bedeutet
+ Grossschreibung), Unterscheidung ai/ei (Punkt oberhalb der weiten, hochgestellt
+en, nicht-schattierten Verbindung bedeutet ai), Unterscheidung lange/kurze
+ Vokale (u-förmiges Böglein oder Strich oberhalb der Vokalverbindung).
+\end_layout
+
+\begin_layout Standard
+Solche diakritische Zeichen lassen sich hinsichtlich des Schreibvorgangs
+ dadurch charakterisieren, dass der Stift jeweils kurz abgesetzt wird, um
+ diese Zeichen unter- oder oberhalb einzufügen.
+ Da sich Stenografie prinzipiell dadurch auszeichnet, dass - in Hinblick
+ auf eine höhere Schreibgeschwindigkeit - der Stift nicht abgesetzt wird,
+ müssen Sie innerhalb von VSTENO speziell umgesetzt werden.
+ Als Beispiel: Ein/e menschliche/r Stenograf/in hat zwei Möglichkeiten,
+ Stenogramme mit diakritischen Zeichen zu verfassen: (1) Er/Sie schreibt
+ das Wort bis zu jener Stelle, wo ein diakritisches Zeichen eingefügt werden
+ muss, unterbricht dann kurz, fügt das Zeichen ein und schreibt anschliessend
+ das Wort zu Ende; (2) Er/Sie schreibt zuerst das Ganze Wort zu Ende und
+ fügt erst am Schluss das diakritische Zeichen dort ein, wo es benötigt
+ wird.
+ Der menschliche Geist ist in dem Sinne bemerkenswert, als dass es ihm leicht
+ fällt, diese beiden Methoden beliebig zu verwenden:
+\end_layout
+
+\begin_layout Itemize
+Im ersten Fall (Absetzen) fällt es ihm leicht, den Stift nach dem Einfügen
+ des diakritischen Zeichens wieder dort anzusetzen, wo er den Schreibfluss
+ unterbrochen hat und den Rest des Stenogrammes - inklusive eventueller
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Bögen
+\begin_inset Quotes erd
+\end_inset
+
+, die begonnen wurden - zu Ende zu führen.
+\end_layout
+
+\begin_layout Itemize
+Im zweiten Fall (Einfügen am Schluss) fällt es ihm leicht, im Nachhinein
+ jene genaue Stelle im Stenogramm zu finden, wo das diakritische Zeichen
+ hingehört.
+\end_layout
+
+\begin_layout Standard
+Computer verfügen nicht über eine derartige 
+\begin_inset Quotes eld
+\end_inset
+
+Intuition
+\begin_inset Quotes erd
+\end_inset
+
+ und somit muss VSTENO sehr präzise Anweisungen erhalten, wie diakritische
+ Zeichen eingefügt werden sollen.
+ Ähnlich wie im Fall (2) schreibt VSTENO zuerst das gesamte Stenogramm (als
+ eine durchgehende Folge von Bezierkurven, die in einem Spline definiert
+ sind) und fügt dann - in einer zweiten (elektronischen) 
+\begin_inset Quotes eld
+\end_inset
+
+Handbewegung
+\begin_inset Quotes erd
+\end_inset
+
+ gewissermassen - ein diakritisches Zeichen ein, indem es einen zweiten,
+ separaten Spline zeichnet (der wiederum eine durchgehende Linie bzw.
+ eine Folge von Bezier-Kurven darstellt).
+ 
+\end_layout
+
+\begin_layout Standard
+Wie aber 
+\begin_inset Quotes eld
+\end_inset
+
+merkt
+\begin_inset Quotes erd
+\end_inset
+
+ sich (bzw.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+weiss
+\begin_inset Quotes erd
+\end_inset
+
+) VSTENO an welcher Stelle ein diakritisches Zeichen eingefügt werden muss?
+ Ganz einfach: Diakritische Zeichen werden als kombinierte Zeichen gehandhabt,
+ d.h.
+ es kann wiederum der TokenCombiner verwendet werden, um ein diakritisches
+ Zeichen mit einem Basiszeichen zu verbinden.
+ Hier ein Beispiel für das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+: wir wollem diesem einen diakritischen Schrägstrich unterhalb einfügen,
+ um die Vorsilbe be- nach Bedarf aufgheben zu können.
+ Hierfür definieren wir zunächst unser Grundzeichen: 
+\end_layout
+
+\begin_layout LyX-Code
+"B" => { 
+\end_layout
+
+\begin_layout LyX-Code
+  /*header*/ 4.5, 0.5, 0, 0, 0, 0, 0, "", 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ "", "", "", "", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+  /*data*/ 0, 10, 0, 1, 3, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 0, 3, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 2.5, 0, 0.5, 4, 1.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 2.25, 0, 0.5, 0, 1.5, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 4.5, 2, 0.5, 0, 1, 0, 1, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ 2, -5, 0, "@#/", 0, 0, 0, 0 
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+Wir erkennen hier das letzte Datentupel { 2, -5, 0, "@#/", 0, 0, 0, 0 },
+ welches an vierter Stelle den Wert 
+\begin_inset Quotes eld
+\end_inset
+
+@#/
+\begin_inset Quotes erd
+\end_inset
+
+ enthält.
+ Wir erinnern uns: Die Information an vierter Stelle (= Offset 3, = Datenfeld
+ 1, = d1) bezeichnet den Eintritts-Punkttyp (mit möglichen Werten wie 1=entry
+ knot, 2=pivot point oder 4=kombiniertes Zeichen).
+ Der Wert 
+\begin_inset Quotes eld
+\end_inset
+
+@#/
+\begin_inset Quotes erd
+\end_inset
+
+ gibt nun an, dass sich das Basiszeichen B mit dem diakritischen Zeichen
+ 
+\begin_inset Quotes eld
+\end_inset
+
+@#/
+\begin_inset Quotes erd
+\end_inset
+
+ verbinden kann.
+\end_layout
+
+\begin_layout Standard
+Diese diakritische Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+@#/
+\begin_inset Quotes erd
+\end_inset
+
+ definieren wir nun ebenfalls:
+\end_layout
+
+\begin_layout LyX-Code
+"@#/" => { 
+\end_layout
+
+\begin_layout LyX-Code
+  /*header*/ 4.5, 0.5, 0, 0, 0, 0, 0, "", 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ "", "", "", "", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+  /*data*/ 0, 0, 0.0, 1, 1.0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+      /**/ -5, -4, 0.0, 0, 1.0, 0, 1, 0.0 
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+Wie wir sehen enthält es im Datenteil (data) nur 2 Punkte: P1(0,0) und P2(-5/-4).
+ Beide Punkte haben ausserdem einen Eintritts- und Austrittsspannung von
+ 0.0 (was einer spitzen - bzw.
+ hier: geraden - Verbindung entspricht).
+ Dies ist das, was wir wollen: eine gerade Linie von links unten P2(-5,-4)
+ nach rechts oben P1(0,0)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In der Beschreibung 
+\begin_inset Quotes eld
+\end_inset
+
+von links unten nach rechts oben
+\begin_inset Quotes erd
+\end_inset
+
+ wurde natürlich die Reihenfolge der Punkte P1 und P2 vertauscht.
+ VSTENO ist es egal, in welche Richtung die Linie gezeichnet wird (in diesem
+ Fall also von rechts oben nach links unten - was wohl am ehesten der natürliche
+n Ausführung eines/r menschlichen Stenografen/in entspricht.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Wo aber steht nun dieser Schrägstrich? Oder anders gesagt: Wie werden die
+ Koordinaten der Punkte P1 und P2 interpretiert? Da sich diakritische Zeichen
+ mit verschiedenen Zeichen verbinden können (und folgedessen unter Umständen
+ auch an verschiedenen Positionen eingefügt werden müssen) verwendet VSTENO
+ hier eine relative Koordinatenangabe.
+ Die Punkte P1(0,0) und P2(-5,-4) werden ausgehend vom Ursprungspunkt aus
+ berechnet, die in der Definition von 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ angegeben sind: Grundpunkt G(2/-5).
+ Die absoluten Koordinaten ergeben in diesem Fall P1'(2,-5) und P2'(-3,-9).
+ Der Grundpunkt gibt also an, in welchem Abstand zum Basiszeichen das diakritisc
+he Zeichen steht, in unserem Fall also G(2,-5) was bedeutet, dass der Schrägstri
+ch halbstufig unterhalb und etwa in der Mitte des Grundzeichens 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ beginnen soll.
+ 
+\end_layout
+
+\begin_layout Standard
+Bitte beachten Sie bei der Definition diakritischer Zeichen zwei Dinge:
+ (1) diakritische Zeichen werden nicht geneigt, sondern mit den Koordinaten
+ eingefügt, die Sie angeben (diakritische Zeichen sehen somit unabhängig
+ von der Neigung immer gleich aus); (2) Der Grundpunkt hingegen wird mit
+ dem Grundzeichen mitgeneigt, d.h.
+ diakritische Zeichen unterhalb der Grundlinie verschieben sich z.B.
+ bei einer Zeichenneigung von 60 Grad nach links, diakritische Zeichen oberhalb
+ der Grundlinie nach rechts (je höher umso weiter nach rechts).
+\end_layout
+
+\begin_layout Standard
+Um das Grundzeichen und das diakritische Zeichen miteinander zu verbinden,
+ verwenden wir schliesslich den TokenCombiner:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(combiner)
+\end_layout
+
+\begin_layout LyX-Code
+    "B" => { "@#/", "", "" } 
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(combiner)
+\end_layout
+
+\begin_layout Standard
+Entscheidend ist hier, dass wir an zweiter und dritter Stelle, dass wir
+ einen leeren String 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ verwenden: VSTENO erkennt daran, dass es sich nicht um eine Zeichenverbindung
+ mithilfe eines Verbindungspunktes (connection point, Typ 4) handelt, sondern
+ um ein Zeichen, das als separaten Spline gezeichnet werden soll
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Zur Erinnerung: Die 
+\begin_inset Quotes eld
+\end_inset
+
+klassische
+\begin_inset Quotes erd
+\end_inset
+
+ Form des TokenCombiners lautet "B" => { "@R6", 0, 0 }.
+ Hier wird das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B
+\begin_inset Quotes erd
+\end_inset
+
+ mit 
+\begin_inset Quotes eld
+\end_inset
+
+@R6
+\begin_inset Quotes erd
+\end_inset
+
+ (= R mit Fusspunkt bei 6 Uhr) verbunden.
+ Die Zahlen-Werte 0 und 0 stehen hier für die zusätzliche Zeichenbreite
+ vor und nach dem kombinierten Zeichen stehen.
+\end_layout
+
+\end_inset
+
+.
+ Das neue entstandene, kombinierte Zeichen lautet auch hier: Grundzeichen
+ + diakritisches Zeichen, also 
+\begin_inset Quotes eld
+\end_inset
+
+B@#/
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Der TokenCombiner ordnet das Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+B@#/
+\begin_inset Quotes erd
+\end_inset
+
+ derselben Spacer-Gruppe zu wie das Grundzeichen.
+ Durch die Verwendung diakritischer Zeichen wird die Abstandsberechnung
+ noch einmal komplizierter, da weitere Zeichen entstehen, die die möglichen
+ Kombinationen (Permutationen) weiter in die Höhe treiben.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Part*
 Regeln
 \end_layout
@@ -12245,6 +12654,746 @@ sie-ben
 Postprocessing Regeln sind also REGEX-Regeln, die im Header stehen und -
  ähnlich wie in Stage 2 und 4 - auf das ganze Wort (inklusive Satzzeichen,
  Morphem- und Silbengrenzen) angewendet werden!
+\end_layout
+
+\begin_layout Section*
+Phonetische Analyse
+\end_layout
+
+\begin_layout Standard
+In einigen Sprachen wie zum Beispiel Französisch, wo Laut und Schrift stark
+ voneinander abweichen, ist es unumgänglich auf eine phonetische Transkription
+ zurückgreifen zu können.
+ VSTENO ermöglicht dies durch die Verwendung des Programmes eSpeak
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://espeak.sourceforge.net/
+\end_layout
+
+\end_inset
+
+, das ebenfalls unter der freien Sofwarelizenz GPL herausgegeben wurde.
+ Das Programm eSpeak ist eigentlich ein Sprachsynthese-Werkzeug, kann als
+ solches aber - im Quiet-Modus - auch phonetische Transkriptionen vornehmen.
+ Die phonetische Analyse via eSpeak kann in VSTENO durch folgende Session-Variab
+len im Header-Teil des Modells vorselektiert werden:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(session)
+\end_layout
+
+\begin_layout LyX-Code
+    // use linguistical analysis 
+\end_layout
+
+\begin_layout LyX-Code
+    "analysis_type" := "selected"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // hyphenation (phpSyllable) 
+\end_layout
+
+\begin_layout LyX-Code
+    "hyphenate_yesno" := "no"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "language_hyphenator" := "fr"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // composed words + affixes (hunspell) 
+\end_layout
+
+\begin_layout LyX-Code
+    "composed_words_yesno" := "no"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "language_hunspell" := "fr"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // generate affixes in composed words 
+\end_layout
+
+\begin_layout LyX-Code
+    "affixes_yesno" := "no"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // set variables for filter option (not selected) 
+\end_layout
+
+\begin_layout LyX-Code
+    "filter_out_prefixes_yesno" := "no"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "filter_out_suffixes_yesno" := "no"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "filter_out_words_yesno" := "no"; 
+\end_layout
+
+\begin_layout LyX-Code
+    // disable phonetic analysis 
+\end_layout
+
+\begin_layout LyX-Code
+    "phonetics_yesno" := "yes"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "language_espeak" := "fr"; 
+\end_layout
+
+\begin_layout LyX-Code
+    "phonetic_alphabet" := "espeak";
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(session)
+\end_layout
+
+\begin_layout Standard
+Beachten Sie, dass es nicht möglich ist, eSpeak mit dem Silbentrenner (phpSyllab
+le) und der Wortanalyse (hunspell) zu kombinieren.
+ Es empfiehlt sich, bei der Vorselektion der linguistischen Analyse immer
+ alle Variablen zu setzen (also zum Beispiel auch 
+\begin_inset Quotes eld
+\end_inset
+
+fr
+\begin_inset Quotes erd
+\end_inset
+
+ für die Variablen 
+\begin_inset Quotes eld
+\end_inset
+
+language_hyphenator
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+language_hunspell
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+ auch wenn Sie nicht verwendet werden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Die Parameter können ja auch vom/von der Benuzter/in im Eingabe-Formular
+ Maxi verändert werden; das Setzen aller Variablen steht sicher, dass dem/der
+ Benuzter/in korrekte Parameter zur Auswahl angeboten werden.
+\end_layout
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Wir können uns nun mit den obigen Einstellungen anschauen, wie eine erste
+ französische Transkription aussieht.
+ Wir wählen hierfür das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+renseignement
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Die Wahl von LNG als Ausgabeform ergibt nun:
+\end_layout
+
+\begin_layout LyX-Code
+rA~sEnj@mA~ 
+\end_layout
+
+\begin_layout Standard
+Dies entspricht der Ausgabe 
+\begin_inset Quotes eld
+\end_inset
+
+espeak
+\begin_inset Quotes erd
+\end_inset
+
+ die wir mit der Variable 
+\begin_inset Quotes eld
+\end_inset
+
+phonetic_alphabet
+\begin_inset Quotes erd
+\end_inset
+
+ vorselektiert haben.
+ Verwendet wird hier grundsätzlcih das so genannte Kirshenbaum Alphabet
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://en.wikipedia.org/wiki/Kirshenbaum
+\end_layout
+
+\end_inset
+
+.
+ Der Vorteil des Kirshenbaum-Alphabets besteht darin, dass nur Zeichen verwendet
+ werden, die auf einer normalen Tastatur einfach eingegeben und auch in
+ einem normalen ASCII-Text-Editor gut dargestellt werden können.
+ Der Nachteil besteht darin, dass für ungewöhnlich Laute manchmal mehrere
+ Zeichen mit Gross- und Kleinschreibung verwendet werden.
+ So z.B.
+ die Kombination 
+\begin_inset Quotes eld
+\end_inset
+
+A~
+\begin_inset Quotes erd
+\end_inset
+
+ für das nasale A, 
+\begin_inset Quotes eld
+\end_inset
+
+E
+\begin_inset Quotes erd
+\end_inset
+
+ für ein offenes E, 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+ für stummes E (e muet) etc.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Alternativ kann das Internationale Phonetische Alphabet (IPA) verwendet
+ werden.
+ Es ist aber unklar, inwieweit es realistisch ist, basierend auf diesem
+ Alphabet ein funktionierendes stenografisches Modell mit einem simplen
+ Texteditor zu erstellen (und in der Datenbank, die punkto Sonderzeichen
+ ebenfalls etwas 
+\begin_inset Quotes eld
+\end_inset
+
+reizbar
+\begin_inset Quotes erd
+\end_inset
+
+ ist) abzuspeichern.
+ An dieser Stelle soll deshalb ganz förmlich von der Verwendung des IPA
+ abgeraten werden ...
+ (Aber wer es versuchen möchte, darf natürlich ...
+ ;-)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Im Prinzip kann man man nun mit diesen Zeichen genau gleich Regeln formulieren,
+ wie das mit dem Schriftbild der Fall war, also zum Beispiel:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Quotes eld
+\end_inset
+
+mA~$
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+{MENT}
+\begin_inset Quotes erd
+\end_inset
+
+;
+\end_layout
+
+\begin_layout LyX-Code
+"^kO~tr" => "{CONTRE}"; 
+\end_layout
+
+\begin_layout LyX-Code
+"^Etr$" => "{ETRE}";
+\end_layout
+
+\begin_layout Standard
+Für die Kürzungen -ment, contre-, être.
+ Allerdings ist Französisch eine vertrackte Sprache: da es viele Homonyme
+ (gleichlautende Wörter) gibt, wird oft das Schriftbild dazu verwendet,
+ um sie zu unterscheiden:
+\end_layout
+
+\begin_layout LyX-Code
+son/sont <=/=> le son
+\end_layout
+
+\begin_layout LyX-Code
+sans <=/=> s'en/cent/c'en/sang
+\end_layout
+
+\begin_layout Standard
+Hier sollen für 
+\begin_inset Quotes eld
+\end_inset
+
+son/sont
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes erd
+\end_inset
+
+sans
+\begin_inset Quotes erd
+\end_inset
+
+ die entsprechenden Kürzungen verwendet werden, 
+\begin_inset Quotes eld
+\end_inset
+
+le son
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+c'en/cent/c'en/sang
+\begin_inset Quotes erd
+\end_inset
+
+ sollen jedoch ausgeschrieben werden.
+\end_layout
+
+\begin_layout Standard
+Dies kann dadurch gelöst werden, dass man solche Wörter zunächst in der
+ Stage 0 - wo ja noch das Schriftbild des Wortes zur Verfügung steht - vormarkie
+rt:
+\end_layout
+
+\begin_layout LyX-Code
+"(?<=^| )([Ll]e|[Uu]n) son(?= |$)" => "$1_son"; // R1
+\end_layout
+
+\begin_layout LyX-Code
+"(?<=^| )[Ss]ont?(?= |$)" => " #son "; 		 // R2		
+\end_layout
+
+\begin_layout LyX-Code
+"([Ll]e|[Uu]n)_son" => "$1 son";                // R3
+\end_layout
+
+\begin_layout LyX-Code
+"(?<=^| )[Ss]ans(?= |$)" => "#sans";            // R4
+\end_layout
+
+\begin_layout Standard
+Betrachten wir zuerst den Fall 
+\begin_inset Quotes eld
+\end_inset
+
+son/sont
+\begin_inset Quotes erd
+\end_inset
+
+ vs 
+\begin_inset Quotes eld
+\end_inset
+
+le son
+\begin_inset Quotes erd
+\end_inset
+
+: Die Abgrenzung 
+\begin_inset Quotes eld
+\end_inset
+
+son
+\begin_inset Quotes erd
+\end_inset
+
+ vs 
+\begin_inset Quotes eld
+\end_inset
+
+sont
+\begin_inset Quotes erd
+\end_inset
+
+ ist sehr einfach (hier hilft das unhörbare, aber geschriebene t).
+ Diese Unterscheidung 
+\begin_inset Quotes eld
+\end_inset
+
+son
+\begin_inset Quotes erd
+\end_inset
+
+ (Personalpronomen) vs 
+\begin_inset Quotes eld
+\end_inset
+
+son
+\begin_inset Quotes erd
+\end_inset
+
+ (Substantiv) hingegen ist sehr knifflig.
+ Wir können hier versuchen, syntaktische Elemente herbeizuziehen, z.B.
+ ob 
+\begin_inset Quotes eld
+\end_inset
+
+son
+\begin_inset Quotes erd
+\end_inset
+
+ ein Artikel, also 
+\begin_inset Quotes eld
+\end_inset
+
+le
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+un
+\begin_inset Quotes erd
+\end_inset
+
+ vorausgeht.
+ Dies tut nun die erste Regel R1 (indem es im Gesamttext - Stage 0 - nach
+ solchen Kombinationen sucht) und schreibt diese Kombinationen dann als
+ 
+\begin_inset Quotes eld
+\end_inset
+
+le_son
+\begin_inset Quotes erd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+un_son
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Nun kann die zweite Regel ganz einfach alle verbleibenden, alleinstehenden
+ (das heisst von einem Space-Zeichen umgebenen 
+\begin_inset Quotes eld
+\end_inset
+
+son
+\begin_inset Quotes erd
+\end_inset
+
+) zu #son umschreibt.
+ In einem dritten Schritt (R3) schreiben wir 
+\begin_inset Quotes eld
+\end_inset
+
+le_son
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+un_son
+\begin_inset Quotes erd
+\end_inset
+
+ wieder zu 
+\begin_inset Quotes eld
+\end_inset
+
+le son
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+un son
+\begin_inset Quotes erd
+\end_inset
+
+ (getrennt geschrieben zurück).
+ 
+\end_layout
+
+\begin_layout Standard
+Die Markierung von #son hat nun zur Folge, dass eSpeak dieses Wort nicht
+ phonetische umschreiben wird.
+ Das Wort #son gelangt also unverändert in die Stage 1 (Nachschlagen im
+ Wörterbuch), Stage 2 (einzelne, ganze Wörter; mehrere Falls zusammengesetzt)
+ und Stage 3 (einzelne Teilwörter).
+ Dort können wir sie nun mit dem Shortener zum Beispiel definitiv als Kürzung
+ umschreiben:
+\end_layout
+
+\begin_layout LyX-Code
+"#son" => "{SON}"; 
+\end_layout
+
+\begin_layout Standard
+Das nicht markierte Wort 
+\begin_inset Quotes eld
+\end_inset
+
+le son
+\begin_inset Quotes erd
+\end_inset
+
+ hingegen wird phonetisch zu 
+\begin_inset Quotes eld
+\end_inset
+
+l@ sO~
+\begin_inset Quotes erd
+\end_inset
+
+ transkribiert und kann danach anhand der System-Regeln zu einem Stenogramm
+ umgeschrieben werden.
+\end_layout
+
+\begin_layout Standard
+Etwas einfach funktioniert das Wort 
+\begin_inset Quotes eld
+\end_inset
+
+sans
+\begin_inset Quotes erd
+\end_inset
+
+: Da dieses unveränderlich ist, dann es einfach als alleinstehendes (= zwischen
+ Spaces stehendes) Wort erkannt und mit # als 
+\begin_inset Quotes eld
+\end_inset
+
+#sans
+\begin_inset Quotes erd
+\end_inset
+
+ markiert werden.
+ Alle anderen, vom Schriftbild her verschiedenen, aber lautlich gleichen
+ Varianten wie 
+\begin_inset Quotes eld
+\end_inset
+
+c'en/cent/s'en/sans
+\begin_inset Quotes erd
+\end_inset
+
+ werden von eSpeak phonetisch zu 
+\begin_inset Quotes eld
+\end_inset
+
+sA~
+\begin_inset Quotes erd
+\end_inset
+
+ transkribiert und gemäss der Standardregeln in ein Stenogramm übertragen.
+ 
+\end_layout
+
+\begin_layout Standard
+Beachten Sie bitte, dass die obige Regeln nicht der Weisheit letzter Schluss
+ sind.
+ Sämtliche Wörter die in Anführungszeichen stehen oder die von einem Satzzeichen
+ (,.:;!?) funktionieren zum Beispiel nicht
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dies kann man z.B.
+ wiederum dadurch lösen, dass man zuerst künstlich in Stage 0 Abstände einfügt,
+ die man danach - weiterhin in Stage 0 - wieder herausfiltert, also: "(
+\backslash
+(|
+\backslash
+[|
+\backslash
+"|'|
+\backslash
+?|!)([a-zA-Zàáâéèêïòôùû])" => "$1#># $2"; und "([a-zA-Zàáâéèêïòôùû])(
+\backslash
+)|
+\backslash
+]|
+\backslash
+"|'|!|
+\backslash
+?)" => "$1 #<#$2"; etc.
+ 
+\end_layout
+
+\end_inset
+
+.
+ Auch erkennt die Regel R1 zwar zuverlässig 
+\begin_inset Quotes eld
+\end_inset
+
+le son
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+un son
+\begin_inset Quotes erd
+\end_inset
+
+ nicht aber 
+\begin_inset Quotes eld
+\end_inset
+
+un dernier son
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Kurzum: Regeln zu schreiben, die hier allen möglichen Fällen gerecht werden,
+ ist eine sehr knifflige Angelegenheit!
+\end_layout
+
+\begin_layout Standard
+Bitte beachten Sie auch, dass es bis zu einem gewissen Grad auch möglich
+ ist, markierte Wörter mit Teilen zu kombinieren, die phonetisch behandelt
+ werden sollen.
+ Beispielsweise gibt es im Französischen viele Wörter mit e muet, die mittels
+ Apostroph mit einem vokalisch anlautenden Folgewort verbunden sind: m'étais,
+ l'avait, n'avions etc.
+ Die Regel in Stage 0
+\end_layout
+
+\begin_layout LyX-Code
+"(?<=^| )[Aa]v(ai[st]|ions|iez|aient|oir)(?= |$)" => "#av$1";
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Damit diese Regel funktioniert, müssen bei Apostrophes zunächst künstliche
+ Leerzeichen eingefügt werden, wie später wieder herausgefiltert werden
+ (wie weiter oben beschrieben).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+schreibt zum Beispiel 
+\begin_inset Quotes eld
+\end_inset
+
+n'avions
+\begin_inset Quotes erd
+\end_inset
+
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+n#avions
+\begin_inset Quotes erd
+\end_inset
+
+ um.
+ Im Shortener-Teil können wir dann die Regel
+\end_layout
+
+\begin_layout LyX-Code
+"#avions" => "{AV}j[o~]"; 
+\end_layout
+
+\begin_layout Standard
+einfügen.
+ Das Stenogramm wir schliesslich korrekt generiert:
+\end_layout
+
+\begin_layout LyX-Code
+(1) n stammt aus der Regel in Stage 0 und entspricht phonetisch n
+\end_layout
+
+\begin_layout LyX-Code
+(2) {AV} wurde in Stage 0 als 
+\begin_inset Quotes eld
+\end_inset
+
+#avions
+\begin_inset Quotes erd
+\end_inset
+
+ vormarkiert und im Shortener (Stage 3) ersetzt
+\end_layout
+
+\begin_layout LyX-Code
+(3) lautliches 
+\begin_inset Quotes eld
+\end_inset
+
+j[o~]
+\begin_inset Quotes erd
+\end_inset
+
+ wird vom Shortener als 
+\begin_inset Quotes eld
+\end_inset
+
+phonetischer Rest zur Kürzung {AV}
+\begin_inset Quotes erd
+\end_inset
+
+ umgeschrieben (und später durch die Kürzung {ION} wiedergegeben)
+\end_layout
+
+\begin_layout Standard
+Dies nur einige Beispiele, die zeigen sollen, dass durch geschickte Kombinierung
+ der Stages in VSTENO sehr vieles möglich ist.
 \end_layout
 
 \begin_layout Subsection*

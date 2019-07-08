@@ -450,12 +450,12 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             $x2 = round($separate_spline[$n+8] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $y2 = round($separate_spline[$n+9], $vector_value_precision, PHP_ROUND_HALF_UP);
           
-          
+          /*
             $x1 += 5;
             $q1x += 5;
             $x2 += 5;
             $q2x += 5;
-            
+          */  
             
             
             $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
@@ -2195,6 +2195,14 @@ function TokenCombinerDiacritics( $first_token, $second_token, $pattern, $replac
             // read first token x,y coordinates for diacritics
             $dx1 = $steno_tokens_master[$first_token][$i+offs_x1];
             $dy1 = $steno_tokens_master[$first_token][$i+offs_y1];
+            // correct delta
+            //echo "dx1 before: $dx1<br>";
+            
+            $delta_x = $dy1 / tan( deg2rad( $_SESSION['token_inclination'] ));
+            $dx1 += $delta_x;
+            //echo "delta: $delta_x<br>";
+            //echo "dx1 after: $dx1<br>";
+            
             //echo "dx1=$dx1 / dy1=$dy1<br>";
             // start insertion
             //echo "start insertion<br>";
