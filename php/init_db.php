@@ -1,4 +1,8 @@
 <?php 
+session_start();
+$_SESSION['fortune_cookie'] = "";
+ini_set('display_errors','on');    // turn off errors in order to keep error.log of apache server clean
+//error_reporting(0);  
 /* this file can be used to create the tables and other data (standard user, models) necessary for vsteno database */
 require_once "dbpw.php";
 require_once "constants.php";
@@ -185,7 +189,8 @@ function create_tables() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function CreateStandardUser() {
-    // standard user will have superuser priviledges
+global $conn;    
+// standard user will have superuser priviledges
     // prepare data
     $safe_username = "standard";
     $safe_email = "";
@@ -197,10 +202,10 @@ function CreateStandardUser() {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        die_more_elegantly("Username bereits verwendet.<br>");
+        echo "Username bereits verwendet.<br>";
     } else {
         echo "Username ist noch frei.<br>";
-    }
+    
 
     // insert new account in db
     $account_privilege = super_user;
@@ -301,6 +306,7 @@ function CreateStandardUser() {
         echo "Error creating table: " . $conn->error . "<br>";
     }
 }
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -308,25 +314,66 @@ function ReadModelFromFile( $filename ) {
     $myfile = fopen( $filename, "r") or die("Unable to open file $filename!");
     $content = fread($myfile,filesize( $filename ));
     fclose($myfile);
+//echo "content: $content<br>";
     return $content;
 }
 
 function GetSection( $text, $type ) {
-    $result = preg_match("#BeginSection($type).*?#EndSection($type)", $subject, $matches);
-    if ($result !== false) return $matches[0];
-    else echo "Unable to open Section \"$type\"<br>";
+    //$pattern = "(#BeginSection\($type\)(?:.|[\n\t\r])*?#EndSection\($type\))";
+    //$pattern = "(#BeginSection\($type\))(.|~\R~)*?(#EndSection\($type\))"; // holy sh... ! you have to use this ~\R~ expression in order to match all \v \n \r \t ... I hate escaping and old ASCII incompatibilities ...
+    //$replacement = "$1";
+    $pattern1 = "#BeginSection($type)"; // ok, let's do it the old way ...
+    $pattern2 = "#EndSection($type)";
+    $pos1 = mb_strpos($text, $pattern1);
+    $pos2 = mb_strpos($text, $pattern2);
+    if (($pos1 !== false) && ($pos2 !== false)) {
+        $content = mb_substr($text, $pos1, $pos2-pos1+mb_strlen($pattern2));
+        $content = $type; // just to have a value ...
+    //echo "Pattern: $pattern<br>";
+    //$content = preg_replace("/$pattern/", "$replacement", $text);
+    //$result = preg_match("/$pattern/", $text, $matches);
+    //$content = $matches[1];
+    //echo "content: $content<br><br>###<br>";
+    //if ($result !== false) return $content;
+    //if (mb_strlen($content)>0) return $content;
+    return $content; 
+    }else echo "Unable to open Section \"$type\"<br>";
+}
+
+function CreateModelEntry($model_name) {
+    global $conn;
+    echo "Create empty model ...<br>";
+    $sql = "SELECT * FROM models WHERE name = '$model_name'";
+    $result = $conn->query($sql);
+    if ($result) {
+        echo "Model $model_name exists (don't create duplicate)<br>";
+    } else { 
+        $sql = "INSERT INTO models (user_id, name, header, font, rules) 
+        VALUES ('99999', '$model_name', '', '', '')"; // REPLACE means: INSERT IF NOT EXISTS
+        //$sql = "INSERT INTO `sys`.`models` (`user_id`, `name`) VALUES ('99999', 'SPSSBAS');
+        echo "QUERY: $sql<br>";
+        $result = $conn->query($sql);
+        if ($result) {
+            echo "An empty section $type in model $model_name has been created.<br>";    
+        } else {
+            //echo "Query: $sql<br>";
+            die_more_elegantly("Error creating empty section $type in $model_name<br>");
+        }
+    }
 }
 
 function WriteSection( $data, $model_name, $type ) {
-    $update_header = $conn->real_escape_string($data);
+    global $conn;    
+    echo "write $model_name => $type<br>";
+    $escaped_data = $conn->real_escape_string($data);
     $sql = "UPDATE models
-            SET $type = '$data'
+            SET $type = '$escaped_data'
             WHERE name='$model_name';";
-    //echo "QUERY: $sql<br>";
+    echo "QUERY: $sql<br>";
     $result = $conn->query($sql);
 
-    if ($result == TRUE) {
-        echo "<p>The section $type in model $model_name has been updated.</p>";    
+    if ($result) {
+        echo "The section $type in model $model_name has been updated.<br>";    
     } else {
         //echo "Query: $sql<br>";
         die_more_elegantly("Error writing section $type in $model_name<br>");
@@ -335,15 +382,20 @@ function WriteSection( $data, $model_name, $type ) {
 
 function CreateModels() {
     global $standard_models_list;
+    //var_dump($standard_models_list);
     foreach ($standard_models_list as $key => $description) {
+        echo "create model: $key<br>";
+        echo "read data from file ...<br>";
         $model_as_text = ReadModelFromFile( "../ling/$key.txt" );
         $header = GetSection( $model_as_text, "header" );
         $font = GetSection( $model_as_text, "font" );
         $rules = GetSection( $model_as_text, "rules" );
+        echo "all data read => write it to database ...<br>";
         // write sections
+        CreateModelEntry($key);
         WriteSection( $header, $key, "header" );
         WriteSection( $font, $key, "font" );
-        WriteSeciton( $rules, $key, "rules" );
+        WriteSection( $rules, $key, "rules" );
     }
 }
 
@@ -352,8 +404,12 @@ if (isset($_POST["mpw"])) {
     if (isset($_POST['mpw'])) $temphash = hash( "sha256", $_POST['mpw']);
     if ($temphash === master_pwhash) {
         $conn = connect_or_die();
+echo "createtables<br>";
         create_tables();
+echo "createstandarduser<br>";
+
         CreateStandardUser();
+echo "createmodels<br>";
         CreateModels();
     } 
 } else {
