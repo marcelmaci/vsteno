@@ -25,7 +25,7 @@ echo "<h1>Zeichen</h1>";
     
 if (($_SESSION['model_standard_or_custom'] === 'standard') && ($_SESSION['user_privilege'] < 2)) {
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Modell auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
-    echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
+    echo "<p><a href='input.php'><button>zurück</button></a></p>";
 } else { 
 
     $model_name = $_SESSION['actual_model'];

@@ -65,7 +65,7 @@ VSTENO Dokumentation
 \end_layout
 
 \begin_layout SubTitle
-08.04.2019
+09.07.2019
 \end_layout
 
 \begin_layout Author
@@ -138,7 +138,8 @@ linguistinnen.pdf) vom 18.
 .
  Seitdem ist viel passiert: Datenbankfunktionen, Formelsprache (mit Branching
  und Stages), linguistisches Analyse-Modul (linguistical analyzer), Weiterentwic
-klung der Steno Engine, spanisches und französisches System
+klung der Steno Engine (diakritische Zeichen und verbesserte Darstellung
+ von Punktschlingen), spanisches und französisches System
 \begin_inset Foot
 status open
 
@@ -6508,6 +6509,248 @@ D@R
  Da dieses - wie die übrigen Grundzeichen - ins Hauptfont von VSTENO geschrieben
  wird, können Sie es danach ohne Einschränkung wie jedes andere Zeichen
  verwenden!
+\end_layout
+
+\begin_layout Subsection*
+Punktschlingen
+\end_layout
+
+\begin_layout Standard
+Der TokenCombiner funktioniert in den meisten Fällen recht gut.
+ Allerdings zeigte sich, dass bei der Verbindung mit sehr kleinen Zeichen
+ - in Stolze-Schrey zum Beispiel - das Punktschlingen-L das Problem entstehen
+ kann, dass das zweite Zeichen aufgrund der Schattierung des ersten Zeichens
+ kaum sichtbar ist.
+ Mit anderen Worten: Die Schattierung ist so breit, dass sie einen Teil
+ des kombinierten Zeichens überdeckt.
+\end_layout
+
+\begin_layout Standard
+Als Lösung empfahl es sich hier, den TokenCombiner um einen so genannten
+ Randvektor (border vector) zu ergänzen.
+ Der Randvektor ist jener Wert der angibt, wo bei einem schattierten Zeichen
+ der Aussenrand der Schreiblinie verläuft.
+ Zur Illustration zeigen wir hier die Kombination des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+P
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+"P" => { 
+\end_layout
+
+\begin_layout LyX-Code
+   /*header*/ 4, 0.5, 0, 0, 0, 0, 0, "", 
+\end_layout
+
+\begin_layout LyX-Code
+         /**/ "", "", 0.0, 0.75, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+         /**/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+   /*data*/ 0, 20, 0, 1, 3, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+       /**/ 0, 2.5, 0.5, 0, 2.5, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+       /**/ 2, 0, 0.5, 4, 1.5, 0, 0, 0.5,    // Verbindungspunkt
+\end_layout
+
+\begin_layout LyX-Code
+       /**/ 2, 0, 0.5, 0, 1.5, 0, 2, 0.5,    // Weiterführungspunkt
+\end_layout
+
+\begin_layout LyX-Code
+       /**/ 4, 2, 0, 0, 1, 0, 1, 0
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+mit dem Punktschlingen-L 
+\begin_inset Quotes eld
+\end_inset
+
+@L
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+"@L" => { 
+\end_layout
+
+\begin_layout LyX-Code
+    /*header*/ 0, 0, 0, 0.5, 2, 2, 0, "", 
+\end_layout
+
+\begin_layout LyX-Code
+          /**/ "", "", "", "", 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+          /**/ 0, 0, 0, 0, 0, 0, 0, 0, 
+\end_layout
+
+\begin_layout LyX-Code
+    /*data*/ 0, 0, 1, 0.5, 1, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ 1, 1, 0.5, 0, 1, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ 0, 2, 0.5, 0, 1, 0, 0, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ -1, 1, 0.5, 0, 1, 0, 2, 0.5, 
+\end_layout
+
+\begin_layout LyX-Code
+        /**/ 0, 0, 0.5, 0, 1, 0, 1, 0.5 
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+die wie gewohnt über den TokenCombiner verbunden werden:
+\end_layout
+
+\begin_layout LyX-Code
+#BeginSubSection(combiner)
+\end_layout
+
+\begin_layout LyX-Code
+    "B" => { "@L", 0, 0 } 
+\end_layout
+
+\begin_layout LyX-Code
+#EndSubSection(combiner)
+\end_layout
+
+\begin_layout Standard
+Der entscheidende Unterschied liegt hier in den Offsets 10 und 11 des Headers:
+ Die Werte bvectx = 0.0 und bvecty = 0.75 entsprechen hier dem besagten Randvektor
+ R(0.0/0.75).
+ Was aber bedeuten diese Werte genau?
+\end_layout
+
+\begin_layout Standard
+Wie wir sehen liegt der Verbindungspunkt (Wert 4 im Offset 3 des Datentupels)
+ im Punkt V(2,0), was dem Fusspunkt des Zeichens B entspricht.
+ Normalerweise würde nun genau hier (d.h.
+ mit diesen Koordinaten) das zweite Zeichen mit dem ersten verbunden.
+ Allerdings beträgt die Dicke des Zeichens bei Schattierung an dieser Stelle
+ 1.5.
+ Dieser Wert ist relativ (relative_thickness) und gibt die Strichdicke im
+ Vergleich zur Grunddicke an, die im Formular unter Dicke bzw.
+ mit der Session-Variable 'token_thickness' angegeben werden.
+ Ausserdem kann die Schattierung des Zeichens ihrerseits mit dem Wert Schattieru
+ng im Formular bzw.
+ der Session-Variablen 'token_shadow' weiter differenziert werden.
+ Die endgültige Strichdicke D berechnet sich also wie folgt:
+\end_layout
+
+\begin_layout LyX-Code
+D = relative_thickness * token_size * token_shadow
+\end_layout
+
+\begin_layout Standard
+Der genaue Wert von D braucht uns aber nicht zu kümmern.
+ Uns interessiert hier nur der relative Wert (relative_thickness) und 1.5
+ bedeutet in dem Fall 
+\begin_inset Quotes eld
+\end_inset
+
+eineinhalb mal dicker
+\begin_inset Quotes erd
+\end_inset
+
+ als die Grunddicke (ganz egal, welche zusätzlichen Werte der/die Benutzer/in
+ hier wählt).
+ Da das von uns definierte Punktschlingen-L rund 3 Einheiten hoch ist (von
+ y=+2 bis y=-1) wird es folglich zur Hälfte durch die Schattierung des Grundzeic
+hens verdeckt.
+\end_layout
+
+\begin_layout Standard
+Der Randvektor R(0.0/0.75) bedeutet nun, dass wir dies korrigieren, indem
+ wir die Koordinaten des zweiten Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+@L
+\begin_inset Quotes erd
+\end_inset
+
+ relativ um 0.75 auf der y-Achse nach oben verschieben (die Modellierung
+ erfolgt hier bei 90 Grad, also am aufrecht stehenden Zeichen).
+ Dadurch wird also nur noch ein Viertel (0.75 von 3) durch die Schattierung
+ verdeckt, wodurch das Zeichen besser lesbar wird.
+\end_layout
+
+\begin_layout Standard
+Allerdings ergibt sich ein Problem: Das Grundzeichen 
+\begin_inset Quotes eld
+\end_inset
+
+P
+\begin_inset Quotes erd
+\end_inset
+
+ wurde so definiert, dass zuerst der Verbindungspunkt (2,0), danach das
+ Verbundzeichen 
+\begin_inset Quotes eld
+\end_inset
+
+@L
+\begin_inset Quotes erd
+\end_inset
+
+ und schliesslich ein Weiterführungspunkt (2,0) eingefügt wird.
+ Da der Verbindungspunkt vom TokenCombiner durch den Eintrittspunkt des
+ Verbundzeichens ersetzt wird, ergäbe sich hier die Situation, dass dieser
+ nicht - wie benötigt - bei (2,0) zu liegen käme, sondern bei (2,0.75) -
+ eben um den Vektor R(0.0,0.75) nach oben verschoben.
+ Dadurch würde das Grundzeichen B 
+\begin_inset Quotes eld
+\end_inset
+
+verbogen
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Um dies zu verhindern, wird der Eintrittspunkt des Verbundzeichens nicht
+ relativ verschoben.
+ Auch dies hat negative Effekte: Da nun der Eintrittspunkt - im Unterschied
+ zu allen anderen Punkten des Verbundzeichens - nicht verschoben wird, stimmen
+ nun die Relationen der Punkte im Folgezeichen untereinander nicht mehr
+ ganz (und somit wird das Folgezeichen verbogen).
+ Dieser Fehler ist innerhalb des Verbundzeichens jedoch kaum sichtbar und
+ stellt somit eine akzeptable und pragmatische Lösung dar, um die Sichtbarkeit
+ solch kleiner Zeichen zu verbessern.
 \end_layout
 
 \begin_layout Subsection*
@@ -14113,12 +14356,34 @@ Sie können sich mit den Pfeiltasten < und > rechts jeweils einen Punkt nach
 status open
 
 \begin_layout Plain Layout
-Sie wurden gewarnt: Wenn Sie auf ->DB klicken, exportiert VPAINT die Daten
- in den Text-Editor der SE1 rev0.
- Das exportierte Format entspricht allerdings der SE1 rev1 (und ist mit
- der SE1 rev0 nicht kompatibel).
- Wenn Sie danach noch einmal abspeichern klicken, wird Ihr aktuelles Modell
- mit KORRUPTEN Daten überschrieben (und wird unbrauchbar)!
+Im Hinblick auf die Release der Version 0.1 wurde die Speicherfunktion von
+ VPAINT nun definitiv deaktiviert.
+ Es besteht somit keine Gefahr mehr, Daten und Modelle durch fehlerhafte
+ Exporte zu beschädigen.
+ Wenn auf den Button ->DB geklickt wird, gelangt man wie gewohnt zu einem
+ Texteditor, der die exportierten Zeichen-Definition enthält.
+ Daraus können - wenn gewünscht - einzelne Zeichen manuell kopiert und via
+ den normalen Font-Editor (aus der Seitennavigation) in ein bestimmtes Modell
+ eingefügt werden.
+ Wenn Sie anschliessend auf 
+\begin_inset Quotes eld
+\end_inset
+
+speichern
+\begin_inset Quotes erd
+\end_inset
+
+ klicken, so führt der Link lediglich auf die Seite 
+\begin_inset Quotes eld
+\end_inset
+
+edit_font_disabled.php
+\begin_inset Quotes erd
+\end_inset
+
+, wo Sie darauf hingewiesen werden, dass die Speicher-Funktion deaktiviert
+ wurde.
+ 
 \end_layout
 
 \end_inset
@@ -15068,10 +15333,41 @@ hunspell
 \end_layout
 
 \begin_layout Standard
-Hunspell wird von VSTENO zur linguistischen Analyse genutzt.
+Hunspell
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://hunspell.github.io/
+\end_layout
+
+\end_inset
+
+ wird von VSTENO zur linguistischen Analyse genutzt.
  Hierzu muss hunspell bereits auf dem System installiert sein.
  Der Aufruf erfolgt via Shell.
  Aus diesem Grund ist hunspell nicht Teil von VSTENO.
+\end_layout
+
+\begin_layout Subsection*
+eSpeak
+\end_layout
+
+\begin_layout Standard
+eSpeak
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://espeak.sourceforge.net/
+\end_layout
+
+\end_inset
+
+ wird von VSTENO zur phonetischen Transkription genutzt.
+ Hierzu muss eSpeak auf dem System installiert sein.
+ Der Aufruf erfolgt via Shell.
+ Aus diesem Grund ist eSpeak nicht Teil von VSTENO.
 \end_layout
 
 \begin_layout Subsection*

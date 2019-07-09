@@ -2325,10 +2325,6 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_d2];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_t2];
                 }
-                if (($first_token === "P") && ($second_token === "@L")) {
-                    echo "token P@L<br>";
-                    var_dump($new_token); echo "<br>";
-                }
         }
     }
     // the problem now is, that the combined token may have 2 exit/pivot points
@@ -2354,10 +2350,6 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
             $first_pivot = $i;
         }
     }
-            if (($first_token === "P") && ($second_token === "@L")) {
-                    echo "token $new_token_key (final)<br>";
-                    var_dump($new_token); echo "<br>";
-                }
     $steno_tokens_master["$new_token_key"] = $new_token; 
 }
 
