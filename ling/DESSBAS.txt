@@ -1,0 +1,2773 @@
+#BeginSection(header)
+	DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)
+    	(c) 2018-2109  Marcel Maci
+	
+	This program is free software: you can redistribute it and/or modify
+    	it under the terms of the GNU General Public License as published by
+    	the Free Software Foundation, either version 3 of the License, or
+    	(at your option) any later version.
+
+    	This program is distributed in the hope that it will be useful,
+    	but WITHOUT ANY WARRANTY; without even the implied warranty of
+    	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    	GNU General Public License for more details.
+
+    	You should have received a copy of the GNU General Public License
+    	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+	
+	Special thanks go to Yvonne Reith for external corrections which
+	helped to improve the model substantially.
+	#BeginSubSection(session)
+	"license" := "<p>DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)<br>
+    	(c) 2018-2109  Marcel Maci</p>
+	
+	<p>This program is free software: you can redistribute it and/or modify
+    	it under the terms of the GNU General Public License as published by
+    	the Free Software Foundation, either version 3 of the License, or
+    	(at your option) any later version.</p>
+
+    	<p>This program is distributed in the hope that it will be useful,
+    	but WITHOUT ANY WARRANTY; without even the implied warranty of
+    	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    	GNU General Public License for more details.<p>
+
+    	<p>You should have received a copy of the GNU General Public License
+    	along with this program.  If not, see www.gnu.org/licenses.<p>
+	
+	<p>Special thanks go to Yvonne Reith for external corrections which 
+	helped to improve the model substantially.</p>
+	";
+	"release_notes" := "
+	<p>This file was originately generated as export from old parser, then 
+	later completed with manual additions to form DESSBAS (DD=Deutsch, 
+	SS=Stolze-Schrey, BAS=Grundschrift).</p> 
+	
+	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
+	inclination of 60 degrees.</p>
+	";
+
+	// Schreibweise:
+	// = ein Zeichen am Wortanfang (z.B. [F=]) oder Wortende (z.B. [=NG])
+	// ^ ein höher gestelltes Zeichen (z.B. [^CH]) oder Variante vor höhergestelltem Zeichen (z.B. [AR5^])
+	// _ ein tiefer gestelltes Zeichen (z.B. [_N])
+	// @ ein Verbundzeichen (z.B. [@L] oder [@R], die mit anderen Zeichen verbunden werden)
+	// 0..9 bei runden Zeichen: Anknüpfpunkt (z.B. [@R6] = Zeichen R mit Anknüpfpunkt bei 6 Uhr, also im Fusspunkt)
+	// # technische Zeichen (z.B. [#WS] = wide shadowed, eine weite, schattierte Verbindung, also ä im System 
+	//   Stolze-Schrey; [#5] = spacer mit Abstand 5px)
+	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
+	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
+        // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
+	"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
+		// model version
+		"model_version" := "1.0";
+		"model_date" := "29. Juni 2019";
+		// wide distance
+		"token_distance_wide" := "17";
+		// use linguistical analysis
+		"analysis_type" := "selected";
+		// hyphenation (phpSyllable)
+		"hyphenate_yesno" := "yes";
+		"language_hyphenator" := "de";
+		// composed words + affixes (hunspell)
+		"composed_words_yesno" := "yes";
+		"language_hunspell" := "de_CH";
+		// generate affixes in composed words
+		"affixes_yesno" := "yes";
+		// set variables for filter option (not selected)
+		"filter_out_prefixes_yesno" := "yes";
+		"filter_out_suffixes_yesno" := "yes";
+		"filter_out_words_yesno" := "yes";
+		// disable phonetic analysis
+		"phonetics_yesno" := "no";
+		"language_espeak" := "de";
+		"phonetic_alphabet" := "espeak";
+		// define prefixes, suffixes and stems for hunspell
+		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen";
+		"stems_list" := "gangen, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts";
+		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, bar(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?, seits, voll"; // use non caputuring groups! (?:)
+		// do not treat these as separate words (block_list)
+		//"block_list" := "der, den, dem";
+		"filter_list" := "|de[rsmn], de[rsmn]s|";
+		"title_text" := "Deutsch";
+		"introduction_text" := "Grundschrift (Stolze-Schrey)";
+	#EndSubSection(session)
+	#BeginSubSection(analyzer)
+		// additional syllables
+		"ebe(-?)n" => "e-be$1n";  // bug in phpSyllable: eben is not hyphenated!?
+		"oder" => "o-der"; 	// same ...
+		"^([Vv]i)a$" => "$1-a";
+		"([Hh]y-gi)(e-n)" => "$1-$2";
+		"([Ii])-?(ta-)(li)(e-n)" => "$1-$2-$3-$4";
+
+		// probably, phpSyllable doesn't separate VCV at the beginning
+		// because it doesn't want to separate just 1 vowel (would be ugly in a text)
+		// so, it never separates the first vowel in that case
+		// => therefore, correct that "bug" (feature;-) here in a more general way
+		"([aeiouAEIOU]|ä|ö|ü|Ä|Ö|Ü)([bcdfghjklmnprstvwxz])([aeiouAEIOU]|ä|ö|ü|Ä|Ö|Ü)" => "$1-$2$3";
+
+		// hm ... must say that phpSyllable doesn't do a very reliable job ...
+		// Ausweichthema for example: separation "Ausweich-thema" is NOT recognized ...
+		// only possibility to patch this would be in the dictionary of phpSyllable
+		// (which - if I'm right - is based on TEX)
+
+		"([Uu]n)z-([aeiou])" => "$1+z$2"; // phpSyllable does that wrong ...
+		"\|ge$" => "-ge"; 	// correct ge- prefix (recognized as word)
+
+		"r\|t\'s" => "rt's";	// pressiert's (cleaning up some chaos produced by linguistical analyzer ...)
+		"\|t'" => "t'"; // geh|t's
+		"([Ww]eh)\|r" => "$1-r";
+
+		// ending es
+		"\|es$" => "-es";
+
+		////////////////////////// new approach for affixes ge-, be-, -er- //////////////////////////////
+		///////////// mark all er as affix and filter out "false positive" at the end //////////////////
+		// be- and ge- must be done before -er (because of ber- ger-)
+		// be-
+		"^([Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
+		"(\|[Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
+
+		// ge-
+		"^([Gg]e)-" => "$1+";
+		"(\|[Gg]e)-" => "$1+";
+
+		//ein-ge (eingebrockt)
+		"^([Ee]in)-(ge)-" => "$1+$2+";
+
+		// -er-
+		"([Ee]r)-" => "$1+";
+		"([Ee])-r" => "$1r+"; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => "$1-er$2"; // Schil-der+ung: reorganize syllabical structure ...
+		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
+		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
+		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
+		"er(?!\+)" => "er+"; // generalization of preceeding rule (because also valid for other cases: Pflegern
+
+		////////////////////////////////////// end new approach ///////////////////////////////////////
+
+		// early filter
+		"([Ss]er)\+(vier)\+?" => "$1-$2-";
+		
+		////////////////////////////////// end early filter //////////////////////////////////////////
+
+		// don't separate prepositions or shortings at beginning
+		"([Ff]ür)\|" => "$1+";
+		"([Ii]n-?ter)\|" => "$1+";
+		
+		// diejenige, derjenige, desjenigen etc.
+		"([Dd](?:ie|er|es|as|em|en))-?(je-?ni-?ge)" => "$1+$2";
+
+		// don't separate -zer, -der, -er at end of words
+		"(.?)\|([dz]?er)\+?$" => "$1-$2";
+
+		// correct wrong separations
+		"([Dd])e-?nen" => "$1en+en";
+		"([Dd])e(-?|\|)r\+?e([rn])" => "$1er+e$3";
+		"([Mm]i-?ne)\|(ral)" => "$1-$2";
+		"([Dd]er\+?)\|(ben)" => "$1-$2";
+		"([Ss]au)\|(be)\+(r)" => "$1-$2-$3";
+		"([Mm]an)\|(gel)" => "$1-$2";
+		"([Hh]eu)\|(e-?t)" => "$1-$2";
+		"([Ff]ol-gen)\|(der)" => "$1-$2";
+		"([Ss]pie)\|(gel)" => "$1-$2";
+		"([Hh]a)-?t's" => "$1t's"; 
+		"([Aa]-?m-?e-?r\+?i-?ka)\|(ni-?schen)" => "$1-$2"; // computers are stupid ... :)
+		"([Jj]e)\|(doch)" => "$1-$2";
+		"([Vv]or\+ei)\|(li-g)" => "$1-$2"; // voreiligen
+		"([Ee])i\|ge\+ne" => "$1i-ge-ne";   // eigene
+		"([Ss]prit)\|(ze-?r)" => "$1-$2";
+		"([Gg]e)-?(le)\|(ge)\+" => "$1-$2-$3"; // abgelegene
+		"([Aa]m)\|(her)\+(d)" => "$1-$2$3"; // Swiss name
+		"([Ee]-he)\|(ma)" => "$1-$2"; // ehemalig
+		"([Mm]ai)\|(l(?:a|ä)n-?d)" => "$1-$2";
+		"(t)\|(nis-?se)" => "$1-$2";
+		"(sich)\|(ti-?ge-?r)" => "$1-$2"; // durchsichtiger
+		"[Ss]tau\|den" => "Stau-den"; // Staudenkultur (|den not recognized in interior of word ...)
+		"([Tt]e-le)\|(phon)" => "$1-$2"; // avoid separation of old orthography
+		"\|(haf-?t)" => "-$1";
+		"(ungs)-(haf-?t)" => "$1|$2"; // recorrection: Untersuchungshaft
+		"([Ee]i)\|(gen)" => "$1-$2";
+		"([Pp]la-?to)\|(ni-?sch)" => "$1-$2";
+
+		// "resyllabation"
+		"([Zz]wei)-to" => "$1t|o";  // zweitoberst
+		"([Zz]wei)t\|(ens)" => "$1-t$2"; // recorrection
+		"([Jj]u-li)n-" => "$1|n"; // Julinacht
+		"([Vv]i-si-ten)k-" => "$1|k";
+
+		// resyllabation -ie
+		"([Kk]o-mö-di)e" => "$1-e";
+
+		// additional separations
+		"([Nn]acht)-?(tisch)" => "$1|$2";
+		"([Ww]ei-?ter)\+" => "$1|";
+		"([Ss]er-?vier)-" => "$1|$2";	// Serviertochter
+		"-lied" => "|lied"; 	// Beresinalied
+		"Erb-l" => "Erb|l";	// Erb-lassers (most probable decision for noun vs Er-blasser)
+		"erb-l" => "er+bl";	// er-blassen (most probable decision for Verb)
+		"([Bb]reit)-" => "$1|"; // breitbeinig, breitschultrig etc.
+		"([Kk]o-kos)-" => "$1|";
+		"([Ss]chank)-" => "$1|";
+		"([Kk]lein)-" => "$1|"; // kleinkalibrig, Kleinkunst etc.
+		"ti-ons-" => "ti-ons|"; // Deflagrationsspuren, Reaktionszeit etc.
+		"([Bb]ar-chent)-" => "$1|"; // Barchentteppich, -unterrock etc.
+
+		// aus-
+		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
+		"([Aa]us)-([kr])" => "$1+$2";
+
+		// in general: don't separate -[brt]en (..)
+		"\|ren" => "-ren";
+		"\|ten" => "-ten";  // why is "ten" recognized as a word (in german)?!?
+		"\|ben" => "-ben";
+
+		// separate repetier-
+		"([Rr]e)-(pe-tier)-" => "$1+$2|"; // Repetierpistole, Repetierstunde
+		
+		// separate "Kutte(n)-"
+		"(Kut-?ten)-" => "$1|"; // beginning
+		"-(kut-?ten?)" => "|$1";  // end (works also for "Kutter" which is correct)
+
+		// recognize more auf-
+		"([Aa]uf)-(kl|n|o|a)" => "$1+$2";
+
+		// don't separate -tümlich
+		"\|(tüm[-#]?li-?ch)" => "-$1";
+
+		// ein-
+		"([Ee]in)-?(tö-?ni-?g)" => "$1+$2";
+
+		// er-
+		"([Ee]r)-?(lau-?b)" => "$1+$2";
+		"([Ee]r)-?(staun)" => "$1+$2";
+		"([Ee]r)-?(le-?di-?g)" => "$1+$2"; 
+		"([Ee]r)-?(in-?ne-?r)" => "$1+$2"; 
+		
+		// allesamt
+		"([Aa]l-?le)\|(samt)" => "$1+$2"; 
+
+		"([Gg]ib)\|t" => "$1t"; // what a mess ...
+
+		"^([Nn])eu\|e" => "$1eu-e";
+
+		"([Ii])n-ter-" => "$1n-ter+";
+
+		"\|dun(-?)g(s|en)?$" => "-dun$1g$2"; // Neugründung
+
+		"([Bb]e)-?(ja-?h)" => "$1+$2";
+
+		"([Hh])e-?r-?aus-?" => "$1er+aus+";
+		"da-ma(-?)l" => "da+ma$1l";
+		"un(-?|\||\+)te(-?)r" => "un-te$2r"; 
+		"([Aa]u-?s-?ser)\+(\|dem)" => "$1$2";	// special: recorrect +| before following rule 
+		"(\+|\|)([bd])e([nrsm]?)$" => "-$2e$3";
+		"([WwNn])ie\|de(-?)r\+" => "$1ie-de$2r|";
+		"([WwNn])ie\|de(-?)r" => "$1ie-de$2r";
+		"([Nn])ie\|ma" => "$1ie-ma";
+		"([Hh]er)\+(ren)" => "$1-$2";
+		"([Ww]in-?ter)\+(thur)" => "$1|$2";
+		"([Tt]rotz)-(dem)" => "$1+$2";
+		"Lei-?b-?und-?gut" => "Leib|und|gut";
+		"([Gg]e)-?(sel-?l)" => "$1+$2";
+		"([Ww]ich)\|(ti-?ger)" => "$1-$2";
+		"(wir)\|(ren)" => "$1-$2";
+		"(wir)\|(ren)\|(der)?" => "$1-$2-$3";
+		"(wor)\+(ren)" => "$1-$2";
+		"([Mm]it)\+(ta-?g)" => "$1-$2";
+		"([Oo]h)\|(ren)" => "$1-$2";
+		"([Bb]al-?dri-?an)-?(?!\|)" => "$1|"; // word unknown by hunspell
+		"([Aa])u\|g" => "$1u-g";
+		"([Aa]u)\|(tor)" => "$1-$2";
+		"([Ww]en)\|(n)" => "$1$2";  // this linguistical analyzer really does strange things (with "wenn's")
+		"([Ee]in)-?(tö-?nig)" => "$1+$2";
+		"([Ss]pan)\|(nun(?:-|\|)?g)" => "$1-$2";
+		"([Kk]om-?bi)\|(na-?ti-?o-?n)" => "$1-$2";
+		
+		"\+lie-g" => "|lie-g"; // daniederliegen
+		"([Ss])ie\|ben" => "$1ie-ben";
+		// more general: don't separate bens?$
+		"\|(bens?)$" => "-$1";
+
+		"zäh\|lun-gen$" => "zäh-lun-gen";
+		"([Mm])it\|tag" => "$1it-tag";
+		"([Vv])iel\|leicht" => "$1iel-leicht";
+		"^([Pp])ro\|" => "$1ro-";
+		"e\|ren$" => "e-ren";	// näheren
+		"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
+		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
+		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
+		"(\|)er(\|)" => "{ER}"; // infix er
+		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
+		"([Gg]e)-?(räu-?sch)" => "$1+$2";
+		"([Rr]at)-?(lo-?s)" => "$1#$2";
+
+		// mark prefixes that have not been recognized
+		"^([Vv])er-ant-" => "$1er+ant+";
+		"\|ver-ant-" => "|ver+ant+";
+		"([Ee]nt)-(fer-?n)" => "$1+$2";
+ 
+
+		"in-dem" => "in+dem";
+		"zu-dem" => "zu+dem";
+		"^([Gg]e)[-+]?(gen)\|" => "$1-$2+";
+		"^(Ü|ü)(-?)ber-" => "$1$2ber+"; 
+		"([Bb]e)-?(rei-?t)" => "$1+$2";
+		"([Uu]r)-?(teil)" => "|$1+teil"; 	// isn't recognized because 2nd word starts with vowel
+		"([Jj]e)\|?(de)" => "$1-$2";
+		"([Bb]e)-(son-de)" => "$1+$2";
+		"([Ee]r)-(f[auie])" => "$1+$2";  // c'est osé ...
+		"([Ee]r)-(kl(?:[aeiou]|ä))" => "$1+$2";
+		"([Gg]e)-(n(?:u|ü))" => "$1+$2";
+		"([Gg]e)-?(litz-?t)" => "$1+$2"; // Helvetism
+		"([Gg]e)-?(f(?:a|ä)ng)" => "$1+$2";
+		"([Gg]e)-?(dach-?t)" => "$1+$2";
+		"([Gg]e)-?(fühl)" => "$1+$2";
+		"([Gg]e)-?(sin-?nung)" => "$1+$2";
+		"([Gg]e)-?(nos-?s)" => "$1+$2";
+		"([Gg]e)-?(wöh-?n)" => "$1+$2";
+		"([Gg]e)-?(win-?n)" => "$1+$2";
+		"([Gg]e)-?(stal-?t)" => "$1+$2";
+		"([Gg]e)-?(ta-?n)" => "$1+$2";
+		"([Aa]n)-?(ge)-?(bie-?d)" => "$1+$2+$3";
+		"([Gg]e)-?(moch-?t)" => "$1+$2"; 
+		"([GgBb]e)-?(wuss-?t)" => "$1+$2";
+		"([Gg]e)-?(r(?:u|o)-?c-?h)" => "$1+$2";
+		"([Gg]e)-?(wis-?s)" => "$1+$2";
+		"([Gg]e)-?(setz)" => "$1+$2";
+		"([Gg]e)-?(sand-?t)" => "$1+$2";
+		"([Gg]e)-(dicht)" => "$1+$2"; 	// Gedichtlein isn't recognized ...
+		"([Gg]e)-(schlitz-?t)" => "$1+$2";
+		"([Gg]e)-?(frei-?t)" => "$1+$2";
+		"([Gg]e)-?(sich)" => "$1+$2"; 
+		"([Gg]e)-(spr)" => "$1+$2";
+		"([Gg]e)-(sun)" => "$1+$2";
+
+		"([Ee])r-folg" => "$1r+folg";
+		"([Ee]r)-?(hö-?h)" => "$1+$2";
+
+		"ungs-an" => "ungs|an"; // terrible "hacks" ... :-)
+		"\|an-" => "|an+";
+
+		"([Ww])ar\|um" => "$1a-rum";
+		"([Bb])e-?que(-?)m" => "$1e+que$2m";
+		"([Pp])fle-?ge\|r" => "$1fle-ge-r"; // Pflege-Rinnen (Computers are stupid ... :)
+		"([Aa])-?me-?ri-?ka\|ni" => "$1-me-ri-ka-ni";	// Amerika-Nische (Computers are stupid ... :)
+		//"([Kk])i(-?)lo\|" => "$1i$2lo+"; // Kilometer: shorting [et] ...
+		"([Gg]e-?ne)\|(ral)" => "$1-$2";
+		"#seits" => "|seits";
+
+		// prefix in-
+		"^(Volks\|)?([Ii])n-(?!ter)" => "$1$2n+";
+		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
+		"\|([Ii]n)-(s[tp])" => "|$1+$2"; // idem in separated words
+		"^([Ii]n)\+(ne)" => "$1-$2";
+
+		// un-
+		"^([Uu]n)-([bcdfghjklmnprstvwxz])" => "$1+$2";
+		"([Uu]n)\+(te[rn])" => "$1-$2"; // recorrect unter, unten
+		// un-ent/ver-
+		"^([Uu]n)-?(ent|ver)(-|\+)?" => "$1+$2+";
+	
+		// trying to recognize more ge-/be- prefixes: rule: ends with -en(..) or -t(..)
+		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
+		"^([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
+		//"\+([bg])e-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
+		"\+([bg])e-(.*)(t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2$3$4"; // test (replaces line before)
+		"^([bg])e-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
+
+		// same for ver-
+		"\+([Vv])er-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1er+$2-$3$4";
+		"^([Vv])er-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "$1er+$2-$3$4";
+		"\+([Vv])er-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "+$1er+$2-$3$4";
+		"^([Vv])er-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "$1er+$2-$3$4";
+
+		// be- + #er(in)(nen) // be- + ung
+		"([Bb]e)-(.*)-(.*?)(e-?r)([sn]|in(?:-?nen)?)?$" => "$1+$2-$3$4$5";
+		"([Bb]e)-(.*-)(.*)(un-?g(?:s|en)?)" => "$1+$2$3$4";	
+
+		// recorrect be-/ge- before gerundium
+		"([bg]e)\+(.*)(n-?d)(e[rnsm]?)$" => "$1-$2$3$4";
+		"([bg]e)\+(.*)(n-?d)(e[rnsm]?)\|" => "$1-$2$3$4|";
+
+		// and correct the correction ...
+		"([Bb]e)-?(geis-?ter)" => "$1+$2";
+		"([Bb]e)-?(am-?t)" => "$1+$2";
+		"([Bb]e)-?(tr(?:u|o|ü)-?g)" => "$1+$2";
+		"^([Bb]e)-?(gin-?n)" => "$1+$2";
+		"([Bb]e)-?(rech)" => "$1+$2";
+
+		// an-
+		"([Aa]n)-(.*)-(lich)" => "$1+$2#lich";
+		"([Aa]n)-?(läs-?s)" => "$1+$2"; 
+
+		// auf- / ver- / zu-
+		"^([Aa]uf|[Vv]er|[Zz]u)-(.*)(ung)(en)?$" => "$1+$2$3$4";
+		"\+(auf|ver|zu)-(.*)(ung)(en)?$" => "+$1+$2$3$4";
+		"^([Aa]uf)-(zu)-" => "$1+$2+";
+		"([Zz]u)-?(k(?:u|ünf))" => "$1+$2";
+
+		// additional separations
+		"([Ww]eih)-?(nach-?t)" => "$1|$2";
+		"Pri-?vat\|?de-?tek-?tiv" => "Pri-vat[#4]\\de-tek-tiv"; // to high (produces lines all over the place ... :) One of the ugliest words in steno I think ... :)
+		"([Nn]as)-?(t(?:u|ü)-?ch)" => "$1|$2";	// Helvetism
+
+		// die- ist most of the times not a separate word (a part from diejenigen, dieselben)
+		"([Dd])ie\|(?!(je|se))" => "$1ie-";
+
+		// meinet, deinet, seinetwegen etc. => consider it as two words
+		"\+(we-?gen)$" => "|$1"; 
+ 
+		// zeit-
+		"([Zz]eit)-?(wei-?l)" => "$1|$2";
+
+		// -lich
+		"(?<!#)-?(lich(?:-|#)?kei-?t)" => "#$1";
+
+		// -bar(ensr)
+		"\|(ba-?r(?:(?:e-?r)?e[rsnm]?)?)" => "-$1";
+
+		// in vs inner
+		"([Ii]n)\+(ner)" => "$1-$2";
+
+		"([Gg]e)-?(stan-?d)" => "$1+$2"; 
+
+		// ent-
+		"([Ee]nt)-?(setz)" => "$1+$2";
+		"([Ee]nt)-?(b|sch)" => "$1+$2";
+
+		// un-
+		"([Uu]n)-(z)(?!e)" => "$1+$2";
+		"([Uu]n)-(b)" => "$1+$2";
+		"([Uu]n)-?(nach-?)" => "$1+$2";
+		"^([Uu]n)-(er|ver|ge|be|an)-" => "$1+$2+";
+
+		"([Zz]u#sam)\|(men)-?(ge)\|" => "$1-$2|$3";
+
+		"([Bb]e\+?)(auf)-" => "$1$2+";
+
+		"([Ss]on-?n)-?(t(a|ä)g)" => "$1|$2";
+
+		// not recognized words
+		"([Ll]ein)-?(t(?:ü|u)-?ch)" => "$1|$2";
+		"([Ee]r)-?(qui-?ck)" => "$1+$2";
+		"([Kk]ur)\|(zer)\+h" => "$1-$2|h";
+
+		"([Hh]arm)\|l" => "$1#l";
+		
+		// who the hell invented this Aufstrich-stuff ... Stolze or Schrey (or both must have been
+		// slightly drunk (or high) when they had the idea ... it's nice for short words and in the 
+		// end of words ... but try to write something like "sentimental" or "Sentimentalität" ...
+		// you probably have to glue some additional paper on top in order to get enough space ... 
+		// anyway: I'm opting her for an etymological (romanistic) separation of this word:
+		// senti|mental and Senti|mentalität (and if a purist thinks this is not correct then come
+		// up with a better solution - or tace! :)
+		"([Ss]en-?ti)-?(men-?t)" => "$1|$2";
+		
+		// recorrections
+		"([Gg]e[+-]?)(be)[+-](t)" => "$1$2-$3";
+		"([Gg]e)-(bet)" => "$1+$2";
+		"([Ww]o)#(chen)" => "$1-$2";
+		"([Ff]rei)\+(tag)" => "$1-$2";
+		"([Ss]ams)\|(tag)" => "$1-$2";
+		
+		"([Mm]u-?se)\|(um)" => "$1-$2";
+		"([Ss]ei)\|(den)[+-]?(en)" => "$1-$2-$3";
+		"([Zz]er)\+(ren)" => "$1-$2";
+		"([Tt]he-ma)\|(tisch)" => "$1-$2";
+		"([Uu]-ni)\|(for-?m)" => "$1-$2";
+		"([Zz]wei)\|(fels)" => "$1-$2"; // suppose it is never "zwei" + "Fels" (Dreifels exists;-)
+		"([Ss]ei)\|(den)" => "$1-$2";
+		"([Nn]eu)\|(fund)\|(l)" => "$1-$2|$3"; // Neu-Fund will be written separately
+		"Zu\+ge" => "Zu-ge";
+		"([Kk]lös-ter)\|(li-?ch)" => "$1#$2";
+		"\|(run-gen)" => "-run-gen"; // very strange results that have to be corrected ... ;-)
+		"([Aa]n)\+(gel)" => "$1-$2";
+		"([Ee]i)\|(ni)" => "$1-$2";
+		"([Ww]en)\|(de)" => "$1-$2";
+		"([Uu]n)\+(se-?r)" => "$1-$2";
+		"([Mm]uss)\|(test)" => "$1-$2";
+
+		// final ge-
+		"([Gg]e)-?(fun-?de-?n)" => "$1+$2";
+		"([Gg]e)\+(ge)\+" => "$1+$2-"; 	// avoid 2x ge-
+		"([Aa]uf(?:-|\+)?(?:ge\+)?ge)\+(be)" => "$1-$2"; 
+		"([Gg]e)\+(ben)" => "$1-$2";
+
+		/////////////////////////////////////// new approach prefixes ///////////////////////
+		// filter out "false positives" for affixes
+		
+		// prefix be+
+		"([Bb]e)\+(te(?:n|st|t(?:en?)?|nd(?:en?)?))" => "$1-$2";
+		"([Bb]e)\+(b(?:en|e?st|e?t(?:en?)?|nd(?:en?)?))" => "$1-$2";
+		"([Bb]e)\+(sens?)" => "$1-$2";
+		"([Bb]e)\+(ne)" => "$1-$2";
+		"([Bb]e)\+(x)" => "$1$2";
+		
+
+		// prefix ge+
+		"([Gg]e)\+(he)" => "$1-$2";
+		"([Gg]e)\+(gen)" => "$1-$2";
+		"([Gg]e)\+(be(?:-|\+)?n(?:d?(?:st)?e[mrsn]?)?)" => "$1-$2";
+		"([Gg]e)\+(cko)" => "$1-$2";
+		"([Gg]e)\+(le(?:-|\+)?n(?:d?e[mrsn]?)?)" => "$1-$2"; // eingelen (if it exists ... ;-)
+		"([Gg]e)\+(l-?t(?:e[mrsn]?)?)" => "$1-$2";
+		"([Gg]e)\+(ne?[sn]?)" => "$1-$2";
+		"([Gg]e)-?(no)" => "$1+$2";	// re-correction of re-correction
+		"([Gg]e)-?(hei)" => "$1+$2"; // rere
+		"([Gg]e)-(nü)" => "$1+$2"; // rere
+		"([Gg]e)-(na)" => "$1+$2"; // rere
+		"([Aa]n\+ge)-(nehm)" => "$1+$2"; // rerere
+		
+		// affix er+ 
+		"^([Uu]n\+?)?([GgBbFf]er)\+n" => "$1$2-n";
+		"^([Uu]n\+?)?([Ss]ter)\+n" => "$1$2-n";
+
+		"^([Ee])r\+(s-?t)(?!au)" => "$1r$2";
+		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
+		"^([Bb]er)\+k" => "$1-k";		// Berkeley
+		"b-?er\+g" => "ber-g";			// Aarberg(er) (Berg)
+		
+		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
+		"([Ee]r)\+(ker)" => "$1-$2";
+		"([Ee]r)\+(bt)" => "$1$2";
+		"r\+$" => "r";
+		"r\+\|" => "r|";
+		"([TtGg]er)\+m" => "$1-m";
+		"([Zz]er)\+(be-?r\+)" => "$1-$2";	// Zerberus
+		"([Zz]e-?r)\+(e-?mo-?n)" => "$1-$2";	// Zeremonie
+		"([Zz]er)\+(ti-?fi)" => "$1-$2";	// Zertifikat, zertifizieren
+		"([Kk]on-?zer)\+(t)" => "$1$2";		// Konzert (syllables are not handled very cleanly ...)
+		"(Zer)\+(matt)" => "$1-$2";
+		"(ie-?r)\+" => "$1";
+		"(er)\+(i-?e)" => "$1$2";
+		"([Bb]er)\+(e-?si-?na)" => "$1$2";
+		"([Mm]er)\+k" => "$1k";
+		"([Ee]r)\+(ns)" => "$1$2"; 	// ernst
+		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
+		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
+		
+		"(?<![Vv])([Ee]r)\+(le)(?!i)" => "$1$2"; 			// Erle: first transform all
+
+		"([Ee]r)(le-)(?=[dsbghmprtwz])" => "$1+$2"; 	// reseparate: erlesen, erledigen etc.
+		"([Ee]r)(ler\+)" => "$1+$2"; 	// reseparate: erlernen, erlernt etc.
+		"([Ee]r)(le-?b)" => "$1+$2"; 	// reseparate: erleben, erlebte etc.
+		
+		"([Ll]er)\+n" => "$1n";
+		"([Ww]er)\+?(-?de)" => "$1$2";
+		"([Hh]er)\+r" => "$1r";
+		"([Hh]er)\+(ein|aus|auf|un-?ter|nach)" => "$1-+$2"; // well, -+ is audacious ...
+		"([Ee]r)\+(i-?ka)(?!-?ni-?sch)" => "$1$2"; // Erika, Amerika; amerikanisch
+		"([Ff]er)\+t" => "$1t";
+		"([Ww]er)\+d" => "$1d";
+		"([Mm]er)\+c" => "$1c";
+		"([Ee]r)\+b(e|in)" => "$1-b$2";
+		"([Ee]r)\+(b\|)" => "$1$2"; // erbberechtigt
+		"([Vv]er)\+(s-)" => "$1$2";
+		"([Vv]er)\+(s$)" => "$1$2";
+		"([Vv]er)\+(si-?on)" => "$1-$2";
+		"([Vv]er)\+(s)(chen)" => "$1$2-$3";
+		"([Ff]er)\+(se?n?)" => "$1$2";
+		"([Ss]chmer)\+z" => "$1z";
+		"([Hh]er)\+z" => "$1z";
+		"([Hh]er)\+nach" => "$1-nach";
+		"([Hh]er)\+aus" => "$1|aus";
+		"([Ee]nt)-?(f-?er)\+" => "$1+$2";
+		"(Ger)\+(zen)" => "$1-$2"; // Gerzenstein (Glauser, der Chinese)
+		"([Mm])a-?t-e-?ri-?e" => "Ma-te-ri-e"; // recorrection/resyllabation
+		"er\+v" => "er-v"; // audacious rule ... Nerven, Verve
+		"([Bb]er)\+(lin)" => "$1-$2";
+		"([Ss]cher)\+?-?(be)" => "$1-$2"; // +- because of recorrected |ben ... (et l'horreur continue ... :)
+		"([Vv]or\+der)-" => "$1+"; 
+		"([Ll]a-?t-?er)\+(n)" => "$1$2";
+		"([Ww]er)\+k" => "$1k";
+		"([Zz]er)\+r(e|t(?:e|en|est|et)?)" => "$1r$2"; 
+		"([Ww]er)\+(t)" => "$1$2";
+		"([Ww]er)(te)" => "$1-$2"; // resyllabation
+		"([Bb]er)\+g" => "$1g";
+		"([Bb]er)(ge)" => "$1-$2"; // resyllabation
+		"([Ee]r)(leuch)" => "$1+$2"; // erleuchtet
+		"([Ss]per)\+r" => "$1r";
+		"([Rr]e-?cher)\+(ch)" => "$1-$2";
+		"Ber\+s" => "Ber-s"; // name Berset
+
+		// er+ and in+
+		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
+		"([Ii]n)-?di-?e([rn])" => "$1-di-e$2";
+ 		"([Ii])n-?di-?erin" => "$1-di-e-rin";
+
+		// affix er- => er+ (additional affixes)
+		"Schwie-?g-?er-" => "Schwie-ger+";
+		// additional ge+
+		"^([Gg]e)-?(n(?:u|ü)-?g)" => "$1+$2";
+
+		// einmal, zweimal, dreimal etc. (where's the logic anyway ... ?:)
+		"(ein|zwei|drei|vier|fünf|sechs|sie-?ben|acht|neun|zehn|elf|zwölf)\|mal" => "$1-mal";
+ 
+	#EndSubSection(analyzer)
+#EndSection(header)
+#BeginSection(font)
+	#BeginSubSection(base)
+		"IST" => {  /*h*/ 1,  0.5,  0,  0.5,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0.5,  9.5,  0.5,  1,  1,  0,  0,  0.5, /**/ 1,  10,  0.5,  0,  1,  0,  0,  0.5, /**/ 0.5,  10.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 0,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0.5,  9.5,  0.5,  0,  3,  0,  1,  0.5 }
+		"ES" => {  /*h*/ 1,  0.5,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1.0,  0,  0,  0, /**/ 2,  5,  0,  0,  1.0,  0,  1,  0 }
+		"WAS" => {  /*h*/ 5,  0.5,  0,  0.5,  2,  1,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 1.5,  8.5,  0.5,  1,  1,  0,  0,  0.5, /**/ 2.25,  9.25,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 5,  10,  0.5,  98,  1.5,  0,  0,  0.5, /**/ 2.25,  9.25,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 1.5,  8.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  6,  0.5,  0,  3,  0,  0,  0.5, /**/ 0.5,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 4.25,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 8,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"AUCH" => {  /*h*/ 5,  1,  -1,  0.5,  0.5,  0.5,  0,  "", /**/ "",  "",  "",  "",  1,  1,  1,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  8.5,  0.5,  1,  1.3,  0,  0,  0.5, /**/ 4.2,  10,  0.7,  2,  2.5,  0,  0,  0.6, /**/ 7.8,  5.6,  0.8,  0,  3,  0,  0,  0.5, /**/ 6.9,  -5.2,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5.5,  -8,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 4,  -10,  0.5,  0,  1,  0,  0,  0.5 }
+		"TIG" => {  /*h*/ 7.5,  0.5,  0,  0.5,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  1,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  18.75,  0.5,  1,  1.5,  0,  0,  0, /**/ 6,  20,  0.5,  2,  2.5,  0,  0,  0.5, /**/ 7.5,  18,  0.5,  0,  3,  0,  0,  0, /**/ 7.5,  10,  0,  0,  1,  0,  1,  0, /**/ 7.5,  12.5,  0,  4,  1,  0,  0,  0 }
+		"NICHT" => {  /*h*/ 15,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0.5,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  4,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 6.5,  5,  0.5,  2.5,  2,  0,  0,  0.5, /**/ 7.75,  4,  0.5,  0,  3,  0,  0,  0.5, /**/ 11,  1,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 12.5,  0,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 14,  1,  0.5,  0,  1,  0,  1,  0.5 }
+		"ALL" => {  /*h*/ 3,  0.5,  0,  0.5,  0.75,  0.75,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  7,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 2,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 3,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"WERD" => {  /*h*/ 1.25,  0.5,  0,  0.5,  0,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0.5,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0, /**/ 0,  1,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 1.25,  0,  0.5,  0,  1.2,  0,  1,  0.5 }
+		"IN" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  3,  0,  1,  1,  0,  0,  0, /**/ 3,  4,  0,  0,  1,  0,  0,  0, /**/ 2,  0,  0,  0,  0,  0,  0,  0, /**/ 5,  1,  0,  0,  1,  0,  1,  0 }
+		"SEIN" => {  /*h*/ 20,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0.5,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0.5, /**/ 2,  3.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 8,  5,  0.5,  0,  0,  0,  0,  0.5, /**/ 15,  3.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 19,  1,  0.5,  0,  1,  0,  0,  0, /**/ 20,  0,  0,  0,  1,  0,  1,  0 }
+		"GEGEN" => {  /*h*/ 8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d1*/ 0.5,  7.5,  0.5,  1,  1,  0,  0,  0, /*2*/ 1.5,  10,  0.5,  2,  1,  0,  0,  0.5, /*3*/ 4,  8,  0.5,  0,  1,  0,  0,  0, /*4*/ 4,  4.5,  0,  0,  1,  0,  0,  0.5, /*5*/ 6.25,  5.5,  0.5,  0,  1,  0,  0,  0.5, /*6*/ 8,  3,  0,  0,  1,  0,  0,  0, /*7*/ 8,  0,  0,  0,  1,  0,  1,  0 }
+		"HAB" => {  /*h*/ 4,  0.5,  0,  0,  1.5,  1.5,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  1,  0.5,  0,  1,  0,  1,  0 }
+		"HAT" => {  /*h*/ 4.5,  0.5,  0,  0.5,  1,  1,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  8.75,  0.5,  1,  1.5,  0,  0.5,  0, /**/ 1,  10,  0.5,  2,  2.5,  0,  0,  0.5, /**/ 3.5,  7.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3.5,  1.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  1.0,  0,  2,  0.5, /**/ 0,  2,  0.5,  0,  1.0,  0,  1,  0.5 }
+		"DA" => {  /*h*/ 0,  0.5,  0,  0,  0,  2.25,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"SIND" => {  /*h*/ 2.5,  0.5,  0,  0.5,  1,  2.5,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2.5,  8.25,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  0,  0,  0,  1,  0,  0,  0 }
+		"VOR" => {  /*h*/ 5,  0.5,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  2.5, /**/ 5,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  1,  0,  0,  0.5, /**/ 0,  6.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 1.25,  5.75,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  1,  3,  0,  0,  0.5, /**/ 5,  2.5,  0.7,  0,  3,  0,  0,  0.7, /**/ 2.5,  0,  0.7,  0,  1,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  1,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  0,  1,  0,  1,  0 }
+		"VORAR" => {  /*h*/ 5,  0.5,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0.5,  2.5, /**/ 5,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  1,  0,  0,  0.5, /**/ 0,  6.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 1.25,  5.75,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  5,  0.5,  1,  3,  0,  0,  0.5, /**/ 8,  2.5,  0.7,  0,  3,  0,  0,  0.7, /**/ 5.5,  0,  0.7,  0,  1,  0,  0,  0.5, /**/ 3,  2.5,  0.7,  0,  1,  0,  0,  0.5, /**/ 5.5,  5,  0.5,  0,  1,  0,  0,  0, /**/ 8,  7.5,  0.5,  0,  1,  0,  0,  0, /**/ 5.5,  10,  0.5,  0,  1,  0,  0,  0, /**/ 3,  7.5,  0.5,  0,  1,  0,  0,  0, /**/ 5.5,  5,  0.5,  0,  1,  0,  1,  0 }
+		"ANT" => {  /*h*/ 26,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  4.5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 7,  5,  0.5,  2,  2,  0,  0,  0.5, /**/ 11.5,  4.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 17.75,  1,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 22,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 26,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"RÜCK" => {  /*h*/ 8,  0.5,  0,  0.5,  2,  2,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.5,  0,  0.5,  1,  1,  0,  0,  0.7, /**/ 5,  2.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  5,  0.7,  0,  3,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  3,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  1,  0 }
+		"UR" => {  /*h*/ 5,  0.5,  0,  0,  0,  1,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  2.5, /**/ 5,  0,  0,  0,  0,  0,  0,  0, /*d*/ -2,  10,  0,  1,  3,  0,  0,  0.5, /**/ 3,  5,  0.5,  0,  1,  0,  0,  0.7, /**/ 5,  2.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  0,  0.7,  0,  1,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  1,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  0,  1,  0,  1,  0 }
+		"ANTI" => {  /*h*/ 25,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  4.5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 8,  5,  0.5,  2.5,  2,  0,  0,  0.5, /**/ 11,  4,  0.5,  0,  3,  0,  0,  0.5, /**/ 18,  1,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 22,  0,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 22.5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 23.5,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ 24.5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 23.5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 22.5,  1,  0.5,  0,  1,  0,  1,  0.5 }
+		"ZURÜCK" => {  /*h*/ 5,  0.5,  0,  0.5,  2,  1,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  -10,  0.5,  1,  1,  0,  0,  0.5, /**/ 3.5,  -7.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 5.5,  0.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  2.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  5,  0.7,  0,  2,  0,  0,  0.5, /*6*/ 1,  5,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  3,  0,  0,  0.5, /*8*/ 1,  1,  0.5,  0,  2,  0,  0,  0.5, /**/ 3.5,  0,  0.5,  0,  1,  0,  2,  0, /**/ 5,  2.5,  0.5,  1,  1,  0,  1,  0.7 }
+		"INTER" => {  /*h*/ 5,  0.5,  0,  0.5,  2,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ -2,  -4,  0.5,  1,  1,  0,  0,  0.5, /**/ 1.5,  -3,  0.5,  0,  1,  0,  0,  0.5, /**/ 4,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  2.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  5,  0.7,  0,  3,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  3,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  0,  0, /**/ 3.5,  0,  0.5,  1,  1,  0,  1,  0.7 }
+		"ION" => {  /*h*/ 25,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0.5,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  4.5,  0.5,  1,  1.5,  2,  0,  0.5, /**/ 8,  5,  0.5,  2.5,  2,  0,  0,  0.5, /**/ 11,  4,  0.5,  0,  3,  0,  0,  0.5, /**/ 18,  1,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 22,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 25,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"HAFT" => {  /*h*/ 4,  0.5,  0,  0,  4,  1,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  17,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.8,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 2,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"SCHAFT" => {  /*h*/ 20,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  1.5,  0,  0,  0.5, /**/ 0.75,  3,  0.5,  0,  3,  0,  0,  0.5, /**/ 19.25,  2.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 20,  0,  0.5,  0,  1,  0,  1,  0 }
+		"TALL" => {  /*h*/ 3,  0.5,  0,  0.5,  0.75,  0.75,  0,  "", /**/ "",  "",  "",  "",  1,  0,  1,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  15,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 7,  18.5,  0.5,  2,  2,  0,  0,  0.5, /**/ 6.1,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  17,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  12,  0.5,  0,  2.5,  0,  0,  0, /**/ 7,  10,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 8,  12,  0.5,  0,  1,  0,  1,  0.5 }
+		"TUNG" => {  /*h*/ 8,  0.5,  0,  0.5,  2,  1,  0,  "", /**/ "",  "",  "",  "",  1,  0,  1,  0, /**/ 1,  0,  0,  0,  0,  0,  0,  0, /*d*/ 7,  18,  0.5,  1,  1.3,  0,  0,  0.5, /**/ 8,  19.5,  0.5,  0,  1.3,  0,  0,  0.5, /**/ 9,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 8,  19.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 7,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 7,  11.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 6,  10,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 5,  12,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 7,  14,  0.5,  0,  1,  0,  1,  0.5 }
+		"AUF" => {  /*h*/ 9,  0.5,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0.5, /**/ 2,  2,  0.5,  0,  2,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 7.5,  2,  0.5,  0,  1,  0,  2,  0.5, /**/ 9,  5,  0.5,  0,  1,  0,  1,  0.5 }
+		"AUS" => {  /*h*/ 20,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0.5, /**/ 3,  3,  0.5,  0,  1,  0,  0,  0.5, /**/ 10,  5,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 17,  3,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 19,  1,  0.5,  0,  3,  0,  0,  0.5, /**/ 20,  0,  0.5,  0,  1,  0,  1,  0 }
+		"-AUS" => {  /*h*/ 20,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 10,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 17,  3,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 19,  1,  0.5,  0,  3,  0,  0,  0.5, /**/ 20,  0,  0.5,  0,  1,  0,  1,  0 }
+		"BEI" => {  /*h*/ 18,  0.5,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0.5, /**/ 3,  2,  0.5,  0,  2,  0,  0,  0.5, /**/ 9,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 15,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ 18,  5,  0.5,  0,  1,  0,  1,  0.5 }
+		"DURCH" => {  /*h*/ 10,  0.5,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 3,  10,  0,  1,  1,  0,  0,  0.3, /**/ 0.5,  5,  0.3,  0,  1,  0,  0,  0, /**/ 8,  0,  0,  0,  1,  0,  1,  0 }
+		"DIS" => {  /*h*/ 8,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0.5,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0.5, /**/ -1,  7.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  10,  0.5,  0,  1,  0,  0,  0, /**/ 6.5,  5,  0,  0,  1,  0,  1,  0 }
+		"SICH" => {  /*h*/ 11.75,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  1,  0,  0,  0.5, /**/ 2,  9.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 3,  10,  0.5,  2.5,  1,  0,  0,  0.5, /**/ 5,  9.5,  0.5,  0,  1,  0,  0,  0, /**/ 8,  5,  0,  0,  1,  0,  1,  0 }
+		"SOLCH" => {  /*h*/ 15,  1,  -1,  0.5,  0.5,  0.5,  0,  "", /**/ "",  "",  "",  "",  0,  0,  -0.5,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0.5, /**/ 2.5,  4,  0.5,  0,  1,  0,  0,  0.5, /**/ 4,  5,  0.5,  0,  1,  0,  0,  0.5, /**/ 5.5,  4,  0,  0,  1,  0,  0,  0, /**/ 9,  0,  0,  0,  1,  0,  0,  0, /**/ 10,  3.5,  0,  1,  1.3,  0,  0,  0.5, /**/ 12.5,  5,  0.7,  2,  2.5,  0,  0,  0.8, /**/ 15,  2,  0.8,  0,  3,  0,  0,  0.5, /**/ 15,  -13,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 13,  -15,  0.5,  0,  2,  0,  99,  0.5, /**/ 11.5,  -14,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 10,  -12,  0.5,  0,  1,  0,  2,  0.5, /**/ 13,  -7,  0.5,  0,  1,  0,  1,  0.5, /**/ 15,  -2.5,  0,  4,  1,  0,  0,  0.5 }
+		"WIRD" => {  /*h*/ 5,  0.5,  0,  0.5,  2,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.5,  1,  1,  0,  0,  0.5, /**/ 3.5,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  5,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  7.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  10,  0.7,  0,  3,  0,  0,  0.5, /**/ 0,  7.5,  0.7,  0,  3,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  0,  1,  0,  0,  0, /**/ 5,  5,  0.5,  1,  1,  0,  1,  0.7 }
+		"SELB" => {  /*h*/ 3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 0.5,  0,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 1,  0.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 0.5,  1,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 0,  0.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 0.5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  0,  0.5,  0,  1,  0,  2,  0.5, /**/ 2,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"WO" => {  /*h*/ 7,  0.5,  0,  0.5,  0.5,  0.5,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 1.5,  8.5,  0.5,  1,  1,  0,  0,  0.5, /**/ 2.25,  9.25,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 5,  10,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 2.25,  9.25,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 1.5,  8.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  6,  0.5,  0,  3,  0,  0,  0.5, /**/ 1,  3.25,  0.5,  0,  3,  0,  0,  0.5, /**/ 2.5,  1.5,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 6,  1.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 6.5,  0,  0.5,  0,  1,  0,  1,  0 }
+		"VILLEICHT" => {  /*h*/ 5,  0.5,  0,  0.5,  0.75,  0.75,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2,  8.5,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 2,  0,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  12,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 2,  20,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  17,  0.5,  0,  1,  0,  1,  0.5 }
+		"HEIT" => {  /*h*/ 24,  0,  1.5,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 24,  20,  0,  1,  1,  0,  0,  0, /**/ 24,  20,  0,  0,  1,  0,  1,  0 }
+		"HEIT-1" => {  /*h*/ 24,  0,  1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 24,  20,  0,  1,  1,  0,  0,  0, /**/ 24,  20,  0,  0,  1,  0,  1,  0 }
+		"HEIT&UL" => {  /*h*/ 24,  0,  2,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 24,  20,  0,  1,  1,  0,  0,  0, /**/ 24,  20,  0,  0,  1,  0,  1,  0 }
+		"FORT" => {  /*h*/ 8,  0.5,  0,  0,  1,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 8,  17,  0.5,  2,  2,  0,  0,  0.5, /**/ 6.8,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  -5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 4.25,  -9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  2.5,  0.5,  4,  1,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"\" => {  /*h*/ /*spacing between separate words*/ 3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#0" => {  /*h*/ 0,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }		
+		"#S#" => {  /*h*/ 3,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0, /*d*/ 0, 0, 0, 1, 0, 5, 0, 0, /**/ 3, 0, 0, 0, 0, 5, 1, 0 }
+		"#1" => {  /*h*/ 1,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }		
+		"#2" => {  /*h*/ 2,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }		
+		"#3" => {  /*h*/ 3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#4" => {  /*h*/ 4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }		
+		"#5" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#6" => {  /*h*/ 6,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#7" => {  /*h*/ 7,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#8" => {  /*h*/ 8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }		
+		"#9" => {  /*h*/ 9,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }								
+		"#10" => {  /*h*/ 10,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }	
+		"#1-" => {  /*h*/ -1,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#2-" => {  /*h*/ -2,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }		
+		"#3-" => {  /*h*/ -3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }		
+		"#4-" => {  /*h*/ -4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#5-" => {  /*h*/ -5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#6-" => {  /*h*/ -6,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#7-" => {  /*h*/ -7,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#8-" => {  /*h*/ -8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#9-" => {  /*h*/ -9,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }
+		"#10-" => {  /*h*/ -10,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  3,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0 }			
+		"SCHM" => {  /*h*/ 6,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2,  9,  0.5,  1,  1,  0,  0,  0.5, /**/ 4,  10,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 6,  9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3,  2.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3,  1.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  0.5,  0.5,  0,  3,  0,  0,  0, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"SCHW" => {  /*h*/ 7,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  17,  0.5,  1,  1,  0,  0,  0.5, /**/ 7,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 9,  20,  0.5,  98,  1.5,  0,  0,  0.5, /**/ 7,  19,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  17,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"MPF" => {  /*h*/ 6,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d1*/ 0,  9,  0.5,  1,  1.5,  0,  0,  0, /*2*/ 1.5,  10,  0.5,  2,  2.5,  0,  0,  0.5, /*3*/ 3,  8,  0.5,  0,  3,  0,  0,  0.5, /*4*/ 3,  2,  0.5,  0,  2.5,  0,  0,  0, /*5*/ 4.5,  0,  0.5,  0,  1.5,  0,  0,  0.5, /*6*/ 6,  2.5,  0.5,  0,  1,  0,  0,  0.5, /*7*/ 2.5,  5,  0.5,  0,  1,  0,  0,  0.5, /*8*/ 0.75,  4,  0.5,  0,  1,  0,  0,  0.8, /*9*/ 0,  2.8,  0.8,  0,  1,  0,  0,  0.5, /*10*/ 0.75,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ 4.5,  2,  0.5,  0,  1,  0,  2,  0.5, /*11*/ 5.75,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"SCH" => {  /*h*/ 9,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  7,  0.5,  1,  1,  0,  0,  0.5, /**/ 7,  9,  0.5,  0,  1,  0,  0,  0.5, /**/ 9,  10,  0.5,  98,  1.5,  0,  0,  0.5, /**/ 7,  9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5, /**/ 5,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"^SCH" => {  /*h*/ 9,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0.1, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  7,  0.5,  1,  1,  0,  0,  0.5, /**/ 7,  9,  0.5,  0,  1,  0,  0,  0.5, /**/ 9,  10,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 7,  9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9.5,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -8,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  -6.5,  0.5,  0,  1,  0,  1,  0.5, /**/ 5,  -6,  0,  4,  1,  0,  0,  0.5 }
+		"^SCHM" => {  /*h*/ 6,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0.1, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2,  9,  0.5,  1,  1,  0,  0,  0.5, /**/ 4,  10,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 6,  9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3,  2.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3,  1.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  0.5,  0.5,  0,  3,  0,  0,  0, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"^SCHW" => {  /*h*/ 7,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0.1, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  17,  0.5,  1,  1,  0,  0,  0.5, /**/ 7,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 9,  20,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 7,  19,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  17,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"^CH" => {  /*h*/ 6,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0.1, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.2,  8.5,  0.5,  1,  1.3,  0,  0,  0.5, /**/ 4.5,  10,  0.7,  2,  2.5,  0,  0,  0.5, /**/ 7,  6.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 7,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5.5,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 3.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 3,  -7.5,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  -5,  0.5,  0,  1,  0,  1,  0.5, /**/ 7,  -3.5,  0,  4,  1,  0,  0,  0.5 }
+		"^ZW" => {  /*h*/ 5,  1,  -1,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0.1, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  20,  0,  1,  3,  0,  0,  0, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"^Z" => {  /*h*/ 5,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  1,  -1,  0, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  10,  0,  1,  3,  0,  0,  0, /**/ 5,  -5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 4.25,  -9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"CK" => {  /*h*/ 4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  28.5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2,  30,  0.5,  2,  2,  0,  0,  0.5, /**/ 4,  27,  0.5,  0,  2.5,  0,  0,  0, /**/ 4,  25,  0,  0,  3,  0,  0,  0, /**/ 5,  0,  0,  0,  1,  0,  1,  0, /**/ 5,  2.5,  0,  4,  1,  0,  0,  0 }
+		"FF" => {  /*h*/ 3,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  27,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.8,  30,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  28,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  1,  0.5,  0,  1,  0,  1,  0.5 }
+		"LL" => {  /*h*/ 3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2,  8.5,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 2,  0,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 3,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  1.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 2,  0.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  2,  0.5, /**/ 3,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"MM" => {  /*h*/ 13,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  9,  0.5,  1,  1,  0,  0,  0.5, /**/ 1,  10,  0.5, 0,  1.2,  0,  0,  0.5, /**/ 8,  10,  0.5,  0,  2,  0,  0,  0.5, /**/ 10,  8.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 10,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 12,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 12,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 13,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"NN" => {  /*h*/ 18,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d1*/ 0,  9,  0.5,  1,  1.5,  0,  0,  0.5, /*2*/ 2.75,  10,  0.5,  2,  2.2,  0,  0,  0.5, /*3*/ 7.5,  7,  0.3,  0,  2.7,  0,  0,  0.3, /*4*//* 10.75,  3,  0.5,  0,  2.5,  0,  0,  0.5, *//*5*/ 11,  3.5,  0.3,  0,  2.2,  0,  0,  0.3, /*6a*/ 16,  0,  0.5,  4,  1.5,  0,  0,  0.5, /*6b*/ 16,  0,  0.5,  0,  1.5,  0,  2,  0.5, /*7*/ 18,  1.5,  0.5,  0,  1,  0,  1,  0.5 }
+		"PP" => {  /*h*/ 6,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  3,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 3,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 6,  2,  0,  0,  1,  0,  1,  0 }
+		"RR" => {  /*h*/ 10,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  1,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  8,  0.5,  1,  1,  0,  0,  0.5, /**/ 5,  10,  0.5,  0,  2,  0,  0,  0.5, /*3*/ 8,  7.75,  0.5,  5,  3,  0,  0,  0.5, /**/ 10,  4,  0.5,  0,  3,  0,  0,  0.5, /*5*/ 9,  0.25,  0.5,  5,  2,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 0.5,  4.75,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  9,  0.5,  0,  1,  0,  0,  0.5, /**/ 5, 10,  0.5,  4,  1,  0,  0,  0.5, /**/ 5,  10,  0.5,  0,  1,  0,  1,  0.5 }
+		"SS" => {  /*h*/ 14,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  9,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  10,  0.5,  2.5,  2,  0,  0,  0.5, /**/ 7.5,  8,  0,  0,  3,  0,  0,  0, /**/ 9.5,  6,  0,  0,  3,  0,  0,  0, /**/ 14,  0,  0,  0,  1,  0,  1,  0 }
+		"TT" => {  /*h*/ 0,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  30,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"CH" => {  /*h*/ 5,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  8.5,  0.5,  1,  1.3,  0,  0,  0.5, /**/ 2.5,  10,  0.7,  2,  2.5,  0,  0,  0.8, /**/ 5,  7,  0.8,  0,  3,  0,  0,  0.5, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  99,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5, /**/ 5,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"ND" => {  /*h*/ 3.5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3.5,  7,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0,  0,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"NG" => {  /*h*/ 4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 1,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.5,  7.5,  0.5,  1,  1.3,  0,  0,  0.5, /**/ 3,  9.25,  0.5,  0,  1.3,  0,  0,  0.5, /**/ 5,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  9.25,  0.5,  0,  3,  0,  0,  0.5, /**/ 2.5,  7.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3.5,  1.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  2.25,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 3.5,  4,  0.5,  0,  1,  0,  1,  0.5, /**/ 3.5,  4,  0,  4,  1,  0,  0,  0.5 }
+		"NK" => {  /*h*/ 6,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 3,  0,  0,  0,  0,  0,  0,  0, /*d*/ 3,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 6,  17,  0.5,  2,  2,  0,  0,  0.5, /**/ 4.8,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 3,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  5,  0.5,  0,  1,  0,  1,  0.5, /**/ 4,  5.5,  0,  4,  1,  0,  0,  0.5 }
+		"NS" => {  /*h*/ 5,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2,  5.5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 5,  7.75,  0.5,  2,  2,  0,  0,  0.5, /**/ 4,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2.5,  9,  0.5,  0,  3,  0,  0,  0.5, /**/ 2.75,  1.25,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  99,  0.5, /**/ 0,  2,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 2.5,  2.75,  0.5,  0,  1,  0,  1,  0.5, /**/ 3,  3.5,  0,  4,  1,  0,  0,  0.5 }
+		"PF" => {  /*h*/ 8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  7,  0.5,  1,  1.0,  0,  0,  0.5, /**/ 0.5,  7,  0.5,  2,  1.0,  0,  0,  0.5, /**/ 6,  9,  0.5,  0,  1,  0,  0,  0.5, /**/ 9,  11.1,  0.5,  0,  1.0,  0,  0,  0.5, /**/ 7.5,  16.5,  0.5,  0,  1.25,  0,  0,  0.5, /**/ 2,  20,  0.5,  0,  2.25,  0,  0,  0.5, /**/ 0,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 2,  0,  0.5,  4,  1.25,  0,  0,  0.5, /**/ 3,  0,  0.5,  0,  1.25,  0,  2,  0.5, /**/ 6,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"SP" => {  /*h*/ 8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d1*/ 0,  18,  0.5,  1,  1.5,  0,  0,  0.5, /*2*/ 2,  20,  0.5,  2,  2,  0,  0,  0.5, /*3*/ 4,  18,  0.5,  0,  2.5,  0,  0,  0.5, /*4*/ /*4,  15,  0.5,  0,  3,  0,  0,  0.5,*/ /*5*/ /*4,  5,  0.5,  0,  2.5,  0,  0,  0.5,*/ /*6*/ 4,  3,  0.5,  0,  2,  0,  0,  0.5, /*7*/ 6,  0,  0.5,  4,  1.5,  0,  0,  0.5, /*8*/ 6,  0,  0.5,  0,  1.5,  0,  2,  0.5, /*9*/ 8,  2,  0.5,  0,  1,  0,  1,  0 }
+		"ST" => {  /*h*/ 3,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  17,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.8,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  18,  0.5,  0,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  1,  0 }
+		"ZW" => {  /*h*/ 5,  1,  -1,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  20,  0,  1,  3,  0,  0,  0, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  0,  0,  0,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"EN" => {  /*h*/ 5,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 5,  0,  0,  1,  1,  0,  0,  0, /**/ 5,  0,  0,  0,  1,  0,  1,  0 }
+		"EM" => {  /*h*/ 18,  5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 5,  0,  0,  1,  1,  0,  0,  0, /**/ 13,  0,  0.5,  1,  1,  0,  1,  0 }
+		"/EN" => {  /*h*/ 5,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 10,  0,  0,  1,  1,  0,  0,  0, /**/ 10,  0,  0,  0,  1,  0,  1,  0 }
+		"/EM" => {  /*h*/ 18,  5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 10,  0,  0,  1,  1,  0,  0,  0, /**/ 15,  0,  0.5,  1,  1,  0,  1,  0 }
+		"DEN" => {  /*h*/ 5,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0, /**/ 5,  0,  0,  0,  1,  0,  1,  0 }
+		"DEM" => {  /*h*/ 13,  5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0, /**/ 13,  0,  0.5,  1,  1,  0,  1,  0 }
+		"VR+AR" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0.5,  2.5, /**/ 5,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.5,  5,  0.5,  1,  3,  0,  0,  0.5, /**/ 5,  2.5,  0.7,  0,  3,  0,  0,  0.7, /**/ 2.5,  0,  0.7,  0,  1,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  1,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  0,  1,  0,  0,  0, /**/ 2.5,  5,  0.5,  0,  1,  0,  0,  0.7, /**/ 5,  7.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  10,  0.7,  0,  1.0,  0,  0,  0.5, /**/ 0,  7.5,  0.7,  0,  1.0,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  0,  1,  0,  1,  0 }
+		"B" => {  /*h*/ 4.5,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  0,  0.75,  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  3,  0,  0,  0.5, /* 0,  4,  0.5,  0,  2.5,  0,  0,  0.5, */ 0,  3,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 2.25,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4.5,  2,  0.5,  0,  1,  0,  1,  0, /*test:diacritics*/ 3,  -5,  0,  "@#/",  0,  0,  0,  0 }
+		"@#/" => {  /*h*/ 4.5,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.0,  1,  1.0,  0,  0,  0, /**/ -5,  -4,  0.0,  0,  1.0,  0,  1,  0.0  }
+		"C" => {  /*h*/ 3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 1,  9.5,  0.5,  1,  1,  0,  0,  0.5, /**/ 3,  10,  0.5,  98,  3,  0,  0,  0.5, /**/ 1,  9.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  7.5,  0.5,  0,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0,  /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"D" => {  /*h*/ 0,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"F" => {  /*h*/ 4,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  17,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.8,  20,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  18,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 2,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"G" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 1.75,  8.75,  0.5,  1,  1.5,  0,  0,  0, /**/ 2,  10,  0.5,  2,  2.5,  0,  0,  0.5, /**/ 4.5,  8,  0.5,  0,  3,  0,  0,  0, /**/ 4.5,  0,  0,  0,  1,  0,  1,  0, /**/ 4.5,  2.5,  0,  4,  1,  0,  0,  0 }
+		"H" => {  /*h*/ 4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 1,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0.5,  9,  0.5,  1,  1.5,  0,  0.5,  0.5, /**/ 1.75,  10,  0.5,  2,  2.5,  0,  0,  0.5, /**/ 3.5,  7.2,  0,  0,  3,  0,  0,  0, /**/ 3.5,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.95, 0, 0.5, 0, 4, 0, 0, 0.5,  /**/ 0,  0.5,  0.5,  0,  2.5,  0,  99,  0.5, /**/ 0,  2.4,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 3.5,  4.6,  0.5,  0,  1,  0,  1,  0.5, /**/ 3.5,  5,  0,  4,  1,  0,  0,  0.5 }
+		"J" => {  /*h*/ 3,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 3,  10,  0,  1,  3,  0,  0,  0.5, /**/ 3,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  1.5,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  1.5,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 3,  5,  0.5,  0,  1,  0,  1,  0.5 }
+		"J^" => {  /*h*/ 3,  0.5,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2,  10,  0,  1,  3,  0,  0,  0.5, /**/ 3,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  1.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 3,  5,  0.5,  0,  1,  0,  1,  0.5 }
+		"K" => {  /*h*/ 4,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  18,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2,  20,  0.5,  2,  2,  0,  0,  0.5, /**/ 4,  18,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 4,  15,  0.5,  0,  3,  0,  0,  0, /**/ 4,  0,  0,  0,  1,  0,  1,  0, /**/ 4,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"L" => {  /*h*/ 3,  0.5,  0,  0.5,  0, 0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3,  8.5,  0.5,  2,  2,  0,  0,  0.5, /**/ 1.1,  10,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 2,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 3.25,  1.5,  0.5,  0,  1,  0,  1,  0.5 }
+		"@L" => {  /*h*/ 0,  0,  0,  0.5,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  1,  0.5,  1,  0,  0,  0.5, /**/ 1,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ -1,  1,  0.5,  0,  1,  0,  2,  0.5, /**/ 0,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"@L3" => {  /*h*/ 0,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  1,  0.5,  1.0,  0,  0,  0.5, /**/ -1,  0.75,  0.5,  0,  1.0,  0,  0,  0.5, /**/ -2.75,  0,  0.5,  0,  1.0,  0,  0,  0.5, /**/ -1,  -0.75,  0.5,  0,  1.0,  0,  2,  0.5, /**/ 0,  0,  0.5,  0,  1.0,  0,  1,  0.5 }
+		"&L" => {  /*h*/ 2,  0.5,  0,  0.5,  1,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0.5,  0,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 1,  0.5,  0.5,  0,  2,  0,  0,  0.5, /**/ 0.5,  1,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  0.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 0.5,  0,  0.5,  0,  2.5,  0,  1,  0 }
+		"M" => {  /*h*/ 8,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  8.75,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 1.5,  10,  0.5,  2,  2.5,  0,  0,  0.5,  /**/ 3.5,  7.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 3.5,  2,  0.5,  0,  2.5,  0,  0,  0, /**/ 6,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 6,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 8,  1.75,  0.5,  0,  1,  0,  1,  0.5 }
+		"N" => {  /*h*/ 11,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  4.25,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 1.9,  5,  0.5,  2,  2,  0,  0,  0.5, /**/ 4.5,  3.9,  0.5,  0,  3,  0,  0,  0.5, /* 5.5,  2,  0.5,  0,  2.5,  0,  0,  0.5, *//**/ 7.5,  1,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 9.5,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 9.5,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 11,  1,  0.5,  0,  1,  0,  1,  0.5 }
+		"N=" => {  /*h*/ 12,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.5,  1,  1,  0,  0,  0.5, /**/ 0,  2.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  4.25,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 2.9,  5,  0.5,  0,  1.0,  0,  0,  0.5, /**/ 5.5,  3.9,  0.5,  0,  1.0,  0,  0,  0.5, /* 6.5,  2,  0.5,  0,  2.5,  0,  0,  0.5, *//**/ 8.5,  1,  0.5,  0,  1.0,  0,  0,  0.5, /**/ 10.5,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 10.5,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 12,  1,  0.5,  0,  1,  0,  1,  0.5 }
+		"P" => {  /*h*/ 4,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  0.0, 0.75,  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  20,  0,  1,  3,  0,  0,  0, /**/ 0,  2.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 4,  2,  0,  0,  1,  0,  1,  0 }
+		"Q" => {  /*h*/ 3,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 1,  19,  0.5,  1,  1,  0,  0,  0.5, /**/ 3,  20,  0.5,  98,  3,  0,  0,  0.5, /**/ 1,  19,  0.5,  0,  3,  0,  0,  0.5, /**/ 0,  15,  0.5,  0,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0 }
+		"VR" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  2.5, /**/ 5,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.5,  5,  0.5,  1,  1.5,  0,  0,  0.5, /**/ 3.75,  4,  0.7,  5,  2.5,  0,  0,  0.7, /**/ 5,  2.5,  0.7,  0,  3,  0,  0,  0.7, /**/ 4.5,  0.5,  0.7,  5,  2,  0,  0,  0.7, /**/ 3.25,  0.15,  0.7,  5,  1.5,  0,  0,  0.7, /**/ 2.5,  0,  0.7,  0,  1,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  1,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  4,  1,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  0,  1,  0,  1,  0 }
+		"AR" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.5,  0,  0.5,  1,  1,  0,  0,  0.7, /**/ 5,  2.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  5,  0.7,  0,  3,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  3,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  2.5,  0.5,  0,  1,  0,  1,  0 }
+		"AR^" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2.5,  0,  0.5,  1,  1,  0,  0,  0.7, /**/ 5,  2.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 2.5,  5,  0.7,  0,  3,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  3,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  0,  0, /**/ 5,  2.5,  0.7,  0,  1,  0,  1,  0.7 }
+		"AR5" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  2.5,  0.7,  1,  1,  0,  0,  0.7, /**/ 2.5,  5,  0.7,  0,  3,  0,  0,  0.5, /**/ 0,  2.5,  0.7,  0,  3,  0,  0,  0.5, /**/ 2.5,  0,  0.5,  0,  1,  0,  0,  0, /**/ 2.5,  0,  0.5,  1,  1,  0,  1,  0.7 }
+		"AUF+AR" => {  /*h*/ 10.5,  0.5,  0,  0.0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3.0,  0,  0,  0.5, /**/ 1.75,  2.5,  0.5,  0,  2,  0,  0,  0.0, /*d2*/ 5.75,  0,  0.5,  0,  1,  0,  0,  0.7, /**/ 10.5,  2.5,  0.7,  0,  1,  0,  0,  0.7, /**/ 8,  5,  0.7,  0,  1.0,  0,  0,  0.5, /**/ 5.5,  2.5,  0.7,  0,  1.0,  0,  0,  0.5, /**/ 8,  0,  0.5,  0,  1,  0,  1,  0 }
+		"@R" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.7,  0,  1,  0,  0,  0.7, /**/ -2.5,  2.5,  0.7,  0,  1,  0,  0,  0.5, /**/ -4,  0,  0.7,  0,  1,  0,  0,  0.5, /**/ -2.5,  -2.5,  0.5,  0,  1,  0,  2,  0.5, /**/ 0,  0,  0.5,  0,  1,  0,  1,  0.7 }
+		"@R3^" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ -2.5,  4,  0.7,  0,  1,  0,  0,  0.5, /**/ -5,  1.5,  0.7,  0,  1,  0,  0,  0.5, /**/ -2.5,  -1,  0.5,  0,  1,  0,  2,  0.5, /**/ 0,  1.5,  0.5,  0,  1,  0,  1,  0.7 }
+		"@R6" => {  /*h*/ 0,  0.5,  0,  0.5,  0,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.7,  0,  1,  0,  0,  0.7, /**/ 2,  2.5,  0.7,  0,  1,  0,  0,  0.5, /**/ -0.25,  5,  0.7,  0,  1,  0,  0,  0.5, /**/ -2.5,  2.5,  0.5,  0,  1,  0,  2,  0.5, /**/ 0,  0,  0.5,  0,  1,  0,  1,  0.7 }
+		"S" => {  /*h*/ 6.75,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d1*/ 0,  4,  0.5,  1,  1.5,  0,  0,  0.5, /*2*/ /*1,  5,  0.5,  2,  2,  0,  0,  0.5,*/ /**/ 2,  5,  0.5,  2,  3,  0,  0,  0, /*3*/ 4,  4,  0.5,  0,  3,  0,  0,  0, /*4*/ 8.75,  0,  0,  0,  1,  0,  1,  0 }
+		"=ES" => {  /*h*/ 18.75,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 2,  5,  0.5,  1,  1.5,  0,  0,  0.5, /*d*/ 6,  5.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 10,  5.5,  0.5,  0,  2,  0,  0,  0.5, /**/ 12,  5,  0.5,  0,  3,  0,  0,  0.5, /**/ 14,  4,  0.5,  0,  3,  0,  0,  0, /**/ 18.75,  0,  0,  0,  1,  0,  1,  0 }
+		"S=" => {  /*h*/ 9.75,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 1,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0.5,  1,  1.0,  0,  0,  0.5,/**/ 0,  2.5,  0.5,  0,  1.0,  0,  0,  0.5, /**/ 1,  4,  0.5,  0,  1.0,  0,  0,  0.5, /**/ 2,  5,  0.5,  0,  1.0,  0,  0,  0.5, /**/ 3,  5,  0.5,  0,  2.0,  0,  0,  0, /**/ 5,  4,  0.5,  0,  3,  0,  0,  0, /**/ 9.75,  0,  0,  0,  1.0,  0,  1,  0 }
+		"T" => {  /*h*/ 0,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  20,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0, /**/ 0,  2.5,  0,  4,  1,  0,  0,  0.5 }
+		"&T" => {  /*h*/ 4,  0,  1.5,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  20,  0,  1,  1,  0,  0,  0, /**/ 4,  20,  0,  0,  1,  0,  1,  0 }
+		"&T-1" => {  /*h*/ 4,  0,  1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  20,  0,  1,  1,  0,  1,  0, /**/ 4,  20,  0,  0,  1,  0,  1,  0 }
+		"&T3/4" => {  /*h*/ 4,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  1,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  15,  0,  1,  1,  0,  1,  0, /**/ 4,  15,  0,  0,  1,  0,  1,  0, /**/ 4,  15,  0,  4,  1,  0,  1,  0 }
+		"&&T" => {  /*h*/ 4,  0,  1.5,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  20,  0,  1,  1,  0,  1,  0, /**/ 4,  20,  0,  0,  1,  0,  1,  0 }
+		"&T34" => {  /*h*/ 4,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  1,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  15,  0,  1,  1,  0,  1,  0, /**/ 4,  15,  0,  0,  1,  0,  1,  0, /**/ 4,  15,  0,  4,  1,  0,  1,  0 }
+		"ET" => {  /*h*/ 6,  0,  2.5,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 6,  30,  0,  1,  1,  0,  1,  0, /**/ 6,  30,  0,  0,  1,  0,  1,  0 }
+		"ET3/4" => {  /*h*/ 4,  0,  1.5,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  20,  0,  1,  1,  0,  1,  0, /**/ 4,  20,  0,  0,  1,  0,  1,  0 }
+		"V" => {  /*h*/ 7,  0.5,  0,  0.5, 1.5,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0.25,  16.75,  0.5,  1,  1,  0,  0,  0.5, /**/ 2.25,  19.5,  0.6,  2,  1,  0,  0,  0, /**/ 6,  20,  0,  98,  0,  0,  0,  0.5, /**/ 2.25,  19.5,  0.6,  0,  1.5,  0,  0,  0.5, /**/ 0.25,  16.75,  0.5,  0,  2.5,  0,  0,  0.5, /**/ -0.75,  14,  0.5,  0,  3,  0,  0,  0.5, /**/ -1.5,  9.75,  0.5,  0,  3,  0,  0,  0.5, /**/ -0.5,  4.5,  0.5,  0,  3,  0,  0,  0.5, /**/ 1,  2,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3.5,  0.25,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 5,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 7,  0.5,  0.5,  0,  1,  0,  1,  0.5 }
+		"W" => {  /*h*/ 7,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 1.5,  8.5,  0.5,  1,  1,  0,  0,  0.5, /**/ 2.25,  9.25,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 5,  10,  0.5,  98,  1.5,  0,  0,  0.5, /**/ 2.25,  9.25,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 1.5,  8.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 0,  6,  0.5,  0,  3,  0,  0,  0.5, /**/ 0.5,  2,  0.5,  0,  3,  0,  0,  0.5, /**/ 4,  0,  0.5,  4,  1.5,  0,  0,  0.5, /**/ 4.5,  0,  0.5,  0,  1.5,  0,  2,  0.5, /**/ 7,  1.5,  0.5,  0,  1,  0,  1,  0.5 }
+		"X" => {  /*h*/ 7,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  1.0,  0,  0,  0.5, /**/ 3,  7.5,  0.5,  2,  1.5,  0,  0,  0.5, /**/ 3,  9.5,  0.5,  0,  2.0,  0,  0,  0.5, /**/ 1,  9.75,  0.5,  0,  2.5,  0,  0,  0.5, /**/ -0.5,  6,  0.5,  0,  2.0,  0,  0,  0.5, /**/ 0,  5,  0.5,  0,  1.5,  0,  0,  0, /**/ 7,  0,  0,  0,  1,  0,  1,  0 }
+		"Y" => {  /*h*/ 10,  0.5,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  3,  0,  0,  0, /**/ 10,  0,  0,  0,  1,  0,  1,  0 }
+		"Z" => {  /*h*/ 5,  1,  -1,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 5,  10,  0,  1,  3,  0,  0,  0, /**/ 5,  -5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 4.25,  -9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -7,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  2.5,  0.5,  4,  1,  0,  2,  0.5, /**/ 5,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"&E" => {  /*h*/ 3,  0.5,  0,  0,  0,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0, /**/ 0,  1.5,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 2,  0,  0.5,  0,  1.2,  0,  2,  0.5, /**/ 3,  0,  0.5,  0,  1,  0,  1,  0.5 }
+		"&A" => {  /*h*/ 0,  0.5,  0,  0,  0,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0 }
+		"&U" => {  /*h*/ 5,  0.5,  0,  0,  0,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0, /**/ 5,  0,  0,  0,  1,  0,  1,  0 }
+		"&O" => {  /*h*/ 6.75,  0.5,  0,  0.5,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  1.5,  0,  0,  0.5, /**/ 0.75,  3,  0.5,  0,  3,  0,  0,  0.5, /**/ 6,  2.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 6.75,  0,  0.5,  0,  1,  0,  1,  0 }
+		"&I" => {  /*h*/ 2,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0.5,  1,  0.5,  1,  2,  0,  0,  0.5, /**/ 1,  0.5,  0.5,  0,  2,  0,  0,  0.5, /**/ 0.5,  0,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  0.5,  0.5,  0,  1,  0,  0,  0, /**/ 0.5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 0.5,  1,  0.5,  0,  1,  0,  1,  0.5 }
+		"#U#" => {  /*h*/ 5,  0.5,  0,  0,  0,  2,  0,  "", /**/ "",  "",  "",  "",  1,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0, /**/ 5,  5,  0,  0,  3,  0,  0,  0, /**/ 10,  0,  0,  0,  1,  0,  1,  0 }
+		"-E" => {  /*h*/ 1.25,  0.5,  0,  0,  4,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ -1,  5,  0.5,  1,  3,  0,  0,  0, /**/ -1,  5,  0,  0,  3,  0,  1,  0 }
+		"-A" => {  /*h*/ 0,  0.5,  0,  0.5,  0,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0 }
+		"-U" => {  /*h*/ 5,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  3,  0,  0,  0, /**/ 5,  0,  0,  0,  1,  0,  1,  0 }
+		"-O" => {  /*h*/ 6.75,  0.5,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  5,  0,  1,  1.5,  0,  0,  0.5, /**/ 0.75,  3,  0.5,  0,  3,  0,  0,  0.5, /**/ 6,  2.5,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 6.75,  0,  0.5,  0,  1,  0,  1,  0 }
+		"-I" => {  /*h*/ 3,  0.5,  0,  0.5,  3,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  1,  0.5,  1,  1,  0,  0,  0.5, /**/ 1,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ 2,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  0,  0.5,  0,  1,  0,  0,  0, /**/ 0,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  2,  0.5,  0,  1,  0,  1,  0.5 }
+		"-EI" => {  /*h*/ 1.25,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 1,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  10,  0,  1,  3,  0,  0,  0, /**/ 4,  10,  1,  0,  3,  0,  1,  0 }
+		"-^EI" => {  /*h*/ 1.25,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ /*no!*/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  10,  0,  1,  3,  0,  0,  0, /**/ 4,  10,  1,  0,  3,  0,  1,  0 }
+		"-EI2" => {  /*h*/ 1.25,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 1,  0,  0,  0,  0,  0,  0,  0, /*d*/ 4,  15,  0,  1,  3,  0,  0,  0, /**/ 4,  10,  1,  0,  3,  0,  1,  0 }
+		"/I" => {  /*h*/ 1.25,  0.5,  0,  0.5,  1,  1,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  10,  0,  1,  1,  0,  0,  0 }
+		"0-" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0.5 }
+		"0N-" => {  /*h*/ 1,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  5,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0.5 }
+		"0D-" => {  /*h*/ 3,  0,  -0.5,  0,  0,  0,  1,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0.5 }
+		"0U-" => {  /*h*/ 5,  0,  0,  0,  0,  0,  1,  "", /**/ "",  "",  "",  "",  0,  0.5,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  0,  0,  0, /**/ 0,  0,  0,  0,  1,  0,  1,  0.5 }
+		"PSPACE" => {  /*h*/ 2,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  5,  0,  0, /**/ 2,  0,  0,  0,  1,  5,  2,  0 }
+		"~~" => {  /*h*/ 12.5,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  9,  0,  1,  1,  5,  0,  0.5, /**/ 2.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 5,  9,  0,  0,  1,  0,  0,  0.5, /**/ 7.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 10,  9,  0,  0,  1,  0,  0,  0.5, /**/ 12.5,  11,  0,  0,  1,  0,  1,  0.5, /**/ 15,  9,  0,  0,  1,  0,  1,  0.5 }
+		"~" => {  /*h*/ 12.5,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  9,  0,  1,  1,  5,  0,  0.5, /**/ 2.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 5,  9,  0,  0,  1,  0,  0,  0.5, /**/ 7.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 10,  9,  0,  0,  1,  0,  0,  0.5, /**/ 12.5,  11,  0,  0,  1,  0,  1,  0.5, /**/ 15,  9,  0,  0,  1,  0,  1,  0.5 }
+		"…" => {  /*h:ellipsis*/ 9,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d1*/ 0.5,  0,  0,  1,  1,  5,  0,  0, /**/ 1,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 0,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  0,  0,  0,  1,  0,  1,  0.5, /*d2*/ 4.5,  0,  0,  1,  1,  5,  0,  0, /**/ 5,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 4.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 4,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 4.5,  0,  0,  0,  1,  0,  1,  0.5, /*d3*/ 8.5,  0,  0,  1,  1,  5,  0,  0, /**/ 9,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 8.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 8,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 8.5,  0,  0,  0,  1,  0,  1,  0.5 }
+		"." => {  /*h*/ 2,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0.5,  0,  0,  1,  1,  5,  0,  0, /**/ 1,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 0,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  0,  0,  0,  1,  0,  1,  0.5 }
+		"," => {  /*h*/ 3,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 2,  -2,  0,  1,  1,  5,  0,  0, /**/ 3,  1,  0,  0,  1,  0,  1,  0.5 }
+		";" => {  /*h*/ 3,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 2.5,  4.5,  0,  1,  1,  5,  0,  0, /**/ 3,  5,  0,  0,  1,  0,  1,  0.5, /**/ 2.5,  5.5,  0,  0,  1,  0,  1,  0.5, /**/ 2,  5,  0,  0,  1,  0,  1,  0.5, /**/ 2.5,  4.5,  0,  0,  1,  0,  1,  0.5, /**/ 3,  1,  0,  1,  1,  5,  0,  0, /**/ 2,  -2,  0,  0,  1,  0,  1,  0.5 }
+		":" => {  /*h*/ 3,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0.5,  4.5,  0,  1,  1,  5,  0,  0, /**/ 1,  5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  5.5,  0,  0,  1,  0,  1,  0.5, /**/ 0,  5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  4.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  0,  0,  1,  1,  5,  0,  0, /**/ 1,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 0,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  0,  0,  0,  1,  0,  1,  0.5 }
+		"!" => {  /*h*/ 2,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0.5,  20,  0,  1,  1,  5,  0,  0, /**/ 0.5,  5,  0,  1,  1,  0,  0,  0, /**/ 0.5,  0,  0,  1,  1,  5,  0,  0, /**/ 1,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 0,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 0.5,  0,  0,  0,  1,  0,  1,  0.5 }
+		"?" => {  /*h*/ 5,  0,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  15,  0,  0,  1,  5,  0,  0.5, /**/ 1.25,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  20,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.75,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  15,  0.5,  0,  1,  0,  0,  0.5, /**/ 5,  13,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  10,  0.5,  0,  1,  0,  0,  0.5, /**/ 2.5,  5,  0.5,  0,  1,  0,  0,  0, /**/ 2.5,  0,  0,  1,  1,  5,  0,  0, /**/ 3,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 2.5,  1,  0,  0,  1,  0,  1,  0.5, /**/ 2,  0.5,  0,  0,  1,  0,  1,  0.5, /**/ 2.5,  0,  0,  0,  1,  0,  1,  0.5 }
+		"=" => {  /*h*/ 5,  0,  0,  0,  3,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  11,  0,  1,  1,  5,  0,  0.5, /**/ 5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 0,  9,  0,  0,  1,  5,  0,  0.5, /**/ 5,  9,  0,  0,  1,  0,  1,  0.5 }
+		"'" => {  /*h*/ 1,  0,  0,  0,  3,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  1,  1,  5,  0,  0.5, /**/ 1,  15,  0,  0,  1,  0,  0,  0.5, /**/ 1,  18,  0,  0,  1,  0,  1,  0.5 }
+		""" => {  /*h*/ 3,  0,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  1,  1,  5,  0,  0.5, /**/ 1,  15,  0,  0,  1,  0,  0,  0.5, /**/ 1,  18,  0,  0,  1,  0,  0,  0.5, /**/ 2,  14,  0,  0,  1,  5,  0,  0.5, /**/ 3,  15,  0,  0,  1,  0,  0,  0.5, /**/ 3,  18,  0,  0,  1,  0,  1,  0.5 }
+		"/" => {  /*h*/ 6,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  1,  0,  1,  1,  5,  0,  0, /**/ 6,  19,  0,  0,  1,  0,  1,  0.5 }
+		"#Q#" => {  /*h*/ 3,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  1,  1,  5,  0,  0.5, /**/ 1,  15,  0,  0,  1,  0,  0,  0.5, /**/ 1,  18,  0,  0,  1,  0,  0,  0.5, /**/ 2,  14,  0,  1,  1,  5,  0,  0.5, /**/ 3,  15,  0,  0,  1,  0,  0,  0.5, /**/ 3,  18,  0,  0,  1,  0,  0,  0.5 }
+		"(" => {  /*h*/ 4,  0,  0,  0,  0,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 4,  13,  0,  1,  1,  5,  0,  0, /**/ 0,  13,  0,  0,  1,  0,  0,  0, /**/ 0,  1,  0,  0,  1,  0,  0,  0, /**/ 4,  1,  0,  0,  1,  0,  0,  0 }
+		")" => {  /*h*/ 4,  0,  0,  0,  2,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  13,  0,  1,  1,  5,  0,  0, /**/ 4,  13,  0,  0,  1,  0,  0,  0, /**/ 4,  1,  0,  0,  1,  0,  0,  0, /**/ 0,  1,  0,  0,  1,  0,  0,  0 }
+		"A" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "narrow",  "yes",  0,  0 }
+		"#0S" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "none",  "yes",  0,  0 }
+		"#N" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "narrow",  "no",  0,  0 }
+		"#W" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "wide",  "no",  0,  0 }
+		"#NS" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "narrow",  "yes",  0,  0 }
+		"#WS" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "wide",  "yes",  0,  0 }
+		"#NDS" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "down",  "narrow",  "yes",  0,  0 }
+		"#WDS" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "down",  "wide",  "yes",  0,  0 }
+		"#WD" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "down",  "wide",  "no",  0,  0 }
+		"#WU" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "up",  "wide",  "no",  0,  0 }
+		"#WUS" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "up",  "wide",  "yes",  0,  0 }
+		"E" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "wide",  "no",  0,  0 }
+		"I" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "up",  "narrow",  "no",  0,  0 }
+		"O" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "down",  "narrow",  "no",  0,  0 }
+		"U" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "down",  "narrow",  "yes",  0,  0 }
+		"Ä" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "no",  "wide",  "yes",  0,  0 }
+		"Ö" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "down",  "wide",  "no",  0,  0 }
+		"Ü" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "down",  "wide",  "yes",  0,  0 }
+		"EU" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "up",  "wide",  "yes",  0,  0 }
+		"AU" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "up",  "narrow",  "yes",  0,  0 }
+		"EI" => {  /*h*/ 0,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  2,  0,  0,  0, /**/ 0,  0,  0,  "up",  "wide",  "no",  0,  0 }
+		"0" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 3.5,  1,  0,  0,  1,  5,  0,  0.5, /**/ 6,  2.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  10,  0.5,  0,  1,  0,  0,  0.5, /**/ 6,  17.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  17.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  10,  0.5,  0,  1,  0,  0,  0.5, /**/ 1,  2.5,  0.5,  0,  1,  0,  0,  0, /**/ 3.5,  1,  0,  1,  1,  0,  0,  0, /**/ 6,  2.5,  0,  0,  1,  5,  1,  0.5 }
+		"1" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0, /*d*/ 0,  11,  0,  0,  1,  5,  0,  0, /**/ 7,  19,  0,  0,  1,  0,  0,  0, /**/ 7,  1,  0,  0,  1,  0,  0,  0 }
+		"2" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  0,  1,  5,  0,  0.5, /**/ 1.25,  18,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 5.75,  18,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  15,  0.5,  0,  1,  0,  0,  0, /**/ 0,  1,  0,  0,  1,  0,  0,  0.5, /**/ 7,  1,  0,  0,  1,  0,  0,  0 }
+		"3" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  0,  1,  5,  0,  0.5, /**/ 1.25,  18,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 5.75,  18,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  15,  0.5,  0,  1,  0,  0,  0, /**/ 3.5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 7,  7,  0.5,  0,  1,  0,  0,  0.5, /**/ 6,  2.5,  0.5,  0,  1,  0,  0,  0, /**/ 3.5,  1,  0,  1,  1,  0,  0,  0, /**/ 0,  5,  0,  0,  1,  0,  1,  0 }
+		"4" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 3.5,  19,  0,  0,  1,  5,  0,  0, /**/ 0,  11,  0,  0,  1,  0,  0,  0.5, /**/ 7,  11,  0,  0,  1,  0,  0,  0, /**/ 5.5,  19,  0,  0,  1,  5,  0,  0, /**/ 5.5,  1,  0,  0,  1,  0,  0,  0 }
+		"5" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 7,  19,  0,  0,  1,  5,  0,  0, /**/ 0,  19,  0,  0,  1,  0,  0,  0, /**/ 0,  11,  0,  0,  1,  0,  0,  0.5, /**/ 6,  10,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  5,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  4,  0.5,  0,  1,  0,  0,  0 }
+		"6" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 7,  19,  0,  0,  1,  5,  0,  0.5, /**/ 1,  11,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  5,  0.5,  0,  1,  0,  0,  0.5, /**/ 1.5,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 6,  2,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  5,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  10,  0.5,  1,  1,  0,  0,  0.5, /**/ 0,  5,  0.5,  0,  1,  0,  1,  0.5 }
+		"7" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  19,  0,  0,  1,  5,  0,  0, /**/ 7,  19,  0,  0,  1,  0,  0,  0, /**/ 3,  1,  0,  0,  1,  0,  0,  0, /**/ 3.5,  11,  0,  0,  1,  5,  0,  0, /**/ 6.5,  11,  0,  0,  1,  0,  0,  0 }
+		"8" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 3.5,  11,  0,  0,  1,  5,  0,  0.5, /**/ 7,  15,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  15,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  11,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  6,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  6,  0.5,  0,  1,  0,  0,  0, /**/ 3.5,  11,  0,  1,  1,  0,  0,  0 }
+		"9" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 7,  14,  0,  0,  1,  5,  0,  0.5, /**/ 3.5,  10,  0.5,  0,  1,  0,  0,  0.5, /**/ 0,  15,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  19,  0.5,  0,  1,  0,  0,  0.5, /**/ 7,  15,  0.5,  0,  1,  0,  0,  0.5, /**/ 6,  6,  0.5,  0,  1,  0,  0,  0.5, /**/ 3.5,  1,  0.5,  0,  1,  0,  0,  0 }
+		"#A+" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  0,  0,  1,  1,  5,  0,  0, /**/ 3.5,  19,  0,  0,  1,  0,  0,  0, /**/ 7,  0,  0,  0,  1,  0,  0,  0, /**/ 1.75,  9.5,  0,  0,  1,  5,  0,  0, /**/ 5.25,  9.5,  0,  0,  1,  0,  1,  0 }
+		"#A-" => {  /*h*/ 7,  0,  0,  0,  4,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 5.25,  9,  0,  1,  1,  5,  0,  0.5, /**/ 4.5,  9.5,  0.5,  0,  1,  0,  0,  0.5, /**/ 0.5,  3.75,  0.5,  0,  1,  0,  0,  0.5, /**/ 0.5,  1,  0.5,  0,  1,  0,  0,  0.5, /**/ 1.5,  0,  0.5,  0,  1,  0,  0,  0, /**/ 5.25,  9,  0,  0,  1,  0,  0,  0.5, /**/ 5.25,  1,  0.5,  0,  1,  0,  0,  0, /**/ 6,  0,  0,  0,  1,  0,  1,  0 }
+		"#_#" => {  /*h*/ 1,  0.5,  0,  0,  4,  4,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  1,  0,  0,  0,  0,  0,  0, /*d*/ 0,  -4.5,  0,  1,  1.0,  0,  0,  0, /**/ 7,  -4.5,  0,  0,  1.0,  0,  1,  0 }
+		"_._" => {  /*h*/ 3,  0,  0,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  0,  0,  0,  0,  0,  0, /*stützpunkt_sch*/ 2.5,  8,  0.5,  1,  1,  0,  1,  0.5 }
+	#EndSubSection(base)
+	#BeginSubSection(combiner)
+		"D" => { "@R3^", 0, 0 }
+		"C" => { "@R", 0, 0 }
+		"ND" => { "@R", 0, 0 }
+		"T" => { "@R3^", 0, 0 }
+		"G" => { "@R3^", 0, 0 }
+		"K" => { "@R3^", 0, 0 }
+		"CH" => { "@R", 0, 0 }
+		"NK" => { "@R", 0, 0 }
+		"NG" => { "@R", 0, 0 }
+		"NS" => { "@R", 0, 0 }
+		"H" => { "@R", 0, 0 }
+		"SCH" => { "@R", 0, 0 }
+		"ST" => { "@R3^", 0, 0 }
+		"L" => { "@L", 0, 0 }
+		"B" => { "@L", 0, 0 }
+		"G" => { "@L3", 0, 0 }
+		"M" => { "@L", 0, 0 }
+		"MM" => { "@L", 0, 0 }
+		"F" => { "@L", 0, 0 }
+		"P" => { "@L", 0, 0 }
+		"PF" => { "@L", 0, 0 }
+		"V" => { "@L", 0, 0 }
+		"SP" => { "@L", 0, 0 }
+		"W" => { "@L", 0, 0 }
+		"T" => { "@L3", 0, 0 }
+		"TT" => { "@L3", 0, 0 }
+		"PP" => { "@L", 0, 0 }
+		"CK" => { "@L3", 0, 0 }
+		"FF" => { "@L", 0, 0 }
+		"NG" => { "@L3", 0, 0 }
+		"NS" => { "@L3", 0, 0 }
+		"NK" => { "@L3", 0, 0 }
+		"D" => { "@L3", 0, 0 }
+		"C" => { "@L3", 0, 0 }
+		"ND" => { "@L3", 0, 0 }
+		"ST" => { "@L3", 0, 0 }
+		"NK" => { "@L3", 0, 0 }
+		"K" => { "@L3", 0, 0 }
+		"Z" => { "@L3", 0, 0 }
+		"SCH" => { "@L3", 0, 0 }
+		"CH" => { "@L3", 0, 0 }
+		"B" => { "@R6", 0, 0 }
+		"SP" => { "@R6", 0, 0 }
+		"F" => { "@R6", 0, 0 }
+		"M" => { "@R6", 0, 0 }
+		"P" => { "@R6", 0, 0 }
+		"PF" => { "@R6", 0, 0 }
+		"V" => { "@R6", 0, 0 }
+		"W" => { "@R6", 0, 0 }
+		"Z" => { "@R", 0, 0 }
+		"Z" => { "@L3", 0, 0 }
+		"DA" => { "@R", 0, 0 }
+		"N" => { "@R6", 0, 0 }
+		"N=" => { "@R6", 0, 0 }
+		"N" => { "@L", 0, 0 }
+		"NN" => { "@L", 0, 0 }
+		"VR" => { "@L", 0, 0.5 }
+		"RR" => { "@L", 0, 1 }
+		"CK" => { "@L", 0, 0 }
+		"L" => { "@R6", 0, 0 }
+		"TT" => { "@R3^", 0, 0 }
+		"PP" => { "@R6", 0, 0 }
+		"CK" => { "@R3^", 0, 0 }
+		"FF" => { "@R6", 0, 0 }
+		"^CH" => { "@L3", 0, 0 }
+		"^CH" => { "@R", 0, 0 }
+		"^SCH" => { "@L3", 0, 0 }
+		"B" => { "@#/", "", "" }
+	#EndSubSection(combiner)
+	#BeginSubSection(shifter)
+		"DEM" => { "^DEM", 0, 5, 0, 0 }
+		"DEN" => { "^DEN", 0, 5, 0, 0 }
+		"DEM" => { "^^DEM", 0, 10, 0, 0 }
+		"DEN" => { "^^DEN", 0, 10, 0, 0 }
+		"=ES" => { "&EITES", 10, 14.5, 0, 1 }
+		"=ES" => { "&TES", 2, 14.5, 0, 1 }
+		"B" => { "&TB", 4, 10, 0, 1 }
+		"NG" => { "&TNG", 4, 10, 0, 1 }
+		"NS" => { "&TNS", 4, 10, 0, 1 }
+		"C" => { "&TC", 4, 10, 0, 1 }
+		"D" => { "&TD", 4, 10, 0, 1 }
+		"G" => { "&TG", 4, 10, 0, 1 }
+		"H" => { "&TH", 4, 10, 0, 1 }
+		"J" => { "&TJ", 4, 10, 0, 1 }
+		"L" => { "&T#L", 4, 10, 0, 1 }
+		"@L3" => { "&T@L3", 4, 16.5, 0, 1.5 }
+		"ALL" => { "&TALL", 4, 10, 0, 1 }
+		"M" => { "&TM", 4, 10, 0, 1 }
+		"W" => { "&TW", 4, 10, 0, 1 }
+		"X" => { "&TX", 4, 10, 0, 1 }
+		"Y" => { "&TY", 4, 10, 0, 1 }
+		"&E" => { "&T&E", 4, 15, 0, 1.5 }
+		"SCHAFT" => { "&TSCHAFT", 4, 15, 0, 1.5 }
+		"ION" => { "&TION", 4, 10, 0, 1 }
+		"N" => { "&TN", 4, 15, 0, 1.5 }
+		"VR" => { "&TVR", 4, 15, 0, 1.5 }
+		"AR5" => { "&TAR5", 4, 15, 0, 1.5 }
+		"S" => { "&TS", 4, 15, 0, 1.5 }
+		"&U" => { "&T&U", 4, 15, 0, 1.5 }
+		"&O" => { "&T&O", 4, 15, 0, 1.5 }
+		"&I" => { "&T&I", 4, 15, 0, 1.5 }
+		"CH" => { "&TCH", 4, 20, 0, 1 }
+		"SCH" => { "&T^SCH", 4, 20, 0, 1 }
+		"^Z" => { "&T^Z", 4, 20, 0, 1 }
+		"^CH" => { "&T^CH", 4, 20, 0, 1 }
+		"^SCH" => { "&T^SCH", 4, 20, 0, 1 }
+		"Z" => { "&TZ", 4, 20, 0, 1 }
+		"F@L" => { "&TF@L", 4, 10, 0, 1 }
+		"F" => { "&TF", 4, 10, 0, 1 }
+		"HAFT" => { "&THAFT", 4, 10, 0, 1 }
+		"K" => { "&TK", 4, 20, 0, 1 }
+		"P" => { "&TP", 4, 20, 0, 1 }
+		"Q" => { "&TQ", 4, 20, 0, 1 }
+		"V" => { "&TV", 4, 20, 0, 1 }
+		"NK" => { "&TK", 4, 20, 0, 1 }
+		"PF" => { "&TPF", 4, 20, 0, 1 }
+		"SP" => { "&TSP", 4, 20, 0, 1 }
+		"ST" => { "&TST", 4, 10, 0, 1 }
+		"SCHW" => { "&TSCHW", 4, 30, 0, 1 }
+		"ZW" => { "&TZW", 4, 30, 0, 1 }
+		"B" => { "&EITB", 18, 10, 0, 1 }
+		"NG" => { "&EITNG", 18, 10, 0, 1 }
+		"NS" => { "&EITNS", 18, 10, 0, 1 }
+		"C" => { "&EITC", 18, 10, 0, 1 }
+		"D" => { "&EITD", 18, 10, 0, 1 }
+		"G" => { "&EITG", 18, 10, 0, 1 }
+		"H" => { "&EITH", 18, 10, 0, 1 }
+		"J" => { "&EITJ", 18, 10, 0, 1 }
+		"L" => { "&EITL", 18, 10, 0, 1 }
+		"@L3" => { "&EIT@L3", 18, 10, 0, 1 }
+		"ALL" => { "&EITALL", 18, 10, 0, 1 }
+		"M" => { "&EITM", 18, 10, 0, 1 }
+		"W" => { "&EITW", 18, 10, 0, 1 }
+		"X" => { "&EITX", 18, 10, 0, 1 }
+		"Y" => { "&EITY", 18, 10, 0, 1 }
+		"&E" => { "&EIT&E", 18, 15, 0, 1.5 }
+		"SCHAFT" => { "&EITSCHAFT", 18, 15, 0, 1.5 }
+		"N" => { "&EITN", 18, 15, 0, 1.5 }
+		"VR" => { "&EITVR", 18, 15, 0, 1.5 }
+		"S" => { "&EITS", 18, 15, 0, 1.5 }
+		"U" => { "&EITU", 18, 15, 0, 1.5 }
+		"&O" => { "&EIT&O", 18, 15, 0, 1.5 }
+		"CH" => { "&EITCH", 18, 20, 0, 1 }
+		"SCH" => { "&EITSCH", 18, 20, 0, 2 }
+		"Z" => { "&EITZ", 18, 20, 0, 1 }
+		"^Z" => { "&EIT^Z", 4, 20, 0, 1 }
+		"^CH" => { "&EIT^CH", 4, 20, 0, 1 }
+		"^SCH" => { "&EIT^SCH", 4, 20, 0, 1 }
+		"F" => { "&EITF", 18, 10, 0, 1 }
+		"K" => { "&EITK", 18, 20, 0, 1 }
+		"P" => { "&EITP", 18, 20, 0, 1 }
+		"Q" => { "&EITQ", 18, 20, 0, 1 }
+		"V" => { "&EITV", 18, 20, 0, 1 }
+		"NK" => { "&EITK", 18, 20, 0, 1 }
+		"PF" => { "&EITPF", 18, 20, 0, 1 }
+		"SP" => { "&EITSP", 18, 20, 0, 1 }
+		"ST" => { "&EITST", 18, 10, 0, 1 }
+		"SCHW" => { "&EITSCHW", 18, 30, 0, 1 }
+		"ZW" => { "&EITZW", 18, 30, 0, 1 }
+		"@L3" => { "&T@L3", 4, 15, 0, 1.5 }
+		"@R" => { "&T@R", 4, 15, 0, 1.5 }
+		"@L3" => { "&EIT@L3", 18, 15, 0, 1.5 }
+		"@R" => { "&EIT@R", 18, 15, 0, 1.5 }
+		"N=" => { "NICHT2", 0, 5, 0, 0.5 }
+	#EndSubSection(shifter)
+#EndSection(font)
+#BeginSection(rules)
+	#BeginSubSection(global,#>stage0)
+		// global replacements in the whole text
+		"(-)([.,!?;:])" => "$1 $2"; // separate for later rule " - "
+		"([.,!?;:])(-)" => "$1 $2"; // separate for later rule " - "
+		"&ndash;" => "-"; // blocks calculation in layouted mode
+		"-$" => " - "; // end of text
+		"^-" => " - "; // beginning of text
+		" - " => " [~~] ";
+		" -([.,;:!?])" => " [~~]$1";
+		"&hellip;" => "…"; // ellipsis (try to use one character defined as global variable punctuation in php)
+		"\.\.\." => "…";
+		//"…" => "…";
+		"–" => "[~~]"; // blocks calculation in layouted mode
+ 		" &ndash; " => " [~~] "; // Gedankenstrich
+		"&ndash;" => "="; // blocks calculation in layouted mode // probably obsolete?!
+		"&rs?aquo;" => "«"; 
+		"&ls?aquo;" => "»";
+		"›" => "»";
+		"‹" => "«";
+		"ß" => "ss";
+		"&szlig;" => "ss";
+		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
+		"»" => """; //"|[#5][#Q#]|";	
+		" [Ee]s( *?)ist " => " es_ist ";  // avoid "semicolon-look of "Es ist";
+	
+		// since it is not possible to include more than one function in global (for the moment)
+		// include the "abbreviator" this way 
+
+		// abbreviator: eliminates . in abbreviations (based on a list)
+		// all words conserve original upper/lower case distinction
+		"(Adr|[Aa]llg|Art|[Aa]usschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg)\." => "$1";
+		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
+		"(Nr|Prosp|Qual|[Ss]og|Tel|Jan|Febr|Apr|Jun|Jul|Aug|Sept|Okt|Nov|Dez)\." => "$1";
+		// words with two points
+		"[Dd]\.h\." => "das+h";
+		"[Uu]\.a\." => "UA";
+		"[Zz]\.B\." => "ZB";
+	#EndSubSection(global,#>stage1)
+	#BeginSubSection(dasher,#>stage2)
+		"(?<!\[)=" => "\\[=]\\";
+		"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer"
+		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
+		"(?<!\|)'" => "|'"; // apostrophizer: hat's 
+	#EndSubSection(dasher,#>stage3)
+	#BeginSubSection(splitter1,#>stage3)
+		// check if word contains more then 1 upper case
+		// mark it with #£# to have a branch condition
+		"(?<!#acronym#)([A-Z]|Ä|Ö|Ü)([A-Z]|Ä|Ö|Ü)" => "#acronym#$1$2";
+	#EndSubSection(splitter1,!>acronymator,=>packer)
+	#BeginSubSection(acronymator)
+		// filter marker #acronym# out again
+		"#acronym#" => "";
+		//"([A-Z]|Ä|Ö|Ü)" => "strtolower()";
+		// only transform upper case of potential 2nd word (suppose acronym is 1st word ...)
+		"(=(?:[A-Z]|Ä|Ö|Ü))" => "strtolower()";
+		"(?<!\|)=" => "|=\\"; // mark word as 2 words
+		"(?<!\[)=" => "[=]";	// necessary because of packer
+		// now only transform upper case words (from acronym)
+		"(?<!\[)([A-Z]|Ä|Ö|Ü)" => "[$1]";
+		"\[A\](?!\[&A\])" => "[#NS][&A]";
+		"\[E\](?!\[&E\])" => "[E][&E]";
+		"\[I\](?!\[&I\])" => "[#N][&I]";
+		"\[O\](?!\[&O\])" => "[#N][&O]";
+		"\[U\](?!\[&U\])" => "[#NS][&U]";
+		"\[Ä\]" => "[#WS][&A]";
+		"\[Ö\]" => "[E][&O]";
+		"\[Ü\]" => "[#WS][&U]";
+		//"^\[E\]" => "[0N-][E]";  // not sure if that should be done here
+		"^(\[[ns]\])" => "[0N-]$1"; // idem
+		//"([a-z])" => "strtoupper()";  // leave other tokens as untreated (will be processed normally)
+	#EndSubSection(acronymater)
+	#BeginSubSection(packer)
+		// filter out all markes from acronymator
+		// some shorthand tokens use special chars (like -#+=/ etc.) in their definition
+		// this can lead to confusions in the transcriptor: e.g. - might be the character - 
+		// (which has to be drawn as such) or a part of a token definition (like [0N-]
+		// in order to avoid that, "packer" bundles those characters adding brackets []
+		// later the transcriptor converts them back into normal characters
+		//"(?<!\[)=" => "[=]\";
+	#EndSubSection(packer)
+	#BeginSubSection(decapitalizer)
+		"sch(a|ä)ft(s|-?l?er)?$" => "{SCHAFT}$2"; // from shortener: must be done before decapitalizer
+		"schaf-te" => "{SCHAFT}e"; // gewirtschaftet
+		
+		"([A-Z])" => "strtolower()";
+		"{schaft}" => "{SCHAFT}"; // restore upper case (.. yeah yeah ... start messing up ... :)
+	#EndSubSection(decapitalizer)
+	#BeginSubSection(phonetizer)
+		// distinguishes character groups that are written the same way but have different pronunciation
+		// e.g. ie: nie, Knie vs Familie, Linie
+		"([Ll]i-?)nie" => "$1ni-e";
+		"([Ff]a-?mi-?)lie" => "$1li-e";
+		"([Pp]or-?t)ier" => "$1i-e";
+		// phonetical treatment for y
+		//"([Ss])y(s-?tem)" => "$1i$2";
+		"([Rr])h?y(t-?)h?(-?mus)" => "$1ü$2$3";
+		"([Pp]s)y(-?c-?h)" => "$1ü$2";
+		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
+		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
+		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on" };
+
+		// eu = ö
+		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
+		"ieu$" => "iö";  // french: Milieu
+
+		// ou = u
+		"([Tt])ou(-?ris)" => "$1u$2"; 
+
+		"([Dd]i)eu" => "$1ö";	// french word
+		
+		"[Pp]ie-?t-?er-?le" => "p[&I]et[VR@L]e";
+		//"[Pp]ie(-?ter-?le)" => "p[&I]e$1";	// special word (do the whole stuff for simplicity ...)
+
+		"([Aa]r-?s)en" => "$1En"; // avoid -en
+
+		"e-ta-ge-re" => "E-ta-gE-re";
+		"pa-ke(-?t)" => "pa-kE$1";
+
+	#EndSubSection(phonetizer)
+	#BeginSubSection(accentizer)
+		"sis-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
+		"([Ss]ta-?k)e(-?te)" => "$1E$2"; // Staketenzaun (yes, that exists ... :)
+		"([Pp]ro-?l)e(-?t)(?!a)" => "$1E$2";
+		"pro-?ble(-?)m" => "pro-blE$1m";
+		"(kon|dis)-?kre(-?)t" => "$1-krE$2t";
+		"^([Ww])e([rmn])$" => "$1E$2";
+		"^([Gg])e(n)$" => "$1E$2";		// distinguish Gen (noun) vs gen (preposition) ???
+		"(\+?[Gg])e(r-?ne?)" => "$1E$2";
+		"([Kk]on-?z)e(r-?t)" => "$1E$2"; 
+		"([Ll]a-?t-?)e(r-?n)" => "$1E$2";
+
+	#EndSubSection(accentizer)
+	#BeginSubSection(shortener)
+
+		"zer\+" => "{ZER}+";
+
+		"^in-?t-?er$" => "{INTER}";
+		"^in-?t-?er\+" => "{INTER}+";
+		"(\+)in-?t-?er\+" => "$1{INTER}+";
+
+		// -et in verbs
+		"([Ww]ä-?r)et" => "{WÄR}{ET}";
+		"([Hh]ät-?t|[Ww]ür-?d)et" => "$1{ET}";
+
+
+		"([Ss]on)-?der" => "$1d{ER}";
+		"ie(-?r(?:en?|s?t)?)$" => "i$1";	// actually a normalizer rule, but include it here to avoid {er}
+
+		"[Mm]iss-" => "{MISS}"; 	// try that
+
+		"hin(-?ter)" => "{HIN}$1";
+
+		"([Hh])ei-?ter" => "$1{HEIT}er";	// Heiterkeit, angeheitert etc.
+		
+		"es_ist" => "{ESIST}";
+
+		"ge[-+]?habt" => "{GEHABT}";	
+	
+		"(Ü|ü)-?ber" => "{ÜBER}";
+
+		"^[Ww]ir$" => "{WIR}";
+		"^[Ww]ir'" => "{WIR}'";
+		
+		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
+		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
+		
+		"(?<!^|s)(i-)?tä-?t" => "{HEIT}";
+		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
+		
+		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
+		"^zu(\+|-)rück$" => "{ZURÜCK}+";
+		
+		"(\+)dem$" => "$1{DEM}";
+		"^dem$" => "{DEM}";
+		"(\+)den$" => "$1{DEN}";
+		"^den$" => "{DEN}";
+		"^den\+" => "{DEN}";
+		
+		"^aus$" => "{AUS}";
+		"aus(\+|#)" => "{AUS}$1";
+		"(#|\+)aus$" => "$1{AUS}";
+
+		"ur\+" => "{UR}+";
+
+		"#li-?ch" => "{LICH}";
+		"(-|\+)li-?ch((-?s-?t)?e[rnsm]?)?$" => "$1{LICH}$2";
+
+		"ent\+" => "{ANT}+";
+
+		"(?<!a)un-?te-?r" => "{UNTER}";
+		"{UNTER}-" => "{UNTER}+";
+
+		"un\+" => "{UN}+"; 
+
+		"^wie?-?d-?er($|-)" => "{WIDER}";
+		"wie?-?d-?er(\+|#|{)" => "{WIDER}$1";
+		"(#|\+)wie?-?d-?er" => "$1{WIDER}";
+
+		"^in$" => "{IN}";
+		"^in(\+|#)" => "{IN}$1";
+		"^in(-|\+)?str" => "{IN}$1str";
+		"(\+|#)in(\+|#)" => "$1{IN}$2";
+		"(?<!er)(\+|#)in$" => "$1{IN}";
+
+		"^sich$" => "{SICH}";
+
+		"^als$" => "{ALS}"; 
+		
+		// -er
+		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
+		"((?:-|\+)(?:.*?))(e-?r)(e?[rnms]?)?$" => "$1{ER}$3"; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?))(e-?r-?t)(e?[rnms]?)?$" => "$1{ER}t$3"; // use - to detect preceeding syllable
+		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n" };
+		"(?<![VvZzDdWwHh])er\+" => { "{ER}", "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+" };
+
+		"{LICH}er$" => "{LICH}{ER}";
+
+		"^es$" => "{ES}";
+
+		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
+
+		"ver(\+)" => "{VER}$1";
+		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-" }; // can produce wrong results (exclude Overall, Universum)
+
+		"^all$" => "{ALL}";
+		"\+all$" => "+{ALL}";
+		
+		"^wie([+#])" => "{WI}$1";
+		"([+#])wie$" => "+{WI}";
+
+		"^so(\+|#)" => "{SO}$1";
+		"([#-])so$" => "$1{SO}";
+		"^so$" => "{SO}";
+		
+		"un-?ter" => "{UNTER}";
+		
+		"er#" => "{ER}"; // imm-er#hin
+		"^er\+" => "{ER}";
+		"(?<!d)er\+" => { "{ER}", "[Ww]ie?-?d-?er" }; // more general rule
+		"\+er$" => "{ER}";
+		"(n-?d)er\+" => "$1{ER}+";
+		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
+		
+		"(\+)sel-?b" => "$1{SELB}";
+		"^sel-?b" => "{SELB}";
+
+		"ant\+" => "{ANT}+";
+		"ant-" => "{ANT}";
+
+		"an\+" => "{AN}+";
+
+		"schien" => "schin";	// hm .. ;-)
+		"(er-?)dem$" => "{ER}{DEM}";
+		"(ch-?)dem$" => "$1{DEM}"; 
+		"((?:.*?))en$" => "$1{EN}";
+		"((?:.*?))em$" => "$1{EM}";
+
+		"([Aa]n-?d)er" => "$1{ER}"; 
+
+		"^was$" => "{WAS}";
+		"(\||#)was$" => "$1{WAS}";
+		
+		"(?<![Ss]c)[#-]?[hk]?ei-?t" => "{HEIT}";
+		
+		"#li-?ch" => "{H}";
+		
+		"zu(\+|#)" => "{ZU}$1";
+		"zu$" => "{ZU}";
+		
+		"^auf(s)?$" => "{AUF}$1";
+		"auf([+#])" => "{AUF}$1";
+		"(\+|\|)auf$" => "$1{AUF}";
+
+		"ge\+" => "{GE}";
+		"(^|\|)wo(\||#|\+|$)" => "$1{WO}$2";
+		"wil$" => "WIL";
+		"los(igkeit)?$" => "Los$1";
+		"ei-?en" => "[EI][&E]{EN}";
+		"ei-?{EN}" => "[EI][&E]{EN}";
+		
+		"i-e([mn])$" => { "[&I]-e$1", "schien" };
+		"ietät" => "[&I]{HEIT}";
+		"t(u|ü)m[-#]?li-?ch" => "{TUM}{LICH}";
+		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
+		"^[Rr]ück" => "{RÜCK}";
+		"h?eit-?li-?ch" => "{HEIT}{LICH}";
+		"h?ei-?tig" => "{HEIT}ig";
+		"ei-?tens" => "{HEIT}ens";
+		"[kh]?eits" => "{HEIT}s";
+		"iet$" => "[I]T";
+		"sol-?ch" => "{SOLCH}";
+		"^und$" => "{UND}";
+		"\+und#" => "{UND}";
+		"usw\." => "{USW\.}";
+		"viel-?leicht" => "{VILLEICHT}";
+		
+		"\+von$" => "+{VON}";
+		"^von$" => "{VON}";
+		
+		"wel-?ch" => "{WELCH}";
+		"wenn" => "{WENN}";
+		"^wer-?d" => "{WERD}";
+		"{WERD}et" => "{WERD}{ET}";
+
+		"^wie$" => "{WI}";
+		"wird" => "{WIRD}";
+		"vor(?!})" => "{VOR}";
+		"fort" => "{FORT}";
+		"eiht" => "eit";
+		//"^([Hh])a(f-?t)" => "$1A$2"; // avoid application of following rule
+		"(?<!sc|\+)haf-?t(e|en|es)?" => { "{HAFT}$1", "^[Hh]af-?t" }; // not: ver+haften
+		//"ge-?gen" => "{GEGEN}";
+		//"ndwo$" => "nd{WO}";
+		"#wo$" => "#{WO}";	
+	
+		"(?<!f)all(e[n|m|s]?)$" => "{ALL}$1";
+		"^al-?l(?!e-?e)" => { "{ALL}", "[Aa]l-?lü-?r" };
+		"(\[^a-z\])all" => "{$1ALL}";
+		"{ALL}er" => "{ALL}r"; // doesn't respect step-by-step philosophy (but necessary for allerlei)
+
+		"^auch$" => "{AUCH}";
+		
+		"bei(\+)" => "{BEI}$1";
+		"^bei$" => "{BEI}";
+		"(\+|#)bei$" => "$1{BEI}";
+		
+		"^dar[+#]" => "{DA@R}";
+		"^dar$" => "{DA@R}";
+
+		"dass?(?!t)" => "{DASS}";
+		"^dem" => "{DEM}";
+		"^denn" => "de[NN]";
+		"^den$" => "{DEN}";
+		"^den-(?!k)" => "{DEN}";
+		"^de-nen" => "{DEN}[O][&E]{EN}"; // probably the only case where {EN} can follow {DEN} => add &E here directly
+		//"\|den-" => "{DEN}";
+		"^des(?![p-])" => "{DES}";
+		"^die-?s(e[rsnm]?)?" => "{DIS}$1";
+		"dies$" => { "{DIS}", ".*[Pp]aradies" };
+		
+		// die-
+		"^die$" => "{DI}";
+		"^die\+" => "{DI}";	
+
+		"durch" => "{DURCH}";
+		//"fürch" => "Fürch";
+		"für" => { "{FÜR}", "[Ff]ürs-?t", "[Ff]ürch" };
+		"ge-?habt" => "{GEHABT}";
+		"(?<![Cc])ha-?b" => "{HAB}";
+		"^[Hh]at(-t)?" => "{HAT}";
+		"^chin" => "[CH]in";
+
+		"^hin-?zu" => "{HIN}{ZU}";
+		"#hin$" => "{HIN}";
+		"\+hin\+" => "{HIN}";
+
+		"^in$" => "{IN}";
+		"^ist$" => "{IST}";
+		"mitt" => "m1i2t3t4";
+		"mit(?!(t|-t))" => { "{M}", "Eremit" };
+		"m1i2t3t4" => "mitt";
+		"^nicht" => "{NICHT2}";
+		"^sie$" => "{SI}";
+		"^[Ss]ind$" => "{SIND}";
+		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
+		"(eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
+		"([ie]?tät)(en)?$" => "{HEIT}$2";
+		"([Hh])inter" => "HN[&TVR]";
+		//"^([Hh])ing$" => "$1I[NG]";
+		"^[Hh]in" => { "{HIN}", "[Hh]in-?[dgz]", "^[Hh]in(?:k-?t|-?ke)" };
+		"^zur$" => "[Z]ur";
+		"^uns(er.*)?$" => "u[NS]$1";
+		"(^|\|)({?des}?)?inter" => "$1$2{INTER}";
+		
+		"^der(?!-?b)" => "{DER}";
+		
+		
+		"(^|\|)[Aa]n-?ti[kc]on" => "$1{ANTI}{C}";
+		"(^|\|)[Zz]uver" => "$1{Z}{VER}";
+		//"((?:^(?:.*?)\+|\||\\)(?:.*?(?:[aeiou]|ä|ö|ü).*?))(e-?t)(e[nrsm])?" => { "{ET}", "[Rr]e[-+]pe-?t" };
+		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
+		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
+		"et-z" => "Et-z"; // avoid et in following rule
+		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => { "$1{ET}", "[Rr]e[-+]pe-?t" };
+		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
+		
+
+		"erer([se]?[nm]?)$" => "{ER}{ER}$1";
+		"erei(en)?$" => "{ER}ei$1";
+		"\[RR\]" => "rr";
+		"qu" => "q";
+		"(?<!sc)([Hh])all" => "[$1]a[LL]";
+		"(?<![Aa])e([ao])" => "[#W][&E]$1";
+		"ei-?([aeou])" => "[EI][&E]$1";
+		
+		"eu([aeou]|lich)" => "[EU][&E]$1";
+		"ei([aeou]|lich)" => "[EI][&E]$1";
+		"^([Aa])n([bfghklmnprswz][aeiouäöü])" => { "$1[N]$2", ".*[Aa]nker.*" };
+		
+		"sch(a|ä)ft[#-]?{LICH}" => "{SCHAFT}{LICH}";
+		"#sch(a|ä)f-?t" => "#{SCHAFT}";
+		//"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // hm ... must be placed before decapitalizer!
+				
+
+		"t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH})?$" => { "{TUM}$2", "a-?t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH})?$" }; // not: Da-tum
+		"^(ein|an|au[fs]|zu|ab|nieder|auseinander)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
+		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
+		"(^|\|)be(un|ur)" => "$1{BE}$2";
+		"^beu" => "b[EU]";
+		//"^(an)?be(?!(tte?n?s?$)|i|r-?n)" => "$1{BE}";
+
+		"be\+" => "{BE}+";
+
+		"^an-?ti" => "{ANTI}";
+		"sei-?n" => "{SEIN}";
+		"anten$" => "[A]nten";
+		"(^|\|)(in|un)?[k|c]on([^n])" => "$1$2{CON}$3";
+		"i-?[o|ö]-?nn?" => "{ION}";
+		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
+		"(^|\|)(un)?zer\+" => "$1$1{ZER}";
+		"(^|\|)rück(?=!ens?$)" => "$1{RÜCK}";
+		"eien" => "[EI][&E]{EN}";
+		"^([Ss]ch|[Zz])ien$" => "$1[I]n";
+		"(?<=pb)ien$" => "[&I]{EN}";
+		//"je" => "[J][E]";
+		"iet" => "[I]t";
+		"([^c])(haft)$" => "$1{HAFT}";
+		"{ANT}{LICH}" => "en{TLICH}";
+		"{ET}t" => "e[TT]";
+		
+		"da(\+|#|{)" => "{DA}$1";
+		"^da$" => "{DA}";
+		"#da$" => "{DA}";
+
+		"-(.*?)em$" => "-$1{EM}";
+		"-(.*?)en$" => "-$1{EN}";
+
+
+		//"\+(?!\])" => "-";	// reduce + and # to simple - (syllable) in order to simplify following rules
+		//"(?<!\[)#" => "-";	// not a good idea ...
+		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
+
+		"er\+" => "{ER}"; // Studers (hasn't been recognized until now)
+
+	#EndSubSection(shortener)
+	#BeginSubSection(normalizer)
+		
+		"rrh$" => "rr";		// Katarrh
+		"ü-?ü" => "ü"; 	// rule for swiss german
+		"uu" => "u"; // gruusam (dialect)
+		"û" => "ü";
+		"î" => "i";
+		"é" => "e";
+		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
+		"{EM}(\||\\)" => "EM$1";
+
+		"ç" => "c";
+		"[Aa]eo" => "äo";
+		//"-\]" => "=]";
+		//"\[-" => "[=";
+		"=(i|au|eu|äu|ei)" => "|[-]\[0D-]$1";
+		//"-(a|e|o|u)" => "|[-]\[0N-]$1"; // that's a weired rule ... it IS a weired rule and has to be disabled!
+		"(?<!\|)\[-\]" => "|[-]\";
+		//"=\]" => "-]";
+		//"\[=" => "[-";
+		"'(i|au|eu|äu|ei)" => "|[']\[0D-]$1";
+		"'(a|e|o|u)" => "|[']\[0N-]$1";
+		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
+		"thr" => "tHr"; // Thriller
+		"th(?!of$)" => { "t", "[Tt]hur"};
+		//"th(?!er)" => "t";
+		//"th(?!in)" => "t";
+		//"th(?!aft)" => "t";
+		"aa" => "a";
+		"ah(-?)(?=[lmnrstz])" => "a$1";
+		"äh-?(?=[lmnrstz])" => "ä";
+		"uh(-?)(?=[lmnrstz])" => "u$1";
+		"o[oh](-)?([flmnrst])" => "o$1$2";
+		"ö[oh](-)?([flmnrst])" => "ö$1$2";
+		"ieh([tmn])" => "i$1";
+		"e([eh])(-)?([flmnrst])" => "e$2$3";
+		"äh([nrl])" => "ä$1";
+		"öh-(?={LICH})" => "ö[H]"; // conserve h
+		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
+		"ih(-)?([rnm])" => "i$1$2";
+		"äht" => "ät";
+		"t-?z" => "z"; // conserve syllable?
+		"ph" => "f";
+		"ß" => "ss";
+		"üh(-)?([lrmn])" => "ü$1$2";
+		"([aeiou]|ä|ö|ü)h(#|-|\+)(bar|sam|ling|sal|nis)" => "$1$2$3";  // h entfällt vor ungekürzten Nachsilben 
+		"([Mm]ü)h((?:-|\|)?se-?li-?g)" => "$1$2";
+
+		"uhr" => "ur";
+		
+		"ie" => { "i", "fa-?mi-?li-?en?" }; // list with exceptions
+		"ie" => "i-e"; // separation (2 syllables)
+
+		"ühr" => "ür";
+		"\(" => "";
+		"\)" => "";
+		//"\"" => "";
+		"zz" => "z";
+		"ih#" => "i#";
+
+	#EndSubSection(normalizer,#>stage4)
+	#BeginSubSection(bundler,#>stage4)
+		"([aeiouäöüAEIOUÄÖÜ]\]?)ssch((\[|{)?[aeiouäöüAEIOUÄÖÜ])" => "$1[SS][CH]$2";
+		"m-?m-?l" => "[MML]";
+		"p-?p-?l" => "[PPL]";
+		"n-?n-?l" => "[NNL]";
+		"n-?k\|-?r" => "[NKR]";
+		"ns-?r" => "[NSR]";
+		"n-?g-?r" => "[NGR]";
+		"n-?k-?l" => "[NKL]";
+		"ns-?l" => "[NSL]";
+		"ng-?l" => "[NGL]";
+		"r-?r-?l" => "[RRL]";
+		"n-?l" => "[NL]";
+		"n-?d[-\|+]?r" => "[NDR]";
+		"t-?t-?l" => "[TTL]"; 
+		"\[TT\](-|\|)?r" => "[TTR]"; // necesary because of bundler rule in shortener ... 
+		"t-?t(-|\|)?r" => "[TTR]"; 
+		"f-?f-?l" => "[FFL]"; 
+		"f-?f(-|\|)?r" => "[FFR]"; 
+		"[kc]-?k-?l" => "[CKL]"; // akklimatisieren
+		"[kc]-?k-?l" => "[CKR]"; 
+
+		"nd-?l" => "[ND@L3]";
+		"sch-?l" => "[SCHL]";
+		"schm" => "[SCHM]";
+		"schw" => "[SCHW]";
+		"sch(-|\|)?r" => "[SCHR]";
+		"(?<!n)ndr" => "[ND@R]";
+		"sch" => "[SCH]";
+		"(?<!m)m-?p-?f-?r" => "[MPFR]"; // everything goes ha ha ... :)
+		"(?<!m)m-?p-?f-?l" => "[MPFL]";
+		"(?<!m)m-?p-?f" => "[MPF]";
+		"s-?t[\|-]?r" => "[STR]";
+		"(?<!n)nkr" => "[NKR]";
+		"(?<!n)nk-?l" => "[NKL]";
+		"(?<!s)st-?l" => "[STL]";
+		"(?<!s)sp-?l" => "[SPL]";
+		"sp-?r" => "[SPR]";
+		"pf-?l" => "[PFL]";
+		"pf-?r" => "[PFR]";
+		"ch[-\|+]?r" => "[CHR]";
+		"ch-?l" => "[CHL]";
+		"p-?f" => "[PF]";
+		"(ck|k-?k)(\\|\||-|\+|#)?r" => "[CK@R3^]";
+		"(ck|k-?k)" => "[CK]";
+		"s-?s-?l" => "[SSL]";
+		"s-?s" => "[SS]";
+		"n-?n" => "[NN]";
+		"s-?t" => { "[ST]", "[Gg]rin-?s-?t" };
+		//"^eins" => "[EI][N]s";
+		"ch" => "[CH]";
+		"h[-\|+]?r" => "[HR]";
+		"s-?p" => "[SP]";
+		"(?<!#)n-?s" => "[NS]";
+		"b-?l" => "[BL]";
+		"c-?l" => "[CL]";
+		"d-?l" => "[DL]";
+		"f-?l" => "[FL]";
+		"ngl" => "[NG@L3]";
+		//"^[Aa]n(-)?g(?!r)" => "AN-G"; // angestrengt: an is not recognized as a word => doesn't work: angst
+		"n-?g(?!r)" => "[NG]";
+		"g-?l" => "[GL]";
+		"k-?l" => "[KL]";
+		"l-?l" => "[LL]";
+		"m-?l" => "[ML]";
+		"n-?l" => "[NL]";
+		"p-?l" => "[PL]";
+		"r-?l" => "[RL]";
+		"s-?l" => "[SL]";
+		"t-?l" => "[TL]";
+		"v-?l" => "[VL]";
+		"w-?l" => "[WL]";
+		"x-?l" => "[XL]";
+		"y-?l" => "[YL]";
+		"z-?l" => "[ZL]";
+		"b[-\|+]?r" => "[BR]";
+		"c-?r" => "[CR]";
+		"d[-\|]?r" => "[DR]";
+		"f(-?|\+|\|)r" => "[FR]";
+		"g(-?|\|)r" => "[GR]";
+		"k-?r" => "[KR]";
+		"l[-\|]?r" => "[LR]";
+		"m[-\|+]?r" => "[MR]";
+		"{AN}\+?r" => "a[NR]"; // dissolve prefix
+		"n[-\|+]?r" => "[NR]"; // n+r even if two separate words or morphems!
+		"p-?r" => "[PR]";
+		"r-?r" => "[RR]";
+		"s-?r" => "[SR]";
+		"t-?t" => "[TT]";
+		"t(-|\|)?r" => "[TR]"; // even if two words!?
+		"v-?r" => "[#VR]"; // use special name vor v+r, since [VR] can be confused with "vocal r"
+		"w-?r" => "[WR]";
+		"x-?r" => "[XR]";
+		"y-?r" => "[YR]";
+		"z-?r" => "[ZR]";
+		"f-?f" => "[FF]";
+		"m-?m" => "[MM]";
+		"p-?p" => "[PP]";
+		"n-?d" => "[ND]";
+		"n-?k" => { "[NK]", "[Aa]n-?kunft" };
+		"zw" => { "[ZW]", "[Bb][Zz][Ww]" }; // no zw in bzw.
+		"au" => "[AU]";
+		"(Ä|ä)-?u" => "[EU]";
+		"[Ee]u" => "[EU]";
+		"ei" => "[EI]";
+		"ai" => "[EI]";
+	#EndSubSection(bundler,=:std)
+	#BeginSubSection(relancer1)	
+		// relancer reconverts everything except shortings {..} and bundled tokens [..] to lower case
+		"^(.*?)$" => "strtolower()";	// all to low
+		//"({[a-zäöü&\/#@\+-]*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
+		//"(\[[a-zäöü\/#@\+-].*?\])" => "strtoupper()";
+		"({.*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
+		"(\[.*?\])" => "strtoupper()";
+	#EndSubSection(relancer1)
+	#BeginSubSection(transcriptor)
+		////////////////////////////////////////////////////////
+		// 1st step: transform all single (lower case) tokens //
+		// depending on context: insert directly printable    //
+		// tokens wherever necessary
+		////////////////////////////////////////////////////////
+
+		"{HEIT}e\[NS\]" => "[&EITNS]";
+		"{HEIT}{ET}" => "{HEIT}[ET3/4]";
+		"i^" => "[&I]";
+		"i(\||\\)" => "[&I]$1";
+
+		// initial groups
+		"^o" => "[0N-][O]";
+		//"^r" => "[AR]"; // is done later
+		"^äo" => "[0N-][Ä][&E][O]";
+		"^ag" => "[0N-][A][G]";
+
+		// vowel combinations
+		"ou" => "[#N][&O][#NS][&U]";   // wou (dialect)
+		"u-e" => "[#NS][&U]E"; // mues (dialect)
+		"i-?a$" => "[&I]A[&A]"; // via
+		"i-?ö$" => "[&I]E[&O]"; // adieu (adiö)
+		"a-i" => "A[&A]I"; 
+		"o-?a" => "[&O]A";
+		"o-?i" => "[&O]I";
+		"ä-?i" => "[Ä][&E][I]";
+		"o-?e" => "[&O][E]";
+		"i-?o$" => "[&I][&O]";
+		"e-?a" => "E[&E]A";
+		"e-u" => "E[&E]U";
+		"u-?a" => "A[&U]A";
+		"u-?i" => "A[&U]I";
+		"e-e" => "E[&E]E";
+		"i-e" => "[&I]e";
+		"a(-?)([aeo])" => "A[&A]$1$2";
+		"ü(-?)([aeio]|ä|ö|ü)" => "[#WS][&U]$1$2";
+
+		// Aufstrich-t				
+		"([bcdfghjklmnpqrvwxyz])(-)?t" => "$1$2[&T]";
+		"({HIN})-?t" => "$1[&T]";
+		"\[(CH|SCH|NS)\]-?t" => "[$1][&T]";
+		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF|MPF|NG|ND)\]-?t" => "[$1][&T]";
+		"([bcdfghjklmnpqrvwxyz])(-?)\[TL\]" => "$1$2[&T@L3]";
+		"([bcdfghjklmnpqrvwxyz])(-?)\[TR\]" => "$1$2[&T@R]";
+		//"(r\+?)t" => "$1[&T]";
+
+		// -ter
+		"\[&T\]e-?r" => "[&T][VR]";
+
+		// heit + l/r
+		"{HEIT}-?l" => "[&EIT@L3]";
+		"{HEIT}-?r" => "[&EIT@R]";
+
+		// yr: no combined token
+		"\[YR\]" => "[Y][AR]";
+
+		"\[&T\]er" => "[&T][VR]";
+		"\[&T\]{EN}$" => "[&T][&E][EN]";
+		"\[&T\]{EM}$" => "[&T][&E][EM]";
+		"\[&T\]\[EI\]$" => "[&T][&E][#W][-EI]";
+
+		"\[EI\]$" => "[#W][-EI]";
+		"\[&T\]\{HEIT\}" => "[&T][&E]{HEIT}";
+		"\[EU\]({?)E" => "[EU][&E]$1E";
+		"\[&T\]\{LICH\}" => "[&T-1][H]";
+		"\[&T\]u\[NG\]" => "[TUNG]";
+		"T}er" => "T}[VR]";
+		"\[&T\]\i-?g" => "[&T-1][G]";
+		"\[&T\]{ET}" => "[&T][&E][ET3/4]";
+		"\[&T\]e$" => "[&T][&E][-E]";
+		"\[&T\]a" => "[&T][&E]A";
+		"\[&T\]\[?o\]?$" => "[&T&O]";
+		"\[&T\]o$" => "[&T][&E]O";
+		"\[&T\]u([aeiouäöü])" => "[A][&T&U]$1";
+		//"\[&T\]" => "[&T][&E]U";
+
+		"\[&T\]\[?i\]?$" => "[&T&I]";
+		"\[&T\]\[?&I\]?" => "[&T&I]";
+
+		"\[&T\]i" => "[&T][&E]I";
+		"erer$" => "[VR][#N][VR]";
+		"eres$" => "[VR][E][S]";
+		"([aeiouäöü])r" => "$1[VR]";
+		//"([AEIOUÄÖÜ])R(?![D?}\]])" => "$1[VR]";
+		//"{DU\[VR\]CH}" => "{DURCH}"; // du bricolage ...
+		"(\[^@\])r" => "$1[AR]";
+		"}r" => "}[AR]";
+		//"^s" => "[0n-][S]";
+		//"^n" => "[0n-][N]";
+		"^s" => "[S=]";
+		"^n" => "[N=]"; // try new variant
+
+
+		"u([aeiouäöü])" => "[#NS][&U]$1";
+		
+		"oi" => "[&O][I]";
+		"^a($|\|)" => "[0N-][A][&A]$1";
+		"a($|\|)" => "[A][&A]$1";
+		"{ET}e$" => "[ET][&E][-E]";
+		"{HEIT}\[ET3\/4\]" => "{HEIT}[&E][ET3/4]";
+		"\[ET3\/4\]e$" => "[ET3/4][&E][-E]";
+		"{HEIT}e(?!s)" => "{HEIT}[&E][-E]";
+		"\[-E\](.*?$)" => "[E]$1";
+ 
+		"^e$" => "[0N-][E][&E]";
+		"e$" => "$1[-E]";
+		
+		"i($|\\)" => "[#5][&I]$1";
+		"o($|\\)" => "[#N][&O]$1";
+		"u$" => "[#NS][&U]";
+		"ä$" => "[#WS][&A]";
+		"ö$" => "[#W][&O]";
+		"ü$" => "[#WS][&U]";
+		"^(?<!\])\[#(N|NS|WS|W|WS)\]" => "[0N-][#3][#$1]"; // can't start with distance only => add dummy token
+		"\[EU\]$" => "[EU][&E]";
+		"\[AU\]$" => "[AU][&E]";
+		"^i\[(S?CH|ZW?)" => "[0N-][I][$1";
+		"^iz" => "[0N-][I][Z]";
+		"öo" => "[#W][&O][O]";
+		"a" => "A";
+		"e" => "E";
+		"i" => "I";
+		"o" => "O";
+		"u" => "U";
+		"ä" => "Ä";
+		"ö" => "Ö";
+		"ü" => "Ü";
+		"\[AU\]-?({?E)" => "[AU][&E]$1";
+		"b" => "B";
+		"c" => "C";
+		"d" => "D";
+		"f" => "F";
+		"g" => "G";
+		"h" => "H";
+		"j" => "J";
+		"k" => "K";
+		"l" => "L";
+		"m" => "M";
+		"n" => "N";
+		"p" => "P";
+		"q" => "Q";
+		"(^|\+|\|])r" => "$1[AR]";
+		"\|r" => "|[AR]";
+		"\|r" => "|[AR]";
+		"r" => "[VR]";
+		"s" => "S";
+		"(?<!\+)t" => "T";
+		"v" => "V";
+		"w" => "W";
+		"x" => "X";
+		"y" => "Y";
+		"z" => "Z";
+
+		"I(-?){EN}" => "[&I]$1{EN}";
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => "[&I]$1$2";
+
+		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
+		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
+
+		"\[VR\](\||\+|-)?\[AR\]" => "[VR+AR]";
+		"{ER}\|\[AR\]" => "[VR+AR]";
+
+		// Aufstrich-t after {ER}
+		"^{ER}T" => "{ER}[T]";	// no Aufstrich-t at beginning!
+		"(\|){ER}T" => "$1{ER}[T]";	// no Aufstrich-t at beginning!
+		"{ER}T" => "{ER}[&T]";
+
+		// &t after wieder
+		"{WIDER}-?T" => "{WIDER}[&T]";
+
+		"{ET}E" => "{ET}[&E]E";
+
+		"\[&T\]ES" => "[&TES]";
+		"\[&T\]-E" => "[&T][&E]E";
+
+		// heit + unterlänge
+		"{HEIT}-?\[(SCH|CH|Z|ZW)\]" => "{HEIT&UL}[$1]";
+
+	#EndSubSection(transcriptor)
+	#BeginSubSection(separator)
+		// separates two words in one
+		// there must be a possibility to disable this function manually (i.e. via input form)!
+
+		//"(EITS\])\|" => "$1\\";
+		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
+		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
+		"\[&T\]\|({AN})" => "[&T]\\$1"; // write separatedly (2 words) - prefix an-
+		
+		"{HEIT}(S?)\|T" => "{HEIT}$1\\[#4]T"; // write separatedly (2 words) - add additional spacing
+		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
+		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
+		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
+		"\[&T\]S\|" => "[&T]S\\";
+		"\[&T\]\|{ER}" => "[&T]\\[0N-]{ER}";
+		"(\[&T\]ON)\|" => "$1\\";
+		"(\[&T\]O\[NS\])\|" => "$1\\";
+		"\[&T\]E\|" => "[&T]E\\";  // Produktepalette 
+
+		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
+		"(\[TUNG\]S)\|F" => "$1[#3]\\F"; // Unterhaltungsfonds
+		"(\[TUNG\]S)\|" => "$1\\"; 
+		"(\[&T\]{ION}S)\|" => "$1\\"; // Sektionsprotokoll 
+		"\[&T&I\]\|" => "[&T&I]\\"; // Sentimentalität
+
+		"\[&T\]\[EI\]\|\[EI\]" => "[&T][&E]E[-EI]\\[0D-][EI]";  // parteieigener
+		"\[&T\]\[EI\]\|" => "[&T][&E]E[-EI]\\"; // Parteiprojekte
+
+		"\[&T\](\[?(M)\]?)" => "[&T-1]$1";
+		//"E\|([ABCDFGHIJKLMNPQRSTVWXZ])" => "[-E]\\$1"; // separate (2 words)
+		//"(\[&T\]\[VR\]-?)\[&T\]\[&E\]" => "$1[T]"; // can't do that for Winterthur (if not recognized as two words!)
+		"\[&T\]\[&E\]\[-E\]\|" => "[&T][&E][-E]\\";
+		"({HEIT}{ER})\|" => "$1\\";
+		"({HEIT}{EN})\|" => "$1\\";
+
+		"\\{ÜBER}" => "\\[0N-]{ÜBER}"; // needs dummy token if separated
+
+		"(\[(EI|AU|EU)\])\|" => "$1[&E]|";
+		"{ET}\|" => "{ET}\\";
+		"{ET}{EN}\|" => "{ET}{EN}\\";
+ 
+		"(\[RR\]{E[NM]})\|" => "$1\\";
+
+		// -&ter
+		"(\[&T\]{ER})\|" => "$1\\";
+		"{HIN}\[&T\]\[VR\]\+" => "{HIN}[&T][VR]\\"; // special case (try it out)
+
+		// \n and \s
+		"\\N" => "\\[N=]";
+		"(?<!\['\])\\S" => "\\[S=]";  // not separated (external correction)
+
+		// ver-
+		"\\{VER}" => "\\[0N-]{VER}";
+
+		// n- and s- where transformed to [N=] and [S=] by transcriptor
+		// now, if they don't get separated (via \) they must be retransformed to normal n and s
+		//"\|\[([NS])=\]" => "|[$1]";
+
+		// Kreuzverhör is a very rare word: ^z offers an alternative exit point; ver- asks for one
+		// and voilà: Murphy hits (and whatever can go wrong goes wrong:)
+		// separate the word in order to get around the problem ...
+		// (let's hope there aren't many words like that ... :)
+		"(\[EU\]Z)\|({VER})" => "$1\\[0N-]$2";
+		// hm ... Murphy hit's again: not a very good solution ... 
+		// ^z is written with Fussschlaufe (bug in SE?)
+		// something is odd with this \ anyway: doesn't behave like | in SmoothenEntryExitPoints either
+
+		// more general rule: if word contains &t => separate
+		"^(.*?)(\[&T\])(.*?)\|" => "$1$2$3\\"; // ex: Manteltaschen
+
+		// sein => separate
+		"\|{SEIN}" => "\\{SEIN}";
+
+		// if one word is separated => separate all the words!
+		"\|(.*)\\" => "\\$1\\";
+		"\\(.*)\|" => "\\$1\\";
+
+		// if word is not separated => write vowels at the end of each word
+		"E\|" => "E[&E]";
+		"(\[FR\]\[EI\])\+" => "$1[&E]+"; 	// special case Freizeit (separated by +)
+		
+		// Raupenvernichtung
+		//"{EN}\|{VER}" => "EN|{VER}"; 	// if not separated by \ => write -en as en
+		"{EN}\|{VER}" => "{EN}\[0N-]{VER}"; 	// separate
+
+		"(\[AR\]E\[CH\]\[&T\])\+Z" => "$1\Z";  // rechtzeitig
+
+	#EndSubSection(separator)
+	#BeginSubSection(completor)
+		// logically speaking the completor is part of the transcriptor
+		// i.e. it defines how tokens have to be written
+		// but in order to be more systematic and structured we separate this part
+		// specific function of completor: adds dummy tokens at beginning and end of a word
+		// for tokens that need this "completion" (e.g. n, s at beginning; vowels at the end etc.
+		
+		"(?<![&-AEIOU])\[?([A])\]?$" => "[$1][&$1]";
+		"(?<![&-AEIOU])\[?([IOU])\]?$" => "[#N][&$1]";
+
+		//"(?<![&-AEIOU])\[?([AU])\]?(\||\!|\?|\.|\:)" => "[A][&$1]$2"; // punctuators are present if they are inside a word!
+		//"(?<![&-AEIOU])\[?([E])\]?(\||\!|\?|\.|\:)" => "[E][&$1]$2"; // punctuators are present if they are inside a word!
+		//"(?<![&-AEIOU])\[?([IO])\]?(\||\!|\?|\.|\:)" => "[#N][&$1]$2"; // punctuators are present if they are inside a word!
+
+		"^([NS])" => "[0N-][$1]";
+		"^\[([NS])\]" => "[0N-][$1]";
+		"(?<!&)([AEIOU]){HEIT}" => "[&$1]{HEIT}";
+		"^([{\[]&?EIT)" => "[0N-]$1";
+		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
+		"\\Ö" => "[0N-][Ö]"; 
+
+		"^([AEOU]|Ä|Ö|Ü)" => "[0N-]$1";
+		"\\([AEOU]|Ä|Ö|Ü)" => "\\[0N-]$1";
+		"^({AN})" => "[0N-]$1";
+		"\\({AN})" => "\\[0N-]$1";
+
+		"^(I)" => "[0D-][$1]";
+		
+		//"\|({?[AEIOU]|Ä|Ö|Ü)" => "|[0N-][$1]";
+		
+		"^\[E\]" => "[0N-][E]";
+		//"^I" => "[0D-][I]";
+		//"^O" => "[0N-][O]";
+		//"^U" => "[0N-][U]";
+		//"^Ö" => "[0N-][#WD]";
+		//"^Ä" => "[0N-][#WS]";
+		//"^Ü" => "[0N-][#WDS]";
+		"^\[EU\]\[CH\]" => "[0N-][EU][CH]";
+		"^\[EI\]\[CH\]" => "[0N-][EI][CH]";
+		"^\[AU\]\[CH\]" => "[0N-][AU][CH]";
+		"^\[AU\]" => "[0D-][AU]";
+		"^\[EU\]" => "[0D-][EU]";
+		"^\[EI\](?!-?\[(CH|SCHW?|ZW?)\])" => "[0D-][EI]";
+		"^\[EI\](?=-?\[(CH|SCHW?|ZW?)\])" => "[0N-][EI]";
+		"E\\" => "[-E]\\";
+		"A\\" => "A[&A]\\";
+		"\[EI\]\\" => "E[-EI]\\";
+		// \n and \s
+		"\\N" => "\\[N=]";
+		"(?<!\['\])\\S" => "\\[S=]";
+
+		// dem/den at beginning
+		"^{(DE[MN])}([-+#]?)(?=N)" => "[^$1]$2";
+		"^{(DE[MN])}([-+#]?)(?=J)" => "[^^$1]$2";
+
+		// completor in the end (also necessary)
+		"O\|" => "[#N][&O]|"; // Autobahn
+		
+	#EndSubSection(completor)
+	#BeginSubSection(rewriter)
+		// at this point, all characters are upper case
+		// some token combinations need to be rewritten
+		// that's done in this part (was first part of
+		// transcriptor
+
+		///////////////////////////////////////////////////////
+		// 2nd step: rewrite upper case tokens if necessary  //
+		///////////////////////////////////////////////////////
+
+		"E-I" => "E[&E]I";		// Koffein
+		"I\[SCHL\]" => "I[^SCH@L3]";	// Tischli
+
+
+		// &t#los (furchtlos)
+		"\[&T\]#L" => "[&T#L]";
+		
+		"{AUF}\+\[AR\]" => "[AUF+AR]";
+		"\[VR\]\+{AUS}" => "[VR][-AUS]";  
+		"{VOR}\+?{AUS}" => "{VOR}[-AUS]";
+		"{HEIT}U\[NG\]" => "[#NS][&EITNG]";
+		"\[EI\]-{ER}" => "[EI][&E]{ER}";
+
+		"{DEN}{EN}" => "[0N-]{DEN}[O][&E]{EN}";		// denen
+		"(\[EI\])(-?{E[MN]})" => "$1[&E]$2";
+		"(\[EI\])((?:\+|-)?E)" => "$1[&E]$2";
+
+		"{ET}A" => "{ET}[&E]A";
+		"(\[ET3\/4\])({EN})" => "$1[&E]$2";
+
+		// correct position for &T
+		// 1- und 2-stufige Zeichen: [&T-1]
+		"\[&T\]([\#\-\+])?([BCDFGHJKLMPTVWXY]|\[(?:ST|NK|NG|NS|MPF|PP|TT|CK|FF)\])" => "[&T-1]$1$2";
+
+		"\[&T\][-+#]?\[SCH\]" => "[&T^SCH]";
+		
+		//"\[(CH|LL)\]T" => "[$1][&T]";
+		"{VOR}(\||\+)?\[AR\]" => "[VORAR]";
+		"^{ER}\[AR\]" => "[0N-][#N][VR+AR]"; 
+		"{ER}\[AR\]" => "[#N][VR+AR]"; 
+		
+		"\[NK\]T" => "[NK][&T]";
+		"\[ND\]T" => "[ND][&T]";
+		"\[NG\]T" => "[NG][&T]";
+		"\[#VR\]" => "[V@R6]";
+		"\[GR\]" => "[G@R3^]";
+		"\[XR\]" => "[X@R]";
+		"\[MPFR\]" => "[MPF][@R]";
+		"\[MMR\]" => "[MM][@R]";
+		"\[NNR\]" => "[NN][@R]";
+		"\[PPR\]" => "[PP][@R]";
+		"\[NKR\]" => "[NK@R]";
+		"\[NDR\]" => "[ND@R]";
+		"\[HR\]" => "[H@R]";
+		
+		
+		"\[NGR\]" => "[NG@R]";
+		"\[NSR\]" => "[NS@R]";
+		"\[NKL\]" => "[NK@L3]";
+		"\[NGL\]" => "[NG@L3]";
+		"\[NSL\]" => "[NS@L3]";
+		"\[RRL\]" => "[RR@L]";
+		"\[NDL\]" => "[ND@L3]";
+		"\[TTL\]" => "[TT@L3]";
+		"\[TTR\]" => "[TT@R3^]";
+		"\[FFL\]" => "[FF@L]";
+		"\[FFR\]" => "[FF@R6]";
+		"\[CKL\]" => "[CK@L3]";
+		"\[CKR\]" => "[CK@R]";
+		"\[PPL\]" => "[PP@L]";
+		"\[PPR\]" => "[PP@R6]";
+		
+		
+
+		"\[CHR\]" => "[CH@R]";
+		"\[KR\]" => "[K@R3^]";
+		"\[TR\]]" => "[T@R3^]";
+		"\[SCHR\]" => "[SCH@R]";
+		"\[STR\]" => "[ST@R3^]";
+		"\[LL\]" => "[L@L]";
+		"\[BL\]" => "[B@L]";
+		"\[XL\]" => "[X][@L]";
+		"\[MPFL\]" => "[MPF][@R]";
+		"\[MML\]" => "[MM@L]";
+		"\[NNL\]" => "[NN@L]";
+		"\[PPL\]" => "[PP][@L]";
+
+
+		"\[ML\]" => "[M@L]";
+		"\[FL\]" => "[F@L]";
+		"\[PL\]" => "[P@L]";
+		"\[PFL\]" => "[PF@L]";
+		"\[VL\]" => "[V@L]";
+		"\[WL\]" => "[W@L]";
+		"(?<=([bcdfghjklmnpqrsvwxyz])|(\[CH\]))\[TL\]" => "[&T@L3]";
+		"(?<=([bcdfghjklmnpqrsvwxyz])|(\[SCH\]))\[TL\]" => "[&T@L3]";
+		
+		"\[TL\]" => "[T@L3]";
+		"([bcdfghjklmnpqrvwxyzs])\[T" => "$1][&T][";
+		"\[TT\]r" => "[TT@R3^]";
+		"\[TR\]" => "[T@R3^]";
+		"\[DR\]" => "[D@R3^]";
+		"\[CR\]" => "[C@R]";
+		"\[CK\]l" => "[CK@L]";
+		"\[GNL\]" => "[NG@L3]";
+		"\[NR\]" => "[N@R6]";
+		"\[NL\]" => "[N@L]";
+		"\[KL\]" => "[K@L3]";
+		"\[ZL\]" => "[Z@L3]";
+		"\[SCHL\]" => "[SCH@L3]";
+		"\[CHL\]" => "[CH@L3]";
+		"\[BR\]" => "[B@R6]";
+		"\[SPL\]" => "[SP@L]";
+		"\[FR\]" => "[F@R6]";
+		"\[LR\]" => "[L@R6]";
+		"\[MR\]" => "[M@R6]";
+		"\[SPR\]" => "[SP@R6]";
+		"\[PR\]" => "[P@R6]";
+		"\[PFR\]" => "[PF@R6]";
+		"\[WR\]" => "[W@R6]";
+		"\[RL\]" => "[VR@L]";
+		"\[GL\]" => "[G@L3]";
+		"\[SR\]" => "[S][AR]";
+		"\[DL\]" => "[D@L3]";
+		"\[CL\]" => "[C@L3]";
+		"\[STL\]" => "[ST@L3]";
+		"\[SL\]" => "s[@L]";
+		"\[SSL\]" => "[SS][@L]";
+		
+
+		"(\[VR@L\])\[?I\]?(\[?N\]?)" => "$1$2";
+		"^\[EI\]$" => "[0D-][EI][&E]";
+		"&T]{EN}" => "&T][&E][EN]";
+		"\[EU\]\[-E\]" => "[EU][&E][-E]";
+		"\[EU\]\[&E\]E\[VR\]U\[NG\]" => "[EU][&E][VR]U[NG]";
+		"\[VR\]{AUS}" => "[VR]{-AUS}";
+		"\[VR\]\|?\[VR\]" => "[VR+AR]";
+		"^{HEIT}" => "[0N-]{HEIT}";
+		"I-?U" => "[&I]U";
+		"I-?E" => "[&I]E";
+		"I-?A" => "[&I]A";
+		"I-?O([^N])" => "[&I]O$1";
+		"I-?I" => "[&I]I";
+		"O-?U" => "[&O]U";
+		"\[EU\]-?E" => "[EU][&E]";
+		"E-?\[-E\]" => "[#N][-E]";
+		"\[E\]$" => "[-E]";
+		"E-?{EN}" => "E[&E]{EN}";
+		"\[EI\]-?{HEIT}" => "[EI][&E]{HEIT}";
+		"\[AU\]-?I" => "[AU][&E]I";
+		"(\[?[Ii]\]?|\[EI\]|\[AU\]|\[EU\])(-|\|?)\[SCH\]" => "$1$2[^SCH]";
+		"(\[?[Ii]\]?|\[EI\]|\[AU\]|\[EU\])(-|\|?)\[SCHW\]" => "$1$2[^SCHW]";
+		"(\[?[Ii]\]?|\[EI\]|\[AU\]|\[EU\])(-|\|?)\[SCHM\]" => "$1$2[^SCHM]";
+		"(\[?[Ii]\]?|\[EI\]|\[AU\]|\[EU\])(-|\|?)\[ZW\]" => "$1$2[^ZW]";
+		"(\[?[Ii]\]?|\[EI\]|\[AU\]|\[EU\])(-|\|?)Z" => "$1$2[^Z]";
+		"(\[?[Ii]\]?|\[EI\]|\[AU\]|\[EU\])(-|\|?)\[CH\]" => "$1$2[^CH]";
+		//"\[&T\]\[?B\]?" => "[&TB]"; // hopefully not necessary any more
+		"\[&T\]\[?B\]?" => "[&T-1][B]";
+		"\[&T\]\[?L\]?(OS)" => "{&T-L}$1";
+		"\[&T\]\[NG\]" => "[&TNG]";
+		"\[&T\]\[NS\]" => "[&TNS]";
+		"\[&T\]\[?ST\]?" => "[&TST]";
+		"\[&T\]\[?CH\]?" => "[&T^CH]";
+		"\[&T\]\[?C\]?" => "[&TC]";
+		"\[&T\]\[?D\]?" => "[&TD]";
+		"\[&T\]\[?G\]?" => "[&TG]";
+		//"\[&T\]\[?H\]?" => "[&TH]";
+		"\[&T\]\[?J\]?" => "[&TJ]";
+		"\[&T\]\[?ALL\]?" => "[&TALL]";
+		"\[&T\]\[?M\]?" => "[&TM]";
+		"\[&T\]\[?W\]?" => "[&TW]";
+		"\[&T\]\[?X\]?" => "[&TX]";
+		"\[&T\]\[?Y\]?" => "[&TY]";
+		//"\[&T\]\[?&E\]?" => "[&T&E]"; // hopefully not necessary any more
+		"\[&T&E\]E" => "[&T&E][-E]";
+		"\[&T\]{HAFT}" => "[&THAFT]";
+		"{HEIT}{LICH}" => "[&EITH]";
+		"\[&T\]{SCHAFT}" => "[&TSCHAFT]";
+		"{HEIT}{SCHAFT}" => "[&EITSCHAFT]";
+		"\[&T\]{ION}" => "[&TION]";
+		"\[&T\](\[?[AEIOU]|Ä|Ö|Ü\]?)" => "[&T][&E]$1"; 	//"[&T&E]$1";
+		"{&TALL}" => "[&TALL]";
+		"\[&T\]\[?N\]?" => "[&TN]";
+		"\[&T\]\[?VR\]?" => "[&TVR]";
+		"\[&T\]\[?R\]?" => "[&TAR5]";
+		"\[&TL\]" => "[&T@L3]";
+		"\[&T\]\[L\]" => "[&T@L3]";
+		"{&T-L}" => "[&TL]";
+		//"\[&T\]\[SCH\]" => "[&T^SCH]";
+		//"\[&T\]\[?S\]?" => "[&TS]";
+		"\[&T\]\[?U\]?" => "[&TU]";
+		//"\[&T\]\[?SCH\]?" => "[&T^SCH]";
+		"\[&T\]\[?Z\]?" => "[&T^Z]";
+		"\[&T\]\[F@L\]" => "[&TF@L]";
+		"\[&T\]F" => "[&TF]";
+		"\[&T\]\[?K\]?" => "[&TK]";
+		"\[&T\]\[?P\]?" => "[&TP]";
+		"\[&T\]\[?Q\]?" => "[&TQ]";
+		"\[&T\]\[?V\]?" => "[&TV]";
+		"\[&T\]\[?NK\]?" => "[&TNK]";
+		"\[&T\]\[?PF\]?" => "[&TPF]";
+		"\[&T\]\[?SP\]?" => "[&TSP]";
+		"\[&T\]\[?SCHW\]?" => "[&TSCHW]";
+		"\[&T\]\[?ZW\]?" => "[&TZW]";
+		"\[&T\]Ä" => "[&T&E]Ä";
+		"\[&T\]Ü" => "[&T&E]Ü";
+		"\[&T\]\[#W\]\[-E\]" => "[&T&E][#W][-E]";
+		"{HEIT}ES" => "[&EITES]";
+		"{HEIT}\[?B\]?" => "[&EITB]";
+		"{HEIT}\[?L\]?" => "[&EITL]";
+		"{HEIT}\[NG\]" => "[&EITNG]";
+		"{HEIT}\[NS\]" => "[&EITNS]";
+		"{HEIT}\[?ST\]?" => "[&EITST]";
+		"{HEIT}\[?SCH\]?" => "[&EITSCH]";
+		"{HEIT}\[?CH\]?" => "[&EITCH]";
+		"{HEIT}\[?C\]?" => "[&EITC]";
+		"{HEIT}\[?D\]?" => "[&EITD]";
+		"{HEIT}\[?G\]?" => "[&EITG]";
+		"{HEIT}\[?H\]?" => "[&EITH]";
+		"{HEIT}\[?J\]?" => "[&EITJ]";
+		"{HEIT}\[?ALL\]?" => "[&EITALL]";
+		"{HEIT}\[?M\]?" => "[&EITM]";
+		"{HEIT}\[?W\]?" => "[&EITW]";
+		"{HEIT}\[?X\]?" => "[&EITX]";
+		"{HEIT}\[?Y\]?" => "[&EITY]";
+		//"{HEIT}\[?&E\]?" => "[&EIT&E]";
+		"{HEIT}\[?N\]?" => "[&EITN]";
+		"{HEIT}\[?VR\]?" => "[&EITVR]";
+		"{HEIT}\[?S\]?" => "[&EITS]";
+		//"{HEIT}\[?U\]?" => "[&EITU]";
+		"{HEIT}\[?O\]?" => "[&EITO]";
+		"{HEIT}\[?Z\]?" => "[&EITZ]";
+		"{HEIT}\[?F\]?" => "[&EITF]";
+		"{HEIT}\[?K\]?" => "[&EITK]";
+		"{HEIT}\[?P\]?" => "[&EITP]";
+		"{HEIT}\[?Q\]?" => "[&EITQ]";
+		"{HEIT}\[?V\]?" => "[&EITV]";
+		"{HEIT}\[?NK\]?" => "[&EITNK]";
+		"{HEIT}\[?PF\]?" => "[&EITPF]";
+		"{HEIT}\[?SP\]?" => "[&EITSP]";
+		"{HEIT}\[?SCHW\]?" => "[&EITSCHW]";
+		"{HEIT}\[?ZW\]?" => "[&EITZW]";
+		"{HEIT}IG" => "{HEIT-1}[G]";
+		"{TUM}" => "[A][&TM]";
+		"\[TLICH\]T" => "[TLICH][&T]";
+		//"\[TLICH\]" => "[&TH]";
+		"\[&T\](\[-E[MN]?\])" => "[&T][&E]$1";
+		"\[&EITNG\]\[SP\]" => "[&EITNG][S][P]";
+		"\[AU\]\[-E\]" => "[AU][&E][-E]";
+		"\[EI\]{ER}" => "[EI][&E]{ER}";
+		"\[AU\]U" => "[AU][&E]U";
+		"\[O\]U" => "[&O]U";
+		"{HEIT}U\[NG\]" => "{HEIT-1}[#NS][NG]"; 
+		"\[EU\]-?{LICH}" => "[EU][&E]{LICH}"; 
+
+		// rewrite higher position [ch] (combined with @r @l or not)
+		"(I|\[(?:AU|EU)\])([-#\+])?\[CH" => "$1$2[^CH";
+		"\[VR@L\]\[-E\]" => "[VR@L][O][-E]"; // recorrect height -e
+		//"{ER}\[#W\]\[-EI\]" => "{ER}[#W][-EI2]"; // recorrect height -ei // not sure if ei is higher after vr ...
+		"{HEIT}A" => "{HEIT}[&E]A";
+		"{SCHAFT}-?L" => "{SCHAFT}[@L]";
+		"\[EU\]-{ET}" => "[EU][&E]{ET}";
+
+		"U-{EN}" => "A[&U]{EN}";
+
+		
+	#EndSubSection(rewriter)
+	#BeginSubSection(substituter)
+		
+		"{MISS}" => "MI[SS]";
+
+		"{ESIST}" => "[ES]\\[#0][IST]";		// spacing comes from token definition
+
+		"{GEHABT}" => "[G][&T]";
+		"^{AN}" => "[0N-]AN";
+		"{AN}" => "AN";
+		
+		"{WI}(-)?(.?)" => "[W][/I]\\$2";
+
+		"^{SO}" => "[0n-][SS]";
+		"(\||\\){SO}" => "$1[0n-][SS]";
+		"{SO}$" => "[SS]";
+		
+		"}{DEM}" => "}[EM]";
+
+		// trickier ones
+		"\[&T\]{ER}" => "[&T][VR]";  // hopefully better this way
+		"\[&T\]{ALL}" => "{&TALL}";
+		//"{TUM}\[VR\]" => "{TUM}{VR}";	//??
+		//"{TUM}{VR}" => "{TUM}[VR]"; //??
+		"R}t" => "R}[&T]";
+		"^\{ANT\}" => "[0N-][#N]{ANT}";
+		"{HEIT}{ET}" => "{HEIT}[&E][ET3/4]";
+		"{ET}(e[^s]|{EN}|{EM})" => "{ET}[&E]$1";
+		"\[EI\]t" => "[EI]T";
+
+		//"{VOR}r" => "[VOR+AR]";
+		//"{ER}r" => "[VR+AR]";
+		"{DES}" => "[S=]";
+		"^{DE(M|N)}$" => "[DE$1]";
+		"{DEM}(-?)N" => "[^DEM]$1N";
+		"{DE(M|N)}j" => "[^^DE$1]J";
+		"{DE(M|N)}\[j\]" => "[^^DE$1][J]";
+		"{DE(M|N)}[-+]?g" => "[^^DE$1]G";
+		"{DE(M|N)}[-+]?{G" => "[^^DE$1]{G";
+		"{DE(M|N)}[-+]?{GE}" => "[^^DE$1]{GE}";
+		"{DE(M|N)}z" => "[^^DE$1]Z";
+		"{DE(M|N)}{ZU}" => "[^^DE$1]{ZU}";
+		"{DE(M|N)}" => "[E$1]";
+		
+
+		"o{HEIT}" => "[&O]{HEIT}";
+		"\[AU\]{HEIT}" => "[AU][&E]{HEIT}";
+		"{SCHAFT}ler(n|in(nen)?)?$" => "{SCHAFT}[&L]{ER}$1";
+		"{TUM}er(s|in|innen)?$" => "{TUM}[VR]$1";
+		"{HEIT}({EN}|{EM})" => "{HEIT}[&E]$1";
+		"{HEIT}er" => "{HEIT}[VR]";
+		"{HEIT}el" => "{HEIT}[&E][-E]L";
+		"{HEIT}e$" => "{HEIT}[&E][-E]";
+		"{HEIT}es" => "{&EITES}";
+		"{HEIT}e\[NS\]" => "[&EITNS]";
+		"{HEIT}ig" => "[&EITG]";
+		"{HEIT}u\[NG\]" => "[A][&EITNG]";
+		"{HEIT}e" => "{HEIT}[&E]e";
+
+		"^\{ER\}" => "[0N-][#N][VR]";
+		//"\[&T\]{ER}" => "[&TVR]"; // even 2x ...
+		// trivial ones
+		"{DASS?}" => "[#NS][S=]";
+		"{HEIT}{ER}" => "[&EITVR]";
+		//"{ER}" => "[E][VR]";
+		"{BE}" => "[B]";
+		"{GE}" => "[G]";
+		"{UND}" => "[#NS][&U]";
+		"{DI}" => "[D]";
+		"{MIT}" => "[M]";
+		"{VON}" => "[V]";
+		"{FÜR}" => "[F]";
+		"{LICH}" => "[H]";
+		"{ALS}" => "[L]";
+		"{CON}" => "[C]";
+		"{ES}" => "[ES]";
+		"{WENN}" => "[NN]";
+		"{WIR}" => "[W]";
+		"{ZU}" => "[Z]";
+		"{DER}" => "[VR]";
+		"{NICHT}" => "[NICHT]";
+		"{HEIT}ig" => "[#W][TIG]";
+		"\|{VER}" => "[EN][AR]";
+		"^{VER}" => "$1[0N-][EN][AR]";
+		"{VER}" => "[EN][AR]";
+		"{DEM}" => "[0N-][EM]";
+		"{DEN}" => "[0N-][EN]";
+		"{SI}" => "[S=][/I]";
+		"{UN}" => "[#NS][&U]";
+		"{IN}" => "[IN]";
+		"{WAR}" => "[0U-][#0S][&A]";
+		"{WÄR}" => "[0U-][#WS][&A]";
+		"{ET}" => "[ET]";
+		"{HAT}" => "[HAT]";
+		"{DA}" => "[DA]";
+		"{DES}" => "[0N-][S]";
+		"{SIND}" => "[SIND]";
+		//"{DIS}" => "[0N-][#0][I][S]";
+		"{ZER}" => "[Z@R]";
+		"{ANTI}" => "[0N-][ANTI]";
+		//"^{UNTER}" => "[0N-][N@R6]";
+		"^{UNTER}" => "[N=@R6]";
+		"\\{UNTER}" => "\\[N=@R6]";
+		"{UNTER}" => "[N@R6]";
+		"^{ÜBER}" => "[0N-][#WS][&U]";
+		"{ÜBER}" => "[#WS][&U]";
+		"{WI}" => "[W][/I]";
+		"{WIDER}" => "[W@R6]";
+		//"{SOLCH}" => "[SOLCH]"; // with following rules token [solch] probably becomes obsolete
+		"^{SOLCH}" => "[S=]O[CH]";
+		"{SOLCH}" => "SO[CH]";
+		"{WELCH}" => "[CH]";
+		"{HEIT}{HIN}" => "[&EITH][#0][N]";
+		"{HIN}" => "[H][#0][N]";
+		"\[&T\]{EN}$" => "[&T][&E][EN]";
+		"\[&T\]{EM}$" => "[&T][&E][EM]";
+		"\[&T\]\[#N\]\[VR\]$" => "[&T][VR]";
+		"{USW}" => "[A][&U][SS]";
+		"{USF}" => "[A][&U][SS][FORT]";
+		"{GEHABT}" => "[G][&T]";
+		"{HAB}T" => "[HAB][&T]";
+		"{HAB}" => "[HAB]";
+		"{ZUSAMMEN}" => "[Z][A][S]";
+		"{ER}" => "[VR]";
+		"^{INTER}" => "[INTER]";
+		"{INTER}" => "[I][INTER]";
+		"^{ZURÜCK}" => "[ZURÜCK]";
+		"{ZURÜCK}" => "[I][ZURÜCK]";
+		"{E(N|M)}\|" => "[E][$1]";   // dissolve ending in composed words
+		"{E(N|M)}" => "[E$1]";
+		 
+
+		//"{AN}" => "[0N-][A][N]";
+	#EndSubSection(substituter)
+	#BeginSubSection(rewriter2)
+		"\[&T\]-?\[H\]" => "[&T3/4][H]";
+	#EndSubSection(rewriter2)
+	#BeginSubSection(separator)
+		// separator decides wether or not a word should be written separatedly
+		"\[&EITS\](\|)\[?T\]?" => "[&EITS][#5]]\\T";
+	#EndSubSection(separator)
+	#BeginSubSection(relancer2)	
+		// relancer reconverts everything except shortings {..} and bundled tokens [..] to lower case
+		"^(.*?)$" => "strtolower()";	// all to low
+		//"({[a-zäöü&\/#@\+-]*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
+		//"(\[[a-zäöü\/#@\+-].*?\])" => "strtoupper()";
+		//"({.*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
+		//"(\[.*?\])" => "strtoupper()";
+		"\|" => "";  // filter out all | from linguistical analysis (not needed any more, spacer needs them removed for correct spacing)
+		"-\]" => "#=#=#]";	// the same goes for - (this one is trickier to get rid off ...)
+		"\[-" => "[#=#=#";	// first combination of - with brackets must be rewritten
+		"-(?![0-9])" => "";	// - can now be deleted (filter out [T-1] for example ...)
+		"#=#=#" => "-";		// this still might have interferences (watch out if that occurs)
+		"\[#=#\]" => "[=]";
+		"(?!<\[vr)\+(?!ar\])" => "";  // eliminate morphem boundaries before spacer
+	#EndSubSection(relancer2)
+	#BeginSubSection(spacer)
+		
+		// at this point all tokens are lower case 
+		// single tokens can be inside [] or not
+		// multiple tokens are inside []
+		// all abbreviations have been transformed to single or multiple tokens (by preceeding subsituter)
+			
+		// apparently, there are still some accolades (not substituted by substituter because the represent a token of their own => replace accolades by brackets
+		"{" => "[";
+		"}" => "]";		
+
+		// make sure single tokens ARE inside brackets [] (no confusion between f and ff!)
+		"(\[.*?\])" => "strtoupper()";
+		"(?<!\[)([a-z]|ä|ö|ü)" => "[$1]";
+		"(\[.*?\])" => "strtolower()";	
+		
+		// filter out orphanized #
+		"\]#\[" => "][";
+
+
+		//"(\[?[td]\]?)(\[?[aou]\]?)(\[?[td]\]?)" => "$1$2[#5]$3";
+		"(\[[aou]\])(\[[td]\])" => "$1[#5]$2"; // make spacing for td more general
+		"\[l\]\[k\]" => "[l][#2][k]";
+
+		// spacer rules (generated with regex_helper.php
+
+// case: aa
+"(\[(0n-|l@l|b@l|m@l|f@l|p@l|pf@l|v@l|sp@l|w@l|b@r6|sp@r6|m@r6|p@r6|pf@r6|n@r6|n@l|l@r6|rr|ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|[blmnpvwfxy])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(d@r|nd@r|t@r|st@r|l@l|b@l|f@l|p@l|pf@l|v@l|w@l|t@l3|d@l3|nd@l3|st@l3|k@l3|b@r6|f@r6|p@r6|pf@r6|v@r6|w@r6|da@r|n@r6|n@l|vr@l|l@r6|tt@r|pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|[bdcfwlxptvqhns])\])" => "$1[#3]$3$5";
+// case: ab
+"(\[(0n-|l@l|b@l|m@l|f@l|p@l|pf@l|v@l|sp@l|w@l|b@r6|sp@r6|m@r6|p@r6|pf@r6|n@r6|n@l|l@r6|rr|ff|mm|nn|pp|pf|sp|ant|&e|ss|un|schaft|&a|&u|&o|&i|all|hab|haft|auf|aus|des|bei|selb|wo|fort|[blmnpvwfxy])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzgmyk])\])" => "$1[#0]$3$5";
+// case: ba
+"(\[(vr@l|d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|[gkjcdstqzh])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(d@r|nd@r|t@r|st@r|l@l|b@l|f@l|p@l|pf@l|v@l|w@l|t@l3|d@l3|nd@l3|st@l3|k@l3|b@r6|f@r6|p@r6|pf@r6|v@r6|w@r6|da@r|n@r6|n@l|vr@l|l@r6|tt@r|pf|st|rr|nd|vr|ff|pp|tt|all|hab|haft|auf|aus|des|bei|wo|selb|da|vor|inter|ion|[bdcfwlxptvqhns])\])" => "$1[#3]$3$5";
+// case: bb
+"(\[(vr@l|d@r|nd@r|t@r|g@r|k@r|ch@r|nk@r|sch@r|st@r|l@l|g@l3|t@l3|ng@l3|d@l3|nd@l3|st@l3|nk@l3|k@l3|z@l3|sch@l3|f@r6|ch@l3|v@r6|w@r6|z@r|z@l3|da@r|ck@l|l@r6|tt@r|mpf|schm|zw|tt|nd|st|in|ng|ns|nk|ur|sch|schw|gegen|hat|da|vr|ar|vor|inter|rück|ion|durch|ch|\^ch|ck|solch|[gkjcdstqzh])\])(\[(a|u|o|i|au|#n|#ns)\])?(\[(g@r|k@r|ch@r|nk@r|sch@r|g@l3|m@l|sp@l|ng@l3|nk@l3|k@l3|z@l3|sch@l3|ch@l3|sp@r6|m@r6|z@r|z@l3|ck@l|&a|&u|&i|&e|&o|-e|ng|sch|nk|schm|mm|nn|ss|ch|mpf|sp|ns|zw|schw|ck|gegen|hat|vr|durch|solch|[jzgmyk])\])" => "$1[#3]$3$5";
+
+		// additional space for i, au
+		//"\[(i|au)\](?!\[#)" => "[$1][#3]";
+		"\[&e\]\[#3\]\[o\]" => "[&E][O]";   // test: recorrect certain distances
+		"\[vr\]\[#3\]\[-e\]" => "[VR][#3-][-E]"; // just test if negative spacing is possible
+		"\[#6\](\[?i\]?\[?n\]?)" => "$1";
+		"\[#0\](\[i\])?\[ss\]" => "[#3]$1[ss]"; // just a quick fix
+		"\[#0\]\[#ns\]\[&a\]" => "[#3][#NS][&A]"; 		// idem
+		"(?<!\[&t\])#\[schaft\]" => "[#3][schaft]";		// idem
+		"\[i\]\[st\]" => "[#3][I][ST]";				// idem
+		"\[i\]\[t\]" => "[i][#5][t]";				// idem
+		"(\[&t@l3\])\[#n\](\[&i\])" => "$1[#3]$2";		// idem
+		"\[s=\]\[o\]\[nd\]" => "[S=][#2][O][ND]";		// idem
+		"\[n=\]\[i\]\[d\]" => "[n=][#3][i][d]"; 		// idem
+		"\[0d-\]\[i\](?!\[(?:vr|VR|ns|NS)\])" => "[0d-][#1][i]"; // idem
+		"\[t\]\[i\]\[\^sch\]" => "[t][#2][i][^sch]";		// idem
+		"\[s(=?)\]\[a\]\[([lh])\]" => "[S$1][#4][A][$2]";	// idem
+		"\[s\]\[#3\]\[a\]\[h\]" => "[S][#5][A][H]";		// idem
+		"\[a\]\[ss\]" => "[a][#2][ss]";				// idem
+		"\[ch\]\[#3\]\[st\]" => "[ch][#5][st]";			// idem
+		"\[rr\]\[#3\]\[n\]" => "[rr][n]";			// idem
+		"\[auf\]\[#3\]\[s\]" => "[auf][#2-][s]"; 		// idem
+		"\[auf\]\[ant\]" => "[auf][#6-][ant]";			// idem
+		"\[bei\]\[#3\]\[s\]" => "[bei][#2-][s]";		// idem
+		"(\[d\])(\[schaft\])" => "$1[#5]$2";			// idem
+		"(\[k\])\[#3\](\[u\]\[tt\])" => "$1[#6]$2";		// idem
+		"\[t\]\[#3\]\[a\]\[l\]" => "[t][#5][a][l]";		// idem
+		//"\[s=\](?!\[#)" => "[s=][#4]";				// idem
+		"\[n=@r6\]\[b@r6\]" => "[n=@r6][#4][b@r6]";		// idem
+		"\[l\]\[i\]\[\^z\]" => "[l][#3][i][^z]";		// idem
+		"\[g\]\[ar\]" => "[g][#2][ar]";				// idem
+		"\[z\]\[#3\]\[t\]" => "[z][#5][t]";			// idem
+		"\[k\]\[#3\]\[a\]\[p\]" => "[k][#6][a][p]";		// idem
+		"\[p\]\[#3\]\[I\]\[#5\]\[T\]" => "[p][I][#5][T]";	// idem
+		"\[n=@r6\]\[h\]" => "[n=@r6][#3][h]";			// idem
+		"\[\^z\]\[u\]\[ng\]" => "[^z][#3][u][ng]";		// idem
+		"\[ck\]\[#3\]\[w\]" => "[ck][#5][w]";			// idem
+		"\[s\]\[#3\]\[o\]\[b\]" => "[s][#6][o][b]";		// idem
+		"\[t\]\[#3\]\[au\]\[b\]" => "[t][#5][au][b]";		// idem
+		"\[\^z\]\[a\]\[vr\]" => "[^z][#3][a][vr]";		// idem
+		"\[k\]\[#3\]\[o\]\[st\]" => "[k][#5][o][st]";		// idem
+		"\[t\]\[#3\]\[p@r6\]" => "[t][#5][p@r6]";		// idem
+		"\[p@r6\]\[#3\]\[o\]\[b\]" => "[p@r6][#5][o][b]";	// idem
+		"\[s\]\[#3\]\[u\]\[l\]" => "[s][#6][u][l]";		// idem
+		"\[t@r\]\[#3\]\[o\]\[ff\]" => "[t@r][#5][o][ff]";	// idem
+		"\[k\]\[#3\]\[au\]\[f\]" => "[k][#5][au][f]";		// idem
+		"\[zw\]\[i\]\[\^sch\]" => "[zw][#3][i][^sch]";		// idem 
+		"\[m\]\[#3\]\[i\]\[l\]" => "[m][i][l]";			// idem
+		"\[bei\]\[#0\]\[z\]" => "[bei][#3-][z]";		// idem
+		"\[\^z\]\[w\]" => "[^z][#3][w]";			// idem
+		"\[b\]\[#3\]\[i\]\[d\]" => "[b][#1][i][d]";
+		"\[b\]\[#3\]\[[Ii]\]" => "[b][#1][i]";			// idem
+		"\[sch\]\[#3\]\[n\]" => "[sch][n]";			// idem
+		"\[k\]\[#3\]\[a\]\[st\]" => "[k][#6][a][st]";		// idem
+		"\[b\]\[#3\]\[s\]" => "[b][s]";				// idem
+		"\[s\]\[#3\]\[o\]\[vr\]" => "[s][#5][o][vr]";		// idem
+		"\[l@l\]\[schaft\]" => "[l@l][#3][schaft]";		// idem
+		"\[vor\]\[#3\]\[t@r\]" => "[vor][#1-][t@r]";		// idem
+		"\[z\]\[#3\]\[st\]" => "[z][#5][st]";			// idem
+		"\[b@l\]\[#3\]\[i\]\[b\]" => "[b@l][i][b]";		// idem
+		"\[vor\]\[#3\]\[bei\]" => "[vor][#2-][bei]";		// idem
+		"\[\^ch\]\[#3\]\[h\]" => "[^ch][#5][h]";		// idem
+		"\[z\]\[ar\]" => "[z][#2][ar]";				// idem
+		"\[b\]\[o\]\[#5\]\[d\]" => "[b][o][#2][d]";		// idem
+		"\[vor\]\[#3\]\[s\]" => "[vor][#2-][s]";		// idem
+		"\[k\]\[#3\]\[o\]\[pf\]" => "[k][#5][o][pf]"; 		// idem
+		"\[t@r\]\[#3\]\[a\]\[f\]" => "[t@r][#5][a][f]";		// idem
+		"\[vr\]\[#3\]\[s\]" => "[vr][s]";			// idem
+		"\[s=\]\[#4\]\[i\]\[m\]" => "[s=][i][m]";		// idem
+		"\[m\]\[#3\]\[a\]\[n\]" => "[m][a][n]";			// idem
+		"\[m\]\[#3\]\[a\]\[l\]" => "[m][#1][a][l]";		// idem
+		"\[vr\]\[#3\]\[m\]" => "[vr][m]";			// idem
+		"\[vr\]\[#3\]\[n\]" => "[vr][n]";			// idem
+		"\[vr\]\[#3\]\[g\]" => "[vr][g]";			// idem
+		"\[n=@r6\]\[w\]" => "[n=@r6][#3][w]";			// idem 
+		"\[vr\]\[#3\]\[vor\]" => "[vr][vor]";			// idem 
+		"\[j\]\[#3\]\[u\]" => "[j][#5][u]";			// idem
+		"\[l\]\[#3\]\[n\]" => "[l][#1][n]";			// idem
+		"\[ch\]\[#3\]\[b@l\]" => "[ch][#5][b@l]";		// idem
+		"\[in\]\[#3\]\[m\]" => "[in][m]";			// idem 
+		"\[d\]\[#3\]\[i\]\[b\]" => "[d][#5][i][b]";		// idem
+		"\[l\]\[#0]\[au\]\[&e\]" => "[l][#3][au][&e]";		// idem
+		"\[s\]\[#3\]\[a\]\[&a\]" => "[s][#6][a][&a]"; 		// idem
+		"\[b\]\[#3\]\[a\]\[n\]" => "[b][a][n]";			// idem
+		"\[s\]\[#3\]\[p\]" => "[s][#4][p]";			// idem
+		"\[g\]\[#3\]\[i\]\[ng\]" => "[g][#1][i][ng]";		// idem
+		"\[s=\]\[#4\]\[z\]" => "[s=][#1][z]";			// idem
+		"\[ch\]\[#3\]\[o\]\[p\]" => "[ch][#5][o][p]";		// idem
+		"\[p\]\[#3\]\[s\]" => "[p][s]";				// idem
+		"\[t\]\[#3\]\[a\]\[b@l\]" => "[t][#6][a][b@l]";		// idem
+		"\[s=\]\[#4\]\[\/i\]" => "[s=][#1-][/i]";		// idem
+		"\[m\]\[#3\]\[a\]\[s\]" => "[m][a][s]";			// idem
+		"\[l\]\[#3\]\[d\]" => "[l][#4][d]";			// idem
+		"\[w\]\[#3\]\[i\]\[n\]" => "[w][i][n]";			// idem
+		"\[st\]\[#3\]\[i\]\[nk\]" => "[st][i][nk]";		// idem
+		"\[durch\]\[#3\]\[s\]" => "[durch][s]";			// idem
+		"\[&t#l\]\[o\]\[s\]" => "[&t#l][#3][o][s]";		// idem
+		"\[vr\]\[#3\]\[ch\]" => "[vr][ch]";			// idem
+		"\[b\]\[#3\]\[a\]\[vr\]" => "[b][a][vr]";		// idem
+		"\[vr\]\[#3\]\[k\]" => "[vr][k]";			// idem
+		"\[k\]\[#3\]\[t\]" => "[k][#5][t]";			// idem
+		"\[h\]\[#3\]\[o\]\[ch\]" => "[h][#1][o][ch]";		// idem
+		"\[st\]\[#3\]\[a\]\[p@l\]" => "[st][#4][a][p@l]";
+		"\[b\]\[#3\]\[i\]\[d\]" => "[b][#4][i][d]";
+		"\[b\]\[#3\]\[t@r\]" => "[b][t@r]";
+		"\[m\]\[#3\]\[l\]" => "[m][#1][l]";
+		"\[vr\]\[#3\]\[z\]" => "[vr][z]";
+		"\[n=@r6\]\[l\]" => "[n=@r6][#3][l]";
+		"\[s=\]\[#4\]\[a\]\[#2\]\[ss\]" => "[s=][a][ss]"; // what a mess ...
+		"\[k\]\[#3\]\[a\]\[ff\]" => "[k][#6][a][ff]";
+		"\[vr\]\[#3\]\[i\]\[n\]" => "[vr][#2-][i][n]";
+		"\[vr\]\[#3\]\[i\]\[s\]" => "[vr][#1-][i][s]";
+		"\[b\]\[#0\]\[sch@r\]" => "[b][#5-][sch@r]";
+		"\[m\]\[#3\]\[i\]\[n\]" => "[m][#0][i][n]";
+		"\[n\]\[u\]\[#5\]\[t\]" => "[n][u][#3][t]";
+		"\[st\]\[#3\]\[u\]\[m\]" => "[st][#1][u][m]";
+		"\[l\]\[#0\]\[a\]\[ng\]" => "[l][#2][a][ng]";
+		"\[ar\]\[#3\]\[au\]\[m\]" => "[ar][#1][au][m]";
+		"\[t\]\[#3\]\[a\]\[st\]" => "[t][#5][a][st]";
+		"\[t\]\[was\]" => "[t][#2][was]";
+		"\[b\]\[#0\]\[g@r3\^\]" => "[b][#4-][g@r3^]";
+		"\[v\]\[#3\]\[t@r\]" => "[v][#1][t@r]";
+		"\[t@r\]\[#3\]\[a\]\[b\]" => "[t@r][#5][a][b]";
+		"\[sch@l3\]\[#3\]\[o\]\[ss\]" => "[sch@l3][o][ss]";
+		"\[auf\]\[#3\]\[st\]" => "[auf][#1][st]";
+		"\[m\]\[#0\]\[i\]\[g@r3\^\]" => "[m][#4-][i][g@r3^]";
+		"\[vor\]\[#3\]\[sch\]" => "[vor][#2-][sch]";
+		"\[g\]\[#3\]\[o\]\[tt\]" => "[g][#5][o][tt]";
+		"\[s\]\[ar\]" => "[s][#3][ar]";
+		"\[ch\]\[#3\]\[d\]" => "[ch][#6][d]";
+		"\[f\]\[#0\]\[sch@r\]" => "[f][#3-][sch@r]";
+		"\[l\]\[#0\]\[a\]\[g\]" => "[l][#1][a][g]";
+		"\[vr\]\[#3\]\[i\]\[g\]" => "[vr][#1-][i][g]";
+		"\[b@l\]\[#3\]\[a\]\[s\]" => "[b@l][#1][a][s]";
+		"\[m\]\[#3\]\[u\]\[s\]" => "[m][#1][u][s]";
+		"\[v\]\[#3\]\[i\]\[s\]" => "[v][#0][i][s]";
+		"\[sch\]\[#3\]\[o\]\[n\]" => "[sch][#0][o][n]";
+		"\[b\]\[#3\]\[a\]\[l\]" => "[b][#1][a][l]";
+		"\[ant\]\[#3\]\[st\]" => "[ant][#0][st]";
+		"\[w\]\[#3\]\[i\]\[vr\]" => "[w][#0][i][vr]";
+		"\[m\]\[#3\]\[u\]\[nd\]" => "[m][#2][u][nd]";
+		"\[j\]\[#3\]\[a\]\[&a\]" => "[j][#5][a][&a]";
+		"\[s=\]\[#4\]\[u\]\[ch\]" => "[s=][#2][u][ch]";
+		"\[t\]\[#3\]\[h\]" => "[t][#5][h]";
+		"\[n\]\[#3\]\[l\]" => "[n][#1][l]";
+		"\[k@l3\]\[#3\]\[a\]\[pp\]" => "[k@l3][#6][a][pp]";
+		"\[n\]\[#3\]\[o\]\[pf\]" => "[n][#2][o][pf]";
+		"\[b\]\[ar\]" => "[b][#1-][ar]";
+		"\[ar\]\[#3\]\[u\]\[f\]" => "[ar][#5][u][f]";
+		"\[b\]\[#3\]\[n\]" => "[b][#0][n]";
+		"\[ar\]\[#3\]\[sp\]" => "[ar][#0][sp]";
+		"\[t@r\]\[#3\]\[o\]\[st\]" => "[t@r][#5][o][st]";
+		"\[k\]\[#3\]\[u\]\[pf\]" => "[k][#5][u][pf]";
+		"\[0n-\]\[#n\]\[vr\+ar\]" => "[0n-][#3][#n][vr+ar]";
+		"\[b\]\[a\]\[#5\]\[d\]" => "[b][a][#4][d]";
+		"\[g\]\[#3\]\[sch\]" => "[g][#1][sch]";
+		"\[m\]\[#0\]\[sch\]" => "[m][#1-][sch]";
+		"\[d\]\[#3\]\[k@r3\^\]" => "[d][#0][k@r3^]";
+		"\[ch\]\[#3\]\[a\]\[b\]" => "[ch][#5][a][b]";
+		"\[vr\]\[e\]\[s\]" => "[vr][#3-][e][s]";
+		"\[n=\]\[a\]\[h\]" => "[n=][#3][a][h]";
+		"\[t@r\]\[#3\]\[au\]\[t\]" => "[t@r][#5][au][t]";
+		"\[ar\]\[#3\]\[t@r\]" => "[ar][#1][t@r]";
+		"\[s\]\[i\]\[\^sch\]" => "[s][#3][i][^sch]";
+		"\[t@r\]\[i\]\[\^sch\]" => "[t@r][#3][i][^sch]";
+		"\[s\]\[#3\]\[t\]" => "[s][#5][t]";
+		"\[s=\]\[#4\]\[a\]\[m\]" => "[s=][#1][a][m]";
+		"\[m\]\[#3\]\[s\]" => "[m][#1][s]";
+		"\[pf\]\[#0\]\[u\]\[sch\]" => "[pf][#3-][u][sch]";
+		"\[0n-\]\[#0\]\[a\]\[ng\]" => "[0n-][#2][a][ng]";
+		"\[ng\]\[#3\]\[st\]" => "[ng][#5][st]";
+		"\[da\]\[#3\]\[z\]" => "[da][#1][z]";
+		"\[c\]\[#3\]\[a\]\[p@l\]" => "[c][#5][a][p@l]";
+		"\[l\]\[#3\]\[u\]\[st\]" => "[l][#5][u][st]";
+		"\[ch\]\[#3\]\[o\]\[l\]" => "[ch][#5][o][l]";
+		"\[g\]\[i\]\[\^sch\]" => "[g][#3][i][^sch]";
+		"\[t\]\[#3\]\[p\]" => "[t][#6][p]";
+		"\[m\]\[#3\]\[a\]\[x\]" => "[m][#0][a][x]";
+		"\[sch\]\[i\]\[\^z\]" => "[sch][#2][i][^z]";
+		"\[\^z\]\[&o\]" => "[^z][#2][&o]";
+		"\[\^z\]\[i\]\[vr\]" => "[^z][#3][i][vr]";
+		"\[p@l\]\[i\]\[\^z\]" => "[p@l][#2][i][^z]";
+		"\[ch\]\[#3\]\[u\]\[ng\]" => "[ch][#5][u][ng]";
+		"\[n=@r6\]\[s\]" => "[n=@r6][#3][s]";
+		"\[k\]\[#3\]\[i\]\[nd\]" => "[k][#5][i][nd]";
+		"\[ng\]\[&t\]" => "[ng][#5][&t]";
+		"\[sp@r6\]\[#0\]\[i\]\[ng\]" => "[sp@r6][#2][i][ng]";
+		"\[ch\]\[#3\]\[vr\]" => "[ch][#5][vr]";
+		"\[st\]\[#3\]\[g\]" => "[st][#0][g]";
+		"\[g\]\[#3\]\[st\]" => "[g][#5][st]";
+		"\[s\]\[en\]" => "[s][#2][en]";
+		"\[\^ch\]\[#3\]\[w\]" => "[^ch][#5][w]";
+		"\[vor\]\[#3\]\[g\]" => "[vor][#2-][g]";
+		"\[g\]\[#3\]\[w\]" => "[g][#4][w]";
+		"\[0d-\]\[#4-\]\[i\]\[d\]" => "[0d-][#1][i][d]";
+		"\[nd\]\[schaft\]" => "[nd][#5][schaft]";
+		"\[s\]\[@l\]" => "[s][#3][@l]";
+		"\[ck@l3\]\[i\]\[ng\]" => "[ck@l3][#4][i][ng]";
+		"\[tt\]\[#3\]\[f\]" => "[tt][#5][f]";
+		"\[s\]\[i\]\[\^z\]" => "[s][#4][i][^z]";
+		"\[s\]\[#3\]\[p@r6\]" => "[s][#5][p@r6]";
+		"\[k\]\[#3\]\[f@l\]" => "[k][#5][f@l]";
+		"\[\^ch\]\[#3\]\[f\]" => "[^ch][#5][f]";
+		"\[&u\]\[dis\]" => "[&u][#1-][dis]";
+		"\[s\]\[#3\]\[st\]" => "[s][#5][st]";
+		"\[t\]\[#3\]\[u\]\[b\]" => "[t][#5][u][b]";
+		"\[b\]\[o\]\[#5\]\[t\]" => "[b][o][#3][t]";
+		"\[n=\]\[o\]\[pp\]" => "[n=][#3][o][pp]";
+		"\[durch\]\[#3\]\[sch\]" => "[durch][#3-][sch]";
+		"\[vr\]\[schaft\]" => "[vr][#3][schaft]";
+		"\[t\]\[schaft\]" => "[t][#4][schaft]";
+		"\[m\]\[u\]\[#5\]\[t\]" => "[m][u][#3][t]";
+		"\[k\]\[au\]\[\^z\]" => "[k][#3][au][^z]";
+		"\[vr\]\[#3\]\[sch\]" => "[vr][#1-][sch]";
+		"\[z\]\[i\]\[\^z\]" => "[z][#3][i][^z]";
+		"\[\^z\]\[vr\]" => "[^z][#2][vr]";
+		"\[ch\]\[#3\]\[t\]" => "[ch][#5][t]";
+		"\[\^sch\]\[ch\]" => "[^sch][#2-][ch]";
+		"\[k\]\[#3\]\[o\]\[ff\]" => "[k][#6][o][ff]";
+		"\[k\]\[#3\]\[a\]\[pp\]" => "[k][#6][a][pp]";
+		"\[z@r\]\[ar\]" => "[z@r][#2][ar]";
+		"\[st\]\[#3\]\[o\]\[tt\]" => "[st][#5][o][tt]";
+		"\[ck@l3\]\[i\]\[m\]" => "[ck@l3][#4][i][m]";
+		"\[b\]\[#3\]\[st\]" => "[b][#1][st]";
+		"\[vr\]\[#3\]\[schw\]" => "[vr][#1-][schw]";
+		"\[s=\]\[u\]\[pp\]" => "[s=][#4][u][pp]";
+		"\[b\]\[#3\]\[a\]\[l@l\]" => "[b][#1][a][l@l]";
+		"\[rr\]\[#3\]\[w\]" => "[rr][#1-][w]";
+		"\[nn\]\[#3\]\[v\]" => "[nn][#0][v]";
+		"\[g\]\[#3\]\[g\]" => "[g][#2][g]";
+		"\[da\]\[#3\]\[bei\]" => "[da][#0][bei]";
+		"\[s\]\[#3\]\[h\]" => "[s][#4][h]";
+		"\[t@r\]\[#3\]\[i\]\[tt\]" => "[t@r][#5][i][tt]";
+		"\[t\]\[o\]\[vr\+ar\]" => "[t][#3][o][vr+ar]";
+		"\[m\]\[o\]\[#5\]\[t\]" => "[m][o][#3][t]";
+		"\[n\]\[#3\]\[d@r3\^\]" => "[n][#1][d@r3^]";
+		"\[t\]\[au\]\[\^ch\]" => "[t][#2][au][^ch]";
+		"\[s\]\[#3\]\[d\]" => "[s][#5][d]";
+		"\[in\]\[#3\]\[sch@r\]" => "[in][#3-][sch@r]";
+		"\[vor\]\[#3\]\[k\]" => "[vor][#2-][k]";
+		"\[ar\]\[#3\]\[schw\]" => "[ar][#0][schw]";
+		"\[durch\]\[#3\]\[b@r6\]" => "[durch][#1-][b@r6]";
+		"\[st@r3\^\]\[#3\]\[a\]\[#2\]\[ss\]" => "[st@r3^][#1][a][ss]";
+		"\[b\]\[#2-\]\[i\]\[tt\]" => "[b][#1][i][tt]";
+		"\[vor\]\[#3\]\[sch@r\]" => "[vor][#4-][sch@r]";
+		"\[\^z\]\[b\]" => "[^z][#5][b]";
+		"\[anti\]\[c\]" => "[anti][#3][c]";
+		"\[t\]\[#3\]\[b\]" => "[t][#5][b]";
+		"\[s=\]\[i\]\[d\]" => "[s=][#4][i][d]";
+		"\[ch\]\[#3\]\[i\]\[c\]" => "[ch][#5][i][c]";
+		"\[t\]\[#3\]\[a\]\[p\]" => "[t][#6][a][p]";
+		"\[g\]\[#3\]\[a\]\[b\]" => "[g][#6][a][b]";
+		"\[vorar\]\[u\]\[nd\]" => "[vorar][#5][u][nd]";
+		"\[z\]\[#3\]\[a\]\[l\]" => "[z][#6][a][l]";
+		"\[k\]\[u\]\[#5\]\[t\]" => "[k][u][#7][t]";
+		"\[\^ch\]\[#3\]\[vr\]" => "[^ch][#5][vr]";
+		"\[k\]\[#3\]\[u\]\[b\]" => "[k][#6][u][b]";
+		"\[l\]\[#0\]\[u\]\[k\]" => "[l][#2][u][k]";
+		"\[z\]\[#3\]\[w\]" => "[z][#5][w]";
+		"\[f\]\[#0\]\[o\]\[y\]" => "[f][#3][o][y]";
+		"\[s=\]\[o\]\[f\]" => "[s=][#3][o][f]";
+		"\[k@l3\]\[#3\]\[o\]\[st\]" => "[k@l3][#5][o][st]";
+		"\[\^ch\]\[i\]\[\^sch\]" => "[^ch][#3][i][^sch]";
+		"\[&i\]\[#0\]\[a\]\[&a\]" => "[&i][#5][a][&a]";
+		"\[t\]\[#3\]\[i\]\[f\]" => "[t][#5][i][f]";
+		"\[d\]\[#3\]\[o\]\[x\]" => "[d][#5][o][x]";
+		"\[s\]\[#3\]\[u\]\[nd\]" => "[s][#5][u][nd]";
+		"\[n=@r6\]\[n\]" => "[n=@r6][#2][n]";
+		"\[(t|d|k|g|tt|ck|st)@r3\^\]\[(a|i|o|u|au)\]" => "[$1@r3^][#3][$2]"; // general rule for new token @r3^
+		"\[ck@r3\^\]\[#3\]\[u\]\[f\]" => "[ck@r3^][#5][u][f]";
+		"\[s\]\[in\]" => "[s][#4][in]";
+		"\[l@l\]\[#0\]\[k\]" => "[l@l][#4][k]";
+		"\[s\]\[i\]\[\^ch\]" => "[s][#3][i][^ch]";
+		"\[w\]\[#0\]\[o\]\[ch\]" => "[w][#1][o][ch]";
+		"\[s=\]\[i\]\[\^z\]" => "[s=][#3][i][^z]";
+		"\[p\]\[s\]" => "[p][#1][s]";
+		"\[ar\]\[#3\]\[a\]\[nd@l3\]" => "[ar][#5][a][nd@l3]";
+		"\[w\]\[#0\]\[u\]\[ss\]" => "[w][#2][u][ss]";
+		"\[st@r3\^\]\[#3\]\[i\]\[\^ch\]" => "[st@r3^][#1][i][^ch]";
+		"\[n\]\[#0\]\[a\]\[&a\]" => "[n][#3][a][&a]";
+		"\[pf\]\[#3\]\[i\]\[ff\]" => "[pf][#6][i][ff]";
+		"\[\^ch\]\[en\]" => "[^ch][#4][en]"; // correct length -en: why is this necessary for ch but not for sch?!?
+		"\[s=\]\[au\]\[&e\]" => "[s=][#2][au][&e]";
+		"\[n\]\[#0\]\[au\]\[&e\]" => "[n][#3][au][&e]";
+		"\[0d-\]\[#4-\]\[i\]\[l@l\]" => "[0d-][#1][i][l@l]";
+		"\[l@l\]\[u\]\[st@r3\^\]" => "[l@l][#1][u][st@r3^]";
+		"\[&t3\/4\]\[h\]" => "[&t3/4][#1][h]";
+		"\[b@l\]\[i\]\[b\]" => "[b@l][#2][i][b]";
+		"\[zurück\]\[b@l\]" => "[zurück][#3][b@l]";
+		"\[d\]\[i\]\[\^z\]" => "[d][#4][i][^z]";
+		"\[\^z\]\[i\]\[l\]" => "[^z][#5][i][l]";
+		"\[\^z\]\[l\]" => "[^z][#4][l]";
+		"\[n=@r6\]\[t\]" => "[n=@r6][#4][t]";
+		"\[ch\]\[vr\+ar\]" => "[ch][#4]][vr+ar]";
+		"\[\^z\]\[&i\]" => "[^z][#4][&i]";
+		"\[ff\]\[i\]\[\^z\]" => "[ff][#3]][i][^z]";
+		"\[s=\]\[u\]\[b\]" => "[s=][#3][u][b]";
+		"\[b\]\[#0\]\[j\]" => "[b][#1][j]";
+		"\[sp@r6\]\[i\]\[\^z\]" => "[sp@r6][#2][i][^z]";
+		"\[t\]\[vr\+ar\]" => "[t][#3][vr+ar]";
+		"\[ck\]\[#3\]\[p\]" => "[ck][#6][p]";
+		"\[nn\]\[#0\]\[a\]\[&a\]" => "[nn][#2][a][&a]";
+		"\[w\]\[o\]\[tt@l3\]" => "[w][#4][o][tt@l3]";
+		"\[tt@l3\]\[i\]\[s\]" => "[tt@l3][#3][i][s]";
+		"\[&tion\]\[s\]" => "[&tion][#2][s]";
+		"\[0n-\]\[#0\]\[a\]" => "[0n-][#4][a]";
+		"\[st\]\[#3\]\[i\]\[#5\]\[t\]" => "[st][#4][i][t]"; // correct completely wrong rule from above ...
+		"\[s=\]\[a\]\[f\]" => "[s=][#4][a][f]";
+		"\[&u\]\[#3\]\[i\]\[inter\]" => "[&u][#1-][i][inter]"; // recorrect distance 3 introduced automatically
+		"\[n=@r6\]\[ar\]" => "[n=@r6][#2][ar]";
+		"\[t\]\[#3\]\[u\]\[pf\]" => "[t][#5][u][pf]";
+		"\[d\]\[#3\]\[i\]\[d\]" => "[d][#5][i][d]"; 
+		"\[d\]\[#3\]\[a\]\[k\]" => "[d][#5][a][k]";
+		"\[0d-\]\[au\]\[t\]" => "[0d-][#2][au][t]";
+		"\[n=@r6\]\[st\]" => "[n=@r6][#3]][st]";
+		"\[zurück\]\[f\]" => "[zurück][#3][f]";
+		"\[t@r3\^\]\[#3\]\[i\]\[tt\]" => "[t@r3^][#5][i][tt]";
+		"\[f\]\[#0\]\[u\]\[ss\]" => "[f][#1][u][ss]";
+		"\[st\]\[#3\]\[sch\]" => "[st][#0][sch]";
+		"\[ck\]\[#3\]\[h\]" => "[ck][#5][h]";
+		"\[l\]\[#0\]\[y\]" => "[l][#2][y]";
+		"\[b\]\[#1\]\[i\]\[tt\]" => "[b][#3][i][tt]";
+		"\[mm\]\[#0\]\[a\]\[&a\]" => "[mm][#3][a][&a]";
+		"\[t\]\[i\]\[\^sch@l3\]" => "[t][#3][i][^sch@l3]";
+		"\[\^z\]\[i\]\[n\]" => "[^z][#3][i][n]";
+		"\[\^ch\]\[&t\]" => "[^ch][#2][&t]";
+		"\[sch@r\]\[#3\]\[o\]\[ck\]" => "[sch@r][#7][o][ck]";
+		"\[vr\]\[#3\]\[sch@r\]" => "[vr][#4-][sch@r]";
+		//"\[c\]\[#5\]\[&i\]" => "[c][#1][&i]"; // replaced by generic rule
+		"\[d\]\[i\]\[\^ch\]" => "[d][#4][i][^ch]";
+		"\[l\]\[#0\](\[a\])?\[m\]" => "[l][#3]$1[m]";
+		"\[l\]\[#0\]\[a\]\[ch\]" => "[l][#3][a][ch]";
+		"\[ch\]\[en\]" => "[ch][#3][en]";
+		"\[s\]\[#4\]\[h\]" => "[s][#6][h]";
+		//"\[b\]\[#5\]\[&i\]" => "[b][#2][&i]"; // replaced by generic rule
+		"\[auf\]\[#3\]\[n\]" => "[auf][#1-][n]";
+		"\[t@r3\^\]\[#3\]\[a\]\[f\]" => "[t@r3^][#5][a][f]";
+		"\[st\]\[#3\]\[a\]\[tt\]" => "[st][#6][a][tt]";
+		"\[l\]\[#3\]\[au\]\[t\]" => "[l][#5][au][t]";
+		"\[w\]\[i\]\[\^z\]" => "[w][#3]][i][^z]";
+		"\[\^z\]\[-e\]" => "[^z][#3][-e]";
+		"\[z\]\[#3\]\[i\]\[tt\]" => "[z][#6][i][tt]";
+		"\[l\]\[au\]\[\^sch\]" => "[l][#3][au][^sch]";
+		"\[n\]\[au\]\[\^z\]" => "[n][#3][au][^z]";
+		"\[d@r3\^\]\[#3\]\[i\]\[tt\]" => "[d@r3^][#6][i][tt]";
+		"\[t@r3\^\]\[#3\]\[au\]\[m\]" => "[t@r3^][#5][au][m]";
+		"\[w\]\[#0\]\[a\]\[&a\]" => "[w][#3][a][&a]";
+		"\[ar\]\[t@r3\^\]" => "[ar][#3][t@r3^]";
+		"\[g\]\[#3\]\[d\]" => "[g][#5][d]";
+		"\[d\]\[#3\]\[a\]\[nk\]" => "[d][#5][a][nk]";
+		"\[h\]\[#3\]\[au\]\[t\]" => "[h][#5][au][t]";
+		"\[ng\]\[#3\]\[t\]" => "[ng][#6][t]";
+		"\[g\]\[#3\]\[a\]\[ng\]" => "[g][#5][a][ng]";
+		"\[s=\]\[h\]" => "[s=][#4][h]";
+		"\[s=\]\[u\]\[tt\]" => "[s=][#4][u][tt]";
+		"\[\^z\]\[i\]\[d\]" => "[^z][#4][i][d]";
+
+		// experimental: generic -&i, -&a
+		"\[#5\]\[&i\]$" => "[#2][&i]";
+		"\[#3\]\[a\]\[&a\]" => "[#5][a][&a]";
+
+		// experimental: draw-arround-knot _._
+		"\[(sch|d|t)@(r|l.?|r3\^)\]\[#(.*?)\]\[(i|u)\]\[(tt|ck|pp|b)\]" => "[$1@$2][_._][#$3][$4][$5]";
+
+		"^(.*?)$" => "strtoupper()";	// all to upper
+
+		// fix spacing bug for \
+		"\\" => "[#S#]";
+		"\[VR@L\]\[EN\]" => "[VR@L][O][EN]"; // figh vertical position -en with combined token vrl (bug?)
+
+		"\[VR@L\]\[#3\]\[O\]\[-E\]" => "[VR@L][#2-][O][-E]"; // re-recorrect re-corrections ...
+
+	#EndSubSection(spacer,=:prt)
+#EndSection(rules)
+

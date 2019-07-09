@@ -2279,7 +2279,9 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
     $new_token_key = $first_token . $second_token;
      // enter token in $steno_tokens_table
     $steno_tokens_type[$new_token_key] = "combined";
-   
+    // second token defines if compensation offered by first token is used or not
+    $use_bvect_compensation = ($steno_tokens_master[$second_token][offs_bvectx] === "yes") ? true : false;
+    
     // copy the header of $first_token adding x width for new token
     // first copy all values without modification
     for ($i = 0; $i < header_length; $i++) {
@@ -2306,7 +2308,8 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
 
                 $base = count($new_token) - 8;
                 $type_offset = $base + offs_d1; // offset 3 in the data tuplet
-                $new_token[$type_offset] = 3; // former type = 0; new: 3 for compensation with shadowed combined token
+                if ($use_bvect_compensation) $new_token[$type_offset] = 3; // former type = 0; new: 3 for compensation with shadowed combined token
+                else $new_token[$type_offset] = 0;
                 // store connection_x and connection_y to calculate relative coordinates of second token
                 $connection_x = $steno_tokens_master[$first_token][$i+offs_x1]; //$new_token[$base+0];    // x
                 $connection_y = $steno_tokens_master[$first_token][$i+offs_y1]; //$new_token[$base+1];    // y
@@ -2319,7 +2322,8 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
                         $new_token[] = $connection_x + $steno_tokens_master[$second_token][$n+offs_x1]; // - $steno_tokens_master[$first_token][4];
                         $new_token[] = $connection_y + $steno_tokens_master[$second_token][$n+offs_y1];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_t1];
-                        $new_token[] = 3; // see above // $steno_tokens_master[$second_token][$n+offs_d1];
+                        if ($use_bvect_compensation) $new_token[] = 3; // see above // $steno_tokens_master[$second_token][$n+offs_d1];
+                        else $new_token[] = 0;
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_th];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_dr];
                         $new_token[] = $steno_tokens_master[$second_token][$n+offs_d2];

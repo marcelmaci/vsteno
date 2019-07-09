@@ -48,6 +48,7 @@ const offs_parrotaxis1 = 7;                     // offset 7: reused for parallel
 const offs_parrotaxis2 = 8;                     // offset 8: idem ............................ 2 
 const offs_parrotaxis3 = 9;                     // offset 9: idem ............................ 3
 const offs_bvectx = 10;                         // offset 10: border vector x (shadowed combined tokens)
+                                                //            in combined token: string = "yes" (use bvect compensation), "no" (don't user bvect compensation)
 const offs_bvecty = 11;                         // offset 11: border vector y (shadowed combined tokens)
 const offs_token_type = 12;                     // offset 12: token type: 0 = normal token (with/without shadows) / 
                                                 //            1 = always shadowed / 2 = "virtual" tokens (defines how the following 

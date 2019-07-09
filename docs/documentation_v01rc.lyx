@@ -3933,7 +3933,24 @@ Die Angaben mit Stern * sind nur für die SE1 rev1 gültig und wurden in Version
 \begin_inset Text
 
 \begin_layout Plain Layout
-nicht verwendet
+Randvektor-Kompensation (x-Wert) bzw.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ im Zweitzeichen
 \end_layout
 
 \end_inset
@@ -3953,7 +3970,7 @@ nicht verwendet
 \begin_inset Text
 
 \begin_layout Plain Layout
-nicht verwendet
+Randvektor-Kompensation (y-Wert)
 \end_layout
 
 \end_inset
@@ -6602,7 +6619,7 @@ mit dem Punktschlingen-L
 \end_layout
 
 \begin_layout LyX-Code
-          /**/ "", "", "", "", 0, 0, 0, 0, 
+          /**/ "", "yes", "", "", 0, 0, 0, 0, 
 \end_layout
 
 \begin_layout LyX-Code
@@ -6748,9 +6765,129 @@ verbogen
  zu allen anderen Punkten des Verbundzeichens - nicht verschoben wird, stimmen
  nun die Relationen der Punkte im Folgezeichen untereinander nicht mehr
  ganz (und somit wird das Folgezeichen verbogen).
- Dieser Fehler ist innerhalb des Verbundzeichens jedoch kaum sichtbar und
- stellt somit eine akzeptable und pragmatische Lösung dar, um die Sichtbarkeit
- solch kleiner Zeichen zu verbessern.
+ Dieser Fehler ist innerhalb kleiner Verbundzeichen (wie eben das Punktschlingen
+-L) nicht störend und kann somit als 
+\begin_inset Quotes eld
+\end_inset
+
+pragmatische
+\begin_inset Quotes erd
+\end_inset
+
+ und brauchbare Lösung gelten.
+ Allerdings kann er in Verbundzeichen (zum Beispiel dem Verbund-R) unschöne
+ Effekte habe (das R wirkt dann nicht mehr rund, sondern 
+\begin_inset Quotes eld
+\end_inset
+
+eiert
+\begin_inset Quotes erd
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Deshalb besteht die Möglichkeit, über das zweite Zeichen festzulegen, ob
+ eine Kompensation verwendet werden will oder nicht.
+ Dieser Wert wird in Offset 10 und ist oben bei 
+\begin_inset Quotes eld
+\end_inset
+
+@L
+\begin_inset Quotes erd
+\end_inset
+
+ als 
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+ erkennbar:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+ bedeutet also: Es soll eine Randvektor-Kompensation vorgenommen werden,
+ FALLS das Grundzeichen eine solche anbietet (d.h.
+ Werte in Offset 10 und 11 =/= 0).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ bedeutet: Es wird in jedem Fall auf eine Kompensation verzichtet (auch
+ wenn das Grundzeichen eine Kompensation anbietet).
+\end_layout
+
+\begin_layout Standard
+Durch Setzen des Wertes 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ in Offset 10 des Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+@R6
+\begin_inset Quotes erd
+\end_inset
+
+ können also auch Verbundzeichen wie 
+\begin_inset Quotes eld
+\end_inset
+
+P@R6
+\begin_inset Quotes erd
+\end_inset
+
+ korrekt dargestellt werden
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Aus Gründen der Rückwärtskompatibilität mit bereits erstellten Modellen
+ gilt hier sogar: Jeder Wert in Offset 10, der nicht 
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+ ist, wird als 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ betrachtet.
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection*
