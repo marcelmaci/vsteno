@@ -1,4 +1,54 @@
 <?php require "vsteno_template_top.php"; ?>
+<h1>Installation</h1>
+<h1>Automatisiert</h1>
+<p>Mit dem Commit vom 10. Juli 2019 sind erstmals automatisierte Installationsskripts verfügbar. Gehen Sie wie folgt vor, um diese zu verwenden:</p>
+<ol>
+<li>Laden Sie die ZIP-Datei <a href="../downloads/install.tar.gz">install.tar.gz</a> herunter.</li>
+<li>Entpacken Sie die ZIP-Datei (es werden 4 Dateien ins Verzeichnis ./install/ entpackt).</li>
+<li>Öffnen Sie eine Shell in diesem Verzeichnis.</li>
+<li>Machen Sie die Installationsskripts ausführbar: sudo chmod +x *.sh</li>
+<li>Starten Sie die Installation: sudo ./install_vsteno.sh</li>
+</ol>
+<h2>Ablauf</h2>
+<p>Die Skripts aktualisieren die Paketquellen (sudo apt-get update) und installieren diverse Programme (falls Sie dies nicht möchten - 
+weil Sie z.B. auf bestimmte, ältere Programmversionen von hunspell, eSpeak, mySQL, git etc. angewiesen sind -, führen Sie den Installer nicht 
+aus). Anschliessend lädt es das Programm VSTENO von Github herunter (standardmässig ins Apache-Verzeichnis /var/www/html/ unter /var/www/html/vsteno 
+und konfiguriert die Datenbank durch Aufrufen des PHP-Skripts init_db.php
+im Webbrowser (ABrowser). Die Installation dauert 5-10 Minuten und während des Vorgangs müssen Sie diverse Vorgänge mit "ja" bestätigen.</p>
+<h2>Datenbank</h2>
+<p>Etwa in der Mitte der Installation - nach der Installation von MySQL - werden Sie aufgefordert, ein Root-Passwort für die Datenbank einzugeben 
+(und zu bestätigen). Etwas später öffnet das Skript dann die Datei dbpw.php im Texteditor vi. Sie müssen dort nun die Datenbankangaben eintragen. Da vi bzgl. 
+Tastaturbefehle etwas "tricky" ist, hier ein paar wichtige Hinweise:</p>
+<ul>
+<li>vi befindet sich standardmässig im Befehlsmodus - es kann also kein Text eingegeben werden. Drücken Sie 1x die Taste I um in den Einfüge-
+Modus (insert) zu gelangen.</li>
+<li>Navigieren Sie nun mit den Pfeiltasten zu den Datenbankangaben und ändern Sie diese</li>
+</ul>
+<pre>
+const db_servername = "127.0.0.1:3306";
+const db_username = "root";
+const db_password = "xxxxxxxx";
+const db_dbname = "sys";
+</pre>
+<ul>
+<li>Speichern Sie die Änderungen, indem Sie 1x die Taste ESC gefolgt von den Tasten : und X drücken (abschliessend mit Return).</li>
+</ul>
+<p>Ersetzen Sie xxxxxxx durch Ihr Passwort. Der Datenbankname "sys" entspricht der Standardkonfiguration unter Trisquel8 (ändern Sie diese 
+falls nötig - mit der mysql-workbench können Sie die entsprechenden Angaben auf Ihrem System nachschauen).</p>
+<h2>Kompatibilität</h2>
+<p>Die Installation wurde im Moment nur für Trisquel8 geschrieben und getestet. Falls Sie eine Debian-ähnliche Linux-Distribution verwenden, 
+bestehen durchaus Chancen, dass der Installer funktioniert ... ;-) Einzig das Browser-Skript init_db.php am Schluss werden Sie manuell 
+aufrufen müssen: Starten Sie hierfür Ihren System-Browser und geben Sie als Adresse http://localhost/vsteno/php/init_db.php ein.</p>
+<h2>Passwörter</h2>
+<p>VSTENO verwendet das Standardpasswort '11111111'. Die benötigen dieses zur Konfiguration der Datenbank (init_db.php). Ebenso legt das 
+Installationsskript einen Standardnutzer 'standard' mit dem Passwort '11111111' an. Löschen Sie nach der Installation die Datei init_db.php 
+und ändern Sie das Passwort des Standard-Nutzers, in dem Sie sich einloggen und die Funktion "Passwort ändern" verwenden.</p>
+<h2>Haftungsausschluss</h2>
+<p>Wie bereits unter der GPL zum Programm hingewiesen übernehme keine Garantie, dass (1) der Installer funktioniert und (2) keinen Schaden 
+an Ihrem System anrichtet. Wenn Sie nicht sicher sind, installieren Sie VSTENO in einer virtuellen oder auf einer separaten Maschine.</p> 
+<h1>Manuell</h1>
+<p>Nach wie vor gültig ist die manuelle Installation. Es ist einzig zu ergänzen, dass zusätzlich das Programm eSpeak installiert werden muss 
+(sudo apt-get install espeak)</p>
 <pre>
 ﻿VSTENO INSTALLIEREN
 
