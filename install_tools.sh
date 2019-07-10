@@ -33,6 +33,8 @@ apt-get install mysql-workbench
 echo "install git ..."
 apt-get install git
 echo "Install gedit ..."
-sudo apt-get install gedit
+apt-get install gedit
+echo "restart apache ..."
+service apache2 restart
 echo "Have a look at all messages from the paket manager"
 echo "If there are no errors you are done ... :)"
