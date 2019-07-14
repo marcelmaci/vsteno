@@ -42,9 +42,12 @@ aufrufen müssen: Starten Sie hierfür Ihren System-Browser und geben Sie als Ad
 <h2>Passwörter</h2>
 <p>VSTENO verwendet das Standardpasswort '11111111'. Die benötigen dieses zur Konfiguration der Datenbank (init_db.php). Ebenso legt das 
 Installationsskript einen Standardnutzer 'standard' mit dem Passwort '11111111' an. Löschen Sie nach der Installation die Datei init_db.php 
-und ändern Sie das Passwort des Standard-Nutzers, in dem Sie sich einloggen und die Funktion "Passwort ändern" verwenden.</p>
+und ändern Sie das Passwort des Standard-Nutzers, indem Sie sich einloggen und die Funktion "Passwort ändern" verwenden.</p>
+<h2>Verwenden</h2>
+<p>Um VSTENO zu verwenden, starten Sie Ihren System-Browser und geben Sie <a href="http://localhost/vsteno/php/input.php">
+http://localhost/vsteno/php/input.php</a> in der Adresszeile ein (alternativ können Sie auf den Link klicken).</p>
 <h2>Haftungsausschluss</h2>
-<p>Wie bereits unter der GPL zum Programm hingewiesen übernehme keine Garantie, dass (1) der Installer funktioniert und (2) keinen Schaden 
+<p>Wie bereits unter der GPL zum Programm hingewiesen übernehme ich keine Garantie, dass (1) der Installer funktioniert und (2) keinen Schaden 
 an Ihrem System anrichtet. Wenn Sie nicht sicher sind, installieren Sie VSTENO in einer virtuellen oder auf einer separaten Maschine.</p> 
 <h1>Manuell</h1>
 <p>Nach wie vor gültig ist die manuelle Installation. Es ist einzig zu ergänzen, dass zusätzlich das Programm eSpeak installiert werden muss 

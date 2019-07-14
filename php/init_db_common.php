@@ -2,6 +2,24 @@
 require_once "dbpw.php";
 require_once "constants.php";
 
+function create_database( $server, $user, $password, $name ) {
+    
+    // Create connection
+    $temp_conn = new mysqli($server, $user, $password);
+    // Check connection
+    if ($temp_conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "CREATE DATABASE $name";
+    echo "QUERY: $sql<br>";
+    if ($temp_conn->query($sql) === TRUE) {
+        echo "Database created successfully";
+    } else {
+        echo "Error creating database: " . $temp_conn->error;
+    }
+    $temp_conn->close();
+}
+
 function create_tables() {
   global $conn;
     // sql to create users table
