@@ -33,7 +33,7 @@ function GetBrowser {
 echo "configure database"
 # gksudo edit /var/www/html/vsteno/php/dbpw.php
 # use vi instead ...
-vi /var/www/html/vsteno/php/dbpw.php
+sudo vi /var/www/html/vsteno/php/dbpw.php
 echo "open webbrowser with php-db_init script ..."
 # get local installed browser
 local_browser=`GetBrowser`

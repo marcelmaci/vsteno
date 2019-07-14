@@ -1,40 +1,40 @@
 #!/bin/bash
 echo "Welcome to the VSTENO tools installation script"
 echo "Note: This only works on DEBIAN-like systems with apt-get paket manager"
-if [ $(whoami) != "root"]; then
-	echo "ERROR: you must be root to install the tools"
-	echo "Run this script with: sudo ./install_tools.sh"
-	exit 1
-fi
+#if [ $(whoami) != "root"]; then
+#	echo "ERROR: you must be root to install the tools"
+#	echo "Run this script with: sudo ./install_tools.sh"
+#	exit 1
+#fi
 echo "update paket manager ..."
-apt-get update
+sudo apt-get update
 echo "install webserver (apache2) ..."
-apt-get install apache2
+sudo apt-get --assume-yes install apache2
 echo "install php ..."
-apt-get install php php-common libapache2-mod-php php-cli php-mysql php-mbstring
+sudo apt-get --assume-yes install php php-common libapache2-mod-php php-cli php-mysql php-mbstring
 echo  "install hunspell ..."
-apt-get install hunspell
+sudo apt-get --assume-yes install hunspell
 echo "install dictionaries:"
 echo "german (de_CH) ..."
-apt-get install hunspell-de-ch
+sudo apt-get --assume-yes install hunspell-de-ch
 echo "spanisch (es)"
-apt-get install hunspell-es
+sudo apt-get --assume-yes install hunspell-es
 echo "french (fr)"
-apt-get install hunspell-fr
+sudo apt-get --assume-yes install hunspell-fr
 echo "install eSpeak ..."
-apt-get install espeak
+sudo apt-get --assume-yes install espeak
 echo "install database:"
 echo "install server ..."
-apt-get install mysql-server 
+sudo apt-get --assume-yes install mysql-server 
 echo "install client ..."
-apt-get install mysql-client
+sudo apt-get --assume-yes install mysql-client
 echo "install workbench ..."
-apt-get install mysql-workbench
+sudo apt-get --assume-yes install mysql-workbench
 echo "install git ..."
-apt-get install git
+sudo apt-get --assume-yes install git
 echo "Install gedit ..."
-apt-get install gedit
+sudo apt-get --assume-yes install gedit
 echo "restart apache ..."
-service apache2 restart
+sudo service apache2 restart
 echo "Have a look at all messages from the paket manager"
 echo "If there are no errors you are done ... :)"
