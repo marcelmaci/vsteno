@@ -11,7 +11,10 @@ require_once "init_db_common.php";
 if (isset($_POST["mpw"])) {
     if (isset($_POST['mpw'])) $temphash = hash( "sha256", $_POST['mpw']);
     if ($temphash === master_pwhash) {
-        echo "start initialization ...<br>";
+        echo "<h1>LAUNCH VSTENO</h1>";
+        echo "<p>Click on <a href='http://localhost/vsteno/php/input.php'>this link</a> to go to the input form for VSTENO.</p>";
+        echo "<h1>OUTPUT</h1>";
+        echo "Start initialization ...<br>";
         echo "createdatabase";
         create_database( db_servername, db_username, db_password, db_dbname);
         // do the rest with newly created database
@@ -22,8 +25,6 @@ if (isset($_POST["mpw"])) {
         CreateStandardUser();
         echo "createmodels<br>";
         CreateModels();
-        echo "<h1>Run the programm ...</h1>";
-        echo "<p>Click on <a href='http://localhost/vsteno/php/input.php'>this link</a> to go to the input form for VSTENO.</p>";
     } 
 } else {
         echo "<h1>Password</h1>";

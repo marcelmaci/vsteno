@@ -8,14 +8,14 @@ function create_database( $server, $user, $password, $name ) {
     $temp_conn = new mysqli($server, $user, $password);
     // Check connection
     if ($temp_conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+        die("Connection failed: " . $temp_conn->connect_error);
     }
     $sql = "CREATE DATABASE $name";
     echo "QUERY: $sql<br>";
     if ($temp_conn->query($sql) === TRUE) {
-        echo "Database created successfully";
+        echo "Database created successfully<br>";
     } else {
-        echo "Error creating database: " . $temp_conn->error;
+        echo "Error creating database: " . $temp_conn->error . "<br>";
     }
     $temp_conn->close();
 }

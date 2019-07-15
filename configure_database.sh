@@ -29,11 +29,52 @@ function GetBrowser {
 	fi
 }
 
+function WriteDatabaseVariables {
+    # set these variables as global with default values    
+    dbserver="localhost:3306"
+    dbuser="root"
+    dbpwd="test"
+    dbname="vsteno"
+    # get values from user
+    echo "Enter database configuration: "
+    echo "Server (default: $dbserver): "
+    read input
+    if [ -n "$input" ]
+    then
+        dbserver=$input
+    fi
+    echo "User (default: $dbuser): "
+    read input
+    if [ -n "$input" ]
+    then
+        dbuser=$input
+    fi
+    echo "Password (default: $dbpwd): "
+    read -s input
+    if [ -n "$input" ]
+    then
+        dbpwd=$input
+    fi
+    echo "Database name (default: $dbname): "
+    read -s input
+    if [ -n "$input" ]
+    then
+        dbname=$input
+    fi    
+    # now write variables to dbpw.php via sed
+    sudo sed -i 's/db_servername = ".*\?";/db_servername = "'"$dbserver"'";/g' /var/www/html/vsteno/php/dbpw.php
+    sudo sed -i 's/db_username = ".*\?";/db_username = "'"$dbuser"'";/g' /var/www/html/vsteno/php/dbpw.php
+    sudo sed -i 's/db_password = ".*\?";/db_password = "'"$dbpwd"'";/g' /var/www/html/vsteno/php/dbpw.php
+    sudo sed -i 's/db_dbname = ".*\?";/db_dbname = "'"$dbname"'";/g' /var/www/html/vsteno/php/dbpw.php
+}
+
 # main
 echo "configure database"
 # gksudo edit /var/www/html/vsteno/php/dbpw.php
 # use vi instead ...
-sudo vi /var/www/html/vsteno/php/dbpw.php
+# sudo vi /var/www/html/vsteno/php/dbpw.php
+# write it directly to dbpw.php via sed
+WriteDatabaseVariables
 echo "open webbrowser with php-db_init script ..."
 # get local installed browser
 local_browser=`GetBrowser`
