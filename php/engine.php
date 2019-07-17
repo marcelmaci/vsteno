@@ -655,7 +655,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                     $t2_t = $steno_tokens[$token][$i+offs_t2];
                     
                     //echo "insert knot: { $x1_t, $y1_t, $t1_t, $d1_t, $th_t, $dr_t, $d2_t, $t2_t } <br>";
-                    if ($dr_t == 2) {
+                    if (($dr_t == 2) || ($dr_t == 3)) {
                         // this knot belongs to a diacritic token => insert it into separate spline
                         //echo "insert this knot into separate spline<br>";
                         
@@ -669,7 +669,8 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         //$tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
                         //$value_to_insert = $exit_point_type;
                         // $splines[] = $value_to_insert; //$exit_point_type;              // earlier version: $steno_tokens[$token][$i+6];                        // d2
-                        $dr_t = 0; //$dr_t; ?
+                        //$dr_t = 0; //$dr_t; ?
+                        $dr_t = ($dr_t == 3) ? 5 : 0; // 3 => 5 (non connecting) ; 2 => 0 (connecting)
                         $d2_t = $d2_t;
                         $t2_t = $t2_t;
                 
@@ -1016,6 +1017,9 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         //echo "<br><br>TokenList2SVG(): var_dump(splines) before CalculateWord() after TrimSplines()<br>";
         //var_dump($splines);
         $copy = $splines;
+        //echo "separate_spline (before calculateword):<br>";
+        //var_dump($separate_spline);
+        
         $splines = CalculateWord( $splines );
         //$separate_spline = CalculateWord( $copy );
         $separate_spline = CalculateWord( $separate_spline );
@@ -1032,7 +1036,7 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         //$svg_string = CreateSVG( $splines, $actual_x + ($distance_words * $scaling) / 2, $width + ($distance_words * $scaling) / 2, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text );
         
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
-        
+        $separate_spline = null;
         return $svg_string;
 }
 /*
@@ -2241,7 +2245,8 @@ function TokenCombinerDiacritics( $first_token, $second_token, $pattern, $replac
                 $t1 = $tuplet[offs_t1];
                 $d1 = $tuplet[offs_d1];
                 $th = $tuplet[offs_th];
-                $dr = 2; // value 2 = knot belonging to a diacritic token that must be transferred to a separate spline before CalculateWord is called
+                $drx = ($j == header_length) ? 3 : 2; // drx = modified dr field: 3 = non connecting, 2 = connecting knot
+                $dr = $drx; // value 2 or 3 = knot belonging to a diacritic token that must be transferred to a separate spline before CalculateWord is called
                 $d2 = $tuplet[offs_d2];
                 $t2 = $tuplet[offs_t2];
                 // correct values in tuplet
@@ -2268,8 +2273,10 @@ function TokenCombinerDiacritics( $first_token, $second_token, $pattern, $replac
     }
     // insert new token
     $key = $first_token . $second_token;
-    //echo "insert new key: $key<br>";
-    //var_dump($new_definition);
+    //if ($first_token === "B") {
+      //  echo "insert new key: $key<br>";
+       // var_dump($new_definition); echo "<br>";
+    //}
     $steno_tokens_master[$key] = $new_definition;
 }
 
@@ -2449,11 +2456,17 @@ function StripOutUnusedTuplets() {
                 $dr = $definition[$i+offs_dr];
                 $d2 = $definition[$i+offs_d2];
                 $t2 = $definition[$i+offs_t2];
-                //echo "strip out tuplet($i): { $x1, $x2, $t1, $d1, $th, $dr, $d2, $t2 }<br>";
+                //if (($key === "B@#/") || ($key === "B@#_")) {
+                  //  echo "strip out tuplet($i): { $x1, $x2, $t1, $d1, $th, $dr, $d2, $t2 }<br>";
+                //}
             }
         }
         
         $steno_tokens_master/*[$actual_model]*/[$key] = $new_definition;
+        //if (($key === "B@#/") || ($key === "B@#_")) {
+          //  echo "key = $key after stripout:<br>";
+            //var_dump($steno_tokens_master[$key]); echo "<br>";
+        //}
     }
 }
 

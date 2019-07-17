@@ -98,7 +98,7 @@ const offs_group = 23;                          // offset 23: group of the token
 // their signification due to later operations on the data:
 //
 // (a) InsertTokenInSplinesList(): Modifies the dr field by (i) filtering out eventual rev1-backport data and inserting values
-//     to mark knots belonging to diacritic tokens (value 2) and combined tokens (string = vector for knot corrections), only values
+//     to mark knots belonging to diacritic tokens (values 2 and 3) and combined tokens (string = vector for knot corrections), only values
 //     1 (normal dot) and 5 (don't connect) from original rev0 are preserved. In order to avoid confusions, this new dr field will
 //     be called drx ("modified dr").
 // (b) CalculateWord() calculates the control points for the bezier curves (qx1, qy1; qx2, qy2) and writes them into offsets 2,3 (t1, d1) 
@@ -116,8 +116,11 @@ const offs_group = 23;                          // offset 23: group of the token
 // Notes:
 // * Values t1, d1 (offsets 2+3) and d2, t2 (offsets 6+7) are later overwritten by function CalculateWord()
 //   The new values written to the tuplet correspond to the control points for the bezier curve (qx1, qy1, qx2, qy2)
-// ** Modified dr-field containing value 2 (knot belonging to diacritic token, that must be transferred to a separated spline),
-//    a string with the vector for knot correction in combined tokens or the original values 1 and 5 of the dr-field
+// ** Modified dr-field containing one of the following:
+//    - value 2: connecting knot belonging to diacritic token, that must be transferred to a separated spline
+//    - value 3: non connecting knot "           "                              "
+//    - a string with the vector for knot correction in combined tokens 
+//    - original values 1 and 5 of the dr-field
 //
 
 const tuplet_length = 8; // each tuplet contains 8 entries

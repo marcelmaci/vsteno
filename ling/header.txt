@@ -358,6 +358,8 @@
 
 		// prefix in-
 		"^(Volks\|)?([Ii])n-(?!ter)" => "$1$2n+";
+		"(=|\|)([Ii])n-?i-?t" => "$1$2n+i-t"; // Pestizid-initative => careful with that rule
+
 		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
 		"\|([Ii]n)-(s[tp])" => "|$1+$2"; // idem in separated words
 		"^([Ii]n)\+(ne)" => "$1-$2";
@@ -478,7 +480,7 @@
 		"([Zz]wei)\|(fels)" => "$1-$2"; // suppose it is never "zwei" + "Fels" (Dreifels exists;-)
 		"([Ss]ei)\|(den)" => "$1-$2";
 		"([Nn]eu)\|(fund)\|(l)" => "$1-$2|$3"; // Neu-Fund will be written separately
-		"Zu\+ge" => "Zu-ge";
+		"Zu\+ge(?!\+)" => "Zu-ge";
 		"([Kk]lös-ter)\|(li-?ch)" => "$1#$2";
 		"\|(run-gen)" => "-run-gen"; // very strange results that have to be corrected ... ;-)
 		"([Aa]n)\+(gel)" => "$1-$2";
@@ -602,6 +604,11 @@
 
 		// einmal, zweimal, dreimal etc. (where's the logic anyway ... ?:)
 		"(ein|zwei|drei|vier|fünf|sechs|sie-?ben|acht|neun|zehn|elf|zwölf)\|mal" => "$1-mal";
- 
+
+		// not separated
+		"([Dd])on-?ner\+?s\|?tag" => "$1on-ner+stag"; // where's the logic anyway ... :)
+ 		"([Ll])ob-by\|ist" => "$1ob-by-ist";
+		"([Dd]ür-?ren)\|(matt)" => "$1-$2";
+
 	#EndSubSection(analyzer)
 #EndSection(header)
