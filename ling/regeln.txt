@@ -57,17 +57,25 @@
 		"(?<!\|)=" => "|=\\"; // mark word as 2 words
 		"(?<!\[)=" => "[=]";	// necessary because of packer
 		// now only transform upper case words (from acronym)
-		"(?<!\[)([A-Z]|Ä|Ö|Ü)" => "[$1]";
-		"\[A\](?!\[&A\])" => "[#NS][&A]";
-		"\[E\](?!\[&E\])" => "[E][&E]";
-		"\[I\](?!\[&I\])" => "[#N][&I]";
-		"\[O\](?!\[&O\])" => "[#N][&O]";
-		"\[U\](?!\[&U\])" => "[#NS][&U]";
-		"\[Ä\]" => "[#WS][&A]";
-		"\[Ö\]" => "[E][&O]";
-		"\[Ü\]" => "[#WS][&U]";
+		"(?<!\[)([BCDFGHJKLMPQTVWXYZ])" => "[$1@#_][#6]"; // add diacritics _
+		"^R" => "[AR@#_][#6]"; // add diacritics _
+		"^N" => "[N=@#_][#6]"; // add diacritics _
+		"^S" => "[S=@#_][#6]"; // add diacritics _
+		"(?<!\[)N" => "[N@#_][#6]";
+		"(?<!\[)S" => "[S@#_][#6]";
+		"(?<!\[|A|V)R" => "[VR@#_][#6]";
+		"(?<!\[|&)A" => "[A][&A@#_][#6]";
+		"(?<!\[|&)E" => "[E][&E@#_][#6]";
+		"(?<!\[|&)I" => "[&I@#_][#6]";
+		"(?<!\[|&)O" => "[&O@#_][#6]";
+		"(?<!\[|&)U" => "[A][&U@#_][#6]";
+		"(?<!\[|&)Ä" => "[E][&A@#_][#6]";
+		"(?<!\[|&)Ö" => "[E][&O@#_][#6]";
+		"(?<!\[|&)Ü" => "[E][&U@#_][#6]";
 		//"^\[E\]" => "[0N-][E]";  // not sure if that should be done here
 		"^(\[[ns]\])" => "[0N-]$1"; // idem
+		// correct distances for vowels
+		"\[#6\]\[E\]" => "[E]";
 		//"([a-z])" => "strtoupper()";  // leave other tokens as untreated (will be processed normally)
 	#EndSubSection(acronymater)
 	#BeginSubSection(packer)
@@ -597,7 +605,7 @@
 		"s-?r" => "[SR]";
 		"t-?t" => "[TT]";
 		"t(-|\|)?r" => "[TR]"; // even if two words!?
-		"v-?r" => "[#VR]"; // use special name vor v+r, since [VR] can be confused with "vocal r"
+		"(?<!\[)v-?r" => "[#VR]"; // use special name vor v+r, since [VR] can be confused with "vocal r"
 		"w-?r" => "[WR]";
 		"x-?r" => "[XR]";
 		"y-?r" => "[YR]";
