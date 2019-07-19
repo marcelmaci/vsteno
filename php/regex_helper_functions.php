@@ -18,7 +18,9 @@ function GetRegexOrString($array) {
     $output = "";
     foreach ($array as $element) {
          $escaped = preg_quote($element); // in tokens like ^CH escaping is necessary => escape it always! 
-         $output .= ($element === end($array)) ? "$escaped" : "$escaped|";
+         $escaped1 = preg_replace( "/\//", "\\/", $escaped); // additional escaping: / is not escaped by preg_quote!
+         //echo "<br>element: $element escaped: $escaped escaped1: $escaped1<br>";
+         $output .= ($element === end($array)) ? "$escaped1" : "$escaped1|";
     }
     return $output;
 }
@@ -27,7 +29,9 @@ function GetRegexOrStringAndPrint($array) {
     $output = "";
     foreach ($array as $element) {
          $escaped = preg_quote($element); // in tokens like ^CH escaping is necessary => escape it always! 
-         $output .= ($element === end($array)) ? "$escaped" : "$escaped|";
+         $escaped1 = preg_replace( "/\//", "\\/", $escaped); // additional escaping: / is not escaped by preg_quote!
+         //echo "<br>element: $element escaped: $escaped escaped1: $escaped1<br>";
+         $output .= ($element === end($array)) ? "$escaped1" : "$escaped1|";
          echo "$element ";
     }
     return $output;
