@@ -4,6 +4,11 @@ echo "download VSTENO:"
 #sudo cd /var/www/html
 echo "clone VSTENO from https://github.com/marcelmaci/vsteno ..."
 sudo git clone https://github.com/marcelmaci/vsteno
+# checkout necessary commit 
+echo "checkout commit number: $commit"
+cd vsteno
+sudo git checkout $commit
+cd ..
 # copy to webserver directory
 echo "copy VSTENO to webserver"
 # first delete existing vsteno intallation

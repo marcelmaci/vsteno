@@ -1,11 +1,6 @@
 #!/bin/bash
 echo "Welcome to the VSTENO tools installation script"
 echo "Note: This only works on DEBIAN-like systems with apt-get paket manager"
-#if [ $(whoami) != "root"]; then
-#	echo "ERROR: you must be root to install the tools"
-#	echo "Run this script with: sudo ./install_tools.sh"
-#	exit 1
-#fi
 echo "update paket manager ..."
 sudo apt-get update
 echo "install webserver (apache2) ..."
@@ -32,8 +27,6 @@ echo "install workbench ..."
 sudo apt-get --assume-yes install mysql-workbench
 echo "install git ..."
 sudo apt-get --assume-yes install git
-echo "Install gedit ..."
-sudo apt-get --assume-yes install gedit
 echo "restart apache ..."
 sudo service apache2 restart
 echo "Have a look at all messages from the paket manager"
