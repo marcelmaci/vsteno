@@ -1,0 +1,156 @@
+Test words for Spanish
+
+Based on:
+
+[1] Arthur Meier, Lehrbuch der Spanischen Stenografie, Verlag und Buchhandlung
+des Allgemeinen Schweizerischen Stenografenvereins, Druckerei Weitzikon AG, 
+8620 Wetzikon ZH, 1. Auflage 1981 (32 Seiten)
+
+Abbreviations:
+
+A = Abschnitt
+
+Comments:
+
+In some occasions, several variants have been added, e.g. buen, bueno (in [1])
+buena, buenos, buenas (added).
+Some accents have been corrected.
+Words not listed in DRAE are marked with (*).
+Doubts are marked with (?).
+Ortographical variants have been added inside ().
+
+Words:
+
+A1b)
+CTT ver beber querer fenecer pender red éter 
+paz mal garrafal satán arrasar valer segar listín 
+difícil Miguel liquen decir ir idem ilegal
+estirar sol voz color oval oxidar hotel comer español
+ferrocaril sur rural puñal tutor volumen regular útil
+usar humor
+vende hace ocuparse pique manera Barcelona colega
+espina hora así  recibí merecí casi Toledo dinero
+seguro remoto paro par
+
+A1c)
+bebida coriza garguero depender gozar limón tambo mano nota
+pepino quisto radical repetir rogar rumor saber signo selva seso
+tutela tenis xilófono versar veterano apenas adolecer erogar esa
+imitar ibérico ídolo obedecer otero óxido comer viceversa tasa
+decir misa hace dos años
+
+A1e)
+figura asimilar árbol emotivo enero enfermar 
+evadir estimular ignoto ilegal irregular oculista ósculo osar oval oler
+ubérrimo ulular unir urraca usado usurpar utilizar hostil vagón
+zagal xenófobo vestido versátil vivo vocal vulgarizar valor tañer
+tapizar taxi tabaquera daca
+
+A2a)
+la da le de dé que qué te té mi mí ni si sí
+
+A2b)
+a ha el él en he es y e las les los lo desde
+
+A2c) 
+las abuelas el acuerdo el quiosco los envíos anual acuático 
+Diego los viernes la vianda diagonal el país a raíz de
+
+A2d)
+el fuego de miedo la rueda el riel la tibieza los esfuerzos
+las copias a la vez la pierna la aduana a la izquierda el
+periodista la tienda demasiado caro en España miércoles
+la camioneta las afueras
+
+A2e)
+En la escuela. ¿Qué le duele? Tiene razón. Les ruego 
+se sirva. Al tomar y dar es fácil errar. Quien mal anda, mal acaba.
+Eso le viene de casta. Lo que hace al caso. Dale bola. Me lucí. Pasarse de listo. 
+Lo sé de pe a pa. Es acabada cosa. Las "espadas" señalan duelo. Mi para-
+nubes. Desde hace algunos años el sol se hace raro en verano.
+
+A3c)
+giro jefe bajo lleno caballero limpieza angular
+ansia vencejo venganza bancario banquero ya yerro
+desayuno cheque chinchilla hecho
+cae hacéis agua oigo Noé Perú caí ahí 
+materia hacia Valencia recibiría cambié vario varío varió
+río rio midió mandó fué lengua
+
+A3d)
+Bien buen bueno buena buenos buenas cada como cómo cuyo cuya cuyos cuyas cuando cuándo
+mas más mucho muy poco so su sus tan tanto tanta tantos tantas todo toda todos todas
+tu tú también tampoco tiempo yo
+buena cuyos muchas poca tantos todas tus
+
+A3e)
+la muchacha, el chocolate, el juez, la limpieza, llover, Juan, la licencia,
+el lingote de oro, la gestión, judáico, la áncora(*), la ley, el yanqui, la hoja de
+afeitar, chau, el canapé, viudo, oír, ahí (ay?), dio, evacuo (evacúo), 
+evacuáis, evacuan (evacúan), evacué, evacuó, evacuen (evacúen), pagué,
+la chabacanería, la lluvia, perdéis, durmió, varié, el anuncio, la agencia, la razón 
+social, la solvencia, realiza muchos negocios, corren rumores, vender 
+algo a alguien, el despacho, el mercado, el almacén, el espécimen, pedir 
+a título de ensayo, el envío parcial, el reaseguro, satisfacer, los derechos
+de aduana.
+Lo que de noche se hace, a la mañana parece. Dinero llama dinero. Casa
+a tu hija como pudieres, a tu hijo como quisieres. Cuando el río suena agua
+lleva. Quien tiempo tiene, tiene vida. El buen paño en el arca se vende. A
+caballo nuevo caballero viejo. Haré lo que me dé la real gana. Meterse en 
+dibujos.
+
+A4a)
+factura nafta reptil saltar atento oferta partida
+
+A4b) 
+breve blusa creer cliente drama vendré Francia
+flexible gracias gloria trabajo actriz arlequinada artritis
+mientras ultraamontano enlazar israelí emprender
+empleado exclamar escribir extranjero explicable
+saludarle aprovecharlas
+
+A4c)
+cual cuán cuánto cuánta cuántos cuántas cuan cuanto cuanta cuantos cuantas del gran grande grandes mediante mismo misma mismos mismas
+no nos para particularmente particular particularidades pero primero primera primeros primeras según siempre
+Vd. usted Usted Ud. Vds. Uds. ustedes Ustedes nuestro nuestra nuestros nuestras vuestro vuestra vuestros vuestras
+
+A4d) 
+el placer, la honra, traigamos, el apartado de correos, franquear, la carta
+certificada, practicable, la entrega de fondos, advertir, la pregunta, 
+cruzarse, la importancia, el precio aproximado, los bancos públicos, los
+títulos al portador.
+Ande yo caliente y ríase de la gente. Palabra y piedra suelta no tienen vuelta. 
+A buen hambre no hay pan duro. En boca cerrada no entran moscas. El
+hombre y el oso, cuanto más feo, más hermoso. A cada pajarillo agrada su 
+nidillo. Los extremos se tocan. Donde menos se piensa, salta la liebre.
+Cobra fama y échate a dormir. - Los precios van subiendo. Acabamos de 
+recibir su muy estimable carta fecha 15 del actual en la cual nos remite Vd. (?)
+el extracto de nuestra cuenta. Sentimos mucho participarle que ... el último
+reparto me trae su carta del trece de diciembre. Celebraríamos poderle
+prestar el mismo servicio en caso semejante. Obra en mi poder.
+
+A4e)
+en último extremo, la cuenta pendiente, para cancelar, 
+sellos de correo, rendir las gracias, del todo, en nuestra plaza, nos causa
+extrañeza, cuanto al mismo se refiera, a cuyo efecto, para que sean pagadas,
+la suerte, la prórroga.
+
+
+
+
+
+Barcelona, 15 de marzo de 1978
+
+Sres Durand y Peter
+Bordeaux
+
+Muy Señores míos :
+
+En su anuncio inserto en el Correo de la Tarde de ayer, leo que buscan Vds. un tenedor de libros práctico en la contabilidad industrial y me permito concurrir a dicha plaza.
+Debo manifestarles que, durante once años, he ocupado una plaza análoga en la fundición Brambilla y Cía y a completa satisfacción de la dirección de la misma, por lo que creo puedo satisfacer igualmente todas las exigencias de Vds. Me he visto obligado a abandonar la plaza porque la firma Brambilla y Cía ha cesado su actividad y se encuentra en liquidación.
+Mis pretensiones se concretan a un sueldo mensual de cinco mil francos franceses, que estimo sea adecuado y que Vds. podrán concederme. 
+Les incluyo una breve reseña de mis notas personales y copias de los certificado en mi poder.
+En la esperanza de una contestación favorable, quedo pendiente de sus gratas nuevas y aprovecho la ocasión para saludarles atentamente y suscribirme
+
+de Vds s.s.
+Andrés Cattaneo
