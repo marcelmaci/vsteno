@@ -495,6 +495,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         //echo "stenotokens($token) - DUMP: ";
        // var_dump($steno_tokens["IST"]);
        //echo "START: InsertToken(): token = $token distance = $distance actual_x = $actual_x<br>";
+        $shadowed = ($steno_tokens[$token][offs_token_type] == 1) ? "yes" : $shadowed;
         
         //$old_dont_connect = $dont_connect;
         $late_entry_position = GetLateEntryPoint( $steno_tokens[$token] );
@@ -663,7 +664,8 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         $y1_t = $y_interpretation - $y1_t;            // calculate coordinates inside splines (svg) $actual_y is wrong!
                         $t1_t = $t1_t;                        // tension following the point
                         $d1_t = $d1_t; // diacritic tokens CANNOT contain pivot points
-                        if (($shadowed == "yes") /*|| ($steno_tokens[$token][offs_token_type] == "1")*/) {
+                        
+                        if (($shadowed === "yes") /*|| ($steno_tokens[$token][offs_token_type] == 1)*/) {
                             $th_t = $th_t;  // th = relative thickness of following spline (1.0 = normal thickness)
                         } else $th_t = 1.0;
                         //$tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
