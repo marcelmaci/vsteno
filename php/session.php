@@ -135,6 +135,7 @@ function InitializeSessionVariables() {
     }
     $_SESSION['actual_model'] = $default_model;
     $_SESSION['model_version'] = "";
+    $_SESSION['required_version'] = "";
     $_SESSION['model_date'] = "";
     $_SESSION['selected_std_model'] = $default_model;
     $_SESSION['last_updated_model'] = "";

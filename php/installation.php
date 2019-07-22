@@ -2,8 +2,9 @@
 <h1>Installation</h1>
 <p>Bitte beachten Sie, dass VSTENO prinzipiell ein Server-Programm ist und somit in der Regel via eine Webseite (wie www.vsteno.ch) zur Verfügung 
 gestellt wird. Dennoch ist es selbstverständlich möglich, VSTENO lokal zu installieren und das Programm offline zu verwenden. Die ursprüngliche 
-Server-Client Konzeption bleibt dabei bestehen, d.h. VSTENO wird dann über einen lokalen Webserver betrieben, der via localhost (127.0.0.1) das 
-Programm und Datenbankzugriffe zur Verfügung stellt.</p>
+Server-Client-Konzeption bleibt dabei bestehen, d.h. VSTENO wird dann über einen lokalen Webserver betrieben, der via localhost (127.0.0.1) das 
+Programm und Datenbankzugriffe zur Verfügung stellt. Bitte beachten Sie auch die <a href="versions.php">Hinweise</a> zum Release-Modell und den 
+einzelnen Versionen von VSTENO.</p>
 <h1>Automatisiert</h1>
 <p>Mit dem Commit vom 10. Juli 2019 sind erstmals automatisierte Installationsskripts verfügbar. Gehen Sie wie folgt vor, um diese zu verwenden:</p>
 <ol>

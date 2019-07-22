@@ -348,3 +348,13 @@ float: left;
     font-size: 10px;
     margin-left: 2px;
 }
+
+/*
+#versions table {
+ border-collapse: collapse;   
+}
+
+#versions table, tr, td {
+    border: 1px solid black;
+}
+*/

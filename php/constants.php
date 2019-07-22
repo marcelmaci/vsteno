@@ -25,6 +25,8 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
+const version_name = "Hephaistos"; // official release name
+const version_number = 0.1; // two digit version number (can be used to test compatibility with models)
 const version_commit_id = "0582f167165ed24599eac2924e30e35d9cd07818";   // must be inserted manually after commit => could be from last commit if forgotten
 const version_date = "21. Juli 2019 (50 years since moonlanding ... :)";                                  // idem
 
