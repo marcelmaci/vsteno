@@ -48,6 +48,9 @@
 	// este/estas/estos |        [EST][-E] etc.  |            [ST][-E] etc. (!!!)
 	//      
 	#BeginSubSection(session)
+		// set versions
+		"model_version" := "0.0";
+		"required_version" := "0.1";
 		// disable linguistical analysis
 		"hyphenate_yesno" := "no";
 		"composed_words_yesno" := "no";
@@ -619,6 +622,10 @@
 	#BeginSubSection(accentizer)
 		//empty
 	#EndSubSection(accentizer)
+	#BeginSubSection(earlyshortener)
+		"^[Ee]star(é|á[ns]?|emos|éis)" => "{ESTAR}$1";
+		"^[Ee]star(ía[ns]?|ía(?:mos|is))" => "{ESTAR}$1";
+	#EndSubSection(earlyshortener)
 	#BeginSubSection(normalizer)
 		"é(?!$)" => "e";
 		"á(?!$)" => "a";
@@ -685,7 +692,7 @@
 		"^cuant?" => "{CUANT}";
 		"^del$" => "{DEL}";
 		"^gran$" => "{GRAN}";
-		"^grand(es?)$" => "{GRAND}$1";
+		"^grand(es?)" => "{GRAND}$1";
 		"^mediante$" => "{MEDIANTE}";
 		"^mism([oa]s?)" => "{MISM}$1";
 		"^no$" => "{NO}";
@@ -705,7 +712,7 @@
 		"(?<!c)[cs](ion)" => "{SION}";
 		"(cc|x)(ion)" => "k{SION}";
 		"(?<!^)mi?ent" => "{MENT}";
-		"^(re)?ex(ped)" => "re{EX}ped";	// (re)expedición
+		"^(re)?ex(ped)" => "$1{EX}ped";	// (re)expedición
 		"^(in|co)?ex(?!(?:c[rluao]|[pt]))" => "$1{EX}$2";
 		"^(in)?sub" => { "$1{SUB}", "s(ú|u)bit" };
 		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl", "[Pp]eriodista" }; // not perder and all its forms
@@ -723,8 +730,8 @@
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
 		"^(en)?contr" => "$1{CONTR}";
-		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]orreo", "[Cc]opia", "[Cc]oriza", "[Cc]orre", "[Cc]orr(?:i|í)", "[Cc]obr" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
-		"^sobre?|sor" => { "{SOBRE}", "sobri" }; // sobrio/as
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]orreo", "[Cc]opia", "[Cc]oriza", "[Cc]orre", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^sobre?|sor" => { "{SOBRE}", "[Ss]obri", "[Ss][oó]rd" }; // sobrio/as, sordo, sórdido (accent necessary since pattern is compared to original word => is this a good idea?!?)
 		"^gener" => "{GENER}";
 		"^necesar" => "{NECESAR}";
 		"^porque$" => "{PORQUE}";
@@ -737,7 +744,7 @@
 		"^edad(es)?$" => "e{TAD}$1";
 		"^ciudad(es)?$" => "s{TAD}$1"; // claro ... eso se llama: mutilar una palabra ...
 		"rt" => "[RT]"; // early bundler: avoid following rule in apartado, portador etc.
-		"[ei]?(?:t[au]|da)d(es)?" => "{TAD}$1"; // 1st vowel falls out
+		"[ei]?(?:t[au]|da)d(?![oa]s?)" => "{TAD}"; // 1st vowel falls out
 		"(?:í|i)sim([oa]s?)$" => "{ISIM}$1";
 		"ito$" => "{ITO}";
 		"ita$" => "{ITA}";
@@ -763,6 +770,8 @@
 	#BeginSubSection(phonetizer,#>stage4)
 		// empty
 		"v" => "b";
+		"sc([ei])" => "s$1";  // scientífico, escena
+		"cc([ei])" => "x$1";
 		"c([ei]|{IT)" => "s$1";
 		"c([aou])" => "k$1";
 		"z" => "s";
@@ -784,6 +793,7 @@
 		"[sx]cr" => "[SCR]";
 		"[sx]tr" => "[STR]";
 		"[sx]pl" => "[SPL]";
+		"[sx]pr" => "[SPR]";
 		"ndr" => "[NDR]";
 		
 		// 2 consonants
@@ -863,6 +873,7 @@
 	#BeginSubSection(transcriptor)
 		// double vowels
 		"(?<!^)a([aeou])" => "A[&A]$1";
+		"^a([aeou])" => "[0N-]A[&A]$1";
 		"e([aeiou]|\[IA\])" => "E[&E]$1";
 		"o([aeéiu]|\[IA\])" => "[&O]$1";
 		"u([io]|\[IA\])" => "A[&U]$1";
@@ -1286,4 +1297,3 @@
 		
 	#EndSubSection(postspacer,=:prt)
 #EndSection(rules)
-
