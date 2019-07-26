@@ -646,6 +646,9 @@
 		//"r-?r" => "r";
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
+		"^extract" => "estract";
+		"^extrae" => "estrae";
+		"^extrai" => "estrai";
 		"^extra(?!ñ)" => "{EXTRA}";
 		"^coin" => "{CON}{IN}";
 		"^la$" => "{LA}";
@@ -718,24 +721,25 @@
 		"(cc|x)(ion)" => "k{SION}";
 		"(?<!^)mi?ent" => "{MENT}";
 		"^(re)?ex(ped)" => "$1{EX}ped";	// (re)expedición
+		"^ex(quisit)" => "es$1";	// exquisito
 		"^(in|co)?ex(?!(?:c[rluao]|[pt]))" => "$1{EX}$2";
 		"^(in)?sub" => { "$1{SUB}", "s(ú|u)bit" };
-		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl", "[Pp]eriodista" }; // not perder and all its forms
+		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl", "[Pp]eriodista", "[Pp]erit", "[Pp]erro", "[Pp]ericia", "[Pp]er(?:i|í)(?:o|ó)d" }; // not perder and all its forms
 		"^(in)?tran?s" => "$1{TRAS}";
 		"^(des)?inte?r" => { "$1{INTER}", "intermin", "intrad" }; // not: interminable, intraducible
 		"^(bien)?estar$" => "$1{ESTAR}";
 		"^bi-?en" => "{BIEN}";
 		"^estuv" => "{ESTUV}";
-		"^est(?!r)" => { "{EST}", "estac", "esti" }; // does not apply to estación, estirar
+		"^est(?!r)" => { "{EST}", "[Ee]stac", "[Ee]sti", "[Ee]sten", "[Ee]st(?:é|e)r", "[Ee]stanc" }; // does not apply to estación, estirar
 		"^ser(é|á[ns]?|emos|éis|ía(?:[sn]|amos|ais)?)?$" => "{SER}$1";
 		"^son$" => "{SON}";
 		"^uno?$" => "{UNO}";
 		"^una$" => "{UNA}";
-		"^ant[ei]" => { "{ANTE}", "antena", "ant(í|i)g" };
+		"^ant[ei]" => { "{ANTE}", "[Aa]ntena", "[Aa]nt(?:í|i)[gqc]", "[Aa]ntera" };
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
 		"^(en)?contr" => "$1{CONTR}";
-		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]orreo", "[Cc]opia", "[Cc]oriza", "[Cc]orre", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]orreo", "[Cc]opia", "[Cc]oriza", "[Cc]orre", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobrent" => "{SOBRE}ent"; // sobrentender (sobreentender)
 		"^sobre?|sor" => { "{SOBRE}", "[Ss]obri", "[Ss][oó]rd" }; // sobrio/as, sordo, sórdido (accent necessary since pattern is compared to original word => is this a good idea?!?)
 		"^gener" => "{GENER}";
@@ -749,8 +753,10 @@
 		"^(des)?in" => "$1{IN}";
 		"^edad(es)?$" => "e{TAD}$1";
 		"^ciudad(es)?$" => "s{TAD}$1"; // claro ... eso se llama: mutilar una palabra ...
-		"rt" => "[RT]"; // early bundler: avoid following rule in apartado, portador etc.
-		"[ei]?(?:t[au]|da)d(?![oa]s?)" => "{TAD}"; // 1st vowel falls out
+		"rt(?!(?:ud|ad)(?:es)?)" => "[RT]"; // early bundler: avoid following rule in apartado, portador etc.
+		"c[ei](?:t[au]|da)d(?![oa]s?)" => "s{TAD}"; // 1st vowel falls out
+		"(?:ui|[ei])?(?:t[au]|da)d(?![oa]s?)" => "{TAD}"; // 1st vowel falls out
+		"c(?:í|i)sim([oa]s?)$" => "s{ISIM}$1";
 		"(?:í|i)sim([oa]s?)$" => "{ISIM}$1";
 		"ito$" => "{ITO}";
 		"ita$" => "{ITA}";
@@ -806,7 +812,8 @@
 		"ndr" => "[NDR]";
 		
 		// 2 consonants
-		"rr" => "[VR@#/.]";
+		//"rr" => "[VR@#/.]"; // diacritics
+		"rr" => "r";
 		"[sx][ck]" => "[SC]";
 		"[sx]p" => "[SP]";
 		"[sx]t" => "[ST]";
@@ -889,6 +896,9 @@
 		"u([io]|\[IA\])" => "A[&U]$1";
 		"iu" => "i[LES]u"; // viudo
 		"u\[AI\]" => "A[&U][AI]"; // evacuáis
+		"i{ISIM}" => "[I][&E]{ISIM}";
+		"u({IT)" => "A[&U]$1";
+		"e({IT)" => "E[&E]$1";
 		// other sounds
 		"^({SUB})?r" => "$1[AR]"; // initial r (Anlaut-r)
 		"\[(RT|MP)\]r" => "[$1][AR]";
@@ -910,7 +920,7 @@
 	#BeginSubSection(separator)
 		//"{CONTR}A" => "{CONTR}\A";
 		"{CONTR}[Aa]([aeiouAEIOU])" => { "{CONTR}A[&A]$1", "^{CONTR}[Aa]$" }; // problem is more complex, solve it like that for now
-		"({BIEN})({ESTAR})" => "$1[LES]$2";
+		//"({BIEN})({ESTAR})" => "$1[LES]$2";
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// vowels at beginning of word
@@ -1124,11 +1134,13 @@
 		"{SENOR}" => "O[SOBRE]";
 		"{SENORA}" => "O[SOBRE][#9-][EN]";
 		"{SUIZ}" => "[0U-][#0][SS]";
+		"{TAD}S" => "[&EITS]";
 		"{TAD}" => "[HEIT]";
 		"{ISIM}" => "[ISIM]"; // created with shifter
 		"{ITO}" => "[&T]";
 		"{ITA}" => "[&T][&E][EN]";
-		"{ITOS}" => "[&IT][#1][S]";
+		//"{ITOS}" => "[&IT][#1][S]";
+		"{ITOS}" => "[&TS]";
 		"{ITAS}" => "[&IT]A[#1][S]";
 		"{ETE}" => "[&T][&E][-E]";
 		"{ETES}" => "[&TES]";
@@ -1141,6 +1153,10 @@
 		//"{}" => "";
 
 	#EndSubSection(substituter)
+	#BeginSubSection(laterewriter)
+		"\[AR\](\[&T)" => "[AR^]$1";
+		"\[AR\]([iI])" => "[AR^]$1";
+	#EndSubSection(laterewriter)
 	#BeginSubSection(separator)
 		// empty
 	#EndSubSection(separator)
