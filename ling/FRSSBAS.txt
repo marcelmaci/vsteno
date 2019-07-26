@@ -48,15 +48,21 @@
     	along with this program.  If not, see www.gnu.org/licenses.<p>
 	";
 		"release_notes" := "
+	<p>Based on:</p>
+	<p>[1] Emil Hug, "Französische Stenografie, nach dem Einigungssystem Stolze-Schrey", 
+	Offizielle Übertragung des Allgemeinen Schweizerischen Stenografenvereins (Zentralverein Stolze-Schrey), 
+	Verlag und Buchhandlung des Allgemeinen Schweizerischen Stenografenvereins, Druckerei Wetzikon AG, 8620 Wetzikon ZH, 8. Auflage 1983.</p>
 	<p>This is based on the german and spanish models (DESSBAS, SPSSBAS). 
 	Meaning of the characters: FR = french, SS=Stolze-Schrey, BAS=Grundschrift).</p> 
 	
 	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
 	inclination of 60 degrees.</p>
+	<p>The model is very early stage and has to be considered alpha (i.e. with a high percentage of incorrect words).</p>
 	";
 		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// model version
-		"model_version" := "0.0";
+		"model_version" := "0.1";
+		"required_version" := "0.1";
 		"model_date" := "3. Juli 2019";
 		// wide distance
 		"token_distance_wide" := "17";
@@ -209,7 +215,7 @@
 		// are not part of the word given to the analyzer!
 		//"( *?)?(.*?)( *?)?" => "$2"; // additional spaces created by eSpeak => are now trimmed directly inside php-code
 		"mA~t$" => "{MENT1}"; // mark diacritics (holy cow ... what a mess :)
-		"(?<!^|:)t" => "[T@#/.]"; // mark diacritics (using : before filtering it out)
+		"(?<!o|^|:)t" => "[T@#/.]"; // mark diacritics (using : before filtering it out); ôte hôte hotte => difference in preceeding vowel (closed vs open)
 		":" => ""; // filter out long vowel mark (again: original : are not touched)
 		"[-\.](?!\])" => ""; // filter out rounded/unrounded (dont filter out diacritics)
 		"_\|" => ""; // filter out aspiration (haute)

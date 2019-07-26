@@ -38,11 +38,18 @@
 	helped to improve the model substantially.</p>
 	";
 	"release_notes" := "
+	<p>Based on:</p>
+	<p>[1] Jakob Züllig, Emil Zürcher, "Stenografie Fortbildung: einmal ist keinmal", Verlag des Schweizerischen Stenografenverbandes Stolze/Schrey, Wetzikon ZH 2010.</p>
+	<p>[2] "Interpretation der Systemurkunde", Stolze/Schrey nach Systemurkunde 1967, Verlag des Schweizerischen 
+	Stenografenverbandes Stolze/Schrey, Wetzikon ZH 2013.
+	</p>
+	<p>This model was further improved using transcriptions of different novels (mainly from Friedrich Glauser) and articles which where corrected manually from February to July 2019.</p>
+	<p>The model produces >90% of correct transcriptions an can be considered an official release.</p>
 	<p>This file was originately generated as export from old parser, then 
 	later completed with manual additions to form DESSBAS (DD=Deutsch, 
 	SS=Stolze-Schrey, BAS=Grundschrift).</p> 
 	
-	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
+	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an 
 	inclination of 60 degrees.</p>
 	";
 
@@ -60,7 +67,8 @@
 	"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// model version
 		"model_version" := "1.0";
-		"model_date" := "29. Juni 2019";
+		"required_version" := "0.1";
+		"model_date" := "26. Juli 2019";
 		// wide distance
 		"token_distance_wide" := "17";
 		// use linguistical analysis

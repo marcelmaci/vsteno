@@ -48,8 +48,46 @@
 	// este/estas/estos |        [EST][-E] etc.  |            [ST][-E] etc. (!!!)
 	//      
 	#BeginSubSection(session)
+		// license stuff
+		"license" := "
+	<p>SPSSBAS - VSTENO shorthand model for spanisch<br>
+	Set of rules interpreted and processed by VSTENO (www.vsteno.ch)<br> 
+	(c) 2019 - Marcel Maci (m.maci@gmx.ch)</p>
+	<p>This program* is free software: you can redistribute it and/or modify it under	
+	the terms of the GNU General Public License as published by the Free Software
+ 	Foundation, either version 3 of the License, or (at your option) any later
+ 	version.</p>
+	<p>This program is distributed in the hope that it will be useful, but WITHOUT
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+	FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+	details.</p>
+ 	<p>You should have received a copy of the GNU General Public License along with
+	this program. If not, see <http://www.gnu.org/licenses/>.</p>
+	<p>* As explained in the documentation of VSTENO, shorthand models are considered
+	as interpreted code (and thus code licensed under the same terms as the main 
+	program).</p>
+	<p>Model naming:<br>
+	SP = Spanisch, SS = Stolze-Schrey, BAS = basic system (Grundsystem)</p>
+	";
+	"release_notes" := "<p>Based on:<br>
+	[1] Arthur Meier, Lehrbuch der Spanischen Stenografie, Verlag und Buchhandlung
+	des Allgemeinen Schweizerischen Stenografenvereins, Druckerei Weitzikon AG, 
+	8620 Wetzikon ZH, 1. Auflage 1981 (32 Seiten)</p>
+	<p> [2] Allgemeiner Schweizerischer Stenographenverein (Zentralverein Stolze-Schrey), 
+	Systemurkunden der französischen, italienischen, englischen, spanischen 
+	Stenographie Stolze-Schrey, aufgestellt durch die Kommission für die Übertragungen 
+	auf Fremdsprachen, 1953 (Seiten 25 - 31).</p>
+	<p>When there are differences between the two systems, the variant in [1] is 
+	preferred.</p>
+	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
+	inclination of 60 degrees.</p>
+	<p>This model is still under developpment and has to be considered in beta state (but many words should be 
+	calculated correctly).</p>
+		";
+	"copyright_footer" := "Created with Free Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// set versions
-		"model_version" := "0.0";
+		"model_version" := "0.2";
+		"model_date" := "26. Juli 2019";
 		"required_version" := "0.1";
 		// disable linguistical analysis
 		"hyphenate_yesno" := "no";
