@@ -27,8 +27,8 @@ error_reporting(0);                 // turn off all error reporting
 // version
 const version_name = "Hephaistos"; // official release name
 const version_number = 0.1; // two digit version number (can be used to test compatibility with models)
-const version_commit_id = "0582f167165ed24599eac2924e30e35d9cd07818";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "21. Juli 2019 (50 years since moonlanding ... :)";                                  // idem
+const version_commit_id = "4f09ae3ab48e06fb2357a7437a7fcf9321e3c6f6";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "26. Juli 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)

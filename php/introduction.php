@@ -23,7 +23,7 @@ folgenden Goodies auf:<p>
 <ul>
 <li><p><b>Programm</b>:<br>
 - komplett funktionsfähige** SE1rev0 (= steno engine revision 0) <br>
-- automatisierte <a href="install.php">Installation</a> unter der GNU/Linux-Distribution <a href="http://www.trisquel.info">Trisquel 8</a>***</p></li>
+- automatisierte <a href="installation.php">Installation</a> unter der GNU/Linux-Distribution <a href="http://www.trisquel.info">Trisquel 8</a>***</p></li>
 <li><p><b>Dokumentation</b>:<br>
 - vollständige <a href="../docs/documentation_v01.pdf">Hauptdokumentation</a> der aktuellen Version<br>
 - aktualisierte <a href="documentation.php">Zusammenstellung</a> sämtlicher verfügbarer Dokumentationen</p></li>

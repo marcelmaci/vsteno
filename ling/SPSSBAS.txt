@@ -616,6 +616,28 @@
 		// transcribe spanish question mark / exclamation mark
 		"\?([a-zA-Z])" => "¿$1";
 		"\!([a-zA-Z])" => "¡$1";
+		// replace strange characters so that they can be handled correctly
+		"^—(?=[a-zA-Z¿¡])" => " [~~] ";
+		// copied from DESSBAS
+		"&ndash;" => "-"; // blocks calculation in layouted mode
+		"-$" => " - "; // end of text
+		"^-" => " - "; // beginning of text
+		" - " => " [~~] ";
+		" -([.,;:!?])" => " [~~]$1";
+		"&hellip;" => "…"; // ellipsis (try to use one character defined as global variable punctuation in php)
+		"\.\.\." => "…";
+		//"…" => "…";
+		"–" => "[~~]"; // blocks calculation in layouted mode
+ 		" &ndash; " => " [~~] "; // Gedankenstrich
+		"&ndash;" => "="; // blocks calculation in layouted mode // probably obsolete?!
+		"&rs?aquo;" => "«"; 
+		"&ls?aquo;" => "»";
+		"›" => "»";
+		"‹" => "«";
+		"ß" => "ss";
+		"&szlig;" => "ss";
+		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
+		"»" => """; //"|[#5][#Q#]|"; 
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		"(\+|#|\|)" => "-"; // ignore linguistical analysis (if not already disabled in header)
@@ -687,7 +709,7 @@
 		"^extract" => "estract";
 		"^extrae" => "estrae";
 		"^extrai" => "estrai";
-		"^extra(?!ñ)" => "{EXTRA}";
+		"^extra(?!ñ|nj)" => "{EXTRA}";
 		"^coin" => "{CON}{IN}";
 		"^la$" => "{LA}";
 		"^da$" => "{DA}";
@@ -777,7 +799,7 @@
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
 		"^(en)?contr" => "$1{CONTR}";
-		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]orreo", "[Cc]opia", "[Cc]oriza", "[Cc]orre", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobrent" => "{SOBRE}ent"; // sobrentender (sobreentender)
 		"^sobre?|sor" => { "{SOBRE}", "[Ss]obri", "[Ss][oó]rd" }; // sobrio/as, sordo, sórdido (accent necessary since pattern is compared to original word => is this a good idea?!?)
 		"^gener" => "{GENER}";
@@ -827,7 +849,7 @@
 		"{EX}s" => "{EX}"; // simplificación
 		"z" => "s";
 		"([aeiou])h([aeiou])" => "$1[H']$2"; // preserve h 
-		"(?<!c)h" => "";
+		"(?<!c)h" => { "", "[Hh]arry", "[Hh]ol[ey]" }; // yes, trying to read some Nesboe ...
 		"ñ" => "n";
 		"g([ei])" => "h$1";
 		"j" => "h";
@@ -990,7 +1012,8 @@
 		// vowels at end of the words
 		"e$" => "[-E]";
 		"a$" => "[EN]"; // keep token names as in original (mother) system
-		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "(?<!.)paso" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
+		"[Dd]id[gh]e\[VR\]idoo" => "didherido";
+		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "(?<!.)paso", "^[Oo]slo$", "[Dd]idgerido" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
 		"o$" => "[EM]";
 		"i$" => "[-I]";
 		"u$" => "A[&U]";
@@ -1011,6 +1034,7 @@
 
 
 		// rewrite diptongs
+		"^\[UE\]" => "[0N-][Ä]";	// keep german vowel system
 		"\[UE\]" => "[Ä]";	// keep german vowel system
 		"\[IO\]" => "[Ö]";
 		"\[UA\]" => "[Ü]";
@@ -1349,7 +1373,7 @@
 		//[RR][#3][AR]
 		"(\[rr\])\[#[0-9]\](\[ar\])" => "$1[#9-]$2"; // adjust for rtr (artritis)
 		"(\[in\])\[#5\]\[a\](\[p@r6\])" => "$1[A]$2"; // test
-
+		"(?<!\[vr\])\[en\]$" => "[#3][EN]";
 
 		// assign 5 to the rest (standard value)
 		//"\[#d..?\]" => "[#5]";

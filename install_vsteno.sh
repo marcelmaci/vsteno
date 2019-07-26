@@ -20,20 +20,20 @@ case "$1" in
             version_number=0.1
 	    version_name=Hephaistos
 	    version_date="26/07/19"
-            commit=cd6b6f3b31423344c8a82d6e434546568511918d
+            commit=4f09ae3ab48e06fb2357a7437a7fcf9321e3c6f6
             ;;
          
         0.1)
 	    version_number=0.1
             version_name=Hephaistos
 	    version_date="26/07/19"
-	    commit=cd6b6f3b31423344c8a82d6e434546568511918d
+	    commit=4f09ae3ab48e06fb2357a7437a7fcf9321e3c6f6
 	    ;;
 	lateststable)
             version_number=lateststable
             version_name=Hephaistos
             version_date="26/07/19"
-            commit=cd6b6f3b31423344c8a82d6e434546568511918d
+            commit=4f09ae3ab48e06fb2357a7437a7fcf9321e3c6f6
             ;;
          
         latest)
