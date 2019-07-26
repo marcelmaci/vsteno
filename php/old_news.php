@@ -1,6 +1,40 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Old News</h1>
 <p>Hier finden Sie archivierte, ältere News-Einträge.</p>
+<i><p><b><u>9. Juni 2019</u></b><br>
+Es ist wieder einiges geschehen rund um VSTENO:
+<ul>
+<li><p>
+<b>Spanish</b>: Erstmals ist es möglich, Stenogramme in einer anderen Sprache zu generieren! Die Wahl fiel auf Spanisch, weil dies 
+eine sehr regelmässige Sprache mit wenigen Unterschieden zwischen Laut und Schrift ist. Die Implementierung ist zur 
+Zeit natürlich noch alles andere als perfekt und fehlerfrei. Wie immer handelt es sich um einen ersten Wurf, der sich im Laufe der nächsten
+Wochen und Monate verbessern wird. Die ersten Resultate sind jedoch sehr vielversprechend - werfen Sie doch einen Blick auf den <a href="../docs/donquijote1.pdf">Preview</a>!
+</p>
+</li>
+<li><p>
+<b>Installation</b>: Nachdem der letzte Upload reichlich schief lief, hatte ich das unaussprechliche Vergnügen, stundenlang nach dem Fehler zu
+suchen - und unter anderem eine komplette Neuinstallation von VSTENO vorzunehmen. Immerhin bot dies Gelegenheit, aus der Not eine Tugend zu machen, und
+diesen Prozess minutiös zu dokumentieren. Daraus resultierte also die folgende <a href="installation.php">Installationsanleitung</a>. Nerds, die sich das gerne antun wollen, können diese gerne
+konsultieren ... ;-)</p>
+</li>
+<li><p>
+<b>Dokumentation</b>: Die <a href="../docs/documentation_v01rc.pdf">Hauptdokumentation</a> wurde in verschiedenen Punkten ergänzt (neue Funktionalitäten wie wechseln zwischen
+verschiedenen Stenografie-Systemen, neues Abstandskonzept für Zeichen und zusätzliche Lizenzierungshinweise). Ebenfalls noch (mehr
+oder minder) aktuell sind: <a href="../docs/gel_speiende_spiegel.pdf">Gel speiende Spiegel</a> und <a href="../docs/stenoengines.pdf">STENO-ENGINES</a>. 
+</p>
+</li>
+<li><b>Mitarbeit</b>: Das Dokument <a href="../docs/mitmachen_bei_vsteno.pdf">Mitmachen</a> ist nur noch teilweise gültig. Insbesondere bin ich eher
+wieder davon abgekommen, Wortkorrekturen via Datenbank vorzunehmen. Eine bewährtere Form der Mitarbeit ist die direkte Korrektur von Stenogrammen
+auf dem Papier (und die Integrierung der Korrekturen als Transkriptions-Regeln). Falls jemand Kenntnisse - insbesondere im Spanisch - hat, darf er/sie
+sich gerne melden! Ebenfalls biete ich nach wie vor gerne Hilfestellung, falls jemand gerne ein weiteres (eigenes) Stenografie-System mit VSTENO
+umsetzen möchte.
+</p>
+</li>
+</ul>
+<p>Nach wie vor ist unklar, wann die erste offizielle Version 0.1 spruchreif ist (die Schätzung liegt zwischen "bald" und "nie";) und in welcher Form sie publiziert
+werden soll (z.B. Installation ab GIT-Archiv oder ZIP-Datei). So oder so: Mit der erwähnten <a href="installation.php">Installationsanleitung</a> kann bereits jetzt jede/r
+Interessierte im Sinne eines "rolling release" Modells eine lokale Instanz von VSTENO installieren.</p>
+<p>In diesem Sinne wünsche ich frohes Stenografieren!</p>
 <i><p><b><u>16. April 2019</u><br><br>Lets fetz - 1 Jahr VSTENO!</b><br><br>
 Zugegeben: Es ist nicht gerade die goldene Hochzeit ... noch nicht mal die silberne. Dennoch: Es gibt Grund zum Feiern! Ziemlich genau 1 Jahr ist
 her, dass die erste Codezeile für VSTENO entstand. Die früheste "archäologisch auffindbare" Datei datiert vom 10. April 2018: Sie legte 
@@ -11,29 +45,29 @@ bildet bis heute das Kernstück von VSTENO.</p>
 <ul>
 <li><p><b>Code:</b> VSTENO besteht inzwischen aus rund 10'500 Zeilen PHP-Code und 5000 Zeilen JavaScript (VPAINT). Das Gesamtprogramm enthält
 zusätzlich die Bibliotheken phpSyllable und PAPERS.JS, die im Rahmen freier Lizenzen integriert wurden. Insgesamt wurden in 220 Commits 
-429'994 Zeilen hinzugefügt und 21'841 Zeilen gelöscht.</li>
+429'994 Zeilen hinzugefügt und 21'841 Zeilen gelöscht.</p></li>
 
 <li><p><b>Dokumentation</b>: Nebst der Webseite (die etwa 800 Zeilen HTML/CSS-Code enthält) wurden mehrere Dokumentationen erstellt. Im
 Hinblick auf die erste offizielle Version 0.1 wurde eine <a href="../docs/documentation_v01rc.pdf">Gesamtdokumentation</a> begonnen, 
-die mittlerweile 65 Seiten umfasst.
+die mittlerweile 65 Seiten umfasst.</p>
 </li>
-<li><b>Stolze-Schrey</b>: Die Datei mit den Definitionen für die Grundschrift Stolze-Schrey umfasst inzwischen 2343 Zeilen. Darin enthalten
+<li><p><b>Stolze-Schrey</b>: Die Datei mit den Definitionen für die Grundschrift Stolze-Schrey umfasst inzwischen 2343 Zeilen. Darin enthalten
 sind etwa 1400 Regeln und 360 Zeichen (wovon 200 Grundzeichen, 70 kombinierte Zeichen und 90 verschobene Zeichen).</li>
 
 <li><b>Datenbanken</b>: Die Datenbanken (Purgatorium, Olympus, Elysium) von VSTENO sind nach wie vor leer - und das ist gut so! Das Programm
 soll möglichst weit gehend in der Lage sein, Stenogramme anhand von Regeln zu berechnen (die Gruppe an "Ausnahmen" soll also klein gehalten
 werden).
-</li>
-<li><b>Performance</b>: Die zunehmende Komplexität von VSTENO fordert ihren Preis: Die Berechnung einer Stenoseite dauert nun im Schnitt ca.
+</p></li>
+<li><p><b>Performance</b>: Die zunehmende Komplexität von VSTENO fordert ihren Preis: Die Berechnung einer Stenoseite dauert nun im Schnitt ca.
 20 Sekunden. Der Server schafft im Moment maximal rund 20 Seiten aufs Mal. Die Hauptrechenzeit wird nicht zur Generierung der Stenogramme, sondern
 für die linguistische Analyse verwendet (diese benötigt rund 80% der Rechenzeit*).
-</li>
-<li><b>Zeit</b>: Rein auf der Informatikseite flossen rund 740 Stunden Entwicklungszeit in VSTENO. Hinzuzurechnen sind ferner Handkorrekturen, 
+</p></li>
+<li><p><b>Zeit</b>: Rein auf der Informatikseite flossen rund 740 Stunden Entwicklungszeit in VSTENO. Hinzuzurechnen sind ferner Handkorrekturen, 
 welche vor allem zwei "gute Seelen" (Mitglieder des Schweizerischen Stenografenverbands) auf Papier vornahmen, um das Schriftbild zu 
 verbessern (diese Arbeit war zum Teil sehr detailreich, professionell und hat wesentlich zur Verbesserung von VSTENO beigetragen).
-</li>
-<li><b>Finanziell</b>: Im Laufe des Jahres gingen zwei Spenden in der Höhe von 220.- CHF ein. Damit können ungefähr die Infrastrukturkosten 
-für das vergangene und das kommende Jahr gedeckt werden (15.- CHF für die Internet-Adresse und ca. 100.- für den Server).</li>
+<p></li>
+<li><p><b>Finanziell</b>: Im Laufe des Jahres gingen zwei Spenden in der Höhe von 220.- CHF ein. Damit können ungefähr die Infrastrukturkosten 
+für das vergangene und das kommende Jahr gedeckt werden (15.- CHF für die Internet-Adresse und ca. 100.- für den Server).<p></li>
 </ul>
 </i>
 <p>Ganz herzlich bedanken möchte ich mich am Ende des ersten Jahres beim <a href="http://www.steno.ch">Schweizer Stenografenverband</a>, 

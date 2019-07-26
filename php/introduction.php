@@ -13,42 +13,62 @@ Stenografie-Systeme definiert werden können.
 <h2>Lizenz</h2>
 <p>VSTENO ist Freie Software, d.h. das Programm darf also kopiert, weitergegeben und verändert werden. Bitte beachten Sie weitere Hinweise unter <a href="copyright.php">Copyright</a> und <a href="donation.php">Spende</a>.
 </p>
-<p><h2>Neuigkeiten</h2>
-<i><p><b><u>9. Juni 2019</u></b><br>
-Es ist wieder einiges geschehen rund um VSTENO:
+<p><h1>Neuigkeiten</h1>
+<p><b><u>25/07/19:</u><br>Here we are ... ! :)</b></p>
+<p>Nach 15 Monaten und rund 950 Entwicklungsstunden* freue ich mich, 
+heute die erste offizielle Version namens <a href="https://de.wikipedia.org/wiki/Hephaistos"><b>HEPHAISTOS</b></a> zu präsentieren!
+Der sagenumwobene Schmied - zweifellos Kind einer humanistischen Tradition und hoffentlich der erste aus dem Geschlecht einer Reihe edler Olympier, 
+die folgen - wartet mit 
+folgenden Goodies auf:<p>
 <ul>
-<li><p>
-<b>Spanish</b>: Erstmals ist es möglich, Stenogramme in einer anderen Sprache zu generieren! Die Wahl fiel auf Spanisch, weil dies 
-eine sehr regelmässige Sprache mit wenigen Unterschieden zwischen Laut und Schrift ist. Die Implementierung ist zur 
-Zeit natürlich noch alles andere als perfekt und fehlerfrei. Wie immer handelt es sich um einen ersten Wurf, der sich im Laufe der nächsten
-Wochen und Monate verbessern wird. Die ersten Resultate sind jedoch sehr vielversprechend - werfen Sie doch einen Blick auf den <a href="../docs/donquijote1.pdf">Preview</a>!
-</p>
-</li>
-<li><p>
-<b>Installation</b>: Nachdem der letzte Upload reichlich schief lief, hatte ich das unaussprechliche Vergnügen, stundenlang nach dem Fehler zu
-suchen - und unter anderem eine komplette Neuinstallation von VSTENO vorzunehmen. Immerhin bot dies Gelegenheit, aus der Not eine Tugend zu machen, und
-diesen Prozess minutiös zu dokumentieren. Daraus resultierte also die folgende <a href="installation.php">Installationsanleitung</a>. Nerds, die sich das gerne antun wollen, können diese gerne
-konsultieren ... ;-)</p>
-</li>
-<li><p>
-<b>Dokumentation</b>: Die <a href="../docs/documentation_v01rc.pdf">Hauptdokumentation</a> wurde in verschiedenen Punkten ergänzt (neue Funktionalitäten wie wechseln zwischen
-verschiedenen Stenografie-Systemen, neues Abstandskonzept für Zeichen und zusätzliche Lizenzierungshinweise). Ebenfalls noch (mehr
-oder minder) aktuell sind: <a href="../docs/gel_speiende_spiegel.pdf">Gel speiende Spiegel</a> und <a href="../docs/stenoengines.pdf">STENO-ENGINES</a>. 
-</p>
-</li>
-<li><b>Mitarbeit</b>: Das Dokument <a href="../docs/mitmachen_bei_vsteno.pdf">Mitmachen</a> ist nur noch teilweise gültig. Insbesondere bin ich eher
-wieder davon abgekommen, Wortkorrekturen via Datenbank vorzunehmen. Eine bewährtere Form der Mitarbeit ist die direkte Korrektur von Stenogrammen
-auf dem Papier (und die Integrierung der Korrekturen als Transkriptions-Regeln). Falls jemand Kenntnisse - insbesondere im Spanisch - hat, darf er/sie
-sich gerne melden! Ebenfalls biete ich nach wie vor gerne Hilfestellung, falls jemand gerne ein weiteres (eigenes) Stenografie-System mit VSTENO
-umsetzen möchte.
-</p>
-</li>
+<li><p><b>Programm</b>:<br>
+- komplett funktionsfähige** SE1rev0 (= steno engine revision 0) <br>
+- automatisierte <a href="install.php">Installation</a> unter der GNU/Linux-Distribution <a href="http://www.trisquel.info">Trisquel 8</a>***</p></li>
+<li><p><b>Dokumentation</b>:<br>
+- vollständige <a href="../docs/documentation_v01.pdf">Hauptdokumentation</a> der aktuellen Version<br>
+- aktualisierte <a href="documentation.php">Zusammenstellung</a> sämtlicher verfügbarer Dokumentationen</p></li>
+<li><p><b>Stenografie</b>: <br>
+<u>drei Modelle (Stolze/Schrey):</u><br>
+- <a href="https://github.com/marcelmaci/vsteno/blob/master/ling/DESSBAS.txt">Deutsch</a> (V1.0): als Muttersystem (>95% korrekte Stenogramme)<br>
+- <a href="https://github.com/marcelmaci/vsteno/blob/master/ling/SPSSBAS.txt">Spanisch</a> (V0.2): Beispiel eines schriftbasierten Systems (Betastatus) <br>
+- <a href="https://github.com/marcelmaci/vsteno/blob/master/ling/FRSSBAS.txt">Französisch</a> (V0.1): Beispiel eines lautbasierten/phonetischen Systems (Alphastatus) 
+</p></li>
 </ul>
-<p>Nach wie vor ist unklar, wann die erste offizielle Version 0.1 spruchreif ist (die Schätzung liegt zwischen "bald" und "nie";) und in welcher Form sie publiziert
-werden soll (z.B. Installation ab GIT-Archiv oder ZIP-Datei). So oder so: Mit der erwähnten <a href="installation.php">Installationsanleitung</a> kann bereits jetzt jede/r
-Interessierte im Sinne eines "rolling release" Modells eine lokale Instanz von VSTENO installieren.</p>
-<p>In diesem Sinne wünsche ich frohes Stenografieren!</p>
+<p>Detailliertere Release-Notes zu den einzelnen Modellen können direkt im Eingabeformular via den Link <a href='model_info.php'>Info</a> 
+abgerufen werden (das Modell muss vorselektiert werden).</p>
 
+<p><i>
+*) die unleugbar auch die eine oder andere Durststrecke enthielten ... :)<br>
+**) oder zumindest bereinigte und mehr oder minder getestete ... ;-)<br>
+***) andere Distributionen oder Betriebssysteme sind möglich, bedingen aber manuelle Anpassungen.
+</i></p>
+
+<h1>Ausblick</h1>
+<p>Quo vadis VSTENO ... ? Diese Frage stellt sich mir mehr und mehr. Das Programm hat inzwischen einen Umfang erreicht, der es praktisch 
+unmöglich macht, das Projekt als Einzelperson weiterzuführen. Einmal mehr möchte ich an dieser Stelle somit auch Sie zur 
+<a href="mailto:m.maci@gmx.ch">Mitarbeit</a> an VSTENO 
+einladen - und betone noch einmal, dass man kein/e Programmierer/in sein muss, um sich am Projekt zu beteiligen.</p>
+<p><b>Beispiele</b></p>
+<ul>
+<li><p><b>Stenografische Systeme</b>: Stenografische Systeme können nur getestet werden, wenn anhand von Beispieltexten (Artikel, Kurzgeschichten, 
+Romane) Fehler erkannt und korrigiert werden. Sprich: Wenn Sie ein stenografisches System beherrschen und bereit sind, stenografische Texte
+Korrektur zu lesen, dann melden Sie sich doch!</p></li>
+<li><p><b>Dokumentation</b>: Als Entwickler von VSTENO liegt mir daran, möglichst viel Zeit in die Programmierung zu investieren, was dazu führt, dass
+ich praktisch keine Zeit habe, Dokumenationen gegenzulesen (und diese z.B. voller Tippfehler sind). Auch hier - oder zum Beispiel um 
+Dokumentationen zu übersetzen (Englisch z.B. wäre wesentlich) - ist jede Unterstützung willkommen!</p></li>
+<li><p><b>Werbung</b>: Ebenfalls fehlt mir die Zeit, Stenografenvereine zu kontaktieren und Werbung für das Programm zu machen. Deshalb: Wenn Sie 
+die Möglichkeit haben, in Ihrem (stenografischen) Bekanntenkreis auf das Programm hinzuweisen, so leisten Sie auch damit einen Beitrag dazu, 
+dass VSTENO bekannter wird (und so in Zukunft vielleicht auf mehr Unterstützung zählen kann)!</p></li>
+<li><p><b>DEK, Gregg, Pitmann, Duployé, Stiefografie ... </b>: Schreiben Sie ein anderes stenografisches System als Stolze/Schrey? Dann 
+<a href="mailto:m.maci@gmx.ch">melden 
+Sie sich</a>! Mit VSTENO lässt sich im Prinzip jedes beliebige System in relativ kurzer Zeit umsetzen.</p></li>
+</ul>
+<h2>Danke</h2>
+<p>Mit der Release von VSTENO V0.1 Hephaistos bedanke ich mich ganz offiziell bei Frau Yvonne Reith vom Schweizerischen 
+Stenografenverband, welche seit Februar unzählige Rückmeldungen zu Korrektheit und Schriftbild gemacht und damit einen 
+wesentlichen Beitrag dazu geleistet hat, dass auf Deutsch inzwischen über 95% der Stenogramme korrekt generiert werden!</p> 
+<p>Ebenfalls bedanke ich mich beim <a href="http://www.steno.ch">Schweizerischen Stenografenverband</a> für die Offenheit und 
+Unterstützung gegenüber dem Projekt.</p>
 <center>* * *</center>
 <p>=> Hier finden Sie <a href="old_news.php">ältere News-Einträge</a>.
 <br>

@@ -3,6 +3,7 @@
                 <li><A href="introduction.php">Einführung</A></li>
                 <li><A href="documentation.php">Dokumente</a></li>
                 <li><A href="installation.php">Installation</a></li>
+                <li><A href="versions.php">Versionen</a></li>
                 <li><A href="copyright.php">Copyright</a></li>
                 <li><A href="donation.php">Spende</a></li>
                 </ul>

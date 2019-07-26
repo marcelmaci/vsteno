@@ -5,9 +5,11 @@ if [ $(whoami) == "root" ]; then
 fi
 if [ -z $1 ]; then
 	echo "ERROR: you must give a version as argument: ./install_vsteno version"
-	echo "Valid versions are:"
-	echo "Hephaistos: version 0.1"
-	echo "latest: lastest commit (without garantees that it will work)"
+	echo "Valid arguments are:"
+	echo "0.1: version 0.1 (Hephaistos)"
+	echo "Hephaistos: same as preceeding"
+	echo "lateststable: lastest stable version"
+	echo "latest: latest version (might not work properly)"
 	echo "commit: any commit number from https://github.com/marcelmaci/vsteno"	
 	exit 1
 fi
@@ -15,21 +17,39 @@ fi
 echo "Install VSTENO version: $1"
 case "$1" in
         Hephaistos)
-            commit=d958efb9ef3f353d71e265696c17f3383d83821a
+            version_number=0.1
+	    version_name=Hephaistos
+	    version_date="26/07/19"
+            commit=cd6b6f3b31423344c8a82d6e434546568511918d
             ;;
          
-        oldstable)
-            commit=6ddab137fde3b4c7208dd247445578944208c882
+        0.1)
+	    version_number=0.1
+            version_name=Hephaistos
+	    version_date="26/07/19"
+	    commit=cd6b6f3b31423344c8a82d6e434546568511918d
+	    ;;
+	lateststable)
+            version_number=lateststable
+            version_name=Hephaistos
+            version_date="26/07/19"
+            commit=cd6b6f3b31423344c8a82d6e434546568511918d
             ;;
          
         latest)
-            commit=origin/master
+            version_number=latest
+            version_name=Hephaistos
+            version_date="26/07/19"
+	    commit=origin/master
             ;;
         *)
             commit=$1
 esac
 echo "Version $1 corresponds to commit: $commit"
 # export variable to make it available for following scripts
+export version_number
+export version_name
+export version_date
 export commit
 ./install_tools.sh
 ./download_vsteno.sh

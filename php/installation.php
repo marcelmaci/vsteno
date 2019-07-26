@@ -8,11 +8,19 @@ einzelnen Versionen von VSTENO.</p>
 <h1>Automatisiert</h1>
 <p>Mit dem Commit vom 10. Juli 2019 sind erstmals automatisierte Installationsskripts verfügbar. Gehen Sie wie folgt vor, um diese zu verwenden:</p>
 <ol>
-<li>Laden Sie die ZIP-Datei <a href="../downloads/install.tar.gz">install.tar.gz</a> herunter.</li>
+<li>Laden Sie die ZIP-Datei <a href="../downloads/install.zip">install.zip</a> herunter.</li>
 <li>Entpacken Sie die ZIP-Datei (es werden 4 Dateien ins Verzeichnis ./install/ entpackt).</li>
 <li>Öffnen Sie eine Shell in diesem Verzeichnis.</li>
-<li>Machen Sie die Installationsskripts ausführbar: sudo chmod +x *.sh</li>
-<li>Starten Sie die Installation: ./install_vsteno.sh</li>
+<li>Machen Sie die Installationsskripts ausführbar: <i>sudo chmod +x *.sh</i></li>
+<li>Starten Sie die Installation: <i>./install_vsteno.sh version</i></li>
+</ol>
+<p>Gültige Versionen sind:</p>
+<ol>
+<li><b>0.1</b>: version 0.1 (Hephaistos)</li>
+<li><b>Hephaistos</b>: wie 0.1</li>
+<li><b>lateststable</b>: letzte stabile (= garantiert lauffähige) Version</li>
+<li><b>latest</b>: allerneueste Version (Lauffähigkeit nicht garantiert)</li>
+<li><b>commit</b>: eine beliebige Commit-Nummer aus dem <a href="https://github.com/marcelmaci/vsteno/commits/master">Github-Repository</a>.</li>
 </ol>
 <h2>Ablauf</h2>
 <p>Die Skripts aktualisieren die Paketquellen (sudo apt-get update) und installieren diverse Programme (falls Sie dies nicht möchten - 

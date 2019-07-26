@@ -18,7 +18,7 @@
 require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return_address'] = "input.php"; ?>
 <br>
 <center>
-<?php require_once "constants.php"; echo "Version: " . version_number . "(" . version_name . ") <br><i>Commit: " . version_commit_id . "</i><br>"; ?>
+<?php require_once "constants.php"; echo "Version: " . version_number . " (" . version_name . ") <br><i>Commit: " . version_commit_id . "</i><br>"; ?>
 <div id="order">
 <form action="calculate.php" method="post">
 <table>

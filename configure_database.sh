@@ -66,10 +66,12 @@ function WriteDatabaseVariables {
     sudo sed -i 's/db_username = ".*\?";/db_username = "'"$dbuser"'";/g' /var/www/html/vsteno/php/dbpw.php
     sudo sed -i 's/db_password = ".*\?";/db_password = "'"$dbpwd"'";/g' /var/www/html/vsteno/php/dbpw.php
     sudo sed -i 's/db_dbname = ".*\?";/db_dbname = "'"$dbname"'";/g' /var/www/html/vsteno/php/dbpw.php
-	# write commit number to constants.php via sed
-	sudo sed -i 's/version_commit_id = ".*\?";/version_commit_id = "'"$commit"'";/g' /var/www/html/vsteno/php/constants.php
-	versiondate="(not set)"
-	sudo sed -i 's/version_date = ".*\?";/version_date = "'"$versiondate"'";/g' /var/www/html/vsteno/php/constants.php
+    # write version variables to constants.php via sed
+    sudo sed -i 's/version_name = ".*\?";/version_name = "'"$version_name"'";/g' /var/www/html/vsteno/php/constants.php
+    # version number not inside "" !
+    sudo sed -i 's/version_number = .*\?;/version_number = '"$version_number"';/g' /var/www/html/vsteno/php/constants.php
+    sudo sed -i 's/version_commit_id = ".*\?";/version_commit_id = "'"$commit"'";/g' /var/www/html/vsteno/php/constants.php
+    sudo sed -i 's/version_date = ".*\?";/version_date = "'"$version_date"'";/g' /var/www/html/vsteno/php/constants.php
 }
 
 # main

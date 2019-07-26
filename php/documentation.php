@@ -1,23 +1,34 @@
 <?php require "vsteno_template_top.php"; ?>
-<h1>Tutorials</h1>
-<p><b>[Update 20.02.19: <a href="../docs/documentation_v01rc.pdf">Dokumentation 0.1rc</a>]</b></p>
-<p>Diese Seite enthält Tutorials und Dokumentationen zu VSTENO. Aus unserer Sicht kann das Programm von 3 Zielgruppen genutzt werden: 
-(1) Leseratten,  (2) Stenograf/innen, (3) Programmierer/innen</p>
-<h2>(1) Leseratten</h2>
-<p>Wer VSTENO dazu nutzen möchte, Texte in die Grundschrift Stolze-Schrey zu übertragen  (um sie z.B. auf einem E-Reader zu lesen),
-der findet entsprechende Informationen in diesem <a href="../docs/vsteno_tutorial.pdf">Kurztutorial</a>. 
-Noch kürzer - im Sinne eines "get started" ist <A href="hints.php">dieses Tutorial</a>.</p>
-<h2>(2) Stenograf/innen</h2>
-<p>Wenn Sie "der Hafer sticht" und Sie VSTENO dazu nutzen möchte, selber eigene Stenografie-System umzusetzen, dann finden
-Sie die hierzu notwendigen technischen Informationen im  <a href="../docs/tutorial_linguistinnen.pdf">Tutorial für Linguist/innen</a>.</p>
-<h2>(3) Programmierer/innen</h2> 
-<p>Falls Sie VSTENO abändern oder um eigene Funktionalitäten erweitern möchten, können Sie sich den Quelltext von 
-<a href="http://www.github.com/marcelmaci/vsteno">www.github.com/marcelmaci/vsteno</a> herunterladen. </p>
-<p>Im Moment ist leider noch keine Dokumentation verfügbar, welche den Programmcode von VSTENO näher beschreibt. Der Quellcode ist 
-jedoch reichlich mit Kommentaren versehen. Wenn Sie also über PHP-Kenntnisse verfügen, dann sollten Sie das Programm anhand
-dieser Anmerkungen und der vorgängig erwähnten Tutorials erschliessen können.</p>
-<p>Falls es hilft, können Sie zusätzlich auch diese 
-<a href="../docs/documentation.txt">ältere Dokumentation</a> 
-konsultieren (das meiste darin ist zwar wirklich veraltet, aber einige interessante Informationen - z.B. wie VSTENO die Stenozeichen neigt 
-und wie VSTENO den Quellcode grundsätzlich aufgeteilt und einbindet - sind nach wie vor gültig).</p>
+<h1>Dokumentation</h1>
+<p>Hier finden Sie eine Auflistung sämtlicher für VSTENO zur Verfügung stehender Dokumentationen.</p>
+<h2>Aktuell</h2>
+<p>
+- <b>Programm</b>: <a href="../docs/documentation_v01.pdf">Hauptdokumentation</a> (gültig für Verson 0.1 Hephaistos)<br>
+- <b>Linguistik</b>: <a href="../docs/gel_speiende_spiegel.pdf">Gel speiende Spiegel</a><br>
+- <b>Datenbank</b>: ursprünglich veröffentlicht als <a href="../docs/mitmachen_bei_vsteno.pdf">Mitmachen bei VSTENO</a>*<br>
+- <b>Stenoengine</b>: Unterschiede <a href="../docs/stenoengines.pdf">SE1 vs SE2</a>**
+</p>
+
+<p><i>
+* nur noch teilweise aktuell.<br>
+** weiteres zu rev0 und rev1 in <a href="../docs/documentation_v01.pdf">Hauptdokumentation</a>
+</i>
+</p>
+
+<h2>Archiv</h2>
+
+<p>
+- <b>Lesestoff</b>: <a href="../docs/vsteno_tutorial.pdf">VSTENO-Tutorial</a> und <A href="hints.php">hints</a><br>
+- <b>Stenografie</b>: <a href="../docs/tutorial_linguistinnen.pdf">Tutorial-Stenograf/innen</a>*<br>
+- <b>ganz alt</b> <a href="../docs/documentation.txt">allererste Dokumentation</a>
+</p>
+
+<p><i>
+* integriert in <a href="../docs/documentation_v01.pdf">Hauptdokumentation</a>.</p></li>
+</i>
+</p>
+<h2>Quellcode</h2>
+<p>Viele Teile von VSTENO wurden direkt im Quellcode dokumentiert und sind via 
+<a href="https://github.com/marcelmaci/vsteno">Github</a> verfügbar.</p>
+
 <?php require "vsteno_template_bottom.php"; ?>
