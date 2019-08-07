@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="msapplication-tap-highlight" content="no">
+  <link rel="stylesheet" href="Paper.js%20%E2%80%94%20Path%20Simplification-Dateien/style.css">
+  <link rel="icon" href="http://paperjs.org/assets/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="http://paperjs.org/assets/favicon.ico">
+  <script type="text/javascript" async="" src="Paper.js%20%E2%80%94%20Path%20Simplification-Dateien/ga.js"></script><script src="Paper.js%20%E2%80%94%20Path%20Simplification-Dateien/jquery.js"></script>
+  <script src="Paper.js%20%E2%80%94%20Path%20Simplification-Dateien/paper.js"></script>
+  <script src="Paper.js%20%E2%80%94%20Path%20Simplification-Dateien/codemirror.js"></script>
+  <script src="Paper.js%20%E2%80%94%20Path%20Simplification-Dateien/scripts.js"></script>
+  <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-10082945-6']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <title>Paper.js — Path Simplification</title>
+</head>
+  <body class="fullscreen">
+    <nav>
+      <h1><a href="http://paperjs.org/">Paper.js</a></h1>
+<ul>
+  <li><a href="http://paperjs.org/about/">About</a>
+  </li>
+  <li><a href="http://paperjs.org/features/">Features</a>
+  </li>
+  <li class="spacer"></li>
+  <li><a href="http://paperjs.org/examples/">Examples</a>
+<ul>
+  <li><a href="http://paperjs.org/examples/boolean-operations/">Boolean Operations</a></li>
+  <li><a href="http://paperjs.org/examples/candy-crash/">Candy Crash</a></li>
+  <li><a href="http://paperjs.org/examples/satie-liked-to-draw/">Satie Liked To Draw</a></li>
+  <li><a href="http://paperjs.org/examples/chain/">Chain</a></li>
+  <li><a href="http://paperjs.org/examples/tadpoles/">Tadpoles</a></li>
+  <li><a href="http://paperjs.org/examples/nyan-rainbow/">Nyan Rainbow</a></li>
+  <li><a href="http://paperjs.org/examples/rounded-rectangles/">Rounded Rectangles</a></li>
+  <li><a href="http://paperjs.org/examples/radial-rainbows/">Radial Rainbows</a></li>
+  <li><a href="http://paperjs.org/examples/meta-balls/">Meta Balls</a></li>
+  <li><a href="http://paperjs.org/examples/voronoi/">Voronoi</a></li>
+  <li><a href="http://paperjs.org/examples/future-splash/">Future Splash</a></li>
+  <li><a href="http://paperjs.org/examples/smoothing/">Smoothing</a></li>
+  <li><a href="http://paperjs.org/examples/spiral-raster/">Spiral Raster</a></li>
+  <li><a href="http://paperjs.org/examples/division-raster/">Division Raster</a></li>
+  <li><a href="http://paperjs.org/examples/q-bertify/">Q-bertify</a></li>
+  <li><a href="http://paperjs.org/examples/path-intersections/">Path Intersections</a></li>
+  <li class="active"><a href="http://paperjs.org/examples/path-simplification/">Path Simplification</a></li>
+  <li><a href="http://paperjs.org/examples/hit-testing/">Hit Testing</a></li>
+  <li><a href="http://paperjs.org/examples/bouncing-balls/">Bouncing Balls</a></li>
+</ul>
+  </li>
+  <li><a href="http://paperjs.org/showcase/">Showcase</a>
+  </li>
+  <li class="spacer"></li>
+  <li><a href="http://paperjs.org/tutorials/">Tutorials</a>
+  </li>
+  <li><a href="http://paperjs.org/reference/">Reference</a>
+  </li>
+  <li><a href="http://sketch.paperjs.org/">Sketch</a>
+  </li>
+  <li class="spacer"></li>
+  <li><a href="http://paperjs.org/download/">Download</a>
+  </li>
+  <li><a href="http://paperjs.org/donation/">Donation</a>
+  </li>
+  <li><a href="http://paperjs.org/license/">License</a>
+  </li>
+  <li class="spacer"></li>
+  <li><a href="http://groups.google.com/group/paperjs" target="_blank">Mailing List</a>
+  </li>
+  <li><a href="http://twitter.com/PaperJS" target="_blank">Follow on Twitter</a>
+  </li>
+  <li><a href="http://github.com/paperjs/paper.js" target="_blank">Watch on Github</a>
+  </li>
+</ul>
+    </nav>
+<article><div class="paperscript">
+<div class="buttons">
+<div class="button run">Source</div>
+<div class="explain hidden"></div>
+</div>
+<div class="source hidden"></div><script type="text/paperscript" canvas="canvas-1" data-paper-ignore="true">
+var path;
+
+var textItem = new PointText({
+	content: 'Click and drag to draw a line.',
+	point: new Point(20, 30),
+	fillColor: 'black',
+});
+
+function onMouseDown(event) {
+	// If we produced a path before, deselect it:
+	if (path) {
+		path.selected = false;
+	}
+
+	// Create a new path and set its stroke color to black:
+	path = new Path({
+		segments: [event.point],
+		strokeColor: 'black',
+		// Select the path, so we can see its segment points:
+		fullySelected: true
+	});
+}
+
+// While the user drags the mouse, points are added to the path
+// at the position of the mouse:
+function onMouseDrag(event) {
+	path.add(event.point);
+
+	// Update the content of the text item to show how many
+	// segments it has:
+	textItem.content = 'Segment count: ' + path.segments.length;
+}
+
+// When the mouse is released, we simplify the path:
+function onMouseUp(event) {
+	var segmentCount = path.segments.length;
+
+	// When the mouse is released, simplify it:
+	path.simplify(10);
+
+	// Select the path, so we can see its segments:
+	path.fullySelected = true;
+
+	var newSegmentCount = path.segments.length;
+	var difference = segmentCount - newSegmentCount;
+	var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
+	textItem.content = difference + ' of the ' + segmentCount + ' segments were removed. Saving ' + percentage + '%';
+}
+</script>
+<div class="canvas">
+<canvas resize="true" id="canvas-1" style="-moz-user-select: none;" width="1454" height="928" data-paper-scope="1"></canvas>
+</div>
+</div>
+</article>
+  
+</body></html>
