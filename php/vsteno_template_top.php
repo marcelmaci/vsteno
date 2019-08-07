@@ -21,7 +21,6 @@
            <div id="purelab_texts">
                 
                 <?php 
-                    //echo "hithere";
                     require_once "fortune.php";
                     //$_SESSION['original_text_content'] = $fortune_cookie;
                     echo "<center>" . fortune() . "</center>";

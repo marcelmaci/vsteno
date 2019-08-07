@@ -83,7 +83,12 @@ Farbe <input type="Text" name="introduction_color"  size="10" value="<?php echo 
 
 ?>
 
-Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch
+Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch<br>
+Rendering: 
+<?php /*echo "test:" . $_SESSION['rendering_middleline_yesno'] . "<";*/?>
+<input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 
+<input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon
+
 </td></tr>
 <tr><td>Sprache</td></tr>
 <tr><td>

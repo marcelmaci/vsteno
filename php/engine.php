@@ -113,6 +113,7 @@
  
 require_once "data.php";
 require_once "constants.php";
+require_once "rendering.php";
 
 // SE1-BACKPORTS: revision1
 $backport_revision1 = false;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
@@ -417,7 +418,7 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             $y1 = round($splines[$n+1], $vector_value_precision, PHP_ROUND_HALF_UP);
             $q1x = round($splines[$n+2] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $q1y = round($splines[$n+3], $vector_value_precision, PHP_ROUND_HALF_UP);
-            $relative_thickness = $splines[$n+4];
+            $relative_thickness = ($_SESSION['rendering_middleline_yesno']) ? $splines[$n+4] : 1.0;
             $unused = $splines[$n+5];
             $q2x = round($splines[$n+6] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $q2y = round($splines[$n+7], $vector_value_precision, PHP_ROUND_HALF_UP);
@@ -469,7 +470,10 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             $svg_string .= "<!-- separate --><path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
         }
        
-        $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
+        if ($_SESSION['rendering_polygon_yesno']) $polygon_shadow = GetPolygon( $splines );
+        else $polygon_shadow = "";
+        
+        $svg_string .= "$polygon_shadow</g>$svg_not_compatible_browser_text</svg>";
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
     // } 
     return $svg_string;
@@ -665,7 +669,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         $t1_t = $t1_t;                        // tension following the point
                         $d1_t = $d1_t; // diacritic tokens CANNOT contain pivot points
                         
-                        if (($shadowed === "yes") /*|| ($steno_tokens[$token][offs_token_type] == 1)*/) {
+                        if (($shadowed === "yes") /*&& ($_SESSION['rendering_middleline_yesno'])*//*|| ($steno_tokens[$token][offs_token_type] == 1)*/) {
                             $th_t = $th_t;  // th = relative thickness of following spline (1.0 = normal thickness)
                         } else $th_t = 1.0;
                         //$tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
@@ -724,7 +728,7 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         //}
                     
                         $splines[] = $value_to_insert;                        // d1
-                        if (($shadowed == "yes")/* || ($steno_tokens[$token][offs_token_type] == "1")*/) {
+                        if (($shadowed == "yes") /*&& ($_SESSION['rendering_middleline_yesno'])*//* || ($steno_tokens[$token][offs_token_type] == "1")*/) {
                             $splines[] = $steno_tokens[$token][$i+offs_th];  // th = relative thickness of following spline (1.0 = normal thickness)
                         } else $splines[] = 1.0;
                         $tempdr = (($old_dont_connect) && ($i+offsdr < header_length+tuplet_length)) ? 5 : $steno_tokens[$token][$i+offs_dr]; $splines[] = $tempdr; //echo "$token" . "[" . $i . "]:  old_dont_connect = $old_dont_connect / dr = $tempdr<br>";                       // dr
@@ -1552,7 +1556,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 $y1 = round($word_splines[$i][$n+1] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $q1x = round($word_splines[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $q1y = round($word_splines[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-                $relative_thickness = $word_splines[$i][$n+4];
+                $relative_thickness = ($_SESSION['rendering_middleline_yesno']) ? $word_splines[$i][$n+4] : 1.0;
                 $unused = $word_splines[$i][$n+5];
                 $q2x = round($word_splines[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $q2y = round($word_splines[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);

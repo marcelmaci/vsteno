@@ -134,6 +134,11 @@ const offs_th = 4;       // offset 4: th
 const offs_dr = 5;       // offset 5: dr => drx
 const offs_d2 = 6;       // offset 6: d2 => qx2*
 const offs_t2 = 7;       // offset 4: t2 => qy2*
+// offsets after CalculateWord()
+const offs_qx1 = 2;
+const offs_qy1 = 3;
+const offs_qx2 = 6;
+const offs_qy2 = 7;
 
 
 const bezier_offs_qx1 = 3;
