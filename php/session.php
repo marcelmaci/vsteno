@@ -149,6 +149,7 @@ function InitializeSessionVariables() {
     $_SESSION['spacer_autoinsert'] = false;
     $_SESSION['rendering_middleline_yesno'] = true;
     $_SESSION['rendering_polygon_yesno'] = false;
+    $_SESSION['rendering_polygon_color'] = $_SESSION['token_color'];
 }
 
 
@@ -290,6 +291,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
     $_SESSION['rendering_middleline_yesno'] = ($_POST['rendering_middleline_yesno'] === "yes") ? true : false;
     $_SESSION['rendering_polygon_yesno'] = ($_POST['rendering_polygon_yesno'] === "yes") ? true : false;
+    $_SESSION['rendering_polygon_color'] = htmlspecialchars($_POST['rendering_polygon_color']);
     
     
 /*

@@ -4,10 +4,8 @@ require_once "engine.php";
 
 function GetPolygon($splines) {
     global $space_before_word;
-    $color = "red";
+    $color = $_SESSION['rendering_polygon_color'];
     $outer_line_thickness = 0.001;
-    $left_spline = array();
-    $right_spline = array();
     
     //var_dump($splines); echo "<br>";
     // initialize path variable
@@ -16,9 +14,7 @@ function GetPolygon($splines) {
     $i = 0;
     $spline_length = count($splines);
 // outer loop: repeat until $i==$length (= all shadows - if there are several - have been rendered)
-while ($i<$spline_length) {    
-    // initialize next path
-    $path4 .= "\n<path d='"; // final spline path
+while ($i<$spline_length) {  
     // determine start and end of shadow
     $start = false;
     $end = false;
@@ -26,7 +22,12 @@ while ($i<$spline_length) {
     while (($i<$spline_length) && ($splines[$i+offs_th] == 1.0)) $i+=tuplet_length;
     if ($i<$spline_length) $start=$i;
     // if start found => scan up to end of shadow
-    if ($start) {
+    if ($start !== false) { // darned php ... 'auf' ended up in an endless loop sind start was found at position 0 ... which, by implicit type cast, is false ... *grrrrr*
+        $left_spline = null;
+        $right_spline = null;
+        $final_spline = null;
+        // initialize next path
+        $path4 .= "\n<path d='"; // final spline path
         $thickest_thickness = 0;
         $thickest_tuplet = 0;
         while (($i<$spline_length) && ($splines[$i+offs_th] > 1.0)) {
@@ -37,15 +38,22 @@ while ($i<$spline_length) {
             $i+=tuplet_length;
         }
         $end = $i;
-    }
-    echo "spline_length: $spline_length, i: $i, start: $start, end: $end thickest: $thickest_thickness at $thickest_tuplet<br>";
+      
+        // due to early exit points there might be no tuplet with th == 1.0 towards the end
+        // in that case, $end points to an inexisting tuplet at the very end of the array
+        // correct this by setting $end to preceeding tuplet
+        // NOTE: final tuplet (= last of array) in early exit points will be considered as ROUND
+        // (so it ends "smoothly" whereas in SE1 it ends "abruptly" like a sharp token)
+        if ($end == $spline_length) $end=$spline_length-tuplet_length;
+    //}
+    //echo "<br><br>spline_length: $spline_length, i: $i, start: $start, end: $end thickest: $thickest_thickness at $thickest_tuplet<br>";
     // determine if start and end points are sharp
     $start_sharp = ($splines[$start+offs_x1] == $splines[$start+offs_t1]) ? true : false;
     $end_sharp = ($splines[$end+offs_x1] == $splines[$end+offs_t1]) ? true : false;
-    echo "start_sharp: #$start_sharp# end_sharp: #$end_sharp#<br>";
+    //echo "start_sharp: #$start_sharp# end_sharp: #$end_sharp#<br>";
     
     // if start (and end) found => calculate polygon for shadow
-    if ($start) {
+    //if ($start) {
         // rendering loop
         for ($r=$start; $r<=$end; $r+=tuplet_length) {
             //echo "tuplet: r = $r<br>";
@@ -64,61 +72,65 @@ while ($i<$spline_length) {
             // calculate outer knot
             // needs: perpendicular vector relative to straight line that goes through preceeding and following knot
             // get coordinates of preceeding and following know
-            if ($r > tuplet_length) {
+            if ($r >= tuplet_length) {
                 // preceeding knot exists
                 if (($x != $tt1) && ($tt1 != 0)) { // x != tt1 means: original t1 == 0.5 (we are AFTER CalculateWord())
                     // condition $tt1 != 0: necessary because last tt1 in spline (= very end of the word/spline) is 0 if line is sharp
                     // this is probably a bug in CalculateWord (so the additional condition is just a workaround ...)
                     // entry tension is > 0 (round)
-                    echo "tuplet $r has tension != 0 (round)<br>";
+                    //echo "tuplet $r has tension != 0 (round)<br>";
                     $px = $splines[$r-tuplet_length+offs_x1]; // preceeding x (assume it exists)
                     $py = $splines[$r-tuplet_length+offs_y1]; //            y
                 } else {
-                    echo "tuplet $r has tension 0.0 (sharp)<br>";
+                    //echo "tuplet $r has tension 0.0 (sharp)<br>";
                     // problem with the following condition: word "Tube": preceeding t is 0 (but belongs to other token)
                     if ($r == $start) {
-                        echo "start knot: set px/py/fx/fy<br>";
+                        //echo "start knot: set px/py/fx/fy<br>";
                         $px = $splines[$r+offs_x1];
                         $py = $splines[$r+offs_y1];
                         //echo "set fx/fy to x = $x, y = $y<br>";
                         $fx = $splines[$r+tuplet_length+offs_x1];;
                         $fy = $splines[$r+tuplet_length+offs_y1];;
                         $use_this_thickness = $splines[$r+offs_th];
-                        echo "px = $px, py = $py, fx = $fx, fy = $fy<br>";
+                        //echo "px = $px, py = $py, fx = $fx, fy = $fy<br>";
                         
                     } elseif ($r == $end) {
-                        echo "end knot: set px/py/fx/fy<br>";
+                        //echo "end knot: set px/py/fx/fy<br>";
                         $px = $splines[$r-tuplet_length+offs_x1];
                         $py = $splines[$r-tuplet_length+offs_y1];
                         //echo "set fx/fy to x = $x, y = $y<br>";
                         $fx = $splines[$r+offs_x1];;
                         $fy = $splines[$r+offs_y1];;
                         $use_this_thickness = $splines[$r-tuplet_length+offs_th]; // use preceeding thickness (end == "decreasing" part)
-                         echo "px = $px, py = $py, fx = $fx, fy = $fy<br>";
+                        //echo "px = $px, py = $py, fx = $fx, fy = $fy<br>";
                       
                     } 
-                    /*
-                    if (($splines[$r-tuplet_length+offs_x1] == $splines[$r-tuplet_length+offs_t1])
-                        && ($r-tuplet_length >= $start)) {
-                        //echo "tuplet $r-8 has tension 0.0 and belongs to same token<br>";
-                        $px = $splines[$r-tuplet_length+offs_x1];
-                        $py = $splines[$r-tuplet_length+offs_y1];
-                        //echo "set fx/fy to x = $x, y = $y<br>";
-                        $fx = $x;
-                        $fy = $y;
-                        $use_this_thickness = $splines[$r-tuplet_length+offs_th];
-                    } else {
-                        //echo "tuplet $r-8 has tension != 0.0<br>"; 
-                        // entry tension == 0 (sharp connection => don't use preceeding knot for calculation)
-                        $px = $x;
-                        $py = $y;
-                    }
-                    */
                 }
             } else {
                 // no preceeding knot => set it to central knot x, y
-                $px = $x;
-                $py = $y;
+                //echo "no preceeding knot<br>";
+                if ($r == $start) {
+                        //echo "start knot: set px/py/fx/fy<br>";
+                        $px = $splines[$r+offs_x1];
+                        $py = $splines[$r+offs_y1];
+                        $fx = $splines[$r+tuplet_length+offs_x1];;
+                        $fy = $splines[$r+tuplet_length+offs_y1];;
+                        $use_this_thickness = $splines[$r+offs_th];
+                        //echo "px = $px, py = $py, fx = $fx, fy = $fy<br>";
+                        
+                    } elseif ($r == $end) {
+                        //echo "end knot: set px/py/fx/fy<br>";
+                        $px = $splines[$r-tuplet_length+offs_x1];
+                        $py = $splines[$r-tuplet_length+offs_y1];
+                        $fx = $splines[$r+offs_x1];;
+                        $fy = $splines[$r+offs_y1];;
+                        $use_this_thickness = $splines[$r-tuplet_length+offs_th]; // use preceeding thickness (end == "decreasing" part)
+                        //echo "px = $px, py = $py, fx = $fx, fy = $fy<br>";
+                      
+                    } else { 
+                        $px = $x;
+                        $py = $y;
+                    }
             }
             if ($fx === null) {
                 //echo "fx hasn't been set => set it<br>";
@@ -152,11 +164,11 @@ while ($i<$spline_length) {
                     // since in middle line modelling the thickness continues until the end of the corresponding part!
                     //$use_this_thickness = $thickest_thickness; // use thickest_thickness for beginning and end of thickest part
                     $use_this_thickness = $splines[$r-tuplet_length+offs_th];
-                } elseif (($r == $start) && (!$start_sharp)/*&& ($spline[$r+offs_x1] != $spline[$r+offs_t1])*/) $use_this_thickness = 0;
+                } elseif (($r == $start) && (!$start_sharp)) $use_this_thickness = 0;
                 elseif (($r == $end) && (!$end_sharp)) $use_this_thickness = 0;
             }
             $th = ($use_this_thickness === null) ? $splines[$r+offs_th] : $use_this_thickness;
-            echo "tuplet: $r thickness (se2): $th<br>";
+            //echo "tuplet: $r thickness (se2): $th<br>";
             
             $olx = $x + $nvx * ($th / 2 - $outer_line_thickness); // ol = outer left
             $oly = $y + $nvy * ($th / 2 - $outer_line_thickness);
@@ -219,38 +231,11 @@ while ($i<$spline_length) {
             $final_spline[] = $left_spline[$ii+offs_t2];
         }
         // now set tensions for connecting tuplet
-        /*echo "connecting tuplet (before): $connecting_tuplet<br>";
-        $ctx1 = $final_spline[$connecting_tuplet+offs_x1];
-        $cty1 = $final_spline[$connecting_tuplet+offs_y1];
-        $ctt1 = $final_spline[$connecting_tuplet+offs_t1];
-        $ctd1 = $final_spline[$connecting_tuplet+offs_d1];
-        $ctth = $final_spline[$connecting_tuplet+offs_th];
-        $ctdr = $final_spline[$connecting_tuplet+offs_dr];
-        $ctd2 = $final_spline[$connecting_tuplet+offs_d2];
-        $ctt2 = $final_spline[$connecting_tuplet+offs_t2];
-        $pt2 = $final_spline[$connecting_tuplet-1];
-        $ft1 = $final_spline[$connecting_tuplet+tuplet_length+offs_t1];
-        echo "($pt2) $ctx1 $cty1 $ctt1 $ctd1 $ctth $ctdr $ctd2 $ctt2 ($ft1)<br>";
-        */
         
         //$final_spline[$connecting_tuplet-1] = 0.0; // (preceeding) entry tension 1st knot
         $final_spline[$connecting_tuplet+offs_t1] = 0.0; // exit tension 1st knot
         $final_spline[$connecting_tuplet+offs_t2] = 0.0; // entry tension 2nd knot
         //$final_spline[$connecting_tuplet+tuplet_length+offs_t1] = 0.0; // (following) exit tension 2nd knot
-        
-        /*echo "connecting tuplet (after): $connecting_tuplet<br>";
-        $ctx1 = $final_spline[$connecting_tuplet+offs_x1];
-        $cty1 = $final_spline[$connecting_tuplet+offs_y1];
-        $ctt1 = $final_spline[$connecting_tuplet+offs_t1];
-        $ctd1 = $final_spline[$connecting_tuplet+offs_d1];
-        $ctth = $final_spline[$connecting_tuplet+offs_th];
-        $ctdr = $final_spline[$connecting_tuplet+offs_dr];
-        $ctd2 = $final_spline[$connecting_tuplet+offs_d2];
-        $ctt2 = $final_spline[$connecting_tuplet+offs_t2];
-        $pt2 = $final_spline[$connecting_tuplet-1];
-        $ft1 = $final_spline[$connecting_tuplet+tuplet_length+offs_t1];
-        echo "($pt2) $ctx1 $cty1 $ctt1 $ctd1 $ctth $ctdr $ctd2 $ctt2 ($ft1)<br>";
-        */
         
         // calculate complete polygon spline
         $final_spline = CalculateWord($final_spline);
@@ -275,9 +260,11 @@ while ($i<$spline_length) {
         
         // finish path4 
         //fill='none'
-        $path4 .= "' stroke='$color' stroke-width='$outer_line_thickness' style='fill:$color' Z/>"; // final bezier path        
+        $path4 .= "Z' stroke='$color' stroke-width='$outer_line_thickness' style='fill:$color' />"; // final bezier path        
+    
     }
-echo "i at the end of while loop: $i<br>";
+//echo "i at the end of while loop: $i<br>";
+//echo "path4: " . htmlspecialchars($path4) . "<br>";
 }
     return $path4;
 }
