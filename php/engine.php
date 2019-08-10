@@ -405,7 +405,7 @@ function InsertAuxiliaryLines( $width ) {
 
 function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
-    $combined_pretags, $separate_spline, $correction_shadow_factor;
+    $combined_pretags, $separate_spline;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
     
     //list( $splines, $width ) = TrimSplines( $splines );
@@ -1464,7 +1464,7 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
 }
 
 function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, $force_left_align ) {
-    global $distance_words, $vector_value_precision, $baseline_y, $word_tags, $correction_shadow_factor;
+    global $distance_words, $vector_value_precision, $baseline_y, $word_tags;
     //var_dump($word_tags);
     $angle = $_SESSION['token_inclination'];
     $stroke_width = $_SESSION['token_thickness'];
