@@ -3,7 +3,7 @@
 require_once "engine.php";
 
 function GetPolygon($splines) {
-    global $space_before_word;
+    global $space_before_word, $correction_shadow_factor;
     $color = $_SESSION['rendering_polygon_color'];
     $outer_line_thickness = 0.001;
     
@@ -168,6 +168,10 @@ while ($i<$spline_length) {
                 elseif (($r == $end) && (!$end_sharp)) $use_this_thickness = 0;
             }
             $th = ($use_this_thickness === null) ? $splines[$r+offs_th] : $use_this_thickness;
+            // adjust thickness with scaling factors
+            //$th = $th * $_SESSION['token_size'] / $correction_shadow_factor * $_SESSION['token_shadow'];
+            $th = AdjustThickness($th);
+                
             //echo "tuplet: $r thickness (se2): $th<br>";
             
             $olx = $x + $nvx * ($th / 2 - $outer_line_thickness); // ol = outer left

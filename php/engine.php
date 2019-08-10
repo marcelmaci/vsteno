@@ -139,6 +139,17 @@ function SetGlobalScalingVariables( $factor ) {
     $horizontal_distance_wide = $standard_height * 1 * $factor;
 }
 
+function AdjustThickness($thickness) {
+    global $correction_shadow_factor;
+    // adjust thickness using scaling factors
+    // global adjustment (shadowed and not shadowed)
+    // NOTE: $_SESSION['token_thickness'] is not taken into account here, since it is given as a parameter to CreateSVG() and DrawOneLineInLayouted()
+    $adjusted_thickness = $thickness * $_SESSION['token_size'] / $correction_shadow_factor;
+    // adjustment for shadowed parts
+    if ($thickness > 1.0) $adjusted_thickness *= $_SESSION['token_shadow'];
+    return $adjusted_thickness;
+}
+
 function CreateDeltaList( $angle ) {
     global $height_above_baseline, $height_for_delta_array;
     $deltalist = array();
@@ -394,7 +405,7 @@ function InsertAuxiliaryLines( $width ) {
 
 function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
-    $combined_pretags, $separate_spline;
+    $combined_pretags, $separate_spline, $correction_shadow_factor;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
     
     //list( $splines, $width ) = TrimSplines( $splines );
@@ -425,7 +436,9 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             $x2 = round($splines[$n+8] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $y2 = round($splines[$n+9], $vector_value_precision, PHP_ROUND_HALF_UP);
             
-            $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+            //$absolute_thickness = $stroke_width * $relative_thickness * $_SESSION['token_size'] / $correction_shadow_factor * $_SESSION['token_shadow']; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+            $absolute_thickness = $stroke_width * AdjustThickness($relative_thickness);
+                
             // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
             // this method doesn't work with n, m, b ... why???
             if ($splines[$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
@@ -1451,7 +1464,7 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
 }
 
 function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, $force_left_align ) {
-    global $distance_words, $vector_value_precision, $baseline_y, $word_tags;
+    global $distance_words, $vector_value_precision, $baseline_y, $word_tags, $correction_shadow_factor;
     //var_dump($word_tags);
     $angle = $_SESSION['token_inclination'];
     $stroke_width = $_SESSION['token_thickness'];
@@ -1557,6 +1570,9 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 $q1x = round($word_splines[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $q1y = round($word_splines[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $relative_thickness = ($_SESSION['rendering_middleline_yesno']) ? $word_splines[$i][$n+4] : 1.0;
+                $relative_thickness = AdjustThickness($relative_thickness);
+                // adjustment for shadowed parts
+                if ($original_thickness > 1.0) $relative_thickness *= $_SESSION['token_shadow'];
                 $unused = $word_splines[$i][$n+5];
                 $q2x = round($word_splines[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $q2y = round($word_splines[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
@@ -1582,6 +1598,8 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 $q1x = round($word_separate_spline[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $q1y = round($word_separate_spline[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $relative_thickness = $word_separate_spline[$i][$n+4];
+                $relative_thickness = AdjustThickness($relative_thickness);
+                
                 $unused = $word_separate_spline[$i][$n+5];
                 $q2x = round($word_separate_spline[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $q2y = round($word_separate_spline[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);

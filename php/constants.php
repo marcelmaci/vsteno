@@ -176,13 +176,14 @@ $posttokenlist = $punctuation . $only_posttokens . $numbers;  // treat punctuati
 $standard_height = 10;                          // height of one token like b, g, m etc.
 $svg_height = 6 * $standard_height;             // height for svg image
 $height_above_baseline = 4 * $standard_height;  // number of lines available above baseline
-$height_for_delta_array = $height_above_baseline + 4 * $standard_height; // create more deltas for words that go beyond system lines
+$height_for_delta_array = $height_above_baseline + 10 * $standard_height; // create more deltas for words that go beyond system lines
 $baseline_y = 40;                               // baseline for steno tokens
 $half_upordown = $standard_height / 2;          // value for tokens that have to be placed 1/2 line higher or lower
 $one_upordown = $standard_height;               //   "                                 "     1   "
 $horizontal_distance_none = 0;
 //$horizontal_distance_narrow = $standard_height / 4;
 $horizontal_distance_narrow = 0;
+$correction_shadow_factor = 1.6;                // needed for backwards compatibility with existing models
 
 $horizontal_distance_wide = $standard_height * 1.5;
 $space_at_end_of_stenogramm = $horizontal_distance_wide;    // defines horizontal distance between stenogramms
