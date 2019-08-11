@@ -89,7 +89,7 @@ Rendering:
 <input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 
 <input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon 
 <input type="text" name="rendering_polygon_color"  size="6" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
-Transparenz<input type="text" name="rendering_polygon_opacity"  size="6" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
+Deckungskraft <input type="text" name="rendering_polygon_opacity"  size="6" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
 
 <br>
 Vektor: 

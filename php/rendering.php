@@ -56,7 +56,7 @@ while ($i<$spline_length) {
         // (so it ends "smoothly" whereas in SE1 it ends "abruptly" like a sharp token)
         if ($end == $spline_length) $end=$spline_length-tuplet_length;
     //}
-    echo "<br><br>spline_length: $spline_length, i: $i, start: $start, end: $end thickest: $thickest_thickness at $thickest_tuplet<br>";
+    //echo "<br><br>spline_length: $spline_length, i: $i, start: $start, end: $end thickest: $thickest_thickness at $thickest_tuplet<br>";
     // determine if start and end points are sharp
     $start_sharp = ($splines[$start+offs_x1] == $splines[$start+offs_t1]) ? true : false;
     $end_sharp = ($splines[$end+offs_x1] == $splines[$end+offs_t1]) ? true : false;
@@ -64,7 +64,7 @@ while ($i<$spline_length) {
     // offs_t1 of last tuplet is 0 if knot is sharp
     $end_sharp = (($end+tuplet_length == $spline_length) && ($splines[$end+offs_t1] == 0)) ? true : $end_sharp;
     
-    echo "start_sharp: #$start_sharp# end_sharp: #$end_sharp#<br>";
+    //echo "start_sharp: #$start_sharp# end_sharp: #$end_sharp#<br>";
     
     // if start (and end) found => calculate polygon for shadow
     //if ($start) {
@@ -167,14 +167,18 @@ while ($i<$spline_length) {
             // offer middleangle as an option via session variable
             if (($_SESSION['rendering_vector_type'] === "middleangle") && ((($px != $x) && ($py != $y)) && (($x != $fx) && ($y != $fy)))) {
                 // only do recaculation if there are really three differents points that are found
+                //echo "recalculate middleangle<br>";
                 $v1x = $x - $px;
                 $v1y = $y - $py;
                 $v1d = sqrt($v1x*$v1x + $v1y*$v1y);
                 $v2x = $x - $fx;
                 $v2y = $y - $fy;
                 $v2d = sqrt($v2x*$v2x + $v2y*$v2y);
+                $oldpx = $px;
+                $oldpy = $py;
                 $px = $x - $v1x / $v1d * $v2d;    // make v1 the same length as v2
                 $py = $y - $v1y / $v1d * $v2d;
+                //echo "corrected: old: $oldpx, $oldpy; new: $px, $py<br>";
                 //echo "v1: $v1x, $v1y; v1d: $v1d; v2: $v2x, $v2y; v2d: $v2d<br>";
                 //echo "preceeding: $px, $py - central: $x, $y - following: $fx, $fy<br>";
             }
@@ -187,7 +191,8 @@ while ($i<$spline_length) {
             $nvx = - $vgy / $d;
             $nvy = $vgx / $d;
             // correct normal vector for horizontal modelling
-            if ($_SESSION['rendering_sharp_modelling'] === "horizontal") {
+            
+            if ((($r == $start) && ($start_sharp)) || (($r == $end) && ($end_sharp)) && ($_SESSION['rendering_sharp_modelling'] === "horizontal")) {
                 $angle = $_SESSION['token_inclination'];
                 $rad = deg2rad($angle);
                 $f = 1/sin($rad); // place that at beginning of function for permance reasons
@@ -197,7 +202,7 @@ while ($i<$spline_length) {
                 //echo "sign: $sign angle: $angle; rad: $rad; f: $f nvx: $nvx; nvy: $nvy<br>";
                
             }// elseif ($_SESSION['rendering_sharp_modelling'] === "tangent") {
-                
+            
             //}
         
             // normal vector right = same as left but with negated nvx, nvy (include it directly in the calculation)
@@ -240,8 +245,8 @@ while ($i<$spline_length) {
             // and modified splines.
             // modify entry/exit knots: place them near the upper left/lower right corner of polygon
             if ($_SESSION['rendering_sharp_modelling'] === "horizontal") {
-                echo "correct entry/exit knots for horizontal modelling<br>";
-                echo "r: $r start: $start end: $end<br>";
+                //echo "correct entry/exit knots for horizontal modelling<br>";
+                //echo "r: $r start: $start end: $end<br>";
                 if (($r == $start) && ($start_sharp)) {
                     // user upper left for entry knot
                     // use vgx/y to place it "near" the corner
@@ -255,18 +260,18 @@ while ($i<$spline_length) {
                     $vgxd = sqrt($vgx*$vgx + $vgy*$vgy);
                     $nvgx = $vgx / $vgxd;
                     $nvgy = $vgy / $vgxd;
-                    $fn1x = $nlx + $nvgx * $line_th; // final new x1
-                    $fn1y = $nly + $nvgy * $line_th;
-                    echo "old: $x, $y; olxy: $olx, $oly fn1xy: $fn1x, $fn1y<br>";
+                    $fn1x = $nlx+ $nvgx * ($line_th / 2 - $outer_line_thickness); // final new x1
+                    $fn1y = $nly + $nvgy * ($line_th / 2 - $outer_line_thickness);
+                    //echo "old: $x, $y; olxy: $olx, $oly fn1xy: $fn1x, $fn1y<br>";
                   
-                    $splines[$r+offs_x1] = $olx; // $fnlx;
-                    $splines[$r+offs_y1] = $oly; //$fnly;
-                    $splines[$r+offs_qx1] = $olx;
-                    $splines[$r+offs_qy1] = $oly;
+                    $splines[$r+offs_x1] = $fn1x; //$olx; 
+                    $splines[$r+offs_y1] = $fn1y; //$oly; 
+                    $splines[$r+offs_qx1] = $fn1x; // $olx;
+                    $splines[$r+offs_qy1] = $fn1y; // $oly;
                     // additionally modify preceeding control points if knot exists
                     if ($r>0) {
-                            $splines[$r-tuplet_length+offs_qx2] = $olx; //$fn1x;
-                            $splines[$r-tuplet_length+offs_qy2] = $oly; //$fn1y;
+                            $splines[$r-tuplet_length+offs_qx2] = $fn1x; // $olx; //$fn1x;
+                            $splines[$r-tuplet_length+offs_qy2] = $fn1y; //$oly; //$fn1y;
                     }
                 } elseif (($r == $end) && ($end_sharp)) {
                     // user lower right for entry knot
@@ -278,21 +283,22 @@ while ($i<$spline_length) {
                     $nrx = $x - $nvx * ($th / 2 - $outer_line_thickness - $line_th); // or = outer right (negated x, y of normal vector)
                     $nry = $y - $nvy * ($th / 2 - $outer_line_thickness - $line_th);
            
-                     echo "old: $x, $y; orxy: $orx, $ory fn1xy: $fn1x, $fn1y<br>";
-                  
+                   
                     $vgxd = sqrt($vgx*$vgx + $vgy*$vgy);
                     $nvgx = $vgx / $vgxd;
                     $nvgy = $vgy / $vgxd;
-                    $fn1x = $nrx + $nvgx * $line_th; // final new x1
-                    $fn1y = $nry + $nvgy * $line_th;
-                    $splines[$r+offs_x1] = $orx; //$fnlx;
-                    $splines[$r+offs_y1] = $ory; //$fnly;
-                    $splines[$r+offs_qx1] = $orx;
-                    $splines[$r+offs_qy1] = $ory;
+                    $fn1x = $nrx - $nvgx * ($line_th / 2 - $outer_line_thickness); // final new x1
+                    $fn1y = $nry - $nvgy * ($line_th / 2 - $outer_line_thickness);
+                    //echo "old: $x, $y; orxy: $orx, $ory fn1xy: $fn1x, $fn1y<br>";
+                
+                    $splines[$r+offs_x1] = $fn1x; // $orx; 
+                    $splines[$r+offs_y1] = $fn1y; // $ory;
+                    $splines[$r+offs_qx1] = $fn1x; // $orx;
+                    $splines[$r+offs_qy1] = $fn1y; //$ory;
                     // additionally modify control points of preceeding knot if it exists
                     if ($r>0) {
-                            $splines[$r-tuplet_length+offs_qx2] = $orx; //$fn1x; // qx1 inside same tuplet
-                            $splines[$r-tuplet_length+offs_qy2] = $ory; //$fn1y;
+                            $splines[$r-tuplet_length+offs_qx2] = $fn1x; //$orx; //$fn1x; // qx1 inside same tuplet
+                            $splines[$r-tuplet_length+offs_qy2] = $fn1y; //$ory; //$fn1y;
                     }
                 }
              }
@@ -387,7 +393,7 @@ while ($i<$spline_length) {
 //echo "i at the end of while loop: $i<br>";
 //echo "path4: " . htmlspecialchars($path4) . "<br>";
 }
-    var_dump($splines);
+    //var_dump($splines);
    return array($path4, $splines);
 }
 
