@@ -87,8 +87,20 @@ Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo (
 Rendering: 
 <?php /*echo "test:" . $_SESSION['rendering_middleline_yesno'] . "<";*/?>
 <input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 
-<input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon:
+<input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon 
 <input type="text" name="rendering_polygon_color"  size="6" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
+Transparenz<input type="text" name="rendering_polygon_opacity"  size="6" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
+
+<br>
+Vektor: 
+<input type="radio" name="rendering_vector_type" value="orthogonal" <?php echo ($_SESSION['rendering_vector_type'] === "orthogonal") ? "checked" : ""?>> orthogonal 
+<input type="radio" name="rendering_vector_type" value="middleangle" <?php echo ($_SESSION['rendering_vector_type'] === "middleangle") ? "checked" : ""?>> Halbwinkel 
+<br>
+Spitzen: 
+<input type="radio" name="rendering_sharp_modelling" value="orthogonal" <?php echo ($_SESSION['rendering_sharp_modelling'] === "orthogonal") ? "checked" : ""?>> orthogonal 
+<input type="radio" name="rendering_sharp_modelling" value="horizontal" <?php echo ($_SESSION['rendering_sharp_modelling'] === "horizontal") ? "checked" : ""?>> horizontal 
+<input type="radio" name="rendering_sharp_modelling" value="tangent" <?php echo ($_SESSION['rendering_sharp_modelling'] === "tangent") ? "checked" : ""?>> tangential 
+
 
 </td></tr>
 <tr><td>Sprache</td></tr>

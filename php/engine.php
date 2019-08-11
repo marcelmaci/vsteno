@@ -407,6 +407,12 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
     global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
     $combined_pretags, $separate_spline;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
+
+    // calculate polygon shadow before generating svg
+    // reason: in some cases GetPolygon() has to adjust values in splines
+    // these modifications have to occur before so that the take effect in the final svg
+    if ($_SESSION['rendering_polygon_yesno']) list($polygon_shadow,$splines) = GetPolygon( $splines );
+    else $polygon_shadow = "";
     
     //list( $splines, $width ) = TrimSplines( $splines );
     $pre = $combined_pretags;
@@ -424,6 +430,9 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
 
         // add word to svg
         for ($n = 0; $n <= $array_length - (tuplet_length*2); $n += tuplet_length) {
+            
+            $testx = $splines[$n];
+            $testy = $splines[$n+1];
             
             $x1 = round($splines[$n] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $y1 = round($splines[$n+1], $vector_value_precision, PHP_ROUND_HALF_UP);
@@ -483,8 +492,7 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             $svg_string .= "<!-- separate --><path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
         }
        
-        if ($_SESSION['rendering_polygon_yesno']) $polygon_shadow = GetPolygon( $splines );
-        else $polygon_shadow = "";
+       
         
         $svg_string .= "$polygon_shadow</g>$svg_not_compatible_browser_text</svg>";
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options

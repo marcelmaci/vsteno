@@ -150,6 +150,9 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_middleline_yesno'] = true;
     $_SESSION['rendering_polygon_yesno'] = false;
     $_SESSION['rendering_polygon_color'] = $_SESSION['token_color'];
+    $_SESSION['rendering_vector_type'] = "middleangle";
+    $_SESSION['rendering_sharp_modelling'] = "orthogonal";
+    $_SESSION['rendering_polygon_opacity'] = "0.5";
 }
 
 
@@ -292,6 +295,9 @@ if ($_POST['token_size'] != "") {
     $_SESSION['rendering_middleline_yesno'] = ($_POST['rendering_middleline_yesno'] === "yes") ? true : false;
     $_SESSION['rendering_polygon_yesno'] = ($_POST['rendering_polygon_yesno'] === "yes") ? true : false;
     $_SESSION['rendering_polygon_color'] = htmlspecialchars($_POST['rendering_polygon_color']);
+    $_SESSION['rendering_vector_type'] = htmlspecialchars($_POST['rendering_vector_type']);
+    $_SESSION['rendering_sharp_modelling'] = htmlspecialchars($_POST['rendering_sharp_modelling']);
+    $_SESSION['rendering_polygon_opacity'] = $_POST['rendering_polygon_opacity'];
     
     
 /*
