@@ -430,13 +430,13 @@ function InsertAuxiliaryLines( $width ) {
 
 function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
-    $combined_pretags, $separate_spline;
+    $combined_pretags, $separate_spline, $space_before_word;;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
 
     // calculate polygon shadow before generating svg
     // reason: in some cases GetPolygon() has to adjust values in splines
     // these modifications have to occur before so that the take effect in the final svg
-    if ($_SESSION['rendering_polygon_yesno']) list($polygon_shadow,$splines) = GetPolygon( $splines );
+    if ($_SESSION['rendering_polygon_yesno']) list($polygon_shadow,$splines) = GetPolygon( $splines, $space_before_word, 0 );
     else $polygon_shadow = "";
     
     //list( $splines, $width ) = TrimSplines( $splines );
@@ -1606,6 +1606,9 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             $color_htmlrgb = $_SESSION['token_color'];
             $stroke_dasharray = $_SESSION['token_style_custom_value']; 
             
+            // add polygon spline
+            list($polygon_spline, $word_splines[$i]) = GetPolygon($word_splines[$i], $word_position_x + $align_shift_x, $word_position_y + $extra_shift_y);
+                
             // insert word
             for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
             
@@ -1632,6 +1635,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             
                 //echo "ins: wrd($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
                 $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
+                $svg_string .= "$polygon_spline\n";
             }    
             // insert separate spline 
             // (note: there's only one separate spline per word ... which means: only one token can use a diacritic token per word ...

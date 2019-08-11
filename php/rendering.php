@@ -6,14 +6,14 @@ function sign( $number ) {
     return ( $number > 0 ) ? 1 : ( ( $number < 0 ) ? -1 : 0 );
 }
 
-function GetPolygon($splines) {
+function GetPolygon($splines, $shiftx, $shifty) {
     // jump function to test both variants: orthogonal and middle angle vector method
-    return GetPolygonMiddleAngle($splines);
+    return GetPolygonMiddleAngle($splines, $shiftx, $shifty);
     //return GetPolygonOrthogonal($splines);
 }
 
-function GetPolygonMiddleAngle($splines) {
-    global $space_before_word;
+function GetPolygonMiddleAngle($splines, $shiftx, $shifty) {
+    global $vector_value_precision;
     $color = $_SESSION['rendering_polygon_color'];
     $outer_line_thickness = 0.001;
      
@@ -217,8 +217,8 @@ while ($i<$spline_length) {
                     // since in middle line modelling the thickness continues until the end of the corresponding part!
                     //$use_this_thickness = $thickest_thickness; // use thickest_thickness for beginning and end of thickest part
                     $use_this_thickness = $splines[$r-tuplet_length+offs_th];
-                } elseif (($r == $start) && (!$start_sharp)) $use_this_thickness = 1.0;
-                elseif (($r == $end) && (!$end_sharp)) $use_this_thickness = 1.0;
+                } elseif (($r == $start) && (!$start_sharp)) $use_this_thickness = 0; // maybe modify thickness depending on number of shadowed knots
+                elseif (($r == $end) && (!$end_sharp)) $use_this_thickness = 0;
             }
             $th = ($use_this_thickness === null) ? $splines[$r+offs_th] : $use_this_thickness;
             // adjust thickness with scaling factors
@@ -407,18 +407,19 @@ while ($i<$spline_length) {
         
         //var_dump($final_spline);
         $length = count($final_spline);
-        $x1 = $final_spline[offs_x1] + $space_before_word;
-        $y1 = $final_spline[offs_y1];
+        $x1 = round($final_spline[offs_x1] + $shiftx, $vector_value_precision, PHP_ROUND_HALF_UP);
+        $y1 = round($final_spline[offs_y1] + $shifty, $vector_value_precision, PHP_ROUND_HALF_UP);
         $path4 .= "M $x1 $y1 ";
         //echo "start: M $x1 $y1<br>";
         
         for ($ii=0; $ii<$length-tuplet_length; $ii+=tuplet_length) {
-            $qx1 = $final_spline[$ii+offs_qx1] + $space_before_word;
-            $qy1 = $final_spline[$ii+offs_qy1];
-            $qx2 = $final_spline[$ii+offs_qx2] + $space_before_word;
-            $qy2 = $final_spline[$ii+offs_qy2];
-            $x2 = $final_spline[$ii+tuplet_length+offs_x1] + $space_before_word;
-            $y2 = $final_spline[$ii+tuplet_length+offs_y1];
+            // round($value, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $qx1 = round($final_spline[$ii+offs_qx1] + $shiftx, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $qy1 = round($final_spline[$ii+offs_qy1] + $shifty, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $qx2 = round($final_spline[$ii+offs_qx2] + $shiftx, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $qy2 = round($final_spline[$ii+offs_qy2] + $shifty, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $x2 = round($final_spline[$ii+tuplet_length+offs_x1] + $shiftx, $vector_value_precision, PHP_ROUND_HALF_UP);
+            $y2 = round($final_spline[$ii+tuplet_length+offs_y1] + $shifty, $vector_value_precision, PHP_ROUND_HALF_UP);
             $path4 .= "C $qx1 $qy1 $qx2 $qy2 $x2 $y2 ";
             //echo "bezier $ii: C $qx1 $qy1 $qx2 $qy2 $x2 $y2<br>";
         } 
@@ -427,7 +428,7 @@ while ($i<$spline_length) {
         // finish path4 
         //fill='none'
         $opacity = $_SESSION['rendering_polygon_opacity'];
-        $path4 .= "Z' stroke='$color' stroke-width='$outer_line_thickness' style='fill:$color' fill-opacity='$opacity' />"; // final bezier path        
+        $path4 .= "Z' stroke='$color' stroke-width='$outer_line_thickness' style='fill:$color' fill-opacity='$opacity' shape-rendering='geometricPrecision' />"; // final bezier path        
     
     }
 //echo "i at the end of while loop: $i<br>";

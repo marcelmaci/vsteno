@@ -153,7 +153,7 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_vector_type'] = "middleangle";
     $_SESSION['rendering_sharp_modelling'] = "horizontal";
     $_SESSION['rendering_polygon_opacity'] = "1";
-    $_SESSION['rendering_intermediateshadowpoints_yesno'] = true;
+    $_SESSION['rendering_intermediateshadowpoints_yesno'] = false;
     
 }
 
