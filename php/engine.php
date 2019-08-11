@@ -277,6 +277,31 @@ function CopyTokenToSplinesArray( $token, $base_x, $base_y, $token_list, $spline
         return $splines;
 }
 
+function GetControlPoints( $px0, $py0, $px1, $py1, $px2, $py2, $t1, $t2) {
+    // taken from global_functions.js
+    // returns control points for p1
+    $d01 = sqrt(pow($px1-$px0,2)+pow($py1-$py0,2));
+    $d12 = sqrt(pow($px2-$px1,2)+pow($py2-$py1,2));
+    $fa = $t1*$d01 / ($d01+$d12);
+    $fb = $t2*$d12 / ($d01+$d12);
+    $c1x = $px1 - $fa*($px2-$px0);
+    $c1y = $py1 - $fa*($py2-$py0);
+    $c2x = $px1 + $fb*($px2-$px0);
+    $c2y = $py1 + $fb*($py2-$py0);
+    return array( $c1x, $c1y, $c2x, $c2y );
+/* 
+    var d01=Math.sqrt(Math.pow(p0.x-p1.x,2)+Math.pow(p1.y-p0.y,2)); // 01 vs 10 - this is probably a bug in JS-code?!?
+    var d12=Math.sqrt(Math.pow(p2.x-p1.x,2)+Math.pow(p2.y-p1.y,2));
+    var fa=t1*d01/(d01+d12);   // scaling factor for triangle Ta
+    var fb=t2*d12/(d01+d12);   // ditto for Tb, simplifies to fb=t-fa
+    var p1x=p1.x-fa*(p2.x-p0.x);    // x2-x0 is the width of triangle T
+    var p1y=p1.y-fa*(p2.y-p0.y);    // y2-y0 is the height of T
+    var p2x=p1.x+fb*(p2.x-p0.x);
+    var p2y=p1.y+fb*(p2.y-p0.y);  
+    return [ new Point( p1x, p1y ), new Point( p2x, p2y ) ];
+*/
+}
+
 function CalculateWord( $splines ) {     // parameter $splines
         $array_length = count( $splines );
         // set control points for first knot to coordinates of first knot
@@ -631,6 +656,17 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
             $pt_type_entry = ($steno_tokens[$token][$i+offs_d1] == 98) ? 1 : $steno_tokens[$token][$i+offs_d1]; // not sure if this is correct ... ?! maybe distinguish: if token is first position => transform 98 to 1; if token is inside or last position => transform 98 to 0 (!?)
             $pt_type_exit = $steno_tokens[$token][$i+offs_d2];
             // dont insert: (1) connecting points, (2) intermediate shadow points, if token is not shadowed, 
+            
+            // test for polygon rendering
+            // don't insert intermediate shadow points if polygon rendering is active
+            //$_SESSION['rendering_intermediatshadowpoints_yesno'] = false;
+            //echo "intermediateyesno: #" . $_SESSION['rendering_intermediateshadowpoints_yesno'] . "#<br>";
+            //echo "polygonyesno: #" . $_SESSION['rendering_polygon_yesno'] . "#<br>";
+            if (($_SESSION['rendering_polygon_yesno']) && (!$_SESSION['rendering_intermediateshadowpoints_yesno']) && ($steno_tokens[$token][$i+offs_d1] == 5)) {
+                //echo "tuplet: $i => don't insert (intermediate shadow point with polygon rendering)<br>";
+                $insert_this_point = false;
+            } //else echo "tuplet: $i => insert<br>";
+        
             if (
                 ($pt_type_entry == connecting_point) 
                 || (($pt_type_entry == intermediate_shadow_point) && ($shadowed == "no")) 

@@ -57,7 +57,7 @@ $whitelist_variables .= " actual_model model_custom_or_standard prefixes_list st
 $whitelist_variables .= " spacer_token_combinations spacer_vowel_groups spacer_rules_list spacer_autoinsert license release_notes copyright_footer language_espeak analysis_type ";
 $whitelist_variables .= " phonetic_alphabet filter_out_prefixes_yesno filter_out_suffixes_yesno filter_out_words_yesno affixes_yesno phonetics_yesno block_list filter_list ";
 $whitelist_variables .= " model_version model_date required_version rendering_middleline_yesno rendering_polygon_yesno rendering_polygon_color rendering_vector_type rendering_sharp_modelling ";
-$whitelist_variables .= " rendering_polygon_opacity ";
+$whitelist_variables .= " rendering_polygon_opacity rendering_intermediateshadowpoints_yesno ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;

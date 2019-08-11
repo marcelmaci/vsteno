@@ -71,7 +71,7 @@ while ($i<$spline_length) {
         // rendering loop
         for ($r=$start; $r<=$end; $r+=tuplet_length) {
             //echo "tuplet: r = $r<br>";
-            // for testing just draw lines (shifted by x+=5) 
+            // initialize variables
             $px = null;
             $py = null;
             $fx = null;
@@ -217,8 +217,8 @@ while ($i<$spline_length) {
                     // since in middle line modelling the thickness continues until the end of the corresponding part!
                     //$use_this_thickness = $thickest_thickness; // use thickest_thickness for beginning and end of thickest part
                     $use_this_thickness = $splines[$r-tuplet_length+offs_th];
-                } elseif (($r == $start) && (!$start_sharp)) $use_this_thickness = 0;
-                elseif (($r == $end) && (!$end_sharp)) $use_this_thickness = 0;
+                } elseif (($r == $start) && (!$start_sharp)) $use_this_thickness = 1.0;
+                elseif (($r == $end) && (!$end_sharp)) $use_this_thickness = 1.0;
             }
             $th = ($use_this_thickness === null) ? $splines[$r+offs_th] : $use_this_thickness;
             // adjust thickness with scaling factors
@@ -336,6 +336,8 @@ while ($i<$spline_length) {
         // compose final spline combinig right and left splines
         // first copy over right spline
         $final_spline = $right_spline;
+        $patch_first_right = count($final_spline);
+        $patch_last_left = $patch_first_right - tuplet_length;
         // connect right and left spline by a straight line
         // to do so, set entry/exit tensions 0 in last and first knots
         // (this makes it easier to calculate final polygon shape since function CalculateWord can be used)
@@ -365,6 +367,44 @@ while ($i<$spline_length) {
         
         // calculate complete polygon spline
         $final_spline = CalculateWord($final_spline);
+        // now patch result with start/end control points 
+        // start with first knot in final spline on the left side
+        if (($start>0) && (!$start_sharp)) {
+            $tpx0 = $splines[$start-tuplet_length+offs_x1]; // temp point x0; get that knot from original spline to calculate control points
+            $tpy0 = $splines[$start-tuplet_length+offs_y1];
+            $tpx1 = $final_spline[0+offs_x1]; 
+            $tpy1 = $final_spline[0+offs_y1];
+            $tpx2 = $final_spline[0+tuplet_length+offs_x1]; 
+            $tpy2 = $final_spline[0+tuplet_length+offs_y1];
+            list( $c1x, $c1y, $c2x, $c2y) = GetControlPoints( $tpx0, $tpy0, $tpx1, $tpy1, $tpx2, $tpy2, 0.5, 0.5); 
+            //echo "p0: $tpx0, $tpy0; p1: $tpx1, $tpy1; p2: $tpx2, $tpy2<br>";
+            //echo "c1: $c1x, $c1y; c2: $c2x, $c2y<br>";
+            //echo "splines c2: " . $splines[$start+offs_qx1] . ", " . $splines[$start+offs_qy1] . "<br>";
+            $final_spline[0+offs_qx1] = $c2x; //$splines[$start+offs_qx1];
+            $final_spline[0+offs_qy1] = $c2y; //$splines[$start+offs_qy1];
+        }
+        // do the same with last left
+        if (($end+tuplet_length <= $spline_length) && (!$end_sharp)) {
+            //var_dump($splines);
+           // echo "<br>";
+            //var_dump($final_spline);
+            //echo "<br>";
+            
+            //echo "end: $end; patch_last_left: $patch_last_left<br>";
+            $tpx0 = $final_spline[$patch_last_left-tuplet_length+offs_x1]; // temp point x0; get that knot from original spline to calculate control points
+            $tpy0 = $final_spline[$patch_last_left-tuplet_length+offs_y1];
+            $tpx1 = $final_spline[$patch_last_left+offs_x1]; 
+            $tpy1 = $final_spline[$patch_last_left+offs_y1];
+            $tpx2 = $splines[$end+tuplet_length+offs_x1]; 
+            $tpy2 = $splines[$end+tuplet_length+offs_y1];
+            list( $c1x, $c1y, $c2x, $c2y) = GetControlPoints( $tpx0, $tpy0, $tpx1, $tpy1, $tpx2, $tpy2, 0.5, 0.5); 
+            //echo "p0: $tpx0, $tpy0; p1: $tpx1, $tpy1; p2: $tpx2, $tpy2<br>";
+            //echo "c1: $c1x, $c1y; c2: $c2x, $c2y<br>";
+            //echo "splines c2: " . $splines[$start+offs_qx1] . ", " . $splines[$start+offs_qy1] . "<br>";
+            $final_spline[$patch_last_left-tuplet_length+offs_qx2] = $c1x; 
+            $final_spline[$patch_last_left-tuplet_length+offs_qy2] = $c1y;             
+        }
+        
         //var_dump($final_spline);
         $length = count($final_spline);
         $x1 = $final_spline[offs_x1] + $space_before_word;

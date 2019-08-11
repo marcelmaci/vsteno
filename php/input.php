@@ -89,17 +89,17 @@ Rendering:
 <input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 
 <input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon 
 <input type="text" name="rendering_polygon_color"  size="6" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
-Deckungskraft <input type="text" name="rendering_polygon_opacity"  size="6" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
-
+Deckkraft <input type="text" name="rendering_polygon_opacity"  size="6" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
+<input type="checkbox" name="rendering_intermediateshadowpoints_yesno" value="yes" <?php echo ($_SESSION['rendering_intermediateshadowpoints_yesno']) ? "checked" : ""?>> Zwischenpunkte
 <br>
-Vektor: 
-<input type="radio" name="rendering_vector_type" value="orthogonal" <?php echo ($_SESSION['rendering_vector_type'] === "orthogonal") ? "checked" : ""?>> orthogonal 
+Umriss: 
+<input type="radio" name="rendering_vector_type" value="orthogonal" <?php echo ($_SESSION['rendering_vector_type'] === "orthogonal") ? "checked" : ""?>> Normalvektor 
 <input type="radio" name="rendering_vector_type" value="middleangle" <?php echo ($_SESSION['rendering_vector_type'] === "middleangle") ? "checked" : ""?>> Halbwinkel 
 <br>
 Spitzen: 
 <input type="radio" name="rendering_sharp_modelling" value="orthogonal" <?php echo ($_SESSION['rendering_sharp_modelling'] === "orthogonal") ? "checked" : ""?>> orthogonal 
 <input type="radio" name="rendering_sharp_modelling" value="horizontal" <?php echo ($_SESSION['rendering_sharp_modelling'] === "horizontal") ? "checked" : ""?>> horizontal 
-<input type="radio" name="rendering_sharp_modelling" value="tangent" <?php echo ($_SESSION['rendering_sharp_modelling'] === "tangent") ? "checked" : ""?>> tangential 
+<!--<input type="radio" name="rendering_sharp_modelling" value="tangent" <?php echo ($_SESSION['rendering_sharp_modelling'] === "tangent") ? "checked" : ""?>> tangential--> 
 
 
 </td></tr>

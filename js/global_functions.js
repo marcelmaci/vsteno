@@ -51,7 +51,7 @@
  
 // bezier functions
 function getControlPoints( p0, p1, p2, t1, t2) {
-    var d01=Math.sqrt(Math.pow(p0.x-p1.x,2)+Math.pow(p1.y-p0.y,2));
+    var d01=Math.sqrt(Math.pow(p1.x-p0.x,2)+Math.pow(p1.y-p0.y,2));
     var d12=Math.sqrt(Math.pow(p2.x-p1.x,2)+Math.pow(p2.y-p1.y,2));
     var fa=t1*d01/(d01+d12);   // scaling factor for triangle Ta
     var fb=t2*d12/(d01+d12);   // ditto for Tb, simplifies to fb=t-fa

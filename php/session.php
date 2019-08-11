@@ -147,12 +147,14 @@ function InitializeSessionVariables() {
     $_SESSION['phonetic_alphabet'] = "espeak";
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
-    $_SESSION['rendering_middleline_yesno'] = true;
-    $_SESSION['rendering_polygon_yesno'] = false;
+    $_SESSION['rendering_middleline_yesno'] = false;
+    $_SESSION['rendering_polygon_yesno'] = true;
     $_SESSION['rendering_polygon_color'] = $_SESSION['token_color'];
     $_SESSION['rendering_vector_type'] = "middleangle";
-    $_SESSION['rendering_sharp_modelling'] = "orthogonal";
-    $_SESSION['rendering_polygon_opacity'] = "0.5";
+    $_SESSION['rendering_sharp_modelling'] = "horizontal";
+    $_SESSION['rendering_polygon_opacity'] = "1";
+    $_SESSION['rendering_intermediateshadowpoints_yesno'] = true;
+    
 }
 
 
@@ -298,8 +300,8 @@ if ($_POST['token_size'] != "") {
     $_SESSION['rendering_vector_type'] = htmlspecialchars($_POST['rendering_vector_type']);
     $_SESSION['rendering_sharp_modelling'] = htmlspecialchars($_POST['rendering_sharp_modelling']);
     $_SESSION['rendering_polygon_opacity'] = $_POST['rendering_polygon_opacity'];
-    
-    
+    $_SESSION['rendering_intermediateshadowpoints_yesno'] = ($_POST['rendering_intermediateshadowpoints_yesno'] === "yes") ? true : false;
+           
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";
     echo "actual_model: " . $_SESSION['actual_model'] . "<br>";
