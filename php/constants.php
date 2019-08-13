@@ -25,10 +25,10 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_name = "Hephaistos"; // official release name
+const version_name = "Hephaistos (latest, 12. August 2019)"; // official release name
 const version_number = 0.1; // two digit version number (can be used to test compatibility with models)
-const version_commit_id = "4f09ae3ab48e06fb2357a7437a7fcf9321e3c6f6";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "26. Juli 2019";                                  // idem
+const version_commit_id = "c2d7cc7ffd62c921f0707717c30abbee235ddceb";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "12. August 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)

@@ -1607,8 +1607,9 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             $stroke_dasharray = $_SESSION['token_style_custom_value']; 
             
             // add polygon spline
-            list($polygon_spline, $word_splines[$i]) = GetPolygon($word_splines[$i], $word_position_x + $align_shift_x, $word_position_y + $extra_shift_y);
-                
+            if ($_SESSION['rendering_polygon_yesno']) list($polygon_spline, $word_splines[$i]) = GetPolygon($word_splines[$i], $word_position_x + $align_shift_x, $word_position_y + $extra_shift_y);
+            else $polygon_spline = "";
+            
             // insert word
             for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
             
@@ -1769,7 +1770,7 @@ function CalculateLayoutedSVG( $text_array ) {
     $word_position_y = $starty; $max_height = $_SESSION['output_height'];
     $bottom_limit = $max_height-$bottom_margin; // -$line_height; // baseline_y-bug: impossible to set baseline to 0 in calculation; extra_shift_y to correct bug etc. => has to be investigated!
     
-    $svg_string = "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
+    $svg_string = "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\" style=\"shape-rendering:geometricPrecision\">\n";
     $svg_string .= InsertPageNumber();
     $svg_string .= InsertLineNumbers();
     
@@ -1819,7 +1820,7 @@ function CalculateLayoutedSVG( $text_array ) {
             */ 
             
             $tokenlist = NormalText2TokenList( $single_word );
-            
+            //var_dump($tokenlist);
             //echo "pretags: " . htmlspecialchars($pre) . "<br>";
             //echo "Session(token_color): " . $_SESSION['token_color'] . "<br>";
             $pre_html_tag_list = "";                                                             // must be set to "", because following options returns tags that aren't there ... ?!?

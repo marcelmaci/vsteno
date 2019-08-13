@@ -147,6 +147,16 @@ function InitializeSessionVariables() {
     $_SESSION['phonetic_alphabet'] = "espeak";
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
+    // use legacy configuration for www.steno.ch
+    $_SESSION['rendering_middleline_yesno'] = true;
+    $_SESSION['rendering_polygon_yesno'] = false;
+    $_SESSION['rendering_polygon_color'] = $_SESSION['token_color'];
+    $_SESSION['rendering_vector_type'] = "middleangle";
+    $_SESSION['rendering_sharp_modelling'] = "horizontal";
+    $_SESSION['rendering_polygon_opacity'] = "1";
+    $_SESSION['rendering_intermediateshadowpoints_yesno'] = false;
+
+/*
     $_SESSION['rendering_middleline_yesno'] = false;
     $_SESSION['rendering_polygon_yesno'] = true;
     $_SESSION['rendering_polygon_color'] = $_SESSION['token_color'];
@@ -154,7 +164,7 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_sharp_modelling'] = "horizontal";
     $_SESSION['rendering_polygon_opacity'] = "1";
     $_SESSION['rendering_intermediateshadowpoints_yesno'] = false;
-    
+*/    
 }
 
 
