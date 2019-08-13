@@ -74,9 +74,72 @@ function GetPolygonMiddleAngle($splines, $shiftx, $shifty) {
             $end_sharp = (($end+tuplet_length == $spline_length) && ($splines[$end+offs_t1] == 0)) ? true : $end_sharp;
     
             //echo "start_sharp: #$start_sharp# end_sharp: #$end_sharp#<br>";
-    
+            if (($start_sharp) && ($_SESSION['rendering_lineoverpass_yesno']) && ($_SESSION['rendering_sharp_modelling'] === "horizontal")) {
+                // tokens that start and end with horizontal line (horizontal modelling) look different from smoothly rendered tokens
+                // because they do not overpass the line (like smooth tokens), but follow exactly the horizontal line.
+                // This can be corrected with the option 'rendering_lineoverpass_yesno'. In this case, patch the original splines
+                // by placing knot a little bit 'higher' (= above the horizontal line). Distance from horizontal line to corrected
+                // knot should be thickness / 2.
+                //echo "calculate lineoverpass start<br>";
+                // get start knot
+                $snx = $splines[$start+offs_x1];
+                $sny = $splines[$start+offs_y1];
+                // vector to following knot
+                $snvx = $snx - $splines[$start+tuplet_length+offs_x1];
+                $snvy = $sny - $splines[$start+tuplet_length+offs_y1];
+                // normalize vector
+                $snvd = sqrt($snvx*$snvx + $snvy*$snvy);
+                $snvx /= $snvd;
+                $snvy /= $snvd;
+                // calculate new knot and patch splines
+                //echo "original knot: " . $splines[$start+offs_x1] . ", " . $splines[$start+offs_y1] . "<br>";
+                $sth = $splines[$start+offs_th]; // thickness start knot
+                $factor = AdjustThickness($sth) / 2 -  $outer_line_thickness;
+                $splines[$start+offs_x1] = $snx + $factor * $snvx;
+                $splines[$start+offs_y1] = $sny + $factor * $snvy;
+                //echo "new knot: " . $splines[$start+offs_x1] . ", " . $splines[$start+offs_y1] . "<br>";
+                // patch also control points
+                // start knot
+                $splines[$start+offs_qx1] = $splines[$start+offs_x1]; // tension = 0 = sharp = same value
+                $splines[$start+offs_qy1] = $splines[$start+offs_y1];
+                // preceeding
+                if ($start>0) {
+                    $splines[$start-tuplet_length+offs_qx2] = $splines[$start+offs_x1];
+                    $splines[$start-tuplet_length+offs_qy2] = $splines[$start+offs_y1];
+                }
+            }
+            // same for end knot
+            if (($end_sharp) && ($_SESSION['rendering_lineoverpass_yesno']) && ($_SESSION['rendering_sharp_modelling'] === "horizontal")) {
+                //echo "calculate lineoverpass end<br>";
+                // get end knot
+                $snx = $splines[$end+offs_x1];
+                $sny = $splines[$end+offs_y1];
+                // vector to preceeding knot
+                $snvx = $snx - $splines[$end-tuplet_length+offs_x1];
+                $snvy = $sny - $splines[$end-tuplet_length+offs_y1];
+                // normalize vector
+                $snvd = sqrt($snvx*$snvx + $snvy*$snvy);
+                $snvx /= $snvd;
+                $snvy /= $snvd;
+                // calculate new knot and patch splines
+                //echo "original knot: " . $splines[$end+offs_x1] . ", " . $splines[$end+offs_y1] . "<br>";
+                $sth = $splines[$end-tuplet_length+offs_th]; // thickness end knot = preceeding thickness (se1) 
+                $factor = AdjustThickness($sth) / 2 -  $outer_line_thickness;
+                $splines[$end+offs_x1] = $snx + $factor * $snvx;
+                $splines[$end+offs_y1] = $sny + $factor * $snvy;
+                //echo "new knot: " . $splines[$end+offs_x1] . ", " . $splines[$end+offs_y1] . "<br>";
+                // patch also control points
+                // start knot
+                $splines[$end+offs_qx1] = $splines[$end+offs_x1]; // tension = 0 = sharp = same value
+                $splines[$end+offs_qy1] = $splines[$end+offs_y1];
+                // preceeding
+                if ($end>0) {
+                    $splines[$end-tuplet_length+offs_qx2] = $splines[$end+offs_x1];
+                    $splines[$end-tuplet_length+offs_qy2] = $splines[$end+offs_y1];
+                }
+            }
+            
             // if start (and end) found => calculate polygon for shadow
-    
             for ($r=$start; $r<=$end; $r+=tuplet_length) {
                 //echo "tuplet: r = $r<br>";
                 // initialize variables

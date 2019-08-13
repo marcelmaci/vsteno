@@ -88,9 +88,11 @@ Rendering:
 <?php /*echo "test:" . $_SESSION['rendering_middleline_yesno'] . "<";*/?>
 <input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 
 <input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon 
-<input type="text" name="rendering_polygon_color"  size="6" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
-Deckkraft <input type="text" name="rendering_polygon_opacity"  size="6" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
+<input type="text" name="rendering_polygon_color"  size="4" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
+Deckkraft <input type="text" name="rendering_polygon_opacity"  size="2" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
 <input type="checkbox" name="rendering_intermediateshadowpoints_yesno" value="yes" <?php echo ($_SESSION['rendering_intermediateshadowpoints_yesno']) ? "checked" : ""?>> Zwischenpunkte
+<input type="checkbox" name="rendering_lineoverpass_yesno" value="yes" <?php echo ($_SESSION['rendering_lineoverpass_yesno']) ? "checked" : ""?>> Linienübertritt
+
 <br>
 Umriss: 
 <input type="radio" name="rendering_vector_type" value="orthogonal" <?php echo ($_SESSION['rendering_vector_type'] === "orthogonal") ? "checked" : ""?>> Normalvektor 

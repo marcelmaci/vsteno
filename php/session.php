@@ -155,6 +155,7 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_sharp_modelling'] = "horizontal";
     $_SESSION['rendering_polygon_opacity'] = "1";
     $_SESSION['rendering_intermediateshadowpoints_yesno'] = false;
+    $_SESSION['rendering_lineoverpass_yesno'] = true;
 
 /*
     $_SESSION['rendering_middleline_yesno'] = false;
@@ -311,6 +312,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['rendering_sharp_modelling'] = htmlspecialchars($_POST['rendering_sharp_modelling']);
     $_SESSION['rendering_polygon_opacity'] = $_POST['rendering_polygon_opacity'];
     $_SESSION['rendering_intermediateshadowpoints_yesno'] = ($_POST['rendering_intermediateshadowpoints_yesno'] === "yes") ? true : false;
+    $_SESSION['rendering_lineoverpass_yesno'] = ($_POST['rendering_lineoverpass_yesno'] === "yes") ? true : false;
            
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";
