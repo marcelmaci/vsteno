@@ -63,7 +63,8 @@ dass VSTENO bekannter wird (und so in Zukunft vielleicht auf mehr Unterstützung
 <a href="mailto:m.maci@gmx.ch">melden 
 Sie sich</a>! Mit VSTENO lässt sich im Prinzip jedes beliebige System in relativ kurzer Zeit umsetzen.</p></li>
 </ul>
-<p><b>[UPDATE 14.08.19:]</b> <a href="release_notes.php">Release notes</a> mit Preview auf die nächste Version veröffentlicht.</p>
+<p><b>[UPDATE 14.08.19:]</b> <a href="release_notes.php">Release notes</a> mit Preview auf die nächste Version veröffentlicht. Aktuelle Informationen 
+zur neuen <a href="../docs/Umrissmodellierung.pdf">Umrissmodellierung</a>.</p>
 <h2>Danke</h2>
 <p>Mit der Release von VSTENO V0.1 Hephaistos bedanke ich mich ganz offiziell bei Frau Yvonne Reith vom Schweizerischen 
 Stenografenverband, welche seit Februar unzählige Rückmeldungen zu Korrektheit und Schriftbild gemacht und damit einen 
