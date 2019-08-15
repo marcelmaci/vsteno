@@ -379,11 +379,11 @@
 		"&U" => { /*header*/ 5, 0.5, 0, 0, 0, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RPB:RP", /*data*/ 0, 5, 0, 1, 3, 0, 0, 0,  /**/ 5, 0, 0, 0, 1, 0, 1, 0 }
 		"&O" => { /*header*/ 6.75, 0.5, 0, 0.5, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNB:RN", /*data*/ 0, 5, 0, 1, 1.5, 0, 0, 0.5,  /**/ 0.75, 3, 0.5, 0, 3, 0, 0, 0.5,  /**/ 6, 2.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 6.75, 0, 0.5, 0, 1, 0, 1, 0 }
 		"&I" => { /*header*/ 2, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0.5, 1, 0.5, 1, 2, 0, 0, 0.5,  /**/ 1, 0.5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 0.5, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 0.5, 0.5, 0, 1, 0, 0, 0,  /**/ 0.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 1, 0.5, 0, 1, 0, 1, 0 }
-		"-E" => { /*header*/ 1.25, 0.5, 0, 0, 4, 1, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, /*data*/ -1, 5, 0, 1, 3, 0, 0, 0,  /**/ -1, 5, 0, 0, 3, 0, 1, 0 }
+		"-E" => { /*header*/ 1.25, 0.5, 0, 0, 4, 1, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 3, 0, 0, 0,  /**/ 0, 5, 0, 0, 3, 0, 1, 0 }
 		"-A" => { /*header*/ 0, 0.5, 0, 0.5, 0, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0 }
 		"-U" => { /*header*/ 5, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 3, 0, 0, 0,  /**/ 5, 0, 0, 0, 1, 0, 1, 0 }
 		"-O" => { /*header*/ 6.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 1.5, 0, 0, 0.5,  /**/ 0.75, 3, 0.5, 0, 3, 0, 0, 0.5,  /**/ 6, 2.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 6.75, 0, 0.5, 0, 1, 0, 1, 0 }
-		"-I" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 2, 10, 0, 1, 3, 0, 0, 0,  /**/ 2, 10, 1, 0, 3, 0, 1, 0 }
+		"-I" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
 		"-EI" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
 		"-^EI" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
 		"/I" => { /*header*/ 1.25, 0.5, 0, 0.5, 1, 1, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 10, 0, 1, 1, 0, 0, 0 }
@@ -627,8 +627,9 @@
 		"&hellip;" => "…"; // ellipsis (try to use one character defined as global variable punctuation in php)
 		"\.\.\." => "…";
 		//"…" => "…";
-		"–" => "[~~]"; // blocks calculation in layouted mode
- 		" &ndash; " => " [~~] "; // Gedankenstrich
+		"–" => "&ndash;"; // blocks calculation in layouted mode
+ 		"—" => " [~~] ";
+		" &ndash; " => " [~~] "; // Gedankenstrich
 		"&ndash;" => "="; // blocks calculation in layouted mode // probably obsolete?!
 		"&rs?aquo;" => "«"; 
 		"&ls?aquo;" => "»";
@@ -783,23 +784,24 @@
 		"^(re)?ex(ped)" => "$1{EX}ped";	// (re)expedición
 		"^ex(quisit)" => "es$1";	// exquisito
 		"^(in|co)?ex(?!(?:c[rluao]|[pt]))" => "$1{EX}$2";
-		"^(in)?sub" => { "$1{SUB}", "s(ú|u)bit" };
+		"^(in)?sub" => { "$1{SUB}", "[Ss](ú|u)bit", "[Ss]ubi" };
 		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl", "[Pp]eriodista", "[Pp]erit", "[Pp]erro", "[Pp]ericia", "[Pp]er(?:i|í)(?:o|ó)d" }; // not perder and all its forms
 		"^(in)?tran?s" => "$1{TRAS}";
-		"^(des)?inte?r" => { "$1{INTER}", "intermin", "intrad" }; // not: interminable, intraducible
+		"^(des)?inte?r" => { "$1{INTER}", "[Ii]ntermin", "[Ii]ntrad" }; // not: interminable, intraducible
 		"^(bien)?estar$" => "$1{ESTAR}";
 		"^bi-?en" => "{BIEN}";
 		"^estuv" => "{ESTUV}";
-		"^est(?!r)" => { "{EST}", "[Ee]stac", "[Ee]sti", "[Ee]sten", "[Ee]st(?:é|e)r", "[Ee]stanc" }; // does not apply to estación, estirar
+		"^est(?!r)" => { "{EST}", "[Ee]stac", "[Ee]sti", "[Ee]sten", "[Ee]st(?:é|e)r", "[Ee]stanc", "[Ee]stud", "[Ee]stant" }; // does not apply to estación, estirar
 		"^ser(é|á[ns]?|emos|éis|ía(?:[sn]|amos|ais)?)?$" => "{SER}$1";
 		"^son$" => "{SON}";
+		"^unos" => "{UNO}os"; // not clear: unos (as "unas" also): no indication in Meier!
 		"^uno?$" => "{UNO}";
-		"^una$" => "{UNA}";
+		"^una(s?)$" => "{UNA}$1";
 		"^ant[ei]" => { "{ANTE}", "[Aa]ntena", "[Aa]nt(?:í|i)[gqc]", "[Aa]ntera" };
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
 		"^(en)?contr" => "$1{CONTR}";
-		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]", "[Cc]ocin", "[Cc]olga", "[Cc]olilla", "[Cc]ord" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobrent" => "{SOBRE}ent"; // sobrentender (sobreentender)
 		"^sobre?|sor" => { "{SOBRE}", "[Ss]obri", "[Ss][oó]rd" }; // sobrio/as, sordo, sórdido (accent necessary since pattern is compared to original word => is this a good idea?!?)
 		"^gener" => "{GENER}";
@@ -810,12 +812,12 @@
 		"^se(ñ|n)or" => "{SENOR}";
 		"^se(ñ|n)ora$" => "{SENORA}";
 		"^suiz" => "{SUIZ}";
-		"^(des)?in" => "$1{IN}";
+		"^(des)?in" => { "$1{IN}", "[Ii]ndi[oa]" };
 		"^edad(es)?$" => "e{TAD}$1";
 		"^ciudad(es)?$" => "s{TAD}$1"; // claro ... eso se llama: mutilar una palabra ...
 		"rt(?!(?:ud|ad)(?:es)?)" => "[RT]"; // early bundler: avoid following rule in apartado, portador etc.
 		"c[ei](?:t[au]|da)d(?![oa]s?)" => "s{TAD}"; // 1st vowel falls out
-		"(?:ui|[ei])?(?:t[au]|da)d(?![oa]s?)" => "{TAD}"; // 1st vowel falls out
+		"(?:ui|[ei])?(?:ta|da)d(?![oa]s?)" => "{TAD}"; // 1st vowel falls out
 		"c(?:í|i)sim([oa]s?)$" => "s{ISIM}$1";
 		"(?:í|i)sim([oa]s?)$" => "{ISIM}$1";
 		"ito$" => "{ITO}";
@@ -845,7 +847,7 @@
 		"sc([ei])" => "s$1";  // scientífico, escena
 		"cc([ei])" => "x$1";
 		"c([ei]|{IT)" => "s$1";
-		"c([aou])" => "k$1";
+		"c([aouáóú])" => "k$1";
 		"{EX}s" => "{EX}"; // simplificación
 		"z" => "s";
 		"([aeiou])h([aeiou])" => "$1[H']$2"; // preserve h 
@@ -1011,6 +1013,7 @@
 		
 		// vowels at end of the words
 		"e$" => "[-E]";
+		"\[RL\]a$" => "[RL]O[EN]"; // keep token names as in original (mother) system
 		"a$" => "[EN]"; // keep token names as in original (mother) system
 		"[Dd]id[gh]e\[VR\]idoo" => "didherido";
 		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "(?<!.)paso", "^[Oo]slo$", "[Dd]idgerido" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
@@ -1095,6 +1098,7 @@
 		"e{TAD}" => "[E][LES]{TAD}";
 
 		// preserved h
+		"a\[H'\]" => "A[&A]";
 		"\[H'\]" => "[LES]";
 
 		// 2nd step rewriting (= rewrite rewritten tokens)
@@ -1377,6 +1381,9 @@
 
 		// assign 5 to the rest (standard value)
 		//"\[#d..?\]" => "[#5]";
+
+		// recorrections (wanted to avoid that, but ...)
+		"(\[auf\]\[)#3(\]\[s\])" => "$1#2-$2";
 
 		// convert all to upper case for final rendering
 		"([a-z])" => "strtoupper()";
