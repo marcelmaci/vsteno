@@ -18,8 +18,9 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
     <li>SPSSBAS 0.2: Grundschrift Spanisch (rein schriftbasiert,  Beta-Status)</li>
     <li>FRSSBAS 0.1: Grundschrift Franzöisch (rein lautbasiert/phonetisch, Alpha-Status)</li>
 </ul>
-<li>Domentation: Version 0.1 (übernommen aus 0.1rc)</li>
 </li>
+<li>Domentation: Version 0.1 (übernommen aus 0.1rc)</li>
+<li>Installer: Skript zur automatischen Installation unter Trisquel GNU/Linux 8</li>
 </ul>
 
 <h1>Ariadne (Preview)</h1>
