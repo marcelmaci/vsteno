@@ -784,14 +784,14 @@
 		"^(re)?ex(ped)" => "$1{EX}ped";	// (re)expedición
 		"^ex(quisit)" => "es$1";	// exquisito
 		"^(in|co)?ex(?!(?:c[rluao]|[pt]))" => "$1{EX}$2";
-		"^(in)?sub" => { "$1{SUB}", "[Ss](ú|u)bit", "[Ss]ubi" };
-		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl", "[Pp]eriodista", "[Pp]erit", "[Pp]erro", "[Pp]ericia", "[Pp]er(?:i|í)(?:o|ó)d" }; // not perder and all its forms
-		"^(in)?tran?s" => "$1{TRAS}";
+		"^(in)?sub" => { "$1{SUB}", "[Ss](ú|u)bit", "[Ss]ubi", "^[Ss]ub(?:o|e[ns]?|ís|a[sn]?|amos|áis)$" };
+		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl", "[Pp]eriodista", "[Pp]erit", "[Pp]erro", "[Pp]ericia", "[Pp]er(?:i|í)(?:o|ó)d", "[Pp]erilla" }; // not perder and all its forms
+		"^(in)?tran?s" => { "$1{TRAS}", "[Tt]rastos?$", "[Tt]raser" };
 		"^(des)?inte?r" => { "$1{INTER}", "[Ii]ntermin", "[Ii]ntrad" }; // not: interminable, intraducible
 		"^(bien)?estar$" => "$1{ESTAR}";
 		"^bi-?en" => "{BIEN}";
 		"^estuv" => "{ESTUV}";
-		"^est(?!r)" => { "{EST}", "[Ee]stac", "[Ee]sti", "[Ee]sten", "[Ee]st(?:é|e)r", "[Ee]stanc", "[Ee]stud", "[Ee]stant" }; // does not apply to estación, estirar
+		"^est(?!r)" => { "{EST}", "[Ee]stac", "[Ee]sti", "[Ee]sten", "[Ee]st(?:é|e)r", "[Ee]stanc", "[Ee]stud", "[Ee]stant", "[Ee]stad[íi]" }; // does not apply to estación, estirar
 		"^ser(é|á[ns]?|emos|éis|ía(?:[sn]|amos|ais)?)?$" => "{SER}$1";
 		"^son$" => "{SON}";
 		"^unos" => "{UNO}os"; // not clear: unos (as "unas" also): no indication in Meier!
@@ -801,11 +801,11 @@
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
 		"^(en)?contr" => "$1{CONTR}";
-		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]", "[Cc]ocin", "[Cc]olga", "[Cc]olilla", "[Cc]ord" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]", "[Cc]ocin", "[Cc]olga", "[Cc]olilla", "[Cc]ord", "[Cc]opas?", "[Cc]odazo", "[Cc][oó]m[ií]", "[Cc]orp", "[Cc]ort" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobrent" => "{SOBRE}ent"; // sobrentender (sobreentender)
 		"^sobre?|sor" => { "{SOBRE}", "[Ss]obri", "[Ss][oó]rd" }; // sobrio/as, sordo, sórdido (accent necessary since pattern is compared to original word => is this a good idea?!?)
 		"^gener" => "{GENER}";
-		"^necesar" => "{NECESAR}";
+		"^([Ii]n)?[Nn]ecesar" => "$1{NECESAR}";
 		"^porque$" => "{PORQUE}";
 		"^por(?!t)" => "{POR}"; // not applied in portador, portal etc.
 		"^sin$" => "{SIN}";
@@ -817,7 +817,8 @@
 		"^ciudad(es)?$" => "s{TAD}$1"; // claro ... eso se llama: mutilar una palabra ...
 		"rt(?!(?:ud|ad)(?:es)?)" => "[RT]"; // early bundler: avoid following rule in apartado, portador etc.
 		"c[ei](?:t[au]|da)d(?![oa]s?)" => "s{TAD}"; // 1st vowel falls out
-		"(?:ui|[ei])?(?:ta|da)d(?![oa]s?)" => "{TAD}"; // 1st vowel falls out
+		"(?:ui|[ei])?(?:ta|da)d(es)?$" => "{TAD}$1"; // 1st vowel falls out
+		"ntud(es)?$" => "n{TAD}$1"; // juventud
 		"c(?:í|i)sim([oa]s?)$" => "s{ISIM}$1";
 		"(?:í|i)sim([oa]s?)$" => "{ISIM}$1";
 		"ito$" => "{ITO}";
@@ -851,7 +852,7 @@
 		"{EX}s" => "{EX}"; // simplificación
 		"z" => "s";
 		"([aeiou])h([aeiou])" => "$1[H']$2"; // preserve h 
-		"(?<!c)h" => { "", "[Hh]arry", "[Hh]ol[ey]" }; // yes, trying to read some Nesboe ...
+		"(?<!c)h" => { "", "[Hh]arry", "[Hh]ol[ey]", "[Ss]how" }; // yes, trying to read some Nesboe ...
 		"ñ" => "n";
 		"g([ei])" => "h$1";
 		"j" => "h";
@@ -872,6 +873,7 @@
 		"[sx]pl" => "[SPL]";
 		"[sx]pr" => "[SPR]";
 		"ndr" => "[NDR]";
+		"ngr" => "[NGR]";
 		
 		// 2 consonants
 		//"rr" => "[VR@#/.]"; // diacritics
@@ -993,8 +995,8 @@
 		"^o$" => "[0N-][&O]";
 		"^o" => "[0N-]o";
 		"^u" => "[0N-]u";
-		"^\[&O]" => "[0N-][&O]";
-		"^\[AI]" => "[0D-][AI]";
+		"^\[&O\]" => "[0N-][&O]";
+		"^\[(AI|IE)\]" => "[0D-][$1]";
 
 		// vowels after prefix
 		"({(?:PER|BIEN)})([aeiouAEIOU])" => "$1[LES]$2";
@@ -1015,8 +1017,9 @@
 		"e$" => "[-E]";
 		"\[RL\]a$" => "[RL]O[EN]"; // keep token names as in original (mother) system
 		"a$" => "[EN]"; // keep token names as in original (mother) system
+		"^({EST})o$" => "$1[EM]"; // keep -o because otherwhise it would be too similar to "el" ?!
 		"[Dd]id[gh]e\[VR\]idoo" => "didherido";
-		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "(?<!.)paso", "^[Oo]slo$", "[Dd]idgerido" }; // not sure if -o stays after &e in any case? (ex: momentáneo)
+		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "(?<!.)paso", "^[Oo]slo$", "[Dd]idgerido" }; // not sure if -o stays after &e in any case? (ex: momentáneo) // esto: not sure, just interpreting because it would be too similar to "el" ?!
 		"o$" => "[EM]";
 		"i$" => "[-I]";
 		"u$" => "A[&U]";
@@ -1046,6 +1049,7 @@
 		"\[AI\]" => "[EU]";
 
 		// combinations consonant + r/l (copied over from DESSBAS)
+		"\[NGR\]" => "[NG@R]";
 		"\[SCR\]" => "[C@R]";
 		"\[SCL\]" => "[C@L3]";
 		"\[STR\]" => "[ST@R]";
@@ -1351,7 +1355,7 @@
 		"\[#d34\]" => "[#4]";	
 		"\[#d35\]" => "[#0]";	
 		"\[#d36\]" => "[#4]";	
-		"\[#d37\]" => "[#4]";
+		"\[#d37\]" => "[#5]";
 		"\[#d38\]" => "[#4]";
 		"\[#d39\]" => "[#3]";
 		"\[#d40\]" => "[#3]";
