@@ -166,6 +166,11 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_polygon_opacity'] = "1";
     $_SESSION['rendering_intermediateshadowpoints_yesno'] = false;
 */    
+    $_SESSION['layouted_original_text_yesno'] = false;
+    $_SESSION['layouted_original_text_position'] = before;
+    $_SESSION['layouted_original_text_size'] = 23;
+    $_SESSION['layouted_original_text_delta'] = 1.4;    
+
 }
 
 
@@ -313,7 +318,12 @@ if ($_POST['token_size'] != "") {
     $_SESSION['rendering_polygon_opacity'] = $_POST['rendering_polygon_opacity'];
     $_SESSION['rendering_intermediateshadowpoints_yesno'] = ($_POST['rendering_intermediateshadowpoints_yesno'] === "yes") ? true : false;
     $_SESSION['rendering_lineoverpass_yesno'] = ($_POST['rendering_lineoverpass_yesno'] === "yes") ? true : false;
-           
+        
+    $_SESSION['layouted_original_text_yesno'] = ($_POST['layouted_original_text_yesno'] === "yes") ? true : false;
+    $_SESSION['layouted_original_text_position'] = ($_POST['layouted_original_text_position'] === "before") ? "before" : "after";    
+    $_SESSION['layouted_original_text_size'] = $_POST['layouted_original_text_size'];
+    $_SESSION['layouted_original_text_delta'] = $_POST['layouted_original_text_delta'];    
+
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";
     echo "actual_model: " . $_SESSION['actual_model'] . "<br>";

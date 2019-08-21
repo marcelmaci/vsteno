@@ -259,6 +259,14 @@ Position: x <input type="text" name="page_number_posx"  size="4" value="<?php ec
 y <input type="text" name="page_number_posy"  size="4" value="<?php echo $_SESSION['output_page_number_posy']; ?>">
 Farbe <input type="text" name="page_number_color"  size="4" value="<?php echo $_SESSION['output_page_number_color']; ?>">
 
+<br>
+<input type="checkbox" name="layouted_original_text_yesno" value="yes" <?php echo ($_SESSION['layouted_original_text_yesno']) ? "checked" : "";?>> 
+Originaltext: 
+Grösse<input type="text" name="layouted_original_text_size"  size="4" value="<?php echo $_SESSION['layouted_original_text_size']; ?>">
+Abstand<input type="text" name="layouted_original_text_delta"  size="4" value="<?php echo $_SESSION['layouted_original_text_delta']; ?>">
+
+<input type="radio" name="layouted_original_text_position" value="before" <?php echo ($_SESSION['layouted_original_text_position'] === "before") ? "checked" : "";?>> vorher
+<input type="radio" name="layouted_original_text_position" value="after" <?php echo ($_SESSION['layouted_original_text_position'] !== "before") ? "checked" : "";?>> nachher
 </td></tr>
 </table>
 

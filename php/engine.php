@@ -114,6 +114,7 @@
 require_once "data.php";
 require_once "constants.php";
 require_once "rendering.php";
+require_once "svgtext.php";
 
 // SE1-BACKPORTS: revision1
 $backport_revision1 = false;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
@@ -1744,12 +1745,32 @@ function InsertLineNumbers() {
     return $output;
 }
 
+function InsertSeparatePageForOriginalText($max_width, $max_height, $svg_string, $original_text_last_page_buffer, $where) {
+    global $actual_page_number;
+    if ($where === "before") {
+            // adjust page number
+            //echo "actual_page_number: $actual_page_number<br>";
+            $actual_page_number -= 2;   // reference is first shorthand page: if this one has page number 1, preceeding page with original text will have number 0
+            $separate_page = GetCompleteSVGTextPage($max_width, $max_height, $_SESSION['layouted_original_text_size'], $original_text_last_page_buffer);
+            // restore original page number + 1
+            $actual_page_number += 2; // only add 2 because actual page number has be incremented by InsertPageNumber() called via GetCompleteSVGTextPage()
+            $svg_string = preg_replace("/#P#L#A#C#E#H#O#L#D#E#R#B#E#F#O#R#E#/", "\n$separate_page", $svg_string);     
+    } else {
+            // if page with original text comes after page with shorthand text, no adaptions are necessary
+            $separate_page = GetCompleteSVGTextPage($max_width, $max_height, $_SESSION['layouted_original_text_size'], $original_text_last_page_buffer);
+            $svg_string = preg_replace("/#P#L#A#C#E#H#O#L#D#E#R#B#E#F#O#R#E#/", "\n", $svg_string);
+            $svg_string .= "\n$separate_page\n";
+    }    
+    return $svg_string;
+}
+
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
         $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $word_tags;
     // set variables
     $actual_page_number = 1;
+    $original_text_last_page_buffer = "";
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
     $system_line_height = $standard_height * $_SESSION['token_size'];
@@ -1770,7 +1791,10 @@ function CalculateLayoutedSVG( $text_array ) {
     $word_position_y = $starty; $max_height = $_SESSION['output_height'];
     $bottom_limit = $max_height-$bottom_margin; // -$line_height; // baseline_y-bug: impossible to set baseline to 0 in calculation; extra_shift_y to correct bug etc. => has to be investigated!
     
-    $svg_string = "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\" style=\"shape-rendering:geometricPrecision\">\n";
+    $placeholder = ($_SESSION['layouted_original_text_yesno']) ? "#P#L#A#C#E#H#O#L#D#E#R#B#E#F#O#R#E#" : "";
+    
+    // insert separate page here if it should be displayed before shorthand page
+    $svg_string = "$placeholder<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\" style=\"shape-rendering:geometricPrecision\">\n";
     $svg_string .= InsertPageNumber();
     $svg_string .= InsertLineNumbers();
     
@@ -1804,6 +1828,7 @@ function CalculateLayoutedSVG( $text_array ) {
     foreach ( $text_array as $key => $single_word ) {
             $global_debug_string = ""; // even if there is no debug output in layouted svg, set $debug_string = "" in order to avoid accumulation of data in this variable by parser functions
     //if ($_SESSION['token_type'] === "shorthand") {
+            
             $original_word = $single_word;
             //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
             $bare_word = GetWordSetPreAndPostTags( $single_word ); // ???"<@token_type=\"svgtext\">" );
@@ -1956,8 +1981,32 @@ function CalculateLayoutedSVG( $text_array ) {
                 //echo "word_position_y: $word_position_y max_height: $max_height bottom_margin: $bottom_margin => start new svg ...<br>";
                 // close svg-tag 
                 $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
+                //echo "text last page<br>$original_text_last_page_buffer<br>";
+                // insert original text as separate page
+                
+                if ($_SESSION['layouted_original_text_yesno']) 
+                    $svg_string = InsertSeparatePageForOriginalText($max_width, $max_height, $svg_string, $original_text_last_page_buffer, $_SESSION['layouted_original_text_position']);
+                /*
+                $where = "after"; // insert it before or after shorthand page
+                if ($where === "before") {
+                    // adjust page number
+                    //echo "actual_page_number: $actual_page_number<br>";
+                    $actual_page_number -= 2;   // reference is first shorthand page: if this one has page number 1, preceeding page with original text will have number 0
+                    $separate_page = GetCompleteSVGTextPage($max_width, $max_height, 20, $original_text_last_page_buffer);
+                    // restore original page number + 1
+                    $actual_page_number += 2; // only add 2 because actual page number has be incremented by InsertPageNumber() called via GetCompleteSVGTextPage()
+                    $svg_string = preg_replace("/#P#L#A#C#E#H#O#L#D#E#R#B#E#F#O#R#E#/", "\n$separate_page", $svg_string);     
+                } else {
+                    // if page with original text comes after page with shorthand text, no adaptions are necessary
+                    $separate_page = GetCompleteSVGTextPage($max_width, $max_height, 20, $original_text_last_page_buffer);
+                    $svg_string = preg_replace("/#P#L#A#C#E#H#O#L#D#E#R#B#E#F#O#R#E#/", "\n", $svg_string);
+                    $svg_string .= "\n$separate_page\n";
+                }
+                */
+                // reset and reinitialize text buffer for original text
+                $original_text_last_page_buffer = "$single_word ";
                 // reopen svg-tag 
-                $svg_string .= "\n<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
+                $svg_string .= "$placeholder<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
                 // insert page number
                 $svg_string .= InsertPageNumber();
                 $svg_string .= InsertLineNumbers();
@@ -1972,7 +2021,8 @@ function CalculateLayoutedSVG( $text_array ) {
         
                 // $word_position_y = $baseline_y- (10 * $_SESSION['token_size']) + $top_margin; // baseline_bug ....................................
                 $word_position_y = $top_start_on_page;
-            }
+            } else $original_text_last_page_buffer .= "$single_word ";
+         
     //} else {
         // NormalText2NormalTextInLayoutedSVG();
     //}   
@@ -2000,6 +2050,7 @@ function CalculateLayoutedSVG( $text_array ) {
         //echo "insert last line<br>";
         //var_dump($word_splines);
         $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, true );
+        
     } 
     /*elseif ($old_temp_width <= $max_width-$right_margin) {
         echo "Draw shorter (incomplete) line<br>";
@@ -2008,6 +2059,8 @@ function CalculateLayoutedSVG( $text_array ) {
     
     
     $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
+    if ($_SESSION['layouted_original_text_yesno'])
+        $svg_string = InsertSeparatePageForOriginalText($max_width, $max_height, $svg_string, $original_text_last_page_buffer, $_SESSION['layouted_original_text_position']);
     return $svg_string;
 }
 /*

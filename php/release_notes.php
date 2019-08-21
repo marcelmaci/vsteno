@@ -31,7 +31,8 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
 <ul>
     <li>Variable, proportionale Schattierung (umgesetzt, Testphase)</li>
     <li>Automatisierte Umriss-Schattierung (Polygon-Modellierung) ab Daten der SE1 (umgesetzt, Testphase)</li>
-    <li>Orthogonale und proportionale Knots mit parallelen Rotationsachsen (gemäss SE1 rev1, todo) 
+    <li>Orthogonale und proportionale Knots mit parallelen Rotationsachsen (gemäss SE1 rev1, todo)</li>
+    <li>Paralleledition: Originaltext (Langschrift) neben Kurzschrift</li>
 </ul>
 </li>
 <li>Bugfixes und weitere noch nicht definierte neue Features</li>
