@@ -34,17 +34,23 @@ function GetSVGTextInsideRectangle($size, $wrap, $text) {
     $top_margin = $_SESSION['top_margin'];
     $system_lines = $_SESSION['num_system_lines'];
     $top = $standard_height * $token_size * $session_baseline + $top_margin - $standard_height * $token_size * ($system_lines-1); // vertical text position (baseline)
+    $font = $_SESSION['layouted_original_text_font'];
     // distance between lines
     $delta = $size * $_SESSION['layouted_original_text_delta'];    // vertical distance to next line
     //$width = 400;   // right margin
      // initialize string
-    $output = "<text x='0' y='0' font-size='$size' style='fill:$color;'>\n";
+    //$output = "<text x='0' y='0' font-size='$size' textLength='6000' lengthAdjust='spacingAndGlyphs' font-family='$font' style='fill:$color;'>\n";
+    $output = "<text x='0' y='0' font-size='$size' font-family='$font' style='fill:$color;'>\n";
+    //$output = ""; // test: integrate text-tag with textLength attribut into tspan
+    
     // transform text to textarray and loop
     $textarray = explode(" ", $text);
     foreach($textarray as $word) {
         if (($word === "<br>") || ($word === "<p>") || ($word === "</p>")) {
             // print line immediately after linebreak
-            $output .= "<tspan x='$left' y='$top'>$single_line_text</tspan>\n";
+            $output .= "<tspan x='$left' y='$top' textLength='100%' lengthAdjust='spacing'>$single_line_text</tspan>\n";
+            //$output .= "<text x='0' y='0' textLength='100%' font-size='$size' font-family='$font' style='fill:$color;'>\n<tspan x='$left' y='$top' textLength='100%' lengthAdjust='spacing'>$single_line_text</tspan></text>\n";
+            
             $single_line_text = "";
             $top += $delta;
             continue;
@@ -67,11 +73,12 @@ function GetSVGTextInsideRectangle($size, $wrap, $text) {
 
 function GetCompleteSVGTextPage($width, $height, $size, $text) {
     global $svg_not_compatible_browser_text;
+    //$text = preg_replace("/<(@.*?)>/", "$1", $text); // for the moment strip out all inline-option-tags (keep html-tags)
     $text = preg_replace("/<@.*?>/", "", $text); // for the moment strip out all inline-option-tags (keep html-tags)
     
     $svg_string = "<svg width=\"$width\" height=\"$height\">\n<g>\n";
     // add text
-    $wrap = GuessAverageNumberOfCharactersThatFitWidth($size, $width);
+    $wrap = ($_SESSION['layouted_original_text_wrap'] === "auto") ? GuessAverageNumberOfCharactersThatFitWidth($size, $width) : $_SESSION['layouted_original_text_wrap'];
     $svg_string .= GetSVGTextInsideRectangle($size, $wrap, $text);
     $svg_string .= InsertPageNumber(); // give a page number to the separate page (original text)
     // close svg

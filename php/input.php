@@ -262,11 +262,19 @@ Farbe <input type="text" name="page_number_color"  size="4" value="<?php echo $_
 <br>
 <input type="checkbox" name="layouted_original_text_yesno" value="yes" <?php echo ($_SESSION['layouted_original_text_yesno']) ? "checked" : "";?>> 
 Originaltext: 
-Grösse<input type="text" name="layouted_original_text_size"  size="4" value="<?php echo $_SESSION['layouted_original_text_size']; ?>">
-Abstand<input type="text" name="layouted_original_text_delta"  size="4" value="<?php echo $_SESSION['layouted_original_text_delta']; ?>">
+Grösse <input type="text" name="layouted_original_text_size"  size="3" value="<?php echo $_SESSION['layouted_original_text_size']; ?>">
+Abstand <input type="text" name="layouted_original_text_delta"  size="3" value="<?php echo $_SESSION['layouted_original_text_delta']; ?>">
+Schrift <input type="text" name="layouted_original_text_font"  size="12" value="<?php echo $_SESSION['layouted_original_text_font']; ?>">
+Umbruch <input type="text" name="layouted_original_text_wrap"  size="3" value="<?php echo $_SESSION['layouted_original_text_wrap']; ?>">
 
 <input type="radio" name="layouted_original_text_position" value="before" <?php echo ($_SESSION['layouted_original_text_position'] === "before") ? "checked" : "";?>> vorher
 <input type="radio" name="layouted_original_text_position" value="after" <?php echo ($_SESSION['layouted_original_text_position'] !== "before") ? "checked" : "";?>> nachher
+<br>
+Filter: 
+<input type="checkbox" name="layouted_original_text_filter_brackets" value="yes" <?php echo ($_SESSION['layouted_original_text_filter_brackets']) ? "checked" : "";?>> Brackets []
+<input type="checkbox" name="layouted_original_text_filter_dashes" value="yes" <?php echo ($_SESSION['layouted_original_text_filter_dashes']) ? "checked" : "";?>> Dashes #
+
+
 </td></tr>
 </table>
 

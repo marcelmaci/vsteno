@@ -170,6 +170,10 @@ function InitializeSessionVariables() {
     $_SESSION['layouted_original_text_position'] = before;
     $_SESSION['layouted_original_text_size'] = 23;
     $_SESSION['layouted_original_text_delta'] = 1.4;    
+    $_SESSION['layouted_original_text_font'] = "sans-serif";    
+    $_SESSION['layouted_original_text_wrap'] = "auto";    
+    $_SESSION['layouted_original_text_filter_brackets'] = true;    
+    $_SESSION['layouted_original_text_filter_dashes'] = true;    
 
 }
 
@@ -323,6 +327,11 @@ if ($_POST['token_size'] != "") {
     $_SESSION['layouted_original_text_position'] = ($_POST['layouted_original_text_position'] === "before") ? "before" : "after";    
     $_SESSION['layouted_original_text_size'] = $_POST['layouted_original_text_size'];
     $_SESSION['layouted_original_text_delta'] = $_POST['layouted_original_text_delta'];    
+    $_SESSION['layouted_original_text_font'] = $_POST['layouted_original_text_font'];    
+    $_SESSION['layouted_original_text_wrap'] = $_POST['layouted_original_text_wrap'];    
+    $_SESSION['layouted_original_text_filter_brackets'] = ($_POST['layouted_original_text_filter_brackets'] === "yes") ? true : false;
+    $_SESSION['layouted_original_text_filter_dashes'] = ($_POST['layouted_original_text_filter_dashes'] === "yes") ? true : false;
+    
 
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";
