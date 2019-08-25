@@ -490,7 +490,10 @@ function ExecuteRule( /*$word*/ ) {
                     }
                     if ($there_is_a_match) {
                         //echo "Don't apply rule!<br>";
-                        $output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
+                        //$output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
+                        // why must it be set to result_after_last_rule ... ??? this is wrong with "höhere" ... set it back to $word and keep an eye on that ...
+                        $output = $word;
+                        //echo "result after last rule: $result_after_last_rule word: $word<br>";
                         if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     } else {
                         $global_number_of_rules_applied++;

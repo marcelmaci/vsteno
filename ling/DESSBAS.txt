@@ -496,6 +496,7 @@
 		"([Ww]en)\|(de)" => "$1-$2";
 		"([Uu]n)\+(se-?r)" => "$1-$2";
 		"([Mm]uss)\|(test)" => "$1-$2";
+		"([Kk]i-?lo)\|(me-?ter)" => "$1-$2";
 
 		// final ge-
 		"([Gg]e)-?(fun-?de-?n)" => "$1+$2";
@@ -600,6 +601,10 @@
 		"([Rr]e-?cher)\+(ch)" => "$1-$2";
 		"Ber\+s" => "Ber-s"; // name Berset
 
+		// per+ her+
+		"^([Pp]er)\+" => "$1-"; 
+		"^([Hh]er)\+" => "$1-"; 
+		
 		// er+ and in+
 		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
 		"([Ii]n)-?di-?e([rn])" => "$1-di-e$2";
@@ -618,6 +623,17 @@
 		"([Dd])on-?ner\+?s\|?tag" => "$1on-ner+stag"; // where's the logic anyway ... :)
  		"([Ll])ob-by\|ist" => "$1ob-by-ist";
 		"([Dd]ür-?ren)\|(matt)" => "$1-$2";
+
+		// ab+
+		"([Aa]b)(?:\|)(tei-?l)" => "$1+$2";
+
+		// im+ pro+
+		"([Ii]m)\|(pro)\|v" => "$1+$2-v";
+		"([Pp]ro)\|(gramm)" => "$1-$2";
+
+		// "early phonetizer"
+		"([Rr]en-?dez)=([Vv])ous" => "$1|=$2us";
+
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -801,7 +817,7 @@
 		"=" => {  /*h*/ 5,  0,  0,  0,  3,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  11,  0,  1,  1,  5,  0,  0.5, /**/ 5,  11,  0,  0,  1,  0,  0,  0.5, /**/ 0,  9,  0,  0,  1,  5,  0,  0.5, /**/ 5,  9,  0,  0,  1,  0,  1,  0.5 }
 		"'" => {  /*h*/ 1,  0,  0,  0,  3,  3,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  1,  1,  5,  0,  0.5, /**/ 1,  15,  0,  0,  1,  0,  0,  0.5, /**/ 1,  18,  0,  0,  1,  0,  1,  0.5 }
 		""" => {  /*h*/ 3,  0,  0,  0,  2,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  1,  1,  5,  0,  0.5, /**/ 1,  15,  0,  0,  1,  0,  0,  0.5, /**/ 1,  18,  0,  0,  1,  0,  0,  0.5, /**/ 2,  14,  0,  0,  1,  5,  0,  0.5, /**/ 3,  15,  0,  0,  1,  0,  0,  0.5, /**/ 3,  18,  0,  0,  1,  0,  1,  0.5 }
-		"/" => {  /*h*/ 6,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  1,  0,  1,  1,  5,  0,  0, /**/ 6,  19,  0,  0,  1,  0,  1,  0.5 }
+		"/" => {  /*h*/ 6,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  1,  0, /*d*/ 0,  1,  0,  1,  1,  5,  0,  0, /**/ 6,  19,  0,  0,  1,  0,  1,  0.5 }
 		"#Q#" => {  /*h*/ 3,  0,  0,  0,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  14,  0,  1,  1,  5,  0,  0.5, /**/ 1,  15,  0,  0,  1,  0,  0,  0.5, /**/ 1,  18,  0,  0,  1,  0,  0,  0.5, /**/ 2,  14,  0,  1,  1,  5,  0,  0.5, /**/ 3,  15,  0,  0,  1,  0,  0,  0.5, /**/ 3,  18,  0,  0,  1,  0,  0,  0.5 }
 		"(" => {  /*h*/ 4,  0,  0,  0,  0,  2,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 4,  13,  0,  1,  1,  5,  0,  0, /**/ 0,  13,  0,  0,  1,  0,  0,  0, /**/ 0,  1,  0,  0,  1,  0,  0,  0, /**/ 4,  1,  0,  0,  1,  0,  0,  0 }
 		")" => {  /*h*/ 4,  0,  0,  0,  2,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0, /**/ 0,  0,  1,  0,  0,  0,  0,  0, /*d*/ 0,  13,  0,  1,  1,  5,  0,  0, /**/ 4,  13,  0,  0,  1,  0,  0,  0, /**/ 4,  1,  0,  0,  1,  0,  0,  0, /**/ 0,  1,  0,  0,  1,  0,  0,  0 }
@@ -1083,10 +1099,20 @@
 		"[Dd]\.h\." => "das+h";
 		"[Uu]\.a\." => "UA";
 		"[Zz]\.B\." => "ZB";
+		"[Aa]nm\. ?d\. ?[Rr]ed\." => "Anm der Red";
+		
+		// roman numbers
+		// difficult ... I and V can't be included because of confusion with capital i and v
+		// in addition there are many roman numbers ... so just include these as examples
+		// problem must be solved differently (with function inside VSTENO)
+		"(II|III|IV|VI|VII|VIII|IX|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX)" => "<@token_type=svgtext> $1 <@token_type=shorthand>";
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
+		//"([Rr]en-?dez)=[Vv]ous" => "$1=vus"; // "early-phonetizer because it's easier to do it here 
+
 		"(?<!\[)=" => "\\[=]\\";
 		"^(A)$" => "[#_#]\[#5-][#5-][0N-]$1"; // "underscorer"
+		"^(E)$" => "[#9][#_#]\[#9-][#5-][#5-][0N-]$1[&E]"; // "underscorer" => should be solved with diacritics ...
 		"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer" => should be solved with diacritics ...
 		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
 		"(?<!\|)'" => "|'"; // apostrophizer: hat's 
@@ -1148,6 +1174,7 @@
 		"([Ll]i-?)nie" => "$1ni-e";
 		"([Ff]a-?mi-?)lie" => "$1li-e";
 		"([Pp]or-?t)ier" => "$1i-e";
+		"([Kk]ar-?r)ie(re)" => "$1[&I]E$2";
 		// phonetical treatment for y
 		"([Ss])y(n-?th)e(-?ti-?sch)" => "$1ü$2E$3"; // E = stressed
 		//"([Ss])y(s-?tem)" => "$1i$2";
@@ -1155,7 +1182,7 @@
 		"([Pp]s)y(-?c-?h)" => "$1ü$2";
 		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by" };
+		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
@@ -1163,6 +1190,7 @@
 
 		// ou = u
 		"([Tt])ou(-?ris)" => "$1u$2"; 
+		"([Rr])o(u-?t[ie])" => "$1$2";
 
 		"([Dd]i)eu" => "$1ö";	// french word
 		
@@ -1171,10 +1199,11 @@
 
 		"([Aa]r-?s)en" => "$1En"; // avoid -en
 
+		"[Ii]n(\+|-)ge-?nieu-?r" => "in-gen[&I]ör";
 		"e-ta-ge-re" => "E-ta-gE-re";
 		"pa-ke(-?t)" => "pa-kE$1";
 		"([Jj])ou(r-?na-?lis-?t)" => "$1u$2";
-
+		
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
 		"sis-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
@@ -1242,7 +1271,7 @@
 		"ur\+" => "{UR}+";
 
 		"#li-?ch" => "{LICH}";
-		"(-|\+)li-?ch((-?s-?t)?e[rnsm]?)?$" => "$1{LICH}$2";
+		"(-|\+)li-?ch(-?s?-?t)?(e[rnsm]?)?$" => "$1{LICH}$2";
 
 		"ent\+" => "{ANT}+";
 
@@ -1279,7 +1308,7 @@
 		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
 
 		"ver(\+)" => "{VER}$1";
-		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-" }; // can produce wrong results (exclude Overall, Universum)
+		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)" }; // can produce wrong results (exclude Overall, Universum)
 
 		"^all$" => "{ALL}";
 		"\+all$" => "+{ALL}";
@@ -1440,7 +1469,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => { "$1{ET}", "[Rr]e[-+]pe-?t" };
+		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -1526,7 +1555,7 @@
 		"'(a|e|o|u)" => "|[']\[0N-]$1";
 		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
 		"thr" => "tHr"; // Thriller
-		"th(?!of$)" => { "t", "[Tt]hur"};
+		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$" };
 		//"th(?!er)" => "t";
 		//"th(?!in)" => "t";
 		//"th(?!aft)" => "t";
@@ -1559,7 +1588,7 @@
 		"\(" => "";
 		"\)" => "";
 		//"\"" => "";
-		"zz" => "z";
+		"zz" => { "z", "Buzz" };
 		"ih#" => "i#";
 
 	#EndSubSection(normalizer,#>stage4)
@@ -1724,6 +1753,7 @@
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF|MPF|NG|ND)\]-?t" => "[$1][&T]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TL\]" => "$1$2[&T@L3]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TR\]" => "$1$2[&T@R]";
+		"{LICH}t" => "{LICH}[&T]";
 		//"(r\+?)t" => "$1[&T]";
 
 		// -ter
@@ -1786,7 +1816,8 @@
 		"\[-E\](.*?$)" => "[E]$1";
  
 		"^e$" => "[0N-][E][&E]";
-		"e$" => "$1[-E]";
+		"äe$" => "ä[&E][-E]";
+		"e$" => "[-E]";
 		
 		"i($|\\)" => "[#5][&I]$1";
 		"io($|\\)" => "[&I][&O]$1";
@@ -1878,6 +1909,7 @@
 		"\[&T\]\|{ER}" => "[&T]\\[0N-]{ER}";
 		"(\[&T\]ON)\|" => "$1\\";
 		"(\[&T\]O\[NS\])\|" => "$1\\";
+		"(\[RR\].*?)\|" => "$1\\"; // Karrierepläne (separate after rr)
 		"\[&T\]E\|" => "[&T]E\\";  // Produktepalette 
 
 		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
@@ -1948,6 +1980,10 @@
 
 		"(\[AR\]E\[CH\]\[&T\])\+Z" => "$1\Z";  // rechtzeitig
 
+		"\[AU\]#{SO}$" => "[AU][&E]\\{SO}"; 
+
+		"(?<!\[)(\/)" => "\\[/]\\[#6-][/]\\";
+
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// logically speaking the completor is part of the transcriptor
@@ -1976,6 +2012,7 @@
 		"\\({AN})" => "\\[0N-]$1";
 
 		"^(I)" => "[0D-][$1]";
+		"\[=\]\\(I)" => "[=]\\[0D-][$1]";
 		
 		//"\|({?[AEIOU]|Ä|Ö|Ü)" => "|[0N-][$1]";
 		
@@ -2825,6 +2862,7 @@
 		"\[b\]\[#0\]\[au\]\[&e\]" => "[b][#2][au][&e]";
 		"\[s\]\[#3\]\[i\]\[d\]" => "[s][#4][i][d]";
 		"\[n=\]\[a\]\[&a\]" => "[n=][#4][a][&a]";
+		"\[\^z\]\[i\]\[g\]" => "[^Z][#4][I][G]";
 
 		// experimental: generic -&i, -&a
 		"\[#5\]\[&i\]$" => "[#2][&i]";

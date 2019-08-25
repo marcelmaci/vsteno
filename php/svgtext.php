@@ -48,7 +48,7 @@ function GetSVGTextInsideRectangle($size, $wrap, $text) {
     foreach($textarray as $word) {
         if (($word === "<br>") || ($word === "<p>") || ($word === "</p>")) {
             // print line immediately after linebreak
-            $output .= "<tspan x='$left' y='$top' textLength='100%' lengthAdjust='spacing'>$single_line_text</tspan>\n";
+            $output .= "<tspan x='$left' y='$top'>$single_line_text</tspan>\n";
             //$output .= "<text x='0' y='0' textLength='100%' font-size='$size' font-family='$font' style='fill:$color;'>\n<tspan x='$left' y='$top' textLength='100%' lengthAdjust='spacing'>$single_line_text</tspan></text>\n";
             
             $single_line_text = "";

@@ -1767,8 +1767,8 @@ function InsertSeparatePageForOriginalText($max_width, $max_height, $svg_string,
 function FilterOriginalWord($word) {
     // rules that modify the original text in stage 0 (= entire text) modify the final result of the text in the parallel edition
     // therefore, offer two possibilities to filter out "artefacts", i.e. additional tokens introduced by such rules:
-    // - brackets: all [] are filtered out
-    // - dash: all # are filtered out
+    // - brackets: all [] are filtered out (bundling when several characters correspond to one token)
+    // - dash: all # are filtered out (phonetical transcription with eSpeak)
     if ($_SESSION['layouted_original_text_filter_brackets']) $word = preg_replace("/\[(.*?)\]/","$1", $word);
     if ($_SESSION['layouted_original_text_filter_dashes']) $word = preg_replace("/#/","", $word);
     return $word;
@@ -2017,7 +2017,7 @@ function CalculateLayoutedSVG( $text_array ) {
                 // reset and reinitialize text buffer for original text
                 // filter word if necessary
                 $filtered_word = FilterOriginalWord($single_word);
-                $original_text_last_page_buffer .= "$filtered_word ";
+                $original_text_last_page_buffer = "$filtered_word ";
                 // reopen svg-tag 
                 $svg_string .= "$placeholder<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n";
                 // insert page number
