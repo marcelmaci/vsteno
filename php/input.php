@@ -261,7 +261,7 @@ Farbe <input type="text" name="page_number_color"  size="4" value="<?php echo $_
 
 <br>
 <input type="checkbox" name="layouted_original_text_yesno" value="yes" <?php echo ($_SESSION['layouted_original_text_yesno']) ? "checked" : "";?>> 
-Originaltext: 
+Paralleltext: 
 Grösse <input type="text" name="layouted_original_text_size"  size="3" value="<?php echo $_SESSION['layouted_original_text_size']; ?>">
 Abstand <input type="text" name="layouted_original_text_delta"  size="3" value="<?php echo $_SESSION['layouted_original_text_delta']; ?>">
 Schrift <input type="text" name="layouted_original_text_font"  size="12" value="<?php echo $_SESSION['layouted_original_text_font']; ?>">

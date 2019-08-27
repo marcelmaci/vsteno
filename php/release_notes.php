@@ -5,10 +5,18 @@
 <h2>Merkmale</h2>
 <ul>
 <li>Steno Engine: SE1 rev0, also die urpsrünglich definierte SE mit Spline Interpolation (Bezier-Kurven), Mittellinienmodellierung (treppenförmige Schattierungen) und Horizontalneigung (Neigewinkel nur bedingt variabel)</li>
+<li>Ausgaboptionen:</li>
+<ul>
+    <li>Inline- (ein Wort pro SVG) und Layout-Modus (eine Seite pro SVG)</li>
+    <li>Normalschrift (Courier) und Stenogramme (separat und gemischt)</li>
+    <li>Parameter wie Grösse, Farbe, Strichdicke, Schattierungsstärke etc. einstellbar (Eingabeformular) bzw. programmierbar (Inline-Option-Tags)</li>
+    <li>Layout-Modus: linksbündig und Blocksatz, mit/ohne Hilfslinien, mit/ohne Linien-/Seitenzahlen</li>
+</ul>
 <li>Linguistische Analyse: Silbenanalyse mit phpSyllable und morphologische Analyse (Vor-/Nachsilben, Stämme) mit Hunspell</li>
 <li>Phonetische Transkription: eSpeak (IPA oder Kirshenbaum Alphabet)</li>
 <li>Datenbank: Tabellen für fehlerhafte, korrigierte und richtige Stenogramme (Purgatorium, Elysium, Olympus) mit der Möglichkeit, diese in 
 einem Trainingsmodus zu verwalten. 
+<li>Debug-Modus: zur Fehlersuche in eigenen Stenografie-Modellen (Inline-Modus)</li>
 <li>Parser: REGEX-basierter Regelparser, der in der Datenbank abgelegte stenografische Modelle liest und abarbeitet (Interpreter).</li>
 <li>Benutzerverwaltung: Login-Möglichkeit zur Online-Nutzung des Programmes, inklusive Möglichkeit ein eigenes stenografisches System anzulegen 
 und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Modellen)</li>
