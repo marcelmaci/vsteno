@@ -1,0 +1,72 @@
+Test words for French
+
+Based on:
+
+[1] Emil Hug, Französische Stenografie nach dem Einigungssystem Stolze-Schrey,
+Offizielle Übertragung des Allgemeinen Schweizerischen Stenografenvereins
+(Zentralverein Stolze-Schrey), Verlag und Buchhandlung des Allgemeinen 
+Schweizerischen Stenografenvereins, Druckerei Wetzikon AG, 8. Auflage 1983.
+
+Abbreviations:
+
+CH = chapter
+(1)(2)(3) etc. = exercise number
+
+Comments:
+
+In some occasions, several variants have been added.
+Doubts are marked with (?).
+
+Words:
+
+CH1b)
+bel, belle, elle, aile, bête, êtes, sec, nef, reine, herbe
+
+CH1c)
+l'âme, lame, âme, rappel, appel, bande, Andes, centaine, antenne
+
+Ch1(1):
+bel, belle, aile, l'aile, bête, dette, fête, êtes, thème, aime,
+sel, sec, caisse, est-ce (?), net, nette, n'aime, veine, haine, rêve, père, erre
+espèce, espèces, dessert, téméraire, verbe, herbe, l'herbe, terme, réserve,
+date, datte, taxe, dame, femme, ae, l'âme, lame, balle, bal, pâle, halle, alpe, alpes,
+canne, cannes, Anne, l'âne, tasse, basse, as, quart, tare, are,
+vase, valse, salade, haleine, bagatelle, avare, l'avare, catarrhe, gare, garde, masse, mars, arcade, l'arcade,
+pâte, patte, pente, hante, bande, Andes, passe, pense, panse, banque, banquette, avance, devance,
+descente, sentence, envers, l'embassade, tempérance, mansarde, essence
+
+CH2a)
+semaine, regarde, menace, centenaire, redemande
+
+CH2(3):
+demande, recette, revers, famelle, remède, semence, regard, refaire, semelle,
+vedette, remarque, requête, renard, levèrent, allemande, amenèrent, menaçante, Renaissance,
+
+CH2b)
+se, ce, ne, de, te, que, le, me, 
+sa, ça, n'a, rat, bas, pas, ma, m'a, mât, va, vas, la, là, l'a, las, ta, t'a, tas, ca, qu'a, qu'à
+
+CH2(4):
+le pas, la pâte, le tas, ma tête, se défaire, se cas, sa tante, ça va? va! le rat,
+de ma part, 2 paires de bas, Annette n'a qu'a se taire. Marcel ne va pas. Que va-t-elle faire?
+ne le faites pas! Ma mère me le demande. Ça ne te regarde pas. Gaspard, ne renverse pas se vase!
+
+CH2c)
+aider, aidé, aidais, paix, pait, paie, lait, laid, l'ai, thé, tes, t'ai, des, dès, ses, ces, c'est, sais
+denrée, denrées, gâta, gâtas, état, états, serra, serras, banc, ban, vent, vend, tant, t'en, temps, garant
+
+CH2(5):
+aimé, tâtait, athé, réservé, camper, annexé, allée, cédé, attaquées, mêlé,
+tapé, s'absenter, alarmé, mener, se peiner, peser, passer, penser, verser, barrer, séparer,
+effet, la santé, le ballet, le balais, l'aller, le café, l'aspect, la vallée, le pavé, le délais, né, gai, pet, fait,
+papa, des dégâts, état, l'état, tabac, des débats, embarras, espéra, ramassa, amassa,
+vent, avant, tenant, étant, étang, absent, l'enfant, perdant, rang, tes parents,
+calmé, calma, calmant, perça, perçant, percé, manquant, manqua, manqué
+
+CH2(6):
+Ça et là, Est-il malade? Quand est-il né? Qu'en pense-t-il? Que fait-il là? Qu'a-t-il enlevé?
+Entend-il l'appel? Max a accédé a ma demande. Thérèse a cassé sa belle bague,
+mais papa va la faire réparer. Il m'attend à la gare. En avant! Il en a assez. En
+effet, il a manqué de respect envers sa tante. L'enfant n'a que sept ans. Il me 
+l'a réservé. Qu'espère-t-elle? L'état de santé de René n'est pas alarmant. Elle
+n'a qu'à demander. Ne l'agace pas! Elle s'est levée assez tard. Que tarde-t-il? Ne sait-il pas l'allemand.
