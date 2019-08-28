@@ -480,6 +480,7 @@ function TryPhoneticTranscriptionFromList($word) {
 }
 
 function GetPhoneticTranscription($word) {
+    global $last_written_form;
     //echo "word to transcribe: $word<br>";
     //if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
     $check = mb_strpos($word, "#");
@@ -512,6 +513,7 @@ function GetPhoneticTranscription($word) {
         $output = $word;
     }
     //echo "result: $output<br>";
+    $last_written_form = $word;
     return $output;
 }
 

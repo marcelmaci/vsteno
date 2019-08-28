@@ -235,6 +235,9 @@ $rules_pointer_start_stage2 = null;
 $rules_pointer_start_stage3 = null;
 $rules_pointer_start_stage4 = null;
 
+// phonetics
+$last_written_form = "";                        // contains written form of last word that has called GetPhoneticTranscription() in linguistics.php
+
 // error handling
 $global_error_string = "";
 $global_warnings_string = "";

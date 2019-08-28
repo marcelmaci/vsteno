@@ -43,7 +43,13 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
     <li>Paralleledition: Originaltext (Langschrift) neben Kurzschrift</li>
 </ul>
 </li>
-<li>Phonetik: Patchliste für falsch transkribierte Wörter (eSpeak)</li>
+<li>Phonetik: 
+<ul>
+    <li>Patchliste für falsch transkribierte Wörter (eSpeak)</li>
+    <li>Hybride Regeln (Schrift + Phonetik)</li>
+</ul>
+</li>
+
 <li>Bugfixes und weitere noch nicht definierte neue Features</li>
 </ul>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)</i></p>

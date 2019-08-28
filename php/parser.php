@@ -418,12 +418,23 @@ function CropStringAfterNCharacters($string, $n) {
     if ($n > mb_strlen($string)) return $string;
     else return mb_substr($string, 0, $n) . "[...]";
 }
+
+function CheckAndApplyHybridRule($condition1, $condition2, $consequence, $written, $phonetic) {
+    //echo "Apply hybrid rule: $condition1 => { >$condition2<, >$consequence< } on written: >$written< and phonetic: >$phonetic<<br>";
+    $result = null;
+    if (preg_match("/$condition1/", $written)) {
+        $result = preg_replace("/$condition2/", "$consequence", $phonetic); 
+    }
+    //echo "Result: >$result<<br>";
+    return $result;
+}
+
 // ExecuteRule replaces GenericParser from old parser
 function ExecuteRule( /*$word*/ ) {
 
     global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
     global $rules, $rules_pointer, $actual_function;
-    global $act_word, $original_word, $result_after_last_rule;
+    global $act_word, $original_word, $result_after_last_rule, $last_written_form;
     //echo "is word set?: $word";
     //$output = $word;
     $actual_model = $_SESSION['actual_model'];
@@ -439,6 +450,12 @@ function ExecuteRule( /*$word*/ ) {
         case "EndFunction()" : ExecuteEndParameters(); $output = $act_word; break;
         default : // normal condition
             //echo "in default: act_word = $act_word<br>";
+            //$temp_condition = $rules["$actual_model"][$rules_pointer][0];
+            //echo "last written form: $last_written_form (condition: $temp_condition)<br>";
+            //if (preg_match("/tstwrt(/", $temp_condition)) {
+            //        echo "teste: " . $temp_condition . " an $last_written_form<br>";
+            //}
+            
             $output = $act_word;
             $length = count($rules["$actual_model"][$rules_pointer]);
             if ($length == 2) {
@@ -465,6 +482,31 @@ function ExecuteRule( /*$word*/ ) {
             
             } else {
                 // special rule: 1 condition => several consequences
+                // special case: if phonetic transcription is on condition can be tested on the written form of the word (instead of transcription)
+                // in that case, the following formalism is valid:
+                // "condition1" => { "condition2", "consequence" };
+                // with condition1 = tstwrt(condition)        applied to written form
+                //      condition2 = normal condition         applied to phonetic form
+                //      consequence = normal consequence      applied to phonetic form
+                // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
+// test if phonetical transcription is selected and if condition has to be tested on written form
+if (($_SESSION['phonetics_yesno']) && (preg_match("/^tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]))) {
+    $hybrid_condition1 = preg_replace("/tstwrt\((.*?)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+    $hybrid_condition2 = $rules["$actual_model"][$rules_pointer][1];
+    $hybrid_consequence = $rules["$actual_model"][$rules_pointer][2];
+    $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $last_written_form, $act_word);
+    if ($result !== null) {
+        // result is valid
+        $output = $result;
+        $global_number_of_rules_applied++;
+        $_SESSION['rules_count'][$rules_pointer]++;
+        // set variables for debugging
+        //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
+        //$replacement = $hybrid_consequence;
+        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> Hybrid: [1]: " . htmlspecialchars($hybrid_condition1) . "<br>[2]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
+    }
+} else {
+// apply "normal" rule as usual
                 //if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
                 $pattern = $rules["$actual_model"][$rules_pointer][0];
                 $replacement = $rules["$actual_model"][$rules_pointer][1];
@@ -501,7 +543,7 @@ function ExecuteRule( /*$word*/ ) {
                         if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     }
                 }
-            
+}
             }
     }
     //if ($output === "") echo "output = null / rule = $rules_pointer<br>";
