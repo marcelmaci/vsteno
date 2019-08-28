@@ -468,21 +468,40 @@ function recursive_search_optimized($line, $row, $array) {
 
 /////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
 
+function TryPhoneticTranscriptionFromList($word) {
+    $result = null;
+    foreach ($_SESSION['phonetics_transcription_array'] as $key => $transcription) {
+        if (preg_match("/^$key$/", $word)) {
+            $result = $transcription;
+            break;
+        }
+    }
+    return $result;
+}
+
 function GetPhoneticTranscription($word) {
     //echo "word to transcribe: $word<br>";
     //if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
     $check = mb_strpos($word, "#");
     if ($check === false) {  // do not transcribe words containing # (at any position)
-        //echo "transcribe: $word<br>";
-        $language = $_SESSION['language_espeak'];
-        $alphabet_option = ($_SESSION['phonetic_alphabet'] === "espeak") ? "-x" : "--ipa"; 
-        $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
-        //echo "$shell_command";
+        //echo "<br>transcribe: $word<br>";
+        $decapitalized = mb_strtolower($word);
+        $list_result = TryPhoneticTranscriptionFromList($decapitalized); // $_SESSION['phonetics_transcription_array'][$decapitalized];
+        //echo "list_result: $list_result<br>";
+        // if word exists in list, take result from list
+        if ($list_result !== null) $output = $list_result;
+        else {
+            // otherwise call espeak for transcription
+            $language = $_SESSION['language_espeak'];
+            $alphabet_option = ($_SESSION['phonetic_alphabet'] === "espeak") ? "-x" : "--ipa"; 
+            $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
+            //echo "$shell_command";
         
-        exec("$shell_command",$o);
-        //var_dump($o);
-        $output = trim($o[0]); // trim is necessary because espeak adds additional spaces
-        //echo "trimmed output: >$output<<br>";
+            exec("$shell_command",$o);
+            //var_dump($o);
+            $output = trim($o[0]); // trim is necessary because espeak adds additional spaces
+            //echo "trimmed output: >$output<<br>";
+        }
     } else {
         //echo "don't transcribe: $word<br>";
          // extend rule to not transcribe words to any position of #
@@ -492,6 +511,7 @@ function GetPhoneticTranscription($word) {
          // in n#avais, n can be treated as phonem and the abbreviation #avais can be applied normally
         $output = $word;
     }
+    //echo "result: $output<br>";
     return $output;
 }
 

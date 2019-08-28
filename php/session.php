@@ -145,6 +145,9 @@ function InitializeSessionVariables() {
     $_SESSION['language_hyphenator'] = "de"; // correction: can be done here, since toggle_model now actualizes session variables for specific model
     $_SESSION['language_espeak'] = "de";
     $_SESSION['phonetic_alphabet'] = "espeak";
+    // phonetics variables
+    $_SESSION['phonetics_transcription_list'] = "";
+    $_SESSION['phonetics_transcription_array'] = "";
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
     // use legacy configuration for www.steno.ch

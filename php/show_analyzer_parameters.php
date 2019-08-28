@@ -64,6 +64,10 @@ if ($_SESSION['analysis_type'] === "selected") {
     
     echo "<h2>Block</h3>";
     echo ShowListOrEmpty($_SESSION['block_list']);
+
+    echo "<h2>Phonetics</h3>";
+    echo ShowListOrEmpty($_SESSION['phonetics_transcription_list']);
+    //var_dump($_SESSION['phonetics_transcription_array']);
 }
 
 echo '<p><a href="input.php"><br><button>zurück</button></a></p>';

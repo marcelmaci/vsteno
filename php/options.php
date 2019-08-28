@@ -59,7 +59,7 @@ $whitelist_variables .= " phonetic_alphabet filter_out_prefixes_yesno filter_out
 $whitelist_variables .= " model_version model_date required_version rendering_middleline_yesno rendering_polygon_yesno rendering_polygon_color rendering_vector_type rendering_sharp_modelling ";
 $whitelist_variables .= " rendering_polygon_opacity rendering_intermediateshadowpoints_yesno rendering_lineoverpass_yesno layouted_originalt_text_yesno layouted_original_text_position ";
 $whitelist_variables .= " layouted_original_text_size layouted_original_text_delta layouted_original_text_font layouted_original_text_wrap layouted_original_text_filter_brackets ";
-$whitelist_variables .= " layouted_original_text_filter_dashes ";
+$whitelist_variables .= " layouted_original_text_filter_dashes phonetics_transcription_list phonetics_transcription_array ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
@@ -185,6 +185,11 @@ function CheckAndSetSessionVariable( $variable, $value ) {
                             case "yes" : $_SESSION[$variable] = true; break;
                             case "no" : $_SESSION[$variable] = false; break;
                             default : $_SESSION[$variable] = $value; break;
+                        }
+                        // adjust phonetics array necessary
+                        if ($variable === "phonetics_transcription_list") {
+                            // 2nd paramter true = create array (instead of stdobj)
+                            $_SESSION['phonetics_transcription_array'] = json_decode( "{" . $_SESSION['phonetics_transcription_list'] . "}", true);
                         }
                     } 
     } else {
