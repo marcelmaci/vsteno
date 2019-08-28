@@ -61,9 +61,9 @@
 	";
 		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// model version
-		"model_version" := "0.1";
+		"model_version" := "0.2";
 		"required_version" := "0.1";
-		"model_date" := "3. Juli 2019";
+		"model_date" := "28. August 2019";
 		// wide distance
 		"token_distance_wide" := "17";
 
@@ -85,6 +85,12 @@
 		"prefixes_list" := "";
 		"stems_list" := "";
 		"suffixes_list" := ""; // use non caputuring groups! (?:)
+		// set phonetics parameters
+		"phonetics_transcription_list" := "
+			"laids?":"lE",
+			"aspects?":"aspE",
+			"respects?":"respE"
+		";
 		// engine parameters
 		"token_distance_wide" := "18";
 		"title_text" := "Französisch";
@@ -227,7 +233,7 @@
 		// - bête, dette (b'Et vs d'Et)
 		// - date, datte (d'at vs d'at)
 
-		"(?<!o|^|:|[eEaAbBcCdDfFgGkKlLmMvVwWxXyYzZ]|~)t" => "[T@#/.]";
+		"(?<!o|^|:|[eEaAbBcCdDfFgGkKlLmMpPrRsSvVwWxXyYzZuU]|~)t" => "[T@#/.]";
 
 		// list of words that have to be marked
 		"^p('?)at$" => "pa[T@#/.]";
@@ -670,6 +676,11 @@
 		"-t-" => " "; 
 		"-(je|tu|il|elle|on|nous|vous|ils) " => " $1 ";
 
+
+		"(?<=^| )[Cc]e qui(?<= |$)" => "#ce_qui";
+		"(?<=^| )[Cc]e qu\'a(?=[ ,.]|$)" => "#ce_qua ";
+		"(?<=^| )[Cc]e qu(e|')" => "#ce_que ";
+		
 		// the problem with regexes like "(?<=^| )example(?= |$)" is that they don't apply to
 		// words like (example), "example", example. etc.
 		// to solve this, first add spaces (later filter them out again)
@@ -698,9 +709,9 @@
 		"(?<=^| )(?:I|i)l(?= |$)" => "#il"; 
 		"(?<=^| )[Ee]st-ce qu(?:e|')?" => "#estceque ";
 		"(?<=^| )[Cc]e qu'ils?(?= |$)" => "#cequil";	
-		"(?<=^| )[Cc]e qui(?<= |$)" => "#ce_qui";
-		"(?<=^| )[Cc]e qu(e|')" => "#ce_que ";
-		"(?<=^| )[Cc]e qu'a " => "#ce_qua ";
+		//"(?<=^| )[Cc]e qui(?<= |$)" => "#ce_qui";
+		//"(?<=^| )[Cc]e qu(e|')" => "#ce_que ";
+		//"(?<=^| )[Cc]e qu\'a(?=[ ,.]|$)" => "#ce_qua ";
 		"(?<=^| )([Ll]e|[Uu]n) son(?= |$)" => "$1_son";
 		"(?<=^| )[Ss]ont?(?= |$)" => " #son ";
 		"(le|un)_son" => "$1 son";
@@ -753,8 +764,9 @@
 		"(?<=^| )[Ww]allons?(?= |$)" => "#wallon";	// idem
 		
 		// wrong transcriptions
-		"(?<=^| )([Ll])aid(?= |$)" => "#$1aid";	// eSpeak transcribes this as "lEd" instead of "lE"
-		"(?<=^| )([Aa])spect(?= |$)" => "#$1spect";
+		// this is done in phonetics_transcriptor_list now (much better, no interference with original text)
+		//"(?<=^| )([Ll])aid(?= |$)" => "#$1aid";	// eSpeak transcribes this as "lEd" instead of "lE"
+		//"(?<=^| )([Aa])spect(?= |$)" => "#$1spect";
 				
 		// filter out inserted spaces
 		"#># " => "";
@@ -851,8 +863,9 @@
  		"^otr\[ü\]i$" => "{AUTRUI}";
 
 		// wrong transcriptions => write them manually here
-		"#[Ll]aid" => "[L][-E]";
-		"(l?)#[Aa]spect" => "$1[A][SP][-E]";
+		// done with phonetics_transcription_list now
+		//"#[Ll]aid" => "[L][-E]";
+		//"(l?)#[Aa]spect" => "$1[A][SP][-E]";
 		
 		
 		"#ils" => "{ILS}";
@@ -932,7 +945,7 @@
 		"^#fois$" => "{FOIS}";
 		"^a~t[ie]" => "{ANTI}";
 		"sirko~" => "{CIRCON}";
-		"ko~" => { "{CON}", "^ko[nm]" };
+		"ko~" => { "{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
 		"^(?<=r@|r|)e[kg][sz]" => "{EX}";
 		"(?<=^[mtsl])e[kg][sz]" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
 		"e~ter" => "{INTER}";
@@ -946,7 +959,13 @@
 		"([aeiou])?sj(on)" => "$1{SIONN}"; // diacritics
 		"([aeiou])?zj(o~|on)" => "$1{ZION}"; // diacritics
 		"#fixions" => "fiks[ION]";
-		"(?<!^)ma~$" => { "{MENT}", "alm\'?A~" };
+
+		// this is the new beauty of VSTENO: a hybrid rule!
+		// checks written form in order to determine if ma~ comes form ment$ or mant$, mand$, end$
+		// abbreviation {MENT} can only be applied to ment$
+		"tstwrt((?:an[dt]|end)$)" => { "ma~", "[M][EN]" };   
+
+		"(?<!^)ma~$" => "{MENT}";
 		"^#moimeme$" => "{MOIMEME}";
 		"^#toimeme$" => "{TOIMEME}";
 		"^#soimeme$" => "{SOIMEME}";
@@ -1128,7 +1147,8 @@
 		"ee" => "e[&E]e";
 		"e(\[o~\])" => "e[&E]$1";
 		"i(e|\[e~\]|\[ö\])" => "i[&E]$1";
-		"j(e|\[e~\])" => "i[&E]$1"; // hier => _|jer
+		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
+		"j(e|\[e~\])" => "[H]$1"; // hier => _|jer
 		"j(\[o~\])" => "[ION]"; // camion
 		"j(on)" => "[ION@#/_]"; // l'espionne (diacritics)
 		"\[ü\]({?i)" => "[ü][&E]$1";
@@ -1189,6 +1209,7 @@
 	
 		"\[a~\]$" => "[EM]";
 		"i$" => "[-I]";
+		"^qu({ESTCEQUE})" => "K$1";
 		"u(\||{|$)" => "A[&U]$1"; 	// write literally as vowel before abbréviations
 		"o{" => "[O]{";	// partial bleeding with following: commentent
 		"o(\||{|$)" => "[&O]$1";	// beau-frère
@@ -1402,7 +1423,7 @@
 		// filtering
 		"\|" => ""; // filter out | to get correct spacing (case tire-ligne: | is used to separate r-l)
 		// filter out all remaining e muet (@), necessary for the spacer to work correctly
-		"@" => "";
+		"\]@\[" => "";
 		
 		// end prespacer
 	#EndSubSection(prespacer)
