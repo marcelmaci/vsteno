@@ -90,7 +90,8 @@
 			"laids?":"lE",
 			"(?:(l)')?aspects?":"$1aspE", // use full regex for phonetic transcriptions
 			"respects?":"respE",
-			"cheques?":"SEk"
+			"cheques?":"SEk",
+			"quantités?":"ka~tite"
 		";
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -200,7 +201,7 @@
 	#BeginSubSection(analyzer)
 		// corrections
 		"k'Omt" => "k'O~t"; // correct "compte": is done wrong by espeak
-		"mm" => "m"; // simpflify double m (espeak does this wrong in "immense" for example)
+		"mm" => { "m", "#comme" }; // simpflify double m (espeak does this wrong in "immense" for example)
 		"gr'andru:t" => "gra~ rut"; // grand'route
 		"S'Ef d'Wvr" => "SEdWvr"; // chef-d'oeuvre
 		//"v'i; a v'i" => "vizavi"; // vis-à-vis (liaison missing)
@@ -234,7 +235,7 @@
 		// - bête, dette (b'Et vs d'Et)
 		// - date, datte (d'at vs d'at)
 
-		"(?<!o|^|:|[eEaAbBcCdDfFgGkKlLmMpPrRsStTvVwWxXyYzZuU@]|~)t" => "[T@#/.]";
+		"(?<!o|^|:|[eEaAbBcCdDfFgGkKiIjJlLmMpPrRsStTvVwWxXyYzZuU@]|~)t" => "[T@#/.]";
 
 		// list of words that have to be marked
 		"^p('?)at$" => "pa[T@#/.]";
@@ -672,15 +673,41 @@
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text french
 		
+		// eliminate upper case vowels with accents (produces gibberish)
+		"À" => "A";
+		"(Ô|Ò)" => "O";
+		"(Ê|È|É)" => "E";
+
+		// fils vs fils (fil): quite tricky (if not impossible) to know which is which ...
+		// mark "fils" (son) as #fils
+		// if preceeded by possessive pronoun
+		// if followed by "de", "du", "des"
+		"(?<=^| )([MmTtSs](?:on|es)|[NnVv]o(?:tre|s)|leurs?) fils(?=[ ,\.]|$)" => "$1 #fils";
+		"(?<=^| )[Ff]ils (d(?:es|[eu]))(?=[ ,\.]|$)" => "#fils $1";
+		// fils (pl. fil) instead will be processed phoneticly by eSpeak
+		
+		// similar problem with: je sens vs le sens (sa~s by eSpeak)
+		// the "easy" solution would be to transcribe all "sens" as "sa~" 
+		// (which is a possible transcription for "le sens")
+		// but in order to avoid confusions at reading it's better to keep the final s
+		// therefore, mark all verbs as "#sens"
+		"(?<=^| )([Jj]e|[Tt]u) sens(?=[ ,\.]|$)" => "$1 #sens";
+		"(?<=^| )[Ss]ens-(tu)(?=[ ,\.]|$)" => "$1 #sens $1"; // inversion, eliminate -
+
+		
+
 		// french inversion like va-t-elle are written va elle in shorthand
 		// filter out "-t-" and - + pronom at the end of words
 		"-t-" => " "; 
+		// as-tu must be transcribed as #as 
+		// because if isolate, eSpeak will pronounce it "as" (like the word "as" = ace) 
+		"(?<=^| )[Aa]s-tu(?=[ ,\.]|$)" => "#as tu";
 		"-(je|tu|ils?|elles?|on|nous|vous) " => " $1 ";
 
 		"(?<=^| )[Cc]e qu\'on" => "#ce_quon";
 		"(?<=^| )[Ee]st-ce qu\'on" => "#estcequon";
 		"(?<=^| )[Qq]u\'est-ce qu'on" => "#questcequon";
-		"(?<=^| )[Cc]e qui(?<= |$)" => "#ce_qui";
+		"(?<=^| )[Cc]e qui(?=[ ,\.]|$)" => "#ce_qui";
 		"(?<=^| )[Cc]e qu\'a(?=[ ,.]|$)" => "#ce_qua ";
 		"(?<=^| )[Cc]e qu(?:e|')" => "#ce_que ";
 		
@@ -719,9 +746,10 @@
 		"(?<=^| )[Ss]ont?(?=[ ,\.]|$)" => " #son ";
 		"(le|un)_son" => "$1 son";
 		"(?<=^| )[Ss]ans(?=[ ,\.]|$)" => "#sans";
-		"(?<=^| )[Dd]ans(?= |$)" => "#dans";
+		"(?<=^| )[Dd]ans(?=[ ,\.]|$)" => "#dans";
+		"(?<=^| )[Cc]omme(?=[ ,\.]|$)" => "#comme";
 		"(?<=^| )[Tt]ous ([mtsl]es|[nv]os|leurs)(?= |$)" => "#tout $1";
-		"(?<=^| )[Cc]et(te)?(?= |$)" => "#cet";
+		"(?<=^| )[Cc]et(te)?(?=[ ,\.]|$)" => "#cet";
 		"(?<=^| )[Pp]ar(?= |$)" => "#par";
 		"(?<=^| )[Ll]eurs?(?= |$)" => "#leur";
 		"(?<=^| )[Mm]onsieur(?= |$)" => "#monsieur";
@@ -846,7 +874,7 @@
 		"(?<!\[)@(?!#)" => { "", "^r@" }; // e muet falls out => all abbreviations with 1 syllable are automatically handled correctly: se, ce, me, ne, te etc.
 		"(?<!#)y" => "[ü]";
 		"^([sn])a$" => "[#NS]$1";
-		"^([sn])o$" => "[#ND]$1";
+		"^([fsn])o$" => "[#ND]$1";
 		"^([sn])u$" => "[#NDS]$1";
 		"^([sn])i$" => "[#NU]$1";
 		"^([bdfgklmpqtvwxyz]|\[sch\])a$" => "[#NS]$1"; monosyllabic words consonant + a
@@ -872,6 +900,9 @@
 		//"(l?)#[Aa]spect" => "$1[A][SP][-E]";
 		
 		
+		"#as" => "a"; // verb: as (with inversion)
+		"#sens" => "sa~"; // verb: je, tu sens
+		"#fils" => "fis";
 		"#ils" => "{ILS}";
 		"#il" => "{IL}";
 		"#ce_que" => "{CEQUE}";
@@ -886,8 +917,9 @@
 		"^no~$" => "{NON}";
 		"#son" => "{SON}";
 		"#sans" => "{SANS}";
+		"#comme" => "{COMME}";
 		"#scie" => "[S=@#/][-I]";
-		"tstwrt(êtez$)" => { "ete$", "E[T]E" }; // arrêtez: no abbreviation!
+		"tstwrt((êtez|ettez)$)" => { "ete$", "E[T]E" }; // arrêtez: no abbreviation!
 		"(i|j?e)te$" => "{ITE}";
 		"#dans" => "{DANS}";
 		"^d\[ü\]$" => "{DU}";
@@ -954,13 +986,13 @@
 		"^#fois$" => "{FOIS}";
 		"^a~t[ie]" => "{ANTI}";
 		"sirko~" => "{CIRCON}";
-		"(?<!s)ko~" => { "{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
+		"(?<!s|\[ü\])ko~" => { "{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
 		"^(?<=r@|r|)e[kg][sz]" => "{EX}";
 		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
 		"e~ter" => "{INTER}";
 		"^e~tr" => "{INTER}";
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
-		"^(?:in|e~)(?!$)" => { "{IN}", "[Ee]~si ?$" }; // why is original word with E uppercase?!? (see ExecuteRule())
+		"^(?:in)(?!(?:j|$))" => { "{IN}", "[Ee]~si ?$" }; // why is original word with E uppercase?!? (see ExecuteRule())
 		"s\[ü\]b" => "{SUB}";
 		"tra~skr" => "{TRANS}skr"; // transcrire
 		"tra~s" => "{TRANS}";
@@ -1028,6 +1060,15 @@
 		" #<#" => "";
 	#EndSubSection(specialtokensfilter)
 	#BeginSubSection(bundler)
+
+		// three characters
+		"str" => "[STR]";
+		"spl" => "[SPL]";
+		"ktr" => "[CTR]";
+		"skr" => "[SCR]";
+		"skl" => "[SCL]";
+
+
 		"(?<!\[)a~" => "[A~]";
 		"(?<!\[)o~" => "[O~]";
 		"(?<!\[)(e|w)~" => "[E~]"; // no distinction: dinde vs humble
@@ -1037,6 +1078,9 @@
 		// restore original #w
 		"#wikend" => "[W@#.]ikend";
 		"#w" => "w";
+		
+		"(?<!^)rtr" => "[RT][#6-][AR]"; // like spanish: artritis
+		"(?<!^)rt" => "[RT]"; // not at beginning, rt => [rt] before tr => [tr], e.g. portrait
 		
 		"(?<!\[)ks(?!\])" => "x";
 		"(?<!\[)br(?!\])" => "[BR]";
@@ -1076,7 +1120,6 @@
 		"(?<!\[)kt(?!\])" => "[CT]";
 		"(?<!\[)ft(?!\])" => "[FT]";
 		"(?<!\[)lt(?!\])" => "[LT]";
-		"(?<!^)rt" => "[RT]"; // not at beginning
 		"n\^|nj" => "[GN]";
 		"\[GN\]r" => "[GNR]";
 		"\[sch\]l" => "[SCHL]";
@@ -1176,7 +1219,7 @@
 		"^i" => "[0D-]i";
 		"^o" => "[0N-]o";
 		
-		"j(\[ö\])(?!$)" => "i[&E]$1";
+		"(?<!\[wa\]|[ae])j(\[ö\])(?!$)" => "i[&E]$1"; // don't apply to: joyeux, aïeul, meilleur
 
 		"^\[e~\]$" => "[0N-]E[-EI]"; // un (must be placed here)
 		
@@ -1240,6 +1283,16 @@
 		"\[o~\]\|" => "[ON]\\"; // wagon-lits
 	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
+		
+		// rewrite bundled tokens
+		"\[str\]" => "[ST@R]";
+		"\[spl\]" => "[SP@L]";
+		"\[ctr\]" => "[CK@R]";
+		"\[scr\]" => "[C@R]";
+		"\[scl\]" => "[C@L3]";
+		
+
+
 		// assign french vowels to original german system
 		"^(.*)$" => "strtolower()";
 		"({.*?})" => "strtoupper()"; // prevent transformations inside {}
@@ -1310,6 +1363,7 @@
 		"{NON}" => "[#ND][0N-][ON]";
 		"{SON}" => "[#ND][SEIN]";
 		"{SANS}" => "[#NDS][SEIN]";
+		"{COMME}" => "OK";
 		"^{ITE}$" => "[0N-][HEIT]";
 		"{ITE}" => "[HEIT]";
 		"{DANS}" => "AD";
@@ -1423,6 +1477,10 @@
 		"({.*?})" => "strtoupper()";
 		"(?<!\[)([a-z]|ä|ö|ü)" => "[$1]";
 	#EndSubSection(jailor)
+	#BeginSubSection(corrector)
+		// correct incorrect stuff ... :)
+		"\[VR@L\]\[-E\]" => "[VR@L][#3-]O[-E]";    // -e 0.5 too high
+	#EndSubSection(corrector)
 	#BeginSubSection(prespacer)
 		// at this point words are raw token sequences inside brackets
 		// add spacing where necessary

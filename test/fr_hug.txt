@@ -118,9 +118,8 @@ banque d'escompte! Il n'a qu'a nous le renvoyer. Je l'ai fait sans vouloir. Jér
 empoché mon mouchoir, est-ce que la caisse d'épargne est déjà fermé? Débouche la bouteille!
 Je l'en soupçonne. Allons a la besogne! Est-ce qu'on l'a fait payer la taxe normale? Arrêtez le cheval.
 
-CH4a1)
+CH4a)
 apte, secte, naphte, stalle, poste, texte, svelte, halte, partager
-CH4a2+3)
 empaqueter, taffetas, fausseté, saleté, secours, rareté, retard, acheter
 
 CH4(13)
@@ -131,3 +130,60 @@ altéré, delta, la récolte, alterner, asphalte, c'est révoltant, Malte, halte
 il perd, la perte, tarte, morte, courte, la porte, ouverte, écarter, partenaire, courtage, cartouche, orthodoxe,
 le parquet, parquer, le pactage, coqueter, caftan, méchanceté, halte ?, molton, secousse, légerté, 
 retardé, retomber, retour, en retournant, la retouche, sauvetage, hantons, fermeté, l'honnêteté
+
+CH4b)
+vider, idée, timide, immense, dinde, Indes, Humbert, sainteté, 
+lune, l'une, cumuler, neuf, oeuf, heureuse, feuilleton, 
+riche, richesse, inchangé, bûcher, huche, Neuchâtel
+
+CH4(14):
+l'île, île, viser, hisser, nous dirons, nous irons, guide, idée, fixer, billet, la cime, pipe, vite, disque
+le bilan, retenir, histoire, ignorance, dimanche, chimique, fictif, corriger, artiste, optique, petite, déchiqueter,
+mince, ils vinrent, le singe, peinte, ils vainquent, rincer, quinze, des nymphes, le sphinx, 
+important, n'importe, syndicat, indiqué, installer, s'imposer, inspirer, défunt,
+dur, ils eurent, dureté, fumer, nous eûmes, musée, user, je juge, luxe, succès, une ruse, lutte, tube, buffet, culte,
+suspecte, mixture, stupide, succursale, multitude, succombé, étude, accusé, obscur, utile, humide, unique,
+coeur, peur, heure, heurté, deuil, boeuf, oeuf, jeune, il veulent, peuvent, 
+humeur, Europe, Eugène, rigoureuse, joyeuse, la chaleur, aïeul, feuilleté, 
+la niche, fiche, le guichet, Richard, la rûche, le rucher, bûcher, duchesse, chocolat, Suchardt, affiché, chuchoter, Neuchâtel.
+
+CH4c)
+vie, géri, fin, aucun, moyen, parrains, bu, courut,
+qualité, vérité, société, piété, acquitter, cité, émietter, dignitaire
+
+
+CH4(15)
+je lis, il rit, mes skis, janter, lundi, finit, aussi, série, choisi, parti, petit, je rectifie,
+le bain, chemin, des moyens, le rein, éteint, étain, terrain, lin, aucun, commun, a jeun,
+j'ai bu, lu, tu l'as vu, su, la rue, disparu, secouru, vertu, avenue, ému, vaincu, charrue, échu, fichu
+quantité, université, possibilité, dignité, popularité, charité, variété, anxiété, société,
+habitez, invité, imité, quitter, j'hésitais, on l'a cité, il s'inquiétait, ils l'irritèrent, 
+pie, pu, pe, pain, piété, reçu, réciter, sécurité, pureté, stabilité, habileté, activité, oisiveté.
+
+CH4d)
+un, été, étais, était, dans, du, dû, tout, tous, toute, 
+bien, peu, peut, peux, comme, qui, qu'y, cette, cet, faut, veut, veux, voeux, vos, vaut, vous, ce qui
+
+CH4(16):
+Voilà un bulletin! L'un de ces petits garçons est son voisin. L'été passé, Henry
+et Jules ont été en Espagne. Quand j'arrivais chez le dentiste, mon mal de dent était passé.
+Je m'étais retiré assez tard. Mes soeurs s'étaient couchées de bonne heure. Mettez nos valises dans le taxi. Nous nous
+perdîmes dans l'obscurité. C'est le fils du directeur. Voulez-vous un bifteck et des pommes de terre? Cet
+honneur vous est dû. Je me sens tout a fait a mon aise. Ils partirent en toute hâte. On voyait là toute 
+sorte de gens. Il a perdu tous ses amis. Tous l'ont quitté. Je peux bien raccomoder vos bas. ON le sauras sous peu.
+Eh bien, il se peut que tu aies raison. Faites comme vous voulez. Comme il était déjà si tard, je restai à la maison.
+À qui as-tu remis le paquet? Eugénie ne fait que songer. Cette mixture est bien amère. Qui t'a raconté l'histoire
+de cet accident? J'ai failli me noyer das cet étang. Il faut que tu dise la vérité. Qu'est-ce que tu veux acheter
+ici? Non, elle ne t'en veut pas. Veuillez accepter mes meilleures voeux. Voici vos certificats.
+Il ne vaut pas la peine. Ses ce qui vous fait du bien. Quand es-tu sorti? Je n'y ai pas été. Ils sont sans moyens.
+
+CH5b)
+bras, simple, grand, classe, discret, slave, portrait, parlons
+
+CH5(18):
+le bras, pris, frais, il est vrai, à l'abri, après, esprit, filtre, arbre, souffrir, ouvrage, déchiffrer, livre,
+des drogues, le train, griller, structure, je l'ai cru, actrice, industrie, litre, orthographe, indiscret, il vaincra,
+blanc, il me plaît, fleur, splendide, table, souplesse, humble, réfléchir, simplicité, obligeant, 
+la gloire, clinique, esclavage, ongle, éclairé, spectacle, des slaves, hurler, perle, Charlotte,
+programme, craindre, prétendre, prêtre, propre, effroyable, un problème, livrable, se plaindre, portrait
+ 
