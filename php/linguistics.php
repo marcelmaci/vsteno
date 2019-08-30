@@ -469,10 +469,12 @@ function recursive_search_optimized($line, $row, $array) {
 /////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
 
 function TryPhoneticTranscriptionFromList($word) {
+    //echo "<br>$word";
     $result = null;
     foreach ($_SESSION['phonetics_transcription_array'] as $key => $transcription) {
         if (preg_match("/^$key$/", $word)) {
-            $result = $transcription;
+            //echo "<br>match with $key";
+            $result = preg_replace("/$key/", $transcription, $word); // use regex also for transcription (like in l'aspect: l' can be tested with variable)
             break;
         }
     }

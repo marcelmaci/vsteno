@@ -90,7 +90,7 @@ caché, tâche, sécher, sèche, marchand, marche, échange, il se fâcha, la h�
 
 CH3(9):
 la gomme, homme, noté, ôter, corps, or, posé, oser, le bosquet, loger, la mode, robe, se moquer, mauve, boxer, chauffer, bonne,
-etoffe, d'abord, besogne, feroce, accordé, objet, dommage, soleil, commerce, honorer, raccomoder, opposer, monopole,
+etoffe, d'abord, besogne, féroce, accordé, objet, dommage, soleil, commerce, honorer, raccomoder, opposer, monopole,
 monde, onde, foncé, onze, bonté, la honte, longue, congé, tomba, songer, 
 fontaine, montagnard, réponse, escompte, raconter, la tombola, correspondant, 
 court, course, ours, soupe, la foule, le goûter, rouge, douze, mouillé, le jour, route, poule, bouger, la rouille, se douter, bouillant,
@@ -98,3 +98,36 @@ nouvelle, ouvert, la douzaine, des bouteilles, remboursa, étouffer, encourager,
 la foire, le poil, soigner, il a soif, boîte, voilà, se soir, le foyer, voyez, étoile, l'espoir, voyager, s'éloigner, ils reçoivent, angoisse, le comptoir,
 le rocher, hocher, a gauche, la douche, le cocher ?, se moucher, des mouches, c'est louche, ils se couchèrent, la pochette, farouche,
 lâche, l'âge, chose, j'ose, léger, lécher, manche, mange, bouger, bouché, la chaine, gêne, chez, j'ai
+
+CH3(10):
+rond, ronde, le don, le son, fond, bon, l'on, laine, ce qu'on, est-ce qu'on, 
+qu'est-ce qu'on, répond, courons, taxons, marchons, lorgnon, voyons, ponton, leçon
+
+CH3(10d)
+nos, nous, ni, n'y, on, ont, nom, non, n'ont, sous, si, ci , s'y, 
+son, sont, le son, sans, s'en, cent, c'en, sang
+
+CH3(11):
+Ne te mêle pas de nos affaires! Nous ne le voyons jamais. Je n'y ai pas pensé. Que cherche-t-on là?
+Ils l'ont laissé sans réponse. non, madame, se n'est pas mon nom. N'ont-elles 
+pas d'argent? Sa balle a roulé sous l'armoire. Ne la faites pas espérer si longtemps.
+Le son de son tambour. Cent quarante soldats ont passé. Nous n'y voyons ni offense, ni 
+manque d'égard. C'est assez embarrassant. Jean et Georges en ont fait autant. Accélérez
+le pas! Nous venons de recevoir de ses nouvelles. Ce sont des enfants gâtés. Allez toucher ce cheque a la
+banque d'escompte! Il n'a qu'a nous le renvoyer. Je l'ai fait sans vouloir. Jérôme se fâcha. J'ai
+empoché mon mouchoir, est-ce que la caisse d'épargne est déjà fermé? Débouche la bouteille!
+Je l'en soupçonne. Allons a la besogne! Est-ce qu'on l'a fait payer la taxe normale? Arrêtez le cheval.
+
+CH4a1)
+apte, secte, naphte, stalle, poste, texte, svelte, halte, partager
+CH4a2+3)
+empaqueter, taffetas, fausseté, saleté, secours, rareté, retard, acheter
+
+CH4(13)
+taper, adapter, apte, accepter, opter, septante, adopter, des adeptes, péremptoire,
+lac, laque, tact, acte, des sectes, le pacte, respecter, c'est correct, le factage, affecté, naphte,
+la steppe, stage, stock, stalle, stopper, rester, veston, estomac, vaste, moustache, austère, le texte,
+altéré, delta, la récolte, alterner, asphalte, c'est révoltant, Malte, halte, volt, Voltaire,
+il perd, la perte, tarte, morte, courte, la porte, ouverte, écarter, partenaire, courtage, cartouche, orthodoxe,
+le parquet, parquer, le pactage, coqueter, caftan, méchanceté, halte ?, molton, secousse, légerté, 
+retardé, retomber, retour, en retournant, la retouche, sauvetage, hantons, fermeté, l'honnêteté

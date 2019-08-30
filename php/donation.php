@@ -9,17 +9,16 @@ Name:   Marcel Maci
         Avenue du Guintzet 15
         1700 Fribourg
 </pre>
-<p>Möglich sind auch Spenden in bar.
-</p>
+<p>Spenden sind grundsätzlich anonym und werden nur mit dem Einverständnis der/des Spenderin/s namentlich erwähnt.</p>
 
 <h1>Barometer</h1>
-<p>Der Transparenz halber werden hier eingegangene Spenden (Gesamtsumme) pro Entwicklungsjahr aufgeführt und einzelne Spender/innen namentlich verdankt, 
-sofern diese die Einwilligung zur öffentlichen Nennung gegeben haben. Herzlichen Dank allen jenen, welche dieses Projekt unterstützen!</p>
+<p>Der Transparenz halber werden hier eingegangene Spenden (Gesamtsumme) pro Entwicklungsjahr aufgeführt und Spender/innen, welche ihr 
+Einverständnis hiezu gegeben haben, namentlich verdankt.</p>
 <ul>
     <li><u><b>Jahr 1:</b></u><br>
     Zeitraum: April 2018 - April 2019<br>
-    Spenden (total): 220.-<br>
-    Spender/innen: SSV - Schweizer Stenografenverband
+    Spenden: 220.- <i>(Total / Summe aller Spenden)</i><br>
+    Danke: Nebst anonymen Spenden verdanken wir an dieser Stelle namentlich die Spende des SSV (Schweizer Stenografenverband).
     </li>
 </ul>
 

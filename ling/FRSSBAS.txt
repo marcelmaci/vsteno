@@ -88,8 +88,9 @@
 		// set phonetics parameters
 		"phonetics_transcription_list" := "
 			"laids?":"lE",
-			"aspects?":"aspE",
-			"respects?":"respE"
+			"(?:(l)')?aspects?":"$1aspE", // use full regex for phonetic transcriptions
+			"respects?":"respE",
+			"cheques?":"SEk"
 		";
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -233,7 +234,7 @@
 		// - bête, dette (b'Et vs d'Et)
 		// - date, datte (d'at vs d'at)
 
-		"(?<!o|^|:|[eEaAbBcCdDfFgGkKlLmMpPrRsSvVwWxXyYzZuU]|~)t" => "[T@#/.]";
+		"(?<!o|^|:|[eEaAbBcCdDfFgGkKlLmMpPrRsStTvVwWxXyYzZuU@]|~)t" => "[T@#/.]";
 
 		// list of words that have to be marked
 		"^p('?)at$" => "pa[T@#/.]";
@@ -354,7 +355,7 @@
 		"CK" => { /*header*/ 4, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPA:LP:RNE", /*data*/ 0, 28.5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 30, 0.5, 2, 2, 0, 0, 0.5,  /**/ 4, 27, 0.5, 0, 2.5, 0, 0, 0,  /**/ 4, 25, 0, 0, 3, 0, 0, 0,  /**/ 5, 0, 0, 0, 1, 0, 1, 0,  /**/ 4, 2.5, 0, 4, 1, 0, 0, 0 }
 		"FF" => { /*header*/ 3, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNC:RN", /*data*/ 0, 10, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 3, 27, 0.5, 2, 2, 0, 0, 0.5,  /**/ 1.8, 30, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 28, 0.5, 0, 3, 0, 0, 0.5,  /**/ 0, 2, 0.5, 0, 3, 0, 0, 0.5,  /**/ 2.5, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 2, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 4, 1, 0.5, 0, 1, 0, 1, 0 }
 		"LL" => { /*header*/ 3, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNA:RN", /*data*/ 0, 5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 8.5, 0.5, 2, 2, 0, 0, 0.5,  /**/ 1.1, 10, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 7, 0.5, 0, 3, 0, 0, 0.5,  /**/ 0, 2, 0.5, 0, 2.5, 0, 0, 0,  /**/ 2, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 2.5, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 2.5, 1.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 2, 0.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 2.5, 0, 0.5, 0, 1, 0, 2, 0.5,  /**/ 3, 2, 0.5, 0, 1, 0, 1, 0 }
-		"LT" => { /*header*/ 8.5, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RPD", /*data1*/ 3, 15.5, 0.5, 1, 1.0, 0, 0, 0.5,  /*2*/ 5, 18, 0.5, 2, 1.0, 0, 0, 0.5,  /*3*/ 2, 20, 0.5, 0, 1.0, 0, 0, 0.5,  /*4*/ 1.5, 16.75, 0.5, 0, 1.0, 0, 0, 0.0,  /*5*/ 6, 10, 0.0, 0, 1.5, 0, 0, 0,  /*6*/ 2, 9, 0.5, 0, 2.0, 0, 0, 0.5,  /*7*/ 0, 5.75, 0.5, 0, 2.5, 0, 0, 0.5,  /*8*/ 1.5, 2, 0.5, 0, 2.0, 0, 0, 0.5,  /*9a*/ 6, 0, 0.5, 4, 1.5, 0, 2, 0.5, /*9b*/ 6, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /*10*/ 8.5, 3.5, 0.5, 0, 1.0, 0, 1, 0.5 }
+		"LT" => { /*header*/ 8.5, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RPD", /*data1*/ 3, 15.5, 0.5, 1, 1.0, 0, 0, 0.5,  /*2*/ 5, 18, 0.5, 2, 1.0, 0, 0, 0.5,  /*3*/ 2, 20, 0.5, 0, 1.75, 0, 0, 0.5,  /*4*/ 1.5, 16.75, 0.5, 0, 2.0, 0, 0, 0.0,  /*5*/ 6, 10, 0.0, 0, 1.5, 0, 0, 0,  /*6*/ 2, 9, 0.5, 0, 2.0, 0, 0, 0.5,  /*7*/ 0, 5.75, 0.5, 0, 2.5, 0, 0, 0.5,  /*8*/ 1.5, 2, 0.5, 0, 2.0, 0, 0, 0.5,  /*9a*/ 6, 0, 0.5, 4, 1.5, 0, 2, 0.5, /*9b*/ 6, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /*10*/ 8.5, 3.5, 0.5, 0, 1.0, 0, 1, 0.5 }
 		"MM" => { /*header*/ 13, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNC:RN", /*data*/ 0, 9, 0.5, 1, 1, 0, 0, 0.5,  /**/ 1, 10, 0.5, 0, 1.2, 0, 0, 0.5,  /**/ 8, 10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 10, 8.5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 10, 2, 0.5, 0, 2.5, 0, 0, 0,  /**/ 12, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 12, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 13, 2, 0.5, 0, 1, 0, 1, 0 }
 		"NN" => { /*header*/ 17, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNC:RN", /*data*/ 0, 9, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 5, 8, 0.5, 0, 3, 0, 0, 0.5,  /**/ 11, 2, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 14, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 14, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 17, 2, 1, 0, 1, 0, 1, 0 }
 		"PP" => { /*header*/ 6, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNE", /*data*/ 0, 30, 0, 1, 3, 0, 0, 0,  /**/ 0, 3, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 2.5, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 3, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 6, 2, 0, 0, 1, 0, 1, 0 }
@@ -674,12 +675,14 @@
 		// french inversion like va-t-elle are written va elle in shorthand
 		// filter out "-t-" and - + pronom at the end of words
 		"-t-" => " "; 
-		"-(je|tu|il|elle|on|nous|vous|ils) " => " $1 ";
+		"-(je|tu|ils?|elles?|on|nous|vous) " => " $1 ";
 
-
+		"(?<=^| )[Cc]e qu\'on" => "#ce_quon";
+		"(?<=^| )[Ee]st-ce qu\'on" => "#estcequon";
+		"(?<=^| )[Qq]u\'est-ce qu'on" => "#questcequon";
 		"(?<=^| )[Cc]e qui(?<= |$)" => "#ce_qui";
 		"(?<=^| )[Cc]e qu\'a(?=[ ,.]|$)" => "#ce_qua ";
-		"(?<=^| )[Cc]e qu(e|')" => "#ce_que ";
+		"(?<=^| )[Cc]e qu(?:e|')" => "#ce_que ";
 		
 		// the problem with regexes like "(?<=^| )example(?= |$)" is that they don't apply to
 		// words like (example), "example", example. etc.
@@ -713,9 +716,9 @@
 		//"(?<=^| )[Cc]e qu(e|')" => "#ce_que ";
 		//"(?<=^| )[Cc]e qu\'a(?=[ ,.]|$)" => "#ce_qua ";
 		"(?<=^| )([Ll]e|[Uu]n) son(?= |$)" => "$1_son";
-		"(?<=^| )[Ss]ont?(?= |$)" => " #son ";
+		"(?<=^| )[Ss]ont?(?=[ ,\.]|$)" => " #son ";
 		"(le|un)_son" => "$1 son";
-		"(?<=^| )[Ss]ans(?= |$)" => "#sans";
+		"(?<=^| )[Ss]ans(?=[ ,\.]|$)" => "#sans";
 		"(?<=^| )[Dd]ans(?= |$)" => "#dans";
 		"(?<=^| )[Tt]ous ([mtsl]es|[nv]os|leurs)(?= |$)" => "#tout $1";
 		"(?<=^| )[Cc]et(te)?(?= |$)" => "#cet";
@@ -731,6 +734,7 @@
 		"(?<=^| )[Ll]es(?= |$)" => "#les";
 		"(?<=^| )[Aa]v(ai[st]|ions|iez|aient|oir)(?= |$)" => "#av$1";
 		"(?<=^| )([CLSMTclsmt]es|[VNvn]os|[Ll]eurs) #avions(?= |$)" => "$1 avions"; // don't mark it (delete mark again)
+		//"(?<=^| )[Nn]\'y(?= |$)" => "#n'#y";
 		"(?<=^| )[Yy](?= |$)" => "#y";
 		"(?<=^| )[Pp]ouv(oir|ai[st]|ions|iez|aient)(?= |$)" => "#pouv$1";
 		"(?<=^| )[Bb]eaucoup(?= |$)" => "#beaucoup";
@@ -872,7 +876,10 @@
 		"#il" => "{IL}";
 		"#ce_que" => "{CEQUE}";
 		"#ce_qua" => "{CEQUA}";
+		"#ce_quon" => "{CEQUON}";
 		"#ce_qui" => "{CEQUI}";
+		"#estcequon" => "{ESTCEQUON}";
+		"#questcequon" => "{QUESTCEQUON}";
 		"#estceque" => "{ESTCEQUE}";
 		"#rat" => "A[AR@#/]";
 		"#wallon" => "[W@#.]alo~";
@@ -880,6 +887,7 @@
 		"#son" => "{SON}";
 		"#sans" => "{SANS}";
 		"#scie" => "[S=@#/][-I]";
+		"tstwrt(êtez$)" => { "ete$", "E[T]E" }; // arrêtez: no abbreviation!
 		"(i|j?e)te$" => "{ITE}";
 		"#dans" => "{DANS}";
 		"^d\[ü\]$" => "{DU}";
@@ -922,6 +930,7 @@
 		"#avions" => "{AV}j[o~]";
 		"#aviez" => "{AV}je";
 		"#avoir" => "{AV}war";
+		"n#y$" => "[I][N=]";
 		"#y$" => "{#Y}";
 		"^\[ü\]$" => "{EUT}";
 		"^#pouvoir" => "{POUV}war";
@@ -945,9 +954,9 @@
 		"^#fois$" => "{FOIS}";
 		"^a~t[ie]" => "{ANTI}";
 		"sirko~" => "{CIRCON}";
-		"ko~" => { "{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
+		"(?<!s)ko~" => { "{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
 		"^(?<=r@|r|)e[kg][sz]" => "{EX}";
-		"(?<=^[mtsl])e[kg][sz]" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
+		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
 		"e~ter" => "{INTER}";
 		"^e~tr" => "{INTER}";
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
@@ -1022,7 +1031,7 @@
 		"(?<!\[)a~" => "[A~]";
 		"(?<!\[)o~" => "[O~]";
 		"(?<!\[)(e|w)~" => "[E~]"; // no distinction: dinde vs humble
-		"(?<!\[)wa" => "[WA]";
+		"(?<!\[)#?wa" => "[WA]";
 		"(?<!\[)w\[E~\]" => "[WE~]";
 		"(?<!#)w" => "[Ö]";  // wa vs W (lower vs upper case) => if it leads to confusion here, put this rule inside early bundler
 		// restore original #w
@@ -1057,7 +1066,7 @@
 		"(?<!\[)tl(?!\])" => "[TL]";
 		"(?<!\[)kr(?!\])" => "[KR]";
 		
-		"(?<!\[)kst(?!\])" => "[XT]";
+		"(?<!\[)(?:ks|x)t(?!\])" => "[XT]";
 		"(?<!\[)sk(?!\])" => "[SK]";
 		"\[SK\]r" => "[SKR]";
 		"(?<!\[)kr(?!\])" => "[KR]";
@@ -1149,7 +1158,7 @@
 		"i(e|\[e~\]|\[ö\])" => "i[&E]$1";
 		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
 		"j(e|\[e~\])" => "[H]$1"; // hier => _|jer
-		"j(\[o~\])" => "[ION]"; // camion
+		"(?<=m)j(\[o~\])" => "[ION]"; // camion vs voyons
 		"j(on)" => "[ION@#/_]"; // l'espionne (diacritics)
 		"\[ü\]({?i)" => "[ü][&E]$1";
 		"(a)i" => "$1[&A]i";
@@ -1293,6 +1302,10 @@
 		"{CEQUE}" => "C";
 		"{CEQUA}" => "[#NS]C";
 		"{CEQUI}" => "[#NU]C";
+		"{CEQUON}" => "C[#N][ON]";
+		"{ESTCEQUON}" => "[0N-]EC[ON]";
+		"{QUESTCEQUON}" => "KEC[ON]";
+
 		"{ESTCEQUE}" => "[0N-]EC";
 		"{NON}" => "[#ND][0N-][ON]";
 		"{SON}" => "[#ND][SEIN]";
@@ -1423,7 +1436,7 @@
 		// filtering
 		"\|" => ""; // filter out | to get correct spacing (case tire-ligne: | is used to separate r-l)
 		// filter out all remaining e muet (@), necessary for the spacer to work correctly
-		"\]@\[" => "";
+		"\]@\[" => "][";
 		
 		// end prespacer
 	#EndSubSection(prespacer)
@@ -1551,7 +1564,7 @@
 		"(\[bei\])\[#n\](\[les\])" => "$1[#2-]$2"; // adjust for coexistencia
 		"(\[rr\])(\[ar\])" => "$1[#9-]$2"; // adjust for rtr (artritis)
 		"(\[in\])\[#5\]\[a\](\[p@r6\])" => "$1[A]$2"; // test
-
+		"\[t\]\[#0\]\[a\]\[ck\]" => "[T][#5][A][CK]";
 
 		// assign 5 to the rest (standard value)
 		//"\[#d..?\]" => "[#5]";
