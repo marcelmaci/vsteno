@@ -711,7 +711,7 @@
 		// as-tu must be transcribed as #as 
 		// because if isolate, eSpeak will pronounce it "as" (like the word "as" = ace) 
 		"(?<=^| )[Aa]s-tu(?=[ ,\.]|$)" => "#as tu";
-		"-(je|tu|ils?|elles?|on|nous|vous) " => " $1 ";
+		"-(je|tu|ils?|elles?|on|nous|vous)([ ?])" => " $1$2";
 
 		"(?<=^| )[Cc]e qu\'on" => "#ce_quon";
 		"(?<=^| )[Ee]st-ce qu\'on" => "#estcequon";
@@ -1158,6 +1158,8 @@
 		"(?<!\[)kt(?!\])" => "[CT]";
 		"(?<!\[)ft(?!\])" => "[FT]";
 		"(?<!\[)lt(?!\])" => "[LT]";
+		"tstwrt((ni[eè]re?)$)" => { "nj([eE]r?)", "[N]I[&E]$1" };
+		"tstwrt((nieux|nieuse)$)" => { "nj\[Ö\]", "[N]j[Ö]" };
 		"n\^|nj" => "[GN]";
 		"\[GN\]r" => "[GNR]";
 		"\[sch\]l" => "[SCHL]";
@@ -1233,20 +1235,41 @@
 		"^(.*)$" => "strtolower()"; 
 		"({.*?})" => "strtoupper()"; 
 		
+		// -io
+		"[ji]o$" => "I[&O]";
 
 		// double vowels
 		"ee" => "e[&E]e";
 		"e(\[o~\])" => "e[&E]$1";
-		"i(e|\[e~\]|\[ö\])" => "i[&E]$1";
+		"i(e|\[e~\]|\[ö\])" => "i[&E]$1"; 
 		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
-		"j(e|\[e~\])" => "[H]$1"; // hier => _|jer
+		"tstwrt(^vien)" => {  "j(\[e~\])", "i[&E]$1" }; // vient
+		"j(e|\[e~\])" => "I[&E]$1"; // Pierre
+		"j(a|\[a~\])" => "I[&E]$1"; // mariage
+		"j(o|\[o~\])" => "I[&E]$1"; // curiosité
+		"e(\[?[aeiou]\]?~?)" => "E[&E]$1";
+		"i(\[?[aeiouü]\]?~?)" => "I[&E]$1";
+		"a(\[?[aeiouü]\]?~?)" => "A[&A]$1";
+
 		"(?<=m)j(\[o~\])" => "[ION]"; // camion vs voyons
 		"j(on)" => "[ION@#/_]"; // l'espionne (diacritics)
 		"\[ü\]({?i)" => "[ü][&E]$1";
+		"\[ü\](\[?[eaouiü]~?\]?)" => "[Ü][&E]$1";
+
+		"\[?u\]?(\[?[eaoui]~?\]?)" => "[A][&U]$1";
+
+		"\[?o\]?(\[?[eaoui]~?\]?)" => "[&O]$1";
+
+		"\[ö\](\[?[eaouiü]~?\]?)" => "[E][&O]$1";
+
 		"(a)i" => "$1[&A]i";
 		"(e)i" => "$1[&E]i";
 		"u([ae])" => "A[&U]$1";
 		"o(e|\[ü\])" => "[&O]$1";
+
+		// vowel + ité
+		"\[ü\]{ITE}" => "[ü][&E]{ITE}";
+		"\[?e\]?{ITE}" => "E[&E]{ITE}";
 
 		// vowels at beginning of word
 		"^e" => "[0N-]e";
@@ -1262,10 +1285,10 @@
 
 		"^\[e~\]$" => "[0N-]E[-EI]"; // un (must be placed here)
 		
-		"^(\[ü\])(?!\[(sch)\])" => "[0D-]$1";
+		"^(\[ü\])(?!\[(sch)\])" => "[0N-]$1"; // these are the same in french (different from german)
 		"^(\[ü\])(?=\[(sch)\])" => "[0N-]$1";
 		
-		"^(\[ö\])(?!\[(sch)\])" => "[0D-]$1";
+		"^(\[ö\])(?!\[(sch)\])" => "[0N-]$1"; // not sure if this is true in all cases!?
 		"^(\[ö\])(?=\[(sch)\])" => "[0N-]$1";
 		
 		"^(\[o~\])" => "[0N-]$1";
@@ -1308,6 +1331,7 @@
 		"\[wa\]$" => "[AUF]";
 
 		"\[IE\]$" => "[IE][LES]";
+		"^A" => "[0N-]A";
 		
 		
 
