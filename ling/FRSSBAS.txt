@@ -62,8 +62,8 @@
 		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// model version
 		"model_version" := "0.2";
-		"required_version" := "0.1";
-		"model_date" := "28. August 2019";
+		"required_version" := "0.2";
+		"model_date" := "29. August 2019";
 		// wide distance
 		"token_distance_wide" := "17";
 
@@ -235,7 +235,7 @@
 		// - bête, dette (b'Et vs d'Et)
 		// - date, datte (d'at vs d'at)
 
-		"(?<!o|^|:|[eEaAbBcCdDfFgGkKiIjJlLmMpPrRsStTvVwWxXyYzZuU@]|~)t" => "[T@#/.]";
+		"(?<!o|^|:|[eEaAbBcCdDfFgGkKiIjJlLmMpPrRsStTvVwWxXyYzZuU@]|~)t" => { "[T@#/.]", "[nv]Otr", "^#" };
 
 		// list of words that have to be marked
 		"^p('?)at$" => "pa[T@#/.]";
@@ -308,7 +308,7 @@
 		"AUS" => { /*header*/ 20, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNA:RN", /*data*/ 0, 0, 0, 1, 1, 0, 0, 0.5,  /**/ 3, 3, 0.5, 0, 1, 0, 0, 0.5,  /**/ 10, 5, 0.5, 2, 1.5, 0, 0, 0.5,  /**/ 17, 3, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 19, 1, 0.5, 0, 3, 0, 0, 0.5,  /**/ 20, 0, 0.5, 0, 1, 0, 1, 0 }
 		"-AUS" => { /*header*/ 20, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "RNB:RN", /*data*/ 10, 5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 17, 3, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 19, 1, 0.5, 0, 3, 0, 0, 0.5,  /**/ 20, 0, 0.5, 0, 1, 0, 1, 0 }
 		"BEI" => { /*header*/ 18, 0.5, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RNB:RN", /*data*/ 0, 5, 0, 1, 3, 0, 0, 0.5,  /**/ 3, 2, 0.5, 0, 2, 0, 0, 0.5,  /**/ 9, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 14, 0.5, 0, 0, 1, 0, 2, 0.5,  /**/ 18, 5, 0.5, 0, 1, 0, 1, 0 }
-		"BEI+AR" => { /*header*/ 23, 0.5, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LKA:LK:RNB:RN", /*data*/ 0, 5, 0, 1, 3, 0, 0, 0.5,  /**/ 3, 2, 0.5, 0, 2, 0, 0, 0.5,  /**/ 9, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 17, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 17, 5, 0.5, 0, 1, 0, 0, 0.5, /**/ 14.5, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 17, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 20, 2, 0.5, 0, 1, 0, 2, 0.5,  /**/ 23, 5, 0.5, 0, 1, 0, 1, 0 }
+		"BEI+AR" => { /*header*/ 25, 0.5, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LKA:LK:RNB:RN", /*data*/ 0, 5, 0, 1, 3, 0, 0, 0.5,  /**/ 5, 2, 0.5, 0, 2, 0, 0, 0.5,  /**/ 11, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 19, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 21.5, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 19, 5, 0.5, 0, 1, 0, 0, 0.5, /**/ 16.5, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 19, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 20.5, 0.2, 0.5, 0, 1, 0, 2, 0.5,  /**/ 25, 5, 0.5, 0, 1, 0, 1, 0 }
 		"DURCH" => { /*header*/ 10, 0.5, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RPC:RP", /*data*/ 3, 10, 0, 1, 1, 0, 0, 0.3,  /**/ 0.5, 5, 0.3, 0, 1, 0, 0, 0,  /**/ 8, 0, 0, 0, 1, 0, 1, 0 }
 		"DIS" => { /*header*/ 8, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 0, 0, 1, 1, 0, 0, 0.5,  /**/ -1, 7.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 10, 0.5, 0, 1, 0, 0, 0,  /**/ 6.5, 5, 0, 0, 1, 0, 1, 0 }
 		"SICH" => { /*header*/ 11.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 1, 0, 0, 0.5,  /**/ 2, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3, 10, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 9.5, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 5, 0, 0, 1, 0, 1, 0 }
@@ -347,7 +347,7 @@
 		"SCHW" => { /*header*/ 7, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RPD", /*data*/ 5, 17, 0.5, 1, 1, 0, 0, 0.5,  /**/ 7, 19, 0.5, 0, 1, 0, 0, 0.5,  /**/ 9, 20, 0.5, 98, 1.5, 0, 0, 0.5,  /**/ 7, 19, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5, 17, 0.5, 0, 3, 0, 0, 0.5,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0 }
 		"MPF" => { /*header*/ 6, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNC:LN:RNA:RN", /*data*/ 0, 9, 0.5, 1, 1.5, 0, 0, 0,  /**/ 1.5, 10, 0.5, 2, 2.5, 0, 0, 0.5,  /**/ 3, 8, 0.5, 0, 3, 0, 0, 0.5,  /**/ 3, 2, 0.5, 0, 2.5, 0, 0, 0,  /**/ 4.5, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 5.75, 2, 0.5, 0, 1, 0, 0, 0.5,  /**/ 4.5, 3.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1.5, 3.1, 0.5, 0, 1, 0, 0, 0.8,  /**/ 0.75, 2.6, 0.8, 0, 1, 0, 0, 0.5,  /**/ 1.5, 2, 0.5, 0, 1, 0, 0, 0.5,  /**/ 4.5, 2, 0.5, 0, 1, 0, 2, 0.5,  /**/ 5.75, 2, 0.5, 0, 1, 0, 1, 0, /*diacritics*/ -7,  15,  0,  "@#/_",  0,  0,  0,  0 }
 		"SCH" => { /*header*/ 9, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RPC:RP", /*data*/ 5, 7, 0.5, 1, 1, 0, 0, 0.5,  /**/ 7, 9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 9, 10, 0.5, 98, 1.5, 0, 0, 0.5,  /**/ 7, 9, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5, 7, 0.5, 0, 3, 0, 0, 0.5,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0.5,  /**/ 5, 2.5, 0, 4, 1, 0, 0, 0 }
-		"^SCH" => { /*header*/ 9, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0.1, 3, 0, 0, 0, 0, 0, 0, 0, /*data*/ 5, 7, 0.5, 1, 1, 0, 0, 0.5,  /**/ 7, 9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 9, 10, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 7, 9, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5, 7, 0.5, 0, 3, 0, 0, 0.5,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 2, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0.5,  /**/ 5, 2.5, 0, 4, 1, 0, 0, 0 }
+		"^SCH" => {  /*h*/ 9,  1,  -1,  0.5,  0,  0,  0,  "", /**/ "",  "",  "",  "",  0,  0,  0,  0.1, /**/ 3,  0,  0,  0,  0,  0,  0,  "LNA:LN:RPC:RP", /*d*/ 5,  7,  0.5,  1,  1,  0,  0,  0.5, /**/ 7,  9,  0.5,  0,  1,  0,  0,  0.5, /**/ 9,  10,  0.5,  0,  1.5,  0,  0,  0.5, /**/ 7,  9,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 5,  7,  0.5,  0,  3,  0,  0,  0.5, /**/ 5,  -8,  0.5,  0,  2.5,  0,  0,  0.5, /**/ 3,  -10,  0.5,  0,  2,  0,  0,  0.5, /**/ 1.5,  -9.5,  0.5,  0,  1.5,  0,  99,  0.5, /**/ 0,  -8,  0.5,  0,  1,  0,  2,  0.5, /**/ 5,  -6.5,  0.5,  0,  1,  0,  1,  0.5, /**/ 5,  -6,  0,  4,  1,  0,  0,  0.5 }
 		"^SCHM" => { /*header*/ 6, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0.1, 3, 0, 0, 0, 0, 0, 0, 0, /*data*/ 2, 9, 0.5, 1, 1, 0, 0, 0.5,  /**/ 4, 10, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 6, 9, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5, 5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 3, 2.5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 3, 1.5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 5, 0.5, 0.5, 0, 3, 0, 0, 0,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 2, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0 }
 		"^SCHW" => { /*header*/ 7, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0.1, 3, 0, 0, 0, 0, 0, 0, 0, /*data*/ 5, 17, 0.5, 1, 1, 0, 0, 0.5,  /**/ 7, 19, 0.5, 0, 1, 0, 0, 0.5,  /**/ 9, 20, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 7, 19, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5, 17, 0.5, 0, 3, 0, 0, 0.5,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 2, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0 }
 		"^CH" => { /*header*/ 6, 1, -1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0.1, 3, 0, 0, 0, 0, 0, 0, "LNA:LN:RNC:RN", /*data*/ 0, 8.5, 0.5, 1, 1.3, 0, 0, 0.5,  /**/ 4, 10, 0.7, 2, 2.5, 0, 0, 0.5,  /**/ 7, 6.5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 7, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 5.5, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 3, -8.5, 0.5, 0, 1.5, 0, 99, 0.5,  /**/ 2.5, -6.5, 0.5, 0, 1, 0, 2, 0.5,  /**/ 4, -4, 0.5, 0, 1, 0, 1, 0.5,  /**/ 7, 2.5, 0, 4, 1, 0, 0, 0 }
@@ -439,6 +439,7 @@
 		"-U" => { /*header*/ 5, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 3, 0, 0, 0,  /**/ 5, 0, 0, 0, 1, 0, 1, 0 }
 		"-O" => { /*header*/ 6.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 1.5, 0, 0, 0.5,  /**/ 0.75, 3, 0.5, 0, 3, 0, 0, 0.5,  /**/ 6, 2.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 6.75, 0, 0.5, 0, 1, 0, 1, 0 }
 		"-I" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 2, 10, 0, 1, 3, 0, 0, 0,  /**/ 2, 10, 1, 0, 3, 0, 1, 0 }
+		"-I1" => { /*header*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 15, 0, 1, 3, 0, 0, 0,  /**/ 0, 15, 1, 0, 3, 0, 1, 0 }
 		"-EI" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
 		"-^EI" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
 		"/I" => { /*header*/ 1.25, 0.5, 0, 0.5, 1, 1, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 10, 0, 1, 1, 0, 0, 0 }
@@ -532,6 +533,7 @@
 		"K" => { "@L3", 0, 0 }
 		"Z" => { "@L3", 0, 0 }
 		"SCH" => { "@L3", 0, 0 }
+		"^SCH" => { "@L3", 0, 0 }
 		"CH" => { "@L3", 0, 0 }
 		"B" => { "@R6", 0, 0 }
 		"SP" => { "@R6", 0, 0 }
@@ -673,10 +675,13 @@
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text french
 		
+		"Êtes" => "#etes";
+
 		// eliminate upper case vowels with accents (produces gibberish)
 		"À" => "A";
 		"(Ô|Ò)" => "O";
 		"(Ê|È|É)" => "E";
+		
 
 		// fils vs fils (fil): quite tricky (if not impossible) to know which is which ...
 		// mark "fils" (son) as #fils
@@ -695,6 +700,10 @@
 		"(?<=^| )[Ss]ens-(tu)(?=[ ,\.]|$)" => "$1 #sens $1"; // inversion, eliminate -
 
 		
+		// french inversion with two pronouns (yes, that's a nice complication ... :)
+		// do this before inversion with one pronoun
+		"-([mts]|[nv]ous)['-](en|y)(?=[ ,\.]|$)" => " $1 $2"; // combinations m-en, vous'en possible (doesn't matter)
+		"-(l[ea]|les)-([mt]oi|l(?:ui|eur)|[nv]ous)(?=[ ,\.]|$)" => " $1 $2";
 
 		// french inversion like va-t-elle are written va elle in shorthand
 		// filter out "-t-" and - + pronom at the end of words
@@ -750,15 +759,15 @@
 		"(?<=^| )[Cc]omme(?=[ ,\.]|$)" => "#comme";
 		"(?<=^| )[Tt]ous ([mtsl]es|[nv]os|leurs)(?= |$)" => "#tout $1";
 		"(?<=^| )[Cc]et(te)?(?=[ ,\.]|$)" => "#cet";
-		"(?<=^| )[Pp]ar(?= |$)" => "#par";
-		"(?<=^| )[Ll]eurs?(?= |$)" => "#leur";
-		"(?<=^| )[Mm]onsieur(?= |$)" => "#monsieur";
-		"(?<=^| )M\.(?= |$)" => "#monsieur";
-		"(?<=^| )[Mm]essieurs(?= |$)" => "#messieurs";
-		"(?<=^| )MM\.(?= |$)" => "#messieurs";
+		"(?<=^| )[Pp]ar(?=[ ,\.]|$)" => "#par";
+		"(?<=^| )[Ll]eurs?(?=[ ,\.]|$)" => "#leur";
+		"(?<=^| )[Mm]onsieur(?=[ ,\.]|$)" => "#monsieur";
+		"(?<=^| )M\.(?=[ ,\.]|$)" => "#monsieur";
+		"(?<=^| )[Mm]essieurs(?=[ ,\.]|$)" => "#messieurs";
+		"(?<=^| )MM\.(?=[ ,\.]|$)" => "#messieurs";
 		"(?<=^| )[Ss]er(a[is]?|on[st]|ez|ai[st]|ions|iez|aient)(?= |$)" => "#ser$1";
-		"(?<=^| )[Pp]lus(ieurs)?(?= |$)" => "#plus$1";
-		"(?<=^| )[Pp]lupart(?= |$)" => "#plupart";
+		"(?<=^| )[Pp]lus(ieurs)?(?=[ ,\.]|$)" => "#plus$1";
+		"(?<=^| )[Pp]lupart(?=[ ,\.]|$)" => "#plupart";
 		"(?<=^| )[Ll]es(?= |$)" => "#les";
 		"(?<=^| )[Aa]v(ai[st]|ions|iez|aient|oir)(?= |$)" => "#av$1";
 		"(?<=^| )([CLSMTclsmt]es|[VNvn]os|[Ll]eurs) #avions(?= |$)" => "$1 avions"; // don't mark it (delete mark again)
@@ -794,6 +803,8 @@
 		"(?<=^| )[Ss]cies?(?= |$)" => "#scie"; // treat separately: abbreviation has to be cancelled	
 		"(?<=^| )[Rr]ats?(?= |$)" => "#rat";	// idem
 		"(?<=^| )[Ww]allons?(?= |$)" => "#wallon";	// idem
+		//"(?<=^| )[Qq]u\'on(?=[ ,\.]|$)" => "#quon";
+		
 		
 		// wrong transcriptions
 		// this is done in phonetics_transcriptor_list now (much better, no interference with original text)
@@ -868,14 +879,33 @@
 		// (2) no @ (donra, tombrai) => use combined token without space ([N@R6], [B@R6] etc.)
 		"s@?l" => "s[@L]"; // special case
 		"rl@r" => "[RL][VR]"; // special case
+		
+		// as always the following rule is very strange ...
+		// it applies to fera (f@ra) for example, but then in trembleront (tre~bl@ro~) it suddenly doesn't apply
+		// (see CH5(19) p. 15 in the manuel)
+		// as I always say: where's the logic anyway ... :)
+		// solution: before applying @r => @[AR] transform bl@r to [bl][vr] in words where [AR] is not correct
+		// same case: ornera
+		// probably this occurs whenever @ is not there first syllable but stands inside (internal vowel)
+		// if this is true, a more general rule could be written (and would be preferable) instead of
+		// writing "exception rules" for each word ...
+		"tstwrt(trembler)" => { "bl@r", "[BL][VR]" };
+		"tstwrt(rner)" => { "rn@r", "[VR][NR]" }; // special: handle n@r as [NR] ?! verbs: retourner, orner
 		"([bflmnpv])@r" => "$1[AR]"; // use this for all tokens that finish with a round bow on the baseline
+		
 		"@o" => "[&E]o"; // e muet plus vowel
 		// in all other cases, @ falls out and [VR] is used (?)
-		"(?<!\[)@(?!#)" => { "", "^r@" }; // e muet falls out => all abbreviations with 1 syllable are automatically handled correctly: se, ce, me, ne, te etc.
+		
+		// following rule: don't make fall out @ (e muet) in "importerons"
+		// reason: is treated differently from "portrait"
+		// group rt@r => [RT][VR]
+		// (primary) group rtr => [RT][AR] (with additional distance correction [#6-])
+		"(?<!\[)@(?!#)" => { "", "^r@", "rt@r" }; // e muet falls out => all abbreviations with 1 syllable are automatically handled correctly: se, ce, me, ne, te etc.
 		"(?<!#)y" => "[ü]";
 		"^([sn])a$" => "[#NS]$1";
 		"^([fsn])o$" => "[#ND]$1";
 		"^([sn])u$" => "[#NDS]$1";
+		"tstwrt(ni.+)" => { "^ni$", "[N=][-I]" }; // verb: nier (nie, nies, nions, niez, nient etc.)
 		"^([sn])i$" => "[#NU]$1";
 		"^([bdfgklmpqtvwxyz]|\[sch\])a$" => "[#NS]$1"; monosyllabic words consonant + a
 		"^ra$" => "[#NS][AR]";
@@ -900,11 +930,13 @@
 		//"(l?)#[Aa]spect" => "$1[A][SP][-E]";
 		
 		
+		"#etes" => "[0N-]ET";
 		"#as" => "a"; // verb: as (with inversion)
 		"#sens" => "sa~"; // verb: je, tu sens
 		"#fils" => "fis";
 		"#ils" => "{ILS}";
 		"#il" => "{IL}";
+		"#quon" => "{QUON}";
 		"#ce_que" => "{CEQUE}";
 		"#ce_qua" => "{CEQUA}";
 		"#ce_quon" => "{CEQUON}";
@@ -986,6 +1018,7 @@
 		"^#fois$" => "{FOIS}";
 		"^a~t[ie]" => "{ANTI}";
 		"sirko~" => "{CIRCON}";
+		"tstwrt(qu\'on)" => { "^ko~$", "K[ON]" };
 		"(?<!s|\[ü\])ko~" => { "{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
 		"^(?<=r@|r|)e[kg][sz]" => "{EX}";
 		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
@@ -1067,7 +1100,11 @@
 		"ktr" => "[CTR]";
 		"skr" => "[SCR]";
 		"skl" => "[SCL]";
-
+		"ptr" => "[PTR]";
+		"ltr" => "[LTR]";
+		"vrt" => "[VRT]";
+		"brt" => "[BR]T"; // bretelles
+		
 
 		"(?<!\[)a~" => "[A~]";
 		"(?<!\[)o~" => "[O~]";
@@ -1079,16 +1116,17 @@
 		"#wikend" => "[W@#.]ikend";
 		"#w" => "w";
 		
+		"(?<!\[)pr(?!\])" => "[PR]"; // pr => [pr] before rt => [rt], ex: propr(e)té (e muet falls out => prt)
 		"(?<!^)rtr" => "[RT][#6-][AR]"; // like spanish: artritis
 		"(?<!^)rt" => "[RT]"; // not at beginning, rt => [rt] before tr => [tr], e.g. portrait
 		
+		"(?<!\[)vl(?!\])" => "[VL]";
 		"(?<!\[)ks(?!\])" => "x";
 		"(?<!\[)br(?!\])" => "[BR]";
 		"(?<!\[)fr(?!\])" => "[FR]";
 		"(?<!\[)lr(?!\])" => "[LR]";
 		"(?<!\[)mr(?!\])" => "[MR]";
 		"(?<!\[)nr(?!\])" => "[NR]";
-		"(?<!\[)pr(?!\])" => "[PR]";
 		"(?<!\[)vr(?!\])" => "[#VR]"; // confusion with r == [VR]
 		"(?<!\[)dr(?!\])" => "[DR]";
 		"(?<!\[)gr(?!\])" => "[GR]";
@@ -1184,6 +1222,7 @@
 		"\[ngl\]" => "[NG@L3]"; // geler: comes from decapitalizer ...
 		"\[KL\]" => "[K@L3]";
 
+		"[Ii]\[SCHL\]" => "I[^SCH@L3]"; // special transcription: Michelin
 		"\[SCHL\]" => "[SCH@L3]";
 		
 	
@@ -1290,6 +1329,9 @@
 		"\[ctr\]" => "[CK@R]";
 		"\[scr\]" => "[C@R]";
 		"\[scl\]" => "[C@L3]";
+		"\[ptr\]" => "[PP@R6]";
+		"\[ltr\]" => "[LT@R6]";
+		"\[vrt\]" => "[W@R6]T";
 		
 
 
@@ -1319,6 +1361,7 @@
 		"\[ct\]" => "[CK]";
 		"\[ft\]" => "[FF]";
 		"\[rt\]" => "[RR]";
+		"\[vl\]" => "[W@L]";
 		
 		"(\[?i\]?|\[(?:EI|AU)\])\[sch\]" => "$1[^sch]";
 		
@@ -1333,6 +1376,7 @@
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"{QUON}" => "K[ON]";
 		"{AUTRUI}" => "[VOR][AU][LES][-I]";
 		"{EXTRA}" => "[0N-]A[LES]";
 		"{AUQUEL}" => "[0N-][&O][CH]";
@@ -1480,6 +1524,7 @@
 	#BeginSubSection(corrector)
 		// correct incorrect stuff ... :)
 		"\[VR@L\]\[-E\]" => "[VR@L][#3-]O[-E]";    // -e 0.5 too high
+		"\[VR\]\[-I\]" => "[VR][-I1]"; // -i 0.5 too low 
 	#EndSubSection(corrector)
 	#BeginSubSection(prespacer)
 		// at this point words are raw token sequences inside brackets
@@ -1623,6 +1668,7 @@
 		"(\[rr\])(\[ar\])" => "$1[#9-]$2"; // adjust for rtr (artritis)
 		"(\[in\])\[#5\]\[a\](\[p@r6\])" => "$1[A]$2"; // test
 		"\[t\]\[#0\]\[a\]\[ck\]" => "[T][#5][A][CK]";
+		"\[rr\]\[#3\]\[vr\]" => "[rr][#0][vr]";
 
 		// assign 5 to the rest (standard value)
 		//"\[#d..?\]" => "[#5]";

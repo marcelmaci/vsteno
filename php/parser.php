@@ -491,7 +491,8 @@ function ExecuteRule( /*$word*/ ) {
                 // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
 // test if phonetical transcription is selected and if condition has to be tested on written form
 if (($_SESSION['phonetics_yesno']) && (preg_match("/^tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]))) {
-    $hybrid_condition1 = preg_replace("/tstwrt\((.*?)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+    // quantifier must be greedy for condition1 in order to go to the last ) !!!
+    $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
     $hybrid_condition2 = $rules["$actual_model"][$rules_pointer][1];
     $hybrid_consequence = $rules["$actual_model"][$rules_pointer][2];
     $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $last_written_form, $act_word);
