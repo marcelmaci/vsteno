@@ -91,7 +91,9 @@
 			"(?:(l)')?aspects?":"$1aspE", // use full regex for phonetic transcriptions
 			"respects?":"respE",
 			"cheques?":"SEk",
-			"quantités?":"ka~tite"
+			"quantités?":"ka~tite",
+			"assid(?:û|u)ment":"asidyma~",
+			"discutions":"diskytio~"
 		";
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -1041,16 +1043,20 @@
 		"tra~skr" => "{TRANS}skr"; // transcrire
 		"tra~[sz]" => "{TRANS}";
 		"([aeiou])?sj(o~)" => "$1{SION}"; // no diacritics
-		"([aeiou])?sj(on)" => "$1{SIONN}"; // diacritics
-		"([aeiou])?zj(o~|on)" => "$1{ZION}"; // diacritics
-		"#fixions" => "fiks[ION]";
+		"([aeiou])?sj(on)$" => "$1{SIONN}"; // diacritics
+		"([aeiou])?zj(o~|on)$" => "$1{ZIONN}"; // diacritics
+		"([aeiou])?sj(on)" => "$1{SION}"; // no diacritics
+		"([aeiou])?zj(o~|on)" => "$1{ZION}"; // no diacritics
+		
+		"#fixions" => "fiks{ION}";
 
 		// this is the new beauty of VSTENO: a hybrid rule!
 		// checks written form in order to determine if ma~ comes form ment$ or mant$, mand$, end$
 		// abbreviation {MENT} can only be applied to ment$
 		"tstwrt((?:an[dt]|end)$)" => { "ma~", "[M][EN]" };   
 
-		"(?<!^)ma~$" => "{MENT}";
+		"(?<!^)m[Aa]~t" => "{MENT}"; // also inside word
+		"(?<!^)m[Aa]~" => "{MENT}";
 		"^#moimeme$" => "{MOIMEME}";
 		"^#toimeme$" => "{TOIMEME}";
 		"^#soimeme$" => "{SOIMEME}";
@@ -1089,6 +1095,8 @@
 		"^#toujours$" => "{TOUJOURS}";
 		"^neseser" => "{NECESSAIRE}";
 
+		"[ji](?:[oO][nN]|\[[oO][nN]\])$" => "{ION1}"; // diacritics
+		"[ji](?:[oO][~nN]|\[[oO][~nN]\])" => "{ION}"; // include possible variants
 		
 		// recorrection
 		"{MENT}r" => "{MENT}[VR]"; // where's the logic anyway ... :) :) :) (or - as I use to say - stenographs aren't linguists ... :o)
@@ -1194,6 +1202,7 @@
 		"(\|)r" => "$1[AR]"; // vice-rectur
 		
 		"^r@?" => "[AR]";
+		"{ZION}r" => "{ZION}[VR]";
 		"}r" => "}[AR]"; // p.ex.: subroger
 		"r" => "[VR]";
 		"kaze" => "ka[S@#.]e"; // distinguish: casser vs caser (diacritics)
@@ -1256,7 +1265,7 @@
 		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
 		"tstwrt(^vien)" => {  "j(\[e~\])", "i[&E]$1" }; // vient
 		"(?<!\[ö\])j(e|\[e~\])" => "I[&E]$1"; // Pierre; don't apply to: veuillez
-		"(?<!\[wa\])j(a|\[a~\])" => "I[&E]$1"; // mariage; don't apply to: voyageur!
+		"(?<!\[wa\]|i)j(a|\[a~\])" => "I[&E]$1"; // mariage; don't apply to: voyageur, brillamment
 		"j(o|\[o~\])" => "I[&E]$1"; // curiosité
 		"e(\[?[aeiouü]\]?~?)" => "E[&E]$1";
 		"i(\[?[aeiouü]\]?~?)" => "I[&E]$1";
@@ -1336,7 +1345,7 @@
 		"\[a~\]$" => "[EM]";
 		"i$" => "[-I]";
 		"^qu({ESTCEQUE})" => "K$1";
-		"u(\||{|$)" => "A[&U]$1"; 	// write literally as vowel before abbréviations
+		"u(\||{I|$)" => "A[&U]$1"; 	// write literally as vowel before abbréviation {ITE}
 		"o{" => "[O]{";	// partial bleeding with following: commentent
 		"o(\||{|$)" => "[&O]$1";	// beau-frère
 		"\[ö\]$" => "E[&O]";
@@ -1495,8 +1504,10 @@
 		"{SUB}" => "[&U]";
 		"{TRANS}" => "A[T@R]";
 		"{SION}" => "[SS]";
+		"{ION1}" => "[ION@#/_]";
 		"{SIONN}" => "[SS@#/_]";
-		"{ZION}" => "[SS@#.]";
+		"{ZIONN}" => "[SS@#.]";
+		"{ZION}" => "[SS]";
 		"{MENT}" => "[MPF]";
 		"{MENT1}" => "[MPF@#/_]";
 		"{AVEC}" => "[0N-]G";
@@ -1535,6 +1546,7 @@
 		"^{SI}" => "I[S=]";
  		"{TOT}" => "[TOT]";
 		"{BIENETRE}" => "B[&T@R]";
+		"{ION}" => "[ION]"; // not really necessary (just to be consistent)
  
 		
 
