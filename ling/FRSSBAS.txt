@@ -235,7 +235,7 @@
 		// - bête, dette (b'Et vs d'Et)
 		// - date, datte (d'at vs d'at)
 
-		"(?<!o|^|:|[eEaAbBcCdDfFgGkKiIjJlLmMpPrRsStTvVwWxXyYzZuU@]|~)t" => { "[T@#/.]", "[nv]Otr", "^#", "^(pr|n)Ot" }; // exception: protester, note
+		"(?<!o|^|:|[eEaAbBcCdDfFgGkKiIjJlLmMpPrRsStTvVwWxXyYzZuU@]|~)t" => { "[T@#/.]", "[nv]Otr", "^#", "^(pr|n|(?:kO~)?patri)Ot" }; // exception: protester, note, (com)patriote
 
 		// list of words that have to be marked
 		"^p('?)at$" => "pa[T@#/.]";
@@ -438,7 +438,7 @@
 		"-A" => { /*header*/ 0, 0.5, 0, 0.5, 0, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0 }
 		"-U" => { /*header*/ 5, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 3, 0, 0, 0,  /**/ 5, 0, 0, 0, 1, 0, 1, 0 }
 		"-O" => { /*header*/ 6.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 5, 0, 1, 1.5, 0, 0, 0.5,  /**/ 0.75, 3, 0.5, 0, 3, 0, 0, 0.5,  /**/ 6, 2.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 6.75, 0, 0.5, 0, 1, 0, 1, 0 }
-		"-I" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 2, 10, 0, 1, 3, 0, 0, 0,  /**/ 2, 10, 1, 0, 3, 0, 1, 0 }
+		"-I" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
 		"-I1" => { /*header*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0, 15, 0, 1, 3, 0, 0, 0,  /**/ 0, 15, 1, 0, 3, 0, 1, 0 }
 		"-EI" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
 		"-^EI" => { /*header*/ 1.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 10, 0, 1, 3, 0, 0, 0,  /**/ 4, 10, 1, 0, 3, 0, 1, 0 }
@@ -1023,20 +1023,23 @@
 		"^#soit$" => "{SOIT}";
 		"^#moi$" => "{MOI}";
 		"^#fois$" => "{FOIS}";
-		"^a~t[ie]" => "{ANTI}";
-		"sirko~" => "{CIRCON}";
+		"^a~t[ie]" => { "{ANTI}", "^A~tikite$", "^A~tEn$" };
+		"sirk(?:[OoWw]~|ym|\[ü\]m)" => "{CIRCON}"; // o~: circon-, W~: cirum- + all sorts of transcriptions ...
 		"tstwrt(qu\'on)" => { "^ko~$", "K[ON]" };
 		"tstwrt(^[Cc]ompt)" => { "^ko~", "K[O~]" };
-		"(?<!s|\[ü\])ko~" => { "{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
+		"(?<!s|\[ü\])(dis|tra~[sz])?ko~" => { "$1{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
 		"^(?<=r@|r|)e[kg][sz]" => "{EX}";
+		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
+		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
+
 		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
 		"e~ter" => "{INTER}";
-		"^e~tr" => "{INTER}";
+		"^(l)?e~tr(?!uvabl)" => "$1{INTER}" };
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
 		"^(?:in)(?!(?:j|$))" => { "{IN}", "[Ee]~si ?$" }; // why is original word with E uppercase?!? (see ExecuteRule())
 		"s\[ü\]b" => "{SUB}";
 		"tra~skr" => "{TRANS}skr"; // transcrire
-		"tra~s" => "{TRANS}";
+		"tra~[sz]" => "{TRANS}";
 		"([aeiou])?sj(o~)" => "$1{SION}"; // no diacritics
 		"([aeiou])?sj(on)" => "$1{SIONN}"; // diacritics
 		"([aeiou])?zj(o~|on)" => "$1{ZION}"; // diacritics
@@ -1116,7 +1119,7 @@
 
 		"(?<!\[)a~" => "[A~]";
 		"(?<!\[)o~" => "[O~]";
-		"(?<!\[)(e|w)~" => "[E~]"; // no distinction: dinde vs humble
+		"(?<!\[)(e|w)~" => { "[E~]", "sirkw~" }; // no distinction: dinde vs humble
 		"(?<!\[)#?wa" => "[WA]";
 		"(?<!\[)w\[E~\]" => "[WE~]";
 		"(?<!#)w" => "[Ö]";  // wa vs W (lower vs upper case) => if it leads to confusion here, put this rule inside early bundler
@@ -1702,6 +1705,9 @@
 		"(\[in\])\[#5\]\[a\](\[p@r6\])" => "$1[A]$2"; // test
 		"\[t\]\[#0\]\[a\]\[ck\]" => "[T][#5][A][CK]";
 		"\[rr\]\[#3\]\[vr\]" => "[rr][#0][vr]";
+
+		// corrections
+		"\[in\]\[#0\]\[a\]\[pp\]" => "[in][#5][a][pp]";
 
 		// assign 5 to the rest (standard value)
 		//"\[#d..?\]" => "[#5]";
