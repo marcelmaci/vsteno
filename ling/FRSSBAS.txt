@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.2";
 		"required_version" := "0.2";
-		"model_date" := "2. September 2019";
+		"model_date" := "3. September 2019";
 		// wide distance
 		"token_distance_wide" := "17";
 
@@ -93,7 +93,9 @@
 			"cheques?":"SEk",
 			"quantités?":"ka~tite",
 			"assid(?:û|u)ment":"asidyma~",
-			"discutions":"diskytio~"
+			"discutions":"diskytio~",
+			"vingt":"vE~t",
+			"l'as":"la"
 		";
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -237,7 +239,7 @@
 		// - bête, dette (b'Et vs d'Et)
 		// - date, datte (d'at vs d'at)
 
-		"(?<!o|^|:|[eEaAbBcCdDfFgGkKiIjJlLmMpPrRsStTvVwWxXyYzZuU@]|~)t(?!r)" => { "[T@#/.]", "[nv]Otr", "^#", "^(pr|n|(?:kO~)?patri)Ot" }; // exception: protester, note, (com)patriote
+		"(?<!o|^|:|[eEaAbBcCdDfFgGkKiIjJlLmMpPrRsStTvVwWxXyYzZuU@]|~)t(?!r)" => { "[T@#/.]", "[nv]Otr", "^#", "^(pr|n|(?:kO~)?patri)Ot", "#avaient" }; // exception: protester, note, (com)patriote
 
 		// list of words that have to be marked
 		"^p('?)at$" => "pa[T@#/.]";
@@ -257,8 +259,11 @@
 		"(kO~tr)\|(ba)" => "$1$2"; // contre-bas: write it in one word
 		"(o|la|si)\|(d@s[yu])" => "$1$2"; // au-dess(o)us
 		"(o|la|si)\|(d@vA~)" => "$1$2"; // au-devant
+		"^(o)\|(d@la)$" => "$1$2"; // au-delà
 
 		"(pO(?:\[T@#\/\.\]|[Tt])o)\|(fY)" => "$1$2"; // pot-au-feu
+
+		"^inuj$" => "inui"; // inouï
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -681,8 +686,15 @@
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text french
-		
+		// high priority replacements (= without any preliminar modification of the original text)		
 		"Êtes" => "#etes";
+		"(?<=^| )([Dd]\')[Aa]ujourd\'?hui(?=[ ,\.]|$)" => "d#aujourdhui";	
+		"(?<=^| )[Jj]usqu\'?à ce que(?=[ ,\.]|$)" => "#jusquaceque";	
+		"(?<=^| )[Pp]lus tôt(?=[ ,\.]|$)" => "plutôt";	// make plus tôt and plutôt the same (parallel edition will be impossible ...)
+		"(?<=^| )([Qq]u)\'a(?=[ ,\.-]|$)" => "$1e a";	
+		
+		
+		
 
 		// eliminate upper case vowels with accents (produces gibberish)
 		"À" => "A";
@@ -717,7 +729,10 @@
 		// and another one for serais-je ...
 		"(?<=^| )([Ss]erai)s?-(je)(?=[ ,\.]|$)" => "$1$2"; // transform it to "seraije" and let eSpeak do the rest ..
 		// and another one ... anyway: peux-je ... I'd prefer puis-je ...
-		"(?<=^| )([Pp]eu)x-(je)(?=[ ,\.]|$)" => "$1$2"; // transform it to "peuje" and let eSpeak do the rest ..	
+		"(?<=^| )([Pp]eu|[Pp]ourrai)[sx]-(je)(?=[ ,\.]|$)" => "$1$2"; // transform it to "peuje" and let eSpeak do the rest ..	
+
+		// some other nice invention: n'étais-je = no inversion (where's the logic anyway ... ;/)
+		"([Eée]tais)-(je)" => "$1 $2"; // separate them
 
 		// french inversion like va-t-elle are written va elle in shorthand
 		// filter out "-t-" and - + pronom at the end of words
@@ -725,7 +740,7 @@
 		// as-tu must be transcribed as #as 
 		// because if isolate, eSpeak will pronounce it "as" (like the word "as" = ace) 
 		"(?<=^| )[Aa]s-tu(?=[ ,\.]|$)" => "#as tu";
-		"-(je|tu|ils?|elles?|on|nous|vous)([ ?])" => " $1$2";
+		"-(moi|toi|lui|leur|je|tu|ils?|elles?|on|nous|vous)([ ?,\.!]?)$" => " $1$2";
 
 		"(?<=^| )[Pp]arce qu'ils?(?=[ ,\.]|$)" => "#parcequil";
 		"(?<=^| )[Pp]arce qu\'on(?=[ ,\.]|$)" => "#parcequon";
@@ -759,7 +774,9 @@
 		"(?<=^| )[Qq]uelqu'un?(?=[ ,\.]|$)" => "#quelquun";
 		"(?<=^| )[Qq]uelques-uns?(?=[ ,\.]|$)" => "#quelquesuns";
 		"(?<=^| )[Qq]uelques-unes?(?=[ ,\.]|$)" => "#quelquesunes";
-		"(?<=^| )[Qq]uel(le)?|qu'elles?(?=[ ,\.]|$)" => "#quel";
+		"(?<=^| )[Qq]uelconque(?=[ ,\.]|$)" => "#quelconque";
+		"(?<=^| )[Qq]uelquefois(?=[ ,\.]|$)" => "#quelquefois";
+		"(?<=^| )([Ll][ea]s?|[Dd]u|[Dd]es)?[Qq]uel(?:le)?|[Qq]u'elles?(?=[ ,\.]|$)" => "$1#quel";
 		"(?<=^| )[Bb]ien-être(?=[ ,\.]|$)" => "#bienetre";
 		"(?<=^| )[Tt]oujours(?=[ ,\.]|$)" => "#toujours";
 		"(?<=^| )(?:I|i)ls(?=[ ,\.]|$)" => "#ils"; // diacritics 
@@ -775,7 +792,7 @@
 		"(?<=^| )[Ss]ans(?=[ ,\.]|$)" => "#sans";
 		"(?<=^| )[Dd]ans(?=[ ,\.]|$)" => "#dans";
 		"(?<=^| )[Cc]omme(?=[ ,\.]|$)" => "#comme";
-		"(?<=^| )[Tt]ous ([mtsl]es|[nv]os|leurs)(?=[ ,\.]|$)" => "#tout $1";
+		"(?<=^| )[Tt]ous ([mtslc]es|[nv]os|leurs)(?=[ ,\.]|$)" => "#tout $1";
 		"(?<=^| )[Cc]et(te)?(?=[ ,\.]|$)" => "#cet";
 		"(?<=^| )[Pp]ar(?=[ ,\.]|$)" => "#par";
 		"(?<=^| )[Ll]eurs?(?=[ ,\.]|$)" => "#leur";
@@ -791,6 +808,7 @@
 		"(?<=^| )([CLSMTclsmt]es|[VNvn]os|[Ll]eurs) #avions(?=[ ,\.]|$)" => "$1 avions"; // don't mark it (delete mark again)
 		//"(?<=^| )[Nn]\'y(?= |$)" => "#n'#y";
 		"(?<=^| )[Yy](?=[ ,\.]|$)" => "#y";
+		"(?<=^| )[Pp]ouvais-je(?=[ ,\.]|$)" => "#pouvaisje";
 		"(?<=^| )[Pp]ouv(oir|ai[st]|i?ons|i?ez|aient)(?=[ ,\.]|$)" => "#pouv$1";
 		"(?<=^| )[Bb]eaucoup(?=[ ,\.]|$)" => "#beaucoup";
 		"(?<=^| )[Pp]our(?=[ ,\.]|$)" => "#pour";
@@ -799,7 +817,7 @@
 		"(?<=^| )[Qq]uoi(?=[ ,\.]|$)" => "#quoi";		
 		"(?<=^| )[Ss]oi([st]|ent)?(?=[ ,\.]|$)" => "#soit";		
 		"(?<=^| )[Mm]ois?(?=[ ,\.]|$)" => "#moi";		
-		"(?<=^| )[Ff]ois?(?=[ ,\.]|$)" => "#fois";	
+		"(?<=^| )[Ff]ois(?=[ ,\.]|$)" => "#fois"; // fois vs foi (not written the same way!)	
 		"(?<=^| )[Ff]ixions(?=[ ,\.]|$)" => "#fixions"; // fiction vs fixions (phoneticly indistinguishable)	
 		"(?<=^| )[Ss]'ils?(?=[ ,\.]|$)" => "#sil";	
 		"(?<=^| )d'il(?=[ ,\.]|$)" => "#dil";	
@@ -815,7 +833,6 @@
 		"(?<=^| )[Cc]eci(?=[ ,\.]|$)" => "#ceci";
 		"(?<=^| )[Cc]eux-ci(?=[ ,\.]|$)" => "#ceuxci";
 		"(?<=^| )[Ss]inon(?=[ ,\.]|$)" => "#sinon";
-		"(?<=^| )[Aa]ujourd'hui(?=[ ,\.]|$)" => "#aujourdhui";	
 		"(?<=^| )[Mm]aintenant(?=[ ,\.]|$)" => "#maintenant";	
 		"(?<=^| )[Ss]ui[st](?=[ ,\.]|$)" => "#suis";	
 		"(?<=^| )[Ss]cies?(?=[ ,\.]|$)" => "#scie"; // treat separately: abbreviation has to be cancelled	
@@ -823,6 +840,7 @@
 		"(?<=^| )[Ww]allons?(?=[ ,\.]|$)" => "#wallon";	// idem
 		//"(?<=^| )[Qq]u\'on(?=[ ,\.]|$)" => "#quon";
 		
+		"(?<=^| )[Vv]a-et-vient(?=[ ,\.]|$)" => "#vaetvient";
 		
 		// wrong transcriptions
 		// this is done in phonetics_transcriptor_list now (much better, no interference with original text)
@@ -932,20 +950,27 @@
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
 
+		
+		"tstwrt(^là=)" => { "^\[#NS\][Ll]", "{LA}" };
+		"tstwrt(^bas=)" => { "^(?:ba|\[#NS\]b)$", "{BAS}" };
+		"tstwrt(^ci=)" => { "^(?:si)", "{CI}" };
+
+		"^odla$" => "O[DL]A"; // au-delà
+		"^k[Ee]l$" => "{QUEL}";
 		"^ekstra$" => "{EXTRA}";
 		"e~par" => "{IMPAR}"; // imparfait (impartial?)
 		"^e~s\[ü\]r" => "{INSUR}";
 		"^#toutefois$" => "{TOUTEFOIS}";
 		"^#dument$" => "{DU}{MENT}";
 		"^#parcequil$" => "{PARCEQUIL}";
-		"^#aujourdhui$" => "{AUJOURDHUI}";
+		"#aujourdhui$" => "{AUJOURDHUI}";
 		"^reeks" => "{RE}{EX}";
 		"^ree~ter" => "{RE}{INTER}";
 		"^partik\[ü\]l" => "{PARTICUL}";
  		"^otr\[ü\]i$" => "{AUTRUI}";
 		"^pl(y|\[ü\])$" => "{PLUS}"; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
-		"^par(?!ti|[Oo]l|[Ee]~?|[Aa]~)" => "{PAR}"; // exceptions: partir (parti), parôle, paraître (paraît), pareil etc.
+		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~)" => "{PAR}"; // exceptions: partir (parti), parôle, paraître (paraît), pareil etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
 
 
@@ -960,19 +985,26 @@
 		"^(d@?)d[Aa]~$" => "$1{DANS}";
 		"^s@?r([Ee](?:[Zz]|\[(?:ng|NG)\]))$" => "{SER}$1";
 
+		"#vaetvient" => "{VAETVIENT}";
+		"#jusquaceque" => "{JUSQUACEQUE}";
+
 		"#etes" => "[0N-]ET";
 		"#as" => "a"; // verb: as (with inversion)
 		"#sens" => "sa~"; // verb: je, tu sens
 		"#fils" => "fis";
 		"[Ss]#il" => "{SIL}";
 		"[Dd]#il" => "{DIL}";
+		"([Kk]|[Qq]u)#ils" => "{KIL}"; // don't use diacritics here
 		"([Kk]|[Qq]u)#il" => "{KIL}";
 		"#ils" => "{ILS}";
 		"#il" => "{IL}";
 		"#quon" => "{QUON}";
 		"#parceque" => "{PARCEQUE}";
 		"#parcequon" => "{PARCEQUON}";
+		"#quelconque" => "{QUELCONQUE}";
+		"#quelquefois" => "{QUELQUEFOIS}";
 		
+		"#pouvaisje" => "{POUVAISJE}";
 		"#ce_que" => "{CEQUE}";
 		"#ce_qua" => "{CEQUA}";
 		"#ce_quon" => "{CEQUON}";
@@ -990,7 +1022,7 @@
 		"#sans" => "{SANS}";
 		"#comme" => "{COMME}";
 		"#scie" => "[S=@#/][-I]";
-		"tstwrt((êtez|ettez)$)" => { "ete$", "E[T]E" }; // arrêtez: no abbreviation!
+		"tstwrt((êtez|ettez|ait(?:é|e)e?[sz]?)$)" => { "ete$", "E[T]E" }; // arrêtez: no abbreviation!
 		"(i|j?e)te$" => "{ITE}";
 		"#dans" => "{DANS}";
 		"^d\[ü\]$" => "{DU}";
@@ -1021,6 +1053,8 @@
 		"^#seron[st]$" => "{SER}o~";
 		"^#serions$" => "{SER}jo~";
 		"^#seriez$" => "{SER}je";
+		"^s\[ü\]rtu$" => "{SUR}{TOUT}";
+		"^s\[ü\]reks" => "{SUR}{EX}";
 		"^s\[ü\]rpl\[ü\]s?$" => "{SUR}{PLUS}";
 		"^s\[ü\]r" => "{SUR}"; // alone and prefix
 		"^#plus$" => "{PLUS}";
@@ -1046,7 +1080,7 @@
 		"^#pouv(ons)" => "{POUV}[O~]";
 		"^#pouv(ez)" => "{POUV}e";
 		"^#beaucoup$" => "{BCP}"; 
-		"^(d)?otr(@?m[Aa]~|@?f#?wa)?$" => "$1{AUTRE}$2";
+		"^([dl])?otr(@?m[Aa]~|@?f#?wa)?$" => "$1{AUTRE}$2";
 		"^#pourr(ai[st]?|aient|ez)$" => "{POUR}e";
 		"^#pourr(as?)$" => "{POUR}a";
 		"^#pourron[st]" => "{POUR}[O~]";
@@ -1064,6 +1098,7 @@
 		"sirk(?:[OoWw]~|ym|\[ü\]m)" => "{CIRCON}"; // o~: circon-, W~: cirum- + all sorts of transcriptions ...
 		"tstwrt(qu\'on)" => { "^ko~$", "K[ON]" };
 		"tstwrt(^[Cc]ompt)" => { "^ko~", "K[O~]" };
+		"^k[Oo]~b[ij][Ee]~$" => "{CON}{BIEN}";
 		"(?<!s|\[ü\])(dis|tra~[sz])?ko~" => { "$1{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar" }; // original word is phonetic  transcription! (without stress! = ')
 		"^(?<=r@|r|)e[kg][sz]" => "{EX}";
 		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
@@ -1111,13 +1146,15 @@
 		"^#dil$" => "{DIL}";
 		"^#quil$" => "{KIL}";
 		"^#cequil$" => "{CEQUIL}";
-		"^#quel$" => "{QUEL}";
+		//"(?<!{)([ld][ea]s?|du)(#quels)?" => "{$1}$2"; // not a very clean rule ...
+		"(?<!{)([ld][ea]s?|du)(#)(quels)?" => "{$1}$2$3"; // try to do better ...
+		"#quels?$" => "{QUEL}";
 		"^#quelque$" => "{QUELQUE}";
 		"^#quelquun$" => "{QUELQUUN}";
 		"^#quelquesuns$" => "{QUELQUESUNS}";
 		"^#quelquesunes$" => "{QUELQUESUNES}";
 		"^fort" => "{FORTE}";
-		"^for" => "{FORT}";
+		"^for(?!s)" => "{FORT}";
 		"^sito$" => "{SI}{TOT}";
 		"i?to$" => "{TOT}";
 		"#bienetre$" => "{BIENETRE}";
@@ -1139,8 +1176,16 @@
 
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(phonetizer,#>stage4)
+		
 		// empty
 	#EndSubSection(phonetizer)
+	#BeginSubSection(preworder)
+		// use | to separate words
+		"^{LA}\|" => "{LA}\\";
+		"^{BAS}\|" => "{BAS}\\";
+		"^{CI}\|" => "{CI}\\";
+		
+	#EndSubSection(preworder)
 	#BeginSubSection(specialtokensfilter)
 		" #<#'#># " => ""; // n'#avais
 		"#># " => "";
@@ -1187,7 +1232,7 @@
 		"(?<!\[)gr(?!\])" => "[GR]";
 		"(?<!\[)qr(?!\])" => "[QR]";
 		"(?<!\[)tr(?!\])" => "[TR]";
-		"(?<!\[)rl(?!\])" => "[RL]";
+		"(?<!\[)rl(?!\])" => { "[RL]", "^tirlir$" };
 		"(?<!\[)kl(?!\])" => "[KL]";
 		
 		"(?<!\[)bl(?!\])" => "[BL]";
@@ -1292,6 +1337,9 @@
 		"^(.*)$" => "strtolower()"; 
 		"({.*?})" => "strtoupper()"; 
 		
+		// necessary to do some separations here (normally work for separator)
+		"\|({VOUS})$" => "\\$1"; // rendez-vous
+
 		// -io
 		"[ji]o$" => "I[&O]";
 
@@ -1385,13 +1433,14 @@
 		"u(\||{I|$)" => "A[&U]$1"; 	// write literally as vowel before abbréviation {ITE}
 		"o{" => "[O]{";	// partial bleeding with following: commentent
 		"o(\||{|$)" => "[&O]$1";	// beau-frère
+		"\\\[&O\]" => "\\[0N-][#2-][&O]"; // là-haut
 		"\[ö\]$" => "E[&O]";
 		"\[wa\]$" => "[AUF]";
 
 		"\[IE\]$" => "[IE][LES]";
 		"^A" => "[0N-]A";
 		
-		
+		"([Ee]|\[[Ee]\])\\" => "[-E]\\"; // rendez-vous
 
 		
 	#EndSubSection(completor)
@@ -1399,6 +1448,7 @@
 		// separations
 		"(\[[Aa]~\])\|s" => "$1\\[S=]"; // avant-scène
 		"(\[[Aa]~\])\|" => "$1\\"; // grand'route
+		"\\(i\[&[Ee]\])" => "\\[0N-]$1"; // avant-hier
 		
 		"dmi\|" => "DM[-I]\\"; // demi-jour
 		"\[o~\]\|" => "[ON]\\"; // wagon-lits
@@ -1406,9 +1456,12 @@
 		"(\[#ns\]l)\|([Oo]|\[&[oO]\])$" => "$1\\[0N-]$2"; // là-haut (vs l'eau)
 
 		"\|(\[#(?:NU|nu)\])[Ss]$" => "\\$1[S=]"; // -ci
-		"\|(\[#(?:NS|ns)\])[Ll]$" => "\\$1L"; // -ci
+		"\|(\[#(?:NS|ns)\])[Ll]$" => "\\$1L"; // -la
+
+		"\[(?:Ö|ö)\]\\" => "E[&O]\\"; // ceux-la (completor)
 
 		"^(\[#(?:NS|ns)\][Ll])\|(\[#(?:NS|ns)\][Bb])$" => "$1\\$2"; // là-bas
+		"^(\[0D-\]i?s)i\|(\[#(?:NS|ns)\][Bb])$" => "$1[-I]\\[#4]$2"; // (i)ci-bas
 
 	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
@@ -1601,6 +1654,19 @@
 		"{PARCEQUE}" => "A[AR]C";
 		"{PARCEQUON}" => "A[AR]C[ON]";
 		"{CELUI}" => "[S=][LUI]";
+		"{VAETVIENT}" => "AW\\[EST]\\WI[&E][EI][-EI]";
+		"{JUSQUACEQUE}" => "[AU][NG][EN]\\[#4]C";
+		"{LE}" => "L";
+		"{LA}" => "AL";
+		"{LES}" => "[LES]";
+		"{DES}" => "DE";
+		"{DU}" => "[AU]D";
+		"{QUELCONQUE}" => "[CH][Ö]K";
+		"{QUELQUEFOIS}" => "[CH]F[EN]";
+		"{BAS}" => "AB";
+		"{POUVAISJE}" => "A[&U]E[NG]";
+		"{CI}" => "I[S=]";
+		
 		
 		
 
