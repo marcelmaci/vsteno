@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.2";
 		"required_version" := "0.2";
-		"model_date" := "3. September 2019";
+		"model_date" := "4. September 2019";
 		// wide distance
 		"token_distance_wide" := "17";
 
@@ -963,7 +963,7 @@
 		"lorsk#il" => "{LORSQUIL}";
 		"^odla$" => "O[DL]A"; // au-delà
 		"^k[Ee]l$" => "{QUEL}";
-		"^ekstra$" => "{EXTRA}";
+		"^ekstra(?!k)" =>  "{EXTRA}"; // don't apply to: extraction
 		"e~par" => "{IMPAR}"; // imparfait (impartial?)
 		"^e~s\[ü\]r" => "{INSUR}";
 		"^r[eE][zs]\[ü\]r" => "{RESUR}";
@@ -974,10 +974,10 @@
 		"^reeks" => "{RE}{EX}";
 		"^ree~te?r" => "{RE}{INTER}";
 		"^partik\[ü\]l" => "{PARTICUL}";
- 		"^otr\[ü\]i$" => "{AUTRUI}";
+ 		"^(d)?otr\[ü\]i$" => "$1{AUTRUI}";
 		"^pl(y|\[ü\])$" => "{PLUS}"; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
-		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~)" => "{PAR}"; // exceptions: partir (parti), parôle, paraître (paraît), pareil etc.
+		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~)" => { "{PAR}", "^pari$" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
 
 
@@ -1076,6 +1076,7 @@
 		"#aviez" => "{AV}je";
 		"#avez" => "{AV}e";
 		"#avoir" => "{AV}war";
+		"j#y" => "[NG][-I]";
 		"n#y$" => "[I][N=]";
 		"s#y$" => "[I][S=]";
 		"#y$" => "{#Y}";
@@ -1108,7 +1109,7 @@
 		"^k[Oo]~b[ij][Ee]~$" => "{CON}{BIEN}";
 		"^pr[Oo]k[oO]~" => "{PRO}{CON}";
 		"(?<!s|\[ü\])(dis|tra~[sz])?ko~" => { "$1{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar", "^[Aa]k[Oo]~p",   "r[Aa]~k[Oo]~t" }; // original word is phonetic  transcription! (without stress! = ')
-		"(?<=^r@|^r|^pre|^)e[kg][sz]" => "{EX}";
+		"(?<=^r@|^r|^pre|^l|^d|^)e[kg][sz]" => "{EX}";
 		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
 		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
 
@@ -1134,7 +1135,7 @@
 		"tstwrt((?:an[dt]|end)$)" => { "ma~", "[M][EN]" };   
 
 		"(?<!^)m[Aa]~t" => "{MENT}"; // also inside word
-		"(?<!^)m[Aa]~" => "{MENT}";
+		"(?<!^)m[Aa]~(?!d)" => "{MENT}"; // don't apply to: commander
 		"^#moimeme$" => "{MOIMEME}";
 		"^#toimeme$" => "{TOIMEME}";
 		"^#soimeme$" => "{SOIMEME}";
@@ -1173,7 +1174,7 @@
 		"^{LORSQUE}il" => "{LORSQUE}{IL}";
 		"^#suis$" => "{SUIS}";
 		"#s#?wiss" => "{SUISSE}";
-		"^s\[ü\]is$" => "{SUISSE}";
+		"^s\[ü\]is" => "{SUISSE}";
 		"^#toujours$" => "{TOUJOURS}";
 		"^neseser" => "{NECESSAIRE}";
 		"^(l)?\[?[Aa]~\]?a" => "$1{EN=}a"; // enhardir
@@ -1361,8 +1362,8 @@
 		"i(e|\[e~\]|\[ö\])" => "i[&E]$1"; 
 		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
 		"tstwrt(^vien)" => {  "j(\[e~\])", "i[&E]$1" }; // vient
-		"(?<!\[ö\]|[AaEe])j(e|\[e~\])" => "I[&E]$1"; // Pierre; don't apply to: veuillez, payez, travaillez
-		"(?<!\[wa\]|i|[eE])j(a|\[a~\])" => "I[&E]$1"; // mariage; don't apply to: voyageur, brillamment, ayant
+		"(?<!\[ö\]|[AaEe]|a\])j(e|\[e~\])" => "I[&E]$1"; // Pierre; don't apply to: veuillez, payez, travaillez
+		"(?<!\[wa\]|i|[eE])j(a|\[a~\])" => "I[&E]$1"; // mariage; don't apply to: voyageur, brillamment, ayant, envoyé
 		"j(o|\[o~\])" => "I[&E]$1"; // curiosité
 		"e(\[?[aeiouü]\]?~?)" => "E[&E]$1";
 		"i(\[?[aeiouü]\]?~?)" => "I[&E]$1";
@@ -1373,6 +1374,7 @@
 		"\[ü\]({?i)" => "[ü][&E]$1";
 		"\[ü\](\[?[eaouiü]~?\]?)" => "[Ü][&E]$1";
 
+		"^\[?u\]?(\[?[eaoui]~?\]?)" => "[0N-][A][&U]$1";
 		"\[?u\]?(\[?[eaoui]~?\]?)" => "[A][&U]$1";
 
 		"\[?o\]?(\[?[eaoui]~?\]?)" => "[&O]$1";
