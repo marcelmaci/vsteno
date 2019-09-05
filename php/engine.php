@@ -499,12 +499,12 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             $x2 = round($separate_spline[$n+8] + $shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
             $y2 = round($separate_spline[$n+9], $vector_value_precision, PHP_ROUND_HALF_UP);
           
-          /*
-            $x1 += 5;
-            $q1x += 5;
-            $x2 += 5;
-            $q2x += 5;
-          */  
+            // corrections for upper / lower position
+            /*$x1 -= 5;
+            $q1x -= 5;
+            $x2 -= 5;
+            $q2x -= 5;
+            */
             
             
             $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
@@ -738,8 +738,22 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
                         $d2_t = $d2_t;
                         $t2_t = $t2_t;
                 
+                        // correct vertical deltax (according to higher / lower position)
+                        $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
+                        // NOTE: This compensation corrects vertical deltax and thus improves the position of diacritics.
+                        // Nonetheless, diacritics are still not 100% accurate. Probably, this has to do with the spacer:
+                        // not sure if spacing is applied correctly to diacritics (it is applied correctly to tokens though).
+                        // This needs further investigation inside generation of SVG (since spacer distances are only applied then).
+                        
+                        // some code snippets for vertical compensation
+                        //echo "token: $token old_y: $old_y vs actual_y: $actual_y vertical_compensation_x: $vertical_compensation_x<br>";
+                        //$compensation_x = $raw_x * $_SESSION['token_shadow'] * $_SESSION['token_thickness'];
+                        //$compensation_y = (-$raw_y) * $_SESSION['token_shadow'] * $_SESSION['token_thickness'];
+                        //$delta_x = (-$compensation_y) / tan( deg2rad( $_SESSION['token_inclination'] ));
+                        //$compensation_x += $delta_x;
+                        
                         //echo "final tuplet for separate_spline: { $x1_t, $y1_t, $t1_t, $d1_t, $th_t, $dr_t, $d2_t, $t2_t } <br>";
-                        $separate_spline[] = $x1_t;
+                        $separate_spline[] = $x1_t+$vertical_compensation_x;
                         $separate_spline[] = $y1_t;
                         $separate_spline[] = $t1_t;
                         $separate_spline[] = $d1_t;

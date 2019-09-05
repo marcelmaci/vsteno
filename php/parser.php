@@ -150,6 +150,13 @@ function GenericParser( $table, $word ) {
 function extended_preg_replace( $pattern, $replacement, $string) {
         global $global_warnings_string;
         switch ($replacement) {
+                // tried to replace $word[1] by mb_substr($word, 0, 1) - didn't work! (why?!)
+                // characters with umlaut (ä,ö,ü) are not handled correctly, neither by strtoupper() nor strtolower() ! (BUG)
+                // apparently both functions strtolower() and strtoupper work if used like so:
+                // "([a-z]|ä|ö|ü)" => "strtoupper()";
+                // "([a-z]|Ä|Ö|Ü)" => "strtolower()";
+                // BUT: "(.*?)" => "strtoupper()"; DOESN'T WORK!
+                // I was just curious: "(^.*?$)" => "strtoupper()"; WORKS! => REGEX, multi-byte string and UTF-8 combined with callback are a complete mystery to me ... :):):)
                 case "strtolower()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtolower($word[1], "UTF-8"); }, $string); 
                                       break;
                 case "strtoupper()" : $result = preg_replace_callback( $pattern, function ($word) { return mb_strtoupper($word[1], "UTF-8"); }, $string); 

@@ -444,4 +444,23 @@ travailler avec quelques chances de succès. En ce qui nous concerne, nous avons
 de l'affaire et nous sommes certains qu'après la première période d'essai, vous n'hésiterez pas à étendre 
 notre champ d'activités. Dans l'attente de vos nouvelles, nous vous présentons, Messieurs, nos salutations distinguées.
 
+CH10ab)
+casser, caser, face, phase, sel, zèle, suis, scie, par, rat
+vallon, wallon, pâte, patte, Bourgeois, 
+affaires, ils étaient, elle fonctionne, ils commentent, l'espionne
+week-end, tournedos, clearing, reine-claude, M. Funk, Annecy
+// Funk and Annecy not solved (can be done via eSpeak patching)
+
+CH10(38):
+la consonne r, rien d'autre, rat commence par un r. Ce vieil âne n'a plus de force. Je suis ici depuis six mois. 
+il ne prononce pas bien la b espagnole. L'année prochaine nous ferons des excursions das les Andes pendant plusieurs semaines.
+Laissez le passé! Ne le lésez pas! Est-ce que c'est du poison. Son cousin lui a fait cadeau d'un coussin
+électrique. Nous causions de la caution en question. La vaisselle, (?), Westfalie. 
+À quelle date les dattes devront-elles être livrées? Edda (?) Eda (?) Louise est dans la cuisine. Jean Racine était un grand poète.
+Il était revenu: ils étaient revenu. Société d'assurance, sociétés d'assurances, factures et traites, il augmente, ils augmentent.
+Elle confectionne, elles confectionnent, il mentionne, ils mentionnent, les lions, les lionnes, 
+mannequin, camping, tournesol, westend à Londres. Le meeting eut lieu hier à Annecy. 
+// all number are written in full phonetic transcription, i.e. as if they stand alone: sis, huit with final -s and -t!
+// (difference with the book)
+
 

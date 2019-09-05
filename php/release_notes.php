@@ -47,6 +47,7 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
 <ul>
     <li>Patchliste für falsch transkribierte Wörter (eSpeak)</li>
     <li>Hybride Regeln (Schrift + Phonetik)</li>
+    <li>Transkription Einzelbuchstaben: selektierbar</li>
 </ul>
 </li>
 

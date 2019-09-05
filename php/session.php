@@ -148,6 +148,7 @@ function InitializeSessionVariables() {
     // phonetics variables
     $_SESSION['phonetics_transcription_list'] = "";
     $_SESSION['phonetics_transcription_array'] = "";
+    $_SESSION['phonetics_single_char_yesno'] = false;
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
     // use legacy configuration for www.steno.ch
@@ -316,6 +317,7 @@ if ($_POST['token_size'] != "") {
     
     $_SESSION['language_espeak'] = htmlspecialchars($_POST['language_espeak']);
     $_SESSION['phonetic_alphabet'] = htmlspecialchars($_POST['phonetic_alphabet']);
+    $_SESSION['phonetics_single_char_yesno'] = ($_POST['phonetics_single_char_yesno'] === "yes") ? true : false;;
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
     $_SESSION['rendering_middleline_yesno'] = ($_POST['rendering_middleline_yesno'] === "yes") ? true : false;
     $_SESSION['rendering_polygon_yesno'] = ($_POST['rendering_polygon_yesno'] === "yes") ? true : false;

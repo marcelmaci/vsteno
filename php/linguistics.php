@@ -469,9 +469,10 @@ function recursive_search_optimized($line, $row, $array) {
 /////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
 
 function TryPhoneticTranscriptionFromList($word) {
-    //echo "<br>$word";
+    //echo "<br>>$word<";
     $result = null;
     foreach ($_SESSION['phonetics_transcription_array'] as $key => $transcription) {
+        //echo "check: $key<br>";
         if (preg_match("/^$key$/", $word)) {
             //echo "<br>match with $key";
             $result = preg_replace("/$key/", $transcription, $word); // use regex also for transcription (like in l'aspect: l' can be tested with variable)
@@ -485,6 +486,8 @@ function GetPhoneticTranscription($word) {
     global $last_written_form;
     //echo "word to transcribe: $word<br>";
     //if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
+// if word is single char, only transcribe it if session-variable is set
+if ((mb_strlen($word) > 1) || ($_SESSION['phonetics_single_char_yesno'])) {
     $check = mb_strpos($word, "#");
     if ($check === false) {  // do not transcribe words containing # (at any position)
         //echo "<br>transcribe: $word<br>";
@@ -514,8 +517,13 @@ function GetPhoneticTranscription($word) {
          // in n#avais, n can be treated as phonem and the abbreviation #avais can be applied normally
         $output = $word;
     }
+} else {
+  // word is single character => don't transcribe
+  $output = $word;
+}
     //echo "result: $output<br>";
     $last_written_form = $word;
+    
     return $output;
 }
 

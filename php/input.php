@@ -127,6 +127,10 @@ Analyse:
 <input type="text" name="language_espeak"  size="6" value="<?php echo $_SESSION['language_espeak']; ?>">
 <input type="radio" name="phonetic_alphabet" value="espeak"<?php echo ($_SESSION['phonetic_alphabet'] === "espeak") ? " checked" : "";?>>eSpeak
 <input type="radio" name="phonetic_alphabet" value="ipa"<?php echo ($_SESSION['phonetic_alphabet'] === "ipa") ? " checked" : "";?>>IPA
+<br>Einzelbuchstabe: 
+<input type="radio" name="phonetics_single_char_yesno" value="yes"<?php echo ($_SESSION['phonetics_single_char_yesno']) ? " checked" : "";?>>yes
+<input type="radio" name="phonetics_single_char_yesno" value="no"<?php echo ($_SESSION['phonetics_single_char_yesno'] !== true) ? " checked" : "";?>>no
+
 <br>
 Markieren:<br>
 <input type="checkbox" name="colored_nouns_yesno" value="colored_nouns_yes" <?php echo ($_SESSION['color_nounsyesno']) ? "checked" : "";?>> 
