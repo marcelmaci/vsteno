@@ -691,7 +691,12 @@ function PreProcessGlobalParserFunctions( $text ) {
                 $pattern = $rules["$actual_model"][$rules_pointer][0];
                 $replacement = $rules["$actual_model"][$rules_pointer][1]; // only simple replacements are allowed for global parser ... 
                 $temp_text = $text;
-                $text = preg_replace( "/$pattern/", "$replacement", $text); // use only preg_replace (i.e. not extended_preg_replace)
+                //$text = preg_replace( "/$pattern/", "$replacement", $text); // use only preg_replace (i.e. not extended_preg_replace)
+                // originally, only preg_replace here (see line before)
+                // test if extended_preg_replace works (otherwhise revert back)
+                // extended_preg_replace is necessary in order to use strtolower() in global rules (stage0)
+                $text = extended_preg_replace( "/$pattern/", "$replacement", $text); // use only preg_replace (i.e. not extended_preg_replace)
+                
                 //echo "\"$pattern\" => \"$replacement\" // word: $temp_text => $text<br>";
                 if ($temp_text !== $text) {
                     $nil = preg_match( "/$pattern/", $temp_text, $matches);

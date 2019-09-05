@@ -86,7 +86,7 @@
 		"stems_list" := "";
 		"suffixes_list" := ""; // use non caputuring groups! (?:)
 		// set phonetics parameters
-		"phonetics_single_character_yesno" := "no";
+		"phonetics_single_char_yesno" := "no";
 		"phonetics_transcription_list" := "
 			"laids?":"lE",
 			"(?:(l)')?aspects?":"$1aspE", // use full regex for phonetic transcriptions
@@ -698,6 +698,11 @@
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text french
+		// eliminate upper case at beginnings (otherwhise the model will use diacritics for all words that
+		// start with upper case).
+		//"(?<=^|[\.\?\:\!-])((?:.*?)(?:[A-Z]|Ä|Ö|Ü|À|Á|Â|É|È|Ê|Ó|Ò|Ô|Ú|Ù|Û))" => "strtolower()";
+		"(?<=^|[-\.\?\!])( *?[A-Z])" => "strtolower()";
+
 		// high priority replacements (= without any preliminar modification of the original text)		
 		"Êtes" => "#etes";
 		"(?<=^| )([Dd]\')[Aa]ujourd\'?hui(?=[ ,\.]|$)" => "d#aujourdhui";	
@@ -706,8 +711,18 @@
 		"(?<=^| )([Qq]u)\'a(?=[ ,\.-]|$)" => "$1e a";	
 		"(?<=^| )[Ss]wiss(?=[ ,\.-]|$)" => "#swiss";	
 		
-		
-		
+		// abbreviations
+		"(?<=^| )[Ff]rs?\.(?=[ ,\.-]|$)" => "#francs";
+		"(?<=^| )[Dd]r(?=[ ,\.-]|$)" => "#docteur";
+		//"([Jj]an|[Ff]év|[Mm]ar|[Aa]vr|[Mm]ai|[Jj]uin|[Jj]uil|[Aa]oût|[Ss]ep|[Oo]ct|[Nn]ov|[Dd]éc)\."
+		"(?<=^| )[Oo]ct\.(?=[ ,\.-]|$)" => "oct";
+		"(?<=^| )[Cc]ie(?=[ ,\.-]|$)" => "#cie";
+		"(?<=^| )[Cc]o\.(?=[ ,\.-]|$)" => "#co";
+		"(?<=^| )[Kk]m(?=[ ,\.-]|$)" => "#km";
+		"(?<!#)[Ee]tc\.?(?=[ ,\.-]|$)" => "#etc";
+		"(?<=^| )[Ss]\.[Aa]\.(?=[ ,\.-]|$)" => "#socanon";
+		"(?<=^| )[Cc]\.-(?:à|a)-d\.(?=[ ,\.-]|$)" => "#cad";
+		"(?<=^| )[Pp]\.ex\.(?=[ ,\.-]|$)" => "#parex";
 
 		// eliminate upper case vowels with accents (produces gibberish)
 		"À" => "A";
@@ -1005,6 +1020,16 @@
 		"#vaetvient" => "{VAETVIENT}";
 		"#jusquaceque" => "{JUSQUACEQUE}";
 
+		"#francs?" => "{FRANCS}";
+		"#docteur" => "{DOCTEUR}";
+		"#cie" => "{CIE}";
+		"#co(?!m)" => "{CO}"; // comme!
+		"#km" => "{KM}";
+		"#etc" => "{ETC}";
+		"#socanon" => "{SOCANON}";
+		"#cad" => "{CAD}";
+		"#parex" => "{PAR}{EX}";
+
 		"#etes" => "[0N-]ET";
 		"#as" => "a"; // verb: as (with inversion)
 		"#sens" => "sa~"; // verb: je, tu sens
@@ -1118,6 +1143,7 @@
 		"tstwrt(^[Cc]ompt)" => { "^ko~", "K[O~]" };
 		"^k[Oo]~b[ij][Ee]~$" => "{CON}{BIEN}";
 		"^pr[Oo]k[oO]~" => "{PRO}{CON}";
+		"^(l)?[Aa]~k[Oo]~" => "$1[A~]K[O~]";
 		"(?<!s|\[ü\])(dis|tra~[sz])?ko~" => { "$1{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar", "^[Aa]k[Oo]~p",   "r[Aa]~k[Oo]~t" }; // original word is phonetic  transcription! (without stress! = ')
 		"(?<=^r@|^r|^pre|^l|^d|^)e[kg][sz]" => "{EX}";
 		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
@@ -1698,6 +1724,15 @@
 		"{RESUR}" => "[AR]E[SOBRE]"; // resurrection
 		"{LORSQUIL}" => "OL\\[#2-][EST]"; 
 		"{RAT}" => "A[AR@#/]";
+		"{FRANCS}" => "[F@R6]";
+		"{DOCTEUR}" => "[D@R]";
+		"{CIE}" => "K[-I]";
+		"{CO}" => "K[&O]";
+		"{KM}" => "KM";
+		"{ETC}" => "[0N-]ETS";
+		"{SOCANON}" => "[S=]A[&A]";
+		"{CAD}" => "[S=]A[&A]D";
+		
 			
 	#EndSubSection(substituter)
 	#BeginSubSection(relancer2)	

@@ -463,4 +463,27 @@ mannequin, camping, tournesol, westend à Londres. Le meeting eut lieu hier à A
 // all number are written in full phonetic transcription, i.e. as if they stand alone: sis, huit with final -s and -t!
 // (difference with the book)
 
+CH10c)
+frs. Dr oct. Cie Co. km etc S.A. c.-à-d. CFF p.ex.
+
+CH10(39):
+kg = kilogramme, cm = centimètre, no = numéro, ps = postscriptum, gv = grande-vitesse
+pv = petite vitesse, ac = année courante, art = article, sucs = successeur, fro = franco,
+svp = s'il vous plaît, ptt = poste, télégraphe, téléphone, fevr = février, nov = novembre
+// mainly not implemented
+
+Rundschreiben:
+Messieurs, avec la présente, nous avons l'honneur de vous remettre notre plan de transport pour les marchandises expédiées
+en petite vitesse depuis notre gare, et valable à partir du 15 mai prochain. En règle générale toute les marchandises
+peuvent être consignées jusqu'à 18 heures et le départ est assuré le soir même à la première
+heure du lendemain. Cependant, pour toute les gares de Genève à Lausanne inclus, il est prévu un deuxième
+départ journalier. Les colis consignés avant 11 heures sont rendus à destination le même jour. Nous
+saisissons toutefois cette occasion pour vous recommander instamment, dans la mesure du possible, de ne pas attendre à la dernière
+heure, le soir, pour procéder à votre expédition de marchandises. C'est le moment où le travail est
+généralement le plus intense et l'encombrement se fait parfois sentir. Comme il y va de votre propre intérêt,
+nous sommes persuadés que vous prêtrez attention à cette utile recommendation. Nous restons en outre à votre entière
+disposition pour tout renseignement concernant les transports non prévus par notre plan et toute question
+de taxe ou autre condition. Veuillez agréer, Messieurs, l'assurance de notre considération la plus distinguée.
+// fin da l'emissiun :)
+
 
