@@ -94,9 +94,10 @@ function GetPolygonMiddleAngle($splines, $shiftx, $shifty) {
                 // calculate new knot and patch splines
                 //echo "original knot: " . $splines[$start+offs_x1] . ", " . $splines[$start+offs_y1] . "<br>";
                 $sth = $splines[$start+offs_th]; // thickness start knot
-                $factor = AdjustThickness($sth) / 2 -  $outer_line_thickness;
+                $factor = (AdjustThickness($sth) / 2 -  $outer_line_thickness) * $_SESSION['rendering_lineoverpass_start_factor'];
                 $splines[$start+offs_x1] = $snx + $factor * $snvx;
                 $splines[$start+offs_y1] = $sny + $factor * $snvy;
+                //echo "factor: $factor<br>";
                 //echo "new knot: " . $splines[$start+offs_x1] . ", " . $splines[$start+offs_y1] . "<br>";
                 // patch also control points
                 // start knot
@@ -124,7 +125,7 @@ function GetPolygonMiddleAngle($splines, $shiftx, $shifty) {
                 // calculate new knot and patch splines
                 //echo "original knot: " . $splines[$end+offs_x1] . ", " . $splines[$end+offs_y1] . "<br>";
                 $sth = $splines[$end-tuplet_length+offs_th]; // thickness end knot = preceeding thickness (se1) 
-                $factor = AdjustThickness($sth) / 2 -  $outer_line_thickness;
+                $factor = (AdjustThickness($sth) / 2 -  $outer_line_thickness) * $_SESSION['rendering_lineoverpass_end_factor'];
                 $splines[$end+offs_x1] = $snx + $factor * $snvx;
                 $splines[$end+offs_y1] = $sny + $factor * $snvy;
                 //echo "new knot: " . $splines[$end+offs_x1] . ", " . $splines[$end+offs_y1] . "<br>";
@@ -255,8 +256,10 @@ function GetPolygonMiddleAngle($splines, $shiftx, $shifty) {
                 $nvy = $vgx / $d;
                 
                 // correct normal vector for horizontal modelling
-                if ((($r == $start) && ($start_sharp)) || (($r == $end) && ($end_sharp)) && ($_SESSION['rendering_sharp_modelling'] === "horizontal")) {
+                if (((($r == $start) && ($start_sharp)) || (($r == $end) && ($end_sharp))) && ($_SESSION['rendering_sharp_modelling'] === "horizontal")) {
                     //echo "correct vector for horizontal modelling<br>";
+                    //echo "r vs start vs end: $r / $start / $end<br>";
+                    //echo "start_sharp vs end_sharp: >$start_sharp< >$end_sharp<<br>";
                     $angle = $_SESSION['token_inclination'];
                     $rad = deg2rad($angle);
                     $f = 1/sin($rad); // place that at beginning of function for performance reasons

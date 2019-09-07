@@ -91,7 +91,10 @@ Rendering:
 <input type="text" name="rendering_polygon_color"  size="4" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
 Deckkraft <input type="text" name="rendering_polygon_opacity"  size="2" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
 <input type="checkbox" name="rendering_intermediateshadowpoints_yesno" value="yes" <?php echo ($_SESSION['rendering_intermediateshadowpoints_yesno']) ? "checked" : ""?>> Zwischenpunkte
-<input type="checkbox" name="rendering_lineoverpass_yesno" value="yes" <?php echo ($_SESSION['rendering_lineoverpass_yesno']) ? "checked" : ""?>> Linienübertritt
+<br>
+<input type="checkbox" name="rendering_lineoverpass_yesno" value="yes" <?php echo ($_SESSION['rendering_lineoverpass_yesno']) ? "checked" : ""?>> Linienübertritt: 
+Start <input type="text" name="rendering_lineoverpass_start_factor"  size="4" value="<?php echo $_SESSION['rendering_lineoverpass_start_factor']; ?>">
+Ende <input type="text" name="rendering_lineoverpass_end_factor"  size="4" value="<?php echo $_SESSION['rendering_lineoverpass_end_factor']; ?>">
 
 <br>
 Umriss: 

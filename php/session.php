@@ -160,6 +160,8 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_polygon_opacity'] = "1";
     $_SESSION['rendering_intermediateshadowpoints_yesno'] = false;
     $_SESSION['rendering_lineoverpass_yesno'] = true;
+    $_SESSION['rendering_lineoverpass_start_factor'] = 0.3;
+    $_SESSION['rendering_lineoverpass_end_factor'] = 0.3;
 
 /*
     $_SESSION['rendering_middleline_yesno'] = false;
@@ -327,6 +329,8 @@ if ($_POST['token_size'] != "") {
     $_SESSION['rendering_polygon_opacity'] = $_POST['rendering_polygon_opacity'];
     $_SESSION['rendering_intermediateshadowpoints_yesno'] = ($_POST['rendering_intermediateshadowpoints_yesno'] === "yes") ? true : false;
     $_SESSION['rendering_lineoverpass_yesno'] = ($_POST['rendering_lineoverpass_yesno'] === "yes") ? true : false;
+    $_SESSION['rendering_lineoverpass_start_factor'] = htmlspecialchars($_POST['rendering_lineoverpass_start_factor']);
+    $_SESSION['rendering_lineoverpass_end_factor'] = htmlspecialchars($_POST['rendering_lineoverpass_end_factor']);
         
     $_SESSION['layouted_original_text_yesno'] = ($_POST['layouted_original_text_yesno'] === "yes") ? true : false;
     $_SESSION['layouted_original_text_position'] = ($_POST['layouted_original_text_position'] === "before") ? "before" : "after";    
