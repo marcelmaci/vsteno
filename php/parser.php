@@ -722,12 +722,47 @@ function PreProcessGlobalParserFunctions( $text ) {
 
 function PostProcessDataFromLinguisticalAnalyzer($word) {
     global $analyzer; // contains postprocess-rules
-    global $global_linguistical_analyzer_debug_string;
+    global $global_linguistical_analyzer_debug_string, $last_written_form;
     $number_analyzer_rules = 0;
     for ($i=0; $i<count($analyzer); $i++) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
-        //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . "($word)<br>";
-        $old_word = $word;
+        //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . " ($word / $last_written_form)<br>";
+       
+// special rule: (1 condition => several consequences &&) hybrid rule
+// special case: if phonetic transcription is on condition can be tested on the written form of the word (instead of transcription)
+// in that case, the following formalism is valid:
+// "condition1" => { "condition2", "consequence" };
+// with condition1 = tstwrt(condition)        applied to written form
+//      condition2 = normal condition         applied to phonetic form
+//      consequence = normal consequence      applied to phonetic form
+// this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
+// test if phonetical transcription is selected and if condition has to be tested on written form
+if (($_SESSION['phonetics_yesno']) && (preg_match("/^tstwrt\(/", $analyzer[$i][0]))) {
+    //echo "Analyzer[$i]: hybrid rule<br>";
+    // quantifier must be greedy for condition1 in order to go to the last ) !!!
+    $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $analyzer[$i][0]);
+    $hybrid_condition2 = $analyzer[$i][1];
+    $hybrid_consequence = $analyzer[$i][2];
+    $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $last_written_form, $word);
+    //echo "result: $result<br>";
+    
+    if ($result !== null) {
+        // result is valid
+        $word = $result; // $word instead of $output
+        //$global_number_of_rules_applied++;
+        //$_SESSION['rules_count'][$rules_pointer]++;
+        // set variables for debugging
+        //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
+        //$replacement = $hybrid_consequence;
+         if ($_SESSION['output_format'] === "debug") $global_linguistical_analyzer_debug_string .= "<tr><td><b>[$number_analyzer_rules]</b> $word </td><td><b>[A$i]</b> Hybrid: [1]: " . htmlspecialchars($hybrid_condition1) . "<br>[2]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>LNG-POST</td></tr>";
+        $number_analyzer_rules++;
+       
+    }
+
+} else {
+      // execute rest of the code as before 
+       
+       $old_word = $word;
         $condition = "/" . $analyzer[$i][0] . "/";
         //echo "execute rule($i): #" . $condition . "# => #" . $analyzer[$i][1] . "#<br>";
         $word = replace_all( $condition, $analyzer[$i][1], $word);
@@ -737,7 +772,9 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
         if (($word !== $old_word) && ($len>2)) {
             $not_applied_comment = "";
             //echo "multiple:<br>"; //var_dump($analyzer[$i]);
-            // multiple consequences: check if one of the multiple consequences matches
+            // multiple consequences
+            
+            // traditional rule with multiple consequences: check if one of the multiple consequences matches
             $hit = false;
             $j = 2;
             while (($j<=$len-1) && (!$hit)) {
@@ -770,6 +807,7 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
         }     
         //echo "result: $word<br>";
     }
+} // end of hybrid rule postprocessing
     //echo "Word after postprocess: $word<br>";
     //echo "global_linguistical_analyzer_debut_string: $global_linguistical_analyzer_debug_string<br>";
     return $word;

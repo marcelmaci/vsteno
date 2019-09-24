@@ -83,6 +83,10 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"language_hunspell" := "en-us";		// set it, even if not used
 		"language_hyphenator" := "en-us";	// idem
 		"language_espeak" := "en-us"; 		// use american english because r's are pronounced as r's
+		// note: selection en-us affects also vowels, for example:
+		// grasp, gasp, ask, fast => ä
+		// tube, new, suit, duke => u 
+		// all these words are written differently than in the cited manual [1]!
 		// set morphological parameters
 		"prefixes_list" := "";
 		"stems_list" := "";
@@ -203,12 +207,27 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"'" => ""; 	// filter out stress (added by eSpeak, not necessary for transcription)
 		"a" => "ä";	// bag
 		"A:?" => "a"; 	// calm
+		//"er" => "ör";	// hair (!= her), err (?)
+		// so, here's the first bizarre problem in english:
+		// hair vs err => 'e@ vs h'e@ (identical transcription by eSpeak)
+		// shorthand: här vs ör (different vowels)
+		// I suppose that written form can be taken as criteria to distinguish between the two:
+		// 1) air => är
+		// 2) er(r) => ör
+		"tstwrt(air)" => { "e@", "är" };
+		"tstwrt(er)" => { "e@", "ör" };
+		// another case
+		"tstwrt(are$)" => { "e@$", "är" }; // spare
 		"@3" => "r";	// ear
-		"@" => "r";	// air (not sure if @ is r or shwa?!)
-		"3:" => "r";	// her
+		"@(?!2)" => "r";// air (not sure if @ is r or shwa?!)
+		"3:" => "ör";	// her, fur (add vowel ö)
 		"#3" => "r";	// better
-		"er" => "är";	// hair (!= her)
-		"ir" => "är";	// tears
+		"ir" => "är";	// tears (not clear: err is written as ör, see 2b)
+		"0" => "o";	// god
+		"O:" => "o";	// bought
+		"V" => "ö";	// bus
+		"j[uU]:?" => "ü";// mule, cure
+		"u:" => "u";	// booze
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -668,6 +687,12 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^It$" => "{IT}";
 		"^(ai|i|I)$" => "{I}"; // single characters are not converted to phonetic form!
 		"^DEm$" => "{THEM}";
+		"^D@2$" => "{THE}";
+		"tstwrt(^[Tt]oo$)" => { "^tu$", "{TOO}" };
+		"tstwrt(^[Tt]o$)" => { "^tu$", "{TO}" };
+		"^häd$" => "{HAD}";
+		"^du$" => "{DO}";
+		
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(decapitalizer,#>stage4)
 		"([A-Z])" => "strtolower()";
@@ -686,7 +711,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// vowels
 		"ei" => "[EI]";
 		"e" => "[E1]"; // narrow e in english
-
+		"ou" => "O";  // no distinction between ou and o
+		
 		// three characters
 		"str" => "[STR]";
 		"spl" => "[SPL]";
@@ -702,18 +728,13 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"(?<!\[)a~" => "[A~]";
 		"(?<!\[)o~" => "[O~]";
 		"(?<!\[)(e|w)~" => { "[E~]", "sirkw~" }; // no distinction: dinde vs humble
-		"(?<!\[)#?wa" => "[WA]";
-		"(?<!\[)w\[E~\]" => "[WE~]";
-		"(?<!#)w" => "[Ö]";  // wa vs W (lower vs upper case) => if it leads to confusion here, put this rule inside early bundler
-		// restore original #w
-		"#wikend" => "[W@#.]ikend";
-		"#w" => "w";
-		"wi" => "ui"; // Louis, oui		
 
 		"(?<!\[)pr(?!\])" => "[PR]"; // pr => [pr] before rt => [rt], ex: propr(e)té (e muet falls out => prt)
 		"(?<!^)rtr" => "[RT][#6-][AR]"; // like spanish: artritis
 		"(?<!^)rt" => "[RT]"; // not at beginning, rt => [rt] before tr => [tr], e.g. portrait
 		
+		"(?<!\[)kw(?!\])" => "[KW]";
+		"(?<!\[)nd(?!\])" => "[ND]";
 		"(?<!\[)vl(?!\])" => "[VL]";
 		"(?<!\[)br(?!\])" => "[BR]";
 		"(?<!\[)fr(?!\])" => "[FR]";
@@ -778,6 +799,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^\[ei\]" => "[0N-][EI]";
 		"^ä" => "[0N-][Ä]";
 		"^a" => "[0N-][A]";
+		"^o" => "[0N-][O]";
+		"^ö" => "[0N-][Ö]";
+		"^u" => "[0N-][U]";
+		"^ü" => "[0N-][Ü]";
+		
 
 	#EndSubSection(completor)
 	#BeginSubSection(separator)
@@ -786,15 +812,16 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
 		
-		// rewrite bundled tokens
-		
-
-
-		// assign french vowels to original german system
 		"^(.*)$" => "strtolower()";
 		"({.*?})" => "strtoupper()"; // prevent transformations inside {}
 		
+		// assign english sounds to original german system
+		// vowels
 		"\[ei\]" => "[E]";
+		
+		// consonants
+		"\[sk\]" => "C";
+		"\[kw\]" => "Q";
 		
 		
 	#EndSubSection(rewriter)
@@ -807,6 +834,12 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{IT}" => "I[EST]";
 		"{I}" => "[0N-]E[-EI]";
 		"{THEM}" => "[0N-][EM]";
+		"{THE}" => "D";
+		"{TOO}" => "UT";
+		"{TO}" => "T";
+		"{HAD}" => "AD";
+		"{DO}" => "UD";
+		
 		
 	#EndSubSection(substituter)
 	#BeginSubSection(relancer2)	
