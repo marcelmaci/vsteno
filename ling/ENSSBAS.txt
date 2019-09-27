@@ -94,8 +94,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// set phonetics parameters
 		"phonetics_single_char_yesno" := "no";
 		"phonetics_transcription_list" := "
-			"word1":"transcription1",
-			"word2":"transcription2"
+			"[Cc]ouncil(s?)":"kaunsil$1", // sorry, dear stenographs, this is complete nonsense (added it anyway ...)
+			"[Ee]leven":"ElEvEn",
+			"[Oo]belisc(s)?":"obElisk$1",
+			"[Bb]ombard(s)?":"bombard$1",
+			"[Oo]xid(.*?)$":"oxideIt"
 		";		
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -204,8 +207,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		// rules applied after after linguistic analysis (eSpeak)
-		"'" => ""; 	// filter out stress (added by eSpeak, not necessary for transcription)
-		"a(?![IiUu])" => "ä";	// bag
+		"(?<!')I" => "E"; 	// messenger
+		"'" => ""; 	// filter out primary stress (added by eSpeak, not necessary for transcription)
+		"," => ""; 	// "         secondary "
+		"a#" => "E"; // appearently this is used as schwa by eSpeak ...
+		"a(?![IiUuRr])" => "ä";	// bag
 		"A:?" => "a"; 	// calm
 		//"er" => "ör";	// hair (!= her), err (?)
 		// so, here's the first bizarre problem in english:
@@ -216,18 +222,29 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// 2) er(r) => ör
 		"tstwrt(air)" => { "e@", "är" };
 		"tstwrt(er)" => { "e@", "ör" };
+		"i@3r" => "ir"; // appearence
 		// another case
 		"tstwrt(are$)" => { "e@$", "är" }; // spare
 		"aI@L" => "aIL"; // isle
 		"aI3" => "aIr"; // fire
 		"aU3" => "aur"; // hour
 		"@3" => "r";	// ear
-		"@(?!2)" => "r";// air (not sure if @ is r or shwa?!)
+		"tstwrt(ous$)" => { "l@([sz])", "lE$1" }; // zealous
+		"l@" => "li"; // politics
+		// usage of @ and 3 by eSpeak is totally bizarre ... correct it with the following rules
+		"U@r" => "Ur"; // during
+		"g3r" => "gEr";
+		"st@L" => "stEl" // postal
+		"3" => "E";
+		"a@" => "ar"; // park
+		//"@(?!2)" => "r";// air (not sure if @ is r or shwa?!)
 		"3:" => "ör";	// her, fur (add vowel ö)
 		"#3" => "r";	// better
 		//"ir" => "är";	// tears (not clear: err is written as ör, see 2b), problem: tears vs beer
 		"tstwrt(ear[sz])" => { "ir", "är" }; // leave beer / bir as bir! 
+		"^be@r" => "bär"; // bearing
 		//"^när$" => "nir"; // correct "near"
+		"I#" => "i"; 	// axes
 		"i:" => "i";	// beast
 		"0" => "o";	// god
 		"O:" => "o";	// bought
@@ -236,6 +253,24 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"j[uU]:?" => "ü";// mule, cure
 		"u:" => "u";	// booze
 		"t2" => "t";	// time (probably "aspired" t?!)
+		"tstwrt(ice$)" => { "I2s$", "is" }; // office
+		//"tstwrt(^[Dd]is)" => { "^(?:dI2s|d,Is)", "dis" }; // disarm (dis-), disappear
+		"tstwrt(^[Dd]is)" => { "^dI2s", "dis" }; // disarm (dis-), disappear
+		"tstwrt(^[Dd]is)" => { "^d,Is", "dis" }; // disarm (dis-), disappear
+		"tstwrt(iage$)" => { "I2dZ", "idZ" }; // carriage 
+		"tstwrt(age$)" => { "I2dZ", "EdZ" }; // carriage 
+		"I2" => "i";    // handicap
+		//"t," => "t"; 	// politics (aspired t?!) secondary stress (filtered out)
+		//"L," => "L";	// equalize
+		"tstwrt(ous$)" => { "@([zs])", "E$1" };
+		"tstwrt(ours$)" => { "3z", "Ers" };
+		"tstwrt(r$)" => { "3$", "Er" };
+		"tstwrt((ers?|ures?)$)" => { "3(z)?$", "Er$1" }; // barbers
+		"3" => "E";
+		"tstwrt(r$)" => { "@$", "r" }; // four
+		"tstwrt(^o)" => { "^@", "o" }; // offend (holy cow ... eSpeak uses this @ for almost anything ... :-/)
+		"@" => "E";
+		"(.)#" => "$1"; // aquatic (no idea what eSpeak means by # after t?!)
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -356,7 +391,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"NS" => { /*header*/ 5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPB:LP:RPC:RP", /*data*/ 2, 5.5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 5, 7.75, 0.5, 2, 2, 0, 0, 0.5,  /**/ 4, 10, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 2.5, 9, 0.5, 0, 3, 0, 0, 0.5,  /**/ 2.75, 1.25, 0.5, 0, 3, 0, 0, 0.5,  /**/ 1.5, 0, 0.5, 0, 2.5, 0, 99, 0.5,  /**/ 0, 2, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 2.5, 2.75, 0.5, 0, 1, 0, 1, 0.5,  /**/ 3, 3.5, 0, 4, 1, 0, 0, 0 }
 		"PF" => { /*header*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPA:LP:RNC:RN", /*data*/ 0, 7, 0.5, 1, 1, 0, 0, 0.5,  /**/ 0.5, 7, 0.5, 2, 1, 0, 0, 0.5,  /**/ 6, 9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 9, 11.1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 7.5, 16.5, 0.5, 0, 1.25, 0, 0, 0.5,  /**/ 2, 20, 0.5, 0, 2.25, 0, 0, 0.5,  /**/ 0, 18, 0.5, 0, 3, 0, 0, 0.5,  /**/ 0, 2, 0.5, 0, 3, 0, 0, 0.5,  /**/ 2, 0, 0.5, 4, 1.25, 0, 0, 0.5,  /**/ 2, 0, 0.5, 0, 1.25, 0, 2, 0.5,  /**/ 4, 2, 0.5, 0, 1, 0, 1, 0 }
 		"SP" => { /*header*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 0, 18, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 20, 0.5, 2, 2, 0, 0, 0.5,  /**/ 4, 18, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ /*4, 15, 0.5, 0, 3, 0, 0, 0.5,*/  /**/ /*4, 5, 0.5, 0, 2.5, 0, 0, 0.5,*/  /**/ 4, 3, 0.5, 0, 2, 0, 0, 0.5,  /**/ 6, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 6, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 8, 2, 0.5, 0, 1, 0, 1, 0 }
-		"MP" => { /*spanish*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 0, 18, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 20, 0.5, 2, 2, 0, 0, 0.5,  /**/ 4, 18, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 4, 15, 0.5, 0, 3, 0, 0, 0.5,  /**/ 4, 5, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 4, 3, 0.5, 0, 2, 0, 0, 0.5,  /**/ 6, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 6, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 8, 2, 0.5, 0, 1, 0, 0, 0, /*n*/ 4, 4, 0.5, 0, 1, 0, 0, 0, /*n*/ 1, 3, 0.5, 0, 1, 0, 0, 0, /*n*/ 6, 2, 0.5, 0, 1, 0, 2, 0, /*n*/ 8, 2, 0.5, 0, 1, 0, 1, 0 }
+		"MP" => { /*spanishandenglish*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 0, 18, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 20, 0.5, 2, 2, 0, 0, 0.5,  /**/ 4, 18, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 4, 15, 0.5, 0, 3, 0, 0, 0.5,  /**/ 4, 5, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 4, 3, 0.5, 0, 2, 0, 0, 0.5,  /**/ 6, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 6, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 8, 2, 0.5, 0, 1, 0, 0, 0, /*n*/ 4, 4, 0.5, 0, 1, 0, 0, 0, /*n*/ 1, 3, 0.5, 0, 1, 0, 0, 0, /*n*/ 6, 2, 0.5, 0, 1, 0, 2, 0, /*n*/ 8, 2, 0.5, 0, 1, 0, 1, 0 }
 		"ST" => { /*header*/ 3, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPA:LP:RPC:RP", /*data*/ 0, 10, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 3, 17, 0.5, 2, 2, 0, 0, 0.5,  /**/ 1.8, 20, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 18, 0.5, 0, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 2.5, 0, 4, 1, 0, 1, 0 }
 		"XT" => { /*header*/ 10, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPA:LP:RPC:RP", /*data*/ 0, 10, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 5, 15, 0.5, 2, 2, 0, 0, 0.5,  /**/ 3.25, 18.75, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 18, 0.5, 0, 3, 0, 0, 0,  /**/ 0, 10, 0, 0, 3, 0, 0, 0, /**/ 10, 0, 0, 0, 1, 0, 1, 0 }
 		"ZW" => { /*header*/ 5, 1, -1, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 5, 20, 0, 1, 3, 0, 0, 0,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0 }
@@ -669,6 +704,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// global replacements in the whole text
 		// eliminate upper case at beginnings (otherwhise the model will use diacritics for all words that
 		// start with upper case).
+		"(?<=^| )(I|[Yy]ou|[Ss]?[Hh]e|[Ww]e|[Tt]hey|[Tt]o) lives?(?=[ ,\.-]|$)" => "$1 #live";
+		
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		// empty
@@ -695,7 +732,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^It$" => "{IT}";
 		"^(ai|i|I)$" => "{I}"; // single characters are not converted to phonetic form!
 		"^DEm$" => "{THEM}";
-		"^D@2$" => "{THE}";
+		"tstwrt(^[Tt]he$)" => { "^(.*?)$", "{THE}" };
 		"tstwrt(^[Tt]oo$)" => { "^tu$", "{TOO}" };
 		"tstwrt(^[Tt]o$)" => { "^tu$", "{TO}" };
 		"^häd$" => "{HAD}";
@@ -705,10 +742,19 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^wi$" => "{WE}";
 		"^wöt$" => "{WHAT}";
 		"^wöz$" => "{WAS}";
-		"tstwrd(^[Ww]ould)" => { "^wUd$", "{WOULD}" }; // don't apply to wood!
+		"tstwrt(^[Ww]ould)" => { "^(.*?)$", "{WOULD}" }; // don't apply to wood!
 		"^wID$" => "{WITH}";
 		"^vEri$" => "{VERY}";
+		"tstwrt(^[Cc]an$)" => { "^.*?$", "{CAN}" }; 
+		"tstwrt(^[Cc]ould$)" => { "^.*?$", "{COULD}" }; 
+		"tstwrt(^[Hh]e$)" => { "^.*?$", "{HE}" }; 
+		"tstwrt(^[Hh]ave$)" => { "^.*?$", "{HAVE}" }; 
+		"tstwrt(^[Ww]ho$)" => { "^.*?$", "{WHO}" }; 
+		"tstwrt(^[Hh]ow$)" => { "^.*?$", "{HOW}" }; 
+		"tstwrt(^[Aa]ll?)" => { "^[Oo]l", "{ALL}" }; 
 		
+		// premarked words
+		"#live(s)$" => "liv$1"; // distinguish between verb live(s) and adjective live
 		
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(upbundler,#>stage4)
@@ -716,7 +762,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// i.e. it bundles tokens where eSpeak uses upper case character in phonetic transcriptions
 		"dZ" => "[DZ]";
 		"Nk" => "[NK]";
-		"(?<!\[)N" => "[NG]";
+		"(?<!(?:\[|{))N(?!(?:\]|}))" => "[NG]";
 
 	#EndSubSection(upbundler)
 	#BeginSubSection(decapitalizer)
@@ -761,6 +807,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"(?<!^)rtr" => "[RT][#6-][AR]"; // like spanish: artritis
 		"(?<!^)rt" => "[RT]"; // not at beginning, rt => [rt] before tr => [tr], e.g. portrait
 		
+		"tstwrt(xe?$)" => { "(?<!\[)ks(?!\])", "[X]" }; // vex [X], politics [KS]
+		"tstwrt(ccess$)" => { "(?<!\[)ks\[E1\]s(?!\])", "[X][E1]s" }; // access
+		"tstwrt(x[ie]s$)" => { "ksi([sz])$", "[X]I$1" }; // axes, axis
+		"tstwrt(xers?$)" => { "ks\[E1\]\[VR\]([sz])?$", "[X][E1][VR]$1" }; // axes, axis
+		"(?<!\[)mp(?!\])" => "[MP]";
 		"(?<!\[)nk(?!\])" => "[NK]";
 		"(?<!\[)ns(?!\])" => "[NS]";
 		"(?<!\[)nz(?!\])" => "[NS]";
@@ -824,7 +875,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// n, s at beginning of a word
 		"^s" => "[S=]";
 		"^n" => "[N=]";
-
+		"^z" => "[S=]"; // s = z
+		
 		// vowels at beginning
 		// lower
 		"^i" => "[0D-]I";
@@ -866,6 +918,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"\[kw\]" => "Q";
 		"\[dz\]" => "J";
 		
+		// y
+		"j" => "y"; // yet; might not be correct in all cases
+
 		// from transcriptor
 		"z" => "s"; // pears
 		
@@ -892,6 +947,13 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{WOULD}" => "UW";
 		"{WITH}" => "IW";
 		"{VERY}" => "V";
+		"{CAN}" => "AK";
+		"{COULD}" => "UK";
+		"{HE}" => "H";
+		"{HAVE}" => "AH";
+		"{WHO}" => "UH";
+		"{HOW}" => "[AU]H";
+		"{ALL}" => "AL";
 		
 		
 	#EndSubSection(substituter)
@@ -1064,6 +1126,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 
 		// corrections
 		"\[in\]\[#0\]\[a\]\[pp\]" => "[in][#5][a][pp]";
+
+		// dangerous vs dangers
+		"\[vr\]\[#2\]\[s\]" => "[VR][#3-][S]"; // not [#2][E1] means dangers 
 
 		// assign 5 to the rest (standard value)
 		//"\[#d..?\]" => "[#5]";

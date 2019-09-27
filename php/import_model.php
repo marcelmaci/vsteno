@@ -246,14 +246,17 @@ function ImportAnalyzer() {
             case "1" : 
                 // multiple consequences
                 $analyzer[$i][] = $condition;
-                //echo "multiple: #" . $matches1[1] . "#<br>";
-                $consequence_list = explode( ",", $matches1[1] );
+                //echo "analyzer condition: $condition<br>";
+                //echo "analyzer multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
+                $matches1[1] = preg_replace("/\"(.*?),(.*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
+                //echo "analyzer multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
+                $consequence_list = explode( ",", $matches1[1] ); // BUG: , inside "" must be escaped before explode!!! See also: ImportRule()
                 foreach ($consequence_list as $element) {
                     // filter out spaces at beginning and end
                     $bare_element = preg_replace("/^[ ]*?\"(.*?)\"[ ]*?/", "$1", $element);
                     //echo "element: #$element# => bare_element: #$bare_element#<br>";
                     
-                    $analyzer[$i][] = $bare_element;
+                    $analyzer[$i][] = preg_replace( "/#C#O#M#A#/", ",", $bare_element); // resubstitue #C#O#M#A#
                 }
                 //echo "rule($i) written: #" . $analyzer[$i][0] . "# => #" . $analyzer[$i][1] . "#-#" . $analyzer[$i][2] . "#<br>";
                 $i++; // point to next analyzer-rule entry in array $analyzer
@@ -472,14 +475,24 @@ function ImportRulesFromGenericSubSection() {
             case "1" : 
                 // multiple consequences
                 $rules["$insertion_key"][$rules_pointer][] = $condition;
-                //echo "multiple: #" . $matches1[1] . "#<br>";
-                $consequence_list = explode( ",", $matches1[1] );
+                //echo "condition: $condition<br>";
+                //echo "multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
+                $matches1[1] = preg_replace("/\"(.*?),(.*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
+                $consequence_list = explode( ",", $matches1[1] ); // BUG!
+                // using explode with , leads to a serious problem:
+                // rule:
+                // "tstwrt(^[Dd]is)" => { "^d,Is", "dis" }; // disarm (dis-), disappear
+                // can't be processed because the multiple consequence is divided into three parts:
+                // a) "^d
+                // b) Is"
+                // c)  "dis"
+                // workaround: replace , inside "" with #C#O#M#A# before explode and re-sustitute it afterwords
                 foreach ($consequence_list as $element) {
                     $bare_element = preg_replace("/^[ ]*?\"(.*?)\"[ ]*?/", "$1", $element);
                     //echo "element: #$element# => bare_element: #$bare_element#<br>";
                     //$rules["$insertion_key"][] = $rules_pointer;
                 
-                    $rules["$insertion_key"][$rules_pointer][] = $bare_element;
+                    $rules["$insertion_key"][$rules_pointer][] = preg_replace( "/#C#O#M#A#/", ",", $bare_element); // resubstitute #C#O#M#A#
                 }
                 $rules_pointer++;
                 break;
