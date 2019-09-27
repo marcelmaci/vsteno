@@ -72,7 +72,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// set versions
 		"model_version" := "0.0";
 		"model_date" := "23. September 2019";
-		"required_version" := "0.1";
+		"required_version" := "0.2";
 		// configure linguistical analysis
 		"analysis_type" := "selected";
 		"hyphenate_yesno" := "no";
@@ -98,7 +98,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 			"[Ee]leven":"ElEvEn",
 			"[Oo]belisc(s)?":"obElisk$1",
 			"[Bb]ombard(s)?":"bombard$1",
-			"[Oo]xid(.*?)$":"oxideIt"
+			"[Oo]xidate(s)?":"oxideIt$1",  // use x for transcription instead of ks
+			"[Aa]ccidence":"axid@ns"
 		";		
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -207,10 +208,17 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		// rules applied after after linguistic analysis (eSpeak)
-		"(?<!')I" => "E"; 	// messenger
+		//"tstwrt(^[Dd]is)" => { "^(?:dI2s|d,Is)", "dis" }; // disarm (dis-), disappear
+		"tstwrt(^[Dd]is)" => { "^dI2s", "dis" }; // disarm (dis-), disappear
+		"tstwrt(^[Dd]is)" => { "^d,Is", "dis" }; // disarm (dis-), disappear
+		
+		"tstwrt(ings?$)" => { "IN([zs])?$", "iN$1" };
+		"tstwrt(izes?$)" => { "aIz(@[zs])?$", "aiz$1" };
+		"(?<!['eEaAoOä])I(?![2#k])" => "E"; 	// messenger
 		"'" => ""; 	// filter out primary stress (added by eSpeak, not necessary for transcription)
 		"," => ""; 	// "         secondary "
 		"a#" => "E"; // appearently this is used as schwa by eSpeak ...
+		"I#" => "i"; 	// axes, emancipate
 		"a(?![IiUuRr])" => "ä";	// bag
 		"A:?" => "a"; 	// calm
 		//"er" => "ör";	// hair (!= her), err (?)
@@ -222,6 +230,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// 2) er(r) => ör
 		"tstwrt(air)" => { "e@", "är" };
 		"tstwrt(er)" => { "e@", "ör" };
+		"tstwrt(ore?)" => { "[oO]@$", "or" };
 		"i@3r" => "ir"; // appearence
 		// another case
 		"tstwrt(are$)" => { "e@$", "är" }; // spare
@@ -230,7 +239,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"aU3" => "aur"; // hour
 		"@3" => "r";	// ear
 		"tstwrt(ous$)" => { "l@([sz])", "lE$1" }; // zealous
-		"l@" => "li"; // politics
+		"l@(?!nd?)" => "li"; // politics vs island/swollen
 		// usage of @ and 3 by eSpeak is totally bizarre ... correct it with the following rules
 		"U@r" => "Ur"; // during
 		"g3r" => "gEr";
@@ -244,7 +253,6 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(ear[sz])" => { "ir", "är" }; // leave beer / bir as bir! 
 		"^be@r" => "bär"; // bearing
 		//"^när$" => "nir"; // correct "near"
-		"I#" => "i"; 	// axes
 		"i:" => "i";	// beast
 		"0" => "o";	// god
 		"O:" => "o";	// bought
@@ -254,9 +262,6 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"u:" => "u";	// booze
 		"t2" => "t";	// time (probably "aspired" t?!)
 		"tstwrt(ice$)" => { "I2s$", "is" }; // office
-		//"tstwrt(^[Dd]is)" => { "^(?:dI2s|d,Is)", "dis" }; // disarm (dis-), disappear
-		"tstwrt(^[Dd]is)" => { "^dI2s", "dis" }; // disarm (dis-), disappear
-		"tstwrt(^[Dd]is)" => { "^d,Is", "dis" }; // disarm (dis-), disappear
 		"tstwrt(iage$)" => { "I2dZ", "idZ" }; // carriage 
 		"tstwrt(age$)" => { "I2dZ", "EdZ" }; // carriage 
 		"I2" => "i";    // handicap
@@ -269,6 +274,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"3" => "E";
 		"tstwrt(r$)" => { "@$", "r" }; // four
 		"tstwrt(^o)" => { "^@", "o" }; // offend (holy cow ... eSpeak uses this @ for almost anything ... :-/)
+		"o@d$" => "ord"; // disaccord
+		"[oO]@m" => "arm"; // warm
 		"@" => "E";
 		"(.)#" => "$1"; // aquatic (no idea what eSpeak means by # after t?!)
 	#EndSubSection(analyzer)
@@ -728,9 +735,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
 		"tstwrt(^[Ii]s$)" => { "^[Ii]z$", "{IS}" }; // don't apply to ease!
-		"^([Aa]|ä(#n)?)$" => "{A}";
+		"tstwrt(^an?$)" => { "^(.*?)$", "{A}" };
 		"^It$" => "{IT}";
-		"^(ai|i|I)$" => "{I}"; // single characters are not converted to phonetic form!
+		"tstwrt(^I$)" => { "^(.*?)$", "{I}" }; // single characters are not converted to phonetic form!
 		"^DEm$" => "{THEM}";
 		"tstwrt(^[Tt]he$)" => { "^(.*?)$", "{THE}" };
 		"tstwrt(^[Tt]oo$)" => { "^tu$", "{TOO}" };
