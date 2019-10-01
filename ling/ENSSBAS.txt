@@ -245,6 +245,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"'" => ""; 	// filter out primary stress (added by eSpeak, not necessary for transcription)
 		"," => ""; 	// "         secondary "
 		"a#" => "E"; // appearently this is used as schwa by eSpeak ...
+		"tstwrt(er$)" => { "aI3$", "aiEr" }; // buyer
 		"i@r" => "ir"; // serious
 		"I#" => "i"; 	// axes, emancipate
 		"a(?![IiUuRr])" => "ä";	// bag
@@ -828,11 +829,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Tt]hat)" => { "^.*?$", "{THAT}" }; 
 		"tstwrt(^[Ss]hall$)" => { "^.*?$", "{SHALL}" }; 
 		"tstwrt(^[Ss]hould$)" => { "^.*?$", "{SHOULD}" }; 
-		"tstwrt(^[Oo]ther)" => { "^.*?$", "{OTHER}" }; 
-		"tstwrt(^[Aa]nd)" => { "^.*?$", "{AND}" }; 
-		"tstwrt(^[Yy]ou)" => { "^.*?$", "{YOU}" }; 
-		"tstwrt(^[Aa]t)" => { "^.*?$", "{AT}" }; 
-		"tstwrt(^[Ii]f)" => { "^.*?$", "{IF}" }; 
+		"tstwrt(^[Oo]ther$)" => { "^.*?$", "{OTHER}" }; 
+		"tstwrt(^[Aa]nd$)" => { "^.*?$", "{AND}" }; 
+		"tstwrt(^[Yy]ou$)" => { "^.*?$", "{YOU}" }; 
+		"tstwrt(^[Aa]t$)" => { "^.*?$", "{AT}" }; 
+		"tstwrt(^[Ii]f$)" => { "^.*?$", "{IF}" }; 
 		"tstwrt(^[Oo]ff?$)" => { "^.*?$", "{OFF}" }; 
 		
 		// premarked words
@@ -985,6 +986,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// special case: owe
 		"^o$" => "[0N-][&O]";
 
+		// special case: ewe
+		"^ü$" => "[0N-]Ä[&U]";
+
 		// vowels at beginning
 		// lower
 		"^i\[tsh\]" => "[0N-]I[TSH]"; // not lowered
@@ -1004,6 +1008,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^ö" => "[0N-][Ö]";
 		"^u" => "[0N-][U]";
 		"^ü" => "[0N-][Ü]";
+
+		// epentesis before end vowel
+		"i(\[e1\])" => "I[&E]$1";
 
 		// end vowels
 		"\[(e1|ei)\]$" => "[-E]";
