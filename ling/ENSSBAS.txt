@@ -214,8 +214,66 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 	#BeginSubSection(analyzer)
 		
 		// rules applied after after linguistic analysis (eSpeak)
+		
+		// morphological markings
+		// prefixes
+		////////////////// primary prefixes (= at beginning) //////////////////////////////////
+		// be-
+		"tstwrt(^[Bb]e)" => { "^(b[',]?[iI][2:;]*)", "bi+" }; // be-
+		// de-
+		"tstwrt(^[Dd]e)" => { "^(d[',]?[iI][2:;]*)", "di+" };
+		// re-
+		"tstwrt(^[Rr]e)" => { "^(r[',]?[iI][2:;]*)", "ri+" };
+		// circum-
+		"tstwrt(^[Cc]ircum)" => { "^(s3:k'Vm|s'3:k@m|s,3:k@m)", "sirkum+" };
+		// sub-
+		"tstwrt(^[Ss]ub)" => { "^(s'?Vb|s@b)", "sub+" };
+		// un-
+		"tstwrt(^[Uu]n)" => { "^([',]?Vn)", "un+" };
+		// extra-
+		"tstwrt(^[Ee]xtra)" => { "^('Ekstr@|Ekstr'a)", "extra+" };
+		// ex-
+		"tstwrt(^[Ee]x)" => { "^(E[kg][sz]|'E[gk][zs])", "ex+" };
+		// in-
+		"tstwrt(^[Ii]n)" => { "^(,[iI]n|'?[iI]n)", "in+" };
+		// pro-
+		"tstwrt(^[Pp]ro)" => { "^(pro)", "pro+" };
+
+		///////////////// secondary prefixes (= after primary prefix) /////////////////////////
+		// +be-
+		"tstwrt(be)" => { "\+b[',]?[iI][2:;]", "+bi+" }; // be-
+		// +de-
+		"tstwrt(de)" => { "\+d[',]?[iI][2:;]", "+di+" };
+		// +re-
+		"tstwrt(re)" => { "\+r[',]?[iI][2:;]", "+ri+" };
+		// +circum-
+		"tstwrt(circum)" => { "\+(s3:k'Vm|s'3:k@m|s,3:k@m)", "+sirkum+" };
+		// +sub-
+		"tstwrt(sub)" => { "\+(s'Vb|s@b)", "+sub+" };
+		// +un-
+		"tstwrt(un)" => { "\+(Vn|,Vn)", "+un+" };
+		// +extra-
+		"tstwrt(extra)" => { "\+('Ekstr@|Ekstr'a)", "+extra+" };
+		// +ex-
+		"tstwrt(ex)" => { "\+(E[kg][sz]|'E[gk][zs])", "+ex+" };
+		// +in-
+		"tstwrt(in)" => { "\+(,[iI]n|'?[iI]n)", "+in+" };
+		// +pro-
+		"tstwrt(pro)" => { "\+(pro)", "+pro+" };
+
+		//////////////////// corrections (morphology) ////////////////////////////////////
+		
+		"tstwrt(^unreason)" => { "ri\+", "ri" }; // unreasonable
+
+		//////////////////// end corrections (morphology) ///////////////////////////////
+
+		"un\+s@L" => "un+sl"; // unsling
+		
 		//"tstwrt(x)" => { "ks", "x" }; // keep an eye on this rule: produces wrong result in case of combination of x and cc (for example)
 		"ks" => "x"; // for the moment: treat all ks as x to detect wrong cases
+		"tstwrt([ck]s$)" => { "x", "ks" }; // recorrect: politics, looks (ks)
+		"tstwrt(cs)" => { "x", "ks" }; // recorrect: ecstasy (ks) - might produce wrong results!
+
 		"\?" => "t"; // eSpeak seems to use that as a t (in written, for example)
 		// -ism
 		",?Iz@m([sz])?$" => "ism$1";
@@ -246,6 +304,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"(ks|x)I([md])" => "$1i$2"; // maximum, accident
 		"tstwrt(idge$)" => { "IdZ$", "idZ" }; // cartridge
 		"tstwrt(id$)" => { "Id$", "id" }; // splendid
+		"bItr" => "bitr"; // arbitrage
 
 		"(?<!['eEaAoOä])I(?![2#k;m])" => "E"; 	// messenger
 		"'" => ""; 	// filter out primary stress (added by eSpeak, not necessary for transcription)
@@ -267,6 +326,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(aer)" => { "e@r", "är" }; // aerial
 		"tstwrt(air)" => { "e@", "är" };
 		"tstwrt(er)" => { "e@", "ör" };
+		"tstwrt(er$)" => { "3$", "Er" }; // matter
 		"tstwrt(ore?)" => { "[oO]@", "or" };
 		"tstwrt(ure?)" => { "[uU]@", "ur" };
 		"i@3r" => "ir"; // appearence
@@ -454,6 +514,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"PF" => { /*header*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPA:LP:RNC:RN", /*data*/ 0, 7, 0.5, 1, 1, 0, 0, 0.5,  /**/ 0.5, 7, 0.5, 2, 1, 0, 0, 0.5,  /**/ 6, 9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 9, 11.1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 7.5, 16.5, 0.5, 0, 1.25, 0, 0, 0.5,  /**/ 2, 20, 0.5, 0, 2.25, 0, 0, 0.5,  /**/ 0, 18, 0.5, 0, 3, 0, 0, 0.5,  /**/ 0, 2, 0.5, 0, 3, 0, 0, 0.5,  /**/ 2, 0, 0.5, 4, 1.25, 0, 0, 0.5,  /**/ 2, 0, 0.5, 0, 1.25, 0, 2, 0.5,  /**/ 4, 2, 0.5, 0, 1, 0, 1, 0 }
 		"SP" => { /*header*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 0, 18, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 20, 0.5, 2, 2, 0, 0, 0.5,  /**/ 4, 18, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ /*4, 15, 0.5, 0, 3, 0, 0, 0.5,*/  /**/ /*4, 5, 0.5, 0, 2.5, 0, 0, 0.5,*/  /**/ 4, 3, 0.5, 0, 2, 0, 0, 0.5,  /**/ 6, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 6, 0, 0.5, 0, 1.5, 0, 2, 0.5,  /**/ 8, 2, 0.5, 0, 1, 0, 1, 0 }
 		"MP" => { /*spanishandenglish*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 0, 18, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 2, 20, 0.5, 2, 2, 0, 0, 0.5,  /**/ 4, 18, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 4, 15, 0.5, 0, 3, 0, 0, 0.5,  /**/ 4, 5, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 4, 3, 0.5, 0, 2, 0, 0, 0.5,  /**/ 6, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 6, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 8, 2, 0.5, 0, 1, 0, 0, 0, /*n*/ 4, 4, 0.5, 0, 1, 0, 0, 0, /*n*/ 1, 3, 0.5, 0, 1, 0, 0, 0, /*n*/ 6, 2, 0.5, 0, 1, 0, 2, 0, /*n*/ 8, 2, 0.5, 0, 1, 0, 1, 0 }
+		"PERHAPS" => { /*english*/ 8, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 4, 20, 0.0, 0, 2.5, 0, 0, 0.5,  /**/ 4, 15, 0.5, 0, 3, 0, 0, 0.5,  /**/ 4, 5, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 4, 3, 0.5, 0, 2, 0, 0, 0.5,  /**/ 6, 0, 0.5, 4, 1.5, 0, 0, 0.5,  /**/ 6, 0, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 8, 2, 0.5, 0, 1, 0, 0, 0, /*n*/ 4, 4, 0.5, 0, 1, 0, 0, 0, /*n*/ 1, 3, 0.5, 0, 1, 0, 0, 0, /*n*/ 6, 2, 0.5, 0, 1, 0, 2, 0, /*n*/ 8, 2, 0.5, 0, 1, 0, 1, 0 }
 		"ST" => { /*header*/ 3, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPA:LP:RPC:RP", /*data*/ 0, 10, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 3, 17, 0.5, 2, 2, 0, 0, 0.5,  /**/ 1.8, 20, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 18, 0.5, 0, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 2.5, 0, 4, 1, 0, 1, 0 }
 		"XT" => { /*header*/ 10, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LPA:LP:RPC:RP", /*data*/ 0, 10, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 5, 15, 0.5, 2, 2, 0, 0, 0.5,  /**/ 3.25, 18.75, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0, 18, 0.5, 0, 3, 0, 0, 0,  /**/ 0, 10, 0, 0, 3, 0, 0, 0, /**/ 10, 0, 0, 0, 1, 0, 1, 0 }
 		"ZW" => { /*header*/ 5, 1, -1, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 5, 20, 0, 1, 3, 0, 0, 0,  /**/ 5, -8, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 3, -10, 0.5, 0, 2, 0, 0, 0.5,  /**/ 1.5, -9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, -7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 1, 0 }
@@ -770,6 +831,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"(?<=^| )(I|[Yy]ou|[Ss]?[Hh]e|[Ww]e|[Tt]hey|[Tt]o) lives?(?=[ ,\.-?]|$)" => "$1 #live";
 		"(?<=^| )([Cc])annot(?=[ ,\.-]|$)" => "#$1annot";
 		
+
+		// re-
+		"(?<=^| )([Rr]e)-(.*?)(?=[ ,\.-]|$)" => "$1$2"; // eliminate -
+		"(?<=^| )([Ee]xtra)-(.*?)(?=[ ,\.-]|$)" => "$1$2"; // eliminate -
+		
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		// empty
@@ -807,7 +873,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Tt]o$)" => { "^tu$", "{TO}" };
 		"^häd$" => "{HAD}";
 		"tstwrt(^[Dd]o$)" => { "^.*?$", "{DO}" };
-		"^bi$" => "{BE}";
+		"tstwrt(^be$)" => { "^.*?$", "{BE}" };
 		"^böt$" => "{BUT}";
 		"^wi$" => "{WE}";
 		"^wöt$" => "{WHAT}";
@@ -855,10 +921,29 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Ww]here$)" => { "^.*?$", "{WHERE}" }; 
 		"tstwrt(^[Ww]ere$)" => { "^.*?$", "{WERE}" }; 
 		"tstwrt(^[Oo]ver$)" => { "^.*?$", "{OVER}" }; 
+		"tstwrt(^[Ff]rom$)" => { "^.*?$", "{FROM}" }; 
+		"tstwrt(^[Yy]our)" => { "^(.*?r)", "{YOUR}" }; 
+		"tstwrt(^[Pp]erhaps$)" => { "^.*?$", "{PERHAPS}" }; 
+		"tstwrt(^[Cc]ontrar)" => { "^(.*?Er)", "{CONTRAR}" }; 
+		"tstwrt(^[Gg]ener)" => { "^(.*?r)", "{GENER}" }; 
+		"tstwrt(^[Nn]ever$)" => { "^.*?$", "{NEVER}" }; 
+		"tstwrt(^[Nn]ecessar)" => { "^(.*?r)", "{NECESSAR}" }; 
 		
 		// premarked words
 		"#live(s)$" => "liv$1"; // distinguish between verb live(s) and adjective live
 		
+		// morphologically premarked words
+		"bi\+" => "{BE1}";
+ 		"di\+" => "{DE}";
+ 		"ri\+" => "{RE}";
+ 		"sirkum\+" => "{CIRCUM}";
+ 		"sub\+" => "{SUB}";
+ 		"un\+" => "{UN}";
+ 		"extr(a|ä)\+" => "{EXTRA}";
+ 		"ex\+" => "{EX}";
+ 		"in\+" => "{IN}";
+ 		"pro\+" => "{PRO}";
+ 		
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(upbundler,#>stage4)
 		// upbundler is short for "uppercase bundler"
@@ -919,7 +1004,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"ndr" => "[NDR]";
 		"spr" => "[SPR]";
 		"ktr" => "[CTR]";
-		"(ks|x)t" => "[XT]";
+		"xt" => "[XT]"; // don't transform ks!
 		"skr" => "[SCR]";
 		"skl" => "[SCL]";
 		"ptr" => "[PTR]";
@@ -993,6 +1078,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		
 		// r alone
 		"^r" => "[AR]";
+		"}r" => "}[AR]";
 		"r" => "[VR]";
 		
 	#EndSubSection(bundler,=:std)
@@ -1217,8 +1303,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 
 		"(\[i\]|i)z" => "$1[^Z]";
 		"(\[i\]|i)\[sch\]" => "$1[^SCH]";
-		"(\[i\]|i)\[ch\]" => "$1[^CH]";
-
+		"(\[e?i\]|i)\[ch\]" => "$1[^CH]";
+		
 		"ö" => "Ö";
 		"ä" => "Ä";
 		"ü" => "Ü";
@@ -1286,6 +1372,33 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{FOR}" => "[VOR]";
 		"{WHERE}" => "[W@R6]";
 		"{WERE}" => "[W@R6]";
+		"{BE1}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "B[&E]$1";
+		"{BE1}" => "B";
+		"{DE}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "D[&E]$1";
+		"{DE}" => "D";
+		"{RE}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "[AR][&E]$1";
+		"{RE}" => "[AR]";
+		"{CIRCUM}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "C[&E]$1";
+		"{CIRCUM}" => "C";
+		"{SUB}" => "[&U]";
+		"{UN}" => "A[&U]";
+		"^{EXTRA}" => "[0N-]A[&E]";
+		"{EXTRA}" => "A[&E]";
+		"{EX}" => "[&E]";
+		"{PRO}" => "[P@R]O"; // not really a prefixe ...
+		"{FROM}" => "[F@R6]";
+		"{YOUR}" => "[UR]";
+		"{PERHAPS}" => "[PERHAPS]"; // new token
+		"{CONTRAR}" => "[BEI+AR]";
+		"{GENER}" => "J[VR]";
+		"{NEVER}" => "[N=][E1][VR]";
+		"^{NECESSAR}" => "[N=][E1][VR]";
+		"{NECESSAR}" => "N[E1][VR]";
+		//"{}" => "";
+		//"{}" => "";
+		//"{}" => "";
+		//"{}" => "";
+		//"{}" => "";
 		//"{}" => "";
 		
 		
