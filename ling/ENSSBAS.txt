@@ -218,61 +218,95 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// morphological markings
 		// prefixes
 		////////////////// primary prefixes (= at beginning) //////////////////////////////////
+		// chapter 10 (rules that must preceed)
+		// inter/enter/intr- (,Intr@ Int'Er 'Intr)
+		//"tstwrt(^[IiEe]nte?r)" => { "^([',]?.nt(?:[',]?[@3E]r?|r@))", "INTER+" };
+		"tstwrt(^[IiEe]nte?r)" => { "^([',]?[EI]nt(?:r@|(?:'?E)?r|3))", "INTER+" };
+			
+		// chapter 9
 		// be-
-		"tstwrt(^[Bb]e)" => { "^(b[',]?[iI][2:;]*)", "bi+" }; // be-
+		"tstwrt(^[Bb]e)" => { "^(b[',]?[iI][2:;]*)", "BI+" }; // be-
 		// de-
-		"tstwrt(^[Dd]e)" => { "^(d[',]?[iI][2:;]*)", "di+" };
-		// re-
-		"tstwrt(^[Rr]e)" => { "^(r[',]?[iI][2:;]*)", "ri+" };
+		"tstwrt(^[Dd]e)" => { "^(d[',]?[iI][2:;]*)", "DI+" };
+		// re- (r'E)
+		"tstwrt(^[Rr]e)" => { "^(r[',]?[iIEe][2:;]*)", "RI+" };
 		// circum-
-		"tstwrt(^[Cc]ircum)" => { "^(s3:k'Vm|s'3:k@m|s,3:k@m)", "sirkum+" };
+		"tstwrt(^[Cc]ircum)" => { "^(s3:k'Vm|s'3:k@m|s,3:k@m)", "SIRKUM+" };
 		// sub-
-		"tstwrt(^[Ss]ub)" => { "^(s'?Vb|s@b)", "sub+" };
+		"tstwrt(^[Ss]ub)" => { "^(s'?Vb|s@b)", "SUB+" };
 		// un-
-		"tstwrt(^[Uu]n)" => { "^([',]?Vn)", "un+" };
+		"tstwrt(^[Uu]n)" => { "^([',]?Vn)", "UN+" };
 		// extra-
-		"tstwrt(^[Ee]xtra)" => { "^('Ekstr@|Ekstr'a)", "extra+" };
+		"tstwrt(^[Ee]xtra?)" => { "^('Ekstr@?|Ekstr'a?)", "EXTRA+" };
 		// ex-
-		"tstwrt(^[Ee]x)" => { "^(E[kg][sz]|'E[gk][zs])", "ex+" };
+		"tstwrt(^[Ee]x)" => { "^(E[kg][sz]|'E[gk][zs])", "EX+" };
 		// in-
-		"tstwrt(^[Ii]n)" => { "^(,[iI]n|'?[iI]n)", "in+" };
+		"tstwrt(^[Ii]n)" => { "^(,[iI]n|'?[iI]n)", "IN+" };
 		// pro-
-		"tstwrt(^[Pp]ro)" => { "^(pro)", "pro+" };
+		"tstwrt(^[Pp]ro)" => { "^(pro)", "PRO+" };
 
+		// chapter 10
+		// anti/ante-
+		"tstwrt(^[Aa]nt[ie])" => { "^([',]?.nt.[2:;]?)", "ANTI+" };
+		// countra/counter/contr- (k,0ntr@)
+		"tstwrt(^[Cc]ou?nt(?:ra|e?r))" => { "^(k[',]?.*?nt(?:3|r.))", "CONTR+" };
+		// acom- (a#kVm)
+		"tstwrt(^[Aa]c?co[nm])" => { "^(a#k[',]?.[:;]?[nm])", "ACOM+" };	
+		// con/com-
+		"tstwrt(^[Cc]o[nm])" => { "^(k[',]?.[:;]?[nm])", "CON+" };
+		// per/pur- (p'3:)
+		"tstwrt(^[Pp][eu]r)" => { "^(p[',]?(?:3[:;]?|Er))", "PER+" };
+		// sur- (s3)
+		"tstwrt(^[Ss]ur)" => { "^(s[',]?(?:3:?|Er))", "SUR+" }; // surrender = surender
+		// trans/tran-
+		"tstwrt(^[Tt]ranscri)" => { "^(tr.*?ns)", "TRANS+s" }; // tran-scription
+		"tstwrt(^[Tt]ranspir)" => { "^(tr.*?ns)", "TRANS+s" }; // tran-spiration, tran-spire
+		"tstwrt(^[Tt]rans?)" => { "^(tr[',]?.n[sz]?)", "TRANS+" };
+		
+		
 		///////////////// secondary prefixes (= after primary prefix) /////////////////////////
+		// chapter 9
 		// +be-
-		"tstwrt(be)" => { "\+b[',]?[iI][2:;]", "+bi+" }; // be-
+		"tstwrt(be)" => { "\+b[',]?[iI][2:;]", "+BI+" }; // be-
 		// +de-
-		"tstwrt(de)" => { "\+d[',]?[iI][2:;]", "+di+" };
+		"tstwrt(de)" => { "\+d[',]?[iI][2:;]", "+DI+" };
 		// +re-
-		"tstwrt(re)" => { "\+r[',]?[iI][2:;]", "+ri+" };
+		"tstwrt(re)" => { "\+r[',]?[iIEe][2:;]", "+RI+" };
 		// +circum-
-		"tstwrt(circum)" => { "\+(s3:k'Vm|s'3:k@m|s,3:k@m)", "+sirkum+" };
+		"tstwrt(circum)" => { "\+(s3:k'Vm|s'3:k@m|s,3:k@m)", "+SIRKUM+" };
 		// +sub-
-		"tstwrt(sub)" => { "\+(s'Vb|s@b)", "+sub+" };
+		"tstwrt(sub)" => { "\+(s'Vb|s@b)", "+SUB+" };
 		// +un-
-		"tstwrt(un)" => { "\+(Vn|,Vn)", "+un+" };
+		"tstwrt(un)" => { "\+(Vn|,Vn)", "+UN+" };
 		// +extra-
-		"tstwrt(extra)" => { "\+('Ekstr@|Ekstr'a)", "+extra+" };
+		"tstwrt(extra)" => { "\+('Ekstr@|Ekstr'a)", "+EXTRA" };
 		// +ex-
-		"tstwrt(ex)" => { "\+(E[kg][sz]|'E[gk][zs])", "+ex+" };
+		"tstwrt(ex)" => { "\+(E[kg][sz]|'E[gk][zs])", "+EX+" };
 		// +in-
-		"tstwrt(in)" => { "\+(,[iI]n|'?[iI]n)", "+in+" };
+		"tstwrt(in)" => { "\+(,[iI]n|'?[iI]n)", "+IN+" };
 		// +pro-
-		"tstwrt(pro)" => { "\+(pro)", "+pro+" };
+		"tstwrt(pro)" => { "\+(pro)", "+PRO+" };
 
+		// chapter 10
+		// con/com-
+		"tstwrt([Cc]o[nm])" => { "\+(k[',]?.[:;]?[nm])", "+CON+" };
+		
 		//////////////////// corrections (morphology) ////////////////////////////////////
 		
-		"tstwrt(^unreason)" => { "ri\+", "ri" }; // unreasonable
-
+		"tstwrt(^([Uu]n)?reason)" => { "RI\+", "ri" }; // unreasonable
+		"tstwrt(^([Uu]n)?real)" => { "RI\+", "ri" }; // (un)real(istic) etc. 
+		"tstwrt(^[Bb](ee|ea|it)ch)" => { "^BI\+", "bi" }; // beech, beach, bich
+		"tstwrt(^[Cc]om[ei])" => { "CON\+", "köm" }; // come, comes, comeback, coming
+		
 		//////////////////// end corrections (morphology) ///////////////////////////////
 
-		"un\+s@L" => "un+sl"; // unsling
+		"UN\+s@L" => "un+sl"; // unsling
 		
 		//"tstwrt(x)" => { "ks", "x" }; // keep an eye on this rule: produces wrong result in case of combination of x and cc (for example)
 		"ks" => "x"; // for the moment: treat all ks as x to detect wrong cases
 		"tstwrt([ck]s$)" => { "x", "ks" }; // recorrect: politics, looks (ks)
 		"tstwrt(cs)" => { "x", "ks" }; // recorrect: ecstasy (ks) - might produce wrong results!
+		"tstwrt(xc)" => { "EX\+", "EX+s" }; // recorrect: excess - might produce wrong results
 
 		"\?" => "t"; // eSpeak seems to use that as a t (in written, for example)
 		// -ism
@@ -294,7 +328,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 
 		// mple, dle etc.
 		"tstwrt(mple$)" => { "p@L", "pl" }; // simple
-		"tstwrt([dtgcxbpksf]le[ds]?$)" => { "@L([tdsz])?", "l$1" }; // middle, cattle, angle, uncle, axle, usable, principle
+		"tstwrt([dtgcxbpksfz]le[ds]?$)" => { "@L([tdsz])?", "l$1" }; // middle, cattle, angle, uncle, axle, usable, principle
 
 		"Enst$" => "änst"; // against
 		"^sI(ks|x)" => "si$1"; // sixteen
@@ -306,7 +340,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(id$)" => { "Id$", "id" }; // splendid
 		"bItr" => "bitr"; // arbitrage
 
-		"(?<!['eEaAoOä])I(?![2#k;m])" => "E"; 	// messenger
+		"(?<!['eEaAoOä])I(?!(?:[2#k;m+]|NTER|RKUM))" => "E"; 	// messenger // I declare this officially the worst rule in the whole model ... !
 		"'" => ""; 	// filter out primary stress (added by eSpeak, not necessary for transcription)
 		"," => ""; 	// "         secondary "
 		"a#" => "E"; // appearently this is used as schwa by eSpeak ...
@@ -315,7 +349,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"I#" => "i"; 	// axes, emancipate
 		"a(?![IiUuRr])" => "ä";	// bag
 		"mänI2dZ" => "mänEdZ"; // manage-
-		"A:?" => "a"; 	// calm
+		"(?<!EXTR)A:?(?!N[ST]|COM)" => "a"; 	// calm // not in prefixes like trans-, ante-, anti-, accom- etc.
 		//"er" => "ör";	// hair (!= her), err (?)
 		// so, here's the first bizarre problem in english:
 		// hair vs err => 'e@ vs h'e@ (identical transcription by eSpeak)
@@ -327,6 +361,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(air)" => { "e@", "är" };
 		"tstwrt(er)" => { "e@", "ör" };
 		"tstwrt(er$)" => { "3$", "Er" }; // matter
+		"tstwrt(ors$)" => { "3z", "Erz" }; // oppressors
 		"tstwrt(ore?)" => { "[oO]@", "or" };
 		"tstwrt(ure?)" => { "[uU]@", "ur" };
 		"i@3r" => "ir"; // appearence
@@ -350,6 +385,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		//"3" => "E";
 		"a@" => "ar"; // park
 		//"@(?!2)" => "r";// air (not sure if @ is r or shwa?!)
+		"u:3d" => "uErd"; // stewardess
 		"3:r" => "ör";	// hurried
 		"3:" => "ör";	// her, fur (add vowel ö)
 		"#3" => "r";	// better
@@ -831,6 +867,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"(?<=^| )(I|[Yy]ou|[Ss]?[Hh]e|[Ww]e|[Tt]hey|[Tt]o) lives?(?=[ ,\.-?]|$)" => "$1 #live";
 		"(?<=^| )([Cc])annot(?=[ ,\.-]|$)" => "#$1annot";
 		
+		// abreviations with dots
+		"(?<=^| )([Mm])r(s)?\.(?=[ ,\.-]|$)" => "$1r$2"; // eliminate dot
+
 
 		// re-
 		"(?<=^| )([Rr]e)-(.*?)(?=[ ,\.-]|$)" => "$1$2"; // eliminate -
@@ -860,7 +899,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		
 		"#[Cc](a|ä)nnot" => "{CAN}{NOT}"; // probably a bug: (post)analyzer rules should not be applied!
 		"tstwrt((?<!i)ed$)" => { "id$", "{ED}" };
-		"tstwrt(ed$)" => { "([brsznlvmZ])d$", "$1{ED}" };
+		"tstwrt(ed$)" => { "([brsznlvmZL])d$", "$1{ED}" };
 		"tstwrt(xed$)" => { "kst$", "x{ED}" }; // mixed
 		"tstwrt(ed$)" => { "([kpsS])t$", "$1{ED}" }; // asked (voiceless t by assimilation)
 		"tstwrt(^[Ii]s$)" => { "^[Ii]z$", "{IS}" }; // don't apply to ease!
@@ -928,21 +967,38 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Gg]ener)" => { "^(.*?r)", "{GENER}" }; 
 		"tstwrt(^[Nn]ever$)" => { "^.*?$", "{NEVER}" }; 
 		"tstwrt(^[Nn]ecessar)" => { "^(.*?r)", "{NECESSAR}" }; 
+		"tstwrt(^[Ss]ir)$" => { "^(.*?r)", "{SIR}" }; 
+		"tstwrt(^[Gg]entleman$)" => { "^(.*?)$", "{GENTLEMAN}" }; 
+		"tstwrt(^[Gg]entlemen$)" => { "^(.*?)$", "{GENTLEMEN}" }; 
+		"tstwrt(^[Mm]uch$)" => { "^(.*?)$", "{MUCH}" }; 
+		"tstwrt(^[Mm]r)$" => { "^(.*?)$", "{MR}" }; 
+		"tstwrt(^[Mm]ister)$" => { "^(.*?)$", "{MR}" }; 
+		"tstwrt(^[Mm]isters)$" => { "^(.*?)$", "{MRS}" }; 
+		//"tstwrt(^[Mm]rs)" => { "^(.*?)$", "{MRS}" }; 
+		"tstwrt([Ss]el[vf])" => { "(s.*?lf)", "{SELF}" }; 
 		
 		// premarked words
 		"#live(s)$" => "liv$1"; // distinguish between verb live(s) and adjective live
 		
 		// morphologically premarked words
-		"bi\+" => "{BE1}";
- 		"di\+" => "{DE}";
- 		"ri\+" => "{RE}";
- 		"sirkum\+" => "{CIRCUM}";
- 		"sub\+" => "{SUB}";
- 		"un\+" => "{UN}";
- 		"extr(a|ä)\+" => "{EXTRA}";
- 		"ex\+" => "{EX}";
- 		"in\+" => "{IN}";
- 		"pro\+" => "{PRO}";
+		"BI\+" => "{BE1}";
+ 		"DI\+" => "{DE}";
+ 		"RI\+" => "{RE}";
+ 		"SIRKUM\+" => "{CIRCUM}";
+ 		"SUB\+" => "{SUB}";
+ 		"UN\+" => "{UN}";
+ 		"EXTRA\+" => "{EXTRA}";
+ 		"EX\+" => "{EX}";
+ 		"[EI]N\+" => "{IN}";
+ 		"PRO\+" => "{PRO}";
+ 		"ANTI\+" => "{ANTI}";
+ 		"CON\+" => "{CON}";
+ 		"CONTR\+" => "{CONTR}";
+ 		"PER\+" => "{PER}";
+ 		"INTER\+" => "{INTER}";
+ 		"SUR\+" => "{SUR}";
+ 		"TRANS\+" => "{TRANS}";
+ 		"ACOM\+" => "{ACOM}";
  		
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(upbundler,#>stage4)
@@ -1242,6 +1298,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"i\[ei\]" => "I[&E][EI]"; // officiate
 		"\[ai\]ä" => "[AI][&E]Ä"; // triangle
 		"\[ai\]ö" => "[AI][&E]Ö"; // triumphal
+		"(?<!\[)oi" => "[&O]I"; // yellowish
 		
 	#EndSubSection(completor)
 	#BeginSubSection(separator)
@@ -1394,7 +1451,23 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{NEVER}" => "[N=][E1][VR]";
 		"^{NECESSAR}" => "[N=][E1][VR]";
 		"{NECESSAR}" => "N[E1][VR]";
-		//"{}" => "";
+		"^{ANTI}" => "[0N-][ANT]";
+		"{ANTI}" => "[ANT]";
+		"{CON}" => "[BEI]";
+		"{CONTR}" => "[BEI+AR]";
+		"{INTER}" => "[INTER]";
+		"{PER}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "P[&E]$1";
+		"{PER}" => "P";
+		"{SUR}(r|\[AR\])?" => "[SOBRE]"; // surrender: don't write second r!
+		"{TRANS}" => "A[T@R]";
+		"{ACOM}" => "[0N-][BEI]";
+		"{SIR}" => "[SOBRE]";
+		"{GENTLEMAN}" => "AM";
+		"{GENTLEMEN}" => "M";
+		"{MUCH}" => "OM";
+		"{MR}" => "[M@R6]";
+		"{MRS}" => "[M@R6]S";
+		"{SELF}" => "[@L]"; // myself
 		//"{}" => "";
 		//"{}" => "";
 		//"{}" => "";
