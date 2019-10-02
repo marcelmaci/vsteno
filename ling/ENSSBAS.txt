@@ -104,7 +104,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 			"[Cc]heque(s)?":"SEk$1",
 			"[Uu]surer(s)?":"juSErEr$1",
 			"[Tt]oward":"toErd",
-			"[Aa]rmour(?:y|ie)(s)?":"armEri$1"
+			"[Aa]rmour(?:y|ie)(s)?":"armEri$1",
+			"[Aa]ssociate([sd])?":"asoSiEt$1"
 		";		
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -215,6 +216,10 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		
 		// rules applied after after linguistic analysis (eSpeak)
 		
+		// immediate phonetic corrections
+		"tstwrt(^[Pp]oor)" => { "p'U@", "pur" }; // poorly etc.
+ 		"tstwrt(^[Cc]areful)" => { "k'e@f@L", "kärful" }; // careful etc.
+
 		// morphological markings
 		// prefixes
 		////////////////// primary prefixes (= at beginning) //////////////////////////////////
@@ -265,7 +270,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		
 		// chapter 11
 		// -ate
-		"(?<!')(?:@|I2?)t(s)?$" => "{ET}$1"; // unstressed suffix, most go here because only in analyzer stress marking ' is available
+		"(?<!')(?:@|I2?|E)t(s)?$" => "{ET}$1"; // unstressed suffix, most go here because only in analyzer stress marking ' is available
  		"(?<!')(?:@|I2?)tli$" => "{ET}{LY}"; // quietly
 
 		///////////////// secondary prefixes (= after primary prefix) /////////////////////////
@@ -788,6 +793,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"J" => { "&TJ", 4, 10, 0, 1 }
 		"L" => { "&T#L", 4, 10, 0, 1 }
 		"@L3" => { "&T@L3", 4, 16.5, 0, 1.5 }
+		"@L3" => { "&ET@L3", 4, 20, 0, 2 } // english: quietly (two system lines high instead of 1.5!)
 		"ALL" => { "&TALL", 4, 10, 0, 1 }
 		"M" => { "&TM", 4, 10, 0, 1 }
 		"W" => { "&TW", 4, 10, 0, 1 }
@@ -989,14 +995,15 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt([ie]ty$)" => { "(?:ai)?[iE]ti$", "{ITY}" };
 		"tstwrt([ie]ties$)" => { "(?:ai)?[iE]ti([sz])$", "{ITY}$1" };
 		"tstwrt(ful$)" => { "f.*?l$", "{FUL}" };
- 		"tstwrt(fully$)" => { "f.*?li$", "{FUL}{LY}" };
+ 		"tstwrt(fully$)" => { "f.[:;]?li$", "{FUL}{LY}" };
  		"tstwrt(some$)" => { "s.*?m$", "{SOME}" };
  		"tstwrt(ness$)" => { "n.*?s$", "{NESS}" };
  		"tstwrt(ship$)" => { "S.*?p$", "{SHIP}" };
  		"tstwrt(mentations?$)" => { "m.*?nt.*?S.*?n([sz])?$", "{MENT}A{TION}$1" };
- 		"tstwrt([xcst]i[oa]ns?$)" => { "[SZ].*?n([sz])?$", "{TION}$1" };
+ 		"tstwrt((?:[xcst]i[oa]n|cean|shion)s?$)" => { "[SZ].[:;]?n([sz])?$", "{TION}$1" };
  		"tstwrt(ments?$)" => { "m.*?nt([sz])?$", "{MENT}$1" };
  		"tstwrt(mentals?$)" => { "m.*?nt.*?l([sz])?$", "{MENT}El$1" };
+		"tstwrt(ment)" => { "mEnt", "{MENT}" }; // might produce wrong results
  		"tstwrt(tually$)" => { "t[SZ].*?li$", "{TUAL}{LY}" };
  		"tstwrt(tual$)" => { "t[SZ].*?l$", "{TUAL}" };
  		"tstwrt(^[Ss]wiss)" => { "s.*?s", "{SWISS}" };
@@ -1327,7 +1334,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"(?<!\[)oi" => "[&O]I"; // yellowish
 		"\[ai\]{ET}" => "[AI][&E]{ET}"; // quietly
 		"(\[ai\])({NESS})" => "$1[&E]$2"; // shyness
-		
+		"i{ET}" => "I[&E]{ET}"; // associate
+
 	#EndSubSection(completor)
 	#BeginSubSection(separator)
 		// separations
@@ -1496,7 +1504,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{MR}" => "[M@R6]";
 		"{MRS}" => "[M@R6]S";
 		"{SELF}" => "[@L]"; // myself
-		"{ET}{LY}" => "[&T]I[@L][-I]"; // quietly (ugly, solution just for now)
+		"{ET}{LY}" => "I[&ET@L3][-I]"; // "[&T]I[@L][-I]"; // quietly (ugly, solution just for now)
 		"{LY}" => "[-I]"; 
 		"{ET}S" => "[&TS]";
 		"{ET}" => "[&T]";
