@@ -248,7 +248,7 @@ function ImportAnalyzer() {
                 $analyzer[$i][] = $condition;
                 //echo "analyzer condition: $condition<br>";
                 //echo "analyzer multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
-                $matches1[1] = replace_all("/\"(.*?),(.*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
+                $matches1[1] = replace_all("/\"([^ ]*?),([^ ]*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
                 //echo "analyzer multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
                 $consequence_list = explode( ",", $matches1[1] ); // BUG: , inside "" must be escaped before explode!!! See also: ImportRule()
                 foreach ($consequence_list as $element) {
@@ -477,7 +477,8 @@ function ImportRulesFromGenericSubSection() {
                 $rules["$insertion_key"][$rules_pointer][] = $condition;
                 //echo "condition: $condition<br>";
                 //echo "multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
-                $matches1[1] = replace_all("/\"(.*?),(.*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
+                $matches1[1] = replace_all("/\"([^ ]*?),([^ ]*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
+                //echo "replaced: " . htmlspecialchars($matches1[1]) . "<br>";
                 $consequence_list = explode( ",", $matches1[1] ); // BUG!
                 // using explode with , leads to a serious problem:
                 // rule:

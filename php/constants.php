@@ -251,7 +251,8 @@ $default_model = "DESSBAS";
 $standard_models_list = array(
     "$default_model" => "Deutsch Grundschrift (Stolze-Schrey)",
     "SPSSBAS" => "Spanisch Grundschrift (Stolze-Schrey)",
-    "FRSSBAS" => "Französisch Grundschrift (Stolze-Schrey)"
+    "FRSSBAS" => "Französisch Grundschrift (Stolze-Schrey)",
+    "ENSSBAS" => "Englisch Grundschrift (Stolze-Schrey)"
 );
 //$default_model = "99999_default_backup";
 
