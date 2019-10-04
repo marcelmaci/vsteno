@@ -50,7 +50,12 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
     <li>Transkription Einzelbuchstaben: selektierbar</li>
 </ul>
 </li>
-
+<li>Modelle:
+<ul>
+    <li>Verbesserungen Deutsch, Spanisch, Französisch</li>
+    <li>Französisch: laut- und schriftbasierte hybride Regeln</li>
+    <li>ENSSBAS: Grundschrift Englisch (neu)</li>
+</ul>
 <li>Bugfixes und weitere noch nicht definierte neue Features</li>
 </ul>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)</i></p>
