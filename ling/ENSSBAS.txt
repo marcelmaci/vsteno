@@ -230,7 +230,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(part)" => { "p[',]?A@t", "part" }; // counterpart
 		"A@t" => "art"; // smart
 		"o@t" => "ort"; // port
-
+		"tstwrt([Ww]hereas)" => { "@z$", "äz" };
+		"tstwrt([Ii]nsurm)" => { "Ins3m", "insör+m" }; // insurmountable
+ 
 		// separations, segmentation (composed words)
 		// NOTE: These are just (bad) examples
 		// until now VSTENO can't handle both linguistic AND phonetic analysis
@@ -265,7 +267,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// un-
 		"tstwrt(^[Uu]n)" => { "^([',]?Vn)", "UN+" };
 		// extra- (,Ekstr@)
-		"tstwrt(^[Ee]xtra?)" => { "^([',]?Ekstr@?|Ekstr[',]?a?)", "EXTRA+" };
+		"tstwrt(^[Ee]xtra?)" => { "^([',]?Ekstr[',]?[a@]?)", "EXTRA+" };
 		// ex-
 		"tstwrt(^[Ee]x)" => { "^(E[kg][sz]|'E[gk][zs])", "EX+" };
 		// in-
@@ -295,6 +297,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// -ate
 		"(?<!['ae]|ä)(?:@|I2?|E)t(s)?$" => "{ET}$1"; // unstressed suffix, most go here because only in analyzer stress marking ' is available
  		"(?<!')(?:@|I2?)tli$" => "{ET}{LY}"; // quietly
+		"(?<!['ae]|ä)(?:@|I2?|E)t(s)?\|" => "{ET}$1|";  // trumpet-call
 
 		///////////////// secondary prefixes (= after primary prefix) /////////////////////////
 		// chapter 10 (rules that must preceed)
@@ -327,6 +330,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// chapter 10
 		// con/com-
 		"tstwrt([Cc]o[nm])" => { "\+(k[',]?.[:;]?[nm])", "+CON+" };
+		
 		
 		//////////////////// corrections (morphology) ////////////////////////////////////
 		
@@ -381,7 +385,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Rr]are)" => { "^r'?e@", "rär" }; // rarely 
 		"sIdli$" => "sidli"; // cursedly
 
-		"(?<!['eEaAoOä])I(?!(?:[2#k;m+]|NTER|RKUM))" => "E"; 	// messenger // I declare this officially the worst rule in the whole model ... !
+		"(?<!['eEaAoOä])I(?!(?:[2#k;m+]|NTER|RKUM|N\+))" => "E"; 	// messenger // I declare this officially the worst rule in the whole model ... !
 		"'" => ""; 	// filter out primary stress (added by eSpeak, not necessary for transcription)
 		"," => ""; 	// "         secondary "
 		"a#" => "E"; // appearently this is used as schwa by eSpeak ...
@@ -500,7 +504,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"7" => { /*header*/ 7, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 0, 1, 5, 0, 0,  /**/ 7, 19, 0, 0, 1, 0, 0, 0,  /**/ 3, 1, 0, 0, 1, 0, 0, 0,  /**/ 3.5, 11, 0, 0, 1, 5, 0, 0,  /**/ 6.5, 11, 0, 0, 1, 0, 0, 0 }
 		"8" => { /*header*/ 7, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 3.5, 11, 0, 0, 1, 5, 0, 0.5,  /**/ 7, 15, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 19, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 15, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 11, 0.5, 0, 1, 0, 0, 0.5,  /**/ 7, 6, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 6, 0.5, 0, 1, 0, 0, 0,  /**/ 3.5, 11, 0, 1, 1, 0, 0, 0 }
 		"9" => { /*header*/ 7, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 7, 14, 0, 0, 1, 5, 0, 0.5,  /**/ 3.5, 10, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 15, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 19, 0.5, 0, 1, 0, 0, 0.5,  /**/ 7, 15, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 6, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 1, 0.5, 0, 1, 0, 0, 0 }
-		"IST" => { /*header*/ 1, 0.5, 0, 0.5, 4, 4, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0.5, 9.5, 0.5, 1, 1, 0, 0, 0.5,  /**/ 1, 10, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 10.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 0, 10, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0.5, 9.5, 0.5, 0, 3, 0, 1, 0 }
+		"IST" => { /*header*/ 1, 0.5, 0, 0.5, 4, 4, 0, 0, 0, 0, "", "", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 0.5, 9.5, 0.5, 1, 1, 0, 0, 0.5,  /**/ 1, 10, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 10.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 0, 10, 0.5, 0, 2.5, 0, 0, 0.5,  /**/ 0.5, 9.5, 0.5, 0, 3, 0, 1, 0 }
 		"ES" => { /*header*/ 1, 0.5, 0, 0, 4, 4, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, /*data*/ 0, 0, 0, 1, 1, 0, 0, 0,  /**/ 2, 5, 0, 0, 1, 0, 1, 0 }
 		"EST" => { /*spanisch*/ 1, 0.5, 0, 0, 4, 4, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, "LPB:LP", /*data*/ 0.5, 5.25, 0, 1, 1, 0, 0, 0,  /**/ 0, -0.05, 0, 0, 1, 0, 1, 0, /*diacritics*/ -10,  10,  0,  "@#/_",  0,  0,  0,  0 }
 		"NO" => { /*header*/ 1, 0.5, 0, 0, 4, 4, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, /*data*/ 0, 0, 0, 1, 1, 0, 0, 0,  /**/ 6, -5, 0, 0, 1, 0, 1, 0 }
@@ -645,7 +649,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"=ES" => { /*header*/ 18.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 2, 5, 0.5, 1, 1.5, 0, 0, 0.5,  /**/ 6, 5.5, 0.5, 0, 1.5, 0, 0, 0.5,  /**/ 10, 5.5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 12, 5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 14, 4, 0.5, 0, 3, 0, 0, 0,  /**/ 18.75, 0, 0, 0, 1, 0, 1, 0 }
 		"S=" => { /*header*/ 9.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, "LNA:LN", /*data*/ 0, 0, 0.5, 1, 1, 0, 0, 0.5,  /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 4, 0.5, 0, 1, 0, 0, 0.5,  /**/ 2, 5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3, 5, 0.5, 0, 2, 0, 0, 0,  /**/ 5, 4, 0.5, 0, 3, 0, 0, 0,  /**/ 9.75, 0, 0, 0, 1, 0, 1, 0, /*diacritics*/ 8,  -5,  0,  "@#/",  0,  0,  0,  0, /*diacritics*/ 8,  -5,  0,  "@#.",  0,  0,  0,  0 }
 		"SER" => { /*spanisch*/ 9.75, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 5.5, 5, 0, 0, 0, 0, 0, 0, "LKB:LK", /*data*/ 0, 0, 0.5, 1, 1, 0, 0, 0.5,  /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1.25, 4, 0.5, 0, 1, 0, 0, 0.5,  /**/ 2.75, 5, 0.5, 0, 1, 0, 0, 0.5,  /**/  5, 5, 0.5, 0, 2, 0, 0, 0.5,  /**/ 5.5, 5, 0.5, 0, 3, 0, 0, 0.5,  /**/ 8, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 5.5, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 3, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 5.5, 5, 0.5, 0, 1, 0, 1, 0 }
-		"T" => { /*header*/ 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 0, 20, 0, 1, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 2.5, 0, 4, 1, 0, 0, 0, /*diacritics*/ 0,  25,  0,  "@#/.",  0,  0,  0,  0, /*diacritics*/ -5,  25,  0,  "@#/_",  0,  0,  0,  0 }
+		"T" => { /*header*/ 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "LNA:LN:RND", /*data*/ 0, 20, 0, 1, 3, 0, 0, 0,  /**/ 0, 0, 0, 0, 1, 0, 1, 0,  /**/ 0, 2.5, 0, 4, 1, 0, 0, 0, /*diacritics*/ 3,  -5,  0,  "@#/",  0,  0,  0,  0, /*diacritics*/ 0,  25,  0,  "@#/.",  0,  0,  0,  0, /*diacritics*/ -5,  25,  0,  "@#/_",  0,  0,  0,  0 }
 		"&T" => { /*header*/ 4, 0, 1.5, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 20, 0, 1, 1, 0, 0, 0,  /**/ 4, 20, 0, 0, 1, 0, 1, 0 }
 		"&IT" => { /*spanisch*/ 4, 0, 1.5, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 17.8, 0.5, 1, 1, 0, 1, 0.5 }
 		"&T-1" => { /*header*/ 4, 0, 1, 0.5, 0, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /*data*/ 4, 20, 0, 1, 1, 0, 1, 0,  /**/ 4, 20, 0, 0, 1, 0, 1, 0 }
@@ -797,6 +801,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"N=" => { "@R6", 0, 0 }
 		"B" => { "@#/", "", "" }
 		"B" => { "@#_", "", "" }
+		"B@L" => { "@#_", "", "" } // recombine a combined token
 		"L" => { "@#/", "", "" }
 		"L" => { "@#/_", "", "" }
 		"L" => { "@#/.", "", "" }
@@ -814,6 +819,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"W" => { "@#.", "", "" }
 		"W" => { "@#/", "", "" }
 		"T" => { "@#/.", "", "" }
+		"T" => { "@#/", "", "" }
 		"T" => { "@#/_", "", "" }
 		"SS" => { "@#/_", "", "" }
 		"EST" => { "@#/_", "", "" }
@@ -909,6 +915,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"Q" => { "&EITQ", 18, 20, 0, 1 }
 		"V" => { "&EITV", 18, 20, 0, 1 }
 		"NK" => { "&EITK", 18, 20, 0, 1 }
+		//"NN" => { "^NN", 0, 10, 0, 1 }
 		"PF" => { "&EITPF", 18, 20, 0, 1 }
 		"SP" => { "&EITSP", 18, 20, 0, 1 }
 		"ST" => { "&EITST", 18, 10, 0, 1 }
@@ -930,14 +937,17 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"(?<=^| )([Cc])annot(?=[ ,\.-]|$)" => "#$1annot";
 		
 		// abreviations with dots
-		"(?<=^| )([Mm])r(s)?\.(?=[ ,\.-]|$)" => "$1r$2"; // eliminate dot
-		"(?<=^| )([Mm])essrs\.(?=[ ,\.-]|$)" => "$1essrs"; // eliminate dot
-		"(?<=^| )([Kk])m\.(?=[ ,\.-]|$)" => "$1m"; // eliminate dot
-		"(?<=^| )([Cc])o\.(?=[ ,\.-]|$)" => "$1o"; // eliminate dot
-		"(?<=^| )([Ll])b\.(?=[ ,\.-]|$)" => "$1b"; // eliminate dot
-		"(?<=^| )([Cc])if\.(?=[ ,\.-]|$)" => "$1if"; // eliminate dot
-		"(?<=^| )([Ff])ob\.(?=[ ,\.-]|$)" => "$1ob"; // eliminate dot
-		"(?<=^| )([Oo])ct\.(?=[ ,\.-]|$)" => "$1ct"; // eliminate dot
+		"(?<=^| )([Mm])r(s)?\.(?=[ ,\.-]|$)" => "#$1r$2"; // eliminate dot
+		"(?<=^| )([Mm])essrs\.(?=[ ,\.-]|$)" => "#$1essrs"; // eliminate dot
+		"(?<=^| )([Kk])m\.(?=[ ,\.-]|$)" => "#$1m"; // eliminate dot
+		"(?<=^| )([Cc])o\.(?=[ ,\.-]|$)" => "#$1o"; // eliminate dot
+		"(?<=^| )([Ll])b\.(?=[ ,\.-]|$)" => "#$1b"; // eliminate dot
+		"(?<=^| )([Cc])if\.(?=[ ,\.-]|$)" => "#$1if"; // eliminate dot
+		"(?<=^| )([Ff])ob\.(?=[ ,\.-]|$)" => "#$1ob"; // eliminate dot
+		"(?<=^| )([Oo])ct\.(?=[ ,\.-]|$)" => "#$1ct"; // eliminate dot
+		"(?<=^| )([Ff])rs\.(?=[ ,\.-]|$)" => "#$1rs"; // eliminate dot AND add # (important: prevents transcription)
+		"(?<=^| )([Dd])r\.(?=[ ,\.-]|$)" => "#$1r"; 
+		"(?<=^| )([Ff])ebr\.(?=[ ,\.-]|$)" => "#$1ebr"; 
 		
 		// abbreviation with several words
 		"(?<=^| )([Aa])nd so on(?=[ ,\.-]|$)" => "#and_so_on"; 
@@ -984,10 +994,14 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Oo]ct$)" => { "^.*?$", "okt" };
 
 		// others
+		"tstwrt(^[Ii]sn\'t)" => { "^.*?$", "{ISNT}" }; 
+		"tstwrt(^[Ee]very.)" => { "^.*?i", "{EVER}i\" }; 
+		"tstwrt(^[Nn]otwithstand)" => { "^.*?st", "{NOT}{WITH}st" }; 
 		"tstwrt(^[Bb]eings?$)" => { "^.*?([zs])?$", "{BE}iN$1" }; 
 		"tstwrt(^[Tt]hemselves$)" => { "^.*?$", "{THEM}{SELF}s" }; 
+		"tstwrt(^[Oo]urselves$)" => { "^.*?$", "{OUR}{SELF}s" }; 
 		"tstwrt(with$)" => { "^(.*?)w.*?[DT]$", "$1{WITH}" }; 
-		"tstwrt(^[Ii]n)" => { "^[^+]*?\+(.*?)$", "{IN}$1" }; 
+		"tstwrt(^[Ii]n(?!(?:ter|tro?)))" => { "^[^+]*?\+(.*?)$", "{IN}$1" }; 
 		"tstwrt(^[Ff]ul)" => { "^.*?[lL](.*?)$", "{FUL}$1" }; 
 		"tstwrt(^[Oo]therwise$)" => { "^.*?r(.*?)$", "{OTHER}$1" }; 
 		"tstwrt(^[Ff]ore)" => { "^.*?r(.*?)$", "{FOR}$1" }; 
@@ -999,6 +1013,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Ss]omewhere$)" => { "^.*?$", "{SOME}{WHERE}" }; 
 		"tstwrt(^[Ss]ome)" => { "^.*?m(.*?)$", "{SOME}$1" }; 
 		"tstwrt(ever$)" => { "(.*?)[Ee]v[Ee]r$", "$1{EVER}" };
+		"tstwrt(how$)" => { "h[^h]*?$", "{HOW}" };
 		"tstwrt(^[Ee]verywhere$)" => { "^.*?$", "{EVER}I\{WHERE}" }; 
 		"tstwrt(^[Ii]tself$)" => { "^.*?$", "{IT}{SELF}" }; 
 		"tstwrt(^[Ii]t'?s$)" => { "^.*?$", "{ITS}" }; 
@@ -1015,7 +1030,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Tt]oo$)" => { "^tu$", "{TOO}" };
 		"tstwrt(^[Tt]o$)" => { "^tu$", "{TO}" };
 		"^häd$" => "{HAD}";
-		"tstwrt(^[Dd]o$)" => { "^.*?$", "{DO}" };
+		"tstwrt(^[Dd]o(ing)?$)" => { "^.*?[uU](.*?)$", "{DO}$1" };
 		"tstwrt(^be(en)?$)" => { "^bi(n)?$", "{BE}$1" };
 		"^böt$" => "{BUT}";
 		"^wi$" => "{WE}";
@@ -1028,8 +1043,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Cc]ould$)" => { "^.*?$", "{COULD}" }; 
 		"tstwrt(^[Hh]e$)" => { "^.*?$", "{HE}" }; 
 		"tstwrt(^[Hh]ave$)" => { "^.*?$", "{HAVE}" }; 
-		"tstwrt(^[Ww]ho$)" => { "^.*?$", "{WHO}" }; 
-		"tstwrt(^[Hh]ow$)" => { "^.*?$", "{HOW}" }; 
+		"tstwrt(^[Ww]ho(ever)?$)" => { "^.*?[uU]", "{WHO}" }; 
+		"tstwrt(^[Hh]ow)" => { "^.*?[uU]", "{HOW}" }; 
 		"tstwrt(^[Aa]lter)" => { "[Oo]l", "oL" }; // altered: transform l to L in order to avoid following rule
 		"tstwrt(^[Aa]ltrui)" => { "^[Oo]l", "äl" }; // avoid application all- (following rule)
 		"tstwrt(^[Aa]ll?)" => { "^[Oo]l", "{ALL}" }; 
@@ -1039,31 +1054,31 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Tt]his$)" => { "^.*?$", "{THIS}" }; 
 		"tstwrt(^[Tt]hese$)" => { "^.*?$", "{THESE}" }; 
 		"tstwrt(^[Nn]ot$)" => { "^.*?$", "{NOT}" }; 
-		"tstwrt(^[Nn]o(body)?$)" => { "^.*?(b.*?)?$", "{NO}$1" }; 
+		"tstwrt(^[Nn]o(body|where)?$)" => { "^.*?([bw].*?)?$", "{NO}$1" }; 
 		"tstwrt(^[Tt]han$)" => { "^.*?$", "{THAN}" }; 
 		"tstwrt(^[Tt]hen$)" => { "^.*?$", "{THEN}" }; 
-		"tstwrt(^[Uu]p$)" => { "^.*?$", "{UP}" }; 
+		"tstwrt(^[Uu]p(?!p))" => { "^.*?p", "{UP}" }; 
 		"tstwrt(^[Ii]n$)" => { "^.*?$", "{IN}" }; 
 		"tstwrt(^[Ww]hich)" => { "^.*?tS(.*?)$", "{WHICH}$1" }; 
 		"tstwrt(^[Tt]hey$)" => { "^.*?$", "{THEY}" }; 
 		"tstwrt(^[Tt]hat)" => { "^.*?$", "{THAT}" }; 
 		"tstwrt(^[Ss]hall$)" => { "^.*?$", "{SHALL}" }; 
 		"tstwrt(^[Ss]hould$)" => { "^.*?$", "{SHOULD}" }; 
-		"tstwrt(^[Oo]ther$)" => { "^.*?$", "{OTHER}" }; 
+		"tstwrt(^[Oo]thers?$)" => { "^.*?([sz])$", "{OTHER}$1" }; 
 		"tstwrt(^[Aa]nd$)" => { "^.*?$", "{AND}" }; 
 		"tstwrt(^[Yy]ou$)" => { "^.*?$", "{YOU}" }; 
 		"tstwrt(^[Aa]t$)" => { "^.*?$", "{AT}" }; 
 		"tstwrt(^[Ii]f$)" => { "^.*?$", "{IF}" }; 
-		"tstwrt(^[Oo]ff?$)" => { "^.*?$", "{OFF}" }; 
-		"tstwrt(^[Ww]ill(ings?|ingly)?$)" => { "^w[^w]*?l(.*?)$", "{WILL}$1" }; 
+		"tstwrt(^[Oo]ff?(print)?)" => { "^.*?f(.*?)$", "{OFF}$1" }; 
+		"tstwrt(^[Ww]il(lings?|ling(?:ly)?|ful(?:ly)?)?$)" => { "^w[^w]*?l(.*?)$", "{WILL}$1" }; 
 		"tstwrt(^[Tt]here$)" => { "^.*?$", "{THERE}" }; 
 		"tstwrt(^[Tt]heir$)" => { "^.*?$", "{THEIR}" }; 
 		"tstwrt(^[Ee]very?)" => { "^.*?r(.*?)$", "{EVER}$1" }; 
 		"tstwrt(^[Uu]nder)" => { "^.*?r(.*?)$", "{UNDER}$1" }; 
 		"tstwrt(^[Ff]ore?$)" => { "^.*?$", "{FOR}" }; 
-		"tstwrt(^[Ww]here)" => { "^.*?r(.*?)$", "{WHERE}$1" }; 
+		"tstwrt([Ww]here)" => { "w[^w]*?r", "{WHERE}" }; 
 		"tstwrt(^[Ww]ere$)" => { "^.*?$", "{WERE}" }; 
-		"tstwrt(^[Oo]ver$)" => { "^.*?$", "{OVER}" }; 
+		"tstwrt(^[Oo]ver)" => { "^.*?r(.*?)$", "{OVER}$1" }; 
 		"tstwrt(overs?$)" => { "o[^o]*?r(s)?$", "{OVER}$1" }; 
 		"tstwrt(^[Ff]rom$)" => { "^.*?$", "{FROM}" }; 
 		"tstwrt(^[Yy]our)" => { "^(.*?r)", "{YOUR}" }; 
@@ -1081,8 +1096,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Mm]isters)$" => { "^(.*?)$", "{MRS}" }; 
 		"tstwrt(^[Mm]essrs$)" => { "^(.*?)$", "{MESSRS}" }; 
 		"tstwrt([Ss]el[vf])" => { "(s.*?lf)", "{SELF}" };
-		"tstwrt((?<![pb])ly$)" => { "([bdcdfgkmnprstvwxzN])li$", "$1{LY}" };
-		"tstwrt(fairly)" => { "^.*?$", "färli" }; // recorrection fairly (no abbreviation)
+		"tstwrt((?<![pb])ly$)" => { "([bdcdfgkmnprstvwxzN]}?)li$", "$1{LY}" };
+		"tstwrt(^[Ff]airly$)" => { "^.*?$", "färli" }; // recorrection fairly (no abbreviation)
+		"tstwrt(^[Hh]ardly$)" => { "^.*?$", "hardli" }; // recorrection hardly (no abbreviation)
 		"tstwrt([ie]ty$)" => { "(?:ai)?[iE]ti$", "{ITY}" };
 		"tstwrt([ie]ties$)" => { "(?:ai)?[iE]ti([sz])$", "{ITY}$1" };
 		"tstwrt(fulness$)" => { "f[^f]*?ln[^n]*?s$", "{FUL}{NESS}" }; // carefulness
@@ -1102,6 +1118,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
  		"tstwrt(^[Ss]witzer)" => { "s.*?r", "{SWITZER}" };
  		"tstwrt(^[Pp]articul)" => { "p.*?l", "{PARTICUL}" };
  		
+		// suffixes
+		"tstwrt(less$)" => { "l[^l][sz]$", "{LESS}" };
+		
 		// premarked words
 		"#live(s)$" => "liv$1"; // distinguish between verb live(s) and adjective live
 		
@@ -1121,7 +1140,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
  		"CONTR\+" => "{CONTR}";
  		"PER\+" => "{PER}";
  		"INTER\+" => "{INTER}";
- 		"SUR\+" => "{SUR}";
+ 		"S(U|Ö)R\+" => "{SUR}";
  		"TRANS\+" => "{TRANS}";
  		"ACOM\+" => "{ACOM}";
  		
@@ -1144,7 +1163,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"Ngr" => "[NGR]"; // hungry
 		"Ngl" => "[NGL]"; // angle
 		"Ng" => "[NG]";
-		"(?<!(?:\[|{))N(?!(?:\]|}))" => { "[NG]", "Nkt" }; // not in words with nkt (distinct)
+		"(?<!(?:\[|{))N(?!(?:\]|}|\+))" => { "[NG]", "Nkt" }; // not in words with nkt (distinct)
 		"(?<!\[)tS" => "[TSH]"; // D = voiced, T = voiceless (in shorthand the same)
 		"(?<!\[)[TD]" => "[TH]"; // D = voiced, T = voiceless (in shorthand the same)
 		"(?<!(?:\[|d|T|D))[SZ]" => "[SH]"; // voiced and voicelss
@@ -1290,7 +1309,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"faz" => "fa[S@#.]"; // face vs phase (diacritics)
 		"zel" => "[S=@#.]el"; // sel vs zèle (diacritics)
 		
-		"z$" => "[S@#.]"; // use diacritics at the end of a word
+		//"z$" => "[S@#.]"; // use diacritics at the end of a word
 		"z" => "s";
 
 		
@@ -1384,7 +1403,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^i\[th\]" => "[0N-]I[TH]"; // not lowered
 		
 		"^i" => "[0D-]I";
-		"^\[ai\]" => "[0D-][AI]";
+		"^\[ai\]" => "[0D-][AI]"; // eyeglass (starts on baseline!), but ideally doesn't (haha ... where's the logic anyway ...)
 		"^\[au\]" => "[0D-][AU]";
 		"^\[oi\]" => "[0D-][OI]";
 		
@@ -1408,8 +1427,10 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"i$" => "[-I]";
 		"i\\" => "[-I]\"; // everywhere
 		"\[(ai)\]$" => "[#9][#9][-EI]";
+		"\[(ai|AI)\]\|" => "[AI][LES]|";
 		"\[(au)\]$" => "[AU][LES]";
 		"\[(oi)\]$" => "[OI][LES]";
+		"\[(oi)\]\|" => "[OI][LES]|";
 		"o$" => "[&O]";
 		"o\|" => "[&O]\";
 		"ü$" => "Ä[&U]";
@@ -1447,11 +1468,18 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		
 		// abbreviations
 		"{CAN}{NOT}" => "{CAN}[#5]\\{NOT}";
+		"{NOT}{" => "{NOT}\{"; // notwithstanding
+		"i{WHERE}" => "[-I]\{WHERE}";
+		"{ET}\|" => "{ET}\"; // trumpet-call
+		"([^\\]){HOW}" => "$1\{HOW}"; // anyhow
+		"i\\{HOW}" => "[-I]\{HOW}";  // re-complete
 
 		// composed words
 		"i\|" => "i[&E]|"; // seaside
 		"(s|\[ng\])\|\[ar\]" => "$1\[AR]"; // horse-race, dining-room (separate)
 
+		// separate in general
+		//"\|" => "\\";
 
 	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
@@ -1521,6 +1549,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"{CONTRAR}I{NESS}" => "{CONTRAR}I[&E]{NESS}";
+		"{ISNT}" => "[IST][NN]"; // isn't 
+		"{RE}{INTER}" => "[AR]I{INTER}"; // reintroduce 
+		"{THERE}{WITH}" => "[VR]\[I][W]";
+		"(.){EVER}" => "$1[E1][VR]";
 		"{FOR}\[AR\]" => "[VORAR]"; // forerunner
 		"{IT}{SELF}" => "I[ES][#6-]I[@L]"; // ugly: just for now
 		"{UN}{INTER}" => "A[&U]I[INTER]";
@@ -1582,6 +1615,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{OVER}" => "[OFF+AR]";
 		"{UNDER}" => "[N=@R6]";
 		"{FOR}" => "[VOR]";
+		"(.){WHERE}" => "$1\[W@R6]";
 		"{WHERE}" => "[W@R6]";
 		"{WERE}" => "[W@R6]";
 		"{BE1}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "B[&E]$1";
@@ -1623,6 +1657,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{MUCH}" => "OM";
 		"{MR}" => "[M@R6]";
 		"{MRS}" => "[M@R6]S";
+		"^{SELF}" => "[0N-][#2][@L]";
 		"{SELF}" => "[@L]"; // myself
 		"{ET}{LY}" => "I[&ET@L3][-I]"; // "[&T]I[@L][-I]"; // quietly (ugly, solution just for now)
 		"{LY}" => "[-I]"; 
@@ -1633,6 +1668,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"([aeiouAEIOU]|ä|ö|ü|Ä|Ö|Ü){FUL}" => "$1[&E]AF";
 		"{FUL}{LY}" => "AF[-I]";
 		"{FUL}" => "AF";
+		"I{NESS}" => "[ION]";
 		"{NESS}" => "O[ION]";
 		"{SHIP}" => "[SCHAFT]";
 		"{TION}" => "[SS]";
@@ -1644,6 +1680,14 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{PARTICUL}" => "A[RR6]";
 		"{MESSRS}" => "[M@R6]S";
 		"{ANDSOON}" => "A[&U][SS]";
+		"{LESS}" => "L[E1]S";
+		"{OUR}" => "[0D-][AU][VR]";
+		//"{}" => "";
+		//"{}" => "";
+		//"{}" => "";
+		//"{}" => "";
+		//"{}" => "";
+		//"{}" => "";
 		//"{}" => "";
 		//"{}" => "";
 		
@@ -1690,63 +1734,64 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 // special: for english, additional spacing is needed for short e, e.g. in beg
 // e1 is defined as short e 
 // normal (= german) e with wide distance is kept for "backwards" compatibility
-// statistics: these rules cover approximately 209160 token combinations.
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d1]$2$3"; // R1|C1: LK#V1:D1#RK (1000)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d10]$2$3"; // R10|C5: LK#V2:D10#RP (2080)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d11]$2$3"; // R11|C6: LK#V1:D11#RPD (1000)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d12]$2$3"; // R12|C6: LK#V2:D12#RPD (400)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d13]$2$3"; // R13|C7: LK#V1:D13#RPE (300)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d14]$2$3"; // R14|C7: LK#V2:D14#RPE (120)
+
+// statistics: these rules cover approximately 226457 token combinations.
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d1]$2$3"; // R1|C1: LK#V1:D1#RK (1050)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d10]$2$3"; // R10|C5: LK#V2:D10#RP (2310)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d11]$2$3"; // R11|C6: LK#V1:D11#RPD (1050)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d12]$2$3"; // R12|C6: LK#V2:D12#RPD (420)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d13]$2$3"; // R13|C7: LK#V1:D13#RPE (315)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d14]$2$3"; // R14|C7: LK#V2:D14#RPE (126)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d15]$2$3"; // R15|C8: LMA#V1:D15#RK (150)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d16]$2$3"; // R16|C8: LMA#V2:D16#RK (60)
-"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d17]$2$3"; // R17|C9: LMA#V1:D17#RN (1020)
-"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d18]$2$3"; // R18|C9: LMA#V2:D18#RN (408)
-"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d19]$2$3"; // R19|C10: LMA#V1:D19#RND (240)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d2]$2$3"; // R2|C1: LK#V2:D2#RK (400)
-"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d20]$2$3"; // R20|C10: LMA#V2:D20#RND (96)
+"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d17]$2$3"; // R17|C9: LMA#V1:D17#RN (1065)
+"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d18]$2$3"; // R18|C9: LMA#V2:D18#RN (426)
+"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d19]$2$3"; // R19|C10: LMA#V1:D19#RND (255)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d2]$2$3"; // R2|C1: LK#V2:D2#RK (420)
+"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d20]$2$3"; // R20|C10: LMA#V2:D20#RND (102)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d21]$2$3"; // R21|C11: LMA#V1:D21#RNE (105)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d22]$2$3"; // R22|C11: LMA#V2:D22#RNE (42)
-"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d23]$2$3"; // R23|C12: LMA#V1:D23#RP (780)
-"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d24]$2$3"; // R24|C12: LMA#V2:D24#RP (312)
+"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d23]$2$3"; // R23|C12: LMA#V1:D23#RP (825)
+"(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d24]$2$3"; // R24|C12: LMA#V2:D24#RP (330)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d25]$2$3"; // R25|C13: LMA#V1:D25#RPD (150)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d26]$2$3"; // R26|C13: LMA#V2:D26#RPD (60)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:a|e1|o|u)\])?(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d27]$2$3"; // R27|C14: LMA#V1:D27#RPE (45)
 "(\[(?:0n\-|0d\-|0u\-)\])(\[(?:i|au)\])(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d28]$2$3"; // R28|C14: LMA#V2:D28#RPE (18)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d29]$2$3"; // R29|C15: LN#V1:D29#RK (5450)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d3]$2$3"; // R3|C2: LK#V1:D3#RN (6800)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d30]$2$3"; // R30|C15: LN#V2:D30#RK (2180)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d31]$2$3"; // R31|C16: LN#V1:D31#RN (37060)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d32]$2$3"; // R32|C16: LN#V2:D32#RN (14824)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d33]$2$3"; // R33|C17: LN#V1:D33#RND (8720)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d34]$2$3"; // R34|C17: LN#V2:D34#RND (3488)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d35]$2$3"; // R35|C18: LN#V1:D35#RNE (3815)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d36]$2$3"; // R36|C18: LN#V2:D36#RNE (1526)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d37]$2$3"; // R37|C19: LN#V1:D37#RP (28340)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d38]$2$3"; // R38|C19: LN#V2:D38#RP (11336)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d39]$2$3"; // R39|C20: LN#V1:D39#RPD (5450)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d4]$2$3"; // R4|C2: LK#V2:D4#RN (2720)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d40]$2$3"; // R40|C20: LN#V2:D40#RPD (2180)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d41]$2$3"; // R41|C21: LN#V1:D41#RPE (1635)
-"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d42]$2$3"; // R42|C21: LN#V2:D42#RPE (654)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d43]$2$3"; // R43|C22: LP#V1:D43#RK (2400)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:i|au)\])(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d44]$2$3"; // R44|C22: LP#V2:D44#RK (960)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d45]$2$3"; // R45|C23: LP#V1:D45#RN (16320)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d46]$2$3"; // R46|C23: LP#V2:D46#RN (6528)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d47]$2$3"; // R47|C24: LP#V1:D47#RND (3840)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:i|au)\])(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d48]$2$3"; // R48|C24: LP#V2:D48#RND (1536)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d49]$2$3"; // R49|C25: LP#V1:D49#RNE (1680)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d5]$2$3"; // R5|C3: LK#V1:D5#RND (1600)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:i|au)\])(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d50]$2$3"; // R50|C25: LP#V2:D50#RNE (672)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d51]$2$3"; // R51|C26: LP#V1:D51#RP (12480)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d52]$2$3"; // R52|C26: LP#V2:D52#RP (4992)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d53]$2$3"; // R53|C27: LP#V1:D53#RPD (2400)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:i|au)\])(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d54]$2$3"; // R54|C27: LP#V2:D54#RPD (960)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d55]$2$3"; // R55|C28: LP#V1:D55#RPE (720)
-"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|est@#\/_)\])(\[(?:i|au)\])(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d56]$2$3"; // R56|C28: LP#V2:D56#RPE (288)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:sp|mp|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d6]$2$3"; // R6|C3: LK#V2:D6#RND (640)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d7]$2$3"; // R7|C4: LK#V1:D7#RNE (700)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d8]$2$3"; // R8|C4: LK#V2:D8#RNE (280)
-"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|w@#\.)\])" => "$1[#d9]$2$3"; // R9|C5: LK#V1:D9#RP (5200)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d29]$2$3"; // R29|C15: LN#V1:D29#RK (5700)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d3]$2$3"; // R3|C2: LK#V1:D3#RN (7455)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d30]$2$3"; // R30|C15: LN#V2:D30#RK (2280)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d31]$2$3"; // R31|C16: LN#V1:D31#RN (40470)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d32]$2$3"; // R32|C16: LN#V2:D32#RN (16188)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d33]$2$3"; // R33|C17: LN#V1:D33#RND (9690)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d34]$2$3"; // R34|C17: LN#V2:D34#RND (3876)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d35]$2$3"; // R35|C18: LN#V1:D35#RNE (3990)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d36]$2$3"; // R36|C18: LN#V2:D36#RNE (1596)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d37]$2$3"; // R37|C19: LN#V1:D37#RP (31350)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d38]$2$3"; // R38|C19: LN#V2:D38#RP (12540)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d39]$2$3"; // R39|C20: LN#V1:D39#RPD (5700)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d4]$2$3"; // R4|C2: LK#V2:D4#RN (2982)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d40]$2$3"; // R40|C20: LN#V2:D40#RPD (2280)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d41]$2$3"; // R41|C21: LN#V1:D41#RPE (1710)
+"(\[(?:werd|in|les|sein|hab|hat|ant|anti|ion|on|haft|schaft|auf|off|aus|bei|durch|solch|selb|wo|schm|schw|mpf|sch|\^sch|\^ch|ff|ll|lt|mm|nn|pp|ss|ch|sp|mp|perhaps|zw|b|c|h|l|m|n|n\=|p|s|s\=|t|v|w|x|y|z|&e|&a|&u|&o|c@r|t@r|ch@r|h@r|sch@r|l@l|b@l|m@l|mm@l|p@l|v@l|sp@l|w@l|t@l3|pp@l|ff@l|c@l3|z@l3|sch@l3|\^sch@l3|ch@l3|b@r6|sp@r6|m@r6|p@r6|v@r6|w@r6|z@r|n@r6|n\=@r6|n@l|n@#\/|nn@l|nn@r6|l@r6|pp@r6|ff@r6|lt@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|m@#_|s\=@#\/|s@#\.|s@#\/_|s\=@#\.|ss@#\.|w@#\.|w@#\/|t@#\/\.|t@#\/_|ss@#\/_|mpf@#\/_|ion@#\/_)\])(\[(?:i|au)\])(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d42]$2$3"; // R42|C21: LN#V2:D42#RPE (684)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d43]$2$3"; // R43|C22: LP#V1:D43#RK (2450)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:i|au)\])(\[(?:rück|rr|vr\+ar|vr|ar|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])" => "$1[#d44]$2$3"; // R44|C22: LP#V2:D44#RK (980)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d45]$2$3"; // R45|C23: LP#V1:D45#RN (17395)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:i|au)\])(\[(?:in|sein|gegen|hat|vor|vorar|ant|ur|anti|ion|on|haft|schaft|auf|off|aus|\-aus|bei|bei\+ar|solch|selb|fort|schm|mpf|\^ch|ff|ll|mm|nn|ss|sobre|ch|nd|pf|g|m|n|auf\+ar|off\+ar|s|x|y|z|&o|nd@r|g@r|ch@r|g@l3|m@l|mm@l|pf@l|ff@l|nd@l3|z@l3|ch@l3|m@r6|pf@r6|z@r|n@r6|n@l|n@#\/|nn@l|nn@r6|ff@r6|m@#_|s@#\.|s@#\/_|ss@#\.|ss@#\/_|mpf@#\/_|ion@#\/_)\])" => "$1[#d46]$2$3"; // R46|C23: LP#V2:D46#RN (6958)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d47]$2$3"; // R47|C24: LP#V1:D47#RND (4165)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:i|au)\])(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d48]$2$3"; // R48|C24: LP#V2:D48#RND (1666)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d49]$2$3"; // R49|C25: LP#V1:D49#RNE (1715)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d5]$2$3"; // R5|C3: LK#V1:D5#RND (1785)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:i|au)\])(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d50]$2$3"; // R50|C25: LP#V2:D50#RNE (686)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d51]$2$3"; // R51|C26: LP#V1:D51#RP (13475)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:i|au)\])(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d52]$2$3"; // R52|C26: LP#V2:D52#RP (5390)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d53]$2$3"; // R53|C27: LP#V1:D53#RPD (2450)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:i|au)\])(\[(?:schw|lt|nk|q|v|nk@r|v@l|nk@l3|v@r6|lt@r6)\])" => "$1[#d54]$2$3"; // R54|C27: LP#V2:D54#RPD (980)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d55]$2$3"; // R55|C28: LP#V1:D55#RPE (735)
+"(\[(?:est|gegen|da|sind|fort|ck|tt|nd|ng|nk|ns|pf|st|xt|d|f|g|j|k|q|d@r|d@#\/|nd@r|g@r|k@r|nk@r|ng@r|ns@r|st@r|g@l3|f@l|pf@l|tt@l3|ck@l3|ng@l3|ns@l3|nk@l3|d@l3|nd@l3|st@l3|k@l3|f@r6|pf@r6|da@r|ck@l|tt@r|ck@r|ns@#\.|est@#\/_)\])(\[(?:i|au)\])(\[(?:tt|tt@l3|tt@r)\])" => "$1[#d56]$2$3"; // R56|C28: LP#V2:D56#RPE (294)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:sp|mp|perhaps|zw|k|p|t|t@r|k@r|p@l|sp@l|t@l3|k@l3|sp@r6|p@r6|t@#\/\.|t@#\/_)\])" => "$1[#d6]$2$3"; // R6|C3: LK#V2:D6#RND (714)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d7]$2$3"; // R7|C4: LK#V1:D7#RNE (735)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:i|au)\])(\[(?:ck|pp|pp@l|ck@l3|ck@l|pp@r6|ck@r)\])" => "$1[#d8]$2$3"; // R8|C4: LK#V2:D8#RNE (294)
+"(\[(?:vor|vorar|rück|ur|zurück|inter|bei\+ar|rr|rr6|sobre|vr\+ar|vr|ar|auf\+ar|off\+ar|ser|vr@l|rr@l|ar@#\/|ar@#_|vr@#\/_)\])(\[(?:a|e1|o|u)\])?(\[(?:les|hab|da|sind|durch|wo|sch|\^sch|ng|ns|st|xt|b|c|d|f|h|j|l|w|&e|&a|&u|d@r|d@#\/|c@r|ng@r|ns@r|h@r|sch@r|st@r|l@l|b@l|f@l|w@l|ng@l3|ns@l3|d@l3|c@l3|st@l3|sch@l3|\^sch@l3|b@r6|f@r6|w@r6|da@r|l@r6|b@#\/|b@#_|l@#\/|l@#\/_|l@#\/\.|ns@#\.|w@#\.|w@#\/)\])" => "$1[#d9]$2$3"; // R9|C5: LK#V1:D9#RP (5775)
 
 	#EndSubSection(spacer)
 	#BeginSubSection(postspacer)
@@ -1864,13 +1909,23 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Dd]otes?$)" => { "(\[#.\])\[o\]", "[#D#@#/_]$1[O]" }; // dote
 		"tstwrt(^[Dd]ots?$)" => { "(\[#.\])\[o\]", "[#D#@#._.]$1[O]" }; // dot
 		"tstwrt(^[Ff]eels?$)" => { "(\[#.\])\[i\]", "[#D#@#/_]$1[I]" }; // feel
-		"tstwrt(^[Ff]ills?$)" => { "(\[#.\])\[i\]", "[#D#@#._.]$1[I]" }; // feel
+		"tstwrt(^[Ff]ills?$)" => { "(\[#.\])\[i\]", "[#D#@#._.]$1[I]" }; // fill
+		"tstwrt([Pp]ool)" => { "(\[#.\])\[u\]", "[#D#@#/_]$1[U]" }; // pool
+		"tstwrt([Pp]ull)" => { "(\[#.\])\[u\]", "[#D#@#._.]$1[U]" }; // pull
+		"tstwrt([Hh]eel)" => { "(\[#.\])\[i\]", "[#D#@#/_]$1[I]" }; // heel
+		"tstwrt([Hh]ill)" => { "(\[#.\])\[i\]", "[#D#@#._.]$1[I]" }; // hill
 		"tstwrt(^[Hh]alls?$)" => { "(\[#.\])\[o\]", "$1[O][#D#@#o]" }; // hall
+		"tstwrt([Bb]all)" => { "(\[#.\])\[o\]", "$1[O][#D#@#o]" }; // hall
 		"tstwrt(^Miller$)" => { "^\[m\](.*?)\[l\]", "[M@#_]$1[L@#/.]" }; // Miller
+		"tstwrt(^[PpRr]ays$)" => { "\[s\]$", "[S@#.]" }; // pays, rays (vs pace, race)
 
 		// single consonants (distinguish from abbreviations)
 		"tstwrt(^d$)" => { "^.*?$", "[D@#/]" }; // distinguish: the vs d
 		"tstwrt(^w$)" => { "^.*?$", "[W@#/]" }; // distinguish: we vs w
+		"tstwrt(^t$)" => { "^.*?$", "[T@#/]" }; // distinguish: to vs t
+
+		// capital letter at beginning
+		"tstwrt(^Bl)" => { "\[b@l\]", "[B@L@#_]" }; // Black
 
 	#EndSubSection(diacritics)
 	#BeginSubSection(finalizer)
