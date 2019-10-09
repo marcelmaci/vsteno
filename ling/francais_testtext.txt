@@ -1,0 +1,39 @@
+Schweizer Stenograf 2019, Nr. 4 (Seite 32, Le Britannic - espoirs et destin)
+
+<@token_type=svgtext>
+<@token_type=shorthand>
+
+<br>
+<@svgtext_size=20>
+Le Brittanic est le troisième et dernier paquebot de la classe "Olympique" de la <@token_type=svgtext>White
+Star Line<@token_type=shorthand>: Olympique, Titanic et Brittanic. Il a été lancé le 26 février 1914. Sa
+construction avait pris du retard suite à la catastrophe du Titanic. Le divertissement
+des voyageurs a toujours été une priorité sur les grands navires de luxe: le
+Titanic n'abritait pas moins de quatre pianos droits et un piano à queue. Aussi n'est-il
+pas étonnant que l'on ait vu plus grand encore pour le Britannic avec l'installation
+d'une orgue <@token_type=svgtext>Welte-Philharmonie<@token_type=shorthand>. Le déclenchement 
+de la première guerre mondiale empêcha
+la réalisation de (?) ces plans et la Britannic ne servit jamais au transport de passagers.
+La marine britannique le transforme en navire hôpital. le 23 décembre 1915 il
+entre officiellement en service. Moins d'un an après il sombre en mer Egée après 
+avoir heurté une mine marine allemande.
+<br>
+Les plans du navire montrent que le Britannic devait être plus luxueux que ses <@token_type=svgtext>
+sister-ships<@token_type=shorthand>.
+Assez de cabines sont prévues pour acqueillir 2579 passgers réartis en trois classe par niveau
+de confort. En anticipant un changement de clientèle probable, la place de la troisième classe,
+destinée aux immigrants, est réduite par rapport aux deux navires précédents, tandis que celle
+de la deuxième classe augmente nettement. De plus, l'équipage prévu pour le navire passe de 860/880
+personnes sur l'Olympique et le Titannic à 950 sur le Brittanic. La première classe voit ses 
+installations particulièrement améliorées. Les enfants, qui étaient jusque-là considérés comme une
+gêne, commencent à apparaître comme une clientèle à satisfaire, et une salle de jeux qui leur est 
+destinée, apparait sur le pont des embarcations. Comme sur les deux précédents navires, les
+installations de première classe sont desservies par le majestueux escalier, mais celui du
+Britannic est nettement plus somptueux: en complément de la verrière, des ballustrades travaillées
+et des panneaux décoratifs, de grande orgue, sont commandés pour orner les paliers
+supérieurs, et les ascenseurs gagnent un niveaux suplémentaire
+sur le pont des embarcations. L'ajout le plus important es cependant celui de salles de bains
+individuelles dans presque tout les cabines de première classe, ce qui aurait été une première
+sur un paquebot: sur le Titanic et l'Olympic, la plupart des passagers devait se contenter
+de salles de bains et toilettes publics.
+
