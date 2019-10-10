@@ -483,7 +483,8 @@ function TryPhoneticTranscriptionFromList($word) {
 }
 
 function GetPhoneticTranscription($word) {
-    global $last_written_form;
+    //global $last_written_form;
+     //$last_written_form = $word;
     //echo "word to transcribe: $word<br>";
     //if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
 // if word is single char, only transcribe it if session-variable is set
@@ -500,7 +501,10 @@ if ((mb_strlen($word) > 1) || ($_SESSION['phonetics_single_char_yesno'])) {
             // otherwise call espeak for transcription
             $language = $_SESSION['language_espeak'];
             $alphabet_option = ($_SESSION['phonetic_alphabet'] === "espeak") ? "-x" : "--ipa"; 
-            $shell_command = "espeak -q -v $language $alphabet_option \"$word\"";
+            // transcriptions in english are wrong if they contain any -#+, so filter them out (don't know for other languages)
+            $stripped_word = preg_replace("/[-#+]/", "", $word);
+            //echo "original word: $word stripped: $stripped_word<br>";
+            $shell_command = "espeak -q -v $language $alphabet_option \"$stripped_word\"";
             //echo "$shell_command";
         
             exec("$shell_command",$o);
@@ -522,13 +526,16 @@ if ((mb_strlen($word) > 1) || ($_SESSION['phonetics_single_char_yesno'])) {
   $output = $word;
 }
     //echo "result: $output<br>";
-    $last_written_form = $word;
+    //$last_written_form = $word;
     
     return $output;
 }
 
 function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
-        //echo "analyze_word_linguistically=>block: $block<br>";
+        global $last_written_form;
+        $last_written_form = $word;
+        //global $parallel_lng_form; // contains analysis of written form if phonetic transcription is selected
+        //echo "<br>analyze_word_linguistically: word=$word hyphenate=$hyphenate decompose=$decompose separate=$separate glue=$glue prefixes=$prefixes stems=$stems suffixes=$suffixes block=$block<br>";
         // explode strings to get rid of commas
         $prefixes_array = explode(",", $prefixes);
         $stems_array = explode(",", $stems);
@@ -579,7 +586,6 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
             //echo "<br>result(AFTER): $result<br>";
             if ($_SESSION['phonetics_yesno']) $result = GetPhoneticTranscription($result);
             //echo "<br>result(PHONETICS): $result<br>";
-            
             return $result;
         }
 }
@@ -675,7 +681,8 @@ function ApplyFilter($word) {
 }
 
 function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
-    //echo "analyze: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
+    global $parallel_lng_form;
+    //echo "analyze_one_word_linguistically: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
     
     // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)
     //            if 0: separate always
@@ -727,7 +734,10 @@ function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separat
             //echo "3:$result<br>";
            
         } else $result = ApplyFilter(mb_strtolower($result));
-        return ApplyFilter($result);
+        $final_result = ApplyFilter($result);
+        $parallel_lng_form = $final_result;
+        echo "result (lng): $final_result<br>";
+        return $final_result;
     }
 }
 
@@ -769,7 +779,9 @@ function backwards_preg_replace_all($word, $array, $type) {
 }
 
 function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stems, $suffixes, $block) {
-    $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
+    $language_code = $_SESSION['language_hunspell'];
+    $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d $language_code -a" /* ) */;
+    //echo "shell: $shell_command<br>";
     // explode strings to get rid of commas
     $prefixes_array = explode(",", $prefixes);
     $stems_array = explode(",", $stems);
@@ -796,7 +808,7 @@ function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stem
     //echo "$shell_command<br>";
     //echo "hunspell: ";
     exec("$shell_command",$o);
-    //var_dump($o);
+    //echo "results:<br>"; var_dump($o);
     $length = count($array[0]);
     $offset = 1;
     for ($l=0;$l<$length; $l++) {

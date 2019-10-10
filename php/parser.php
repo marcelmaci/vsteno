@@ -427,10 +427,16 @@ function CropStringAfterNCharacters($string, $n) {
 }
 
 function CheckAndApplyHybridRule($condition1, $condition2, $consequence, $written, $phonetic) {
-    //echo "Apply hybrid rule: $condition1 => { >$condition2<, >$consequence< } on written: >$written< and phonetic: >$phonetic<<br>";
+    // I know it's not good to (ab)use global variables instead of returning it via function ...
+    // But I would have to adapt all function callers ... and I am honestly too lazy to do that now ...
+    global $condition1_check, $condition2_check;
+    $condition1_check = "-";
+    //echo "Apply hybrid rule: $condition1 => { >$condition2<, >$consequence< } on test_form: >$written< and phonetic: >$phonetic<<br>";
     $result = null;
     if (preg_match("/$condition1/", $written)) {
+        $condition1_check = "+"; // "\u{2713}"; // ok, if you don't like unicode, let's use good old + for matching conditions ... 
         $result = preg_replace("/$condition2/", "$consequence", $phonetic); 
+        $condition2_check = ($result !== $phonetic) ? "+" : "-"; // check mark
     }
     //echo "Result: >$result<<br>";
     return $result;
@@ -441,7 +447,7 @@ function ExecuteRule( /*$word*/ ) {
 
     global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
     global $rules, $rules_pointer, $actual_function;
-    global $act_word, $original_word, $result_after_last_rule, $last_written_form;
+    global $act_word, $original_word, $result_after_last_rule, $last_written_form, $parallel_lng_form, $condition1_check, $condition2_check;
     //echo "is word set?: $word";
     //$output = $word;
     $actual_model = $_SESSION['actual_model'];
@@ -488,6 +494,9 @@ function ExecuteRule( /*$word*/ ) {
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
             
             } else {
+//echo "several consequences: rules<br>"; var_dump($rules["$actual_model"][$rules_pointer]); echo "<br>";
+//echo "last_written_form: $last_written_form parallel_lng_form: $parallel_lng_form<br>";
+
                 // special rule: 1 condition => several consequences
                 // special case: if phonetic transcription is on condition can be tested on the written form of the word (instead of transcription)
                 // in that case, the following formalism is valid:
@@ -497,12 +506,25 @@ function ExecuteRule( /*$word*/ ) {
                 //      consequence = normal consequence      applied to phonetic form
                 // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
 // test if phonetical transcription is selected and if condition has to be tested on written form
-if (($_SESSION['phonetics_yesno']) && (preg_match("/^tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]))) {
+$match_wrt = preg_match("/^tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]);
+$match_lng = preg_match("/^tstlng\(/", $rules["$actual_model"][$rules_pointer][0]);
+if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
+    // chose wrt or lng form for hybrid rule (offering to variants for comparison)
     // quantifier must be greedy for condition1 in order to go to the last ) !!!
-    $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+    if ($match_wrt) {
+        $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+        $test_form = $last_written_form;
+        $hybrid_type = "H-WRT";
+    } else if ($match_lng) {
+        $hybrid_condition1 = preg_replace("/tstlng\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+        $test_form = $parallel_lng_form;
+        $hybrid_type = "H-LNG";
+    }
+    //echo "hybrid_condition1: $hybrid_condition1<br>";
     $hybrid_condition2 = $rules["$actual_model"][$rules_pointer][1];
     $hybrid_consequence = $rules["$actual_model"][$rules_pointer][2];
-    $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $last_written_form, $act_word);
+    //echo "line 515: test_form: $test_form $condition1_check $condition2_check<br>";
+    $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $test_form, $act_word);
     if ($result !== null) {
         // result is valid
         $output = $result;
@@ -511,7 +533,7 @@ if (($_SESSION['phonetics_yesno']) && (preg_match("/^tstwrt\(/", $rules["$actual
         // set variables for debugging
         //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
         //$replacement = $hybrid_consequence;
-        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> Hybrid: [1]: " . htmlspecialchars($hybrid_condition1) . "<br>[2]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
+        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
     }
 } else {
 // apply "normal" rule as usual
@@ -722,7 +744,7 @@ function PreProcessGlobalParserFunctions( $text ) {
 
 function PostProcessDataFromLinguisticalAnalyzer($word) {
     global $analyzer; // contains postprocess-rules
-    global $global_linguistical_analyzer_debug_string, $last_written_form;
+    global $global_linguistical_analyzer_debug_string, $last_written_form, $parallel_lng_form, $condition1_check, $condition2_check;
     $number_analyzer_rules = 0;
     for ($i=0; $i<count($analyzer); $i++) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
@@ -737,13 +759,25 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
 //      consequence = normal consequence      applied to phonetic form
 // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
 // test if phonetical transcription is selected and if condition has to be tested on written form
-if (($_SESSION['phonetics_yesno']) && (preg_match("/^tstwrt\(/", $analyzer[$i][0]))) {
+$match_wrt = preg_match("/^tstwrt\(/", $analyzer[$i][0]);
+$match_lng = preg_match("/^tstlng\(/", $analyzer[$i][0]);
+if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
     //echo "Analyzer[$i]: hybrid rule<br>";
     // quantifier must be greedy for condition1 in order to go to the last ) !!!
-    $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $analyzer[$i][0]);
+    // chose wrt or lng form for hybrid rule (offering to variants for comparison)
+    if ($match_wrt) {
+        $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $analyzer[$i][0]);
+        $test_form = $last_written_form;
+        $hybrid_type = "H-WRT";
+    } else if ($match_lng) {
+        $hybrid_condition1 = preg_replace("/tstlng\((.*)\)/", "$1", $analyzer[$i][0]);
+        $test_form = $parallel_lng_form;
+        $hybrid_type = "H-LNG";
+    }
+    //$hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $analyzer[$i][0]);
     $hybrid_condition2 = $analyzer[$i][1];
     $hybrid_consequence = $analyzer[$i][2];
-    $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $last_written_form, $word);
+    $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $test_form, $word);
     //echo "result: $result<br>";
     
     if ($result !== null) {
@@ -754,7 +788,7 @@ if (($_SESSION['phonetics_yesno']) && (preg_match("/^tstwrt\(/", $analyzer[$i][0
         // set variables for debugging
         //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
         //$replacement = $hybrid_consequence;
-         if ($_SESSION['output_format'] === "debug") $global_linguistical_analyzer_debug_string .= "<tr><td><b>[$number_analyzer_rules]</b> $word </td><td><b>[A$i]</b> Hybrid: [1]: " . htmlspecialchars($hybrid_condition1) . "<br>[2]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>LNG-POST</td></tr>";
+         if ($_SESSION['output_format'] === "debug") $global_linguistical_analyzer_debug_string .= "<tr><td><b>[$number_analyzer_rules]</b> $word </td><td><b>[A$i]</b> $hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>LNG-POST</td></tr>";
         $number_analyzer_rules++;
        
     }
@@ -830,6 +864,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $last_pretoken_list, $last_posttoken_list, $rules_pointer_start_stage4, $rules_pointer_start_stage3, $rules_pointer_start_stage2, $rules_pointer_start_std2prt;
     global $cached_results;
     global $global_linguistical_analyzer_debug_string;
+    global $parallel_lng_form, $last_written_form;
     
     $global_linguistical_analyzer_debug_string = "";
     //echo "processing: $text => ";
@@ -932,7 +967,9 @@ if ($_SESSION['analysis_type'] === "selected") {
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
                     // write debug info
                    
-                    $global_debug_string .= "PRE: \"$pretokens\" - POST: \"$posttokens\"<br>LNG (raw): $test<br>"; // => $test $parameters<br>"; 
+                    // define parallel form
+                    $parallel_form = (($_SESSION['phonetics_yesno']) && (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno']))) ? $parallel_lng_form : $last_written_form;
+                    $global_debug_string .= "PRE: \"$pretokens\" - POST: \"$posttokens\"<br>PAR: $parallel_form<br>LNG (raw): $test<br>"; // => $test $parameters<br>"; 
                     // now "post"process LING result applying analyzer rules from header (still stage1)
                     $lin_form = PostProcessDataFromLinguisticalAnalyzer($test);
                     // set lin_form
@@ -978,6 +1015,7 @@ if ($_SESSION['analysis_type'] === "selected") {
                     $output = ""; 
                     $separated_std_form = "";
                     $separated_prt_form = "";
+                    //echo "parallel_lng_form before stage3 separated parts: $parallel_lng_form<br>";
                     for ($w=0; $w<count($separated_word_parts_array); $w++) {
                         $word_part = $separated_word_parts_array[$w];
                         //var_dump($separated_word_parts_array);

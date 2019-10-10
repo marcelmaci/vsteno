@@ -237,6 +237,7 @@ $rules_pointer_start_stage4 = null;
 
 // phonetics
 $last_written_form = "";                        // contains written form of last word that has called GetPhoneticTranscription() in linguistics.php
+$parallel_lng_form = "";                        // when phonetic transcription is calculated, this global variable contains analysis of written form (if it is selected)
 
 // error handling
 $global_error_string = "";

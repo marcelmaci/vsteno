@@ -70,17 +70,17 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		";
 	"copyright_footer" := "Created with Free Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// set versions
-		"model_version" := "0.0";
-		"model_date" := "23. September 2019";
+		"model_version" := "0.1";
+		"model_date" := "10. Oktober 2019";
 		"required_version" := "0.2";
 		// configure linguistical analysis
 		"analysis_type" := "selected";
-		"hyphenate_yesno" := "no";
-		"composed_words_yesno" := "no";
+		"hyphenate_yesno" := "yes";       // new feature for english: combine 3 types of analysis
+		"composed_words_yesno" := "yes";  // 1) hyphenation 2) composed words 3) phonetics
 		"phonetics_yesno" := "yes";
 		"phonetic_alphabet" := "espeak"; 
 		// set language
-		"language_hunspell" := "en-us";		// set it, even if not used
+		"language_hunspell" := "en_US";		// set it, even if not used
 		"language_hyphenator" := "en-us";	// idem
 		"language_espeak" := "en-us"; 		// use american english because r's are pronounced as r's
 		// note: selection en-us affects also vowels, for example:
@@ -91,6 +91,35 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"prefixes_list" := "";
 		"stems_list" := "";
 		"suffixes_list" := ""; // use non caputuring groups! (?:)
+		// The problem is as follows:
+		// In the first version of this model, there was no analysis for composed words. So, composed
+		// were recognized using lists that described longer words (dividing them into parts).
+		// Example: therefore, yourself => rules that transform them to {THERE}{FOR}, {YOUR}{SELF}
+		// Now that hunspell (and word composing) comes into action, many of these words are 
+		// recognized as individual words and therefore separated:
+		// there|fore, your|self
+		// The consequence is that the old rules now get applied to those (several) parts of the words, 
+		// which leads to horrible results, especially in combination with hybrid rules.
+		// Consider the following case:
+		// "tstwrt(yourself)" => { "^.*?$", "{YOUR}{SELF}" }; 
+		// Since tstwrt(yourself) is true for both parts - i.e. your and self - the rule replaces
+		// twice your and self by {YOUR}{SELF} creating {YOUR}{SELF}|{YOUR}{SELF} ... (sic!)
+		// Blocking certain elements - like self - via block_list doesn't really solve the problem.
+		// The only solution: 
+		// 1) rewrite the rule (damn, that's a pain in the ass ... :):):)
+		// 2) introduce a new type of hybrid rule (tstlng()) which allows to specify exactly
+		//    to what we are comparing.
+		// ad 1) the new rules must take care of staging:
+		// both the wrt and lng (parallel) form don't have staging, but the shortener does.
+		// So, in general, both the wrt/lng (condition1) and the phonetic condition (condition2)
+		// of hybrid rules must be formulated much more carefully.
+		// Unsolved question: What should happen to wrt/lng form when a rule matches? Is there a possibility
+		// to mark these forms as "treated", so that following rules won't be applied any more?
+		// (until now wrt/lng forms never change/can't be modified)
+		// The positive aspect: less rules will be necessary to describe the same transformations
+
+		"block_list" := "er, ty"; // block fore ... therefore is totally wrong otherwise ..
+		"filter_list" := "";
 		// set phonetics parameters
 		"phonetics_single_char_yesno" := "no";
 		"phonetics_transcription_list" := "
@@ -348,6 +377,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		
 		//"tstwrt(x)" => { "ks", "x" }; // keep an eye on this rule: produces wrong result in case of combination of x and cc (for example)
 		"ks" => "x"; // for the moment: treat all ks as x to detect wrong cases
+		"tstwrt(kes$)" => { "x$", "ks$" }; // recorrect: takes, wakes(ks)
 		"tstwrt([ck]s$)" => { "x", "ks" }; // recorrect: politics, looks (ks)
 		"tstwrt(cs)" => { "x", "ks" }; // recorrect: ecstasy (ks) - might produce wrong results!
 		"tstwrt(xc(?!ept))" => { "EX\+", "EX+s" }; // recorrect: excess - might produce wrong results (exceptionally: no s!)
@@ -404,6 +434,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// I suppose that written form can be taken as criteria to distinguish between the two:
 		// 1) air => är
 		// 2) er(r) => ör
+		"tstwrt(ars?)" => { "[E3]([sz])?$", "Er$1" }; // dollars
 		"tstwrt(aer)" => { "e@r", "är" }; // aerial
 		"tstwrt(air)" => { "e@", "är" };
 		"tstwrt(er)" => { "e@", "ör" };
@@ -999,6 +1030,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Oo]ct$)" => { "^.*?$", "okt" };
 
 		// others
+		"tstwrt(up$)" => { "öp$", "{UP}" };
 		"tstwrt(^[Ww]ithin$)" => { "^.*?n$", "{WITH}{IN}" };
 		"tstwrt(^[Cc]ontrariet(y|ies)$)" => { "^[^{]*?([sz])?$", "{CONTR}{ITY}$1" };
 		"tstwrt(^[Bb]efore)" => { "^(.*?r)", "{BE1}{FOR}" };
@@ -1012,11 +1044,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Ii]n(?!(?:ter|tro?)))" => { "^[^+]*?\+(.*?)$", "{IN}$1" }; 
 		"tstwrt(^[Ff]ul)" => { "^.*?[lL](.*?)$", "{FUL}$1" }; 
 		"tstwrt(^[Oo]therwise$)" => { "^.*?r(.*?)$", "{OTHER}$1" }; 
-		"tstwrt(^[Ff]ore)" => { "^.*?r(.*?)$", "{FOR}$1" }; 
+		"tstlng((?:^|\|)[Ff]ore?(?:$|\|))" => { "^f.*?r$", "{FOR}" }; 
 		"tstwrt(^[Ff]orer)" => { "^{FOR}(.*?)$", "{FOR}r$1" }; // forerunner (an r gets lost) 
-		"tstwrt(^[Tt]herefore$)" => { "^.*?$", "{THERE}{FOR}" }; 
-		"tstwrt(^[Tt]here)" => { "^.*?r(.*?)$", "{THERE}$1" }; 
-		"tstwrt(^[Yy]oursel(f|ves)$)" => { "^.*?([zs])?$", "{YOUR}{SELF}$1" }; 
+		//"tstlng(^[Tt]herefore$)" => { "^.*?$", "{THERE}{FOR}" }; // rule doesn't work anymore when analyzing composed words ... !
+		"tstlng((?:^|\|)[Tt]here(?:$|\|))" => { "^D.*?r$", "{THERE}" }; 
+		"tstlng(^[Yy]oursel(f|ves)$)" => { "^.*?([zs])?$", "{YOUR}{SELF}$1" }; 
 		"tstwrt(^[Ss]omehow$)" => { "^.*?$", "{SOME}\{HOW}" }; 
 		"tstwrt(^[Ss]omewhere$)" => { "^.*?$", "{SOME}{WHERE}" }; 
 		"tstwrt(^[Ss]ome)" => { "^.*?m(.*?)$", "{SOME}$1" }; 
@@ -1026,7 +1058,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Ii]tself$)" => { "^.*?$", "{IT}{SELF}" }; 
 		"tstwrt(^[Ii]t'?s$)" => { "^.*?$", "{ITS}" }; 
 		"tstwrt((?<!i)ed$)" => { "id$", "{ED}" };
-		"tstwrt(ed$)" => { "([brsznlvmZLD])d$", "$1{ED}" };
+		"tstwrt(ed$)" => { "([bgrsznlvmZLD])d$", "$1{ED}" };
 		"tstwrt(xed$)" => { "kst$", "x{ED}" }; // mixed
 		"tstwrt(ed$)" => { "([kpsST])t$", "$1{ED}" }; // asked (voiceless t by assimilation)
 		"tstwrt(^[Ii]s$)" => { "^[Ii]z$", "{IS}" }; // don't apply to ease!
@@ -1043,7 +1075,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^böt$" => "{BUT}";
 		"^wi$" => "{WE}";
 		"tstwrt([Ww]hat)" => { "(.*?)wöt(.*?)$", "$1{WHAT}$2" };
-		"^wöz$" => "{WAS}";
+		"tstwrt(^[Ww]as(n\'t)?$)" => { "^.*?[zs](.*?)$", "{WAS}$1" };
 		"tstwrt(^[Ww]ould)" => { "^(.*?)$", "{WOULD}" }; // don't apply to wood!
 		"tstwrt(^[Ww]ith)" => { "^.*?[TD]([^H]*?)$", "{WITH}$1" };
 		"^vEri$" => "{VERY}";
@@ -1056,7 +1088,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Aa]lter)" => { "[Oo]l", "oL" }; // altered: transform l to L in order to avoid following rule
 		"tstwrt(^[Aa]ltrui)" => { "^[Oo]l", "äl" }; // avoid application all- (following rule)
 		"tstwrt(^[Aa]ll?)" => { "^[Oo]l", "{ALL}" }; 
-		"tstwrt(^[Hh]as$)" => { "^.*?$", "{HAS}" }; 
+		"tstwrt(^[Hh]as(n\'t)?$)" => { "^.*?[sz](.*?)$", "{HAS}$1" }; 
 		"tstwrt(^[Ss]o$)" => { "^.*?$", "{SO}" }; 
 		"tstwrt(^[Ss]ome$)" => { "^.*?$", "{SOME}" }; 
 		"tstwrt(^[Tt]his$)" => { "^.*?$", "{THIS}" }; 
@@ -1079,13 +1111,13 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Ii]f$)" => { "^.*?$", "{IF}" }; 
 		"tstwrt(^[Oo]ff?(print)?)" => { "^.*?[fv](.*?)$", "{OFF}$1" }; 
 		"tstwrt(^[Ww]il(lings?|l|ling(?:ly)?|ful(?:ly)?)?$)" => { "^w[^w]*?l(.*?)$", "{WILL}$1" }; 
-		"tstwrt(^[Tt]here$)" => { "^.*?$", "{THERE}" }; 
+		"tstlng((^|\|)[Tt]here(\||$)$)" => { "^\[TH\].*?r$", "{THERE}" }; // reformulate rule for stage 3 with composed words ... 
 		"tstwrt(^[Tt]heir$)" => { "^.*?$", "{THEIR}" }; 
 		"tstwrt(^[Ee]very?)" => { "^.*?r(.*?)$", "{EVER}$1" }; 
 		"tstwrt(^[Uu]nder)" => { "^.*?r(.*?)$", "{UNDER}$1" }; 
 		"tstwrt(^[Ff]ore?$)" => { "^.*?$", "{FOR}" }; 
 		"tstwrt([Ww]here)" => { "w[^w]*?r", "{WHERE}" }; 
-		"tstwrt(^[Ww]ere$)" => { "^.*?$", "{WERE}" }; 
+		"tstwrt(^[Ww]ere(n't)?$)" => { "^.*?r(.*?)$", "{WERE}$1" }; 
 		"tstwrt(^[Oo]ver)" => { "^.*?r(.*?)$", "{OVER}$1" }; 
 		"tstwrt(overs?$)" => { "o[^o]*?r(s)?$", "{OVER}$1" }; 
 		"tstwrt(^[Ff]rom$)" => { "^.*?$", "{FROM}" }; 
@@ -1156,6 +1188,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// clean up
 		"^#" => ""; // eliminate premarked abbreviations
  		
+		// wasn't, hasn't, weren't etc.
+		"n\'t" => "{NN}";
+
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(upbundler,#>stage4)
 		// upbundler is short for "uppercase bundler"
@@ -1304,7 +1339,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		//"^(.*)$" => "strtolower()";
 		"({.*?})" => "strtoupper()";
 
-		"\[#VR\]" => "[W@R6]";
+		"\[#VR\]" => "[V@R6]";
 
 		// use to separate methods to detect beginning of words:
 		// (1) based on "prefixes" (e.g. vice-)
@@ -1563,6 +1598,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"{NN}" => "[NN]"; // n't in wasn't
 		"\[VR\]{SELF}" => "[VR]I[@L]"; // herself
 		"{CONTRAR}I{NESS}" => "{CONTRAR}I[&E]{NESS}";
 		"{ISNT}" => "[IST][NN]"; // isn't 
@@ -1609,6 +1645,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"{NO}" => "O[N=]";
 		"{THAN}" => "A[N=]";
 		"{THEN}" => "[0N-][EN]";
+		"(.){UP}" => "$1\[0N-][&A]";
 		"{UP}" => "[0N-][&A]";
 		"{IN}" => "[IN]";
 		"{WHICH}{EVER}" => "I[^CH][E1][VR]";
