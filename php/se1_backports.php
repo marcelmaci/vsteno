@@ -197,6 +197,7 @@ class Point {
 
 function get_absolute_knot_coordinates($x, $y, $type, $shiftX, $angle) {
     $scaled_shiftX = $_SESSION['token_size'] * $shiftX; // scale shiftX
+    //echo "shiftX: $shiftX, scaled_shiftX: $scaled_shiftX<br>";
     switch ($type) {
         case "horizontal" : $coordinates = calculate_horizontal_coordinates($x, $y, $scaled_shiftX, $angle); break;    // calculation for horizontal could be taken from se1, but to be more systematic integrate it here as a function like the other calculations
         case "orthogonal" : $coordinates = calculate_orthogonal_coordinates($x, $y, $scaled_shiftX, $angle); break;
@@ -212,50 +213,54 @@ function calculate_horizontal_coordinates($x, $y, $shiftX, $angle) {    // shift
 }
 
 function calculate_orthogonal_coordinates($x, $y, $shiftX, $angle) {
-    /* test: possibility to do it recursively (works)
-    if ($shiftX != 0) {
-            $result = calculate_orthogonal_coordinates($x-$shiftX, $y, 0, $angle);
-            $result->x += $shiftX;
-            return $result;
-    } else {
-    */
-    $x -= $shiftX;
+    //echo "calculate orthogonal<br>";
+    // tilt parallel rotating axis and calculate point on that axis (rax/ray)
     $rad = deg2rad($angle);
-    $v1x = cos($rad) * $y;
-    $v1y = sin($rad) * $y;
-    //echo "v1x: $v1x, v1y: $v1y<br>";
-    $angle2 = 90 - $angle; 
-    $rad2 = deg2rad($angle2);
-    $v2x = cos($rad2) * $x;
-    $v2y = - sin($rad2) * $x;
-    //echo "v2x: $v2x, v2y: $v2y (x=$x; y=$y)<br>";
-    $newX = $v1x + $v2x;
-    $newY = $v1y + $v2y;
-    $newX += $shiftX;
-    return new Point($newX,$newY);
-    //}
+    $rax = $y * cos($rad) + shitfX;
+    $ray = $y * sin($rad);
+    //echo "rax: $rax, ray: $ray<br>";
+    // calculate orthogonal normal vector relative to rotating axis
+    // vector parallel to rotating axis
+    $vx = cos($rad);
+    $vy = sin($rad);
+    // orthogonal vector (rotate 90° to left)
+    $nvx = - $vy;
+    $nvy = $vx;
+    //echo "nvx: $nvx, nvy: $nvy<br>";
+    // calculate new knot = point on tilted parallel rotating axis + normal vector * length original distance to parallel rotating axis
+    $dx = $shiftX - $x;
+    //echo "shiftX: $shiftX => distance: $dx<br>";
+    $npx = $rax + $nvx * $dx;
+    $npy = $ray + $nvy * $dx;
+    // add shiftX
+    $npx += $shiftX;
+    //echo "npx: $npx, npy: $npy<br>";
+    return new Point($npx,$npy);
 }
 
 function calculate_proportional_coordinates($x, $y, $shiftX, $angle) {
-    //echo "proportional: ($x/$y) shiftx=$shiftX angle=$angle";
+    // tilt parallel rotating axis and calculate point on that axis (rax/ray)
     $rad = deg2rad($angle);
-    $dx = 1 / tan($rad);
-    $factor = sqrt($dx*$dx + 1);
-    $x -= $shiftX;
-    $rad = deg2rad($angle);
-    $v1x = cos($rad) * $y * $factor;
-    $v1y = $y; // equivalent to: sin($rad) * $y * $factor; (but faster)
-    //echo "v1x: $v1x, v1y: $v1y (x=$x)<br>";
-    $angle2 = 90 - $angle; 
-    $rad2 = deg2rad($angle2); 
-    $v2x = cos($rad2) * $x; // second vector isn't scaled: is that correct?
-    $v2y = - sin($rad2) * $x; // idem
-    //echo "v2x: $v2x, v2y: $v2y<br>";
-    $newX = $v1x + $v2x;
-    $newY = $v1y + $v2y;
-    $newX += $shiftX;
-    //echo " => new: ($newX/$newY)<br>";
-    return new Point($newX,$newY);
+    $rax = $y / tan($rad) + shitfX;
+    $ray = $y;
+    //echo "rax: $rax, ray: $ray<br>";
+    // calculate orthogonal normal vector relative to rotating axis
+    // vector parallel to rotating axis
+    $vx = cos($rad);
+    $vy = sin($rad);
+    // orthogonal vector (rotate 90° to left)
+    $nvx = - $vy;
+    $nvy = $vx;
+    //echo "nvx: $nvx, nvy: $nvy<br>";
+    // calculate new knot = point on tilted parallel rotating axis + normal vector * length original distance to parallel rotating axis
+    $dx = $shiftX - $x;
+    //echo "shiftX: $shiftX => distance: $dx<br>";
+    $npx = $rax + $nvx * $dx;
+    $npy = $ray + $nvy * $dx;
+    // add shiftX
+    $npx += $shiftX;
+    //echo "npx: $npx, npy: $npy<br>";
+    return new Point($npx,$npy);
 }
 
 // test

@@ -224,7 +224,7 @@ function CalculateStenoPage() {
                 $hunspell_yesno = ($_SESSION['composed_words_yesno']) ? "yes" : "no";
                 $hyphens_yesno = ($_SESSION['hyphenate_yesno']) ? "yes" : "no";
                 $phonetics_yesno = ($_SESSION['phonetics_yesno']) ? "yes" : "no";
-                echo "<h2>DEBUGGING</h2>MODEL: $model_name<br>HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)<br>";
+                echo "<h2>DEBUGGING</h2><br><b>PARAMETERS</b><br>MODEL: $model_name<br>HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)<br>";
                 echo "HYPHENATOR: " . $_SESSION['language_hyphenator'] . " ($hyphens_yesno)<br>";
                 echo "PHONETICS: " . $_SESSION['language_espeak'] . " ($phonetics_yesno)";
             }

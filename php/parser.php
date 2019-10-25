@@ -704,7 +704,7 @@ function IsAnyOfAllArguments( $argument ) {
 }
 
 function PreProcessGlobalParserFunctions( $text ) {
-        global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string;
+        global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string, $global_debug_string;
         $rules_pointer = 0;
         $global_textparser_debug_string = "";
         if (IsAnyOfAllArguments("#>stage0")) {
@@ -739,12 +739,18 @@ function PreProcessGlobalParserFunctions( $text ) {
             $start_word_parser = $rules_pointer;
         } else $start_word_parser = 0;
         //echo "start_word_parser = $start_word_parser<br>";
+        if (mb_strlen($global_textparser_debug_string)>0)
+            echo "<br><br><b>#STAGE0:</b><br><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr><tr>$global_textparser_debug_string</table></div>";
+        else
+            echo "<br><br><b>#STAGE0:</b><br>no rules";
+        echo "<br><br><b>#STAGES1234:</b><br>";
         return $text;
 }
 
 function PostProcessDataFromLinguisticalAnalyzer($word) {
     global $analyzer; // contains postprocess-rules
     global $global_linguistical_analyzer_debug_string, $last_written_form, $parallel_lng_form, $condition1_check, $condition2_check;
+    global $parallel_lng_form;
     $number_analyzer_rules = 0;
     for ($i=0; $i<count($analyzer); $i++) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
@@ -843,6 +849,7 @@ if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
     }
 } // end of hybrid rule postprocessing
     //echo "Word after postprocess: $word<br>";
+    //$parallel_lng_form = $word;
     //echo "global_linguistical_analyzer_debut_string: $global_linguistical_analyzer_debug_string<br>";
     return $word;
 }
@@ -966,19 +973,21 @@ if ($_SESSION['analysis_type'] === "selected") {
                     } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list'], $_SESSION['block_list']);    
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
                     // write debug info
-                   
+                  
                     // define parallel form
                     $parallel_form = (($_SESSION['phonetics_yesno']) && (($_SESSION['hyphenate_yesno']) || ($_SESSION['composed_words_yesno']))) ? $parallel_lng_form : $last_written_form;
-                    $global_debug_string .= "PRE: \"$pretokens\" - POST: \"$posttokens\"<br>PAR: $parallel_form<br>LNG (raw): $test<br>"; // => $test $parameters<br>"; 
+                    $global_debug_string .= "LNG (par): $parallel_form<br>LNG (raw): $test<br>"; // => $test $parameters<br>"; 
+                   
                     // now "post"process LING result applying analyzer rules from header (still stage1)
                     $lin_form = PostProcessDataFromLinguisticalAnalyzer($test);
                     // set lin_form
                     //$lin_form = $test;
                     //echo "lin_form: $lin_form<br>";
+                    
                         
                     // write debug info of postprocessing: LING (post)
-                    $global_debug_string .= "LNG (post): $lin_form<br>";
-
+                    $global_debug_string .= "LNG (post): $lin_form<br>PRE: \"$pretokens\" - POST: \"$posttokens\"<br>";
+                    
 } else {
         //$lin_form = $text;
         $lin_form = $word;

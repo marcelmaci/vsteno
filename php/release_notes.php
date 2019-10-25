@@ -39,7 +39,7 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
 <ul>
     <li>Variable, proportionale Schattierung (umgesetzt, Testphase)</li>
     <li>Automatisierte Umriss-Schattierung (Polygon-Modellierung) ab Daten der SE1 (umgesetzt, Testphase)</li>
-    <li>Orthogonale und proportionale Knots mit parallelen Rotationsachsen (gemäss SE1 rev1, todo)</li>
+    <li>Orthogonale und proportionale Knots mit parallelen Rotationsachsen (gemäss SE1 rev1, umgesetzt, Testphase)</li>
     <li>Paralleledition: Originaltext (Langschrift) neben Kurzschrift</li>
 </ul>
 </li>
@@ -57,6 +57,7 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
     <li>ENSSBAS: Grundschrift Englisch (neu)</li>
 </ul>
 <li>Bugfixes und weitere noch nicht definierte neue Features</li>
+<li>Aktualisierte Dokumentation</li>
 </ul>
 <p>* In Kombination mit phonetischer Transkription nur Wortanalyse (keine Silben, Präfixe, Suffixe).</p>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)</i></p>

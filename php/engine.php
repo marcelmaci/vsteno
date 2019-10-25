@@ -117,7 +117,7 @@ require_once "rendering.php";
 require_once "svgtext.php";
 
 // SE1-BACKPORTS: revision1
-$backport_revision1 = false;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
+$backport_revision1 = true;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
 
 //if ($backport_revision1) {
     require_once "se1_backports.php"; // always include se1_backports.php to make VPAINT work even if backports are disabled
@@ -185,43 +185,60 @@ if ($backport_revision1) {
 
 function ScaleAndTiltTokens($steno_tokens_temp, $factor, $angle) {
     // use exactly the same code for the moment in order to see if structure works
+    //echo "ScaleAndTiltTokens()<br>";
     global $standard_height, $svg_height, $height_above_baseline, $half_upordown, $one_upordown, 
     $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide;
     //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
-    foreach( $steno_tokens_temp as $token => $definition ) {    
+    //var_dump($steno_tokens_temp);
+    //foreach( $steno_tokens_temp as $token => $definition ) {    
+    foreach( $steno_tokens_temp as $token => $definition) {    
         // scale informations in header
         $steno_tokens_temp[$token][0] *= $factor; // scale width
         $steno_tokens_temp[$token][4] *= $factor; // scale additional width before
         $steno_tokens_temp[$token][5] *= $factor; // scale additional width after
+    
         
-        /*
-        if ($token === "SP") {
-                var_dump($definition);
-                echo "key: $token factor: $factor<br>";
-        }
-        */
+        //if ($token === "SP") {
+               // var_dump($definition1);
+               // echo "key: $token factor: $factor<br>";
+               //echo "token: $token<br>";
+        //}
+        $definition_length = count($steno_tokens_temp[$token]);
+        //echo "token: $token definition length: $definition_length<br>";
         
-        for ($i = header_length; $i < count($definition); $i += 8) {
+       // for ($i = header_length; $i < count($definition); $i += tuplet_length) {
+        for ($i = header_length; $i < $definition_length; $i += tuplet_length) {
+            //echo "iterate through definition ...<br>";
+            $def_x = $steno_tokens_temp[$token][$i];  // orginal x-coordinate
+            $def_y = $steno_tokens_temp[$token][$i+1]; // original y-coordinate
+            // scale
             $steno_tokens_temp[$token][$i] *= $factor;  // x-coordinate
             $steno_tokens_temp[$token][$i+1] *= $factor; // y-coordinate
             $x = $steno_tokens_temp[$token][$i];
             $y = $steno_tokens_temp[$token][$i+1];
+            //echo "i=$i: values: def_x: $def_x, def_y: $def_y; => x: $x, y: $y<br>";
             
             $legacy_dr = $steno_tokens_temp[$token][$i+offs_dr];
+            //echo "legacy_dr: $legacy_dr<br>";
             
             $dr = new ContainerDRField($legacy_dr); 
             //$shiftX = $steno_tokens_temp[$token][$dr->ra_offset];
-            $shiftX = $definition[$dr->ra_offset];
+            $shiftX = $steno_tokens_temp[$token][$dr->ra_offset];
+            //$scaled_shiftX = $shiftX * $factor; // don't scale shiftx here => will be scaled later!!!
+            
+            //echo "i: $i => get_absolut_knot_coordinates(): x: $x, y: $y, dr->knottype: " . $dr->knottype . ", shiftX: $shiftX, angle: $angle<br>";
             
             $new_point = get_absolute_knot_coordinates($x, $y, $dr->knottype, $shiftX, $angle);
+            //echo "new coordinates: x: " . $new_point->x . ", y: " . $new_point->y . "<br>";
+            
             //var_dump($new_point);
-            /*
-            if ($token === "SP") {
+        
+            //if ($token === "SP") {
                 //echo "key: $token i: $i<br>";
-                echo "i: $i dr: ra_number: " . $dr->ra_number . " ra_offset: " . $dr->ra_offset . " shiftX: " . $shiftX . "<br>";
-                echo "old: x/y: $x/$y new: x/y: " . $new_point->x . "/" . $new_point->y . "<br>";
-            }
-            */
+                //echo "i: $i dr: ra_number: " . $dr->ra_number . " ra_offset: " . $dr->ra_offset . " shiftX: " . $shiftX . "<br>";
+                //echo "old: x/y: $x/$y new: x/y: " . $new_point->x . "/" . $new_point->y . "<br>";
+            //}
+            
             
             $steno_tokens_temp[$token][$i] = $new_point->x;
             $steno_tokens_temp[$token][$i+1] = $new_point->y;
@@ -239,7 +256,7 @@ function ScaleTokens( $steno_tokens_temp,/*_master,*/ $factor ) {
     global $standard_height, $svg_height, $height_above_baseline, $half_upordown, $one_upordown, 
     $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $backport_revision1;
 if ($backport_revision1) {
-        echo "execute backport revision 1<br>";
+        //echo "execute backport revision 1<br>";
         return ScaleAndTiltTokens($steno_tokens_temp, $factor, $_SESSION['token_inclination']);
 } else { // leave SE1 legacy function without any modification
     //echo "ScaleTokens(): variable steno_tokens ist set (global)<br>";
@@ -1299,7 +1316,11 @@ function GetDebugInformation( $word ) {
 */
         //echo "global_linguistical_analyzer_debug_string: $global_linguistical_analyzer_debug_string<br>";
     
-        $debug_text .= "<p>WORD: $word</p><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>$global_textparser_debug_string" . "$global_linguistical_analyzer_debug_string" . "$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($std_form) . "<br>PRT: $prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
+        if (($global_linguistical_analyzer_debug_string !== "") || ($global_debug_string !== ""))
+            $debug_text .= "<br><b>WORD: $word</b><br><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>" . "$global_linguistical_analyzer_debug_string" . "$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($std_form) . "<br>PRT: $prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
+        else 
+            $debug_text .= "<br><b>WORD: $word</b><br>no rules<br>";
+    
         $global_number_of_rules_applied = 0; // suppose, this function is called at the end of the calculation (not before ... since this will give false information then ... ;-)
         return $debug_text;        
     
