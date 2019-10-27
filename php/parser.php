@@ -739,11 +739,13 @@ function PreProcessGlobalParserFunctions( $text ) {
             $start_word_parser = $rules_pointer;
         } else $start_word_parser = 0;
         //echo "start_word_parser = $start_word_parser<br>";
-        if (mb_strlen($global_textparser_debug_string)>0)
-            echo "<br><br><b>#STAGE0:</b><br><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr><tr>$global_textparser_debug_string</table></div>";
-        else
-            echo "<br><br><b>#STAGE0:</b><br>no rules";
-        echo "<br><br><b>#STAGES1234:</b><br>";
+        if ($_SESSION['output_format'] === "debug") {
+            if (mb_strlen($global_textparser_debug_string)>0)
+                echo "<br><br><b>#STAGE0:</b><br><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr><tr>$global_textparser_debug_string</table></div>";
+            else
+                echo "<br><br><b>#STAGE0:</b><br>no rules";
+            echo "<br><br><b>#STAGES1234:</b><br>";
+        }
         return $text;
 }
 

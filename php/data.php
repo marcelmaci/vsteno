@@ -47,6 +47,8 @@ require_once "session.php";
 require_once "import_model.php";
 require_once "engine.php";
 require_once "parser.php";
+require_once "share_font.php";
+
 //require_once "regex_helper_functions.php";
 
 global $font, $combiner, $shifter;
@@ -78,6 +80,14 @@ $model_to_load = $_SESSION['actual_model'];
 // DO NOT ECHO DEBUG INFORMATION HERE => THATS BEFORE HTML HEAD!!!!!!!!!!
 $text_to_parse = LoadModelFromDatabase($model_to_load);
 //echo "text: $text_to_parse<br><br>";
+// barrow a font from another model
+
+///////////////////// prepare patching to use one and the same font for all models //////////
+// idea is to "borrow a font from another model ///////////////////////////////////////////
+// use the following line to test (or comment out to use traditional functionality ///////
+if ($_POST['font_borrow_yesno'] === "yes")  // use POST (SESSION not yet set)
+    $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_POST['font_borrow_model_name']));
+/////////////////// end of patching //////////////////////////////////////////////////////////
 
 $test = ImportModelFromText($text_to_parse);
 $actual_model = $_SESSION['actual_model'];

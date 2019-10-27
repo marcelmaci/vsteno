@@ -681,7 +681,7 @@ function ApplyFilter($word) {
 }
 
 function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
-    global $parallel_lng_form, $analyzer;
+    global $parallel_lng_form;
     //echo "analyze_one_word_linguistically: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
     
     // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)

@@ -101,6 +101,31 @@ require_once "options.php";  // for whitelist (session variables)
 //require_once "data.php";
 
 //////////////////////////////////////// load from database ///////////////////////////////////////////////
+// special LoadModel function
+function LoadModelToShareFromDatabase($name) {
+    // same as LoadModelFromDatabase but without setting global variables
+    global $conn, $insertion_key, $font, $combiner, $shifter, $rules, $functions_table;
+    $conn = connect_or_die();
+    $safe_name = $conn->real_escape_string($name);
+    $sql = "SELECT * FROM models WHERE name='$safe_name'";
+    //echo "QUERY: $sql<br>";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc(); 
+        $output = $row['header'] . "\n" . $row['font'] . "\n" . $row['rules'];
+        //$insertion_key = $name;
+        //$font[] = $insertion_key;       // add insertion key to $font
+        //$combiner[] = $insertion_key;   // idem for $combiner (maybe kind of an overkill: combiner will only be used 1x to create complete font table, but to avoid confusion in case of loading different models create different combiner and shifter variables ...)
+       // $shifter[] = $insertion_key;    // idem for $shifter
+        //$rules[] = $insertion_key;      // idem for $rules
+        //$functions_table[] = $insertion_key; // semper idem
+        //echo "output = $output<br>";
+        return $output;
+    } else {
+        die_more_elegantly("<p>Kein Eintrag in models.</p>");
+        return null;
+    }
+}
 
 function LoadModelFromDatabase($name) {
     global $conn, $insertion_key, $font, $combiner, $shifter, $rules, $functions_table;
@@ -111,7 +136,7 @@ function LoadModelFromDatabase($name) {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc(); 
-        $output = $row['header'] . $row['font'] . $row['rules'];
+        $output = $row['header'] . "\n" . $row['font'] . "\n" . $row['rules'];
         $insertion_key = $name;
         //$font[] = $insertion_key;       // add insertion key to $font
         //$combiner[] = $insertion_key;   // idem for $combiner (maybe kind of an overkill: combiner will only be used 1x to create complete font table, but to avoid confusion in case of loading different models create different combiner and shifter variables ...)

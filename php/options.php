@@ -60,7 +60,7 @@ $whitelist_variables .= " model_version model_date required_version rendering_mi
 $whitelist_variables .= " rendering_polygon_opacity rendering_intermediateshadowpoints_yesno rendering_lineoverpass_yesno layouted_originalt_text_yesno layouted_original_text_position ";
 $whitelist_variables .= " layouted_original_text_size layouted_original_text_delta layouted_original_text_font layouted_original_text_wrap layouted_original_text_filter_brackets ";
 $whitelist_variables .= " layouted_original_text_filter_dashes phonetics_transcription_list phonetics_transcription_array phonetics_single_char_yesno ";
-$whitelist_variables .= " rendering_lineoverpass_start_factor rendering_lineoverpass_start_factor ";
+$whitelist_variables .= " rendering_lineoverpass_start_factor rendering_lineoverpass_start_factor font_borrwo_yesno font_borrow_model_name ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;

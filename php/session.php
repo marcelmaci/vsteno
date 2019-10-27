@@ -149,6 +149,9 @@ function InitializeSessionVariables() {
     $_SESSION['phonetics_transcription_list'] = "";
     $_SESSION['phonetics_transcription_array'] = "";
     $_SESSION['phonetics_single_char_yesno'] = false;
+    // shared font
+    $_SESSION['font_borrow_yesno'] = false;
+    $_SESSION['font_borrow_model_name'] = "ENSSBAS";
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
     // use legacy configuration for www.steno.ch
@@ -341,7 +344,10 @@ if ($_POST['token_size'] != "") {
     $_SESSION['layouted_original_text_filter_brackets'] = ($_POST['layouted_original_text_filter_brackets'] === "yes") ? true : false;
     $_SESSION['layouted_original_text_filter_dashes'] = ($_POST['layouted_original_text_filter_dashes'] === "yes") ? true : false;
     
-
+    // shared font
+    $_SESSION['font_borrow_yesno'] = ($_POST['font_borrow_yesno'] === "yes") ? true : false;
+    $_SESSION['font_borrow_model_name'] = htmlspecialchars($_POST['font_borrow_model_name']);;
+    
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";
     echo "actual_model: " . $_SESSION['actual_model'] . "<br>";
