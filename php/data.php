@@ -89,6 +89,7 @@ if ($_POST['font_borrow_yesno'] === "yes")  // use POST (SESSION not yet set)
     $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_POST['font_borrow_model_name']));
 /////////////////// end of patching //////////////////////////////////////////////////////////
 
+
 $test = ImportModelFromText($text_to_parse);
 $actual_model = $_SESSION['actual_model'];
 $_SESSION['last_updated_model'] = $actual_model;

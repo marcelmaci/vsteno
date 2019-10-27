@@ -152,6 +152,9 @@ function InitializeSessionVariables() {
     // shared font
     $_SESSION['font_borrow_yesno'] = false;
     $_SESSION['font_borrow_model_name'] = "ENSSBAS";
+    $_SESSION['font_importable_yesno'] = false;
+    $_SESSION['font_exportable_yesno'] = false;
+    
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
     // use legacy configuration for www.steno.ch

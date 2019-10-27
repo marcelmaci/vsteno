@@ -19,29 +19,116 @@
  
 /* This file contains functions to share fonts between two models. */
 
+/* Parts of model involved in font sharing:
+ *
+ * HEADER: session-variables token_distance_wide, spacer_tokens_combinations,
+ * spacer_vowel_groups, spacer_rules_list
+ * FONT: the entire part
+ * RULES: prespacer, spacer, postspacer
+ *
+ * These parts need to be copied from lending model and inserted into borrowing
+ * model.
+ *
+ * Special conditions to observe for lending and borrowing models:
+ *
+ * LENDING: must contain all these parts.
+ * BORROWING: must contain all these parts which can be:
+ * - either: mere dummy placeholder (= empty, without definitions)
+ * - or: parts with proper definitions (so that the model can optionally work
+ *   alone, without borrowing a foreign font - if this is wanted)
+ *
+ * CONTROLLING SESSION-VARIABLES:
+ *
+ * font_borrowing_yesno: indicates if font has to be borrowed (imported) or not
+ * font_borrowing_model_name: name of lending model
+ * font_exportable_yesno: indicates if model offers font that can be exported
+ * font_importable_yesno: indicates if model can accept a foreign font
+ *
+ * SPACERS:
+ *
+ * As for now, the following points must be strictly observed:
+ *
+ * PRESPACER: must prepare tokens for SPACER in such a way that all tokens
+ * and abbreviations are lower case and inside [] and {}.
+ * SPACER: copy or autospacing can be used.
+ * POSTSPACER: must prepare tokens for final rendering, which means that
+ * all tokens and abbreviations must be upper case. (This can be done
+ * outside postspacer, for example if borrowing model takes care of that.)
+ *
+ * All these parts are replaced entirely (no custom rules can be inserted
+ * inside spacer).
+ *
+ * Spacer-SubSections MAY NOT CONTAIN any additional argument, like :=prt
+ * or >=finalizer etc. If it is necessary to assign a variable (like
+ * :=prt) it must be done creating a separate SubSection just after
+ * prespacer.
+ *
+ */ 
+ 
 require_once "dbpw.php";
 require_once "import_model.php";
 
 // session variables related to font
 $variable_list = array("token_distance_wide", "spacer_token_combinations", "spacer_vowel_groups", "spacer_rules_list");
     
+// error handling
+global $font_import_export_errors;
+$font_import_export_errors = "";
+
+function CheckForFontErrors($caller, $text) {
+    global $font_import_export_errors, $variable_list;
+    // check if variables are present
+    foreach ($variable_list as $variable)
+        if (!(preg_match("/\"$variable\".*?:=.*?\".*?\";/s", $text)))
+            $font_import_export_errors .= "FONT ($caller): variable '$variable' and/or value missing in session<br>";
+    // check if model has font_importable/exportable_yesno option
+    switch ($caller) {
+        case "original" : 
+            if (!(preg_match("/\"font_importable_yesno\".*?:=.*?\"yes\";/s", $text)))
+                $font_import_export_errors .= "FONT ($caller): import no activated (set session-variable font_importable_yesno to 'yes')<br>";
+            break;
+        case "lender" : 
+            if (!(preg_match("/\"font_exportable_yesno\".*?:=.*?\"yes\";/s", $text)))
+                $font_import_export_errors .= "FONT ($caller): export no activated (set session-variable font_exportable_yesno to 'yes')<br>";
+            break;
+    }
+    // check if font section is present
+    if (!(preg_match("/#BeginSection\(font\).*?#EndSection\(font\)/s", $text)))
+        $font_import_export_errors .= "FONT ($caller): section 'font' is missing<br>";
+    // check if subsections are present
+    $subsections = array( "prespacer", "spacer", "postspacer");
+    foreach ($subsections as $section) 
+        if ((preg_match("/#BeginSubSection\($section\).*?#EndSection\($section\)/s", $text) != 0)) // != compares to 0 and false!
+            $font_import_export_errors .= "FONT ($caller): subsection '$section' is missing<br>";
+    if (mb_strlen($font_import_export_errors)>0) return true;
+    else return false;
+}
 
 function BorrowFont( $original_model_text, $lender_model_name ) {
+    global $font_import_export_errors, $global_error_string;
+    
+    $lender_model_text = LoadModelToShareFromDatabase($lender_model_name);
+    
+    //echo "Checkforerrors: " . CheckForFontErrors("original", $original_model_text) . "<br>";
+    //echo "Checkforerrors: " . CheckForFontErrors("lender", $lender_model_text) . "<br>";
 
-   $lender_model_text = LoadModelToShareFromDatabase($lender_model_name);
-/*
+    if ((CheckForFontErrors("original", $original_model_text)) || (CheckForFontErrors("lender", $lender_model_text))) {
+        $font_import_export_errors .= "FONT: foreign font not loaded<br>";
+        $global_error_string .= $font_import_export_errors;
+        return $original_model_text;
+    } 
+    
     // control output
-    ControlOutput("ORIGINAL:", $original_model_text);
-    ControlOutput("LENDER:", $lender_model_text);
-*/
+    //ControlOutput("ORIGINAL:", $original_model_text);
+    //ControlOutput("LENDER:", $lender_model_text);
+
     // preparations
     $original_model_text = StripOutUnnecessaryElements($original_model_text);
     $lender_model_text = StripOutUnnecessaryElements($lender_model_text);
     
     // control output
     //ControlOutput("STRIPORIGINAL:", $original_model_text);
-/*    ControlOutput("STRIPLENDER:", $lender_model_text);
-*/
+    //ControlOutput("STRIPLENDER:", $lender_model_text);
 
     // patch original model
     // header: session-part
@@ -132,6 +219,7 @@ function GetFontDefinitions($text) {
 }
 
 function ShareFontGetSubSection($type, $model_text) {
+    //if (preg_match("/#BeginSubSection\($type(?:,[^\)].*?)?\).*?#EndSubSection\($type(?:,[^\)].*?)?\)/s", $model_text, $matches))
     if (preg_match("/#BeginSubSection\($type\).*?#EndSubSection\($type\)/s", $model_text, $matches))
         $subsection = $matches[0];
     else 
