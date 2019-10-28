@@ -135,7 +135,7 @@ function LoadModelFromDatabase($name) {
     //echo "QUERY: $sql<br>";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc(); 
+        $row = $result->fetch_assoc();
         $output = $row['header'] . "\n" . $row['font'] . "\n" . $row['rules'];
         $insertion_key = $name;
         //$font[] = $insertion_key;       // add insertion key to $font

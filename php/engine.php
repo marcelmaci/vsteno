@@ -117,7 +117,8 @@ require_once "rendering.php";
 require_once "svgtext.php";
 
 // SE1-BACKPORTS: revision1
-$backport_revision1 = true;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
+// disable SE1 rev1 again: problem with vertical_compensation_x ?!
+$backport_revision1 = ($_SESSION['model_se_revision'] == 1) ? true : false;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
 
 //if ($backport_revision1) {
     require_once "se1_backports.php"; // always include se1_backports.php to make VPAINT work even if backports are disabled
@@ -581,6 +582,11 @@ function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_toke
         // add inconditional deltay to token if specified in token_list
         $old_y = $actual_y;
         $actual_y -= $steno_tokens[$token][offs_inconditional_delta_y_before] * $standard_height;
+        
+        
+        //echo "vertical_compensation_x: $vertical_compensation_x<br>";
+        // PROBLEM WITH vertical_compensation_x and backport_revision1: (?!)
+        // visible in german "steckte": [&T][&E] not correctly rendered when SE1 rev1 is selected!
         $vertical_compensation_x = ($old_y-$actual_y) / tan(deg2rad($_SESSION['token_inclination']));
         if (!($backport_revision1)) $vertical_compensation_x = 0; // disable vertical compensation (compatibility issue with revision1) - revision0 doesn't need compensation!
         //echo "inconditional_delta_y_before: vertical_compensation_x = $vertical_compensation_x<br>";

@@ -69,7 +69,7 @@ require_once "dbpw.php";
 require_once "import_model.php";
 
 // session variables related to font
-$variable_list = array("token_distance_wide", "spacer_token_combinations", "spacer_vowel_groups", "spacer_rules_list");
+$variable_list = array("token_distance_wide", "spacer_token_combinations", "spacer_vowel_groups", "spacer_rules_list", "model_se_revision");
     
 // error handling
 global $font_import_export_errors;
@@ -81,17 +81,10 @@ function CheckForFontErrors($caller, $text) {
     foreach ($variable_list as $variable)
         if (!(preg_match("/\"$variable\".*?:=.*?\".*?\";/s", $text)))
             $font_import_export_errors .= "FONT ($caller): variable '$variable' and/or value missing in session<br>";
-    // check if model has font_importable/exportable_yesno option
-    switch ($caller) {
-        case "original" : 
-            if (!(preg_match("/\"font_importable_yesno\".*?:=.*?\"yes\";/s", $text)))
-                $font_import_export_errors .= "FONT ($caller): import no activated (set session-variable font_importable_yesno to 'yes')<br>";
-            break;
-        case "lender" : 
-            if (!(preg_match("/\"font_exportable_yesno\".*?:=.*?\"yes\";/s", $text)))
-                $font_import_export_errors .= "FONT ($caller): export no activated (set session-variable font_exportable_yesno to 'yes')<br>";
-            break;
-    }
+    // check if models have font_importable/exportable_yesno option
+    $impexp = ($caller === "original") ? "import" : "export";
+    if (!(preg_match("/\"font_$impexp" . "able_yesno\".*?:=.*?\"yes\";/s", $text)))
+        $font_import_export_errors .= "FONT ($caller): $impexp not activated (set session-variable font_$impexp" . "able_yesno to 'yes')<br>";
     // check if font section is present
     if (!(preg_match("/#BeginSection\(font\).*?#EndSection\(font\)/s", $text)))
         $font_import_export_errors .= "FONT ($caller): section 'font' is missing<br>";
