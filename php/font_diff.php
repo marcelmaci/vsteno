@@ -61,7 +61,7 @@ function get_element_as_string($element) {
 }
 
 // fonts
-$font_list = array("DESSBAS", "SPSSBAS", "FRSSBAS", "ENSSBAS");
+$font_list = array("ENSSBAS", "FRSSBAS", "SPSSBAS", "DESSBAS");
 $base_font = $font_list[0];
 $font_data = array();
     

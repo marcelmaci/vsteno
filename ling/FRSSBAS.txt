@@ -55,15 +55,15 @@
 	<p>This is based on the german and spanish models (DESSBAS, SPSSBAS). 
 	Meaning of the characters: FR = french, SS=Stolze-Schrey, BAS=Grundschrift).</p> 
 	
-	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
+	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an 
 	inclination of 60 degrees.</p>
-	<p>The model is very early stage and has to be considered alpha (i.e. with a high percentage of incorrect words).</p>
+	<p>The model is now in beta stage (i.e. it still has to be improved and tested but many words are calculated correctly).</p>
 	";
 		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// model version
 		"model_version" := "0.2";
 		"required_version" := "0.2";
-		"model_date" := "4. September 2019";
+		"model_date" := "5. September 2019";
 		// wide distance
 		"token_distance_wide" := "17";
 
@@ -1937,3 +1937,4 @@
 		//"ü" => "Ü"; 
 	#EndSubSection(finalizer,=:prt)
 #EndSection(rules)
+

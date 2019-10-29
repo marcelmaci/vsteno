@@ -87,8 +87,9 @@
 	"copyright_footer" := "Created with Free Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// set versions
 		"model_version" := "0.3";
-		"model_date" := "26. Juli 2019";
+		"model_date" := "28. August 2019";
 		"required_version" := "0.1";
+		"model_se_revision" := "0";
 		// disable linguistical analysis
 		"hyphenate_yesno" := "no";
 		"composed_words_yesno" := "no";
@@ -100,9 +101,12 @@
 		"stems_list" := "";
 		"suffixes_list" := ""; // use non caputuring groups! (?:)
 		// engine parameters
-		"token_distance_wide" := "18";
 		"title_text" := "Spanisch";
 		"introduction_text" := "Spanisches System 'SPSSBAS' (Stolze-Schrey, Grundschrift)";
+		// font
+		"token_distance_wide" := "18";
+		"font_importable_yesno" := "yes";
+		"font_exportable_yesno" := "yes";
 		// spacer groups
 		// L/R: left, right
 		// M/N/P/K: minus, normal, plus (more or less space needed), circle (special space rules)
