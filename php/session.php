@@ -158,6 +158,10 @@ function InitializeSessionVariables() {
     
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
+    $_SESSION['spacer_vowel_groups'] = "";
+    $_SESSION['spacer_rules_list'] = "";
+    $_SESSION['spacer_token_combinations'] = "";
+    
     // use legacy configuration for www.steno.ch
     $_SESSION['rendering_middleline_yesno'] = true;
     $_SESSION['rendering_polygon_yesno'] = false;

@@ -25,6 +25,7 @@ require_once "data.php";
 require_once "parser.php";
 require_once "engine.php";
 require_once "linguistics.php";
+require_once "share_font.php";
 
 function InsertHTMLHeader() {
     if ($_SESSION['output_integratedyesno']) {
@@ -85,6 +86,8 @@ function ResetSessionGetBackPage() {
         // now load model based on session-variables
         //echo "model: " . $_SESSION['actual_model'];
         $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
+        if ($_POST['font_borrow_yesno'] === "yes")  // use POST (SESSION not yet set)
+            $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_POST['font_borrow_model_name']));
         //echo "text_to_parse: $text_to_parse<br>";
         $output = StripOutComments($text_to_parse);
         $output = StripOutTabsAndNewlines($output);
@@ -161,7 +164,7 @@ function AddMarkings($text) {
 }
 
 function CalculateStenoPage() {
-    global $global_debug_string, $global_error_string;
+    global $global_debug_string, $global_error_string, $backport_revision1;
     $global_debug_string = "";
     CopyFormToSessionVariables();
     InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
@@ -224,9 +227,12 @@ function CalculateStenoPage() {
                 $hunspell_yesno = ($_SESSION['composed_words_yesno']) ? "yes" : "no";
                 $hyphens_yesno = ($_SESSION['hyphenate_yesno']) ? "yes" : "no";
                 $phonetics_yesno = ($_SESSION['phonetics_yesno']) ? "yes" : "no";
-                echo "<h2>DEBUGGING</h2><br><b>PARAMETERS</b><br>MODEL: $model_name<br>HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)<br>";
+                $font_output = ($_POST['font_borrow_yesno'] === "yes") ? $_POST['font_borrow_model_name'] : $model_name; 
+                echo "<h2>DEBUGGING</h2><br><b>PARAMETERS</b><br>MODEL: $model_name<br>FONT: $font_output<br>";
+                echo "ENGINE (SE): rev" . $_SESSION['model_se_revision'] . " (" . (($backport_revision1 === true) ? "true" : "false") . ")<br>"; 
+                echo "HUNSPELL: " . $_SESSION['language_hunspell'] . " ($hunspell_yesno)<br>";
                 echo "HYPHENATOR: " . $_SESSION['language_hyphenator'] . " ($hyphens_yesno)<br>";
-                echo "PHONETICS: " . $_SESSION['language_espeak'] . " ($phonetics_yesno)";
+                echo "PHONETICS: " . $_SESSION['language_espeak'] . " ($phonetics_yesno)<br>";
             }
             echo NormalText2SVG( $text );
             if ($_SESSION['output_format'] === "debug") {

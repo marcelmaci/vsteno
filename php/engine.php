@@ -110,7 +110,7 @@
   $backport_revision1 is set.
   
 */
- 
+
 require_once "data.php";
 require_once "constants.php";
 require_once "rendering.php";
@@ -118,7 +118,9 @@ require_once "svgtext.php";
 
 // SE1-BACKPORTS: revision1
 // disable SE1 rev1 again: problem with vertical_compensation_x ?!
+//echo "set that stuff: " . $_SESSION['model_se_revision'] . gettype($_SESSION['model_se_revision']) . "<br>";
 $backport_revision1 = ($_SESSION['model_se_revision'] == 1) ? true : false;  // vertical_compensation_x is (probably) not compatible with revision1 => disable it for release 0.1!
+//echo "backport_revision1: " . $backport_revision1 . gettype($backport_revision1) . "<br>";
 
 //if ($backport_revision1) {
     require_once "se1_backports.php"; // always include se1_backports.php to make VPAINT work even if backports are disabled
@@ -559,7 +561,7 @@ function GetLateEntryPoint( $token ) {
 
 function InsertTokenInSplinesList( $token, $position, $splines, $preceeding_token, $actual_x, $actual_y, $vertical, $distance, $shadowed, $factor ) {
         global $steno_tokens, $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $half_upordown, $one_upordown, 
-        $standard_height, $baseline_y, $dont_connect, $separate_spline;
+        $standard_height, $baseline_y, $dont_connect, $separate_spline, $backport_revision1;
         $token_definition_length = count( $steno_tokens[$token] );           // continue splines-list
         //echo "stenotokens($token) - DUMP: ";
        // var_dump($steno_tokens["IST"]);

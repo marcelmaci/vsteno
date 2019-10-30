@@ -87,6 +87,22 @@ $text_to_parse = LoadModelFromDatabase($model_to_load);
 // use the following line to test (or comment out to use traditional functionality ///////
 if ($_POST['font_borrow_yesno'] === "yes")  // use POST (SESSION not yet set)
     $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_POST['font_borrow_model_name']));
+else {
+    // since foreign font loading is implemented as a check box it's not sure that font specific
+    // variables are actual when calculation is launched.
+    // therefore (re)load font-session variables even if no foreign font is loaded.
+    // (in a certain way, the orginal model must "borrow" parts of itself - session variables -
+    // to be sure that it uses the correct parameters)
+    // this is only necessary for session variables (everything else, like pre/post/spacer
+    // will be loaded directly by ImportModel())
+    $font_session_variables = ShareFontGetSubsection( "session", $text_to_parse );
+    //echo $font_session_variables;
+    // get complete variable list (definitions) from lending font
+    $lender_definition_list = GetLenderSessionVariableDefinitions( $font_session_variables );
+    //echo "lender definition list: $lender_definition_list<br>";
+    actualize_font_session_variables($lender_definition_list);
+}
+    
 /////////////////// end of patching //////////////////////////////////////////////////////////
 
 

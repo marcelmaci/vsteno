@@ -67,6 +67,7 @@
  
 require_once "dbpw.php";
 require_once "import_model.php";
+require_once "options.php";
 
 // session variables related to font
 $variable_list = array("token_distance_wide", "spacer_token_combinations", "spacer_vowel_groups", "spacer_rules_list", "model_se_revision");
@@ -97,6 +98,20 @@ function CheckForFontErrors($caller, $text) {
     else return false;
 }
 
+function actualize_font_session_variables($t) {
+    global $variable_list, $backport_revision1;
+    //echo "$t<br>";
+    foreach ($variable_list as $variable) {
+            //echo "test: $variable<br>";
+            $r = preg_match("/\"$variable\".*?:=.*?\"(.*?)\".*?;/s", $t, $matches);
+            $value = $matches[1];
+            CheckAndSetSessionVariable( $variable, $value );
+    }
+    // actualize global backport_revision1 variable
+    $backport_revision1 = ($_SESSION['model_se_revision'] == 1) ? true : false;
+}
+    
+    
 function BorrowFont( $original_model_text, $lender_model_name ) {
     global $font_import_export_errors, $global_error_string;
     
@@ -129,6 +144,10 @@ function BorrowFont( $original_model_text, $lender_model_name ) {
     $original_model_text = StripOutFontSessionVariables( $original_model_text );
     // get complete variable list (definitions) from lending font
     $lender_definition_list = GetLenderSessionVariableDefinitions( $lender_model_text );
+    
+    // actualize session variables
+    actualize_font_session_variables($lender_definition_list);
+  
     //ControlOutput("DEFINITIONS:", $lender_definition_list);
     
     // add definition list to original model
@@ -137,6 +156,7 @@ function BorrowFont( $original_model_text, $lender_model_name ) {
     // font-part
     // get font definitions
     $font_section = GetFontDefinitions($lender_model_text);
+    
     //ControlOutput("FONT:", $font_section);
     // replace font definitions in original model
     $original_model_text = preg_replace("/#BeginSection\(font\).*?#EndSection\(font\)/s", "$font_section", $original_model_text);
