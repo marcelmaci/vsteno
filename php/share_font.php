@@ -76,6 +76,24 @@ $variable_list = array("token_distance_wide", "spacer_token_combinations", "spac
 global $font_import_export_errors;
 $font_import_export_errors = "";
 
+function CheckSharedFontAccess($model_name) {
+    global $standard_models_list;
+    // limit access to database for shared fonts
+    // returns true if user has right to access the model
+    // models that can be included are:
+    // - standard models ($standard_models_list)
+    // - user model (getDBUserModelName()) - user must be logged in
+    $result = false;
+    foreach ($standard_models_list as $name => $description) {
+        if ($name === $model_name) {
+            $result = true;
+            break;
+        }
+    }
+    if (($_SESSION['user_logged_in']) && ($name === getDBUserModelName())) $result = true;
+    return $result;
+}
+
 function CheckForFontErrors($caller, $text) {
     global $font_import_export_errors, $variable_list;
     // check if variables are present
@@ -117,6 +135,13 @@ function BorrowFont( $original_model_text, $lender_model_name ) {
     
     $lender_model_text = LoadModelToShareFromDatabase($lender_model_name);
     
+    // limit db access for shared font
+    if (!(CheckSharedFontAccess($lender_model_name))) {
+        $font_import_export_errors .= "FONT: access to foreign font forbidden<br>FONT: foreign font not loaded<br>";
+        $global_error_string .= $font_import_export_errors;
+        return $original_model_text;
+    }
+        
     //echo "Checkforerrors: " . CheckForFontErrors("original", $original_model_text) . "<br>";
     //echo "Checkforerrors: " . CheckForFontErrors("lender", $lender_model_text) . "<br>";
 
