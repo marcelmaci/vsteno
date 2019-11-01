@@ -101,7 +101,7 @@ require_once "options.php";  // for whitelist (session variables)
 //require_once "data.php";
 
 //////////////////////////////////////// load from database ///////////////////////////////////////////////
-// special LoadModel function
+// special LoadModel function database
 function LoadModelToShareFromDatabase($name) {
     // same as LoadModelFromDatabase but without setting global variables
     global $conn, $insertion_key, $font, $combiner, $shifter, $rules, $functions_table;
@@ -125,6 +125,22 @@ function LoadModelToShareFromDatabase($name) {
         die_more_elegantly("<p>Kein Eintrag in models.</p>");
         return null;
     }
+}
+// special LoadModel function file
+function LoadModelToShareFromFile($name) {
+    // same as LoadModelFromDatabase but without setting global variables
+    global $conn, $insertion_key, $font, $combiner, $shifter, $rules, $functions_table;
+    $complete_filename = "../ling/$name.txt";
+    //echo "$complete_filename<br>";
+    $myfile = fopen("$complete_filename", "r"); // font must be in ling directory
+    if ($myfile === false) {
+        die("Unable to open file!");
+        return null;
+    }
+    $output = fread($myfile,filesize("$complete_filename"));
+    //echo "fread: $output<br>";
+    fclose($myfile);
+    return $output;
 }
 
 function LoadModelFromDatabase($name) {

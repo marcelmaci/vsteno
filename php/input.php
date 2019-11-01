@@ -83,7 +83,9 @@ Farbe <input type="Text" name="introduction_color"  size="10" value="<?php echo 
 
 ?>
 Font: <input type="checkbox" name="font_borrow_yesno" value="yes" <?php echo ($_SESSION['font_borrow_yesno']) ? "checked" : ""?>> Name: 
-<input type="text" name="font_borrow_model_name"  size="8" value="<?php echo $_SESSION['font_borrow_model_name']; ?>"><br>
+<input type="text" name="font_borrow_model_name"  size="8" value="<?php echo $_SESSION['font_borrow_model_name']; ?>">
+<input type="checkbox" name="font_load_from_file_yesno" value="yes" <?php echo ($_SESSION['font_load_from_file_yesno']) ? "checked" : ""?>> File
+<br>
 
 Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch<br>
 Rendering: 

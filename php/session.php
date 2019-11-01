@@ -155,6 +155,7 @@ function InitializeSessionVariables() {
     $_SESSION['font_borrow_model_name'] = "ENSSBAS";
     $_SESSION['font_importable_yesno'] = false;
     $_SESSION['font_exportable_yesno'] = false;
+    $_SESSION['font_load_from_file_yesno'] = false;
     
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
@@ -354,7 +355,8 @@ if ($_POST['token_size'] != "") {
     
     // shared font
     $_SESSION['font_borrow_yesno'] = ($_POST['font_borrow_yesno'] === "yes") ? true : false;
-    $_SESSION['font_borrow_model_name'] = htmlspecialchars($_POST['font_borrow_model_name']);;
+    $_SESSION['font_borrow_model_name'] = htmlspecialchars($_POST['font_borrow_model_name']);
+    $_SESSION['font_load_from_file_yesno'] = ($_POST['font_load_from_file_yesno'] === "yes") ? true : false;
     
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";
