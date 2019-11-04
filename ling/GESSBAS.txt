@@ -1,6 +1,6 @@
 #BeginSection(header)
 	// 
-	// ENSSBAS - VSTENO shorthand model for english
+	// GESSBAS - Generic Shorthand Font (Model) in Stolze-Schrey for VSTENO 
 	// Set of rules interpreted and processed by VSTENO (www.vsteno.ch) 
 	// (c) 2019 - Marcel Maci (m.maci@gmx.ch)
  	//
@@ -22,125 +22,12 @@
 	// program).
 	//
 	// Model naming:
-	// EN = English, SS = Stolze-Schrey, BAS = basic system (Grundsystem)
+	// GE = English, SS = Stolze-Schrey, BAS = basic system (Grundsystem)
 	//
-	// General remarks for this model:
-	// - derived from german, spanish and french
-	// - spacer and main parts from spanish
-	// - phonetic parts from french
-	// - tokens: from french (i.e. improvements in spanish not included*)
-	// * must be added manually
-	//
-	// Based on:
-	//  
-	// [1] Emil Hug, Englische Stenographie nach dem Einigungssystem Stolze-Schrey,
-	//     Offizielle Übertragung des Allgemeinen Schweizerischen Stenographen-
-	//     vereins (Zentralverein Stolze-Schrey), 23. Auflage 1981, Verlag und 
-	//     Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins,
-	//     Druckerei Wetzikon AG, 8620 Wetzikon
 	#BeginSubSection(session)
-		// license stuff
-		"license" := "
-	<p>SPSSBAS - VSTENO shorthand model for spanisch<br>
-	Set of rules interpreted and processed by VSTENO (www.vsteno.ch)<br> 
-	(c) 2019 - Marcel Maci (m.maci@gmx.ch)</p>
-	<p>This program* is free software: you can redistribute it and/or modify it under	
-	the terms of the GNU General Public License as published by the Free Software
- 	Foundation, either version 3 of the License, or (at your option) any later
- 	version.</p>
-	<p>This program is distributed in the hope that it will be useful, but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-	FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
-	details.</p>
- 	<p>You should have received a copy of the GNU General Public License along with
-	this program. If not, see <http://www.gnu.org/licenses/>.</p>
-	<p>* As explained in the documentation of VSTENO, shorthand models are considered
-	as interpreted code (and thus code licensed under the same terms as the main 
-	program).</p>
-	<p>Model naming:<br>
-	EN = English, SS = Stolze-Schrey, BAS = basic system (Grundsystem)</p>
-	";
-	"release_notes" := "<p>Based on:<br>
-	[1] Emil Hug, Englische Stenographie nach dem Einigungssystem Stolze-Schrey, Offizielle Übertragung 
-des Allgemeinen Schweizerischen Stenographenvereins (Zentralverein Stolze-Schrey), 23. Auflage 1981, Verlag und 
-Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetzikon AG, 8620 Wetzikon</p>
-	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an
-	inclination of 60 degrees.</p>
-	<p>This model is still under developpment and has to be considered as pre-alpha state (= just a few words work correctly).</p>
-		";
-	"copyright_footer" := "Created with Free Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
-		// set versions
-		"model_version" := "0.1";
-		"model_date" := "10. Oktober 2019";
-		"required_version" := "0.2";
-		"model_se_revision" := "0";
-		// configure linguistical analysis
-		"analysis_type" := "selected";
-		"hyphenate_yesno" := "yes";       // new feature for english: combine 3 types of analysis
-		"composed_words_yesno" := "yes";  // 1) hyphenation 2) composed words 3) phonetics
-		"phonetics_yesno" := "yes";
-		"phonetic_alphabet" := "espeak"; 
-		// set language
-		"language_hunspell" := "en_US";		// set it, even if not used
-		"language_hyphenator" := "en-us";	// idem
-		"language_espeak" := "en-us"; 		// use american english because r's are pronounced as r's
-		// note: selection en-us affects also vowels, for example:
-		// grasp, gasp, ask, fast => ä
-		// tube, new, suit, duke => u 
-		// all these words are written differently than in the cited manual [1]!
-		// set morphological parameters
-		"prefixes_list" := "";
-		"stems_list" := "";
-		"suffixes_list" := ""; // use non caputuring groups! (?:)
-		// The problem is as follows:
-		// In the first version of this model, there was no analysis for composed words. So, composed
-		// were recognized using lists that described longer words (dividing them into parts).
-		// Example: therefore, yourself => rules that transform them to {THERE}{FOR}, {YOUR}{SELF}
-		// Now that hunspell (and word composing) comes into action, many of these words are 
-		// recognized as individual words and therefore separated:
-		// there|fore, your|self
-		// The consequence is that the old rules now get applied to those (several) parts of the words, 
-		// which leads to horrible results, especially in combination with hybrid rules.
-		// Consider the following case:
-		// "tstwrt(yourself)" => { "^.*?$", "{YOUR}{SELF}" }; 
-		// Since tstwrt(yourself) is true for both parts - i.e. your and self - the rule replaces
-		// twice your and self by {YOUR}{SELF} creating {YOUR}{SELF}|{YOUR}{SELF} ... (sic!)
-		// Blocking certain elements - like self - via block_list doesn't really solve the problem.
-		// The only solution: 
-		// 1) rewrite the rule (damn, that's a pain in the ass ... :):):)
-		// 2) introduce a new type of hybrid rule (tstlng()) which allows to specify exactly
-		//    to what we are comparing.
-		// ad 1) the new rules must take care of staging:
-		// both the wrt and lng (parallel) form don't have staging, but the shortener does.
-		// So, in general, both the wrt/lng (condition1) and the phonetic condition (condition2)
-		// of hybrid rules must be formulated much more carefully.
-		// Unsolved question: What should happen to wrt/lng form when a rule matches? Is there a possibility
-		// to mark these forms as "treated", so that following rules won't be applied any more?
-		// (until now wrt/lng forms never change/can't be modified)
-		// The positive aspect: less rules will be necessary to describe the same transformations
-
-		"block_list" := "er, ty"; // block fore ... therefore is totally wrong otherwise ..
-		"filter_list" := "";
-		// set phonetics parameters
-		"phonetics_single_char_yesno" := "no";
-		"phonetics_transcription_list" := "
-			"[Cc]ouncil(s?)":"kaunsil$1", // sorry, dear stenographs, this is complete nonsense (added it anyway ...)
-			"[Ee]leven":"ElEvEn",
-			"[Oo]belisc(s)?":"obElisk$1",
-			"[Bb]ombard(s)?":"bombard$1",
-			"[Oo]xidate(s)?":"oxideIt$1",  // use x for transcription instead of ks
-			"[Aa]ccidence":"axid@ns",
-			"[Ii]mbecile(s)?":"imbEsil$1",
-			"[Cc]heque(s)?":"SEk$1",
-			"[Uu]surer(s)?":"juSErEr$1",
-			"[Tt]oward":"toErd",
-			"[Aa]rmour(?:y|ie)(s)?":"armEri$1",
-			"[Aa]ssociate([sd])?":"asoSiEt$1"
-		";		
+		// only font variables		
 		// engine parameters
 		"token_distance_wide" := "18";
-		"title_text" := "Englisch";
-		"introduction_text" := "Englisches System 'ENSSBAS' (Stolze-Schrey, Grundschrift)";
 		// spacer groups
 		// L/R: left, right
 		// M/N/P/K: minus, normal, plus (more or less space needed), circle (special space rules)
@@ -242,280 +129,11 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 			R55:[C28,V1,D55,?],
 			R56:[C28,V2,D56,]";
 		"font_exportable_yesno" := "yes";
+		"font_importable_yesno" := "no";
+		"model_se_revision" := "0";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
-		
-		// rules applied after after linguistic analysis (eSpeak)
-		
-		// immediate corrections
-		// segmentatation
-		// in stage0 non identifiable space hyphen space are replaced by |
-		// it seems that eSpeak replaces | by a space (transcribing rest phonetically)
-		// based on that assumption (..) => replace space(s) with | again to obtain desired result
-		// (NOTE: This all might be horribly wrong ... :))
-		" " => "|";
-
-		// phonetic
-		"tstwrt(^[Pp]oor)" => { "p'U@", "pur" }; // poorly etc.
- 		"tstwrt(^[Cc]areful)" => { "k'e@f@L", "kärful" }; // careful etc.
-		"tstwrt(part)" => { "p[',]?A@t", "part" }; // counterpart
-		"A@t" => "art"; // smart
-		"o@t" => "ort"; // port
-		"tstwrt([Ww]hereas)" => { "@z$", "äz" };
-		"tstwrt([Ii]nsurm)" => { "Ins3m", "insör+m" }; // insurmountable
- 		"tstwrt(^[Mm]iddle)" => { "m'?[iI]d@L", "midl" }; // middle-aged
-
-		// separations, segmentation (composed words)
-		// NOTE: These are just (bad) examples
-		// until now VSTENO can't handle both linguistic AND phonetic analysis
-		// a proper analysis of composed words is only possible if both analysis can be done
-		// for the moment add these examples (but goal is to adapt program for better
-		// and more general results!)
-		"^s'VnsEt(s)?" => "sön|set$1"; // sunset(s)
-		"^s'i:saId(s)?" => "si|said$1"; // seaside(s)
-		"^g'aslaIt(s)?" => "gäs|laIt$1"; // gaslight(s)
-		"^(p.*?s)(port(s)?)" => "$1|$2"; // passports
-		"^(S'u:)(meIk3)" => "$1|$2"; // shoemaker
-
-		// morphological markings
-		// prefixes
-		////////////////// primary prefixes (= at beginning) //////////////////////////////////
-		// chapter 10 (rules that must preceed)
-		// inter/enter/intr- (,Intr@ Int'Er 'Intr)
-		//"tstwrt(^[IiEe]nte?r)" => { "^([',]?.nt(?:[',]?[@3E]r?|r@))", "INTER+" };
-		"tstwrt(^[IiEe]nte?r)" => { "^([',]?[EI]nt(?:r@|(?:'?E)?r|3r?))", "INTER+" };
-		
-		// chapter 9
-		// be-
-		"tstwrt(^[Bb]e)" => { "^(b[',]?[iI][2:;]*)", "BI+" }; // be-
-		// de-
-		"tstwrt(^[Dd]e)" => { "^(d[',]?[iI][2:;]*)", "DI+" };
-		// re- (r'E)
-		"tstwrt(^[Rr]e)" => { "^(r[',]?[iIEe][2:;]*)", "RI+" };
-		// circum-
-		"tstwrt(^[Cc]ircum)" => { "^(s3:k'Vm|s'3:k@m|s,3:k@m)", "SIRKUM+" };
-		// sub-
-		"tstwrt(^[Ss]ub)" => { "^(s'?Vb|s@b)", "SUB+" };
-		// un-
-		"tstwrt(^[Uu]n)" => { "^([',]?Vn)", "UN+" };
-		// extra- (,Ekstr@)
-		"tstwrt(^[Ee]xtra?)" => { "^([',]?Ekstr[',]?[a@]?)", "EXTRA+" };
-		// ex-
-		"tstwrt(^[Ee]x)" => { "^(E[kg][sz]|'E[gk][zs])", "EX+" };
-		// in-
-		"tstwrt(^[Ii]n)" => { "^(,[iI]n|'?[iI]n)", "IN+" };
-		// pro-
-		"tstwrt(^[Pp]ro)" => { "^(pro)", "PRO+" };
-
-		// chapter 10
-		// anti/ante-
-		"tstwrt(^[Aa]nt[ie])" => { "^([',]?.nt.[2:;]?)", "ANTI+" };
-		// countra/counter/contr- (k,0ntr@)
-		"tstwrt(^[Cc]ou?nt(?:ra|e?r))" => { "^(k[',]?.*?nt(?:3|r.))", "CONTR+" };
-		// acom- (a#kVm)
-		"tstwrt(^[Aa]c?co[nm])" => { "^(a#k[',]?.[:;]?[nm])", "ACOM+" };	
-		// con/com-
-		"tstwrt(^[Cc]o[nm])" => { "^(k[',]?.[:;]?[nm])", "CON+" };
-		// per/pur- (p'3:)
-		"tstwrt(^[Pp][eu]r)" => { "^(p[',]?(?:3[:;]?|Er))", "PER+" };
-		// sur- (s3)
-		"tstwrt(^[Ss]ur)" => { "^(s[',]?(?:3:?|Er))", "SUR+" }; // surrender = surender
-		// trans/tran-
-		"tstwrt(^[Tt]ranscri)" => { "^(tr.*?ns)", "TRANS+s" }; // tran-scription
-		"tstwrt(^[Tt]ranspir)" => { "^(tr.*?ns)", "TRANS+s" }; // tran-spiration, tran-spire
-		"tstwrt(^[Tt]rans?)" => { "^(tr[',]?.n[sz]?)", "TRANS+" };
-		
-		// chapter 11
-		// -ate
-		"(?<!['ae]|ä)(?:@|I2?|E)t(s)?$" => "{ET}$1"; // unstressed suffix, most go here because only in analyzer stress marking ' is available
- 		"(?<!')(?:@|I2?)tli$" => "{ET}{LY}"; // quietly
-		"(?<!['ae]|ä)(?:@|I2?|E)t(s)?\|" => "{ET}$1|";  // trumpet-call
-
-		///////////////// secondary prefixes (= after primary prefix) /////////////////////////
-		// chapter 10 (rules that must preceed)
-		// inter/enter/intr- (,Intr@ Int'Er 'Intr)
-		"tstwrt([IiEe]nte?r)" => { "\+([',]?[EI]nt(?:r@|(?:'?E)?r|3r?))", "+INTER+" }; // uninteresting
-		
-
-		// chapter 9
-		// +be-
-		"tstwrt(be)" => { "\+b[',]?[iI][2:;]", "+BI+" }; // be-
-		// +de-
-		"tstwrt(de)" => { "\+d[',]?[iI][2:;]", "+DI+" };
-		// +re-
-		"tstwrt(re)" => { "\+r[',]?[iIEe][2:;]", "+RI+" };
-		// +circum-
-		"tstwrt(circum)" => { "\+(s3:k'Vm|s'3:k@m|s,3:k@m)", "+SIRKUM+" };
-		// +sub-
-		"tstwrt(sub)" => { "\+(s'Vb|s@b)", "+SUB+" };
-		// +un-
-		"tstwrt(un)" => { "\+(Vn|,Vn)", "+UN+" };
-		// +extra-
-		"tstwrt(extra)" => { "\+([',]?Ekstr@|Ekstr[',]?a)", "+EXTRA" };
-		// +ex-
-		"tstwrt(ex)" => { "\+(E[kg][sz]|'E[gk][zs])", "+EX+" };
-		// +in-
-		"tstwrt(in)" => { "\+(,[iI]n|'?[iI]n)", "+IN+" };
-		// +pro-
-		"tstwrt(pro)" => { "\+(pro)", "+PRO+" };
-
-		// chapter 10
-		// con/com-
-		"tstwrt([Cc]o[nm])" => { "\+(k[',]?.[:;]?[nm])", "+CON+" };
-		
-		
-		//////////////////// corrections (morphology) ////////////////////////////////////
-		
-		"tstwrt(^([Uu]n)?reason)" => { "RI\+", "ri" }; // unreasonable
-		"tstwrt(^([Uu]n)?real)" => { "RI\+", "ri" }; // (un)real(istic) etc. 
-		"tstwrt(^[Bb](ee|ea|it)ch)" => { "^BI\+", "bi" }; // beech, beach, bich
-		"tstwrt(^[Cc]om[ei])" => { "CON\+", "köm" }; // come, comes, comeback, coming
-		"tstwrt(^[Bb]e(en|ings?)?$)" => { "^BI\+(.*?)$", "bi$1" }; // eliminate +
-		"tstwrt(^[Dd]eary$)" => { "^.*?$", "diri" };
-
-		//////////////////// end corrections (morphology) ///////////////////////////////
-
-		"UN\+s@L" => "un+sl"; // unsling
-		
-		//"tstwrt(x)" => { "ks", "x" }; // keep an eye on this rule: produces wrong result in case of combination of x and cc (for example)
-		"ks" => "x"; // for the moment: treat all ks as x to detect wrong cases
-		"tstwrt(kes$)" => { "x$", "ks$" }; // recorrect: takes, wakes(ks)
-		"tstwrt([ck]s$)" => { "x", "ks" }; // recorrect: politics, looks (ks)
-		"tstwrt(cs)" => { "x", "ks" }; // recorrect: ecstasy (ks) - might produce wrong results!
-		"tstwrt(xc(?!ept))" => { "EX\+", "EX+s" }; // recorrect: excess - might produce wrong results (exceptionally: no s!)
-
-		"\?" => "t"; // eSpeak seems to use that as a t (in written, for example)
-		// -ism
-		",?Iz@m([sz])?$" => "ism$1";
-
-		//"tstwrt(^[Dd]is)" => { "^(?:dI2s|d,Is)", "dis" }; // disarm (dis-), disappear
-		"tstwrt(^[Dd]is)" => { "^dI2s", "dis" }; // disarm (dis-), disappear
-		"tstwrt(^[Dd]is)" => { "^d,Is", "dis" }; // disarm (dis-), disappear
-		
-		// dif-
-		"tstwrt(^[Dd]if)" => { "^d,If", "dif" }; // differential
-		
-		// im-/in-
-		"tstwrt(^[Ii][mn])" => { "^I([mn])", "i$1" }; // impatient
-		
-		"tstwrt(ings?$)" => { "IN([zs])?$", "iN$1" };
-		"tstwrt(izes?$)" => { "aIz(@[zs])?$", "aiz$1" };
-		"tstwrt(ied$)" => { "Id", "id" };
-
-		// mple, dle etc.
-		"tstwrt(mple$)" => { "p@L", "pl" }; // simple
-		"tstwrt([dtgcxbpksfz]le[ds]?$)" => { "@L([tdsz])?", "l$1" }; // middle, cattle, angle, uncle, axle, usable, principle
-
-		"Enst$" => "änst"; // against
-		"^sI(ks|x)" => "si$1"; // sixteen
-		"I([sz])$" => "i$1"; // ladies
-		"f'?InIS" => "finiS"; // finisher
-		"ItS" => "itS"; // furniture
-		"(ks|x)I([md])" => "$1i$2"; // maximum, accident
-		"tstwrt(idge$)" => { "IdZ$", "idZ" }; // cartridge
-		"tstwrt(id$)" => { "Id$", "id" }; // splendid
-		"bItr" => "bitr"; // arbitrage
-		
-		"tstwrt(^[Rr]are)" => { "^r'?e@", "rär" }; // rarely 
-		"sIdli$" => "sidli"; // cursedly
-
-		"(?<!['eEaAoOä])I(?!(?:[2#k;m+]|NTER|RKUM|N\+))" => "E"; 	// messenger // I declare this officially the worst rule in the whole model ... !
-		"'" => ""; 	// filter out primary stress (added by eSpeak, not necessary for transcription)
-		"," => ""; 	// "         secondary "
-		"a#" => "E"; // appearently this is used as schwa by eSpeak ...
-		"tstwrt(er$)" => { "aI3$", "aiEr" }; // buyer
-		"i@r" => "ir"; // serious
-		"I#" => "i"; 	// axes, emancipate
-		"a(?![IiUuRr])" => "ä";	// bag
-		"mänI2dZ" => "mänEdZ"; // manage-
-		"(?<!EXTR)A:?(?!N[ST]|COM)" => "a"; 	// calm // not in prefixes like trans-, ante-, anti-, accom- etc.
-		//"er" => "ör";	// hair (!= her), err (?)
-		// so, here's the first bizarre problem in english:
-		// hair vs err => 'e@ vs h'e@ (identical transcription by eSpeak)
-		// shorthand: här vs ör (different vowels)
-		// I suppose that written form can be taken as criteria to distinguish between the two:
-		// 1) air => är
-		// 2) er(r) => ör
-		"tstwrt(ars?)" => { "[E3]([sz])?$", "Er$1" }; // dollars
-		"tstwrt(aer)" => { "e@r", "är" }; // aerial
-		"tstwrt(air)" => { "e@", "är" };
-		"tstwrt(er)" => { "e@", "ör" };
-		"tstwrt(er$)" => { "3$", "Er" }; // matter
-		"tstwrt(ors$)" => { "3z", "Erz" }; // oppressors
-		"tstwrt(ore?)" => { "[oO]@", "or" };
-		"tstwrt(ure?)" => { "[uU]@", "ur" };
-		"i@3r" => "ir"; // appearence
-		// another case
-		"tstwrt(are$)" => { "e@$", "är" }; // spare
-		"aI@L" => "aIL"; // isle
-		"aI3" => "aIr"; // fire
-		"tstwrt(ower)" => { "aU3", "auEr" }; // power
-		"^aU3$" => "aur"; // hour
-		"aU3" => "auEr"; // coward
-		"@3" => "r";	// ear
-		"tstwrt(ous$)" => { "l@([sz])", "lE$1" }; // zealous
-		"l@kweI" => "lokweI"; // loquacious ... et l'horreur commence ... :/|
-		"l@(?!(?:nd?|k|$))" => "li"; // politics vs island/swollen/loquacious ... strange, strange ...
-		// usage of @ and 3 by eSpeak is totally bizarre ... correct it with the following rules
-		"U@r" => "Ur"; // during
-		"g3r" => "gEr";
-		"st@L" => "stEl"; // postal
-		"3([nsf])" => "er$1"; // superstitious, northern, superficial
-		
-		//"3" => "E";
-		"a@" => "ar"; // park
-		//"@(?!2)" => "r";// air (not sure if @ is r or shwa?!)
-		"u:3d" => "uErd"; // stewardess
-		"3:r" => "ör";	// hurried
-		"3:" => "ör";	// her, fur (add vowel ö)
-		"#3" => "r";	// better
-		"tstwrt(tre$)" => { "3", "Er" }; // sceptre
-		"tstwrt(er)" => { "3", "Er" }; // yesterday (rule may produce wrong results!!!)
-		//"ir" => "är";	// tears (not clear: err is written as ör, see 2b), problem: tears vs beer
-		"tstwrt(ear[sz])" => { "ir", "är" }; // leave beer / bir as bir! 
-		"^be@r" => "bär"; // bearing
-		//"^när$" => "nir"; // correct "near"
-		"i:" => "i";	// beast
-		"0" => "o";	// god
-		"O:" => "o";	// bought
-		"V" => "ö";	// bus
-		"dZju" => "dZu"; // June
-		"j[uU]:?" => "ü";// mule, cure
-		"u:" => "u";	// booze
-		"t2" => "t";	// time (probably "aspired" t?!)
-		"tstwrt(ice$)" => { "I2s$", "is" }; // office
-		"tstwrt(iage$)" => { "I2dZ", "idZ" }; // carriage 
-		"tstwrt(age$)" => { "I2dZ", "EdZ" }; // carriage 
-		"I2" => "i";    // handicap
-		//"t," => "t"; 	// politics (aspired t?!) secondary stress (filtered out)
-		//"L," => "L";	// equalize
-		"tstwrt(ous$)" => { "@([zs])", "E$1" };
-		"tstwrt(ours$)" => { "3z", "Ers" };
-		"tstwrt(r$)" => { "3$", "Er" };
-		"tstwrt((ers?|ures?)$)" => { "3(z)?$", "Er$1" }; // barbers
-		"tstwrt(red$)" => { "3d$", "Erd" }; // answered, sponsered
-		"3t" => "Ert"; // advertising
-		"3" => "E";
-		"tstwrt(r$)" => { "@$", "r" }; // four
-		"tstwrt(^o)" => { "^@", "o" }; // offend (holy cow ... eSpeak uses this @ for almost anything ... :-/)
-		"(o|e|ä|E|U|O)@([dtzTD])$" => "$1r$2"; // disaccord, cared, sport, forth
-		"[oO]@m" => "orm"; // warm
-		"@" => "E";
-		"ää" => "ä";
-		"(.)#" => "$1"; // aquatic (no idea what eSpeak means by # after t?!)
-		";" => ""; // aerial
-		"rr" => "r"; // quick fix for double rr ...
-		"I" => "i"; // correct I's that have not yet been transformed
-		"L" => "l"; // idem L
-
-		// make sure all prefixes are upper case
-		"(^.*?\+)" => "strtoupper()";
-		"(\+.*?\+)" => "strtoupper()";
-		
-		"tstwrt(uces?$)" => { "dZus([Ei]s)?$", "düs$1" }; // traduce (avoid dZ and application of abbreviation)
-		"tstwrt(^years?$)" => { "^jär(z)?$", "jir$1" }; // year(s) - recorrection
-		"tstwrt(^[Ii]nn)" => { "^.*?\+(.*?)$", "in$1" }; // inner (vs in) - no abbreviation
-
+		// not needed for font
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -830,11 +448,44 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"#X+" => { /*header*/ 10, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0,  /**/ 10, 0, 0, 0, 1, 0, 0, 0, /**/ 0, 0, 0, 0, 1, 5, 0, 0, /**/ 10, 19, 0, 0, 1, 0, 1, 0 }
 		"#Y+" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0,  /**/ 5, 9.5, 0, 0, 1, 0, 0, 0, /**/ 10, 19, 0, 0, 1, 0, 0, 0, /**/ 5, 9.5, 0, 0, 1, 5, 0, 0, /**/ 5, 0, 0, 0, 1, 0, 1, 0 }
 		"#Z+" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0,  /**/ 10, 19, 0, 0, 1, 0, 0, 0, /**/ 0, 0, 0, 0, 1, 0, 0, 0, /**/ 10, 0, 0, 0, 1, 0, 1, 0 }
+		"#Ä+" => { /*header*/ 10, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 0, 0, 1, 1, 5, 0, 0,  /**/ 5, 19, 0, 0, 1, 0, 0, 0,  /**/ 10, 0, 0, 0, 1, 0, 0, 0,  /**/ 2.5, 9.5, 0, 0, 1, 5, 0, 0,  /**/ 7.5, 9.5, 0, 0, 1, 0, 0, 0, /**/ 2.75, 22, 0, 0, 1, 5, 0, 0, /**/ 2.75, 25, 0, 0, 1, 0, 0, 0, /**/ 5.25, 22, 0, 0, 1, 5, 0, 0, /**/ 5.25, 25, 0, 0, 1, 0, 1, 0 }
+		"#Ö+" => { /*header*/ 7, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 3.5, 1, 0, 0, 1, 5, 0, 0.5,  /**/ 6, 2.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 7, 10, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 17.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 19, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 17.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 10, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 2.5, 0.5, 0, 1, 0, 0, 0,  /**/ 3.5, 1, 0, 1, 1, 0, 0, 0,  /**/ 6, 2.5, 0, 0, 1, 5, 0, 0, /**/ 2.75, 22, 0, 0, 1, 5, 0, 0, /**/ 2.75, 25, 0, 0, 1, 0, 0, 0, /**/ 5.25, 22, 0, 0, 1, 5, 0, 0, /**/ 5.25, 25, 0, 0, 1, 0, 1, 0 }
+		"#Ü+" => { /*header*/ 10, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 0, 1, 5, 0, 0,  /**/ 0, 5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 5, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 10, 5, 0, 0, 1, 0, 0, 0,  /**/ 10, 19, 0, 0, 1, 0, 0, 0, /**/ 2.75, 22, 0, 0, 1, 5, 0, 0, /**/ 2.75, 25, 0, 0, 1, 0, 0, 0, /**/ 5.25, 22, 0, 0, 1, 5, 0, 0, /**/ 5.25, 25, 0, 0, 1, 0, 1, 0 }
+		
 		
 
 		// lower case
-		"#A-" => { /*header*/ 7, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 5.25, 9, 0, 1, 1, 5, 0, 0.5,  /**/ 3.5, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 3.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1.5, 0, 0.5, 0, 1, 0, 0, 0,  /**/ 5.25, 9, 0, 0, 1, 0, 0, 0.5,  /**/ 5.25, 1, 0.5, 0, 1, 0, 0, 0,  /**/ 6, 0, 0, 0, 1, 0, 1, 0 }
-	
+		"#A-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 8, 9, 0, 1, 1, 5, 0, 0.5, /**/ 6, 9.5, 0, 0, 1, 0, 0, 0.5, /**/ 2, 7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 3.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 0, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 9, 0, 0, 1, 0, 0, 0.5,  /**/ 8, 1, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 0, 0, 0, 1, 0, 1, 0 }
+		"#B-" => { /*header*/ 6, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0,  /**/ 0, 0, 0.5, 0, 1, 0, 0, 0.5,  /**/ 4, 0.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 4.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3, 9, 0.5, 0, 1, 0, 0, 0, /**/ 0, 9.5, 0, 0, 1, 0, 1, 0 }	
+		"#C-" => { /*header*/ 6, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 6, 9.5, 0, 1, 1, 5, 0, 0,  /**/ 2, 9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 4.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 0, 0.5, 0, 1, 0, 1, 0 }	
+		"#D-" => { /*header*/ 6, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 6, 8, 0.5, 1, 1, 5, 0, 0.5,  /**/ 3, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 8.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 4.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 1.5, 0.5, 0, 1, 0, 0, 0, /**/ 6, 0, 0, 0, 1, 0, 0, 0, /**/ 6, 19, 0, 0, 1, 0, 1, 0 }	
+		"#E-" => { /*header*/ 10, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 4.75, 0, 1, 1, 5, 0, 0.5,  /**/ 6, 4.75, 0.5, 1, 1, 0, 0, 0.5,  /**/ 10, 7.1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 9.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 1.5, 8.5, 0.5, 0, 1, 0, 0, 0, /**/ 0, 4.75, 0.5, 0, 1, 0, 0, 0, /**/ 1, 1.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 5, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 10, 1.5, 0.5, 0, 1, 0, 1, 0  }
+		"#F-" => { /*header*/ 8, 0, 0, 0, 5, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 8, 14.5, 0, 1, 1, 5, 0, 0.5,  /**/ 7, 18, 0.5, 1, 1, 0, 0, 0.5,  /**/ 3, 19, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 15, 0, 0, 1, 0, 0, 0, /**/ 0, -7, 0.5, 0, 1, 0, 0, 0, /**/ -3, 2.5, 0, 0, 1, 5, 0, 0, /**/ 3, 2.5, 0, 0, 1, 0, 1, 0  }
+		"#G-" => { /*header*/ 8, 0, 0, 0, 5, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 8, 9, 0, 1, 1, 5, 0, 0.5, /**/ 6, 9.5, 0, 0, 1, 0, 0, 0.5, /**/ 2, 7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 3.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 0, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 9, 0, 0, 1, 0, 0, 0.5,  /**/ 8, 1, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 0, 0, 0, 1, 0, 0, 0, /**/ 8, -7, 0.5, 0, 1, 0, 0, 0.5, /**/ 3.5, -9.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 0, -5, 0, 0, 1, 0, 1, 0 }
+		"#H-" => { /*header*/ 10, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0, /**/ 0, 1, 0, 0, 1, 0, 0, 0, /**/ 0, 7, 0.5, 0, 1, 5, 0, 0.5,  /**/ 5, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 10, 7, 0, 0, 1, 0, 0, 0,  /**/ 10, 1, 0, 0, 1, 0, 1, 0 }
+		"#I-" => { /*header*/ 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 1, 0, 1, 1, 5, 0, 0, /**/ 0, 9.5, 0, 0, 1, 0, 0, 0, /**/ 0, 17, 0, 0, 1, 5, 0, 0,  /**/ 0, 19, 0, 0, 1, 0, 0, 0 }
+		"#J-" => { /*header*/ 8, 0, 0, 0, 2, 2, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, -7, 0.5, 1, 1, 5, 0, 0.5, /**/ 3, -9.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 8, -7, 0, 0, 1, 0, 0, 0, /**/ 8, 9.5, 0, 0, 1, 0, 0, 0, /**/ 8, 17, 0, 0, 1, 5, 0, 0,  /**/ 8, 19, 0, 0, 1, 0, 0, 0 }
+		"#K-" => { /*header*/ 8, 0, 0, 0, 2, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0, /**/ 0, 1, 0, 0, 1, 0, 0, 0, /**/ 0, 5, 0, 0, 1, 5, 0, 0, /**/ 6, 9.5, 0, 0, 1, 0, 0, 0, /**/ 0, 5, 0, 0, 1, 5, 0, 0,  /**/ 8, 1, 0, 0, 1, 0, 0, 0 }
+		"#L-" => { /*header*/ 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0, /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 3, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 5, 1, 0, 0, 1, 0, 1, 0 }
+		"#M-" => { /*header*/ 12, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 0, 1, 0, 0, 1, 0, 0, 0, /**/ 0, 7, 0.5, 0, 1, 5, 0, 0.5,  /**/ 3, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 7, 0, 0, 1, 0, 0, 0,  /**/ 6, 1, 0, 0, 1, 0, 0, 0, /**/ 6, 7, 0.5, 0, 1, 5, 0, 0.5,  /**/ 9, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 12, 7, 0, 0, 1, 0, 0, 0,  /**/ 12, 1, 0, 0, 1, 0, 1, 0 }
+		"#N-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 0, 1, 0, 0, 1, 0, 0, 0, /**/ 0, 7, 0.5, 0, 1, 5, 0, 0.5,  /**/ 4, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 8, 7, 0, 0, 1, 0, 0, 0,  /**/ 8, 1, 0, 0, 1, 0, 1, 0 }
+		"#O-" => { /*header*/ 7, 0, 0, 0, 3, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 3.5, 1, 0, 0, 1, 5, 0, 0.5,  /**/ 6, 2.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 7.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 7.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 2.5, 0.5, 0, 1, 0, 0, 0,  /**/ 3.5, 1, 0, 1, 1, 0, 0, 0,  /**/ 6, 2.5, 0, 0, 1, 5, 1, 0 }
+		"#P-" => { /*header*/ 8, 0, 0, 0, 3, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, -9.5, 0, 0, 1, 5, 0, 0, /**/ 0, 9.5, 0, 0, 1, 0, 0, 0.5,  /**/ 5, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 8, 5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 1, 0.5, 0, 1, 0, 1, 0.5 }
+		"#Q-" => { /*header*/ 8, 0, 0, 0, 3, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 8, 9.5, 0, 0, 1, 5, 0, 0, /**/ 3, 9.5, 0, 0, 1, 0, 0, 0.5,  /**/ 0, 5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 8, 1, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 9.5, 0, 0, 1, 5, 0, 0, /**/ 8, -9.5, 0.5, 0, 1, 0, 1, 0.5 }
+		"#R-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 0, 1, 0, 0, 1, 0, 0, 0, /**/ 0, 7, 0.5, 0, 1, 5, 0, 0.5,  /**/ 4, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 8, 8.5, 0, 0, 1, 0, 1, 0 }
+		"#S-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 8, 9.5, 0, 1, 1, 5, 0, 0.5, /**/ 1.5, 9, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0, 7.25, 0.5, 0, 1, 0, 0, 0.5, /**/ 1.5, 5.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ /*4, 4.75, 0.5, 0, 1, 0, 0, 0.5,*/ /**/ 6.5, 4, 0.5, 0, 1, 0, 0, 0.5, /**/ 8, 1.8, 0.5, 0, 1, 0, 0, 0.5, /**/ 7, 0.5, 0.5, 0, 1, 0, 0, 0.5,  /**/  0, 0, 0, 0, 1, 0, 1, 0 }
+		"#T-" => { /*header*/ 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 19, 0, 1, 1, 5, 0, 0, /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 3, 0, 0.5, 0, 1, 0, 0, 0.5, /**/ 5, 1, 0, 0, 1, 0, 0, 0, /**/ -3, 14, 0, 0, 1, 5, 0, 0, /**/ 4, 14, 0, 0, 1, 0, 1, 0 }
+		"#U-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0.5, /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 4, 0.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 8, 4, 0, 0, 1, 0, 0, 0,  /**/ 8, 9.5, 0, 0, 1, 5, 0, 0,  /**/ 8, 0.5, 0, 0, 1, 0, 1, 0 }
+		"#V-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 4, 0.5, 0, 0, 1, 0, 0, 0, /**/ 8, 9.5, 0, 0, 1, 0, 1, 0 }
+		"#W-" => { /*header*/ 11, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 3, 0.5, 0, 0, 1, 0, 0, 0, /**/ 5, 5, 0, 0, 1, 0, 0, 0, /**/ 8, 0.5, 0, 0, 1, 0, 0, 0, /**/ 11, 9.5, 0, 0, 1, 0, 0, 0   }
+		"#X-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 8, 0.5, 0, 0, 1, 0, 0, 0, /**/ 0, 0.5, 0, 0, 1, 5, 0, 0, /**/ 8, 9.5, 0, 0, 1, 0, 1, 0 }
+		"#Y-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 4, 0, 0, 0.5, 1, 0, 0, 0, /**/ 8, 9.5, 0, 0, 1, 5, 0, 0, /**/ 0.5, -5, 0, 0, 1, 0, 1, 0 }
+		"#Z-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0, /**/ 8, 9.5, 0, 0, 1, 0, 0, 0, /**/ 0, 0.5, 0, 0, 1, 0, 0, 0, /**/ 8, 0.5, 0, 0, 1, 0, 1, 0 }
+		"#Ä-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 8, 9, 0, 1, 1, 5, 0, 0.5, /**/ 6, 9.5, 0, 0, 1, 0, 0, 0.5, /**/ 2, 7, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 3.75, 0.5, 0, 1, 0, 0, 0.5,  /**/ 0.5, 1, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 0, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 9, 0, 0, 1, 0, 0, 0.5,  /**/ 8, 1, 0.5, 0, 1, 0, 0, 0,  /**/ 8, 0, 0, 0, 1, 0, 0, 0, /**/ 2.75, 12, 0, 0, 1, 5, 0, 0, /**/ 2.75, 15, 0, 0, 1, 0, 0, 0, /**/ 5.25, 12, 0, 0, 1, 5, 0, 0, /**/ 5.25, 15, 0, 0, 1, 0, 1, 0 }
+		"#Ö-" => { /*header*/ 7, 0, 0, 0, 3, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 3.5, 1, 0, 0, 1, 5, 0, 0.5,  /**/ 6, 2.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 6, 7.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 3.5, 9.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 7.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 1, 2.5, 0.5, 0, 1, 0, 0, 0,  /**/ 3.5, 1, 0, 1, 1, 0, 0, 0,  /**/ 6, 2.5, 0, 0, 1, 5, 0, 0, /**/ 2.75, 12, 0, 0, 1, 5, 0, 0, /**/ 2.75, 15, 0, 0, 1, 0, 0, 0, /**/ 5.25, 12, 0, 0, 1, 5, 0, 0, /**/ 5.25, 15, 0, 0, 1, 0, 1, 0 }
+		"#Ü-" => { /*header*/ 8, 0, 0, 0, 4, 0, 0, 0, 0, 0, "", "", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, /*data*/ 0, 9.5, 0, 1, 1, 5, 0, 0.5, /**/ 0, 2.5, 0.5, 0, 1, 0, 0, 0.5, /**/ 4, 0.5, 0.5, 0, 1, 0, 0, 0.5,  /**/ 8, 4, 0, 0, 1, 0, 0, 0,  /**/ 8, 9.5, 0, 0, 1, 5, 0, 0,  /**/ 8, 0.5, 0, 0, 1, 0, 0, 0, /**/ 2.75, 12, 0, 0, 1, 5, 0, 0, /**/ 2.75, 15, 0, 0, 1, 0, 0, 0, /**/ 5.25, 12, 0, 0, 1, 5, 0, 0, /**/ 5.25, 15, 0, 0, 1, 0, 1, 0 }
+		
+
 	#EndSubSection(base)
 	#BeginSubSection(combiner)
 		"D" => { "@R", 0, 0 }
@@ -1039,45 +690,13 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 #EndSection(font)
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
-		// global replacements in the whole text
-		// eliminate upper case at beginnings (otherwhise the model will use diacritics for all words that
-		// start with upper case).
-		"(?<=^| )(I|[Yy]ou|[Ss]?[Hh]e|[Ww]e|[Tt]hey|[Tt]o) lives?(?=[ ,\.-?]|$)" => "$1 #live";
-		"(?<=^| )([Cc])annot(?=[ ,\.-]|$)" => "#$1annot";
-		
-		// abreviations with dots
-		"(?<=^| )([Mm])r(s)?\.(?=[ ,\.-]|$)" => "#$1r$2"; // eliminate dot
-		"(?<=^| )([Mm])essrs\.(?=[ ,\.-]|$)" => "#$1essrs"; // eliminate dot
-		"(?<=^| )([Kk])m\.(?=[ ,\.-]|$)" => "#$1m"; // eliminate dot
-		"(?<=^| )([Cc])o\.(?=[ ,\.-]|$)" => "#$1o"; // eliminate dot
-		"(?<=^| )([Ll])b\.(?=[ ,\.-]|$)" => "#$1b"; // eliminate dot
-		"(?<=^| )([Cc])if\.(?=[ ,\.-]|$)" => "#$1if"; // eliminate dot
-		"(?<=^| )([Ff])ob\.(?=[ ,\.-]|$)" => "#$1ob"; // eliminate dot
-		"(?<=^| )([Oo])ct\.(?=[ ,\.-]|$)" => "#$1ct"; // eliminate dot
-		"(?<=^| )([Ff])rs\.(?=[ ,\.-]|$)" => "#$1rs"; // eliminate dot AND add # (important: prevents transcription)
-		"(?<=^| )([Dd])r\.(?=[ ,\.-]|$)" => "#$1r"; 
-		"(?<=^| )([Hh])\.P\.(?=[ ,\.-]|$)" => "#hp"; // horse-power
-		"(?<=^| )R\.M\.S\.(?=[ ,\.-]|$)" => "#rms"; // R.M.S. Royal Mail Steamer
-		"(?<=^| )([Ff])ebr\.(?=[ ,\.-]|$)" => "#$1ebr"; 
-		"(?<=^| )([Ss])ept\.(?=[ ,\.-]|$)" => "#$1ept"; 
-		
-		// abbreviation with several words
-		"(?<=^| )([Aa])nd so on(?=[ ,\.-]|$)" => "#and_so_on"; 
-		
-		// re-
-		"(?<=^| )([Rr]e)-(.*?)(?=[ ,\.-]|$)" => "$1$2"; // eliminate -
-		"(?<=^| )([Ee]xtra)-(.*?)(?=[ ,\.-]|$)" => "$1$2"; // eliminate -
-		
-		// segmentations (composed words)
-		"(?<! )-(?! )" => "|"; // book-keeper
-
+		// not needed for font
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
-		// empty
+		// not needed for font
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
-		// check if word contains more then 1 upper case
-		// mark it with #£# to have a branch condition
+		// not needed for font	
 	#EndSubSection(splitter1,!>acronymator,=>packer)
 	#BeginSubSection(acronymator)
 		// empty
@@ -1092,741 +711,46 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// empty	
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
-		
-		// premarked
-		"#[Cc](a|ä)nnot" => "{CAN}{NOT}"; // probably a bug: (post)analyzer rules should not be applied!
-		"#[Cc](a|ä)nnot" => "{CAN}{NOT}"; // probably a bug: (post)analyzer rules should not be applied!
-		"#änd_so_on" => "{ANDSOON}";
-
-		// words with eliminated dots
-		"tstwrt(^[Kk]m$)" => { "^.*?$", "km" };
-		"tstwrt(^[Cc]o$)" => { "^.*?$", "ko" };
-		"tstwrt(^[Ll]b$)" => { "^.*?$", "lb" };
-		"tstwrt(^[Ff]ob$)" => { "^.*?$", "fob" };
-		"tstwrt(^[Oo]ct$)" => { "^.*?$", "okt" };
-
-		// others
-		"tstwrt(up$)" => { "öp$", "{UP}" };
-		"tstwrt(^[Ww]ithin$)" => { "^.*?n$", "{WITH}{IN}" };
-		"tstwrt(^[Cc]ontrariet(y|ies)$)" => { "^[^{]*?([sz])?$", "{CONTR}{ITY}$1" };
-		"tstwrt(^[Bb]efore)" => { "^(.*?r)", "{BE1}{FOR}" };
-		"tstwrt(^[Ii]sn\'t)" => { "^.*?$", "{ISNT}" }; 
-		"tstwrt(^[Ee]very.)" => { "^.*?i", "{EVER}i\" }; 
-		"tstwrt(^[Nn]otwithstand)" => { "^.*?st", "{NOT}{WITH}st" }; 
-		"tstwrt(^[Bb]eings?$)" => { "^.*?([zs])?$", "{BE}iN$1" }; 
-		"tstwrt(^[Tt]hemselves$)" => { "^.*?$", "{THEM}{SELF}s" }; 
-		"tstwrt(^[Oo]urselves$)" => { "^.*?$", "{OUR}{SELF}s" }; 
-		"tstwrt(with$)" => { "^(.*?)w.*?[DT]$", "$1{WITH}" }; 
-		"tstwrt(^[Ii]n(?!(?:ter|tro?)))" => { "^[^+]*?\+(.*?)$", "{IN}$1" }; 
-		"tstwrt(^[Ff]ul)" => { "^.*?[lL](.*?)$", "{FUL}$1" }; 
-		"tstwrt(^[Oo]therwise$)" => { "^.*?r(.*?)$", "{OTHER}$1" }; 
-		"tstlng((?:^|\|)[Ff]ore?(?:$|\|))" => { "^f.*?r$", "{FOR}" }; 
-		"tstwrt(^[Ff]orer)" => { "^{FOR}(.*?)$", "{FOR}r$1" }; // forerunner (an r gets lost) 
-		//"tstlng(^[Tt]herefore$)" => { "^.*?$", "{THERE}{FOR}" }; // rule doesn't work anymore when analyzing composed words ... !
-		"tstlng((?:^|\|)[Tt]here(?:$|\|))" => { "^D.*?r$", "{THERE}" }; 
-		"tstlng(^[Yy]oursel(f|ves)$)" => { "^.*?([zs])?$", "{YOUR}{SELF}$1" }; 
-		"tstwrt(^[Ss]omehow$)" => { "^.*?$", "{SOME}\{HOW}" }; 
-		"tstwrt(^[Ss]omewhere$)" => { "^.*?$", "{SOME}{WHERE}" }; 
-		"tstwrt(^[Ss]ome)" => { "^.*?m(.*?)$", "{SOME}$1" }; 
-		"tstwrt(ever$)" => { "(.*?)[Ee]v[Ee]r$", "$1{EVER}" };
-		"tstwrt(how$)" => { "h[^h]*?$", "{HOW}" };
-		"tstwrt(^[Ee]verywhere$)" => { "^.*?$", "{EVER}I\{WHERE}" }; 
-		"tstwrt(^[Ii]tself$)" => { "^.*?$", "{IT}{SELF}" }; 
-		"tstwrt(^[Ii]t'?s$)" => { "^.*?$", "{ITS}" }; 
-		"tstwrt((?<!i)ed$)" => { "id$", "{ED}" };
-		"tstwrt(ed$)" => { "([bgrsznlvmZLD])d$", "$1{ED}" };
-		"tstwrt(xed$)" => { "kst$", "x{ED}" }; // mixed
-		"tstwrt(ed$)" => { "([kpsST])t$", "$1{ED}" }; // asked (voiceless t by assimilation)
-		"tstwrt(^[Ii]s$)" => { "^[Ii]z$", "{IS}" }; // don't apply to ease!
-		"tstwrt(^[Aa]n?$)" => { "^(.*?)$", "{A}" };
-		"tstwrt(^[Ii]t$)" => { "^.*?$", "{IT}" };
-		"tstwrt(^I$)" => { "^(.*?)$", "{I}" }; // single characters are not converted to phonetic form!
-		"^DEm$" => "{THEM}";
-		"tstwrt(^[Tt]he$)" => { "^(.*?)$", "{THE}" };
-		"tstwrt(^[Tt]oo$)" => { "^tu$", "{TOO}" };
-		"tstwrt(^[Tt]o$)" => { "^tu$", "{TO}" };
-		"^häd$" => "{HAD}";
-		"tstwrt(^[Dd]o(ing)?$)" => { "^.*?[uU](.*?)$", "{DO}$1" };
-		"tstwrt(^be(en)?$)" => { "^bi(n)?$", "{BE}$1" };
-		"^böt$" => "{BUT}";
-		"^wi$" => "{WE}";
-		"tstwrt([Ww]hat)" => { "(.*?)wöt(.*?)$", "$1{WHAT}$2" };
-		"tstwrt(^[Ww]as(n\'t)?$)" => { "^.*?[zs](.*?)$", "{WAS}$1" };
-		"tstwrt(^[Ww]ould)" => { "^(.*?)$", "{WOULD}" }; // don't apply to wood!
-		"tstwrt(^[Ww]ith)" => { "^.*?[TD]([^H]*?)$", "{WITH}$1" };
-		"^vEri$" => "{VERY}";
-		"tstwrt(^[Cc]an$)" => { "^.*?$", "{CAN}" }; 
-		"tstwrt(^[Cc]ould$)" => { "^.*?$", "{COULD}" }; 
-		"tstwrt(^[Hh]e$)" => { "^.*?$", "{HE}" }; 
-		"tstwrt(^[Hh]ave$)" => { "^.*?$", "{HAVE}" }; 
-		"tstwrt(^[Ww]ho(ever)?$)" => { "^.*?[uU]", "{WHO}" }; 
-		"tstwrt(^[Hh]ow)" => { "^.*?[uU]", "{HOW}" }; 
-		"tstwrt(^[Aa]lter)" => { "[Oo]l", "oL" }; // altered: transform l to L in order to avoid following rule
-		"tstwrt(^[Aa]ltrui)" => { "^[Oo]l", "äl" }; // avoid application all- (following rule)
-		"tstwrt(^[Aa]ll?)" => { "^[Oo]l", "{ALL}" }; 
-		"tstwrt(^[Hh]as(n\'t)?$)" => { "^.*?[sz](.*?)$", "{HAS}$1" }; 
-		"tstwrt(^[Ss]o$)" => { "^.*?$", "{SO}" }; 
-		"tstwrt(^[Ss]ome$)" => { "^.*?$", "{SOME}" }; 
-		"tstwrt(^[Tt]his$)" => { "^.*?$", "{THIS}" }; 
-		"tstwrt(^[Tt]hese$)" => { "^.*?$", "{THESE}" }; 
-		"tstwrt(^[Nn]ot$)" => { "^.*?$", "{NOT}" }; 
-		"tstwrt(^[Nn]o(body|where)?$)" => { "^.*?([bw].*?)?$", "{NO}$1" }; 
-		"tstwrt(^[Tt]han$)" => { "^.*?$", "{THAN}" }; 
-		"tstwrt(^[Tt]hen$)" => { "^.*?$", "{THEN}" }; 
-		"tstwrt(^[Uu]p(?!p))" => { "^.*?p", "{UP}" }; 
-		"tstwrt(^[Ii]n$)" => { "^.*?$", "{IN}" }; 
-		"tstwrt(^[Ww]hich)" => { "^.*?tS(.*?)$", "{WHICH}$1" }; 
-		"tstwrt(^[Tt]hey$)" => { "^.*?$", "{THEY}" }; 
-		"tstwrt(^[Tt]hat)" => { "^.*?$", "{THAT}" }; 
-		"tstwrt(^[Ss]hall$)" => { "^.*?$", "{SHALL}" }; 
-		"tstwrt(^[Ss]hould$)" => { "^.*?$", "{SHOULD}" }; 
-		"tstwrt(^[Oo]thers?$)" => { "^.*?([sz])?$", "{OTHER}$1" }; 
-		"tstwrt(^[Aa]nd$)" => { "^.*?$", "{AND}" }; 
-		"tstwrt(^[Yy]ou$)" => { "^.*?$", "{YOU}" }; 
-		"tstwrt(^[Aa]t$)" => { "^.*?$", "{AT}" }; 
-		"tstwrt(^[Ii]f$)" => { "^.*?$", "{IF}" }; 
-		"tstwrt(^[Oo]ff?(print)?)" => { "^.*?[fv](.*?)$", "{OFF}$1" }; 
-		"tstwrt(^[Ww]il(lings?|l|ling(?:ly)?|ful(?:ly)?)?$)" => { "^w[^w]*?l(.*?)$", "{WILL}$1" }; 
-		"tstlng((^|\|)[Tt]here(\||$)$)" => { "^\[TH\].*?r$", "{THERE}" }; // reformulate rule for stage 3 with composed words ... 
-		"tstwrt(^[Tt]heir$)" => { "^.*?$", "{THEIR}" }; 
-		"tstwrt(^[Ee]very?)" => { "^.*?r(.*?)$", "{EVER}$1" }; 
-		"tstwrt(^[Uu]nder)" => { "^.*?r(.*?)$", "{UNDER}$1" }; 
-		"tstwrt(^[Ff]ore?$)" => { "^.*?$", "{FOR}" }; 
-		"tstwrt([Ww]here)" => { "w[^w]*?r", "{WHERE}" }; 
-		"tstwrt(^[Ww]ere(n't)?$)" => { "^.*?r(.*?)$", "{WERE}$1" }; 
-		"tstwrt(^[Oo]ver)" => { "^.*?r(.*?)$", "{OVER}$1" }; 
-		"tstwrt(overs?$)" => { "o[^o]*?r(s)?$", "{OVER}$1" }; 
-		"tstwrt(^[Ff]rom$)" => { "^.*?$", "{FROM}" }; 
-		"tstwrt(^[Yy]our)" => { "^(.*?r)", "{YOUR}" }; 
-		"tstwrt(^[Pp]erhaps$)" => { "^.*?$", "{PERHAPS}" }; 
-		"tstwrt(^[Cc]ontrar)" => { "^(.*?Er)", "{CONTRAR}" }; 
-		"tstwrt(^[Gg]ener)" => { "^(.*?r)", "{GENER}" }; 
-		"tstwrt(^[Nn]ever$)" => { "^.*?$", "{NEVER}" }; 
-		"tstwrt(^[Nn]ecessar)" => { "^(.*?r)", "{NECESSAR}" }; 
-		"tstwrt(^[Ss]ir)$" => { "^(.*?r)", "{SIR}" }; 
-		"tstwrt(^[Gg]entleman)" => { "^(.*?)n(.*?)n(.*?)$", "{GENTLEMAN}$3" }; 
-		"tstwrt(^[Gg]entlemen)" => { "^(.*?)n(.*?)n(.*?)$", "{GENTLEMEN}" }; 
-		"tstwrt(^[Mm]uch$)" => { "^(.*?)$", "{MUCH}" }; 
-		"tstwrt(^[Mm]r)$" => { "^(.*?)$", "{MR}" }; 
-		"tstwrt(^[Mm]ister)$" => { "^(.*?)$", "{MR}" }; 
-		"tstwrt(^[Mm]isters)$" => { "^(.*?)$", "{MRS}" }; 
-		"tstwrt(^#?[Mm]essrs$)" => { "^(.*?)$", "{MESSRS}" }; 
-		"tstwrt([Ss]el[vf])" => { "(s.*?lf)", "{SELF}" };
-		"tstwrt((?<![pb])ly$)" => { "([bdcdfgkmnprstvwxzN]}?)li$", "$1{LY}" };
-		"tstwrt(^[Ff]airly$)" => { "^.*?$", "färli" }; // recorrection fairly (no abbreviation)
-		"tstwrt(^[Hh]ardly$)" => { "^.*?$", "hardli" }; // recorrection hardly (no abbreviation)
-		"tstwrt(^[Dd]early$)" => { "^.*?$", "dirli" }; // dearly (recorrection)
-		"tstwrt([ie]ty$)" => { "(?:ai)?[iE]ti$", "{ITY}" };
-		"tstwrt([ie]ties$)" => { "(?:ai)?[iE]ti([sz])$", "{ITY}$1" };
-		"tstwrt(fulness$)" => { "f[^f]*?ln[^n]*?s$", "{FUL}{NESS}" }; // carefulness
-		"tstwrt(ful$)" => { "f[^f]*?l$", "{FUL}" };
- 		"tstwrt(fully$)" => { "f.[:;]?li$", "{FUL}{LY}" };
- 		"tstwrt(some$)" => { "s.*?m$", "{SOME}" };
- 		"tstwrt(ness$)" => { "n.*?s$", "{NESS}" };
- 		"tstwrt(ship$)" => { "S.*?p$", "{SHIP}" };
- 		"tstwrt(mentations?$)" => { "m.*?nt.*?S.*?n([sz])?$", "{MENT}A{TION}$1" };
- 		"tstwrt((?:ssion|[xcst]i[oa]n|cean|shion)s?)" => { "[SZ].[:;-]?n([sz])?", "{TION}$1" };
- 		"tstwrt(ments?$)" => { "m[^m]*?nt([sz])?$", "{MENT}$1" };
- 		"tstwrt(mentals?$)" => { "m.*?nt.*?l([sz])?$", "{MENT}El$1" };
-		"tstwrt(ment)" => { "mEnt", "{MENT}" }; // might produce wrong results
- 		"tstwrt(tually$)" => { "t[SZ].*?li$", "{TUAL}{LY}" };
- 		"tstwrt(tual(it(y|ies))?$)" => { "t[SZ].*?l({ITY})?$", "{TUAL}$1" };
- 		"tstwrt(^[Ss]wiss)" => { "s.*?s", "{SWISS}" };
- 		"tstwrt(^[Ss]witzer)" => { "s.*?r", "{SWITZER}" };
- 		"tstwrt(^[Pp]articul)" => { "p.*?l", "{PARTICUL}" };
- 		
-		// suffixes
-		"tstwrt(less$)" => { "l[^l][sz]$", "{LESS}" };
-		
-		// premarked words
-		"#live(s)$" => "liv$1"; // distinguish between verb live(s) and adjective live
-		
-		// morphologically premarked words
-		"BI\+" => "{BE1}";
- 		"DI\+" => "{DE}";
- 		"RI\+" => "{RE}";
- 		"SIRKUM\+" => "{CIRCUM}";
- 		"SUB\+" => "{SUB}";
- 		"UN\+" => "{UN}";
- 		"EXTRA\+" => "{EXTRA}";
- 		"EX\+" => "{EX}";
- 		"tstwrt(^[Ii]n$)" => { "[EI]N\+", "{IN}" };
- 		"PRO\+" => "{PRO}";
- 		"ANTI\+" => "{ANTI}";
- 		"CON\+" => "{CON}";
- 		"CONTR\+" => "{CONTR}";
- 		"PER\+" => "{PER}";
- 		"INTER\+" => "{INTER}";
- 		"S(U|Ö)R\+" => "{SUR}";
- 		"TRANS\+" => "{TRANS}";
- 		"ACOM\+" => "{ACOM}";
-
-		// clean up
-		"^#" => ""; // eliminate premarked abbreviations
- 		
-		// wasn't, hasn't, weren't etc.
-		"n\'t" => "{NN}";
-
+		// not needed for font
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(upbundler,#>stage4)
-		// upbundler is short for "uppercase bundler"
-		// i.e. it bundles tokens where eSpeak uses upper case character in phonetic transcriptions
-		// convert all abbreviations to lower in order to avoid application of upbundler rules
-		"({.*?})" => "strtolower()";
-
-		"dZ" => "[DZ]";
-		"Nkl" => "[NKL]"; // uncle
-		"Nk(?!t)" => "[NK]"; // not in distinct!
-		"(?<!(?:\[|{))NS(?!(?:\]|}))" => { "[NK][SH]", "Nkt" }; // anxious, not in words with nkt (distinct)
-		
-		"Tr" => "[THR]"; // thread
-		"Tl" => "[THL]"; // athlete
-
-		"Sr" => "[SHR]"; // shrink
-		"Ngr" => "[NGR]"; // hungry
-		"Ngl" => "[NGL]"; // angle
-		"Ng" => "[NG]";
-		"(?<!(?:\[|{))N(?!(?:\]|}|\+))" => { "[NG]", "Nkt" }; // not in words with nkt (distinct)
-		"(?<!\[)tS" => "[TSH]"; // D = voiced, T = voiceless (in shorthand the same)
-		"(?<!\[)[TD]" => "[TH]"; // D = voiced, T = voiceless (in shorthand the same)
-		"(?<!(?:\[|d|T|D))[SZ]" => "[SH]"; // voiced and voicelss
-
-		"({.*?})" => "strtoupper()"; // reconvert all abbreviations to upper
-
+		// not needed for font
 	#EndSubSection(upbundler)
 	#BeginSubSection(decapitalizer)
-		"([A-Z])" => "strtolower()";
-		"({.*?})" => "strtoupper()"; // reconvert abbreviations to upper case
-		
-		
+		// not needed for font
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(phonetizer)	
 		// empty
 	#EndSubSection(phonetizer)
 	#BeginSubSection(bundler)
-
-		"(\[.*?\])" => "strtoupper()";
-
-		// r + combinations
-		"r\|?r" => "[VR+AR]"; // store-room
-		"rtl" => "[RR][@L]";
-		"rtr" => "[RT][AR]"; // cartridge
-		"rt" => "[RT]";
-		
-		// vowels
-		"oi" => "[OI]";
-		"au" => "[AU]";
-		"ai" => "[AI]";
-		"ei" => "[EI]";
-		"e" => "[E1]"; // narrow e in english
-		"ou" => "O";  // no distinction between ou and o
-		
-		// three characters
-		"str" => "[STR]";
-		"spl" => "[SPL]";
-		"ndl" => "[NDL]";
-		"ndr" => "[NDR]";
-		"spr" => "[SPR]";
-		"ktr" => "[CTR]";
-		"xt" => "[XT]"; // don't transform ks!
-		"skr" => "[SCR]";
-		"skl" => "[SCL]";
-		"ptr" => "[PTR]";
-		"mpt" => "[MPT]";
-		"mpr" => "[MPR]";
-		"ntr" => "[NTR]";
-		"ntl" => "[NTL]";
-		"ltr" => "[LTR]";
-		"vrt" => "[VRT]";
-		"mpl" => "[MP][@L]";
-
-		"(?<!\[)a~" => "[A~]";
-		"(?<!\[)o~" => "[O~]";
-		"(?<!\[)(e|w)~" => { "[E~]", "sirkw~" }; // no distinction: dinde vs humble
-
-		"(?<!\[)pr(?!\])" => "[PR]"; // pr => [pr] before rt => [rt], ex: propr(e)té (e muet falls out => prt)
-		"(?<!^)rtr" => "[RT][#6-][AR]"; // like spanish: artritis
-		"(?<!^)rt" => "[RT]"; // not at beginning, rt => [rt] before tr => [tr], e.g. portrait
-		
-		"tstwrt(xe?$)" => { "(?<!\[)ks(?!\])", "[X]" }; // vex [X], politics [KS]
-		"tstwrt(ccess$)" => { "(?<!\[)ks\[E1\]s(?!\])", "[X][E1]s" }; // access
-		"tstwrt(x[ie]s$)" => { "ksi([sz])$", "[X]I$1" }; // axes, axis
-		"tstwrt(xers?$)" => { "ks\[E1\]\[VR\]([sz])?$", "[X][E1][VR]$1" }; // axes, axis
-		"(?<!\[)mp(?!\])" => "[MP]";
-		"(?<!\[)kt(?!\])" => "[CT]"; // kt before nk (sanctified)
-		"(?<!\[)nk(?!\])" => "[NK]";
-		"(?<!\[)st(?!\])" => "[ST]"; // st before ns (against)
-		"(?<!\[)ns(?!\])" => "[NS]";
-		"(?<!\[)nz(?!\])$" => "[NS@#.]"; // use diacritics at the end of the word
-		"(?<!\[)nz(?!\])" => "[NS]";
-		"(?<!\[)kw(?!\])" => "[KW]";
-		"(?<!\[)nd(?!\])" => "[ND]";
-		"(?<!\[)vl(?!\])" => "[VL]";
-		"(?<!\[)br(?!\])" => "[BR]";
-		"(?<!\[)fr(?!\])" => "[FR]";
-		"(?<!\[)lr(?!\])" => "[LR]";
-		"(?<!\[)mr(?!\])" => "[MR]";
-		"(?<!\[)nr(?!\])" => "[NR]";
-		"(?<!\[)nt(?!\])" => "[NT]";
-		"(?<!\[)vr(?!\])" => "[#VR]"; // confusion with r == [VR]
-		"(?<!\[)dr(?!\])" => "[DR]";
-		"(?<!\[)gr(?!\])" => "[GR]";
-		"(?<!\[)qr(?!\])" => "[QR]";
-		"(?<!\[)tr(?!\])" => "[TR]";
-		"(?<!\[)rl(?!\])" => "[RL]";
-		"(?<!\[)kl(?!\])" => "[KL]";
-		
-		"(?<!\[)bl(?!\])" => "[BL]";
-		"(?<!\[)fl(?!\])" => "[FL]";
-		"(?<!\[)ll(?!\])" => "[LL]";
-		"(?<!\[)ml(?!\])" => "[ML]";
-		"(?<!\[)nl(?!\])" => "[NL]";
-		"(?<!\[)pl(?!\])" => "[PL]";
-		//"vr" => "[VR]"; // confusion with r == [VR]
-		"(?<!\[)dl(?!\])" => "[DL]";
-		"(?<!\[)gl(?!\])" => "[GL]";
-		"(?<!\[)ql(?!\])" => "[QL]";
-		"(?<!\[)tl(?!\])" => "[TL]";
-		"(?<!\[)kr(?!\])" => "[KR]";
-		
-		"(?<!\[)sk(?!\])" => "[SK]";
-		"\[SK\]r" => "[SKR]";
-		"(?<!\[)k\|?r(?!\])" => "[KR]"; // backroom
-		"(?<!\[)sp(?!\])" => "[SP]";
-		"(?<!\[)pt(?!\])" => "[PT]";
-		"(?<!\[)ft(?!\])" => "[FT]";
-		"(?<!\[)lt(?!\])" => "[LT]";
-		"\[sch\]l" => "[SCHL]";
-		"(?<!\[)[sz]l(?!\])" => "S[@L]";
-		"(?<!\[)[sz]r(?!\])" => "S[AR]";
-		"(?<!\[)xl(?!\])" => "X[@L]";
-		
-		// r alone
-		"\|r" => "|[AR]";
-		"^r" => "[AR]";
-		"}r" => "}[AR]";
-		"r" => "[VR]";
-		
+		// not needed for font
 	#EndSubSection(bundler,=:std)
 	#BeginSubSection(relancer1)	
 		// empty
 	#EndSubSection(relancer1)
 	#BeginSubSection(transcriptor)
-		//"^(.*)$" => "strtolower()";
-		"({.*?})" => "strtoupper()";
-
-		"\[#VR\]" => "[V@R6]";
-
-		// use to separate methods to detect beginning of words:
-		// (1) based on "prefixes" (e.g. vice-)
-		// (2) based on | (inserted where eSpeak inserts a space which - by itself - is the result of
-		//     a - in the original word (e.g. vice-recteur => vis rektWr => vis|rectWr; tire-ligne => tir liGN => tir|lir
-		"^(vis)r" => "$1[AR]"; // vice-recteur
-		"(\|)r" => "$1[AR]"; // vice-rectur
-		
-		"^r@?" => "[AR]";
-		"{ZION}r" => "{ZION}[VR]";
-		"}r" => "}[AR]"; // p.ex.: subroger
-		"r" => "[VR]";
-		"kaze" => "ka[S@#.]e"; // distinguish: casser vs caser (diacritics)
-		"faz" => "fa[S@#.]"; // face vs phase (diacritics)
-		"zel" => "[S=@#.]el"; // sel vs zèle (diacritics)
-		
-		//"z$" => "[S@#.]"; // use diacritics at the end of a word
-		"z" => "s";
-
-		
-		"\[BR\]" => "[B@R6]";
-		"\[FR\]" => "[F@R6]";
-		"\[LR\]" => "[L@R6]";
-		"\[MR\]" => "[M@R6]";
-		"\[NR\]" => "[N@R6]";
-		"\[PR\]" => "[P@R6]";
-		//"\[VR\]" => "[V@R6]"; // confusion with r == [VR]!
-		"\[GNR\]" => "[NN@R6]";
-		"\[SKR\]" => "[C@R]";
-		"\[KR\]" => "[K@R]";
-
-		"\[DR\]" => "[D@R]";
-		"\[GR\]" => "[G@R]";
-		"\[KR\]" => "[K@R]";
-		"\[QR\]" => "[Q@R]";
-		"\[TR\]" => "[T@R]";
-
-		"\[RL\]" => "[VR@L]";
-
-		"\[BL\]" => "[B@L]";
-		"\[FL\]" => "[F@L]";
-		"\[LL\]" => "[L@L]";
-		"\[ML\]" => "[M@L]";
-		"\[NL\]" => "[N@L]";
-		"\[PL\]" => "[P@L]";
-		//"vr\]" => "[VR]"; // confusion with r == [VR]
-		"\[DL\]" => "[D@L3]";
-		"\[GL\]" => "[G@L3]";
-		"\[QL\]" => "[Q@L3]";
-		"\[TL\]" => "[T@L3]";
-		"\[NGL\]" => "[NG@L3]";
-		"\[ngl\]" => "[NG@L3]"; // geler: comes from decapitalizer ...
-		"\[KL\]" => "[K@L3]";
-		"\[NGR\]" => "[NG@R]";
-		
-		"[Ii]\[SCHL\]" => "I[^SCH@L3]"; // special transcription: Michelin
-		"\[SCHL\]" => "[SCH@L3]";
-		
-		// following part from french rewriter
-		// rewrite bundled tokens
-		"\[STR\]" => "[ST@R]";
-		"\[SHR\]" => "[SCH@R]";
-		"\[SPR\]" => "[SP@R6]";
-		"\[SPL\]" => "[SP@L]";
-		"\[NDL\]" => "[ND@L3]";
-		"\[NKL\]" => "[NK@L3]";
-		"\[NDR\]" => "[ND@R]";
-		"\[NTR\]" => "[NN@R6]";
-		"\[NTL\]" => "[NN@L]";
-		"\[CTR\]" => "[CK@R]";
-		"\[SCR\]" => "[C@R]";
-		"\[SCL\]" => "[C@L3]";
-		"\[PTR\]" => "[PP@R6]";
-		"\[LTR\]" => "[LT@R6]";
-		"\[VRT\]" => "[W@R6]T";
-		"\[THR\]" => "[Z@R]";
-		"\[THL\]" => "[Z@L3]";
-		"\[MPR\]" => "[MP][AR]";
-		
-		// correction
-		"tstwrt(^[Bb]ehaviou?r)" => { "j", "i" }; // prevent later application of j => y
-		
+		// not needed for font
 	#EndSubSection(transcriptor)
 	#BeginSubSection(completor)
-		// transform all to lower
-		"^(.*)$" => "strtolower()"; 
-		"({.*?})" => "strtoupper()"; 
-		
-		// n, s at beginning of a word
-		"^s" => "[S=]";
-		"^n" => "[N=]";
-		"^z" => "[S=]"; // s = z
-		
-		// special case: eye
-		"^\[ai\]$" => "[0N-][AI][LES]";
-		"\[ai\]\[e1\]" => "[AI][&E][E1]";
-		
-		// special case: eh
-		"^\[ei\]$" => "[0N-][EI][LES]";
-
-		// special case: owe
-		"^o$" => "[0N-][&O]";
-
-		// special case: ewe
-		"^ü$" => "[0N-]Ä[&U]";
-
-		// vowels at beginning
-		// lower
-		"^i\[tsh\]" => "[0N-]I[TSH]"; // not lowered
-		"^i\[th\]" => "[0N-]I[TH]"; // not lowered
-		
-		"^i" => "[0D-]I";
-		"^\[ai\]" => "[0D-][AI]"; // eyeglass (starts on baseline!), but ideally doesn't (haha ... where's the logic anyway ...)
-		"^\[au\]" => "[0D-][AU]";
-		"^\[oi\]" => "[0D-][OI]";
-		
-		// base line
-		"^\[e1\]" => "[0N-][E1]";
-		"^\[ei\]" => "[0N-][EI]";
-		"^ä" => "[0N-][Ä]";
-		"^a" => "[0N-][A]";
-		"^o" => "[0N-][O]";
-		"^ö" => "[0N-][Ö]";
-		"^u" => "[0N-][U]";
-		"^ü" => "[0N-][Ü]";
-
-		// epentesis before end vowel
-		"i(\[e1\])" => "I[&E]$1";
-		"\[oi\]i" => "[OI][&E]i"; // employee
-		"\[ei\]i" => "[EI][&E]i"; // spreyey
-
-		// end vowels
-		"\[(e1|ei)\]$" => "[-E]";
-		"i$" => "[-I]";
-		"i\\" => "[-I]\"; // everywhere
-		"\[(ai)\]$" => "[#9][#9][-EI]";
-		"\[(ai|AI)\]\|" => "[AI][LES]|";
-		"\[(au)\]$" => "[AU][LES]";
-		"\[(oi)\]$" => "[OI][LES]";
-		"\[(oi)\]\|" => "[OI][LES]|";
-		"o$" => "[&O]";
-		"o\|" => "[&O]\";
-		"ü$" => "Ä[&U]";
-		"u$" => "A[&U]";
-		"u\|" => "A[&U]\";
-		
-		// "epenthetic" stuff
-		"\[ei\]\[e1\]" => "[EI][&E][E1]"; 
-		"\[au\]\[e1\]" => "[AU][&E][E1]";
-		"o\[e1\]" => "[&O][E1]";
-		"u\[e1\]" => "A[&U][E1]";
-		"ü\[e1\]" => "Ä[&U][E1]";
-		"\[ei\]i" => "[EI][&E]I";
-		"i\[e1\]" => "I[&E][E1]";
-		"ii" => "I[&E]I";
-		"\[ai\]i" => "[AI][&E]I"; // verifying
-		"\[oi\]i" => "[OI][&E]I"; // boyish
-		"\[oi\]\[e1\]" => "[OI][&E][E+]"; // joyous
-		"ui" => "A[&U]I"; // wooing
-		"iä" => "I[&E]Ä"; // piano
-		"i\[ei\]" => "I[&E][EI]"; // officiate
-		"\[ai\]ä" => "[AI][&E]Ä"; // triangle
-		"\[ai\]ö" => "[AI][&E]Ö"; // triumphal
-		"(?<!\[)oi" => "[&O]I"; // yellowish
-		"\[ai\]{ET}" => "[AI][&E]{ET}"; // quietly
-		"(\[ai\])({NESS})" => "$1[&E]$2"; // shyness
-		"i{ET}" => "I[&E]{ET}"; // associate
-		"u{NESS}" => "A[&U]{NESS}"; // trueness
-
+		// not needed for font
 	#EndSubSection(completor)
 	#BeginSubSection(separator)
-		// separations
-		"(^.*?$)" => "strtolower()";
-		"({.*?})" => "strtoupper()";
-		
-		// abbreviations
-		"{CAN}{NOT}" => "{CAN}[#5]\\{NOT}";
-		"{NOT}{" => "{NOT}\{"; // notwithstanding
-		"i{WHERE}" => "[-I]\{WHERE}";
-		"{ET}\|" => "{ET}\"; // trumpet-call
-		"([^\\]){HOW}" => "$1\{HOW}"; // anyhow
-		"i\\{HOW}" => "[-I]\{HOW}";  // re-complete
-
-		// composed words
-		"i\|" => "i[&E]|"; // seaside
-		"(s|\[ng\])\|\[ar\]" => "$1\[AR]"; // horse-race, dining-room (separate)
-
-		// separate in general
-		//"\|" => "\\";
-
+		// not needed for font
 	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
-		
-		"^(.*)$" => "strtolower()";
-		"({.*?})" => "strtoupper()"; // prevent transformations inside {}
-		
-		// assign english sounds to original german system
-		// vowels
-		"\[ei\]" => "[E]";
-		"\[ai\]" => "[EI]";
-		"\[oi\]" => "[EU]";
-		
-		
-		// consonants
-		// double to single
-		"\[sk\]" => "C";
-		"\[kw\]" => "Q";
-		"\[d[zs]\]" => "J";
-		"\[th\]" => "Z";
-		
-		// double to triple
-		"\[sh\]" => "[SCH]";
-
-		// triple to triple
-
-
-		// double (triple) to double
-		"\[ct\]" => "[CK]";
-		"\[pt\]" => "[PP]";
-		"\[ft\]" => "[FF]";
-		//"\[lt\]" => "[LT]";
-		"\[kst\]" => "[xt]";
-		"\[rt\]" => "[RR]";
-		"\[nt\]" => "[NN]";
-		"\[mpt\]" => "[MM]";
-		"\[tsh\]" => "[CH]";
-				
-		
-		// y
-		"j" => "y"; // yet; might not be correct in all cases
-
-		"(\[.*?\])" => "strtoupper()";
-
-		// from transcriptor
-		"z" => "s"; // pears
-		
+		// not needed for font
 	#EndSubSection(rewriter)
 	#BeginSubSection(beautifier)
-		// rewrite some tokens to get a more esthetical result
-		"Ö" => "ö";	// the eternal problem of special characters ... :)
-		"Ä" => "ä";
-		"Ü" => "ü";
-		"([A-Z]*?)" => "strtolower()";
-
-		"(\[i\]|i)z" => "$1[^Z]";
-		"(\[i\]|i)\[sch\]" => "$1[^SCH]";
-		"(\[e?i\]|i)\[ch\]" => "$1[^CH]";
-		
-		"ö" => "Ö";
-		"ä" => "Ä";
-		"ü" => "Ü";
-		"([a-z]*?)" => "strtoupper()";
-
+		// not needed for font
 	#EndSubSection(beautifier)
 	#BeginSubSection(substituter)
-		// convert all abbreviations to upperspace
-		"({.*?})" => "strtoupper()";
-
-		"{NN}" => "[NN]"; // n't in wasn't
-		"\[VR\]{SELF}" => "[VR]I[@L]"; // herself
-		"{CONTRAR}I{NESS}" => "{CONTRAR}I[&E]{NESS}";
-		"{ISNT}" => "[IST][NN]"; // isn't 
-		"{RE}{INTER}" => "[AR]I{INTER}"; // reintroduce 
-		"{THERE}{WITH}" => "[VR]\[I][W]";
-		"(.){EVER}" => "$1[E1][VR]";
-		"{FOR}\[AR\]" => "[VORAR]"; // forerunner
-		"{IT}{SELF}" => "I[ES][#6-]I[@L]"; // ugly: just for now
-		"{UN}{INTER}" => "A[&U]I[INTER]";
-		"{ITS}" => "I[ES][#0]IS";
-		"{IS}" => "[IST]";
-		"{A}" => "[ES]";
-		"{IT}" => "I[EST]";
-		"{I}" => "[0N-]E[-EI]";
-		"{THEM}" => "[0N-][EM]";
-		"{THE}" => "D";
-		"{TOO}" => "UT";
-		"{TO}" => "T";
-		"{HAD}" => "AD";
-		"{DO}" => "UD";
-		"{BE}" => "IB";
-		"{BUT}" => "OB";
-		"{WE}" => "W";
-		"{WHAT}" => "AW";
-		"{WAS}" => "OW";
-		"{WOULD}" => "UW";
-		"(.){WITH}$" => "$1W"; // herewith ?
-		"{WITH}" => "IW";
-		"{VERY}" => "V";
-		"{CAN}" => "AK";
-		"{COULD}" => "UK";
-		"{HE}" => "H";
-		"{HAVE}" => "AH";
-		"{WHO}" => "UH";
-		"{HOW}" => "[AU]H";
-		"{ALL}" => "AL";
-		"{ED}" => "[EN]";
-		"{HAS}" => "A[S=]";
-		"{SO}" => "[0N-][SS]";
-		"{SOME}" => "O[SEIN]";
-		"{THIS}" => "[DIS]";
-		"{THESE}" => "[DIS@#.]"; // use diacritics
-		"{NOT}" => "[N=]";
-		"{NO}" => "O[N=]";
-		"{THAN}" => "A[N=]";
-		"{THEN}" => "[0N-][EN]";
-		"(.){UP}" => "$1\[0N-][&A]";
-		"{UP}" => "[0N-][&A]";
-		"{IN}" => "[IN]";
-		"{WHICH}{EVER}" => "I[^CH][E1][VR]";
-		"{WHICH}" => "I[^CH]";
-		"{THEY}" => "Z";
-		"{THAT}" => "AZ";
-		"{SHALL}" => "A[SCH]";
-		"{SHOULD}" => "[0N-]UD";
-		"{OTHER}" => "[0N-]ÖZ";
-		"{AND}" => "A[&U]";
-		"{YOU}" => "[AU][&U]";
-		"{AT}" => "A[LES]";
-		"{IF}" => "I[LES]";
-		"{OFF}" => "[OFF]";
-		"{WILL}" => "[LUI]";
-		"{THERE}" => "[VR]"; // vr or ar?
-		"{THEIR}" => "[AR]";
-		"{EVER}" => "[0N-][E1][VR]";
-		"{OVER}" => "[OFF+AR]";
-		"{UNDER}" => "[N=@R6]";
-		"{FOR}" => "[VOR]";
-		"(?<!{SOME}|.){WHERE}" => "\[W@R6]";
-		"{WHERE}" => "[W@R6]";
-		"{WERE}" => "[W@R6]";
-		"{BE1}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "B[&E]$1";
-		"{BE1}" => "B";
-		"{DE}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "D[&E]$1";
-		"{DE}" => "D";
-		"{RE}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "[AR][&E]$1";
-		"{RE}" => "[AR]";
-		"{CIRCUM}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "C[&E]$1";
-		"{CIRCUM}" => "C";
-		"{SUB}" => "[&U]";
-		"{UN}" => "A[&U]";
-		"^{EXTRA}" => "[0N-]A[&E]";
-		"{EXTRA}" => "A[&E]";
-		"{EX}" => "[&E]";
-		"{PRO}" => "[P@R]O"; // not really a prefixe ...
-		"{FROM}" => "[F@R6]";
-		"{YOUR}{SELF}" => "[UR]I[@L]";
-		"{YOUR}" => "[UR]";
-		"{PERHAPS}" => "[PERHAPS]"; // new token
-		"{CONTRAR}" => "[BEI+AR]";
-		"{GENER}" => "J[VR]";
-		"{NEVER}" => "[N=][E1][VR]";
-		"^{NECESSAR}" => "[N=][E1][VR]";
-		"{NECESSAR}" => "N[E1][VR]";
-		"^{ANTI}" => "[0N-][ANT]";
-		"{ANTI}" => "[ANT]";
-		"{CON}" => "[BEI]";
-		"{CONTR}" => "[BEI+AR]";
-		"{INTER}" => "[INTER]";
-		"{PER}([aeiouAEIOZ]|ä|ö|ü|Ä|Ö|Ü|\[E1\])" => "P[&E]$1";
-		"{PER}" => "P";
-		"{SUR}(r|\[AR\])?" => "[SOBRE]"; // surrender: don't write second r!
-		"{TRANS}" => "A[T@R]";
-		"{ACOM}" => "[0N-][BEI]";
-		"{SIR}" => "[SOBRE]";
-		"{GENTLEMAN}" => "AM";
-		"{GENTLEMEN}" => "M";
-		"{MUCH}" => "OM";
-		"{MR}" => "[M@R6]";
-		"{MRS}" => "[M@R6]S";
-		"^{SELF}" => "[0N-][#2][@L]";
-		"{SELF}" => "[@L]"; // myself
-		"{ET}{LY}" => "I[&ET@L3][-I]"; // "[&T]I[@L][-I]"; // quietly (ugly, solution just for now)
-		"{LY}" => "[-I]"; 
-		"{ET}S" => "[&TS]";
-		"{ET}" => "[&T]";
-		"{ITY}S" => "[&EITS]";
-		"{ITY}" => "[HEIT]";
-		"([aeiouAEIOU]|ä|ö|ü|Ä|Ö|Ü){FUL}" => "$1[&E]AF";
-		"{FUL}{LY}" => "AF[-I]";
-		"{FUL}" => "AF";
-		"I{NESS}" => "[ION]";
-		"{NESS}" => "O[ION]";
-		"{SHIP}" => "[SCHAFT]";
-		"{TION}" => "[SS]";
-		"{MENT}" => "[MPF]";
-		"{TUAL}{LY}" => "H[-I]";
-		"{TUAL}" => "H";
-		"{SWISS}" => "[0U-][#0][SS]";
-		"{SWITZER}" => "[0U-][#0][SS]";
-		"{PARTICUL}" => "A[RR6]";
-		"{MESSRS}" => "[M@R6]S";
-		"{ANDSOON}" => "A[&U][SS]";
-		"{LESS}" => "L[E1]S";
-		"{OUR}" => "[0D-][AU][VR]";
-		//"{}" => "";
-		//"{}" => "";
-		//"{}" => "";
-		//"{}" => "";
-		//"{}" => "";
-		//"{}" => "";
-		//"{}" => "";
-		//"{}" => "";
-		
-		
+		// not needed for font
 	#EndSubSection(substituter)
 	#BeginSubSection(relancer2)	
 		// empty
 	#EndSubSection(relancer2)
 	#BeginSubSection(eliminator)
-		// filter out unused linguistical markers
-		"(?<!\[)-(?!\])" => "";
+		// not needed for font
 	#EndSubSection(eliminator)
 	#BeginSubSection(prespacer)
 
@@ -2002,66 +926,13 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)
-		// combined tokens with early exit points get truncated at the end of the words
-		// this functionality was introduced to handle correctly base tokens
-		// the side effect on combined tokens is incorrect (and undesired)
-		// to correct that add a "dummy" (distance) token at the end of the word
-		// the effect is that the algorithm then won't consider this token to be at the end of the word
-		// this is only a workaround, but it works great (so it might be the final solution:)
-
-		"(\[ng@l3\])$" => "$1[#0]"; // see: dongle (with angle there's the problem with shadow that covers the l: must be solved with border vectors (offsets 10 and 11 in header)
-		"(\[nk@l3\])$" => "$1[#0]"; // uncle
- 
+		// not needed for font
 	#EndSubSection(exitkiller)
 	#BeginSubSection(diacritics)
-		
-		// For the moment, all these have to be considered as just examples
-		// There are different cases of diacritics:
-		// 1) diacritics above vowels (dot, dote) => solved with a dummy diacritics base token #D#
-		//    plus a diacritic token (@#/_ or @#._.) placed before distance and vowel
-		// 2) diacritics combined with base token (classic case) => used in Miller for example
-		//    (in the case of feel/fill it would be better to use this solution too)
-		//
-		// In order to have a clean solution it is necessary to:
-		// 1) adapt program so that different models can use the same "font" (centralized font)
-		// 2) develop one general font for Stolze-Schrey that can be used by different models
-		// This of course is a lot of work ... :/|
-		//
-		// Another aspect is when - and based on what criteria - a diacritics token is inserted.
-		// 1) race vs rays: based on phonetics? 
-		//    (consequence: always gets also a diacritics mark, which is not necessary!?)
-		// 2) feel vs fill: based on "case per case" => only inserted if there is a real
-		//    "homography" (which means: two words with different meanings are written the same way)
-		//
-		// In any case the problem is complex and needs more investigation
-
-		"tstwrt(^[Dd]otes?$)" => { "(\[#.\])\[o\]", "[#D#@#/_]$1[O]" }; // dote
-		"tstwrt(^[Dd]ots?$)" => { "(\[#.\])\[o\]", "[#D#@#._.]$1[O]" }; // dot
-		"tstwrt(^[Ff]eels?$)" => { "(\[#.\])\[i\]", "[#D#@#/_]$1[I]" }; // feel
-		"tstwrt(^[Ff]ills?$)" => { "(\[#.\])\[i\]", "[#D#@#._.]$1[I]" }; // fill
-		"tstwrt(^[Mm]eals?$)" => { "(\[#.\])\[i\]", "[#D#@#/_]$1[I]" }; // meal
-		"tstwrt(^[Mm]ills?$)" => { "(\[#.\])\[i\]", "[#D#@#._.]$1[I]" }; // mill
-		"tstwrt([Pp]ool)" => { "(\[#.\])\[u\]", "[#D#@#/_]$1[U]" }; // pool
-		"tstwrt([Pp]ull)" => { "(\[#.\])\[u\]", "[#D#@#._.]$1[U]" }; // pull
-		"tstwrt([Hh]eel)" => { "(\[#.\])\[i\]", "[#D#@#/_]$1[I]" }; // heel
-		"tstwrt([Hh]ill)" => { "(\[#.\])\[i\]", "[#D#@#._.]$1[I]" }; // hill
-		"tstwrt(^[Hh]alls?$)" => { "(\[#.\])\[o\]", "$1[O][#D#@#o]" }; // hall
-		"tstwrt([Bb]all)" => { "(\[#.\])\[o\]", "$1[O][#D#@#o]" }; // hall
-		"tstwrt([Cc]all)" => { "(\[#.\])\[o\]", "$1[O][#D#@#o]" }; // call
-		"tstwrt(^Miller$)" => { "^\[m\](.*?)\[l\]", "[M@#_]$1[L@#/.]" }; // Miller
-		"tstwrt(^[PpRr]ays$)" => { "\[s\]$", "[S@#.]" }; // pays, rays (vs pace, race)
-		"tstwrt(^[Kk]eys$)" => { "\[s\]$", "[S@#.]" }; // kiss vs keys
-
-		// single consonants (distinguish from abbreviations)
-		"tstwrt(^d$)" => { "^.*?$", "[D@#/]" }; // distinguish: the vs d
-		"tstwrt(^w$)" => { "^.*?$", "[W@#/]" }; // distinguish: we vs w
-		"tstwrt(^t$)" => { "^.*?$", "[T@#/]" }; // distinguish: to vs t
-
-		// capital letter at beginning
-		"tstwrt(^Bl)" => { "\[b@l\]", "[B@L@#_]" }; // Black
-
+		// not needed for font
 	#EndSubSection(diacritics)
 	#BeginSubSection(finalizer)
+		// SHARED FONT: BORROWING MODEL MUST TAKE CARE OF THIS! (IF NECESSARY)		
 		// convert all to upper case for final rendering [a-z]|ä|ö|ü
 		"(^.*?$)" => "strtoupper()";
 		//"ä" => "Ä";	// strtolower() works with umlaut, but strtoupper() doesn't ?!

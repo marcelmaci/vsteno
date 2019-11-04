@@ -15,6 +15,12 @@
 </textarea>
 </td></tr>
 </table>
+<!--include necessary post-variables as hidden data fields-->
+<!--post-variables are needed in calculation before session calls (that's why they must be included from session here)-->
+<input type="hidden" name="font_borrow_yesno" value="<?php echo ($_SESSION['font_borrow_yesno']) ? "yes" : "no"?>"> 
+<input type="hidden" name="font_borrow_model_name" value="<?php echo $_SESSION['font_borrow_model_name']; ?>">
+<input type="hidden" name="font_load_from_file_yesno" value="<?php echo ($_SESSION['font_load_from_file_yesno']) ? "yes" : "no"?>">
+
 <input type="submit" name="action" value="abschicken"><a href="input.php"><input type="button" value="Optionen"></a>
 </form>
 </div>

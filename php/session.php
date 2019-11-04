@@ -2,7 +2,7 @@
 
 require_once "constants.php";
 require_once "import_model.php";
-
+  
 function InitializeSessionVariables() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
     $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model, $standard_models_list;

@@ -257,8 +257,8 @@ $standard_models_list = array(
 );
 //$default_model = "99999_default_backup";
 
-// fonts
-$font_files_list = array( "ENSSBAS" ); // use ENSSBAS.txt as shared font for now (.txt is added by LoadFontFromFile)
+// fonts (whitelist or allowed or accessible fonts)
+$font_files_list = array( "ENSSBAS", "GESSBAS" ); // use ENSSBAS.txt as shared font for now (.txt is added by LoadFontFromFile)
 
 // caching
 $cached_results = array();

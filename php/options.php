@@ -176,11 +176,18 @@ function ParseAndSetInlineOptions( $tags ) {
 
 function CheckAndSetSessionVariable( $variable, $value ) {
     global $whitelist_variables, $global_error_string;
+    // ok, this is ugly: for some strange reason, spacer_vowel_groups session variable doesn't get initialized / gets deleted on the way
+    // checked everything (is in initializing function, in whitelist - even the resetrestrictedvariables-functions should be ok), but
+    // couldn't find any error related to that (even in the parser everything seems to be fine). 
+    // Strange enough: re-setting this variable in other places doesn't change anything.
+    // So, temporary solution: reset it here ... (autsch ... :)
+    $_SESSION['spacer_vowel_groups'] = ""; 
+    //echo "checkandsetsessionvariable(): [$variable]<br>";
     if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
                     if (mb_strpos($whitelist_variables, " $variable ") === false) {
                         AddError("ERROR: you are not allowed to set variable '" . htmlspecialchars($variable) . "' to '" . htmlspecialchars($value) . "'!");
                     } else {
-                        //echo "session[$variable] = $value<br>";
+                        /*if ($variable === "spacer_vowel_groups")*/ //echo "session[$variable] = $value<br>";
                         switch ($value) {
                             case "true" : $_SESSION[$variable] = true; break;
                             case "false" : $_SESSION[$variable] = false; break;
