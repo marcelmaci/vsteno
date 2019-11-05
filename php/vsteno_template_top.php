@@ -21,9 +21,9 @@
            <div id="purelab_texts">
                 
                 <?php 
-                    require_once "fortune.php";
+                    //require_once "fortune.php";
                     //$_SESSION['original_text_content'] = $fortune_cookie;
-                    echo "<center>" . fortune() . "</center>";
+                    //echo "<center>" . fortune() . "</center>";
                 ?>
            </div>
             

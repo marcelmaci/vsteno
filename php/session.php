@@ -2,7 +2,29 @@
 
 require_once "constants.php";
 require_once "import_model.php";
-  
+
+// instead of hardcoded function ResetRestrictedSessionVariables() in import_model.php
+// use this array with key => value
+global $restricted_session_variables_list;
+$restricted_session_variables_list = array( 
+    "prefixes_list" => "",
+    "suffixes_list" => "",
+    "block_list" => "",
+    "filter_list" => "",
+    "analysis_type" => "none",
+    "spacer_token_combinations" => "",
+    "spacer_vowel_groups" => "",
+    "spacer_rules_list" => "",
+    "license" => "",
+    "release_notes" => "",
+    "copyright_model" => "",
+    "model_version" => "",
+    "model_date" => "",
+    "font_borrow_yesno" => false,
+ //   "font_borrow_model_name" => "", // must not necessarily be resetted
+ //   "font_load_from_file" => false
+);
+
 function InitializeSessionVariables() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
     $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model, $standard_models_list;
@@ -174,6 +196,9 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_lineoverpass_yesno'] = true;
     $_SESSION['rendering_lineoverpass_start_factor'] = 0.3;
     $_SESSION['rendering_lineoverpass_end_factor'] = 0.3;
+
+    $_SESSION['handwriting_marker'] = "";
+
 
 /*
     $_SESSION['rendering_middleline_yesno'] = false;
@@ -357,6 +382,8 @@ if ($_POST['token_size'] != "") {
     $_SESSION['font_borrow_yesno'] = ($_POST['font_borrow_yesno'] === "yes") ? true : false;
     $_SESSION['font_borrow_model_name'] = htmlspecialchars($_POST['font_borrow_model_name']);
     $_SESSION['font_load_from_file_yesno'] = ($_POST['font_load_from_file_yesno'] === "yes") ? true : false;
+   
+    $_SESSION['handwriting_marker'] = htmlspecialchars($_POST['handwriting_marker']);
     
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";

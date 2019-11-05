@@ -1099,9 +1099,10 @@ if ($_SESSION['analysis_type'] === "selected") {
   
                     break;
                 case "handwriting":
+                    //echo "handwriting marker: " . $_SESSION['handwriting_marker'] . " output: $output<br>";
                     $output = $word;
-                    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+]", $output ); // upper case
-                    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-]", $output ); // lower case
+                    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
+                    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
                     $output = mb_strtoupper( $output );
                     return $output;
             }

@@ -198,6 +198,7 @@ function GetSubSection($text, $name) {
 
 /////////////////////////////////////////////////// import header //////////////////////////////////////////////////
 function ResetRestrictedSessionVariables() {
+        global $restricted_session_variables_list;
         // restricted session variables are variables that are not accessible via the input form
         // the only way to set them is via inline-option tags
         // they are typically used for data that is specific for the model like affix and stems
@@ -207,6 +208,10 @@ function ResetRestrictedSessionVariables() {
         //$_SESSION['language_hyphenator'] = "";
         // $_SESSION['hyphenate_yesno'] = true;  // same goes for these two variables
         // $_SESSION['composed_words_yesno'] = true;
+        foreach ($restricted_session_variables_list as $variable => $value) {
+            $_SESSION[$variable] = $value; 
+        }
+        /*
         $_SESSION['prefixes_list'] = ""; 
         $_SESSION['stems_list'] = ""; 
         $_SESSION['suffixes_list'] = ""; 
@@ -221,6 +226,7 @@ function ResetRestrictedSessionVariables() {
         $_SESSION['copyright_footer'] = "";
         $_SESSION['model_version'] = "";
         $_SESSION['model_date'] = "";
+        */
 }
 
 

@@ -175,6 +175,7 @@ Stil:
 <input type="radio" name="token_line_style" value="dashed" <?php echo ($_SESSION['token_style_type'] === "dashed") ? "checked" : "";?>> gestrichelt 
 <input type="radio" name="token_line_style" value="custom" <?php echo ($_SESSION['token_style_type'] === "custom") ? "checked" : "";?>> benutzerdefiniert:
 <input type="text" name="token_line_style_custom_value"  size="10" value="<?php echo $_SESSION['token_style_custom_value'];?>">
+Handwriting: <input type="text" name="handwriting_marker"  size="10" value="<?php echo $_SESSION['handwriting_marker'];?>">
 <br>
 </td></tr>
 <tr><td>Hilfslinien</td></tr>

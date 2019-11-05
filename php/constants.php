@@ -32,7 +32,7 @@ const version_date = "3. Oktober 2019";                                  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
-
+    
 // header
 const header_length = 24;                       // 24 first values of every token is reserved for header
 const offs_token_width = 0;                     // offset 0: width of token
@@ -162,6 +162,12 @@ const early_exit_point = 99;
 
 const draw_normal = 0;
 const draw_no_connection = 5;
+
+// token definitions: distinction between x and y values (offsets)
+$x_values = array( offs_token_width, offs_additional_x_before, offs_additional_x_after, offs_parrotaxis1, offs_parrotaxis2, 
+                    offs_parrotaxis3, offs_bvectx, offs_alternative_exit_point_x );
+$y_values = array( offs_delta_y_before, offs_delta_y_after, offs_additional_delta_y, offs_bvecty, offs_inconditional_delta_y_before,
+                    offs_inconditional_delta_y_before, offs_alternative_exit_point_y );
 
 // parser
 $punctuation = ".,:;!?…";                        // metaparser recognizes these tokens as punctuation and treats them differently 

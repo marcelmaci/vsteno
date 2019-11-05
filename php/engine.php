@@ -2558,7 +2558,58 @@ function CreateCombinedTokens() {
 // - additionally TokenShifter writes values offs_inconditional_delta_y_before/after (offsets 13 & 14) to header of new token
 //
 
-function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $inconditional_delta_y_before, $inconditional_delta_y_after ) {
+function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2) {
+    // As for the TokenCombiner include a second function without adapting original model / parser structure
+    // If arg1 and arg2 are integer values => use classic functionality
+    // Otherwhise (= if they are strings) => use shrinking
+    //echo "TokenShifter(): $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2<br>";
+    if ((is_integer($arg1)) || (is_integer($arg2))) TokenShifterClassic( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2);
+    else TokenShifterShrinking( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2 );    
+}
+
+function TokenShifterShrinking($b, $k, $sx, $sy, $arg1, $arg2)  {
+    // interpret data in the following way:
+    // $b: base token (example: "#A+")
+    // $k: key for new token (example: "#A0+")
+    // $sx / $sy: shrinking x / y => this argument can have two formats
+    // - integer: normal scaling (without delta)
+    // - string: "d:f" => subtract delta, shrink and readd delta 
+    //echo "TokenShifterShrinking(): $b, $k, $sx, $sy, $arg1, $arg2<br>";
+    global $steno_tokens_master, $x_values, $y_values;
+    $length = count($steno_tokens_master[$b]);
+    //echo "original:<br>"; var_dump($steno_tokens_master[$b]); echo "<br>";
+    // adapt header values
+    // prepare variables
+    $new_token = array();
+    if (!(is_string($sx))) { $dx = 0; $fx = $sx; }
+    else { list($dx, $fx) = explode(":", $sx); }
+    if (!(is_string($sy))) { $dy = 0; $fy = $sy; }
+    else { list($dy, $fy) = explode(":", $sy); }
+    for ($i=0; $i<header_length; $i++) {
+        $value = $steno_tokens_master[$b][$i];
+        if (in_array($i, $x_values)) $new_token[] = ($value - $dx) * $fx + $dx;
+        elseif (in_array($i, $y_values)) $new_token[] = ($value - $dy) * $fy + $dy;
+        else $new_token[] = $value; // default: copy value (without modification)
+    }
+    //echo "header: "; var_dump($new_token); echo "<br>";
+    for ($i=header_length; $i<$length; $i+=tuplet_length) {
+        //echo "i: $i<br>";
+        // read, modify and copy original values (8-tuplet)
+        $new_token[] = ($steno_tokens_master[$b][$i+offs_x1]-$dx) * $fx + $dx;
+        $new_token[] = ($steno_tokens_master[$b][$i+offs_y1]-$dy) * $fy + $dy;
+        $new_token[] = $steno_tokens_master[$b][$i+offs_t1];
+        $new_token[] = $steno_tokens_master[$b][$i+offs_d1];
+        $new_token[] = $steno_tokens_master[$b][$i+offs_th];
+        $new_token[] = $steno_tokens_master[$b][$i+offs_dr];
+        $new_token[] = $steno_tokens_master[$b][$i+offs_d2];
+        $new_token[] = $steno_tokens_master[$b][$i+offs_t2];
+    }
+    // insert new token in steno_tokens_master
+    //echo "<br>"; var_dump($new_token); echo "<br>";
+    $steno_tokens_master[$k] = $new_token;
+}
+
+function TokenShifterClassic( $base_token, $key_for_new_token, $delta_x, $delta_y, $inconditional_delta_y_before, $inconditional_delta_y_after ) {
     global $steno_tokens_master, $steno_tokens_type;
     $new_token = array();
     $new_token_key = $key_for_new_token;
