@@ -1932,7 +1932,7 @@ function CalculateLayoutedSVG( $text_array ) {
                 $collected_inline_option_tags = ""; // reset variable for next word
                 //var_dump($word_tags);
                 
-                if ($_SESSION['token_type'] === "shorthand") {
+                if (($_SESSION['token_type'] === "shorthand") || ($_SESSION['token_type'] === "handwriting")) {
                     list( $word_splines[$actual_word], $word_separate_spline[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
                     $word_width[$actual_word] = $delta_width;
                     //var_dump($word_splines[$actual_word]);
