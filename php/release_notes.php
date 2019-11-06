@@ -41,7 +41,7 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
     <li>Automatisierte Umriss-Schattierung (Polygon-Modellierung) ab Daten der SE1 (umgesetzt, Testphase)</li>
     <li>Orthogonale und proportionale Knots mit parallelen Rotationsachsen (gemäss SE1 rev1, umgesetzt, Testphase)</li>
     <li>Paralleledition: Originaltext (Langschrift) neben Kurzschrift</li>
-    <li>TokenShifter: Erweiterung um Scaling-Funktion</li>
+    <li>TokenShifter: Erweiterung um Scaling-Funktion (inklusive Anpassung der Strichdicke)</li>
     <li>Font: Import/Export (shared fonts)</li>
 </ul>
 </li>

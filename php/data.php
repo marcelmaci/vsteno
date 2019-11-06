@@ -105,12 +105,9 @@ else {
     
 /////////////////// end of patching //////////////////////////////////////////////////////////
 
-echo $text_to_parse;
-
 $test = ImportModelFromText($text_to_parse);
 $actual_model = $_SESSION['actual_model'];
 $_SESSION['last_updated_model'] = $actual_model;
-echo "hithere";
 
 // set statistics
 //$_SESSION['statistics_tokens'] = count($steno_tokens_master[$actual_model]);

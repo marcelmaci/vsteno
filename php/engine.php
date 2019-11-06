@@ -2567,13 +2567,31 @@ function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg
     else TokenShifterShrinking( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2 );    
 }
 
+function CalculateNewThickness( $tht, $thf, $thickness ) {
+    switch ($tht) {
+        case "a" : return $thickness * $thf; break; // all
+        case "p" : return ($thickness > 1.0) ? $thickness * $thf : $thickness; // partial
+        case "n" : return $thickness; break; // none
+    }
+}
+
 function TokenShifterShrinking($b, $k, $sx, $sy, $arg1, $arg2)  {
     // interpret data in the following way:
     // $b: base token (example: "#A+")
-    // $k: key for new token (example: "#A0+")
+    // $k: key for new token (example: "#A+0") NOTE: #A0+ is not a good idea since it can not be used with session-variable token_marker
     // $sx / $sy: shrinking x / y => this argument can have two formats
     // - integer: normal scaling (without delta)
     // - string: "d:f" => subtract delta, shrink and readd delta 
+    // additional function: adjust thickness of token lines
+    // in order to invoke this funtionality, arg1 must be a non empty string that contain the following information:
+    // - type: a = all (including th === 1.0), p = partial (only th > 1.0)
+    // - factor: >1 = thicker <1 = thinner; or "sx" / "sy" / "sf" = shrinking factor (general or x / y) is used 
+    // - shadowing: ! = always; "" (empty) = default (= only when shadowed)
+    // Type and factor have to be separated by :
+    // Example: "a:1.2!" = apply factor 1.2 to all and patch header at offset 12 (offs_token_type)
+    // NOTE: This function can also be used to redefine (adjust) tokens defined in base section.
+    // To do so, use same key for original and new token. The function then replaces the old token with the new one.
+    // Similarly, a token that exists already is replaced with the new token.
     //echo "TokenShifterShrinking(): $b, $k, $sx, $sy, $arg1, $arg2<br>";
     global $steno_tokens_master, $x_values, $y_values;
     $length = count($steno_tokens_master[$b]);
@@ -2585,12 +2603,24 @@ function TokenShifterShrinking($b, $k, $sx, $sy, $arg1, $arg2)  {
     else { list($dx, $fx) = explode(":", $sx); }
     if (!(is_string($sy))) { $dy = 0; $fy = $sy; }
     else { list($dy, $fy) = explode(":", $sy); }
+    if ($arg1 !== "") {
+        if (mb_substr($arg1, -1) === "!") { $arg1 = preg_replace( "/^(.*?)\!$/", "$1", $arg1); $patch = true; }
+        list($tht, $thf) = explode(":", $arg1);  
+    } else { $thf = 1.0; $patch = false; $tht = "n"; };
+    switch ($thf) {
+        case "sx" : $thf = $fx; break; // use $fx, $fy, or avg($fx, $fy) to reduce/increase thickness
+        case "sy" : $thf = $fy; break;
+        case "sf" : $thf = ($fx + $fy) / 2; break;
+    }
+    //echo "tht: $tht thf: $thf patch: [$patch]<br>";
+    // copy and modify header
     for ($i=0; $i<header_length; $i++) {
         $value = $steno_tokens_master[$b][$i];
         if (in_array($i, $x_values)) $new_token[] = ($value - $dx) * $fx + $dx;
         elseif (in_array($i, $y_values)) $new_token[] = ($value - $dy) * $fy + $dy;
         else $new_token[] = $value; // default: copy value (without modification)
     }
+    if ($patch) $new_token[offs_token_type] = 1; // set token to "always shadowed" (= new thickness will be applied inconditionally)
     //echo "header: "; var_dump($new_token); echo "<br>";
     for ($i=header_length; $i<$length; $i+=tuplet_length) {
         //echo "i: $i<br>";
@@ -2599,13 +2629,15 @@ function TokenShifterShrinking($b, $k, $sx, $sy, $arg1, $arg2)  {
         $new_token[] = ($steno_tokens_master[$b][$i+offs_y1]-$dy) * $fy + $dy;
         $new_token[] = $steno_tokens_master[$b][$i+offs_t1];
         $new_token[] = $steno_tokens_master[$b][$i+offs_d1];
-        $new_token[] = $steno_tokens_master[$b][$i+offs_th];
+        $new_token[] = CalculateNewThickness($tht, $thf, $steno_tokens_master[$b][$i+offs_th]);
         $new_token[] = $steno_tokens_master[$b][$i+offs_dr];
         $new_token[] = $steno_tokens_master[$b][$i+offs_d2];
         $new_token[] = $steno_tokens_master[$b][$i+offs_t2];
     }
     // insert new token in steno_tokens_master
     //echo "<br>"; var_dump($new_token); echo "<br>";
+    if ($b === $k) $steno_tokens_master[$k] = null; // delete base token if keys are identical (= replace original token)
+    if ((isset($steno_tokens_master[$k])) && ($steno_tokens_master[$k] !== null)) $steno_tokens_master[$k] = null; // similar function: replace old definition with new one if $k-token exists
     $steno_tokens_master[$k] = $new_token;
 }
 

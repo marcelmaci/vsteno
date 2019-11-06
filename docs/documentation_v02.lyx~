@@ -130,113 +130,112 @@ Einleitung
 \end_layout
 
 \begin_layout Standard
-VSTENO wächst und wächst
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Oder wie man anders auch sagen könnte: Es wuchert ...
- :)
-\end_layout
-
-\end_inset
-
- ...
- Tatsächlich konnte in der vorliegenden, zweiten Version (V0.2) namens Ariadne
- der Funktionsumfang erheblich erweitert werden.
- Unter den Neuerungen sind zum Beispiel:
-\end_layout
-
-\begin_layout Itemize
-Englisch als weiteres Kurzschrift-System (Verkehrsschrift Stolze-Schrey)
- neben Deutsch, Spanisch und Französisch, welche verbessert wurden.
-\end_layout
-
-\begin_layout Itemize
-Eine kombinierte phonetische und linguistische Analyse, welche sich insbesondere
- für das englische System aufdrängte.
-\end_layout
-
-\begin_layout Itemize
-Hybride Regeln, welche gleichzeitig schriftliche, phonetische und linguistische
- Bedingungen überprüfen können.
-\end_layout
-
-\begin_layout Itemize
-Rückportierungen aus der SE2 wie Umrissmodellierung und proportionale Punkte
- mit parallelen Rotationsachsen.
-\end_layout
-
-\begin_layout Itemize
-Parallelsatz, also Langschrift auf gleicher Seite vis-à-vis von Kurzschrift.
-\end_layout
-
-\begin_layout Itemize
-Diakritische Zeichen in Verbindung mit Grundzeichen.
-\end_layout
-
-\begin_layout Itemize
-Allgemein verbesserte globale und individuelle Zeichenskalierung (inklusive
- Schattierung).
-\end_layout
-
-\begin_layout Itemize
-Gemeinsame Nutzung ein und desselben Fonts in verschiedenen Systemen (Sprachen).
+VSTENO wächst und wächst ...
+ Oder vielmehr: Es wuchert! Ariadne Labyrinth Minotauros
 \end_layout
 
 \begin_layout Standard
-Bei all diesen Neuerungen wird gleichzeitig offensichtlich, mit welchen
- technischen Einschränkungen VSTENO zu kämpfen hat.
- Die ursprüngliche Steno Engine, also das eigentliche Herzstück des Programms,
- ist in der Version 1 inzwischen hoffnungslos überholt.
- Zwar wurde sie x-Mal aufgebohrt, gepatcht und durch zuweilen fast münchausneris
-che Hacks immer wieder gedehnt und gebogen, um neuere Funktionalitäten ohngeacht
-et der fundamentalen Inkompatibilitäten, die sich diesem Ansinnen immer
- wieder sperrig in den Weg stellten, zu integrieren.
- Dieses buchstäbliche 
+Ladies and gentlemen ...
+ please fasten your seat belts! 
+\end_layout
+
+\begin_layout Standard
+Vielleicht sollte ich besser sagen: Es tuckert! Denn was anderes ist die
+ vermaledeite Steno Engine inzwischen also
+\end_layout
+
+\begin_layout Standard
+Bereits in der Einleitung zur ersten Version hatte ich ja auf jenes schaurig-ver
+trackte Dilemma hingewiesen, in dem dieses Projekt fortan ausweglos steckt.
+ Schon seit längerer Zeit ist klar, dass der gewählte Ansatz und die so
+ genannte Steno Engine ihre Mängel haben.
+ Neuere (bessere) Ideen und der Drang, das Ganze noch einmal von vorne (besser)
+ zu machen wären also da.
+ Der Wunsch zu sagen: Ok - lesson learned! VSTENO war (Imperfekt) ein tolles
+ Projekt, um das 
 \begin_inset Quotes eld
 \end_inset
 
-Aufmotzen eines Trottinetts zu einem Möchtegern-BMW
+Problem
+\begin_inset Quotes erd
+\end_inset
+
+ (
+\begin_inset Quotes eld
+\end_inset
+
+wie modelliert man Stenozeichen und welche mannigfaltigen Phänomene stellen
+ sich da ein?
+\begin_inset Quotes erd
+\end_inset
+
+) an sich zu verstehen, aber jetzt braucht es eine tabula rasa, einen neuen
+ Ansatz!
+\end_layout
+
+\begin_layout Standard
+Welche schöne Dinge könnte man programmieren in C++ oder Java! Einen sauberen
+ Parser, eine neue Formelsprache ...
+ und ein professionelles Layout dank Metafont und TEX
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Nicht dass an dieser Stelle irgendjemand auf die Idee käme, ich sei ein
- Autonarr oder gar Fan von BMW oder so ...
- aber der Vergleich vom fussbetriebenen Trotinett zu einem soliden Boliden
- schien mir im Falle der in der Grundkonzeption definitiv eher bescheidenen
- Steno Engine doch zutreffend ...
- :)
+Ich komme mehr und mehr zum Schluss, dass Prof.
+ Sarmann absolut richtig lag - und Metafont der Sache nicht nur gerecht
+ wird, sondern sie sogar einfacher und professioneller machen könnte.
 \end_layout
 
 \end_inset
 
+!
+\end_layout
 
+\begin_layout Standard
+Statt dieser hochtrabenden, hehren Visionen werde ich also auf die Seifenkiste
+\end_layout
+
+\begin_layout Standard
+Aber eben: Jedes Mal, wenn ich auch nur im Ansatz zu überschlagen versuche,
+ wie viel Zeit es - selbst bei effizientester
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Und für 
+\begin_inset Quotes eld
+\end_inset
+
+effizient
 \begin_inset Quotes erd
 \end_inset
 
- scheint zwar soweit ad-hoc und funktionell geglückt, es lässt sich indes
- nicht leugnen, dass hier gravierende und grundlegende Mängel bestehen,
- die dereinst nur durch eine komplette Neuimplementierung gelöst werden
- können.
+ habe ich mich wohlgemerkt noch nie gehalten ...
+ ;-)
 \end_layout
 
-\begin_layout Standard
-Sollen wir an dieser Stelle also einen Blick in die Zukunft wagen? In jene
- Schöne Neue Welt dessen, was VSTENO dereinst - in einem völlig neuen Kleid
- - sein könnte? Eine kokette, bezaubernde, objektorientierte Diva in Java
- oder C++ mit einem Satzsystem a la Metafont und TEX als soliden Unterbau?
- Ich komme zum Schluss, dass solche Träumereien ebenso unrealistisch wie
- sinnlos sind.
- Unrealistisch, weil eine Neuimplementierung mit den genannten Parametern
- locker 1500 - 2000 Stunden Arbeit in Anspruch nehmen kann; und sinnlos,
- weil mit VSTENO trotz seiner Mängel inzwischen ein brauchbares Programm
- zur Verfügung steht, dessen Potenzial noch nicht ausgeschöpft ist.
-\end_layout
+\end_inset
 
-\begin_layout Standard
-In diesem Sinne empfehle ich Ihnen Ariadne ganz herzlich zum Gebrauch.
+ Programmierung - wohl benötigen würde, um mit einem neuen Projekt auch
+ nur annähernd wieder an den Funktionsumfang heranzukommen, den VSTENO inzwische
+n erreicht hat, dann wird mir nahezu schwindlig ...
+ und ich begreife, dass es nach wie vor nichts anderes bleibt, als die 
+\begin_inset Quotes eld
+\end_inset
+
+Seifenkiste
+\begin_inset Quotes erd
+\end_inset
+
+ namens 
+\begin_inset Quotes eld
+\end_inset
+
+Steno Engine 1 Revision 1
+\begin_inset Quotes erd
+\end_inset
+
+ weiter auszubauen.
 \end_layout
 
 \begin_layout Section*
