@@ -29,6 +29,19 @@ case "$1" in
 	    version_date="26/07/19"
 	    commit=4f09ae3ab48e06fb2357a7437a7fcf9321e3c6f6
 	    ;;
+	Ariadne)
+            version_number=0.2
+            version_name=Ariadne
+            version_date="11/11/19"
+            commit=e72dd10fcce0db9da470d72ac63d9eebac504878
+            ;;
+
+        0.2)
+            version_number=0.2
+            version_name=Ariadne
+            version_date="11/11/19"
+            commit=e72dd10fcce0db9da470d72ac63d9eebac504878
+            ;;
 	lateststable)
             version_number=lateststable
             version_name=Hephaistos

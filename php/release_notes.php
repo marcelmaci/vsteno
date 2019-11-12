@@ -59,10 +59,24 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
     <li>ENSSBAS: Grundschrift Englisch (neu)</li>
 </ul>
 <li>Bugfixes und weitere noch nicht definierte neue Features</li>
-<li>Aktualisierte Dokumentation</li>
+<li>Dokumentation</li>
+<ul>
+    <li>Deutsch: Ergänzungen neue Funktionen</li>
+    <li>English: Quick-Reference (Kurzdokumentation)</li>
+</ul>
 </ul>
 <p>* In Kombination mit phonetischer Transkription nur Wortanalyse (keine Silben, Präfixe, Suffixe).</p>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)</i></p>
+
+<h1>Ideen</h1>
+<p>Liste mit Ideen für spätere Versionen.</p>
+
+Steno Engine:
+<ul>
+    <li>Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte)</li>
+</ul>
+</li>
+
 <a href="input.php"><br><button>zurück</button></a>
 
 <?php require "vsteno_template_bottom.php"; ?>

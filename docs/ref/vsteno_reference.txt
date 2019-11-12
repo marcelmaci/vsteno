@@ -1,0 +1,536 @@
+QUICK-REFERENCE
+
+As the title says this is the shortest possible reference manual for VSTENO in english.
+
+PROGRAM
+
+VSTENO - Vector Shorthand Tool with Enhanced Notational Options
+
+VERSION
+
+Ariadne (V0.2)
+
+DATE
+
+11/11/2019
+
+MODEL
+
+ASCII text that defines how a text will be transcribed to a specific shorthand system.
+Contains three main sections that can contain various subsections.
+
+I - GENERAL
+
+(1) COMMENTS
+
+// one line comment
+/* comment
+   spreading
+   over
+   several
+   lines
+*/ 
+
+(2) MAIN SECTIONS
+
+#BeginSection(x)
+#EndSection(x)
+
+x = header, font, rules
+
+(3) SUBSECTIONS
+
+#BeginSubSection(a[,b[,c[..]]])
+#EndSubSection(a[,b[,c[..]]])
+
+a = name of the subsection
+b, c .. [optional] = branching, variables or stages 
+
+(a) BRANCHING
+
+In subsections a snapshot of the actual word is stored at the beginning (w1) and at the end (w2). At the end of a section it is possible to branch using comparing operators:
+ 
+=> branch if equal (w1 == w2)
+!> branch if not equal (w1 != w2)
+>> branch inconditionally (in any case)
+
+The operator is followed by the name of a subsection.
+
+(b) VARIABLES
+
+At the end of subsections the operator =: is used to store the actual word in one of the available global variables:
+
+=:std standard form
+=:prt print form
+=:lng linguistical form
+
+(c) STAGES
+
+(i) DELIMITATION
+
+The following optional argument inside brackets at the beginning or at the end of subsections 
+
+#>stageX
+
+means: start stage X.
+x = 0-4
+
+(ii) SCOPE
+
+Stages modify the scope of linguistical rules:
+
+Stage 0: entire text
+Stage 1: entire word (reserved for analysis)
+Stage 2: entire word (custom rules)
+Stage 3: parts of words (composed words)
+Stage 4: entire word
+
+Stages must be specified in this order.
+
+II - HEADER
+
+The header-section can contain three types of data:
+
+(1) TEXT
+
+Normal text in header is ignored (can be used to insert comments).
+
+(2) SUBSECTIONS
+
+Subsections inside the header are specific and can only be of two types:
+
+(a) SESSION 
+
+Contains definitions for session variables:
+
+keyword: session (inside brackets)
+format: "a" := "b";
+
+Means: value b is assigned to session variable a.
+
+(b) ANALYZER
+
+keyword: analyzer (inside brackets)
+
+Contains rules for linguistical analysis (stage1).
+
+III - FONT
+
+The font section contains three subsections:
+
+(1) BASE
+
+Contains base definitions for all tokens that will be used. They contain two main parts: 
+
+(a) header (24 data fields): general information about token 
+(b) data (one or several tuplets of 8 data fields): information for each knot
+
+"t" => { h1, h2, ..., h24, k1d1, k1d2, ..., k1d8, k2d1, k2d2, ..., k2d8, ... kxd1, kxd2, ..., kxd8 }
+
+t        = name of the token
+hx       = header data
+kxd1..8: = knot data
+
+(i) HEADER
+
+The header part of the token definitions consists of 24 data elements:
+
+offset
+
+00: width of token
+01: delta_y (if token has to be placed higher)
+02: baseline after higher position (different for "ich" and "is" for example)
+03: tension before first point of token
+04: additional width before token (added to offset 0)
+05: additional width after token (added to offset 0)
+06: additional delta y
+07: parallel rotating axis 1 (rev1)
+08: idem ................. 2 
+09: idem ................. 3
+10: border vector x (shadowed combined tokens, values "yes" / "no" = use or don't use compensation)
+11: border vector y (shadowed combined tokens)
+12: token type: 
+    0 = normal token (with/without shadows)
+    1 = always shadowed
+    2 = "virtual" tokens (defines how the following token has to be placed (values at offsets 19-21)
+    3 = spacer (no points are inserted, the token only contains delta x at offset 0 (width)
+    4 = part of a token (if exit and entry point of two parts are identical, only 1 point is 
+        inserted in splines: entry tension = from first point, exit tension = from second point
+13: add this delta_y as relative value to baseline in any case BEFORE drawing token
+14: add this delta_y as relative value to baseline in any case BEFORE drawing token
+15: alternative exit point: 0 = none / != 0: x coordinate of alternative exit point
+16: alternative exit point: 0 = none / != 0: y coordinate of alternative exit point
+17: indicates for the following token, which exit point should be used: 
+    0 = use normal exit point
+    1 = use alternative exit point (if available)
+18: interpretation for y coordinates: 
+    0 = cordinates are relative (default)
+    1 = coordinates are absolute
+19: variable $vertical (string): 
+    "no" = next token has same vertical height
+    "up" = next token must be placed higher
+    "down" = next token has to be placed lower (connected to offset 12)
+20: variable $distance (string): 
+    "narrow" or "none" = no distance
+    "wide" = distance defined in constants $horizontal_distance_narrow/wide (connected to offset 12)
+21: variable $shadowed (string): 
+    "yes" = shadowed
+    "no" = not shadowed
+22: connect token
+    0 = default
+    1 = don't connect to the following token (i.e. insert it without connection to previous token)
+23: group of the token (used for regex_helper.php and spacer)
+
+(ii) KNOTS
+
+The knots forming the token are defined in the order in which the have to be drawn using 8 data elements:
+
+offset
+
+0: x1
+1: y1
+2: t1 => qx1*
+3: d1 => qy1*
+4: th
+5: dr => drx**
+6: d2 => qx2*
+7: t2 => qy2*
+
+Meaning:
+
+Coordinates (x1, y2)
+Tensions (t1, t2)
+Thickness (th)
+Type (d1, d2)
+Drawing (dr)
+
+Tensions and type are separated into an entry (1) and an exit (2) part.
+
+Asterisks mean:
+
+(1) single (*)
+
+Reuse of the same fields during spline calculation for control points (cp):
+
+cp1 = (qx1, qy1)
+cp2 = (qx2, qy2)
+
+(2) double (**)
+
+Bitwise reuse of the same field (dr) in se1rev1.
+
+(i) VALUES
+
+The coordinates are floating point values, positive to the right (negative to the left) and above (negative below) orgin.
+
+x1: x-coordinate
+y2: y-coordinate
+
+Tensions are floating poit values for entry (t1) and exit (t2) part. They are used to calculate control points in a cubic bezier curve. The values mean:
+
+0.0: sharp (edged) connection
+0.5: smooth connection
+
+Any other value can be used (but these are the most common).
+
+Thickness (th):
+
+1.0: default value (used when token is not shadowed)
+>1.0: used for shadowed tokens
+
+Type (d1, d2):
+
+d1: entry
+    0 = normal knot
+    1 = entry knot
+    2 = pivot knot
+    3 = conditional pivot knot (if token is in normal position this knot will be ignored / considered as a normal knot (= value))
+    4 = connecting knot (for combined tokens)
+    5 = intermediate shadowed knot (this knot will only be used if the token is shadowed)
+    98 = late entry knot (= if token is first token in tokenlist then don't draw knots before late entry knot)
+    "d" = connecting knot for diacritic token "d"
+d2: exit
+    0 = normal knot
+    1 = exit knot
+    2 = pivot knot
+    3 = conditional pivot knot (if token is in normal position this knot will be ignored, considered as a normal knot (= value 0))
+    99 = early exit knot (= this knot is the last one to be drawn if token is at the end)
+
+Drawing (dr)
+
+In original se1 the dr-field could only contain three values (0, 2 and 5). In se1rev1 this field has be used to include bitwise information for (never implemented) se2 backports. The se1rev1 is fully backwards-compatible with the se1rev0 (= original se1).
+
+bits 
+
+0-3: original dr
+     0000 (0): normal knot, connected
+     0010 (2): connecting point for diacritic token
+     0101 (5): normaler knot, not connected
+4-5: knot type
+     00 (0): horizontal (no rotating axis, default from  se1rev0)
+     01 (1): orthogonal
+     10 (2): proportional
+6-7: rotating axis
+     00 (0): main axis (origin, default)
+     01 (1): rotating axis 1 (header offset 7)
+     10 (2): rotating axis 2 (header offset 8)
+     11 (3): rotating axis 3 (header offset 9)
+
+Examples
+
+dr = 01100000 (96): connected proportional knot, rotating axis 1
+dr = 10100000 (160): connected proportional knot, rotating axis 2
+
+Values are binary and decimal (inside brackets).
+
+(2) COMBINER
+
+Combines two base tokens to form a new combined token. The combinations can be of two types:
+
+(a) TOKENS
+
+"T1" => { "T2", x, y }
+
+T1: first base token (defines header of combined token)
+T2: second base token (is combined using the connecting knot (dr1 = value 4) in T1)
+
+Important:
+x and y must be numerical (floating point) values.
+		
+(b) DIACRITICS
+
+"T1" => { "T2", "", "" }
+
+T1: first base token (defines header of combined token)
+T2: second base token (is combined using the connecting knot for diacritics (dr1 = string value T2 in T1)
+
+Important:
+x and y must be (empty) strings ("").
+
+(3) SHIFTER
+
+Moves or scales base tokens.
+
+(a) MOVING
+
+"T1" => { "T2", sx, sy, dy1, dy2 }
+
+T1: base token
+T2: name for new token
+sx: shift x (positive or negative floating point value by which token should be shifted on x-axis)
+sy: shift y (idem for y-axis)
+dy1: inconditional y before (written in offset 13 in header of new token)
+dy2: inconditional y after (idem with offset 14)
+
+Important:
+sx, sy, dy1 and dy2 must be floating point values.
+
+(b) SCALING
+
+"T1" => { "T2", sx, sy, th, arg2 }
+		
+T1: base token
+T2: name for new token
+sx: x-scaling
+sy: y-scaling
+th: scaling data for thickness
+arg2: unused
+
+The scaling is calculated with the formula:
+
+x' = (x - dx) * fx
+y' = (y - dx) * fy
+
+The scaling variables sx and sy can have two formats:
+
+(i) floating point number
+
+In this case dx or dy is set to 0 and sx is used as scaling factor fx and fy.
+
+(i) string
+
+In this case the values can be set individually separating them by a colon:
+
+sx = "1:0.5": use dx = 1 and fx = 0.5
+sy = "1:1.0": use dy = 1 and fy = 1.0
+
+The thickness (th) has the following format:
+
+T:F[!] 
+
+Meaning: 
+
+T: type
+   a (all): apply factor to all thicknesses
+   p (partial): apply factor to thicknesses > 1.0 only
+   n (none): use original thicknesses
+F: factor
+   floating point number (= factor)
+!: optional
+   present: patch header offset 12 in resulting token
+   not present: don't patch header
+
+Patching of header offset 12 means modifying type of token:
+ 
+value 1: shadowed token (thickness will allways be used)
+value 0: normal token (thickness will only be used if token is shadowed)
+
+IV - RULES
+
+Rules in VSTENO transform an actual word w(n) into a new word w(n+1). Besides the actual form the program can handle parallel form that can be used to express additional conditions that must be met in order to apply the transformation.
+
+(A) TYPES
+
+There are three possible rule formats:
+
+(1) IF A THEN B
+
+"A" => "B";
+
+This is the basic and most common format. A will be called the condition and B the consequence. 
+Note that all rules must be terminated by a semicolon ; and the left and the right side must be surrounded by double quotes:
+
+(2) IF A THEN B IF NOT C NOR D ... NOR E 
+
+"A" => "{ B, C, D .. , X }";
+
+The rule works like the original "A" => "B"; but in addition the conditions C ... X must not be present in the actual word (negative condition).
+
+(3) IF PARALLEL FORM A AND B THEN C
+
+"A" => "{ B, C }";
+
+As mentioned besides the actual form w(n) VSTENO can also calculate parallel forms (if the option is selected) and access these in order to test additional conditions. Possible parallel forms are:
+
+WRT: the original written form (if word has been transcribed phonetically)
+LNG: the linguistically analyzed form (for composed words, affixes)
+
+Since VSTENO only uses one main calculation string, these conditions must be tested using the tstFORM() keyword in A:
+
+"tstwrt(x)" => "{ a, b }";
+"tstlng(x)" => "{ a, b }";
+
+Meaning:
+
+tst = test
+wrt = written form
+lng = analyzed form
+
+If actual word has a parallel written / analyzed form of type x and fulfills the condition a at the same time, then apply consequence b.
+
+(B) REGEX
+
+Full regular expressions (REGEX) can be used for conditions and consequences. "Full" means that the expressions can use capturing groups and variables, for example
+
+"(.*?)ment$" => "$1{MENT}"; 
+
+replaces the character sequence "ment" at the end of the word ($) by "{MENT}". The non-greedy (?) capturing group (.*?) is used to store the corresponding character sequence in variable $1 and insert it in the consequence.
+
+IV - SESSION VARIABLES
+
+(1) GENERAL
+
+All aspects of VSTENO and the SE can be controlled via session variables. These can be set either via the input forms or using inline option tags:
+
+<@variable=value>
+
+Inline option tags can be included between the words of the text and allow modifications on-the-fly (so that output of the SE can be adapted dynamically). The values can stand alone or be surrounded by single or double quotes (this makes no difference for VSTENO):
+
+<@token_size=1.6>
+<@token_size="1.6">
+<@token_size='1.6'>
+
+are identical and assign a scaling factor 1.6 to the variable token_size that controls the size of steno tokens.
+For an exhaustive list of VSTENO session variables have a look at session.php (complete list) and options.php (whitelist for variables that can be set via inline option tags or input form).
+
+(2) SPECIFIC
+
+There is a certain number of session variables - often included in model header subsection "session" - that have specific functions.
+
+(a) LINGUISTICS
+
+Some variables are used to analyse words linguistically. There are variables that control (select / deselect) certain analysis and other that contain data for the selected analysis.
+
+(i) SELECTIONS
+
+(a) MODULES 
+
+VSTENO can use three modules (= third party programs) to analyze words:
+
+(1) hyphenator: syllables - (hyphenation => hy-phe-na-tion)
+(2) hunspell: composed words / affixes 
+(3) espeak: phonetic transcription 
+
+In order to activate / disactivate certain types of analysis use the following variables:
+
+analysis_type: selected / none
+hyphenate_yesno: yes / no
+composed_words_yesno: yes / no
+affixes_yesno: yes / no
+phonetics_yesno: yes / no
+
+(b) MARKERS
+
+The modules use different characters to mark or write their analysis in the output:
+
+(1) syllables: - (hyphenation => hy-phe-na-tion)
+(2) hunspell: | (words), + (prefixes), # (suffixes)
+    - bookstore => book|store
+    - beloved => be+loved
+    - beautifully => beauti#fully 
+(3) espeak: nation => n'eIS@n
+
+(ii) DATA
+
+All modules need specific data in order to process correct analysis of the words.
+
+(1) LANGUAGE
+
+All three modules need a specific language to be defined. The corresponding session variables are:
+
+language_hyphenator (syllables)
+language_hunspell (composed words / affixes)
+language_espeak (phonetic transcription)
+
+Please note that you must set a valid keyword and that these can be different from one module to another (even if it is basically the same language). Standard values are for examle:
+
+german: de
+spanish: es
+french: fr
+english: en
+
+But as said some modules need more specific keywords, for example:
+
+hunspell: de_CH (use Swiss variant for dictionary)
+eSpeak: en-us (use pronunciation for American English)
+
+Please refer to the manuals / man pages of these programs in order to select the correct denomination.
+
+(2) ALPHABET
+
+eSpeak also needs a phonetic alphabet:
+
+phonetic_alphabet: espeak / ipa
+
+Meaning:
+
+espeak: Kirshenbaum Alphabet
+ipa: International Phonetic Alphabet
+
+The Kirshenbaum alphabet is recommended since it uses no special characters in the transcription.
+
+(3) MORPHOLOGY
+
+VSTENO uses a special algorithm in order to search for composed words and affixes (prefixes, suffixes) based on valid forms in the hunspell dictionary. To do that, the algorithm needs additional information in the form of lists:
+
+"list" := "a, b, c, d, .., x";
+
+The list are store in session variable of the form type_LIST:
+
+prefixes_list: prefixes
+stems_list: stems
+suffixes_list: suffixes
+block_list: not separate parts
+filter_list: final corrections (not prefixes / suffixes)
+
+All elements of a list can use REGEX, the only restriction beeing that no variables and no capturing groups can be used, meaning that you should replace all brackets and expression like (.*?) by (?:.*?). In other wordds: simple include ?: inside brackets. Please have a look at the german model (DESSBAS) for specific examples of how these lists affect the analysis.		

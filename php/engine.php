@@ -1297,8 +1297,6 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
             } else return $svg;
             break;
     } 
-
-return "bla1"; // ???
 }
 
 function GetDebugInformation( $word ) {
@@ -1679,6 +1677,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 if ($word_splines[$i][$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
             
                 //echo "ins: wrd($i): n=$n => path: x1: $x1 y1: $y1 q1x: $q1x q1y: $q1y q2x: $q2x q2y: $q2y x2: $x2 y2: $y2<br>";
+                $stroke_dasharray=GetLineStyle();
                 $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
                 $svg_string .= "$polygon_spline\n";
             }    

@@ -187,7 +187,7 @@ function CheckAndSetSessionVariable( $variable, $value ) {
                     if (mb_strpos($whitelist_variables, " $variable ") === false) {
                         AddError("ERROR: you are not allowed to set variable '" . htmlspecialchars($variable) . "' to '" . htmlspecialchars($value) . "'!");
                     } else {
-                        /*if ($variable === "spacer_vowel_groups")*/ echo "session[$variable] = $value<br>";
+                        /*if ($variable === "spacer_vowel_groups")*/ //echo "session[$variable] = $value<br>";
                         switch ($value) {
                             case "true" : $_SESSION[$variable] = true; break;
                             case "false" : $_SESSION[$variable] = false; break;
