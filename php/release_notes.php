@@ -57,6 +57,7 @@ folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
     <li>Verbesserungen Deutsch, Spanisch, Französisch</li>
     <li>Französisch: laut- und schriftbasierte hybride Regeln</li>
     <li>ENSSBAS: Grundschrift Englisch (neu)</li>
+    <li>GESSBAS: Shared Font (inkl. Blockschrift)</b>
 </ul>
 <li>Bugfixes und weitere noch nicht definierte neue Features</li>
 <li>Dokumentation</li>

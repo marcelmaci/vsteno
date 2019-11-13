@@ -180,7 +180,7 @@ function extended_preg_replace( $pattern, $replacement, $string) {
                         break;
         }   
         //echo "extended_preg_replace: result = $result<br>";
-        if ($result === "") $global_warnings_string .= "REGEX: RETURNS EMPTY STRING (\"$pattern\" => \"$replacement\")<br>";
+        if (($result === "") && ($string !== "")) $global_warnings_string .= "REGEX: RETURNS EMPTY STRING (\"$pattern\" => \"$replacement\")<br>";
         return $result;
 };
 

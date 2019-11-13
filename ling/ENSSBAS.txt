@@ -181,8 +181,8 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 			C26:[LP,RP],		// RP = RPA / RPB / RPC
 			C27:[LP,RPD],
 			C28:[LP,RPE]";
-		"spacer_vowel_groups" := 
-			"V1:[A,E1,O,U],		// e1 = narrow e in english
+		"spacer_vowel_groups" := "
+			V1:[A,E1,O,U],		// e1 = narrow e in english
 			V2:[I,AU]";
 		"spacer_rules_list" := "
 			R1:[C1,V1,D1,?],
@@ -242,6 +242,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 			R55:[C28,V1,D55,?],
 			R56:[C28,V2,D56,]";
 		"font_exportable_yesno" := "yes";
+		"font_importable_yesno" := "yes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		

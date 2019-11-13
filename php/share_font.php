@@ -21,7 +21,7 @@
 
 /* Parts of model involved in font sharing:
  *
- * HEADER: session-variables token_distance_wide, spacer_tokens_combinations,
+ * HEADER: session-variables token_distance_wide, spacer_token_combinations,
  * spacer_vowel_groups, spacer_rules_list
  * FONT: the entire part
  * RULES: prespacer, spacer, postspacer

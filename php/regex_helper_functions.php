@@ -1,4 +1,10 @@
 <?php
+function StripOutCommentsRegexHelper($text) {
+    $output = preg_replace("/\/\*.*?\*\//", "", $text);     // replace /* ... */ comments by empty string
+    //$output = preg_replace("/\/\/.*?\n/", "[\n\r]", $output);     // replace // ... \n comments by \n
+     $output = preg_replace("/\/\/.*?(?=\n)/", "", $output);     // replace // ... \n comments empty string followed by \n (careful with that modification ...
+    return $output;
+}
 // create token groups
 $token_groups = array();
 
@@ -139,13 +145,31 @@ function GenerateSpacerRulesAndPrintData() {
     global $permutations, $token_groups, $vowel_groups, $rules_list, $token_variants, $group_combinations, $token_groups_string, $vowel_groups_string;
     $regex_rules = array();
     
+    // BUG:  (1)                            (2)
+    // "spacer_vowel_groups" :=             "spacer_vowel_groups" := "
+    //         "V1:[A,E],                                       V1:[A,E],
+    //         V2:[I,AU]";                                      V2:[I,AU]";
+    //
+    // (1) doesn't get parsed correctly (in the import already => empty session variable)
+    // (2) only works after adapting ImportVowelGroupsFromVariable() - filter out [ \t\n\r] otherwise JSON_decode wont work
+    // 
+    // problem is (probably) the fact that in the beginning I didn't know the /s option for REGEX ... so all the old parsing functions
+    // work with tricks (e.g. filtering out special chars like \r). Unfortunately this leads to problems here ...
+    // Conclusion: Parsing should be debugged and all critical REGEX functions should use s-flag
+    // For the moment: use syntax (2) (should work)
+    
+    //var_dump($vowel_groups); // this is correct!
+    //echo "session(spacer_vowel_groups): " . $_SESSION['spacer_vowel_groups'] . "<br>";
+    //$vowel_groups = ImportVowelGroupsFromVariable($_SESSION['spacer_vowel_groups']);
+    //var_dump($vowel_groups); // this is correct!
+    
+    
     // sort arrays for easier reading (only when results are printed)
     ksort($token_groups); // ascending by key
     ksort($vowel_groups);
     ksort($rules_list);
     ksort($token_variants);
     ksort($group_combinations);
-    var_dump($vowel_groups); // this is correct!
     
     // generate variants
     // token groups
@@ -211,7 +235,8 @@ function GenerateSpacerRulesAndPrintData() {
 function ImportRulesListFromVariable( $string ) {
     // $test_string = "R1: [C1, V1, D1, ?], R2: [C1, V2, D2,], R3:[C1,V2,D3, ]";
     $test_string = $string;
-    $test_string1 = preg_replace("/ /", "", $test_string); // strip out spaces
+    $test_string = StripOutCommentsRegexHelper($test_string); // strip out comments
+    $test_string1 = preg_replace("/[ \t\n\r]/", "", $test_string); // strip out spaces
     $test_string2 = preg_replace("/(.*?):\[(.*?),(.*?),(.*?),(.*?)\](,|$)/", "\"$1\":[\"$2\",\"$3\",\"$4\",\"$5\"]$6", $test_string1);
     $test_string3 = "{" . $test_string2 . "}";
     //echo "<h2>TEST (rules list)</h2>";
@@ -231,7 +256,8 @@ function ImportRulesListFromVariable( $string ) {
 
 function ImportGroupCombinationsFromVariable( $string ) {
     $test_string = $string;
-    $test_string1 = preg_replace("/ /", "", $test_string); // strip out spaces
+    $test_string = StripOutCommentsRegexHelper($test_string); // strip out comments
+    $test_string1 = preg_replace("/[ \t\n\r]/", "", $test_string); // strip out spaces
     $test_string2 = preg_replace("/(.*?):\[(.*?),(.*?)](,|$)/", "\"$1\":[\"$2\",\"$3\"]$4", $test_string1);
     $test_string3 = "{" . $test_string2 . "}";
     //echo "<h2>TEST (group combinations)</h2>";
@@ -251,7 +277,8 @@ function ImportGroupCombinationsFromVariable( $string ) {
 
 function ImportVowelGroupsFromVariable($string ) {
     $test_string = $string;
-    $test_string1 = preg_replace("/ /", "", $test_string); // strip out spaces
+    $test_string = StripOutCommentsRegexHelper($test_string); // strip out comments
+    $test_string1 = preg_replace("/[ \t\n\r]/", "", $test_string); // strip out spaces
     // several steps needed, because the number of vowels is undefined
     //echo "<h2>TEST (vowel groups)</h2>";
     $test_string2 = preg_replace("/(^|,)([^,]*?):/", "$1\"$2\":", $test_string1); // add "
@@ -267,7 +294,7 @@ function ImportVowelGroupsFromVariable($string ) {
     //echo "<p>5:$test_string3</p>";
     $test_string_php = array();
     $test_string_php = json_decode($test_string3, true); // parameter true = decode to an associative array (instead of std_object)
-    //$test_string_boomerang = json_encode($test_string_php);
+    $test_string_boomerang = json_encode($test_string_php);
     //echo "<p>$test_string_boomerang (should be equal to preceeding)</p>";
     //var_dump($test_string_php);
     //echo "<br><br>";

@@ -533,4 +533,98 @@ suffixes_list: suffixes
 block_list: not separate parts
 filter_list: final corrections (not prefixes / suffixes)
 
-All elements of a list can use REGEX, the only restriction beeing that no variables and no capturing groups can be used, meaning that you should replace all brackets and expression like (.*?) by (?:.*?). In other wordds: simple include ?: inside brackets. Please have a look at the german model (DESSBAS) for specific examples of how these lists affect the analysis.		
+All elements of a list can use REGEX, the only restriction beeing that no variables and no capturing groups can be used, meaning that you should replace all brackets and expression like (.*?) by (?:.*?). In other wordds: simple include ?: inside brackets. Please have a look at the german model (DESSBAS) for specific examples of how these lists affect the analysis.	
+
+(4) DISTANCES
+
+By default VSTENO only offers limited functionality for spacing (a fix distance per token can be defined). In order to provide more complex spacing (especially for shorthand tokens) specific rules must be defined. To simplify the work these rules can be automatically generated using special session variables.
+
+(a) VARIABLES
+
+"spacer_token_combinations" := "
+			C1:[LG1,RG1],
+			C2:[LG1,RG2],
+                        ..
+			CX:[LGY,RGZ]		
+                        ";
+
+"spacer_vowel_groups" := "
+                        V1:[T1,T2, ..,TA],
+			V2:[TB,TB+1, ..,TC],
+			..
+			VX:[TY,TY+1, ..,TZ]";
+
+"spacer_rules_list" := "
+			R1:[C1,V1,D1,?],
+			R2:[C1,V2,D2,],
+			..
+			RZ:[CX,VX,DZ,?]
+		       ";
+
+Meaning:
+
+C1..CX: token combinations 1..X
+LG1..LGY: left groups 1..Y
+RG1..RGZ: right groups 1..Z
+V1..VX: vowel groups 1..X
+T1..TA,TB..TC,..,TY..TZ: (virtual) tokens 1..Z (*)
+R1..RZ: rules 1..Z
+D1..DZ: distances 1..Z
+?: if present: vowel is optional
+
+(*) tokens are continuous so that B=A+1, C=B+1 etc. 
+
+The groups (LG1..LGY, RG1..RGZ) are defined inside the font section (token definition) in the header offset 23.
+			
+(b) RX-GEN
+
+RX-GEN is short for REGEX-GENERATOR, a tool included in VSTENO that can automatically generate REGEX based distance rules and include them in the model if the following conditions are met:
+
+(i) spacer_autoinsert (session variable is set)
+(ii) model contains a subsection labeled "spacer"
+
+For performance reason it is better to generate the rules manually (via RX-GEN link in navigation bar) and copying them into the spacer subsection.
+
+(c) SUBSECTIONS
+
+When working with RX-GEN it is recommended to use the following fix names for subsections:
+
+prespacer: modifications before automatic rules are applied
+spacer: automatic rules (pure RX-GEN part)
+postspacer: modifications after automatic rules have been applied
+
+IV - FONTS
+
+Fonts are a subset of a model and can been shared between these.
+
+(A) PARTS
+
+The parts needed to define a font are:
+
+(1) entire font section
+(2) certain session variables
+(3) certain rules
+
+(B) SESSION VARIABLES
+
+Session variables connected to a font are:
+
+token_distance_wide: default distance for wide connection
+spacer_tokens_combinations: needed RX-GEN
+spacer_vowel_groups: needed for RX-GEN
+spacer_rules_list: needed for RX-GEN
+
+In addition the following control variables must be set:
+
+font_exportable_yesno: yes / no
+font_importable_yesno: yes / no
+font_borrow_yesno: yes / no
+font_borrow_model_name: shared font (model)
+font_load_from_file_yesno: yes / no
+model_se_rev: 0 / 1
+
+Fonts can be loaded from database or from a TXT.file inside ling directory. Loading is only allowed from standard or user fonts (models) with font_exportable_yesno set. The variable model_se_rev forces the use of se1rev0 or se1rev1 in case of incompatibilities.
+
+(C) RULES
+
+Rules necessary for a correctly working font must be inside the subsections prespacer, spacer and postspacer (as mentioned for RX-GEN).

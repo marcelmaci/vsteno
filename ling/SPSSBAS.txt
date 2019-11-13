@@ -147,8 +147,8 @@
 			C26:[LP,RP],		// RP = RPA / RPB / RPC
 			C27:[LP,RPD],
 			C28:[LP,RPE]";
-		"spacer_vowel_groups" := 
-			"V1:[A,O,U],
+		"spacer_vowel_groups" := "
+			V1:[A,O,U],
 			V2:[I,AU]";
 		"spacer_rules_list" := "
 			R1:[C1,V1,D1,?],

@@ -181,9 +181,13 @@ function CheckAndSetSessionVariable( $variable, $value ) {
     // couldn't find any error related to that (even in the parser everything seems to be fine). 
     // Strange enough: re-setting this variable in other places doesn't change anything.
     // So, temporary solution: reset it here ... (autsch ... :)
-    $_SESSION['spacer_vowel_groups'] = ""; 
+    // something similar is ocurring with model_se_revision ... very strange 
+    // sometimes errors are printed 2x or 3x ... very strange
+    //$_SESSION['spacer_vowel_groups'] = ""; // not a good idea to set this to "" ... breaks RX-GEN ...
+    $_SESSION['model_se_revision'] = ""; 
     //echo "checkandsetsessionvariable(): [$variable]<br>";
-    if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
+// disable check if variable exists (reason: problems with session-variables that get deleted due to parsing errors and can't be reinitialized after that ...)
+//    if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
                     if (mb_strpos($whitelist_variables, " $variable ") === false) {
                         AddError("ERROR: you are not allowed to set variable '" . htmlspecialchars($variable) . "' to '" . htmlspecialchars($value) . "'!");
                     } else {
@@ -201,9 +205,9 @@ function CheckAndSetSessionVariable( $variable, $value ) {
                             $_SESSION['phonetics_transcription_array'] = json_decode( "{" . $_SESSION['phonetics_transcription_list'] . "}", true);
                         }
                     } 
-    } else {
-            AddError("ERROR: session-variable '" . htmlspecialchars($variable) . "' doesn't exist.");
-    }
+//    } else {
+  //          AddError("ERROR: session-variable '" . htmlspecialchars($variable) . "' doesn't exist.");
+//    }
     
 }
 

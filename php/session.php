@@ -17,7 +17,7 @@ $restricted_session_variables_list = array(
     "spacer_rules_list" => "",
     "license" => "",
     "release_notes" => "",
-    "copyright_model" => "",
+    "copyright_footer" => "",
     "model_version" => "",
     "model_date" => "",
     "font_borrow_yesno" => false,
@@ -32,7 +32,7 @@ function InitializeSessionVariables() {
     $_SESSION['standard_models_list'] = $standard_models_list;
     $_SESSION['license'] = "";
     $_SESSION['release_notes'] = "";
-    $_SESSION['copyrigt_footer'] = "";
+    $_SESSION['copyright_footer'] = "";
     $_SESSION['statistics_rules'] = 0;  // use these variables for statistics
     $_SESSION['statistics_tokens'] = 0;
     $_SESSION['statistics_base'] = 0;
