@@ -1,5 +1,42 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Release notes</h1>
+<h1>Ariadne (Version 0.2)</h1>
+<p>Die Version 0.2 mit dem Namen <a href="http://de.wikipedia.org/wiki/Ariadne">Ariadne</a> wurde am 20. November 2019 veröffentlicht und 
+enthält folgende Verbesserungen.</p>
+<ul>
+<li>Steno Engine: Integration ausgewählter Funktionalitäten der SE2:
+<ul>
+    <li>Variable, proportionale Schattierung</li>
+    <li>Automatisierte Umriss-Schattierung (Polygon-Modellierung) ab Daten der SE1</li>
+    <li>Orthogonale und proportionale Knots mit parallelen Rotationsachsen</li>
+    <li>Paralleledition: Originaltext (Langschrift) neben Kurzschrift</li>
+    <li>TokenShifter: Erweiterung um Scaling-Funktion (inklusive Anpassung der Strichdicke)</li>
+    <li>Font: Import/Export (shared fonts)</li>
+</ul>
+</li>
+<li>Phonetik: 
+<ul>
+    <li>Patchliste für falsch transkribierte Wörter (eSpeak)</li>
+    <li>Hybride Regeln (Schrift/Analyse*/Phonetik) für Analyzer&Regel-Teil</li>
+    <li>Transkription Einzelbuchstaben: selektierbar</li>
+</ul>
+</li>
+<li>Modelle:
+<ul>
+    <li>Verbesserungen Deutsch, Spanisch, Französisch</li>
+    <li>Französisch: laut- und schriftbasierte hybride Regeln</li>
+    <li>ENSSBAS: Grundschrift Englisch (neu)</li>
+    <li>GESSBAS: Shared Font (inkl. Blockschrift)</b>
+</ul>
+<li>Bugfixes und weitere noch nicht definierte neue Features</li>
+<li>Dokumentation</li>
+<ul>
+    <li>Deutsch: Ergänzungen neue Funktionen</li>
+    <li>English: Quick-Reference (Kurzdokumentation)</li>
+</ul>
+</ul>
+<p>* In Kombination mit phonetischer Transkription nur Wortanalyse (keine Silben, Präfixe, Suffixe).</p>
+
 <h1>Hephaistos (Version 0.1)</h1>
 <p>Die erste offiziell releaste Version trägt den Namen <a href="http://de.wikipedia.org/wiki/Hephaistos">Hephaistos</a> und wurde am 26. Juli 2019 veröffentlicht.</p>
 <h2>Merkmale</h2>
@@ -31,52 +68,15 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <li>Installer: Skript zur automatischen Installation unter Trisquel GNU/Linux 8</li>
 </ul>
 
-<h1>Ariadne (Preview)</h1>
-<p>Die nächste Version 0.2 wird den Namen <a href="http://de.wikipedia.org/wiki/Ariadne">Ariadne</a> tragen und enthält voraussichtliche 
-folgende geplante Verbesserungen. Das Publikationsdatum ist offen*.</p>
-<ul>
-<li>Steno Engine: Integration ausgewählter Funktionalitäten der SE2, z.B.
-<ul>
-    <li>Variable, proportionale Schattierung (umgesetzt, Testphase)</li>
-    <li>Automatisierte Umriss-Schattierung (Polygon-Modellierung) ab Daten der SE1 (umgesetzt, Testphase)</li>
-    <li>Orthogonale und proportionale Knots mit parallelen Rotationsachsen (gemäss SE1 rev1, umgesetzt, Testphase)</li>
-    <li>Paralleledition: Originaltext (Langschrift) neben Kurzschrift</li>
-    <li>TokenShifter: Erweiterung um Scaling-Funktion (inklusive Anpassung der Strichdicke)</li>
-    <li>Font: Import/Export (shared fonts)</li>
-</ul>
-</li>
-<li>Phonetik: 
-<ul>
-    <li>Patchliste für falsch transkribierte Wörter (eSpeak)</li>
-    <li>Hybride Regeln (Schrift/Analyse*/Phonetik) für Analyzer&Regel-Teil</li>
-    <li>Transkription Einzelbuchstaben: selektierbar</li>
-</ul>
-</li>
-<li>Modelle:
-<ul>
-    <li>Verbesserungen Deutsch, Spanisch, Französisch</li>
-    <li>Französisch: laut- und schriftbasierte hybride Regeln</li>
-    <li>ENSSBAS: Grundschrift Englisch (neu)</li>
-    <li>GESSBAS: Shared Font (inkl. Blockschrift)</b>
-</ul>
-<li>Bugfixes und weitere noch nicht definierte neue Features</li>
-<li>Dokumentation</li>
-<ul>
-    <li>Deutsch: Ergänzungen neue Funktionen</li>
-    <li>English: Quick-Reference (Kurzdokumentation)</li>
-</ul>
-</ul>
-<p>* In Kombination mit phonetischer Transkription nur Wortanalyse (keine Silben, Präfixe, Suffixe).</p>
-<p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)</i></p>
-
 <h1>Ideen</h1>
-<p>Liste mit Ideen für spätere Versionen.</p>
+<p>Liste mit Ideen für spätere Versionen. Das Publikationsdatum ist offen. (*)</p>
 
 Steno Engine:
 <ul>
     <li>Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte)</li>
 </ul>
 </li>
+<p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)</i></p>
 
 <a href="input.php"><br><button>zurück</button></a>
 

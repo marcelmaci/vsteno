@@ -486,6 +486,8 @@ All modules need specific data in order to process correct analysis of the words
 
 (1) LANGUAGE
 
+(a) STANDARD DICTIONARIES
+
 All three modules need a specific language to be defined. The corresponding session variables are:
 
 language_hyphenator (syllables)
@@ -505,6 +507,28 @@ hunspell: de_CH (use Swiss variant for dictionary)
 eSpeak: en-us (use pronunciation for American English)
 
 Please refer to the manuals / man pages of these programs in order to select the correct denomination.
+
+(b) PATCHLIST
+
+Sometimes, the dictionary for eSpeak produces wrong (or not the desired) results. In that case it is possible to patch the dictionary using the session variable phonetics_transcription_list (in the header subsection session):
+
+"phonetics_transcription_list" := "
+			"W1":"T1",
+			"W2":"T2",
+			...
+			"WX":"TX"
+		";
+
+Meaning:
+
+Wn: word that has to be transcribed
+Tn: transcription of word Wn
+
+It is possible to use (non marking) REGEX for Wn and Tn:
+
+"(?:(l)')?aspects?":"$1aspE"
+
+Transcribes the words "l'aspect", "l'aspects", "aspects", "aspect". The patch list has priority over the selected standard dictionary.
 
 (2) ALPHABET
 

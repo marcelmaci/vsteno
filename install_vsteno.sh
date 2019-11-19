@@ -5,7 +5,9 @@ if [ $(whoami) == "root" ]; then
 fi
 if [ -z $1 ]; then
 	echo "ERROR: you must give a version as argument: ./install_vsteno version"
-	echo "Valid arguments are:"
+	echo "Valid arguments for version are:"
+	echo "0.2: version 0.2 (Ariadne)"
+	echo "Ariadne: same as preceeding"
 	echo "0.1: version 0.1 (Hephaistos)"
 	echo "Hephaistos: same as preceeding"
 	echo "lateststable: lastest stable version"
@@ -33,14 +35,14 @@ case "$1" in
             version_number=0.2
             version_name=Ariadne
             version_date="11/11/19"
-            commit=fdaa9ac825406add9b42eb518d488ac197d9a6f7
+            commit=990c3c568880163ca2832c1e04c452a620ef6260
             ;;
 
         0.2)
             version_number=0.2
             version_name=Ariadne
             version_date="11/11/19"
-            commit=fdaa9ac825406add9b42eb518d488ac197d9a6f7
+            commit=990c3c568880163ca2832c1e04c452a620ef6260
             ;;
 	lateststable)
             version_number=lateststable

@@ -74,7 +74,7 @@ VSTENO Dokumentation
 \end_layout
 
 \begin_layout SubTitle
-04.11.2019
+18.11.2019
 \end_layout
 
 \begin_layout Author
@@ -95,7 +95,8 @@ VSTENO - kurz Vector Shorthand Tool with Enhanced Notational Options oder
 \begin_layout Abstract
 Den Kern des Programmes bildet die so genannte Steno Engine, ein abstraktes
  (verallgemeinertes) Stenografiezeichen-Satzsystem, das grundsätzlich an
- kein spezifisches Kurzschrift-System gebunden ist.
+ kein spezifisches Kurz\SpecialChar \-
+schrift-System gebunden ist.
  Es können also eigene Zeichen und REGEX-Regeln zur Übertragung von Langschrift
  zu Kurzschrift programmiert werden.
  In der Version 0.2 kommt VSTENO mit Definitionen für das deutsche, spanische,
@@ -130,112 +131,113 @@ Einleitung
 \end_layout
 
 \begin_layout Standard
-VSTENO wächst und wächst ...
- Oder vielmehr: Es wuchert! Ariadne Labyrinth Minotauros
-\end_layout
-
-\begin_layout Standard
-Ladies and gentlemen ...
- please fasten your seat belts! 
-\end_layout
-
-\begin_layout Standard
-Vielleicht sollte ich besser sagen: Es tuckert! Denn was anderes ist die
- vermaledeite Steno Engine inzwischen also
-\end_layout
-
-\begin_layout Standard
-Bereits in der Einleitung zur ersten Version hatte ich ja auf jenes schaurig-ver
-trackte Dilemma hingewiesen, in dem dieses Projekt fortan ausweglos steckt.
- Schon seit längerer Zeit ist klar, dass der gewählte Ansatz und die so
- genannte Steno Engine ihre Mängel haben.
- Neuere (bessere) Ideen und der Drang, das Ganze noch einmal von vorne (besser)
- zu machen wären also da.
- Der Wunsch zu sagen: Ok - lesson learned! VSTENO war (Imperfekt) ein tolles
- Projekt, um das 
-\begin_inset Quotes eld
-\end_inset
-
-Problem
-\begin_inset Quotes erd
-\end_inset
-
- (
-\begin_inset Quotes eld
-\end_inset
-
-wie modelliert man Stenozeichen und welche mannigfaltigen Phänomene stellen
- sich da ein?
-\begin_inset Quotes erd
-\end_inset
-
-) an sich zu verstehen, aber jetzt braucht es eine tabula rasa, einen neuen
- Ansatz!
-\end_layout
-
-\begin_layout Standard
-Welche schöne Dinge könnte man programmieren in C++ oder Java! Einen sauberen
- Parser, eine neue Formelsprache ...
- und ein professionelles Layout dank Metafont und TEX
+VSTENO wächst und wächst
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Ich komme mehr und mehr zum Schluss, dass Prof.
- Sarmann absolut richtig lag - und Metafont der Sache nicht nur gerecht
- wird, sondern sie sogar einfacher und professioneller machen könnte.
+Oder wie man anders auch sagen könnte: Es wuchert ...
+ :)
 \end_layout
 
 \end_inset
 
-!
+ ...
+ Tatsächlich konnte in der vorliegenden, zweiten Version (V0.2) namens Ariadne
+ der Funktionsumfang erheblich erweitert werden.
+ Unter den Neuerungen sind zum Beispiel:
+\end_layout
+
+\begin_layout Itemize
+Englisch als weiteres Kurzschrift-System (Verkehrsschrift Stolze-Schrey)
+ neben Deutsch, Spanisch und Französisch, welche verbessert wurden.
+\end_layout
+
+\begin_layout Itemize
+eine kombinierte phonetische und linguistische Analyse, welche sich insbesondere
+ für das englische System aufdrängte.
+\end_layout
+
+\begin_layout Itemize
+Hybride Regeln, welche gleichzeitig schriftliche, phonetische und linguistische
+ Bedingungen überprüfen können.
+\end_layout
+
+\begin_layout Itemize
+Rückportierungen aus der SE2 wie Umrissmodellierung und proportionale Punkte
+ mit parallelen Rotationsachsen.
+\end_layout
+
+\begin_layout Itemize
+Parallelsatz, also Langschrift auf gleicher Seite vis-à-vis von Kurzschrift.
+\end_layout
+
+\begin_layout Itemize
+Diakritische Zeichen in Verbindung mit Grundzeichen.
+\end_layout
+
+\begin_layout Itemize
+Allgemein verbesserte globale und individuelle Zeichenskalierung (inklusive
+ Schattierung).
+\end_layout
+
+\begin_layout Itemize
+Gemeinsame Nutzung ein und desselben Fonts in verschiedenen Systemen (Sprachen).
 \end_layout
 
 \begin_layout Standard
-Statt dieser hochtrabenden, hehren Visionen werde ich also auf die Seifenkiste
-\end_layout
+Bei all diesen Neuerungen wird gleichzeitig offensichtlich, mit welchen
+ technischen Einschränkungen VSTENO zu kämpfen hat.
+ Die ursprüngliche Steno Engine, also das eigentliche Herzstück des Programms,
+ ist in der Version 1 inzwischen hoffnungslos obsolet.
+ Zwar wurde sie x-Mal aufgebohrt, gepatcht und durch zuweilen fast münchausneris
+che Hacks immer wieder gedehnt und gebogen, um neuere Funktionalitäten ohngeacht
+et der fundamentalen Inkompatibilitäten, die sich diesem Ansinnen grundsätzlich
+ in den Weg stellten, zu integrieren.
+ Dieses buchstäbliche 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-Aber eben: Jedes Mal, wenn ich auch nur im Ansatz zu überschlagen versuche,
- wie viel Zeit es - selbst bei effizientester
+Aufmotzen eines Trottinetts zu einem Möchtegern-BMW
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Und für 
-\begin_inset Quotes eld
-\end_inset
-
-effizient
-\begin_inset Quotes erd
-\end_inset
-
- habe ich mich wohlgemerkt noch nie gehalten ...
- ;-)
+Nicht dass an dieser Stelle irgendjemand auf die Idee käme, ich sei ein
+ Autonarr oder gar Fan von BMW oder so ...
+ aber der hanebüchene Vergleich vom fussbetriebenen Trotinett zu einem soliden
+ Boliden schien mir im Falle der in der Grundkonzeption definitiv eher bescheide
+nen Steno Engine doch zutreffend ...
+ :)
 \end_layout
 
 \end_inset
 
- Programmierung - wohl benötigen würde, um mit einem neuen Projekt auch
- nur annähernd wieder an den Funktionsumfang heranzukommen, den VSTENO inzwische
-n erreicht hat, dann wird mir nahezu schwindlig ...
- und ich begreife, dass es nach wie vor nichts anderes bleibt, als die 
-\begin_inset Quotes eld
-\end_inset
 
-Seifenkiste
 \begin_inset Quotes erd
 \end_inset
 
- namens 
-\begin_inset Quotes eld
-\end_inset
+ scheint zwar soweit ad-hoc und funktionell geglückt, es lässt sich indes
+ nicht leugnen, dass hier gravierende und grundlegende Mängel bestehen,
+ die dereinst nur durch eine komplette Neuimplementierung gelöst werden
+ können.
+\end_layout
 
-Steno Engine 1 Revision 1
-\begin_inset Quotes erd
-\end_inset
+\begin_layout Standard
+Sollen wir an dieser Stelle also einen Blick in die Zukunft wagen? In jene
+ Schöne Neue Welt dessen, was VSTENO dereinst - in einem völlig neuen Kleid
+ - sein könnte? Eine kokette, bezaubernde, objektorientierte Diva in Java
+ oder C++ mit einem Satzsystem à la Metafont und TEX als solidem Unterbau?
+ Ich komme zum Schluss, dass solche Träumereien ebenso unrealistisch wie
+ sinnlos sind.
+ Unrealistisch, weil eine Neuimplementierung mit den genannten Parametern
+ locker 1500 - 2000 Stunden Arbeit in Anspruch nehmen kann; und sinnlos,
+ weil mit VSTENO trotz seiner Mängel inzwischen ein brauchbares Programm
+ zur Verfügung steht, dessen Potenzial noch nicht ausgeschöpft ist.
+\end_layout
 
- weiter auszubauen.
+\begin_layout Standard
+In diesem Sinne empfehle ich Ihnen Ariadne ganz herzlich zum Gebrauch.
 \end_layout
 
 \begin_layout Section*
@@ -1583,7 +1585,7 @@ Umrissmodellierung
 \begin_inset Quotes erd
 \end_inset
 
-) ist ein so genannter Backport aus der SE2 auf die SE1rev2 und gilt als
+) ist ein so genannter Backport aus der SE2 auf die SE1rev1 und gilt als
  experimentell.
  Weitere Infos zur Funktionsweise sowie die Parameter, welche diesen Modellierun
 gstyp kontrollieren, werden in einem separaten Dokument erklärt
@@ -1826,10 +1828,38 @@ rock solid
 \end_layout
 
 \begin_layout Standard
-Der aktuelle Stand der Dinge ist somit: In diesem Dokument werden ausschliesslic
-h Funktionen der SE1 rev0 erläutert.
- Das Programm VPAINT wird nur als Hilfsinstrument zur visuellen und interaktiven
- Darstellung der Stenozeichen erläutert.
+Im Juli 2019 wurde die erste Version 0.1 mit Namen 
+\begin_inset Quotes eld
+\end_inset
+
+Hephaistos
+\begin_inset Quotes erd
+\end_inset
+
+ veröffentlicht, welche die Funktionalitäten der SE1rev0 enthielt.
+ In der entsprechenden Dokumentation wurden nur Funktionalitäten aus der
+ SE1rev0 dokumentiert.
+\end_layout
+
+\begin_layout Standard
+Im November 2019 wurde die Version 0.2 mit Namen 
+\begin_inset Quotes eld
+\end_inset
+
+Ariadne
+\begin_inset Quotes erd
+\end_inset
+
+ veröffentlicht, welche erstmals sämtliche Funktionalitäten der SE1rev1
+ umsetzt.
+ In der vorliegenden Dokumentation werden diese neuen Funktionalitäten beschrieb
+en.
+ Die SE1rev1 ist vollständig rückwärtskompatibel zur SE1rev0.
+\end_layout
+
+\begin_layout Standard
+Das Programm VPAINT wird weiterhin nur als Hilfsinstrument zur visuellen
+ und interaktiven Darstellung der Stenozeichen erläutert.
  Von der Verwendung von VPAINT zur Speicherung von Zeichen und der Nutzung
  von Funktionalitäten, die zur SE2 oder zur SE1 rev1 gehören,
 \begin_inset Foot
@@ -1850,6 +1880,16 @@ en und korrupte Zeichendefinitionen sind garantiert).
 \end_inset
 
  wird dringend abgeraten.
+ VPAINT wird in Zukunft voraussichtlich nicht weiterentwickelt, da es grundsätzl
+ich auf der SE2 basiert, die aufgrund verschiedener konzeptioneller Mängel,
+ kaum umgesetzt werden wird.
+\end_layout
+
+\begin_layout Standard
+VSTENO soll in Zukunft noch ein bis zwei weitere Releases mit Erweiterungen
+ und Bugfixes erhalten.
+ Danach wäre, wie in der Einleitung erläutert, eine komplette Neuimplementierung
+ mit einer komplett neuen SE3 anzustreben.
 \end_layout
 
 \begin_layout Part*
@@ -1892,11 +1932,27 @@ Steno Engine Revision 1 (SE1 rev1): Verwendet die gleiche Mittellinienmodellieru
 ng und horizontale Punktverschiedbung wie die SE1 rev0.
  Zwei Features der SE2 wurden jedoch als Hacks rückportiert: (1) parallele
  Rotationsachsen, (2) orthogonale und proportionale Punktdrehung.
- Bei der Rückportierung reden wir ganz klar von einem Hack: Die SE1 war
- nicht dafür ausgelegt, solche Funktionalitäten zu integrieren! Beispielsweise
- werden in der SE1 rev0 nicht einzelne Zeichen geneigt, sondern es werden
- zunächst alle benötigten Zeichen aneinandergefügt und danach das ganze
- Wort geneigt (unter Verwendung der horizontalen Punktverschiebung).
+ Zusätzlich wurde in der Version 0.2 
+\begin_inset Quotes eld
+\end_inset
+
+Ariadne
+\begin_inset Quotes erd
+\end_inset
+
+ auch eine Umrissmodellierung (ähnlich der SE2) in die SE1rev1 integriert.
+ Bei diesen Rückportierungen reden wir ganz klar von 
+\begin_inset Quotes eld
+\end_inset
+
+Hacks
+\begin_inset Quotes erd
+\end_inset
+
+: Die SE1 war nicht dafür ausgelegt, solche Funktionalitäten zu integrieren!
+ Beispielsweise werden in der SE1 rev0 nicht einzelne Zeichen geneigt, sondern
+ es werden zunächst alle benötigten Zeichen aneinandergefügt und danach
+ das ganze Wort geneigt (unter Verwendung der horizontalen Punktverschiebung).
  Die einzige Möglichkeiten, die Funktionen (1) und (2) zu integrieren, besteht
  deshalb darin, (a) die Zeichen einzeln zu neigen (wobei die SE1 rev0 immer
  noch glaubt, es seien nicht geneigte Zeichen) und (b) die Zeichen dann
@@ -1904,12 +1960,10 @@ ng und horizontale Punktverschiedbung wie die SE1 rev0.
  Neigung um 0 Grad an).
  Die Umsetzung von (a) und (b) impliziert weitere Komplikationen: Koordinaten
  für parallele Rotationsachsen und für neue Punkttypen müssen im starren
- Datengerüst der SE1 rev0 unergebracht werden.
+ Datengerüst der SE1 rev0 untergebracht werden.
  Da dort praktisch kein freier Platz mehr besteht, müssen die zusätzlichen
  Informationen zum Teil bitweise mit bestehenden Elementen verknüpft (und
  nachher wieder ausgelesen werden).
- All diese Komplikationen führen dazu, dass die SE1 rev1 bis jetzt nur unzuverlä
-ssig funktioniert und deshalb in der Version 0.1rc deaktiviert wurde.
  
 \end_layout
 
@@ -1939,6 +1993,23 @@ en Knot eine parallele Rotationsachse zu definieren.
  Die Funktionalitäten der SE2 funktionieren in VPAINT zu ca.
  95%, dennoch ist die SE2 bis heute nicht als PHP-Code innerhalb von VSTENO
  implementiert.
+ Leider zeigt sich, dass die SE2 ihre Erwartungen nicht erfüllt: Zum einen
+ führt sie punkto Umrissmodellierung eine Komplexität ein, die schwierig
+ zu handlen ist, zum anderen wirft sie Funktionalitäten (wie insbesonder
+ TokenCombiner und TokenShifter) über Bord, die die Generierung von Zeichen
+ wesentlich vereinfach.
+ Die SE2 (und das Programm VPAINT) werden deshalb nicht (weiter)entwickelt,
+ sondern 
+\begin_inset Quotes eld
+\end_inset
+
+eingemottet
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Stattdessen soll in einer Neuimplementierung eine SE3 ohne grafischen Editor
+ angestrebt werden.
  
 \end_layout
 
@@ -2003,7 +2074,8 @@ Falls Sie das System Stolze-Schrey nicht kennen, melden Sie sich bei mir
 
 \begin_layout Standard
 Detailliertere Informationen zum Anlegen eines Kontos inklusive grafischer
- Screenshots finden Sie auch unter: 
+ Screen\SpecialChar \-
+shots finden Sie auch unter: 
 \begin_inset CommandInset href
 LatexCommand href
 target "https://www.vsteno.ch/docs/mitmachen_bei_vsteno.pdf"
