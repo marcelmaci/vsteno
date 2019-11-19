@@ -880,8 +880,18 @@ function MetaParser( $text ) {          // $text is a single word!
     // check if word has been cached
     //echo "isset: " . isset($cached_results[$text]) . " value: " . $cached_results[$text] . " ";
     
-    
-    if ((isset($cached_results[$text])) && ($cached_results[$text] !== false)){
+    // this is a nice example of how caching can go wrong - and produce errors that are very difficult to track.
+    // In the sequence:
+    //
+    // <@token_type=shorthand>Dies ist ein Test.<@token_type=handwriting>Dies ist ein Test in Blockschrift.
+    // <@token_type=shorthand>
+    // 
+    // Strangely, the first part in shorthand was correct, whereas in the second part the words "dies" and "ist" continued to
+    // be written in shorthand. I first thougt, that the session variable token_type wasn't modified correctly (which could
+    // be a problem coming from the parser), but actually this problem is due the fact, that "dies" and "ist" get cached as
+    // shorthand words first and are then copy&pasted without considering that the token_type may have changed in the meantime.
+    // The solution for now: limit caching strictly to shorthand words (see last AND in following if-statement)
+    if ((isset($cached_results[$text])) && ($cached_results[$text] !== false) && ($_SESSION['token_type'] === "shorthand")){
         //echo "<b>get cached: " . $cached_results[$text] . "</b><br>";
         // due to the global variables used throughout parser and engine, these must be set accordingly to get correct results ...
         switch ($_SESSION['output_format']) {
@@ -1103,7 +1113,16 @@ if ($_SESSION['analysis_type'] === "selected") {
                     $output = $word;
                     $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
                     $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
-                    $output = mb_strtoupper( $output );
+                    // prepare handwriting pretokens (hwpre)
+                    // Example: ! => [#!0] (if marker is 0, so each token is inside [], preceeded by # and followed by marker)
+                    $hwpre = "";
+                    for ($p=0; $p<mb_strlen($pretokens); $p++) $hwpre .= "[#" . mb_substr($pretokens, $p, 1) . $_SESSION['handwriting_marker'] . "]";
+                    // idem posttokens (hwpost)
+                    $hwpost = "";
+                    for ($p=0; $p<mb_strlen($posttokens); $p++) $hwpost .= "[#" . mb_substr($posttokens, $p, 1) . $_SESSION['handwriting_marker'] . "]";
+                    
+                    $output = $hwpre . mb_strtoupper( $output ) . $hwpost;
+                    //echo "final result (handwriting): $output<br>(pretokens: [$pretokens] / posttokens: [$posttokens]) <br>(hwpre: $hwpre / hwpost: $hwpost)<br>";
                     return $output;
             }
 
