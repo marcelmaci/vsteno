@@ -22,7 +22,7 @@
 	// program).
 	//
 	// Model naming:
-	// GE = English, SS = Stolze-Schrey, BAS = basic system (Grundsystem)
+	// GE = General, SS = Stolze-Schrey, BAS = basic system (Grundsystem)
 	//
 	#BeginSubSection(session)
 		// only font variables		

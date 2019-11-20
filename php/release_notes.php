@@ -28,12 +28,12 @@ enthält folgende Verbesserungen.</p>
     <li>ENSSBAS: Grundschrift Englisch (neu)</li>
     <li>GESSBAS: Shared Font (inkl. Blockschrift)</b>
 </ul>
-<li>Bugfixes und weitere noch nicht definierte neue Features</li>
 <li>Dokumentation</li>
 <ul>
     <li>Deutsch: Ergänzungen neue Funktionen</li>
     <li>English: Quick-Reference (Kurzdokumentation)</li>
 </ul>
+<li>Bugfixes</li>
 </ul>
 <p>* In Kombination mit phonetischer Transkription nur Wortanalyse (keine Silben, Präfixe, Suffixe).</p>
 

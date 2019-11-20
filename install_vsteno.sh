@@ -34,21 +34,21 @@ case "$1" in
 	Ariadne)
             version_number=0.2
             version_name=Ariadne
-            version_date="11/11/19"
-            commit=990c3c568880163ca2832c1e04c452a620ef6260
+            version_date="20/11/19"
+            commit=ebd46f6d0b1c3d35b34f50c68fc7d07258bca104
             ;;
 
         0.2)
             version_number=0.2
             version_name=Ariadne
-            version_date="11/11/19"
-            commit=990c3c568880163ca2832c1e04c452a620ef6260
+            version_date="20/11/19"
+            commit=ebd46f6d0b1c3d35b34f50c68fc7d07258bca104
             ;;
 	lateststable)
             version_number=lateststable
-            version_name=Hephaistos
-            version_date="26/07/19"
-            commit=fdaa9ac825406add9b42eb518d488ac197d9a6f7
+            version_name=Ariadne
+            version_date="20/11/19"
+            commit=ebd46f6d0b1c3d35b34f50c68fc7d07258bca104
             ;;
          
         latest)

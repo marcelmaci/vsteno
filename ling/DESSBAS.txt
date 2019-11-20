@@ -1,6 +1,6 @@
 #BeginSection(header)
 	DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)
-    	(c) 2018-2109  Marcel Maci
+    	(c) 2018-2019  Marcel Maci
 	
 	This program is free software: you can redistribute it and/or modify
     	it under the terms of the GNU General Public License as published by
