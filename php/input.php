@@ -19,6 +19,7 @@ require "vsteno_template_top.php"; require_once "session.php"; $_SESSION['return
 <br>
 <center>
 <?php require_once "constants.php"; echo "Version: " . version_number . " (" . version_name . ") <br><i>Commit: " . version_commit_id . "</i><br>"; ?>
+<?php echo "<p style=\"color:red;margin-top:0;margin-bottom:0\">If parts of text are missing, disable font GESSBAS under \"Engine\".</p>"; ?> 
 <div id="order">
 <form action="calculate.php" method="post">
 <table>

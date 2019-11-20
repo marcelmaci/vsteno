@@ -2952,5 +2952,7 @@
 		"ü" => "Ü";
 		"ä" => "Ä";
 		"ö" => "Ö";
+		// fix a problem whose origin is unknown: replace all @r3^ by @r (less beautiful, but should work)
+		"([GHKZTD])@R3\^\]" => "$1@R][#4]";
 	#EndSubSection(finisher,=:prt)
 #EndSection(rules)

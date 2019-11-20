@@ -27,7 +27,7 @@ error_reporting(0);                 // turn off all error reporting
 // version
 const version_name = "Ariadne (20. November 2019)"; // official release name
 const version_number = 0.2; // two digit version number (can be used to test compatibility with models)
-const version_commit_id = "ebd46f6d0b1c3d35b34f50c68fc7d07258bca104";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_commit_id = "5b30f22e1908a653fa41d39b3ad9394e31a280f5";   // must be inserted manually after commit => could be from last commit if forgotten
 const version_date = "20. November 2019";  // idem
 
 // constants
