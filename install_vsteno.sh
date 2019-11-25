@@ -35,20 +35,20 @@ case "$1" in
             version_number=0.2
             version_name=Ariadne
             version_date="20/11/19"
-            commit=5b30f22e1908a653fa41d39b3ad9394e31a280f5
+            commit=452a3007577f2d14d4f03976fb93bccede2073f3
             ;;
 
         0.2)
             version_number=0.2
             version_name=Ariadne
             version_date="20/11/19"
-            commit=5b30f22e1908a653fa41d39b3ad9394e31a280f5
+            commit=452a3007577f2d14d4f03976fb93bccede2073f3
             ;;
 	lateststable)
             version_number=lateststable
             version_name=Ariadne
             version_date="20/11/19"
-            commit=5b30f22e1908a653fa41d39b3ad9394e31a280f5
+            commit=452a3007577f2d14d4f03976fb93bccede2073f3
             ;;
          
         latest)

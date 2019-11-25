@@ -664,6 +664,9 @@
 		"er\+c" => "erc"; // Clerc
 		"([Ee])nt\|meh-r" => "$1nt+meh-r"; // Entmehrung
 
+		// recorrect suffix -chen (not diminutive)
+		"([Bb]lei)#(chen)" => "$1-$2";
+
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -2418,7 +2421,7 @@
 		"{HEIT}u\[NG\]" => "[A][&EITNG]";
 		"{HEIT}e" => "{HEIT}[&E]e";
 
-		"^\{ER\}" => "[0N-][#N][VR]";
+		"^\{ER\}" => "[0N-][#4][VR]";
 		//"\[&T\]{ER}" => "[&TVR]"; // even 2x ...
 		// trivial ones
 		"{DASS?}" => "[#NS][S=]";
@@ -2455,7 +2458,7 @@
 		"{HAT}" => "[HAT]";
 		"{DA}" => "[DA]";
 		"{DES}" => "[0N-][S]";
-		"{SIND}" => "[SIND]";
+		//"{SIND}" => "[SIND]";
 		//"{DIS}" => "[0N-][#0][I][S]";
 		"{ZER}" => "[Z@R]";
 		"{ANTI}" => "[0N-][ANTI]";
@@ -2489,6 +2492,8 @@
 		"{ZURÜCK}" => "[I][ZURÜCK]";
 		"{E(N|M)}\|" => "[E][$1]";   // dissolve ending in composed words
 		"{E(N|M)}" => "[E$1]";
+		"{WO}" => "[WO]";
+		"{SIND}" => "[ND]"; // token "sind" becomes obsolete with this rule
 		 
 
 		//"{AN}" => "[0N-][A][N]";
@@ -2514,6 +2519,10 @@
 		"#=#=#" => "-";		// this still might have interferences (watch out if that occurs)
 		"\[#=#\]" => "[=]";
 		"(?!<\[vr)\+(?!ar\])" => "";  // eliminate morphem boundaries before spacer
+		"([}\]])#" => "$1"; // eliminate suffix boundaries before spacer
+
+		"([gcktdGCKTD])@[Rr]3\^" => "$1@R"; // rule copied from finisher
+
 	#EndSubSection(relancer2)
 	#BeginSubSection(prespacer)
 		// empty (just for shared font)
@@ -2953,6 +2962,7 @@
 		"ä" => "Ä";
 		"ö" => "Ö";
 		// fix a problem whose origin is unknown: replace all @r3^ by @r (less beautiful, but should work)
-		"([GHKZTD])@R3\^\]" => "$1@R][#4]";
+		//"([GCKTD])@R3\^" => "$1@R"; // include this rule before spacer to get correct spacing
+		"\]#\[" => "]["; // bugfix
 	#EndSubSection(finisher,=:prt)
 #EndSection(rules)

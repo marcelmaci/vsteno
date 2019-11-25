@@ -1111,8 +1111,13 @@ if ($_SESSION['analysis_type'] === "selected") {
                 case "handwriting":
                     //echo "handwriting marker: " . $_SESSION['handwriting_marker'] . " output: $output<br>";
                     $output = $word;
-                    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
-                    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
+                    // tokens without upper/lower case (+special cases)
+                    //echo "before: $output<br>";
+                    $output = preg_replace( "/(?<![<>])-{1,1}/", "[#-" . $_SESSION['handwriting_marker'] . "]", $output ); 
+                    //echo "after: $output<br>";
+                    // tokens with distinciton upper/lower case
+                    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]|Ä|Ö|Ü){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
+                    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]|ä|ö|ü){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
                     // prepare handwriting pretokens (hwpre)
                     // Example: ! => [#!0] (if marker is 0, so each token is inside [], preceeded by # and followed by marker)
                     $hwpre = "";
@@ -1123,6 +1128,7 @@ if ($_SESSION['analysis_type'] === "selected") {
                     
                     $output = $hwpre . mb_strtoupper( $output ) . $hwpost;
                     //echo "final result (handwriting): $output<br>(pretokens: [$pretokens] / posttokens: [$posttokens]) <br>(hwpre: $hwpre / hwpost: $hwpost)<br>";
+                    if ($_SESSION['output_format'] === "debug") $global_debug_string .= "Handwriting: $output<br><br>";
                     return $output;
             }
 
