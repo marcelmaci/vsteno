@@ -173,11 +173,11 @@ function InitializeSessionVariables() {
     $_SESSION['phonetics_transcription_array'] = "";
     $_SESSION['phonetics_single_char_yesno'] = false;
     // shared font
-    $_SESSION['font_borrow_yesno'] = false;
-    $_SESSION['font_borrow_model_name'] = "ENSSBAS";
-    $_SESSION['font_importable_yesno'] = false;
+    $_SESSION['font_borrow_yesno'] = true;
+    $_SESSION['font_borrow_model_name'] = "GESSBAS";
+    $_SESSION['font_importable_yesno'] = true;
     $_SESSION['font_exportable_yesno'] = false;
-    $_SESSION['font_load_from_file_yesno'] = false;
+    $_SESSION['font_load_from_file_yesno'] = true;
     
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;

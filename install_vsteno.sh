@@ -34,27 +34,27 @@ case "$1" in
 	Ariadne)
             version_number=0.2
             version_name=Ariadne
-            version_date="20/11/19"
-            commit=452a3007577f2d14d4f03976fb93bccede2073f3
+            version_date="25/11/19"
+            commit=c7761a88d239bba280e334d38c73b66218cfb4c8
             ;;
 
         0.2)
             version_number=0.2
             version_name=Ariadne
-            version_date="20/11/19"
-            commit=452a3007577f2d14d4f03976fb93bccede2073f3
+            version_date="25/11/19"
+            commit=c7761a88d239bba280e334d38c73b66218cfb4c8
             ;;
 	lateststable)
             version_number=lateststable
             version_name=Ariadne
-            version_date="20/11/19"
-            commit=452a3007577f2d14d4f03976fb93bccede2073f3
+            version_date="25/11/19"
+            commit=c7761a88d239bba280e334d38c73b66218cfb4c8
             ;;
          
         latest)
             version_number=latest
             version_name=Ariadne
-            version_date="20/11/19"
+            version_date="25/11/19"
 	    commit=origin/master
             ;;
         *)
