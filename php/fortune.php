@@ -33,7 +33,7 @@ $cookie_table = array(
     /*4*/ array( 250, 120, "align_left", 5, 0, 15, 0, 2.7, 2.6, 1.6, 14, "Zeit ist das, was man an der Uhr abliest.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
     /*5*/ array( 240, 120, "align_left", 5, 0, 10, 0, 2.7, 2.6, 1.25, 14, "Logik bringt dich von A nach B. Deine Phantasie bringt dich überall hin.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
     /*6*/ array( 340, 120, "align_left", 5, 0, 6, 0, 3.15, 2.6, 1.1, 14, "Um eine Ein|kommens steuer erklärung abgeben zu können, muss man Philosoph sein. Für einen Mathematiker ist es zu schwierig.<@token_type=svgtext>Albert Einstein<@token_type=shorthand>" ),
-    /*7*/ array( 360, 120, "align_left", 5, 0, 20, 0, 2.7, 2.6, 1.3, 14, "Ich gebe meinem Psüchiater noch ein Jahr, dann fahre ich nach Lourdes.<@token_type=svgtext>Woody Allen<@token_type=shorthand>" ),
+    /*7*/ array( 340, 120, "align_left", 5, 0, 6, 0, 2.7, 2.6, 1.2, 14, "Ich gebe meinem Psüchiater noch ein Jahr, dann fahre ich nach Lourdes.<br><@token_type=svgtext>Woody Allen<@token_type=shorthand>" ),
     /*8*/ array( 340, 120, "align_left", 5, 0, 15, 0, 2.7, 2.6, 1.05, 14, "Es gibt Schlimmeres als den Tod. Wer schon einmal einen Abend mit einem Versicherungs|ver|treter zugebracht hat, wird wissen, was ich meine.<@token_type=svgtext>Woody Allen<@token_type=shorthand>" ),
     /*9*/ array( 250, 120, "align_left", 5, 0, 20, 0, 2.7, 2.6, 1.4, 14, "Die Ewigkeit dauert lange, besonders gegen Ende.<@token_type=svgtext>Woody Allen<@token_type=shorthand>" ),
    /*10*/ array( 340, 120, "align_left", 5, 0, 2, 0, 2.7, 2.5, 1.0, 14, "Als ich vierzehn war, war mein Vater so unwissend. Ich konnte den alten Mann kaum in meiner Nähe ertragen. Aber mit einundzwanzig war ich verblüfft, wieviel er in sieben Jahren dazugelernt hatte. <@token_type=svgtext>Mark Twain<@token_type=shorthand>" ),
@@ -116,6 +116,8 @@ function restore_engine() {
 
 //unset($_SESSION['fortune_cookie']); // unset session variable to generate new fortune cookie each time a page is loaded (for testing purposes)
 if (!isset($_SESSION['fortune_cookie'])) {
+    global $include_for_cookie;
+    $include_for_cookie = true;
     require_once "engine.php";
 }
 

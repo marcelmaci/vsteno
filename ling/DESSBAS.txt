@@ -668,6 +668,9 @@
 		// recorrect suffix -chen (not diminutive)
 		"([Bb]lei)#(chen)" => "$1-$2";
 
+		// Errungenschaften
+		"([Ee]r\+run)\|(gen)\|(schaf-?t)" => "$1-$2-$3";
+
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -894,7 +897,7 @@
 		"D" => { "@R3^", 0, 0 }
 		"C" => { "@R", 0, 0 }
 		"ND" => { "@R", 0, 0 }
-		"T" => { "@R", 0, 0 }
+		//"T" => { "@R", 0, 0 }
 		"T" => { "@R3^", 0, 0 }
 		"G" => { "@R3^", 0, 0 }
 		"K" => { "@R", 0, 0 }
@@ -2030,6 +2033,7 @@
 		"\[AU\]#{SO}$" => "[AU][&E]\\{SO}"; 
 
 		"(?<!\[#6-\]\\)\[\/\](?!\[#6-\])" => "\\[/][#6-]\\[/]\\";
+		"{EN}\\H" => "{EN}\\[#4]H"; // Irrenhaus
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -2497,6 +2501,7 @@
 		"{E(N|M)}" => "[E$1]";
 		"{WO}" => "[WO]";
 		"{SIND}" => "[ND]"; // token "sind" becomes obsolete with this rule
+		"{WAS}" => "[A][W]"; // token "was" probably obsolete
 		 
 
 		//"{AN}" => "[0N-][A][N]";
@@ -2523,6 +2528,7 @@
 		"\[#=#\]" => "[=]";
 		"(?!<\[vr)\+(?!ar\])" => "";  // eliminate morphem boundaries before spacer
 		"([}\]])#" => "$1"; // eliminate suffix boundaries before spacer
+		"#([{\[])" => "$1"; // eliminate suffix boundaries before spacer
 
 		"([gcktdGCKTD])@[Rr]3\^" => "$1@r"; // rule copied from finisher
 

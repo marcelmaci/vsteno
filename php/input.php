@@ -88,7 +88,7 @@ Font: <input type="checkbox" name="font_borrow_yesno" value="yes" <?php echo ($_
 <input type="checkbox" name="font_load_from_file_yesno" value="yes" <?php echo ($_SESSION['font_load_from_file_yesno']) ? "checked" : ""?>> File
 <br>
 
-Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch<br>
+Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch => <a href="spacer_parameters.php">Parameter</a><br>
 Rendering: 
 <?php /*echo "test:" . $_SESSION['rendering_middleline_yesno'] . "<";*/?>
 <input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 

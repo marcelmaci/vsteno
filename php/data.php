@@ -85,9 +85,32 @@ $text_to_parse = LoadModelFromDatabase($model_to_load);
 ///////////////////// prepare patching to use one and the same font for all models //////////
 // idea is to "borrow a font from another model ///////////////////////////////////////////
 // use the following line to test (or comment out to use traditional functionality ///////
-if ($_POST['font_borrow_yesno'] === "yes")  // use POST (SESSION not yet set)
+if ($_POST['font_borrow_yesno'] === "yes") {  // use POST (SESSION not yet set)
     $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_POST['font_borrow_model_name']));
-else {
+    //echo "model_name: " . $_POST['font_borrow_model_name'];
+} else if ($include_for_cookie) {
+    //echo "include for cookie<br>";
+    // hardcoded include for first run to generate fortune cookie
+    $_SESSION['font_borrow_yesno'] = true;
+    $_SESSION['font_borrow_model_name'] = "GESSBAS";
+    $_SESSION['font_importable_yesno'] = true;
+    $_SESSION['font_exportable_yesno'] = false;
+    $_SESSION['font_load_from_file_yesno'] = true;
+    //echo "model_name: " . $_SESSION['font_borrow_model_name'];
+    //echo "BEFORE: $text_to_parse";
+    $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_SESSION['font_borrow_model_name']));
+    //echo "AFTER: $text_to_parse";
+    $include_for_cookie = false;
+} else if ($include_for_regex_gen) {
+    //echo "include for regex-gen<br>";
+    $temp = preg_match("/\"font_borrow_model_name\" *?:= *?\"(.*?)\" *?;/", $text_to_parse, $m);
+    $_SESSION['font_borrow_model_name'] = $m[1];
+    //echo "font_borrow_model_name: " . $_SESSION['font_borrow_model_name'] . "<br>";
+    //echo "BEFORE: $text_to_parse";
+    $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_SESSION['font_borrow_model_name']));
+    //echo "AFTER: $text_to_parse";
+    
+} else {
     // since foreign font loading is implemented as a check box it's not sure that font specific
     // variables are actual when calculation is launched.
     // therefore (re)load font-session variables even if no foreign font is loaded.

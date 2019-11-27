@@ -86,8 +86,19 @@ function ResetSessionGetBackPage() {
         // now load model based on session-variables
         //echo "model: " . $_SESSION['actual_model'];
         $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
-        if ($_POST['font_borrow_yesno'] === "yes")  // use POST (SESSION not yet set)
-            $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_POST['font_borrow_model_name']));
+        // borrow font
+        $borrow_font_set = preg_match("/\"font_borrow_yesno\" *?:= *?\"yes\" *?;/", $text_to_parse) === 1; 
+        //if ($_POST['font_borrow_yesno'] === "yes") { // use POST (SESSION not yet set)
+        if ($borrow_font_set) { 
+            // echo "borrow font ...<br>";
+            $temp = preg_match("/\"font_borrow_model_name\" *?:= *?\"(.*?)\" *?;/", $text_to_parse, $ret);
+            $parsed_model_name = $ret[1];
+            //echo "model name: [$parsed_model_name]<br>";
+            //var_dump($ret);
+            $borrow_text = " (mit Font " . $parsed_model_name . ")";  
+            $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($parsed_model_name));
+        } else $borrow_text = ""; // echo "don't borrow font";
+        
         //echo "text_to_parse: $text_to_parse<br>";
         $output = StripOutComments($text_to_parse);
         $output = StripOutTabsAndNewlines($output);
@@ -96,7 +107,7 @@ function ResetSessionGetBackPage() {
         $session_subsection = GetSubSection($header_section, "session");
         //echo "session_text: $session_subsection<br>";
         ImportSession();
-        echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . " wurde geladen und die Optionen aktualisiert.</p>";
+        echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . "$borrow_text wurde geladen und die Optionen aktualisiert.</p>";
         echo GetErrorAndWarningSection();
         /*
         if ((mb_strlen($global_error_string)>0) || ((mb_strlen($global_warnings_string)>0))) {

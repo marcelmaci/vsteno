@@ -140,9 +140,11 @@ function actualize_font_session_variables($t) {
     
 function BorrowFont( $original_model_text, $lender_model_name ) {
     global $font_import_export_errors, $global_error_string;
+    global $include_for_cookie, $include_for_regex_gen;
     
     //echo "BorrowFont()<br>";
-    switch ($_POST['font_load_from_file_yesno']) {
+    $check = (($include_for_cookie) || (include_for_regex_gen)) ? "yes" : $_POST['font_load_from_file_yesno'];
+    switch ($check) {
         case "yes" : 
             $lender_model_text = LoadModelToShareFromFile($lender_model_name);
             //echo "load from file ...<br>";
@@ -152,6 +154,7 @@ function BorrowFont( $original_model_text, $lender_model_name ) {
             //echo "load from database ...<br>";
     }
 
+    //echo "BorrowFont - checkpoint2";
     // limit db access for shared font
     if (!(CheckSharedFontAccess($lender_model_name))) {
         $font_import_export_errors .= "FONT: access to foreign font forbidden<br>FONT: foreign font not loaded<br>";
