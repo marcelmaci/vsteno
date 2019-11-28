@@ -518,7 +518,7 @@
 
 		/////////////////////////////////////// new approach prefixes ///////////////////////
 		// filter out "false positives" for affixes
-		
+
 		// prefix be+
 		"([Bb]e)\+(te(?:n|st|t(?:en?)?|nd(?:en?)?))" => "$1-$2";
 		"([Bb]e)\+(b(?:en|e?st|e?t(?:en?)?|nd(?:en?)?))" => "$1-$2";
@@ -655,8 +655,9 @@
 		// jemand
 		"([Jj])e\|man(-)?d" => "$1e-man$2d";
 
-		// Insel
+		// Insel / Au-to-ma-ten
 		"([Ii])n\+sel" => "$1n-sel";
+		"^([Aa]u)\|" => "$1-";
 
 		// Mode-Ration vs Moderation (Computers are stupid ... :)
 		"([Mm])o-?de\|ra-?ti-?o" => "$1o-der+a-tio";
@@ -668,8 +669,17 @@
 		// recorrect suffix -chen (not diminutive)
 		"([Bb]lei)#(chen)" => "$1-$2";
 
-		// Errungenschaften
+		// Errungenschaften / Therapie
 		"([Ee]r\+run)\|(gen)\|(schaf-?t)" => "$1-$2-$3";
+		"([Tt]he)r\+(a-pi)" => "$1-r$2";
+		"([Mm]o)-?d-?(er)\+(n)" => "$1-d$2-$3"; // problem: verb "modern" has {ER}
+		"([Ss]chwe)r\+e" => "$1-re";
+		"([Ss]chwer)\+s-?te" => "$1s-te";
+
+		// hinter- / vorder- (separate words)
+		"([Hh]in)-?t-?er\+" => "$1-ter|";
+		"([Vv]or)-?d-?er\+" => "$1-der|";
+
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1348,7 +1358,7 @@
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zern" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => "$1{ER}t$3"; // use - to detect preceeding syllable
-		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n" };
+		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+" };
 
 		"{LICH}er$" => "{LICH}{ER}";
@@ -1581,6 +1591,10 @@
 		"er\+" => "{ER}"; // Studers (hasn't been recognized until now)
 
 	#EndSubSection(shortener)
+	#BeginSubSection(demorpher)
+		// after shortener delete linguistical markers that are no longer needed (and block spacer later)
+		"#bar" => "-bar";
+	#EndSubSection(demorpher)
 	#BeginSubSection(normalizer)
 		
 		"rrh$" => "rr";		// Katarrh
@@ -1940,6 +1954,9 @@
 
 		// heit + unterlänge
 		"{HEIT}-?\[(SCH|CH|Z|ZW)\]" => "{HEIT&UL}[$1]";
+		"\[&T\]\[?E\]?\[NS\]" => "[&TNS]";
+
+		"{ER}\+t" => "{ER}[&T]";
 
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
@@ -2502,12 +2519,15 @@
 		"{WO}" => "[WO]";
 		"{SIND}" => "[ND]"; // token "sind" becomes obsolete with this rule
 		"{WAS}" => "[A][W]"; // token "was" probably obsolete
-		 
+		"{AUS}" => "[AUS]";		 
 
 		//"{AN}" => "[0N-][A][N]";
 	#EndSubSection(substituter)
 	#BeginSubSection(rewriter2)
 		"\[&T\]-?\[H\]" => "[&T3/4][H]";
+		"\[&T\]-?\[VR\]" => "[&TVR]";
+		"\[&T\]\[?S\]?" => "[&TS]";
+
 	#EndSubSection(rewriter2)
 	#BeginSubSection(separator)
 		// separator decides wether or not a word should be written separatedly
