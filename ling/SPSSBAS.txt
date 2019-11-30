@@ -106,7 +106,10 @@
 		// font
 		"token_distance_wide" := "18";
 		"font_importable_yesno" := "yes";
-		"font_exportable_yesno" := "yes";
+		"font_exportable_yesno" := "no";
+		"font_borrow_yesno" := "yes";
+		"font_borrow_model_name" := "GESSBAS";
+		"font_load_from_file_yesno" := "yes"; 
 		// spacer groups
 		// L/R: left, right
 		// M/N/P/K: minus, normal, plus (more or less space needed), circle (special space rules)
