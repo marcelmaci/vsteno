@@ -1093,7 +1093,11 @@ if ($_SESSION['analysis_type'] === "selected") {
                             $output = $pretokens . $output; // add { and [ without \\
                             $separated_std_form = $pretokens . $separated_std_form;     // do the same for std and prt form
                             $separated_prt_form = $pretokens . $separated_prt_form;
-                        } else $output = "$pretokens\\" . "$output";    // not sure whether this is correct (needs same correction for std and prt as above?!?)
+                        } else { 
+                             // special treatment for numbers in shorthand: transform to # + number + handwriting_marker inside []
+                            $pre_handwriting = preg_match("/[0-9]/", $pretokens) ? "[#" . $pretokens . $_SESSION['handwriting_marker'] . "]" : $pretokens;
+                            $output = "$pre_handwriting\\" . "$output";    // not sure whether this is correct (needs same correction for std and prt as above?!?)
+                        }
                     }
                     if (mb_strlen($posttokens) > 0) {
                         if ((mb_substr($posttokens, 0, 1) === "}") || (mb_substr($posttokens,0,1) === "]")) { // check only first char of posttokens, since there may be . ? ! afterwards (et l'horreur sous forme de greffes aléatoires continue ...;-))
@@ -1101,7 +1105,11 @@ if ($_SESSION['analysis_type'] === "selected") {
                             $separated_std_form .= $posttokens;     // do the same for std and prt form
                             $separated_prt_form .= $posttokens;
                    
-                        } else $output .= "\\$posttokens";
+                        } else {
+                            // special treatment for numbers in shorthand: transform to # + number + handwriting_marker inside []
+                            $post_handwriting = preg_match("/[0-9]/", $posttokens) ? "[#" . $posttokens . $_SESSION['handwriting_marker'] . "]" : $posttokens;
+                            $output .= "\\$post_handwriting";
+                        }
                     }
                     // cache result
                     if (isset($cached_results[$text])) $cached_results[$text] = $output;
@@ -1114,6 +1122,7 @@ if ($_SESSION['analysis_type'] === "selected") {
                     // tokens without upper/lower case (+special cases)
                     //echo "before: $output<br>";
                     $output = preg_replace( "/(?<![<>])-{1,1}/", "[#-" . $_SESSION['handwriting_marker'] . "]", $output ); 
+                    //$output = preg_replace( "/(?<![<>])([0-9]){1,1}/", "[#$1" . $_SESSION['handwriting_marker'] . "]", $output ); 
                     //echo "after: $output<br>";
                     // tokens with distinciton upper/lower case
                     $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]|Ä|Ö|Ü){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case

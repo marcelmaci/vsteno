@@ -25,10 +25,10 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_name = "Ariadne (20. November 2019)"; // official release name
+const version_name = "Ariadne (30. November 2019)"; // official release name
 const version_number = 0.2; // two digit version number (can be used to test compatibility with models)
-const version_commit_id = "5b30f22e1908a653fa41d39b3ad9394e31a280f5";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "20. November 2019";  // idem
+const version_commit_id = "d36ae5e9ac1e70720a07fac83156212e036d1d89";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "30. November 2019";  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)
