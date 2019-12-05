@@ -522,7 +522,10 @@ if ($option_result === false) break; // terminate here if option doesn't match
                     if ($_SESSION['output_format'] === "debug") {
                         //$wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
                         $wrapped_pattern = CropStringAfterNCharacters($pattern, 20);
-                        $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
+                        $option_debug_string = "";
+                        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
+                        elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                        $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
                     }
                 }
                 //echo "GDS: $global_debug_string<br>";
@@ -569,7 +572,11 @@ if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
         // set variables for debugging
         //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
         //$replacement = $hybrid_consequence;
-        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
+        $option_debug_string = "";
+        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
+        elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                     
+        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . "$hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
     }
 } else {
 // apply "normal" rule as usual
@@ -603,11 +610,17 @@ if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
                         // why must it be set to result_after_last_rule ... ??? this is wrong with "höhere" ... set it back to $word and keep an eye on that ...
                         $output = $word;
                         //echo "result after last rule: $result_after_last_rule word: $word<br>";
-                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                        $option_debug_string = "";
+                        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
+                        elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     } else {
                         $global_number_of_rules_applied++;
                         $_SESSION['rules_count'][$rules_pointer]++;
-                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> " . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                        $option_debug_string = "";
+                        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
+                        elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
                     }
                 }
 }
