@@ -167,6 +167,11 @@ function LoadModelFromDatabase($name) {
     }
 }
 
+function WriteTextToFile($file, $text) {
+    $out = fopen("$file", "w") or die("<p>Unable to open file $file.</p>");
+    fwrite($out, $text);
+}
+
 //////////////////////////////////////// import functions /////////////////////////////////////////////////
 function StripOutComments($text) {
     $output = preg_replace("/\/\*.*?\*\//", "", $text);     // replace /* ... */ comments by empty string

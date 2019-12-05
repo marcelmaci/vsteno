@@ -47,6 +47,8 @@
                         echo "<ul><p><b>Tools</b></p>";
                         echo "<li><a href='regex_helper_variable.php'>->RX-GEN</a></li>";
                         echo "<li><a href='export_se1data_to_editor.php'>->VPAINT</a></li>";
+                        echo "<li><a href='dump_models.php'>->MDUMP</a></li>";
+                        echo "<li><a href='load_models.php'>->MLOAD</a></li>";
                         echo "</ul>";
                       }
                 ?>

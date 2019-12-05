@@ -47,14 +47,14 @@ case "$1" in
 	lateststable)
             version_number=lateststable
             version_name=Ariadne
-            version_date="30/11/19"
-            commit=d36ae5e9ac1e70720a07fac83156212e036d1d89
+            version_date="01/12/19"
+            commit=b5b7f30dcd5ca515f9f5c0f7a5e62da1ff1ed205
             ;;
          
         latest)
             version_number=latest
             version_name=Ariadne
-            version_date="30/11/19"
+            version_date="01/12/19"
 	    commit=origin/master
             ;;
         *)
