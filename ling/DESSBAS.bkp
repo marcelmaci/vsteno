@@ -70,6 +70,9 @@
 		"required_version" := "0.1";
 		"model_se_revision" := "0";
 		"model_date" := "10. Oktober 2019";
+		// options
+		"model_option0_text" := "MAC";
+		"model_option0_yesno" := "no";
 		// wide distance
 		"token_distance_wide" := "17";
 		// font
@@ -1109,6 +1112,7 @@
 		"N=" => { "NICHT2", 0, 5, 0, 0.5 }
 	#EndSubSection(shifter)
 #EndSection(font)
+
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
@@ -1589,6 +1593,9 @@
 		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
 
 		"er\+" => "{ER}"; // Studers (hasn't been recognized until now)
+
+		// optional abbreviations (option1: MAC)
+		"tstopt(0)#bar" => { "{BAR}", "[Bb]ar[#-]?ba-?r" };
 
 	#EndSubSection(shortener)
 	#BeginSubSection(demorpher)
@@ -2519,7 +2526,10 @@
 		"{WO}" => "[WO]";
 		"{SIND}" => "[ND]"; // token "sind" becomes obsolete with this rule
 		"{WAS}" => "[A][W]"; // token "was" probably obsolete
-		"{AUS}" => "[AUS]";		 
+		"{AUS}" => "[AUS]";
+
+		// optional abbreviations (option0: MAC)		
+		"tstopt(0){BAR}" => "[A][B]";
 
 		//"{AN}" => "[0N-][A][N]";
 	#EndSubSection(substituter)
