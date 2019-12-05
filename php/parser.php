@@ -468,14 +468,49 @@ function ExecuteRule( /*$word*/ ) {
             //if (preg_match("/tstwrt(/", $temp_condition)) {
             //        echo "teste: " . $temp_condition . " an $last_written_form<br>";
             //}
-            
-            $output = $act_word;
+// ***********************************************************************************************************************
+// another extension: before testing anything (= multiple evolutions, hybrid or normal rule) check if rule has this format:
+//
+// tstopt([0-9+)rule
+//
+// if so: 
+// check first, if required option is selected:
+//      if so: execute rules as before (=> needs modification for rule parsing!)
+//      if not: do not execute the rule
+// if not: execute rule as before
+//
+// tstopt(123) means: if one of the options is selected (logical or: 1 or 2 or 3)
+// ************************************************************************************************************************
+
+if (preg_match("/^tstopt\(([0-9]+)\).*$/", $rules["$actual_model"][$rules_pointer][0], $option_string) === 1) {
+    $rule_condition = $rules["$actual_model"][$rules_pointer][0];
+    $simple_string = $option_string[1];
+    //echo "rule: $rule_condition contains an option: $simple_string<br>";
+    $len = mb_strlen($simple_string);
+    $option_result = false;
+    for ($i=0; $i<=$len; $i++) {
+        $check_name = "model_option" . mb_substr($simple_string, $i, 1) . "_yesno";
+        //echo "checkname: $check_name session: [" . $_SESSION["$check_name"] . "]<br>";
+        if ($_SESSION["$check_name"]) $option_result = true;
+    }
+    //echo "option check: [$option_result]<br>";
+}
+// set output before eventual break
+$output = $act_word;
+
+//if ($option_result === false) echo "BREAK EXPECTED!<br>";
+if ($option_result === false) break; // terminate here if option doesn't match
+//if ($option_result === false) echo "after break<br>";
+
+// otherwhise continue with adapted regex for rules
+
+            //$output = $act_word;
             $length = count($rules["$actual_model"][$rules_pointer]);
             if ($length == 2) {
                 // normal rule: 1 condition => 1 consequence
                 $preceeding_result = $output;
                 $temp = $output;
-                $pattern = $rules["$actual_model"][$rules_pointer][0];
+                $pattern = preg_replace("/^(tstopt\([0-9]+\))?(.*)$/", "$2", $rules["$actual_model"][$rules_pointer][0]); // adapt for options
                 $replacement = $rules["$actual_model"][$rules_pointer][1];
                 $output = extended_preg_replace( "/$pattern/", $replacement, $output );
                 //echo "\nStandardProcedureForRule: pattern: #$pattern# => replacement: #$replacement#<br>word: $preceeding_result result: $output last: $result_after_last_rule<br>";
@@ -506,17 +541,18 @@ function ExecuteRule( /*$word*/ ) {
                 //      consequence = normal consequence      applied to phonetic form
                 // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
 // test if phonetical transcription is selected and if condition has to be tested on written form
-$match_wrt = preg_match("/^tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]);
-$match_lng = preg_match("/^tstlng\(/", $rules["$actual_model"][$rules_pointer][0]);
+
+$match_wrt = preg_match("/^(tstopt\([0-9]+\))?tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt()
+$match_lng = preg_match("/^(tstopt\([0-9]+\))?tstlng\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt()
 if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
     // chose wrt or lng form for hybrid rule (offering to variants for comparison)
     // quantifier must be greedy for condition1 in order to go to the last ) !!!
     if ($match_wrt) {
-        $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+        $hybrid_condition1 = preg_replace("/(?:tstopt\([0-9]+\))?tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
         $test_form = $last_written_form;
         $hybrid_type = "H-WRT";
     } else if ($match_lng) {
-        $hybrid_condition1 = preg_replace("/tstlng\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+        $hybrid_condition1 = preg_replace("/(?:tstopt\([0-9]+\))?tstlng\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
         $test_form = $parallel_lng_form;
         $hybrid_type = "H-LNG";
     }
@@ -538,7 +574,8 @@ if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
 } else {
 // apply "normal" rule as usual
                 //if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
-                $pattern = $rules["$actual_model"][$rules_pointer][0];
+                //$pattern = $rules["$actual_model"][$rules_pointer][0];
+                $pattern = preg_replace("/^(tstopt\([0-9]+\))?(.*)$/", "$2", $rules["$actual_model"][$rules_pointer][0]); // adapt for options
                 $replacement = $rules["$actual_model"][$rules_pointer][1];
                 //$extra_replacement = $rules["$actual_model"][$rules_pointer][1];
                 $word = $act_word;

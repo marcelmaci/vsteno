@@ -68,15 +68,20 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <li>Installer: Skript zur automatischen Installation unter Trisquel GNU/Linux 8</li>
 </ul>
 
-<h1>Ideen</h1>
-<p>Liste mit Ideen für spätere Versionen. Das Publikationsdatum ist offen. (*)</p>
+<h1>Preview</h1>
+<p>Das Publikationsdatum der nächsten Release ist offen(*) und der Name ist noch nicht festgelegt(**). Im Folgenden eine Liste mit Features, die nach und nach integriert werden.</p>
 
 Steno Engine:
 <ul>
-    <li>Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte)</li>
+    <li><b>Modelle</b>:<br>
+    Import/Export via file (MDUMP/MLOAD)<br>
+    Optionale Regeln</li>
+    <li><b>Engine</b>:<br>
+    - Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte) (to do)</li>
 </ul>
 </li>
-<p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)</i></p>
+<p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**)Nach Hephaistos und Ariadne dürfte nun wieder ein männlicher Name aus der griechischen 
+Mythologie zum Zuge kommen ... :)</i></p>
 
 <a href="input.php"><br><button>zurück</button></a>
 

@@ -23,6 +23,27 @@ $restricted_session_variables_list = array(
     "font_borrow_yesno" => false,
  //   "font_borrow_model_name" => "", // must not necessarily be resetted
  //   "font_load_from_file" => false
+    // options (must be enumerated)
+    "model_option0_text" => "",
+    "model_option0_yesno" => false,
+    "model_option1_text" => "",
+    "model_option1_yesno" => false,
+    "model_option2_text" => "",
+    "model_option2_yesno" => false,
+    "model_option3_text" => "",
+    "model_option3_yesno" => false,
+    "model_option4_text" => "",
+    "model_option4_yesno" => false,
+    "model_option5_text" => "",
+    "model_option5_yesno" => false,
+    "model_option6_text" => "",
+    "model_option6_yesno" => false,
+    "model_option7_text" => "",
+    "model_option7_yesno" => false,
+    "model_option8_text" => "",
+    "model_option8_yesno" => false,
+    "model_option9_text" => "",
+    "model_option9_yesno" => false,
 );
 
 function InitializeSessionVariables() {
@@ -218,6 +239,11 @@ function InitializeSessionVariables() {
     $_SESSION['layouted_original_text_filter_brackets'] = true;    
     $_SESSION['layouted_original_text_filter_dashes'] = true;    
 
+    // options: reserve 10 variables
+    for ($i=0; $i<=9; $i++) {
+        $_SESSION["model_option$i" . "_text"] = "";
+        $_SESSION["model_option$i" . "_yesno"] = false;
+    }
 }
 
 
@@ -391,6 +417,18 @@ if ($_POST['token_size'] != "") {
     echo "selected_std_model: " . $_SESSION['selected_std_model'] . "<br>";
     echo "last_updated_model: " . $_SESSION['last_updated_model'] . "<br>";
 */
+    // options for optional rules
+    for ($i=0; $i<=9; $i++) {
+        $option_yesno = "model_option" . $i . "_yesno";
+        $option_text = "model_option" . $i . "_text";
+        if (mb_strlen($_SESSION[$option_text])>0) {
+            // option that needs a yesno variable to be set
+            if ((isset($_POST[$option_yesno])) && ($_POST[$option_yesno] === "yes")) $_SESSION[$option_yesno] = true;
+            else  $_SESSION[$option_yesno] = false;
+        }
+    }
+    
+
 }
 }
 

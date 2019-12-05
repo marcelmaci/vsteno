@@ -61,7 +61,9 @@ $whitelist_variables .= " rendering_polygon_opacity rendering_intermediateshadow
 $whitelist_variables .= " layouted_original_text_size layouted_original_text_delta layouted_original_text_font layouted_original_text_wrap layouted_original_text_filter_brackets ";
 $whitelist_variables .= " layouted_original_text_filter_dashes phonetics_transcription_list phonetics_transcription_array phonetics_single_char_yesno ";
 $whitelist_variables .= " rendering_lineoverpass_start_factor rendering_lineoverpass_start_factor font_borrow_yesno font_borrow_model_name font_importable_yesno font_exportable_yesno ";
-$whitelist_variables .= " model_se_revision font_load_from_file_yesno handwriting_marker ";
+$whitelist_variables .= " model_se_revision font_load_from_file_yesno handwriting_marker model_option0_yesno model_option0_text model_option1_yesno model_option1_text ";
+$whitelist_variables .= " model_option2_yesno model_option2_text model_option3_yesno model_option3_text model_option4_yesno model_option4_text model_option5_yesno model_option5_text ";
+$whitelist_variables .= " model_option6_yesno model_option6_text model_option7_yesno model_option7_text model_option8_yesno model_option8_text model_option9_yesno model_option9_text ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;

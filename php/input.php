@@ -65,8 +65,24 @@ Farbe <input type="Text" name="introduction_color"  size="10" value="<?php echo 
                 $tag_end = "";
         }
         echo "<input type='submit' name='action' value='$name'> $tag_start$description$tag_end";
-        if (mb_strlen($tag_start)>0) echo " => <a href='model_info.php'>Info</a><br>";
-        else echo "<br>";
+        if (mb_strlen($tag_start)>0) {
+            // show options for selected model
+            // echo "<br>option0: " . $_SESSION['model_option0_text'] . " / [" . $_SESSION['model_option0_yesno'] . "]<br>";
+            for ($i=0; $i<=9; $i++) {
+                $option_name_base = "model_option$i";
+                $option_text = "$option_name_base" . "_text";
+                $option_yesno = "$option_name_base" . "_yesno";
+                //echo "option_text: $option_text<br>";
+                if (mb_strlen($_SESSION["$option_text"])>0) {
+                    // option has been defined (= option text exists) => show option
+                    if ($i == 0) echo " - ";
+                    $checked = ($_SESSION[$option_yesno]) ? " checked" : "";
+                    echo " $i:<input type='checkbox' name='$option_yesno' value='yes'$checked>" . $_SESSION["$option_text"];
+                }
+            }
+            // show legacy info button
+            echo " => <a href='model_info.php'>Info</a><br>";
+        } else echo "<br>";
     }
     if ($_SESSION['user_logged_in']) {
         if ($_SESSION['actual_model'] === GetDBUserModelName()) {
