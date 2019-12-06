@@ -20,7 +20,7 @@
 	
 	#BeginSubSection(session)
 	"license" := "<p>DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)<br>
-    	(c) 2018-2109  Marcel Maci</p>
+    	(c) 2018-2019  Marcel Maci</p>
 	
 	<p>This program is free software: you can redistribute it and/or modify
     	it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@
 	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an 
 	inclination of 60 degrees.</p>
 	
-	<p>In December 2020 the optional variant MAC was added. The additional rules introduce additional abbreviations for shorthand used in the so called 'Eilschrift' (2nd level) and 'Redeschrift' (3rd level). These abbreviations are based on:</p>
+	<p>In December 2019 the optional variant MAC was added. The additional rules introduce additional abbreviations for shorthand used in the so called 'Eilschrift' (2nd level) and 'Redeschrift' (3rd level). These abbreviations are based on:</p>
 	<p>[3]Hanspeter Frech, "Die superschnelle Geheimschrift. Gekürzte Stenografie", Schweizerischer Stenografenverband Stolze/Schrey (SSV), Wetzikon, November 2017.</p>
 	<p>Nonetheless, the variant MAC is NOT and 100% congruent application of the rules explained in this book. As the other explains in his foreword, everything beyond the classic model has to be considered as non standard and individual shorthand. That's why I call it MAC (which is short for Maci) in order to be clear that it is my personal way of cutting shorthand further down using more or less standard and/or individual abbreviations</p>  
 	";
@@ -71,10 +71,10 @@
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
 	"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
 		// model version
-		"model_version" := "1.1";
-		"required_version" := "0.1";
+		"model_version" := "1.2";
+		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "10. Oktober 2019";
+		"model_date" := "06/12/19";
 		// options
 		"model_option0_text" := "MA1";
 		"model_option0_yesno" := "no";
@@ -379,6 +379,7 @@
 
 		"ungs-an" => "ungs|an"; // terrible "hacks" ... :-)
 		"\|an-" => "|an+";
+		"([Aa]n)-?(nah-?m)" => "$1+$2";
 
 		"([Ww])ar\|um" => "$1a-rum";
 		"([Bb])e-?que(-?)m" => "$1e+que$2m";
@@ -1303,13 +1304,19 @@
 		"tstopt(01)[Kk]en-?n-?t?" => "{KENN}"; // abbreviate also t if word continues
 		"tstopt(1)[Kk]an-?t" => "{KANNT}t"; // only extreme abbreviations (MA1)
 		"tstopt(01)[Kk]ann-?t" => "{KANNT}t";
-		"tstopt(01)[Ss]e-?h" => "{SEH}";
+		"tstopt(01)[Ss]e-?h(?!r$)" => "{SEH}";
 		"tstopt(01)[Ss]ie-?h" => "{SIEH}";
 		//"tstopt(01)[Ss]i-?ch\|'s" => "{SICH}S"; // not clear when and how to do this abbreviation
 		"tstopt(01)[Ss]i-?ch" => "{SICH}";
 		"tstopt(01)[Ss]a-?h" => "{SAH}";
 		"tstopt(01)[Ll]e-?g" => "{LEG}";
+		"tstopt(01)[Ll]a-?g" => "{LAG}";
+		"tstopt(01)[Ll]ie-?g" => "{LIEG}";
+		"tstopt(01)[Nn]ah-?m" => "{NAHM}"; // not officially listed, but implicitely used (ch. 44, 1)
 		"tstopt(01)[Mm]us-?s" => "{MUSS}";
+		"tstopt(01)[Mm]es-?s" => "{MESS}";
+		"tstopt(01)[Mm]is-?s" => "{MISS}";
+		"tstopt(01)[Mm]as-?s" => "{MASS}";
 		"tstopt(01)[Ww]us-?s" => "{WUSS}";
 		"tstopt(01)[Mm]üs-?s" => "{MÜSS}";
 		"tstopt(01)[Ww]üs-?s" => "{WÜSS}";
@@ -1636,11 +1643,15 @@
 		"tstopt(0)(^|\+)[Kk]am(?!-?m)" => { "{KAM}", "[Kk]a-?me-?r" };
 		"tstopt(0)(^|\+)[Kk]au-?f" => "$1{KAUF}";
 		"tstopt(0)(^|\+)[Kk]äu-?f" => "$1{KÄUF}";
+		"tstopt(0)(^|\+)[Ll]au-?f" => "$1{LAUF}";
+		"tstopt(0)(^|\+)[Ll]äu-?f" => "$1{LÄUF}";
+		"tstopt(0)(^|\+)[Ll]ie-?f" => "$1{LIEF}";
 		
 		// this is a good example of how abbreviations can be more or less extreme
 		// option MA1 is used for less extreme abbreviation: trendige => trend{IG}e
 		// option MA2 is used for extreme abbreviation (including ending): trendige => trend{IG}
 		// option MA2 must be checked first (if rule is not applied => MA1 will be applied)
+		"tstopt(1)([Mm]u-?t)i-?g(?:-?t)?(e[snm]?)?$" => "$1{IG}"; // mutig
 		"tstopt(1)((?<!s-|s)t)?i-?g(?:-?t)?(e[snm]?)?$" => "{IG}"; // don't abbreviate -er (comparative)
 		// trendiger must be placed before -er in base model
 		"tstopt(0)((?<!s-|s)t)?i-?g(?:-?t)?((?:st)?e[rsnm]?)?$" => "{IG}$1";
@@ -1986,7 +1997,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}"  }; // very unclean rule ...
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2314,7 +2325,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}" }; // ugly ...
+		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -2445,7 +2456,9 @@
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 		
-		"{MISS}" => "MI[SS]";
+		"tstopt(01)^{MISS}" => "[0D-][I][SS]";
+		"tstopt(01){MISS}" => "[I][SS]";
+		"{MISS}" => "MI[SS]"; // bleeding with MA12 => place MA12 rule before!
 
 		"{ESIST}" => "[ES]\\[#0][IST]";		// spacing comes from token definition
 
@@ -2585,6 +2598,12 @@
 		"tstopt(01){KAUF}" => "[AU][F]";
 		"tstopt(01)^{KÄUF}" => "[0N-][EU][F]";
 		"tstopt(01){KÄUF}" => "[EU][F]";
+		"tstopt(01)^{LAUF}" => "[0N-][AU][F]";
+		"tstopt(01){LAUF}" => "[AU][F]";
+		"tstopt(01)^{LÄUF}" => "[0N-][EU][F]";
+		"tstopt(01){LÄUF}" => "[EU][F]";
+		"tstopt(01)^{LIEF}" => "[0N-][I][F]";
+		"tstopt(01){LIEF}" => "[I][F]";
 		"tstopt(01){IGER}" => "[I][VR]";
 		"tstopt(01){IGUNG}" => "[AU][NG]";
 		"tstopt(01){IG}([es]|\[)" => "[I][&E]$1";
@@ -2606,7 +2625,13 @@
 		"tstopt(01)^{SAH}" => "[A][S=]";
 		"tstopt(01){SAH}" => "[A][S=]"; // not sure when this has to be separated ?!
 		"tstopt(01){LEG}" => "[L]";
+		"tstopt(01){LAG}" => "[A][L]";
+		"tstopt(01){LIEG}" => "[I][L]";
+		"tstopt(01){NAHM}" => "[A][M]";
 		"tstopt(01){MUSS}" => "[0N-][U][SS]";
+		"tstopt(01)^{MESS}" => "[0N-][E][SS]";
+		"tstopt(01){MESS}" => "[E][SS]";
+		"tstopt(01){MASS}" => "[0N-][A][SS]";
 		"tstopt(01){WUSS}" => "[0N-][U][SS]";
 		"tstopt(01){MÜSS}" => "[0N-][Ü][SS]";
 		"tstopt(01){WÜSS}" => "[0N-][Ü][SS]";
@@ -2625,6 +2650,8 @@
 		// are not handled (correctly)
 		// laterewriter is an additional step to do those rewritings retroactively
 		"\]-" => "]"; // get rid of annoying - ... :)
+		"\]+" => "]"; // get rid of annoying + ... :)
+		
 		"\[((?:NN|S=|SS)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
 		"\[((?:NN|S=|SS)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
 		"\[&T\]\[ET\]" => "[&T&E][ET3/4]";
@@ -3103,6 +3130,7 @@
 		//"([GCKTD])@R3\^" => "$1@R"; // include this rule before spacer to get correct spacing
 		"\]#\[" => "]["; // bugfix
 		"\[VR\]\[\/I\]" => "[VR][I][/I]"; // bösartig in MA12
-		"\[VR\]\[#4\]\[@L\]" => "[VR][#4][I][@L]"; // seriell in MA12
+		"tstopt(01)\[VR\]\[#4\]\[@L\]" => "[VR][#4][I][@L]"; // seriell in MA12
+		"tstopt(01)\[\^CH\]\[\/I\]" => "[^CH][#4][/I]"; // richtig MA2
 	#EndSubSection(finisher,=:prt)
 #EndSection(rules)
