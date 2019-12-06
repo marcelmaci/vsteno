@@ -693,6 +693,7 @@
 		"([Hh]in)-?t-?er\+" => "$1-ter|";
 		"([Vv]or)-?d-?er\+" => "$1-der|";
 
+		"\+_" => "_"; // get rid of annoying tokens ... :)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1173,6 +1174,11 @@
 		// 1990er (suffix)
 		"(?<=^| )((?:19|20)[0-9][0-9])er(?=[ ,\.-]|$)" => "$1#er";
 		
+		// syntaxis: contractions for opt 01
+		"tstopt(01)[Ii]ch muss" => "#ich_muss";
+		"tstopt(01)[Ee]r muss" => "#er_muss";
+		"tstopt(01)[Ww]ir müss" => "#wir_müss";
+		
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		//"([Rr]en-?dez)=[Vv]ous" => "$1=vus"; // "early-phonetizer because it's easier to do it here 
@@ -1293,10 +1299,14 @@
 	#BeginSubSection(shortener)
 
 		// abbreviations MA1/MA2
+		"tstopt(01)#ich_mus-?s" => "{ICHMUSS}";
+		"tstopt(01)#er_mus-?s" => "{ERMUSS}";
+		"tstopt(01)#wir_müs-?s" => "{WIRMÜSS}";
+		
 		"tstopt(01)i-?ge-?r(e[rsnm]?)?$" => "{IGER}$1";
 		"tstopt(01)i-gu-?n-?g" => "{IGUNG}";
 		"tstopt(01)#?nis-?s(e[sn]?)?" => "{NISS}$1";
-		"tstopt(01)#?nis$" => "{NIS}";
+		"tstopt(01)#?nis($|#)" => "{NIS}$1";
 		"tstopt(01)[Kk]onn-?t" => "{KONN}t";
 		"tstopt(01)[Kk]ann(?=(st)?$)" => "{KANN}";
 		"tstopt(01)[Kk]ön-?n" => "{KÖNN}";
@@ -1324,7 +1334,18 @@
 		"tstopt(01)[Ww]eis-?s" => "{WEISS}";
 		"tstopt(01)^[Ee]l-?l" => "{ELL}";
 		"tstopt(01)i?-?el-?l" => "{IELL}";
+		"tstopt(01)[Ll]o-?s-?t" => "{LOST}";
+		"tstopt(01)[Ll]ö-?s-?t" => "{LÖST}";
+		"tstopt(01)[Ll]o-?s" => "{LOS}";
+		"tstopt(01)[Ll]as-?s" => "{LASS}";
+		"tstopt(01)[Ll]ö-?s" => "{LÖS}";
+		"tstopt(01)[Ll]äs-?s" => "{LÄSS}";
+		"tstopt(01){LAG}er" => "{LAG}{ER}"; // special (-er is not recognized in 01)
+		"tstopt(01)[Hh]an-?de?-?l" => "{HANDEL}";
+		"tstopt(01)[Ss]ol-?l" => "{SOLL}";
+		"tstopt(01)[Ww]il-?l" => "{WILL}";
 		
+
 		"#er" => "{ER}";
 		"zer\+" => "{ZER}+";
 
@@ -2118,6 +2139,9 @@
 		"(?<!\[#6-\]\\)\[\/\](?!\[#6-\])" => "\\[/][#6-]\\[/]\\";
 		"{EN}\\H" => "{EN}\\[#4]H"; // Irrenhaus
 
+		// for MA01
+		"tstopt(01)(}\+?|\|){LIEG}" => "}\\{LIEG}";
+
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// logically speaking the completor is part of the transcriptor
@@ -2641,6 +2665,27 @@
 		"tstopt(01){ELL}" => "[0N-][E][L]"; 
 		"tstopt(01)^{SICH}" => "[I][S=]"; 
 		"tstopt(01){SICH}" => "\\[I][S=]"; 
+		"tstopt(01)^{LOS}" => "[0N-][O][S]"; 
+		"tstopt(01){LOS}" => "[O][S]"; 
+		"tstopt(01)^{LASS}" => "[0N-][A][SS]"; 
+		"tstopt(01){LASS}" => "[A][SS]"; 
+		"tstopt(01)^{LÖS}" => "[0N-][Ö][S]"; 
+		"tstopt(01){LÖS}" => "[Ö][S]"; 
+		"tstopt(01)^{LÄSS}" => "[0N-][Ä][SS]"; 
+		"tstopt(01){LÄSS}" => "[Ä][SS]"; 
+		"tstopt(01)^{LOST}" => "[0N-][O][ST]"; 
+		"tstopt(01){LOST}" => "[O][ST]"; 
+		"tstopt(01)^{LÖST}" => "[0N-][Ö][ST]"; 
+		"tstopt(01){LÖST}" => "[Ö][ST]"; 
+		"tstopt(01)^{HANDEL}" => "[0N-][#4][@L]"; 
+		"tstopt(01){HANDEL}" => "[#4][@L]"; 
+		"tstopt(01)^{SOLL}" => "[0D-][#4][@L]"; 
+		"tstopt(01){SOLL}" => "\\[0D-][#4][@L]"; 
+		"tstopt(01)^{WILL}" => "[0U-][#4][@L]"; 
+		"tstopt(01){WILL}" => "\\[0U-][#4][@L]"; 
+		"tstopt(01){ICHMUSS}" => "[0N-][#4][I][^CH][U][SS]"; 
+		"tstopt(01){ERMUSS}" => "[0N-][E][VR][U][SS]"; 
+		"tstopt(01){WIRMÜSS}" => "[W][Ü][SS]"; 
 		
 
 		//"{AN}" => "[0N-][A][N]";
@@ -2651,11 +2696,14 @@
 		// laterewriter is an additional step to do those rewritings retroactively
 		"\]-" => "]"; // get rid of annoying - ... :)
 		"\]+" => "]"; // get rid of annoying + ... :)
+		"\]#" => "]"; // get rid of annoying # ... :)
 		
-		"\[((?:NN|S=|SS)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
-		"\[((?:NN|S=|SS)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
+		"\[((?:NN|S=|SS|@L)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
+		"\[((?:NN|S=|SS|@L)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
 		"\[&T\]\[ET\]" => "[&T&E][ET3/4]";
 		"\[&T\]\[E([NM])\]" => "[&T&E][E$1]";
+		"tstopt(01)\[EI\]\[O\]" => "[EI][&E][O]"; // parteilos 01
+		"tstopt(01)\[&T\]\[O\]" => "[&T][&E][O]"; // haltlos 01
 
 	#EndSubSection(laterewriter)
 	#BeginSubSection(rewriter2)
@@ -2664,10 +2712,13 @@
 		"\[&T\]\[?S\]?" => "[&TS]";
 
 	#EndSubSection(rewriter2)
-	#BeginSubSection(separator)
+	#BeginSubSection(separator2)
+		// why are there 2 separators?!
 		// separator decides wether or not a word should be written separatedly
 		"\[&EITS\](\|)\[?T\]?" => "[&EITS][#5]]\\T";
-	#EndSubSection(separator)
+		//"tstopt(01){VOR}\+?{LIEG}" => "{VOR}\\{LIEG}";
+
+	#EndSubSection(separator2)
 	#BeginSubSection(relancer2)	
 		// relancer reconverts everything except shortings {..} and bundled tokens [..] to lower case
 		"^(.*?)$" => "strtolower()";	// all to low

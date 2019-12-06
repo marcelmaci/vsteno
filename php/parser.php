@@ -760,7 +760,36 @@ function PreProcessGlobalParserFunctions( $text ) {
         if (IsAnyOfAllArguments("#>stage0")) {
             $temp_function = $rules["$actual_model"][$rules_pointer][1];
             while ($rules["$actual_model"][$rules_pointer][0] !== "EndFunction()") {
-                $pattern = $rules["$actual_model"][$rules_pointer][0];
+                
+// ***************************** include tstopt() extension
+if (preg_match("/^tstopt\(([0-9]+)\).*$/", $rules["$actual_model"][$rules_pointer][0], $option_string) === 1) {
+    $rule_condition = $rules["$actual_model"][$rules_pointer][0];
+    $simple_string = $option_string[1];
+    //echo "rule: $rule_condition contains an option: $simple_string<br>";
+    $len = mb_strlen($simple_string);
+    $option_result = false;
+    for ($i=0; $i<=$len; $i++) {
+        $check_name = "model_option" . mb_substr($simple_string, $i, 1) . "_yesno";
+        //echo "checkname: $check_name session: [" . $_SESSION["$check_name"] . "]<br>";
+        if ($_SESSION["$check_name"]) $option_result = true;
+    }
+    //echo "option check: [$option_result]<br>";
+}
+// set output before eventual break
+$output = $act_word;
+
+//if ($option_result === false) echo "BREAK EXPECTED!<br>";
+if ($option_result === false) {
+    $rules_pointer++;
+    continue; // go to next rule if option doesn't match
+}
+//if ($option_result === false) echo "AFTER BREAK<br>";
+
+// ********************************************************
+                //$pattern = $rules["$actual_model"][$rules_pointer][0];
+                // adapt for tstopt()
+                $pattern = preg_replace("/^(tstopt\([0-9]+\))?(.*)$/", "$2", $rules["$actual_model"][$rules_pointer][0]); // adapt for options
+                
                 $replacement = $rules["$actual_model"][$rules_pointer][1]; // only simple replacements are allowed for global parser ... 
                 $temp_text = $text;
                 //$text = preg_replace( "/$pattern/", "$replacement", $text); // use only preg_replace (i.e. not extended_preg_replace)
@@ -775,7 +804,12 @@ function PreProcessGlobalParserFunctions( $text ) {
                     $matching_section = $matches[0];
                     $esc_pattern = htmlspecialchars($pattern);
                     $esc_replacement = htmlspecialchars($replacement);
-                    if ($_SESSION['output_format'] === "debug") $global_textparser_debug_string .= "<tr><td>(..)$matching_section(..)</td><td><b>R$rules_pointer</b> $esc_pattern <b>⇨</b> $esc_replacement</td><td>" . mb_strtoupper($temp_function) . "</td></tr>";
+                    // tstopt() extension
+                    $option_debug_string = "";
+                    if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
+                    elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+        
+                    if ($_SESSION['output_format'] === "debug") $global_textparser_debug_string .= "<tr><td>(..)$matching_section(..)</td><td><b>R$rules_pointer</b> $option_debug_string" . "$esc_pattern <b>⇨</b> $esc_replacement</td><td>" . mb_strtoupper($temp_function) . "</td></tr>";
                 }
                 $rules_pointer++;
             //$text = preg_replace("/ es ist /", " [XEX] ", $text);
