@@ -245,6 +245,8 @@
 		// aus-
 		"([Aa]us)-g" => "$1+g"; // could produce wrong results ...
 		"([Aa]us)-([kr])" => "$1+$2";
+		"([Aa]us)-(hän-di-g)" => "$1+$2";
+		
 
 		// in general: don't separate -[brt]en (..)
 		"\|ren" => "-ren";
@@ -1293,15 +1295,29 @@
 		"tstopt(01)i-?ge-?r(e[rsnm]?)?$" => "{IGER}$1";
 		"tstopt(01)i-gu-?n-?g" => "{IGUNG}";
 		"tstopt(01)#?nis-?s(e[sn]?)?" => "{NISS}$1";
-		"tstopt(01)#nis$" => "{NIS}";
+		"tstopt(01)#?nis$" => "{NIS}";
 		"tstopt(01)[Kk]onn-?t" => "{KONN}t";
 		"tstopt(01)[Kk]ann(?=(st)?$)" => "{KANN}";
-		"tstopt(01)[Kk]önn" => "{KÖNN}";
+		"tstopt(01)[Kk]ön-?n" => "{KÖNN}";
 		"tstopt(01)[Kk]ennt$" => "{KENN}t";
-		"tstopt(01)[Kk]ennt?" => "{KENN}"; // abbreviate also t if word continues
+		"tstopt(01)[Kk]en-?n-?t?" => "{KENN}"; // abbreviate also t if word continues
 		"tstopt(1)[Kk]an-?t" => "{KANNT}t"; // only extreme abbreviations (MA1)
 		"tstopt(01)[Kk]ann-?t" => "{KANNT}t";
-
+		"tstopt(01)[Ss]e-?h" => "{SEH}";
+		"tstopt(01)[Ss]ie-?h" => "{SIEH}";
+		//"tstopt(01)[Ss]i-?ch\|'s" => "{SICH}S"; // not clear when and how to do this abbreviation
+		"tstopt(01)[Ss]i-?ch" => "{SICH}";
+		"tstopt(01)[Ss]a-?h" => "{SAH}";
+		"tstopt(01)[Ll]e-?g" => "{LEG}";
+		"tstopt(01)[Mm]us-?s" => "{MUSS}";
+		"tstopt(01)[Ww]us-?s" => "{WUSS}";
+		"tstopt(01)[Mm]üs-?s" => "{MÜSS}";
+		"tstopt(01)[Ww]üs-?s" => "{WÜSS}";
+		"tstopt(01)[Ww]is-?s" => "{WISS}";
+		"tstopt(01)[Ww]eis-?s" => "{WEISS}";
+		"tstopt(01)^[Ee]l-?l" => "{ELL}";
+		"tstopt(01)i?-?el-?l" => "{IELL}";
+		
 		"#er" => "{ER}";
 		"zer\+" => "{ZER}+";
 
@@ -1970,7 +1986,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => "[&I]$1$2";
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2156,6 +2172,7 @@
 
 		// abbreviations
 		"\\{ANT}" => "\[0N-]{ANT}";
+		"tstopt(01)[uU]{IELL}" => "A[&U]{IELL}";
 
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
@@ -2297,7 +2314,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => "[&I]E";
+		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -2582,6 +2599,24 @@
 		"tstopt(01){KÖNN}" => "[Ö][NN]";
 		"tstopt(01){KENN}" => "[K]";
 		"tstopt(01){KANNT}" => "[A][K]";
+		"tstopt(01)^{SEH}" => "[S=]";
+		"tstopt(01){SEH}" => "[S]";
+		"tstopt(01)^{SIEH}" => "[I][S=]";
+		"tstopt(01){SIEH}" => "\\[I][S=]";
+		"tstopt(01)^{SAH}" => "[A][S=]";
+		"tstopt(01){SAH}" => "[A][S=]"; // not sure when this has to be separated ?!
+		"tstopt(01){LEG}" => "[L]";
+		"tstopt(01){MUSS}" => "[0N-][U][SS]";
+		"tstopt(01){WUSS}" => "[0N-][U][SS]";
+		"tstopt(01){MÜSS}" => "[0N-][Ü][SS]";
+		"tstopt(01){WÜSS}" => "[0N-][Ü][SS]";
+		"tstopt(01){WISS}" => "[0N-][I][SS]";
+		"tstopt(01){WEISS}" => "[0N-][EI][SS]";
+		"tstopt(01){IELL}" => "[#4][@L]"; // use custom (hardcoded) distance
+		"tstopt(01){ELL}" => "[0N-][E][L]"; 
+		"tstopt(01)^{SICH}" => "[I][S=]"; 
+		"tstopt(01){SICH}" => "\\[I][S=]"; 
+		
 
 		//"{AN}" => "[0N-][A][N]";
 	#EndSubSection(substituter)
@@ -2590,8 +2625,8 @@
 		// are not handled (correctly)
 		// laterewriter is an additional step to do those rewritings retroactively
 		"\]-" => "]"; // get rid of annoying - ... :)
-		"\[((?:NN)|[BCDFGHJKLMNPQRSVWXYZ])\]T(E|\[-E\])" => "[$1][&T&E]$2"; 
-		"\[((?:NN)|[BCDFGHJKLMNPQRSVWXYZ])\]T" => "[$1][&T]"; // kommt, kauft
+		"\[((?:NN|S=|SS)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
+		"\[((?:NN|S=|SS)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
 		"\[&T\]\[ET\]" => "[&T&E][ET3/4]";
 		"\[&T\]\[E([NM])\]" => "[&T&E][E$1]";
 
@@ -3068,6 +3103,6 @@
 		//"([GCKTD])@R3\^" => "$1@R"; // include this rule before spacer to get correct spacing
 		"\]#\[" => "]["; // bugfix
 		"\[VR\]\[\/I\]" => "[VR][I][/I]"; // bösartig in MA12
-
+		"\[VR\]\[#4\]\[@L\]" => "[VR][#4][I][@L]"; // seriell in MA12
 	#EndSubSection(finisher,=:prt)
 #EndSection(rules)
