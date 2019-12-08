@@ -1178,6 +1178,28 @@
 		"tstopt(01)[Ii]ch muss" => "#ich_muss";
 		"tstopt(01)[Ee]r muss" => "#er_muss";
 		"tstopt(01)[Ww]ir müss" => "#wir_müss";
+		"tstopt(01)[Ii]ch will" => "#ich_will";
+		"tstopt(01)[Ww]ir sind" => "#wir_sind";
+		"tstopt(01)[Ww]ir können" => "#wir_können";
+		"tstopt(01)[Ii]ch kann" => "#ich_kann";
+		"tstopt(01)[Ww]ir haben" => "#wir_haben";
+		"tstopt(01)[Ii]ch könnte" => "#ich_könnte";
+		"tstopt(01)[Kk]ann er" => "#kann_er";
+		"tstopt(01)[Ii]n der" => "#in_der";
+		"tstopt(01)[Ii]n dies" => "#in_dies";
+		"tstopt(01)[Ii]n die" => "#in_die";
+		"tstopt(01)[Ii]n den" => "#in_den";
+		"tstopt(01)[Ss]ie sich" => "#sie_sich";
+		"tstopt(01)[Aa]uf der" => "#auf_der";
+		"tstopt(01)[Bb]ei der" => "#bei_der";
+		"tstopt(01)[Vv]on der" => "#von_der";
+		"tstopt(01)[Mm]it der" => "#mit_der";
+		"tstopt(01)[Kk]ann ich" => "#kann_ich";
+		"tstopt(01)[Ww]ill ich" => "#will_ich";
+		"tstopt(01)[Ss]oll ich" => "#soll_ich";
+		"tstopt(01)[Ww]enn ich" => "#wenn_ich";
+		"tstopt(01)[Kk]auf ich" => "#kauf_ich";
+		
 		
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
@@ -1302,6 +1324,27 @@
 		"tstopt(01)#ich_mus-?s" => "{ICHMUSS}";
 		"tstopt(01)#er_mus-?s" => "{ERMUSS}";
 		"tstopt(01)#wir_müs-?s" => "{WIRMÜSS}";
+		"tstopt(01)#ich_will" => "{ICHWILL}";
+		"tstopt(01)#wir_sind" => "{WIRSIND}";
+		"tstopt(01)#wir_kön-?nen" => "{WIRKÖNNEN}";
+		"tstopt(01)#ich_kann" => "{ICHKANN}";
+		"tstopt(01)#wir_ha-?ben" => "{WIRHABEN}";
+		"tstopt(01)#ich_könn-?te" => "{ICHKÖNNTE}";
+		"tstopt(01)#kann_er" => "{KANNER}";
+		"tstopt(01)#in_der" => "{INDER}";
+		"tstopt(01)#in_die-?s" => "{INDIES}";
+		"tstopt(01)#in_die" => "{INDIE}";
+		"tstopt(01)#in_den" => "{INDEN}";
+		"tstopt(01)#sie_sich" => "{SIESICH}";
+		"tstopt(01)#auf_der" => "{AUFDER}";
+		"tstopt(01)#bei_der" => "{BEIDER}";
+		"tstopt(01)#von_der" => "{VONDER}";
+		"tstopt(01)#mit_der" => "{MITDER}";
+		"tstopt(01)#kann_ich" => "{KANNICH}";
+		"tstopt(01)#will_ich" => "{WILLICH}";
+		"tstopt(01)#soll_ich" => "{SOLLICH}";
+		"tstopt(01)#wenn_ich" => "{WENNICH}";
+		"tstopt(01)#kauf_ich" => "{KAUFICH}";
 		
 		"tstopt(01)i-?ge-?r(e[rsnm]?)?$" => "{IGER}$1";
 		"tstopt(01)i-gu-?n-?g" => "{IGUNG}";
@@ -1320,7 +1363,7 @@
 		"tstopt(01)[Ss]i-?ch" => "{SICH}";
 		"tstopt(01)[Ss]a-?h" => "{SAH}";
 		"tstopt(01)[Ll]e-?g" => "{LEG}";
-		"tstopt(01)[Ll]a-?g" => "{LAG}";
+		"tstopt(01)(?<![Ss]ch)[Ll]a-?g" => "{LAG}";
 		"tstopt(01)[Ll]ie-?g" => "{LIEG}";
 		"tstopt(01)[Nn]ah-?m" => "{NAHM}"; // not officially listed, but implicitely used (ch. 44, 1)
 		"tstopt(01)[Mm]us-?s" => "{MUSS}";
@@ -2018,7 +2061,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}"  }; // very unclean rule ...
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2349,7 +2392,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}" }; // ugly ...
+		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -2479,9 +2522,12 @@
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
-		
+
+		"tstopt(01){SIESICH}" => "[S=][I][S]";
+
 		"tstopt(01)^{MISS}" => "[0D-][I][SS]";
 		"tstopt(01){MISS}" => "[I][SS]";
+
 		"{MISS}" => "MI[SS]"; // bleeding with MA12 => place MA12 rule before!
 
 		"{ESIST}" => "[ES]\\[#0][IST]";		// spacing comes from token definition
@@ -2686,7 +2732,28 @@
 		"tstopt(01){ICHMUSS}" => "[0N-][#4][I][^CH][U][SS]"; 
 		"tstopt(01){ERMUSS}" => "[0N-][E][VR][U][SS]"; 
 		"tstopt(01){WIRMÜSS}" => "[W][Ü][SS]"; 
+		"tstopt(01){ICHWILL}" => "[0N-][I][^CH][#4][I][@L]"; 
+		"tstopt(01){WIRSIND}" => "[W][ND]"; 
+		"tstopt(01){WIRKÖNNEN}" => "[W][Ö][NN][EN]"; 
+		"tstopt(01){ICHKANN}" => "[0N-][I][^CH][A][NN]"; 
+		"tstopt(01){WIRHABEN}" => "[W][A][B][EN]"; 
+		"tstopt(01){ICHKÖNNTE}" => "[0N-][I][^CH][Ö][NN][&T&E][-E]"; 
+		"tstopt(01){KANNER}" => "[0N-][A][NN][E][VR]"; 
+		"tstopt(01){INDER}" => "[IN][VR]"; 
+		"tstopt(01){INDIE}" => "[IN][D]"; 
+		"tstopt(01){INDEN}" => "[IN][EN]"; 
+		"tstopt(01){INDIES}" => "[IN][DIS]"; 
+		"tstopt(01){AUFDER}" => "[AUF+AR]"; 
+		"tstopt(01){BEIDER}" => "[BEI+AR]"; 
+		"tstopt(01){VONDER}" => "[V@R6]"; 
+		"tstopt(01){MITDER}" => "[M@R6]"; 
+		"tstopt(01){KANNICH}" => "[0N-][A][NN][_CH]"; 
+		"tstopt(01){WILLICH}" => "[0U-][#4][@L][_CH]"; 
+		"tstopt(01){SOLLICH}" => "[0D-][#4][@L][_CH]"; 
+		"tstopt(01){WENNICH}" => "[NN][_CH]"; 
+		"tstopt(01){KAUFICH}" => "[0N-][AU][F][#2][_CH]"; 
 		
+				
 
 		//"{AN}" => "[0N-][A][N]";
 	#EndSubSection(substituter)
