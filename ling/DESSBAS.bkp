@@ -53,9 +53,9 @@
 	<p>Model is based on SE1 rev0 exclusively. Tokens were optimized for an 
 	inclination of 60 degrees.</p>
 	
-	<p>In December 2019 the optional variant MAC was added. The additional rules introduce additional abbreviations for shorthand used in the so called 'Eilschrift' (2nd level) and 'Redeschrift' (3rd level). These abbreviations are based on:</p>
+	<p>In December 2019 the optional variants HF1 and HF2 were added. The new rules introduce additional abbreviations for shorthand used in the so called 'Eilschrift' (2nd level) and 'Redeschrift' (3rd level). These abbreviations are based on:</p>
 	<p>[3]Hanspeter Frech, "Die superschnelle Geheimschrift. Gekürzte Stenografie", Schweizerischer Stenografenverband Stolze/Schrey (SSV), Wetzikon, November 2017.</p>
-	<p>Nonetheless, the variant MAC is NOT and 100% congruent application of the rules explained in this book. As the other explains in his foreword, everything beyond the classic model has to be considered as non standard and individual shorthand. That's why I call it MAC (which is short for Maci) in order to be clear that it is my personal way of cutting shorthand further down using more or less standard and/or individual abbreviations</p>  
+	<p>HF1 means standard abbreviations (leaving endings without modification), HF2 means extreme abbreviations (that affect also endings, for example: trendige Dinge => trendig Dinge; wichtiges Dossier => wichtig Dossier). Additionally, it is planned to add the variant MAC which adds rules for abbreviations that I use personally. In combination with HF1 and HF2 this leads to a personal, individualised and non-standard shorthand system.</p>  
 	";
 
 	// Schreibweise:
@@ -76,10 +76,12 @@
 		"model_se_revision" := "0";
 		"model_date" := "06/12/19";
 		// options
-		"model_option0_text" := "MA1";
+		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
-		"model_option1_text" := "MA2";
+		"model_option1_text" := "HF2";
 		"model_option1_yesno" := "no";
+		"model_option3_text" := "MAC";
+		"model_option3_yesno" := "no";
 		// wide distance
 		"token_distance_wide" := "17";
 		// font
@@ -327,8 +329,8 @@
 		"e\|ren$" => "e-ren";	// näheren
 		"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
 		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
-		"^[Ee]r(\|)" => "{ER}"; // prefix or infix er
-		"(\|)er(\|)" => "{ER}"; // infix er
+		"^([Ee]r)(\|)" => "$1+"; // prefix or infix er
+		"(\|)(er)(\|)" => "$2+"; // infix er
 		"[Aa]n\+?de(-|\|)?r(en?)?" => "an-de$1r$2";
 		"([Gg]e)-?(räu-?sch)" => "$1+$2";
 		"([Rr]at)-?(lo-?s)" => "$1#$2";
@@ -553,7 +555,8 @@
 		"([Gg]e)-(nü)" => "$1+$2"; // rere
 		"([Gg]e)-(na)" => "$1+$2"; // rere
 		"([Aa]n\+ge)-(nehm)" => "$1+$2"; // rerere
-		
+		"([Aa]n)\+?(ge)\+?b(?!o)" => "$1+$2-b";
+
 		// affix er+ 
 		"^([Uu]n\+?)?([GgBbFf]er)\+n" => "$1$2-n";
 		"^([Uu]n\+?)?([Ss]ter)\+n" => "$1$2-n";
@@ -689,6 +692,9 @@
 		"([Ss]chwe)r\+e" => "$1-re";
 		"([Ss]chwer)\+s-?te" => "$1s-te";
 
+		"([Gg]e)[+-](wor)[+-]den[+-]e" => "$1+$2-de-ne";
+		"([Gg]e)[+-](wor)[+-](de)" => "$1+$2-$3";
+ 
 		// hinter- / vorder- (separate words)
 		"([Hh]in)-?t-?er\+" => "$1-ter|";
 		"([Vv]or)-?d-?er\+" => "$1-der|";
@@ -1176,6 +1182,7 @@
 		
 		// syntaxis: contractions for opt 01
 		"tstopt(01)[Ii]ch muss" => "#ich_muss";
+		"tstopt(01)[Mm]uss ich" => "#muss_ich";
 		"tstopt(01)[Ee]r muss" => "#er_muss";
 		"tstopt(01)[Ww]ir müss" => "#wir_müss";
 		"tstopt(01)[Ii]ch will" => "#ich_will";
@@ -1199,6 +1206,16 @@
 		"tstopt(01)[Ss]oll ich" => "#soll_ich";
 		"tstopt(01)[Ww]enn ich" => "#wenn_ich";
 		"tstopt(01)[Kk]auf ich" => "#kauf_ich";
+		"tstopt(01)[Hh]abe? ich" => "#habe_ich";
+		"tstopt(01)[Ii]ch habe?" => "#ich_habe";
+		"tstopt(01)[Bb]in ich" => "#bin_ich";
+		"tstopt(01)[Ii]ch bin" => "#ich_bin";
+		"tstopt(01)[Ww]ir wollen" => "#wir_wollen";
+		"tstopt(01)[Ww]urde ich" => "#wurde_ich";
+		"tstopt(1)[Ww]ir wurden" => "#wir_wurd"; // only in HF1
+		"tstopt(1)[Ww]urden wir" => "#wurd_wir"; // only in HF1
+		"tstopt(1)[Ww]ir nehmen" => "#wir_nehm"; // only in HF1
+		"tstopt(0)[Ww]ir nehmen" => "#wir_nehmen"; // only in HF1
 		
 		
 	#EndSubSection(global,#>stage1)
@@ -1212,6 +1229,9 @@
 		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
 		"(?<!\|)'" => "|'"; // apostrophizer: hat's 
 		"(?<!\[)\/" => "[/]"; // mark / that where originally there (e.g. km/h)
+
+		"tstopt(01)'s$" => "s";
+
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
 		// check if word contains more then 1 upper case
@@ -1321,7 +1341,60 @@
 	#BeginSubSection(shortener)
 
 		// abbreviations MA1/MA2
+		// articles
+		// MAC
+		"tstopt(3)^[Ee]i-?n(e[rsnm]?)?$" => "{EIN}"; // again: why lose time with an undefined article?!
+		// HF
+		"tstopt(01)^[Ee]in(?![+-]?ge|s)" => "{EIN}";
+		"tstopt(01)^[Ee]i-?ne$" => "{EINE}";
+		"tstopt(01)^[Ee]i-?nen$" => "{EINEN}";
+		"tstopt(01)^[Ee]i-?nem$" => "{EINEM}";
+		"tstopt(01)^[Ee]i-?nes$" => "{EINES}";
+		"tstopt(01)^[Ee]i-?n-?er" => "{EINER}";
+		// ending
+		"tstopt(01)ein$" => "{EIN1}";
+
+		// participe
+		"tstopt(01)[Gg]e\+([mldpf]acht)" => "$1";
+		"tstopt(01)[Gg]e\+(nom-?m)" => "$1";
+		"tstopt(01)[Gg]e[+-]?(ta-?n)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(fun-?d)" => "$1"; 
+		"tstopt(1)fun-?de-?n(e[rmns]?)" => "fun-d$1"; 
+		"tstopt(01)[Gg]e[+-]?(bo-?r)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(se-?h)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(kom-?m)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(kauf-?t)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(las-?s)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?g(es-?s)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?g(e-?b)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(le-?g)" => "$1"; 
+		"tstopt(01)er[+-]?g(es-?s)" => "er+$1"; // vergessen
+		"tstopt(01)[Gg]e[+-]?(wuss)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(muss)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(fass)" => "$1"; 
+		
+		// MAC (opt 3)
+		// so here's my personal point of view: EVERYTHING ressembling a verb (and even other words:) will be abbreviated ... !
+		// the reason for that: (1) much shorter, (2) if you have to think each time if the base form has ge- or not you use a tremendous amount of time ... 
+		"tstopt(3)[Gg]e[+-]?n(eh-?m)" => "$1"; 
+		"tstopt(3)[Gg]e[+-]?(woh-?n)" => "$1"; 
+		"tstopt(3)[Gg]e[+-]?(ra-?t)" => "$1"; 
+		"tstopt(3)[Gg]e[+-]?(fal-?l)" => "$1"; 
+		
+		// this is a good example of how abbreviations can be more or less extreme
+		// option MA1 is used for less extreme abbreviation: trendige => trend{IG}e
+		// option MA2 is used for extreme abbreviation (including ending): trendige => trend{IG}
+		// option MA2 must be checked first (if rule is not applied => MA1 will be applied)
+		"tstopt(1)([Mm]u-?t)i-?g(?:-?t)?(e[snm]?)?$" => "$1{IG}"; // mutig
+		"tstopt(1)((?<!s-|s)t)?i-?g(?:-?t)?(e[snm]?)?$" => "{IG}"; // don't abbreviate -er (comparative)
+		// trendiger must be placed before -er in base model
+		"tstopt(0)((?<!s-|s)t)?i-?g(?:-?t)?((?:st)?e[rsnm]?)?$" => "{IG}$1";
+
+		
+
+	
 		"tstopt(01)#ich_mus-?s" => "{ICHMUSS}";
+		"tstopt(01)#muss_ich" => "{MUSSICH}";
 		"tstopt(01)#er_mus-?s" => "{ERMUSS}";
 		"tstopt(01)#wir_müs-?s" => "{WIRMÜSS}";
 		"tstopt(01)#ich_will" => "{ICHWILL}";
@@ -1345,8 +1418,46 @@
 		"tstopt(01)#soll_ich" => "{SOLLICH}";
 		"tstopt(01)#wenn_ich" => "{WENNICH}";
 		"tstopt(01)#kauf_ich" => "{KAUFICH}";
+		"tstopt(01)#ha-?be_ich" => "{HABEICH}";
+		"tstopt(01)#ich_ha-?be" => "{ICHHABE}";
+		"tstopt(01)#bin_ich" => "{BINICH}";
+		"tstopt(01)#ich_bin" => "{ICHBIN}";
+		"tstopt(01)#wur-?de_ich" => "{WURDEICH}";
+		"tstopt(01)#wir_wol-?len" => "{WIRWOLLEN}";
+		"tstopt(01)#wir_wurd" => "{WIRWURD}";
+		"tstopt(01)#wurd_wir" => "{WURDWIR}";
+		"tstopt(01)[Ww]ur-?d" => "{WURD}";
+		"tstopt(01)[Gg]e[-+]?we-?sen" => "{GEWESEN}";
+		"tstopt(1)[Gg]e[-+]?wor-?de-?n(e[rsnm]?)?" => "{GEWORDEN}";
+		"tstopt(0)[Gg]e[-+]?wor-?de-?n" => "{GEWORDEN}";
+		"tstopt(01){WURD}et$" => "{WURD}{ET}";
+		"tstopt(01)[Ww]o(?:l-?l|h-?l)" => "{WOLL}";
+		"tstopt(01)[Ss]tel-?l" => "{STELL}";
+		"tstopt(01)[Ss]te-?h" => "{STEH}";
+		"tstopt(01)[Ss]tan-?d" => "{STAND}";
+		"tstopt(01)[Hh]ät-?t" => "{HÄTT}"; 
+		"tstopt(01){HÄTT}et" => "{HÄTT}{ET}"; 
+		"tstopt(01)[Mm]a-?ch" => "{MACH}"; 
+		"tstopt(01){MACH}er" => "{MACH}{ER}"; 
+		"tstopt(01){MACH}un-?g" => "{MACHUNG}"; 
+		"tstopt(1)[Dd]ie-?se[rmn]?" => "{DIS}"; 
+		"tstopt(01)#wir_neh-?m" => "{WIRNEHM}"; 
+		"tstopt(01)nom-?me-?n" => "{NOMM}{EN}"; 
+		"tstopt(01)[Nn][e]h-?m" => "{NEHM}";
+		"tstopt(01)[Gg]lau-?b" => "{GLAUB}";
+		"tstopt(01)[Gg]läu-?b" => "{GLÄUB}";
+		"tstopt(01)[Ll]ies-?s" => "{LIESS}";
+		"tstopt(01)[Ff]as-?s" => "{FASS}";
 		
+
+		// acually, Auslautkürzungen can be realised in a much simpler way by just taking of starting consonant ... here's an example:
+		"tstopt(01)[Gg]([ea]-?b)" => "$1";
+		"tstopt(01)[Gg](i-?b)" => "[0n-]$1"; // gib: musst start on baseline!
+		"tstopt(01)[Nn]([ao]ch)" => "$1";
+		
+
 		"tstopt(01)i-?ge-?r(e[rsnm]?)?$" => "{IGER}$1";
+		"tstopt(01)ti-gu-?n-?g" => "{IGUNG}";
 		"tstopt(01)i-gu-?n-?g" => "{IGUNG}";
 		"tstopt(01)#?nis-?s(e[sn]?)?" => "{NISS}$1";
 		"tstopt(01)#?nis($|#)" => "{NIS}$1";
@@ -1365,7 +1476,8 @@
 		"tstopt(01)[Ll]e-?g" => "{LEG}";
 		"tstopt(01)(?<![Ss]ch)[Ll]a-?g" => "{LAG}";
 		"tstopt(01)[Ll]ie-?g" => "{LIEG}";
-		"tstopt(01)[Nn]ah-?m" => "{NAHM}"; // not officially listed, but implicitely used (ch. 44, 1)
+		"tstopt(01)[Nn]ah?-?m" => "{NAHM}"; // not officially listed, but implicitely used (ch. 44, 1)
+		"tstopt(01)[Nn]imm" => "{NIMM}";
 		"tstopt(01)[Mm]us-?s" => "{MUSS}";
 		"tstopt(01)[Mm]es-?s" => "{MESS}";
 		"tstopt(01)[Mm]is-?s" => "{MISS}";
@@ -1673,7 +1785,7 @@
 		"^an-?ti" => "{ANTI}";
 		"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
-		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go" };
+		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)" };
 		"i-?[o|ö]-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
 		"(^|\|)(un)?zer\+" => "$1$1{ZER}";
@@ -1703,7 +1815,7 @@
 
 		// optional abbreviations (option1: MAC)
 		"tstopt(0)#bar" => { "{BAR}", "[Bb]ar[#-]?ba-?r" };
-		"tstopt(0)(?:ge)?[Kk]om-?m" => { "{KOMM}", "[Kk]om-?m[ui]" };
+		"tstopt(0)(?:ge)?[Kk]om-?m?" => { "{KOMM}", "[Kk]om-?m[ui]" };
 		"tstopt(0)(^|\+)[Kk]am(?!-?m)" => { "{KAM}", "[Kk]a-?me-?r" };
 		"tstopt(0)(^|\+)[Kk]au-?f" => "$1{KAUF}";
 		"tstopt(0)(^|\+)[Kk]äu-?f" => "$1{KÄUF}";
@@ -1711,15 +1823,7 @@
 		"tstopt(0)(^|\+)[Ll]äu-?f" => "$1{LÄUF}";
 		"tstopt(0)(^|\+)[Ll]ie-?f" => "$1{LIEF}";
 		
-		// this is a good example of how abbreviations can be more or less extreme
-		// option MA1 is used for less extreme abbreviation: trendige => trend{IG}e
-		// option MA2 is used for extreme abbreviation (including ending): trendige => trend{IG}
-		// option MA2 must be checked first (if rule is not applied => MA1 will be applied)
-		"tstopt(1)([Mm]u-?t)i-?g(?:-?t)?(e[snm]?)?$" => "$1{IG}"; // mutig
-		"tstopt(1)((?<!s-|s)t)?i-?g(?:-?t)?(e[snm]?)?$" => "{IG}"; // don't abbreviate -er (comparative)
-		// trendiger must be placed before -er in base model
-		"tstopt(0)((?<!s-|s)t)?i-?g(?:-?t)?((?:st)?e[rsnm]?)?$" => "{IG}$1";
-
+		
 	#EndSubSection(shortener)
 	#BeginSubSection(demorpher)
 		// after shortener delete linguistical markers that are no longer needed (and block spacer later)
@@ -2053,7 +2157,7 @@
 		"\|r" => "|[AR]";
 		"r" => "[VR]";
 		"s" => "S";
-		"(?<!\+)t" => "T";
+		"(?<![|+])t" => "T";
 		"v" => "V";
 		"w" => "W";
 		"x" => "X";
@@ -2061,7 +2165,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}"  }; // very unclean rule ...
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}", "{LIESS}"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2392,7 +2496,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}" }; // ugly ...
+		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}", "{LIESS}" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -2524,7 +2628,51 @@
 	#BeginSubSection(substituter)
 
 		"tstopt(01){SIESICH}" => "[S=][I][S]";
-
+		"tstopt(01){HABEICH}" => "[A][B][_CH]";
+		"tstopt(01){ICHHABE}" => "[0N-][I][^CH][-E]";
+		"tstopt(01){BINICH}" => "[I][B][_CH]";
+		"tstopt(01){ICHBIN}" => "[0N-][I][^CH][N]";
+		"tstopt(01){WURDEICH}" => "[AU][&U][_CH]";
+		"tstopt(01){WIRWOLLEN}" => "[W][O][L][EN]";
+		"tstopt(01){WURD}" => "[AU][&U]";
+		"tstopt(01){GEWESEN}" => "[G]";
+		"tstopt(01){GEWORDEN}" => "[I][&O]";
+		"tstopt(01){WIRWURD}" => "[W]\\[AU][&U]";
+		"tstopt(01){WURDWIR}" => "[AU][&U]\\[W]";
+		"tstopt(01)^{WOLL}" => "[0N-][O][L]";
+		"tstopt(01){WOLL}" => "[O][L]";
+		"tstopt(01){STELL}" => "[ST]";
+		"tstopt(01){STEH}" => "[ST]";
+		"tstopt(01){STAND}" => "[A][ST]";
+		"tstopt(01){HÄTT}" => "[TT]";
+		"tstopt(01){MACH}{EN}" => "\\[0U1-]{EN}"; // does this work? baseline + 1 => not very logic ...
+		"tstopt(01){MACH}" => "\\[0U-]"; 
+		"tstopt(01){MACHUNG}" => "\\[AU][NG]";
+		"tstopt(01){WIRNEHM}" => "[W][E][M]";
+		"tstopt(01){MUSSICH}" => "[0N-][U][SS][_CH]";
+		"tstopt(01)^{NIMM}" => "[0N-][I][MM]";
+		"tstopt(01){NIMM}" => "[I][MM]";
+		"tstopt(01)^{NOMM}" => "[0N-][O][MM]";
+		"tstopt(01){NOMM}" => "[O][MM]";
+		"tstopt(01)^{NEHM}" => "[0N-][E][M]";
+		"tstopt(01){NEHM}" => "[E][M]";
+		"tstopt(01){EIN}" => "[0D-][#9][-EI]";
+		"tstopt(01){EIN1}" => "[#9][-EI]";
+		"tstopt(01){EINE}" => "[0D-][EI][N][-E]";
+		"tstopt(01){EINEN}" => "[0D-][EI][N]";
+		"tstopt(01){EINEM}" => "[0D-][EI][M]";
+		"tstopt(01){EINER}" => "[0D-][EI][VR]";
+		"tstopt(01){EINES}" => "[0D-][EI][S]";
+		"tstopt(01)^{GLAUB}" => "[0N-][AU][B]";
+		"tstopt(01){GLAUB}" => "[AU][B]";
+		"tstopt(01)^{GLÄUB}" => "[0N-][EU][B]";
+		"tstopt(01){GLÄUB}" => "[EU][B]";
+		"tstopt(01)^{LIESS}" => "[0N-][I][SS]";
+		"tstopt(01){LIESS}" => "[I][SS]";
+		"tstopt(01)^{FASS}" => "[0N-][A][SS]";
+		"tstopt(01){FASS}" => "[A][SS]";
+		
+		
 		"tstopt(01)^{MISS}" => "[0D-][I][SS]";
 		"tstopt(01){MISS}" => "[I][SS]";
 
@@ -2653,7 +2801,7 @@
 		"{INTER}" => "[I][INTER]";
 		"^{ZURÜCK}" => "[ZURÜCK]";
 		"{ZURÜCK}" => "[I][ZURÜCK]";
-		"{E(N|M)}\|" => "[E][$1]";   // dissolve ending in composed words
+		"{E(N|M)}\|" => "[E][$1]|";   // dissolve ending in composed words
 		"{E(N|M)}" => "[E$1]";
 		"{WO}" => "[WO]";
 		"{SIND}" => "[ND]"; // token "sind" becomes obsolete with this rule
@@ -2697,6 +2845,7 @@
 		"tstopt(01){LEG}" => "[L]";
 		"tstopt(01){LAG}" => "[A][L]";
 		"tstopt(01){LIEG}" => "[I][L]";
+		"tstopt(01)^{NAHM}" => "[0N-][A][M]";
 		"tstopt(01){NAHM}" => "[A][M]";
 		"tstopt(01){MUSS}" => "[0N-][U][SS]";
 		"tstopt(01)^{MESS}" => "[0N-][E][SS]";
@@ -2765,8 +2914,8 @@
 		"\]+" => "]"; // get rid of annoying + ... :)
 		"\]#" => "]"; // get rid of annoying # ... :)
 		
-		"\[((?:NN|S=|SS|@L)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
-		"\[((?:NN|S=|SS|@L)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
+		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
+		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
 		"\[&T\]\[ET\]" => "[&T&E][ET3/4]";
 		"\[&T\]\[E([NM])\]" => "[&T&E][E$1]";
 		"tstopt(01)\[EI\]\[O\]" => "[EI][&E][O]"; // parteilos 01

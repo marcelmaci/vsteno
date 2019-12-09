@@ -1083,7 +1083,8 @@ if ($_SESSION['analysis_type'] === "selected") {
                         
                     // write debug info of postprocessing: LING (post)
                     $global_debug_string .= "LNG (post): $lin_form<br>PRE: \"$pretokens\" - POST: \"$posttokens\"<br>";
-                    
+                   
+        
 } else {
         //$lin_form = $text;
         $lin_form = $word;
@@ -1093,6 +1094,7 @@ if ($_SESSION['analysis_type'] === "selected") {
 
 }
                    //echo "test: $test<br>";
+                   
                     // calculate
                     $word = $lin_form;
                     
@@ -1156,7 +1158,18 @@ if ($_SESSION['analysis_type'] === "selected") {
                     //var_dump($separated_word_parts_array);
                     $output = implode("\\", $separated_word_parts_array);
                     //if ($output === "ne-men") var_dump($separated_word_parts_array);
-                    
+                    //echo "output: [$output] pre: $pretokens post: $posttokens<br>";
+                    // BUGFIX: when output is empty, pre- and posttokens aren't added (why?!)
+                    // this is complete bullshit ... the bug comes from handwriting ... see further down => correct it there
+                    // unfortunately, this might lead to bugs in handwriting again ...
+                    // anyway it's not clear at this point how handwritten tokens are handled ?!
+                    /*
+                    if (mb_strlen($output)==0) { 
+                        echo "length 0:<br>";
+                        echo "output: [$output] pre: $pretokens post: $posttokens<br>";
+                        $output = $pretokens . $output . $posttokens; 
+                    }
+                    */
                     //$global_debug_string .= "STD: " . mb_strtoupper($separated_std_form) . "<br>PRT: $separated_prt_form<br>";
                     //echo "metaparser: parserchain($rules_pointer_start_stage3, $rules_pointer_start_stage4)<br>";
                     //echo "metaparser: separated_std_form = $separated_std_form<br>";
@@ -1179,7 +1192,9 @@ if ($_SESSION['analysis_type'] === "selected") {
                             $separated_prt_form = $pretokens . $separated_prt_form;
                         } else { 
                              // special treatment for numbers in shorthand: transform to # + number + handwriting_marker inside []
-                            $pre_handwriting = preg_match("/[0-9]/", $pretokens) ? "[#" . $pretokens . $_SESSION['handwriting_marker'] . "]" : $pretokens;
+                            // see BUGFIX comment above: do NOT trasnform pre-/posttokens here!!!
+                            // $pre_handwriting = preg_match("/[0-9]/", $pretokens) ? "[#" . $pretokens . $_SESSION['handwriting_marker'] . "]" : $pretokens;
+                            $pre_handwriting = $pretokens;
                             $output = "$pre_handwriting\\" . "$output";    // not sure whether this is correct (needs same correction for std and prt as above?!?)
                         }
                     }
@@ -1191,7 +1206,9 @@ if ($_SESSION['analysis_type'] === "selected") {
                    
                         } else {
                             // special treatment for numbers in shorthand: transform to # + number + handwriting_marker inside []
-                            $post_handwriting = preg_match("/[0-9]/", $posttokens) ? "[#" . $posttokens . $_SESSION['handwriting_marker'] . "]" : $posttokens;
+                            // see BUGFIX comment above
+                            //$post_handwriting = preg_match("/[0-9]/", $posttokens) ? "[#" . $posttokens . $_SESSION['handwriting_marker'] . "]" : $posttokens;
+                            $post_handwriting = $posttokens;
                             $output .= "\\$post_handwriting";
                         }
                     }
