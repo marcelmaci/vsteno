@@ -693,6 +693,9 @@ function ParserChain( $text, $start = null, $end = null ) {
             ExecuteRule();
             //echo "ParserChain: act_word = $act_word (after executerule())<br>";
             
+            // show a single rule
+            //if ($rules_pointer == 1472) echo "rule: " . $rules[$actual_model][$rules_pointer][0] . " => " . $rules[$actual_model][$rules_pointer][1] . "<br>";
+            
             //echo "rule($rules_pointer) actword = $act_word<br>";
             //echo "after execute";
             $rules_pointer++;
@@ -755,6 +758,7 @@ function IsAnyOfAllArguments( $argument ) {
 
 function PreProcessGlobalParserFunctions( $text ) {
         global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string, $global_debug_string;
+        //echo "start_word_parser: $start_word_parser<br>";
         $rules_pointer = 0;
         $global_textparser_debug_string = "";
         if (IsAnyOfAllArguments("#>stage0")) {
@@ -777,7 +781,6 @@ if (preg_match("/^tstopt\(([0-9]+)\).*$/", $rules["$actual_model"][$rules_pointe
 }
 // set output before eventual break
 $output = $act_word;
-
 //if ($option_result === false) echo "BREAK EXPECTED!<br>";
 if ($option_result === false) {
     $rules_pointer++;
@@ -796,8 +799,11 @@ if ($option_result === false) {
                 // originally, only preg_replace here (see line before)
                 // test if extended_preg_replace works (otherwhise revert back)
                 // extended_preg_replace is necessary in order to use strtolower() in global rules (stage0)
+                //echo "preprocessing: rule: $rules_pointer text (before): $text";
+
                 $text = extended_preg_replace( "/$pattern/", "$replacement", $text); // use only preg_replace (i.e. not extended_preg_replace)
-                
+                //echo " text (after): $text<br>";
+
                 //echo "\"$pattern\" => \"$replacement\" // word: $temp_text => $text<br>";
                 if ($temp_text !== $text) {
                     $nil = preg_match( "/$pattern/", $temp_text, $matches);
@@ -811,6 +817,7 @@ if ($option_result === false) {
         
                     if ($_SESSION['output_format'] === "debug") $global_textparser_debug_string .= "<tr><td>(..)$matching_section(..)</td><td><b>R$rules_pointer</b> $option_debug_string" . "$esc_pattern <b>⇨</b> $esc_replacement</td><td>" . mb_strtoupper($temp_function) . "</td></tr>";
                 }
+                
                 $rules_pointer++;
             //$text = preg_replace("/ es ist /", " [XEX] ", $text);
             //echo "TExt = $text<br>";
