@@ -1294,6 +1294,9 @@
 		"^(\[[ns]\])" => "[0N-]$1"; // idem
 		// correct distances for vowels
 		"\[#6\]\[E\]" => "[E]";
+		// tokens at beginning
+		"^(\[A\]\[&A@#_\])" => "[0N-][#4]$1";
+		"^(\[A\]\[&U@#_\])" => "[0N-][#4]$1";
 		//"([a-z])" => "strtoupper()";  // leave other tokens as untreated (will be processed normally)
 	#EndSubSection(acronymater)
 	#BeginSubSection(packer)
@@ -1328,7 +1331,7 @@
 		"([Pp]s)y(-?c-?h)" => "$1ü$2";
 		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay" };
+		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
@@ -1368,6 +1371,8 @@
 	#EndSubSection(accentizer)
 	#BeginSubSection(shortener)
 
+		"viel-?leicht" => "{VILLEICHT}";
+		
 		// cut out vowels
 		"tstopt(01)er\+li-?ch" => "er{LICH}";
 		"tstopt(01)((?:[ae]|ä)[ui])-?e(-?r)\+?" => "$1$2";
@@ -1805,7 +1810,6 @@
 		"^und$" => "{UND}";
 		"\+und#" => "{UND}";
 		"usw\." => "{USW\.}";
-		"viel-?leicht" => "{VILLEICHT}";
 		
 		"\+von$" => "+{VON}";
 		"^von$" => "{VON}";
