@@ -2017,9 +2017,18 @@ function CalculateLayoutedSVG( $text_array ) {
                     $last_word = (($key == $text_array_length-1) && ($temp_width <= $max_wdith-$right_margin)) ? $actual_word : $actual_word-1;
                     $svg_string .= DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, false );
                 }
+                //echo "actual_word: $actual_word<br>";
+                //echo "actual_word[0]: " . $word_splines[$actual_word][0] . "<br>";
+                
                 $last_word_splines = $word_splines[$actual_word-1];
+                // bugfix: save also separate spline of last word
+                $last_word_separate_spline = $word_separate_spline[$actual_word-1];
                 unset($word_splines);
+                // bugfix: unset also separate spline of last word
+                unset($word_separate_spline);
                 $word_splines[0] = $last_word_splines;
+                // bugfix: copy also separate spline of last word
+                $word_separate_spline[0] = $last_word_separate_spline;
                 $word_width[0] = $word_width[$actual_word-1];
                 $actual_word = 1;
                 $old_temp_width = $temp_width;
