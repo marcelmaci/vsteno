@@ -15,7 +15,7 @@ zu diesen höchst spannenden Projekten unter <i>Artikel</i>.</p></li>
 </ul>
 <h2>Lektüre</h2>
 <ul>
-<li><p><a href="https://stenolektuere.vpweb.ch/Produkte.html">Krimis & Kurzgeschichten</a>: Handschriftliche Stenolektüren von Frau Seeholzer.</p>
+<li><p><a href="https://stenolektuere.jimdosite.com">Krimis & Kurzgeschichten</a>: Handschriftliche Stenolektüren von Frau Seeholzer <br>(<b>Sehr zu empfehlen: neue Seite im Dezember 2019</b>).</p>
 </ul>
 <h2>Vereine</h2>
 <ul>

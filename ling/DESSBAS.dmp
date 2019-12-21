@@ -1235,6 +1235,9 @@
 		"tstopt(0)[Ww]issen [Ss]ie" => "#wissen_sie";
 		"tstopt(0)[Nn]ach dem" => "#nach_dem";
 		"tstopt(0)[Mm]üssen [Ss]ie" => "#müssen_sie";
+		"tstopt(0)[Ss]o sehr" => "#so_sehr";
+		"tstopt(0)[Uu]mso mehr" => "#umso_mehr";
+		"tstopt(0)[Aa]uf über" => "#auf_über";
 		
 		"tstopt(0)[Zz]um Beispiel" => "zb";
 		"tstopt(0)[Ii]ch mag" => "#ich_mag";
@@ -1432,6 +1435,7 @@
 		"tstopt(01)[Gg]e[+-]?(stie-?g)" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(trof-?f)" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(stell-?t)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(bau-?t)" => "$1"; 
 		
 		// not a participe but same principle
 		"tstopt(01)[Gg]e(?:\+|-|#)?(schäf-?t)" => "$1"; 
@@ -1487,6 +1491,8 @@
 		"tstopt(01)#ich_könn-?te" => "{ICHKÖNNTE}";
 		"tstopt(01)#kann_er" => "{KANNER}";
 		"tstopt(01)#in_der" => "{INDER}";
+		"tstopt(1)#in_die-?ser" => "{INDIES}";
+		"tstopt(0)#in_die-?ser" => "{INDIESER}";
 		"tstopt(01)#in_die-?s" => "{INDIES}";
 		"tstopt(01)#in_die" => "{INDIE}";
 		"tstopt(01)#in_den" => "{INDEN}";
@@ -1517,6 +1523,9 @@
 		"tstopt(01)#wol-?len_wir" => "{WOLL}{WIR}";
 		"tstopt(01)#wis-?sen_sie" => "{WISS}{SIE}";
 		"tstopt(01)#müs-?sen_sie" => "{MÜSS}{SIE}";
+		"tstopt(01)#so_sehr" => "{SOSEHR}";
+		"tstopt(01)#um[-#]?so_mehr" => "{UMSOMEHR}";
+		"tstopt(01)#auf_ü-?ber" => "{AUFÜBER}";
 		
 		"tstopt(01)[Ee]-?ben(?:-|\+|#)?so" => "{EBENSO}";
 		"tstopt(01)[Uu]m(?:-|\+|#)?so" => "{UMSO}";
@@ -1584,14 +1593,24 @@
 		"tstopt(01)^[Nn]un$" => "{NUN}";
 		"tstopt(01)^[Aa]l-?so$" => "{ALSO}";
 		"tstopt(01)[Mm]a-?l" => "{MAL}";
+		"tstopt(01){MAL}er" => "{MAL}{ER}";
 		"tstopt(01)[Dd]a-?{MAL}" => "{DA}{MAL}";
 		"tstopt(01)[Jj]e-?{MAL}" => "{JE}{MAL}";
+		"tstopt(01)[Bb]al-?d" => "{BALD}";
+		"tstopt(01)[Bb]ahn" => "{BAHN}";
+		"tstopt(01)[Bb]an-?d" => "{BAND}";
 		
-		"tstopt(01)[Bb]is" => "{BIS}";
+		"tstopt(01)[Bb]is(?!t)" => "{BIS}";
 		"tstopt(01)[Mm]ann?" => "{MAN}";
 		"tstopt(01)^[Nn]ur$" => "{NUR}";
 		"tstopt(01)[Mm]eh-?r" => "{MEHR}";
-		
+		"tstopt(01)[Ss]eh?-?r" => { "{SEHR}", "[Uu]n-?s-?e-?r" };
+		"tstopt(01)[Ss]i-?c-?he-?r" => "{SICHER}";
+		"tstopt(01)[Dd]a[#-+]?mit" => "{DAMIT}";
+		"tstopt(01)[Ss]o[#-+]?for-?t" => "{SOFORT}";
+		"tstopt(01)[Uu]n[-+#]?s[-+#]?er[-+#]?(?:er)?" => "{UNSER}";
+		// uns-er+er 
+
 		"tstopt(01)([Dd](?:[au]|ü))r(-?f)" => "$1$2"; // r falls out
 		
 		"tstopt(3)^[Ww]ir-?k[-#]?li-?ch" => "{WIRKLICH}";
@@ -1637,6 +1656,7 @@
 		"tstopt(01)i?-?el-?l" => "{IELL}";
 		"tstopt(01)[Ll]o-?s-?t" => "{LOST}";
 		"tstopt(01)[Ll]ö-?s-?t" => "{LÖST}";
+		"tstopt(01)s-?[Ll]o-?s(?!s)" => "{LOS}"; // ahnungslos: without s
 		"tstopt(01)(?<![Kk])[Ll]o-?s(?!s)" => "{LOS}";
 		"tstopt(01)[Ll]as-?s" => "{LASS}";
 		"tstopt(01)[Ll]ö-?s" => "{LÖS}";
@@ -1962,7 +1982,7 @@
 		"{LOS}e-?r" => "{LOS}{ER}";
 
 		// optional abbreviations (option1: MAC)
-		"tstopt(0)#?ba-?r" => { "{BAR}", "[Bb]ar[#-]?ba-?r" };
+		"tstopt(0)(?:{ER})?#?ba-?r" => "{BAR}";
 		"tstopt(0)(?:ge)?[Kk]om-?m?" => { "{KOMM}", "[Kk]om-?m[ui]" };
 		"tstopt(0)(^|\+)[Kk]am(?!-?m)" => { "{KAM}", "[Kk]a-?me-?r" };
 		"tstopt(0)(^|\+)[Kk]au-?f" => "$1{KAUF}";
@@ -2317,7 +2337,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}"  }; // very unclean rule ...
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2648,7 +2668,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?}", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}" }; // ugly ...
+		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -2795,8 +2815,18 @@
 	#BeginSubSection(substituter)
 
 		"tstopt(01){FALLS}" => "[A][F][#8-][_S]";
+		"tstopt(01){MAL}{ER}" => "[A][M@R6]";
+		"tstopt(01){LAG}{ER}" => "[A][L@R6]";
+		"tstopt(01){LEG}{ER}" => "[L@R6]";
+		"tstopt(01){INDIESER}" => "[IN][DIS@VR]";
+		"tstopt(01){AUFÜBER}" => "[AUF][Ä][&U]";
 		"tstopt(01)^{MEHR}" => "[0N-][E][VR]";
 		"tstopt(01){MEHR}" => "[E][VR]";
+		"tstopt(01){UMSOMEHR}" => "[0N-][U][M][E][VR]";
+		"tstopt(01){SEHR}" => "[SER]"; // spanish ser
+		"tstopt(01){SOSEHR}" => "[SOBRE]"; // spanish sobre
+		"tstopt(01){SOFORT}" => "[0D-][SS]"; 
+		"tstopt(01){SICHER}" => "I[SER]"; // spanish ser
 		"tstopt(01)^{SCHRIF}" => "[0N-][I][F]";
 		"tstopt(01){SCHRIF}" => "[I][F]";
 		"tstopt(01)^{MACH}$" => "[M][A][CH]";
@@ -2919,6 +2949,11 @@
 		"tstopt(01){SIE}" => "[S][/I]";
 		"tstopt(0){DISER}" => "[DIS@VR]";
 		"tstopt(01){MAL}" => "[A][M]";
+		"tstopt(01){DAMIT}" => "[AU][D]";
+		"tstopt(01){BALD}" => "[A][B]";
+		"tstopt(01){BAHN}" => "[A][B]";
+		"tstopt(01){BAND}" => "[A][B]";
+		"tstopt(01){UNSER}$" => "[0N-][U][NS][#0]"; // #0 to make ns non final
 		
 		"tstopt(01)^{MISS}" => "[0D-][I][SS]";
 		"tstopt(01){MISS}" => "[I][SS]";
