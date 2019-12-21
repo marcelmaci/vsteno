@@ -169,7 +169,7 @@
 		// -er-
 		"([Ee]r)-" => "$1+";
 		"([Ee])-r" => "$1r+"; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
-		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => "$1-er$2"; // Schil-der+ung: reorganize syllabical structure ...
+		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
@@ -703,6 +703,8 @@
 
 		"([Dd]en)\|(noch)" => "$1-$2";
 		"([Jj]ahr)\|(ein)" => "$1-$2";
+
+		"([Bb]e)\+?(un)-?(ru-?hi)" => "$1+$2+$3";
 
 		"\+_" => "_"; // get rid of annoying tokens ... :)
 
@@ -1238,6 +1240,7 @@
 		"tstopt(0)[Ss]o sehr" => "#so_sehr";
 		"tstopt(0)[Uu]mso mehr" => "#umso_mehr";
 		"tstopt(0)[Aa]uf über" => "#auf_über";
+		"tstopt(0)[Ss]age ich" => "#sage_ich";
 		
 		"tstopt(0)[Zz]um Beispiel" => "zb";
 		"tstopt(0)[Ii]ch mag" => "#ich_mag";
@@ -1464,6 +1467,11 @@
 		// trendiger must be placed before -er in base model
 		"tstopt(0)((?<!s-|s)t)?(?<!e)i-?g(?:-?t)?((?:st)?e[rsnm]?)?$" => "{IG}$1";
 
+		// same with -isch
+		"tstopt(0)((?<!s-|s)t)?(?<!e)i-?sch(-?s-?t)?(e[rsnm]?)?$" => "{ISCH}$2$3"; 
+		"tstopt(1)((?<!s-|s)t)?(?<!e)i-?sch(-?s-?t)?(e[rsnm]?)?$" => "{ISCH}"; 
+		"tstopt(1){ISCH}er" => "{ISCH}"; 
+		
 		"tstopt(3)^[Dd]ann$" => "{DANN}"; // don't like the following HF rule ... confusion: kann, dann
 		"tstopt(3)^[Dd]enn$" => "{DENN}"; // special MAC rules
 		"tstopt(01)^[Dd]ann$" => "ann";
@@ -1526,6 +1534,7 @@
 		"tstopt(01)#so_sehr" => "{SOSEHR}";
 		"tstopt(01)#um[-#]?so_mehr" => "{UMSOMEHR}";
 		"tstopt(01)#auf_ü-?ber" => "{AUFÜBER}";
+		"tstopt(01)#sa-?ge_ich" => "{SAGEICH}";
 		
 		"tstopt(01)[Ee]-?ben(?:-|\+|#)?so" => "{EBENSO}";
 		"tstopt(01)[Uu]m(?:-|\+|#)?so" => "{UMSO}";
@@ -1599,6 +1608,8 @@
 		"tstopt(01)[Bb]al-?d" => "{BALD}";
 		"tstopt(01)[Bb]ahn" => "{BAHN}";
 		"tstopt(01)[Bb]an-?d" => "{BAND}";
+		"tstopt(01)el([ns])?$" => "{EL}$1";
+		"tstopt(01)[Ss]a-?g(t)?(e|e?s?t|en)" => "{SAG}$1$2";
 		
 		"tstopt(01)[Bb]is(?!t)" => "{BIS}";
 		"tstopt(01)[Mm]ann?" => "{MAN}";
@@ -1666,6 +1677,7 @@
 		"tstopt(01)[Ss]ol-?l" => "{SOLL}";
 		"tstopt(01)[Ww]il-?l" => "{WILL}";
 		"tstopt(01)[Jj](?:a|ä)h-?r" => "{JAHR}";
+		"tstopt(01)[Ff]ie-?l" => "{FIEL}";
 		
 
 		"#er" => "{ER}";
@@ -2337,7 +2349,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}"  }; // very unclean rule ...
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}", "{FIEL}"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2668,7 +2680,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}" }; // ugly ...
+		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}", "{FIEL}" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -2814,6 +2826,12 @@
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
+		"tstopt(01){ISCH}{ER}" => "{IGER}"; // to simplify replace isch by ig (and treat it the same)
+		"tstopt(01){ISCH}" => "{IG}"; // to simplify replace isch by ig (and treat it the same)
+		"tstopt(01)^{FIEL}" => "[I][F]";
+		"tstopt(01){FIEL}" => "\\[I][F]";
+		"tstopt(01)^{SAG}" => "[A][S=]";
+		"tstopt(01){SAG}" => "[A][S]";
 		"tstopt(01){FALLS}" => "[A][F][#8-][_S]";
 		"tstopt(01){MAL}{ER}" => "[A][M@R6]";
 		"tstopt(01){LAG}{ER}" => "[A][L@R6]";
@@ -2857,6 +2875,8 @@
 		"tstopt(01){HABEICH}" => "[A][B][_CH]";
 		"tstopt(01){ICHHABE}" => "[0N-][I][^CH][-E]";
 		"tstopt(01){BINICH}" => "[I][B][_CH]";
+		"tstopt(01)^{SAGEICH}" => "[A][S=][_CH]";
+		"tstopt(01){SAGEICH}" => "[A][S][_CH]";
 		"tstopt(01){ICHBIN}" => "[0N-][I][^CH][N]";
 		"tstopt(01){WURDEICH}" => "[AU][&U][_CH]";
 		"tstopt(01){WIRWOLLEN}" => "[W][O][L][EN]";
@@ -2884,7 +2904,7 @@
 		"tstopt(01){NEHM}" => "[E][M]";
 		"tstopt(01){EIN}$" => "[0D-][#9][-EI]";
 		"tstopt(01)^{EIN}" => "[0D-][EI][N]";
-		"tstopt(01){EIN1}" => "[#9][-EI]";
+		"tstopt(01){EIN1}" => "[#9][#6][-EI]";
 		"tstopt(01){EINE}" => "[0D-][EI][N][-E]";
 		"tstopt(01)^{EINEN}" => "[0D-][EI][N]";
 		"tstopt(01){EINEN}" => "[EI][N]";
@@ -2960,6 +2980,7 @@
 
 		"{MISS}" => "MI[SS]"; // bleeding with MA12 => place MA12 rule before!
 
+		"tstopt(01){ESIST}" => "[ES][#6-][U][IST]";		// spacing comes from token definition
 		"{ESIST}" => "[ES]\\[#0][IST]";		// spacing comes from token definition
 
 		"{GEHABT}" => "[G][&T]";
@@ -3139,6 +3160,7 @@
 		"tstopt(01){WÜSS}" => "[0N-][Ü][SS]";
 		"tstopt(01){WISS}" => "[0N-][I][SS]";
 		"tstopt(01){WEISS}" => "[0N-][EI][SS]";
+		"tstopt(01){EL}" => "[#4][@L]"; // use custom (hardcoded) distance
 		"tstopt(01){IELL}" => "[#4][@L]"; // use custom (hardcoded) distance
 		"tstopt(01){ELL}" => "[0N-][E][L]"; 
 		"tstopt(01)^{SICH}" => "[I][S=]"; 

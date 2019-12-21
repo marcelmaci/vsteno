@@ -1241,6 +1241,9 @@
 		"tstopt(0)[Uu]mso mehr" => "#umso_mehr";
 		"tstopt(0)[Aa]uf über" => "#auf_über";
 		"tstopt(0)[Ss]age ich" => "#sage_ich";
+		"tstopt(0)[Hh]at er" => "#hat_er";
+		"tstopt(0)[Kk]önnen wir" => "#können_wir";
+		"tstopt(0)[Ss]o viel" => "#so_viel";
 		
 		"tstopt(0)[Zz]um Beispiel" => "zb";
 		"tstopt(0)[Ii]ch mag" => "#ich_mag";
@@ -1265,9 +1268,9 @@
 
 		"tstopt(01)'s$" => "s";
 		"tstopt(01)\|s$" => "s";
-
-	#EndSubSection(dasher,#>stage3)
-	#BeginSubSection(splitter1,#>stage3)
+	
+	#EndSubSection(dasher)
+	#BeginSubSection(splitter1)
 		// check if word contains more then 1 upper case
 		// mark it with #£# to have a branch condition
 		"(?<!#acronym#)([A-Z]|Ä|Ö|Ü)([A-Z]|Ä|Ö|Ü)" => "#acronym#$1$2";
@@ -1375,7 +1378,20 @@
 		"([Ll]a-?t-?)e(r-?n)" => "$1E$2";
 		
 	#EndSubSection(accentizer)
-	#BeginSubSection(shortener)
+	#BeginSubSection(preshortener)
+		// "early shortener"
+		// i.e. shortener that applies to composed words
+		// not sure if this works correctly ... there might be other implications if stage3 doesn't follow
+		// stage2 ... leave it for the moment ...
+
+		"tstopt(01)[Ee][+#-]?b[+#-]?en[+#|-]?falls" => "{EBENFALLS}";
+		"tstopt(01)[Gg]leich[+#|-]?falls" => "{GLEICHFALLS}";
+		"tstopt(01)[Aa]l-?len[+#|-]?falls" => "{ALLENFALLS}";
+		"tstopt(01)[Aa]n-?der\+?n[+#|-]?falls" => "{ANDERNFALLS}";
+		"tstopt(01)[Gg]e[+#-]?ge-?be-?nen[+#|-]?falls" => "{GEGEBENENFALLS}";
+		
+	#EndSubSection(preshortener,#>stage3)
+	#BeginSubSection(shortener,#>stage3)
 
 		"viel-?leicht" => "{VILLEICHT}";
 		
@@ -1439,6 +1455,7 @@
 		"tstopt(01)[Gg]e[+-]?(trof-?f)" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(stell-?t)" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(bau-?t)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(ant-?wor-?tet)" => "$1"; 
 		
 		// not a participe but same principle
 		"tstopt(01)[Gg]e(?:\+|-|#)?(schäf-?t)" => "$1"; 
@@ -1481,6 +1498,7 @@
 		"tstopt(01)^([Aa]n-?d)e-?r" => "$1"; // and(er)en
 		
 
+		"tstopt(01)[Ss]o[+#-]?gar" => "{SOGAR}";
 		"tstopt(01)[Ss]chrif" => "{SCHRIF}";
 		"tstopt(01)#nach_dem" => "nachdem";
 		"tstopt(01)#lie-?gen_las-?sen" => "{LIEG}{LASS}en";
@@ -1535,6 +1553,10 @@
 		"tstopt(01)#um[-#]?so_mehr" => "{UMSOMEHR}";
 		"tstopt(01)#auf_ü-?ber" => "{AUFÜBER}";
 		"tstopt(01)#sa-?ge_ich" => "{SAGEICH}";
+		"tstopt(01)#hat_er" => "{HATER}";
+		"tstopt(01)#kön-?nen_wir" => "{KÖNNENWIR}";
+		"tstopt(01)#so_viel" => "{SOVIEL}";
+		"tstopt(01)[Ss]o[+#-]?viel" => "{SOVIEL}";
 		
 		"tstopt(01)[Ee]-?ben(?:-|\+|#)?so" => "{EBENSO}";
 		"tstopt(01)[Uu]m(?:-|\+|#)?so" => "{UMSO}";
@@ -1606,10 +1628,13 @@
 		"tstopt(01)[Dd]a-?{MAL}" => "{DA}{MAL}";
 		"tstopt(01)[Jj]e-?{MAL}" => "{JE}{MAL}";
 		"tstopt(01)[Bb]al-?d" => "{BALD}";
-		"tstopt(01)[Bb]ahn" => "{BAHN}";
+		"tstopt(01)[Bb]ah-?n" => "{BAHN}";
 		"tstopt(01)[Bb]an-?d" => "{BAND}";
 		"tstopt(01)el([ns])?$" => "{EL}$1";
 		"tstopt(01)[Ss]a-?g(t)?(e|e?s?t|en)" => "{SAG}$1$2";
+		"tstopt(01)[Ii]n[-+#]?so[-+#]?fer[-+#]?n" => "{INSOFERN}";
+		"tstopt(01)[Ii]n[-+#]?so[-+#]?weit" => "{INSOWEIT}";
+		"tstopt(01)[Jj]e-?der" => "{JED}";
 		
 		"tstopt(01)[Bb]is(?!t)" => "{BIS}";
 		"tstopt(01)[Mm]ann?" => "{MAN}";
@@ -2349,7 +2374,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}", "{FIEL}"  }; // very unclean rule ...
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "VIEL}", "{HIER}", "{SIE}", "{FIEL}"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2680,7 +2705,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "{VIEL}", "{HIER}", "{SIE}", "{FIEL}" }; // ugly ...
+		"I-?E" => { "[&I]E", "{SIEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "VIEL}", "{HIER}", "{SIE}", "{FIEL}" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -2826,12 +2851,27 @@
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
+		// kind of a rewriter part in substituter ..
+		"tstopt(01)B{ER}" => "[B@R6]";
+		
+		
+		"tstopt(01){EBENFALLS}" => "[0N-][E][B][_CH]";
+		"tstopt(01){GLEICHFALLS}" => "[G@L3][_CH]";
+		"tstopt(01){ALLENFALLS}" => "[A][L][#6-][_S]";
+		"tstopt(01){ANDERNFALLS}" => "[0N-][A][ND][_CH]";
+		"tstopt(01){GEGEBENENFALLS}" => "[G][E][B][_CH]";
 		"tstopt(01){ISCH}{ER}" => "{IGER}"; // to simplify replace isch by ig (and treat it the same)
 		"tstopt(01){ISCH}" => "{IG}"; // to simplify replace isch by ig (and treat it the same)
+		"tstopt(01){SO}{WI}" => "[0N-][SS][/I]";
 		"tstopt(01)^{FIEL}" => "[I][F]";
 		"tstopt(01){FIEL}" => "\\[I][F]";
 		"tstopt(01)^{SAG}" => "[A][S=]";
 		"tstopt(01){SAG}" => "[A][S]";
+		"tstopt(01){JED}" => "[J][E][D]";
+		"tstopt(01){SOGAR}" => "[A][SOBRE]";
+		"tstopt(01){SOVIEL}" => "[0N-][SS][I][@L]";
+		"tstopt(01){INSOFERN}" => "[IN][SS][E][N]";
+		"tstopt(01){INSOWEIT}" => "[IN][SS][HEIT]";
 		"tstopt(01){FALLS}" => "[A][F][#8-][_S]";
 		"tstopt(01){MAL}{ER}" => "[A][M@R6]";
 		"tstopt(01){LAG}{ER}" => "[A][L@R6]";
@@ -2872,7 +2912,9 @@
 		"tstopt(01){WÜRD}{EN}" => "[AU][&U][#8-][_EN]";
 		"tstopt(01){SIESICH}" => "[S=][I][S]";
 		"tstopt(01){WIRMUSS}" => "[W][U][SS]";
+		"tstopt(01){KÖNNENWIR}" => "[0N-][Ö][NN][W]";
 		"tstopt(01){HABEICH}" => "[A][B][_CH]";
+		"tstopt(01){HATER}" => "[A][H][E][VR]";
 		"tstopt(01){ICHHABE}" => "[0N-][I][^CH][-E]";
 		"tstopt(01){BINICH}" => "[I][B][_CH]";
 		"tstopt(01)^{SAGEICH}" => "[A][S=][_CH]";
@@ -2900,6 +2942,8 @@
 		"tstopt(01){NIMM}" => "[I][MM]";
 		"tstopt(01)^{NOMM}" => "[0N-][O][MM]";
 		"tstopt(01){NOMM}" => "[O][MM]";
+		"tstopt(01)^{NEHM}{ER}" => "[0N-][E][M@R6]";
+		"tstopt(01){NEHM}{ER}" => "[E][M@R6]";
 		"tstopt(01)^{NEHM}" => "[0N-][E][M]";
 		"tstopt(01){NEHM}" => "[E][M]";
 		"tstopt(01){EIN}$" => "[0D-][#9][-EI]";
