@@ -7,14 +7,14 @@ html {
 }
 
 body { 
-    background: #aaa;
-    color: black; 
+    background: #222;
+    color: #bbb; 
 }
 
 /* page layout */
 
 #container { 
-    background: #eee;
+    background: #333;
     width: 1024px;  
     margin-left: auto ;
     margin-right: auto ;
@@ -23,12 +23,12 @@ body {
 #title { 
     width:1024px; 
     height:120px; 
-    background:#aaa;
+    background:#222;
     float: left;
 }
 
 #purelab_banner { 
-    background-color: #ededed;
+    background-color: #131313;
     float: left; 
     /* margin-right: 10px; */
     border-radius: 20px 0px 0px 0px;
@@ -41,7 +41,7 @@ body {
 }
 
 #purelab_title { 
-    background-color: #ddd;
+    background-color: #333;
     /*background-color: blue;*/
     /*border: 0px solid red;*/
     border: none;
@@ -81,7 +81,7 @@ body {
      height: 120px; 
      /*margin: auto;*/
      width: 460px;              /* original value: 120px */
-     background-color: #ddd; /* #ddd; */
+     background-color: #333; /* #ddd; */
      /*border: 2px solid red;*/
      border-radius: 0px 20px 0px 0px;
      float: left;   /* left */
@@ -91,7 +91,7 @@ body {
 
 #main { 
     list-style-type: none;
-    background: #eee;
+    background: #2a2a2a;
     width:1023px; /* to avoid fine line between divs on samsung / safari */
     clear: both;
     margin-left: auto ;
@@ -99,12 +99,22 @@ body {
 float: left;
 }
 
+#main textarea {
+	background-color: #444;
+	color: white;
+}
+
+#main input {
+	background-color: #444;
+	color: white;
+}
+
 /* link layout */
 
 #navigation { 
     float: left;
     width: 120px; 
-    background: #000; /* #ddd; why doesn't it change */
+    background: #111; /* #ddd; why doesn't it change */
 }
 
 #navigation a:hover {
@@ -115,15 +125,15 @@ float: left;
     list-style-type: none;
     margin: 0;
     padding: 0;
-    background-color: #eee;
+    background-color: #2a2a2a;
 }
 
 #navigation li a {
     list-style-type: none;
     display: inline-block;
     
-    background: #eee;
-    color: #000;
+    background: #2a2a2a;
+    color: #fff;
     padding: 4px 8px;
     text-decoration: none;
 }
@@ -134,7 +144,7 @@ float: left;
 }
 
 #navigation p {
-    background: #ddd;
+    background: #333;
     width: 112px;
     margin: 0px;
     padding: 4px;
@@ -142,7 +152,7 @@ float: left;
 }
 
 #content {
-    background: #eee;
+    background: #2a2a2a;
    /* margin: 10px; */
     margin-left: 20px;
     margin-right: 20px;
@@ -153,7 +163,7 @@ float: left;
 #content ul, li {
     margin-left: 20px;
    list-style-type: disc;
-    background: #eee;
+    background: #111;
 }
 
 #content h1 {
@@ -204,23 +214,23 @@ float: left;
 
 #specifications tr:nth-child(even){background-color: #ddd}
 #specifications table {
-    border: 1px solid black;
+    border: 1px solid #666;
     border-collapse: collapse;
        /* padding: -20px; */
 }
 #specifications tr {
-    border: 1px solid black;
+    border: 1px solid gray;
         border-collapse: collapse;
        /* padding: -20px; */
 }
 
 #specifications td {
-    border: 1px solid black;
+    border: 1px solid gray;
         border-collapse: collapse;
        /* padding: -20px; */
 }
 
-#order tr:nth-child(odd){background-color: #ddd}
+#order tr:nth-child(odd){background-color: #333}
 #order table {
         /*border: 1px solid white;*/
                 border-collapse: collapse;
@@ -239,12 +249,12 @@ float: left;
 }
 
 #order td {
-    border: 1px solid black; 
+    border: 1px solid white; 
     border-collapse: collapse;
        /* padding: -20px; */
 }
 
-#debug_table tr:nth-child(odd){background-color: #ddd}
+#debug_table tr:nth-child(odd){background-color: #333}
 #debug_table table {
         /*border: 1px solid white;*/
        border-collapse: collapse;
@@ -263,21 +273,21 @@ float: left;
 }
 
 #debug_table td {
-    border: 1px solid black; 
+    border: 1px solid gray; 
        border-collapse: collapse;
        /* padding: -20px; */
 }
 
 #container button {
     font-size: 20px;
-    background-color: #eee;
+    background-color: #111;
     color: black;
     border-radius: 5px;
-    border: 2px solid #333;
+    border: 2px solid #ddd;
 }
 
 #container button:hover {
-    background-color: #fff;
+    background-color: #000;
 }
 
 #computer button {
@@ -300,19 +310,19 @@ float: left;
 }
 
 #no_borders table {
-    border : 0px solid #eee;
+    border : 0px solid #111;
     border-collapse: collapse;
 }
 
 #no_borders td {
-    border : 0px solid #eee;
+    border : 0px solid #111;
     border-collapse: collapse;
 }
 
 #footer {
     width: 1023;  /* to avoid fine line between divs on samsung / safari */
     float: left;
-    background: #ddd;
+    background: #333;
     border-radius: 0px 0px 10px 10px;
 }
 

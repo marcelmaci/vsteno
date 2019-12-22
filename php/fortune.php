@@ -125,7 +125,13 @@ if (!isset($_SESSION['fortune_cookie'])) {
 // if $fortune_cookie == int number, this cookie is returned
 function fortune() {
     global $fortune_cookie;
-   
+    
+    // set color for display mode (if inverted)
+    if ($_SESSION['display_mode'] === "inverted") {
+        $_SESSION['token_color'] = "white";
+        $_SESSION['auxiliary_baseline_color'] = "#aaa";
+    }
+
     switch ($fortune_cookie) {
             case "be_lucky" : return be_lucky(); break;
             default : return get_fortune( (int)$fortune_cookie ); break;
