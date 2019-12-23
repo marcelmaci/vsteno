@@ -3229,7 +3229,7 @@
 		"\[&T\]{ALL}" => "{&TALL}";
 		//"{TUM}\[VR\]" => "{TUM}{VR}";	//??
 		//"{TUM}{VR}" => "{TUM}[VR]"; //??
-		"R}t" => "R}[&T]";
+		"(?<!U)R}t" => "R}[&T]";
 		"^\{ANT\}" => "[0N-][#N]{ANT}";
 		"{HEIT}{ET}" => "{HEIT}[&E][ET3/4]";
 		"{ET}(e[^s]|{EN}|{EM})" => "{ET}[&E]$1";
@@ -3340,6 +3340,7 @@
 		"{SIND}" => "[ND]"; // token "sind" becomes obsolete with this rule
 		"{WAS}" => "[A][W]"; // token "was" probably obsolete
 		"{AUS}" => "[AUS]";
+		"{UR}" => "[UR]";
 
 		// optional abbreviations (option0: MAC)		
 		"tstopt(01){BAR}" => "[A][B]";

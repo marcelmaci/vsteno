@@ -163,7 +163,7 @@ float: left;
 #content ul, li {
     margin-left: 20px;
    list-style-type: disc;
-    background: #111;
+    background: #2a2a2a;
 }
 
 #content h1 {
@@ -280,14 +280,14 @@ float: left;
 
 #container button {
     font-size: 20px;
-    background-color: #111;
-    color: black;
+    background-color: #333;
+    color: #aaa;
     border-radius: 5px;
     border: 2px solid #ddd;
 }
 
 #container button:hover {
-    background-color: #000;
+    background-color: #666;
 }
 
 #computer button {
