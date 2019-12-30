@@ -88,9 +88,9 @@ sehr unterschiedlich:</p>
 <p>Dies ergäbe aus meiner Sicht eine solide SE3 mit verschiedenem Einsatzzweck: (1) E-Reader oder (2) Desktop-Publishing-System für qualitativ 
 hochwertige Ausgaben von Stenografie-Texten - um nur die zwei wichtigsten zu nennen.</p>
 
-<p><i><b>[UPDATE 23/12/19]</b> Hier eine kleine Weihnachtsedition: Inzwischen wurden 20 von 35 Kapitel aus Hanspeter Frechs Buch "Die superschnelle Geheimschrift", 
+<p><i><b>[UPDATE 23/12/19]</b> Hier eine kleine Weihnachtsedition: Inzwischen wurden 20 von 35 Kapiteln aus Hanspeter Frechs Buch "Die superschnelle Geheimschrift", 
 Band 2, integriert. Die (noch experimentelle) gekürzte Form (Eilschrift) der Steno ist auf Deutsch nun parallel zur Verkehrsschrift (Grundstufe) verfügbar und kann durch Setzen 
-der Parameter HF1 und HF2 im Eingabeformular (unter "Engine") aktiviert werden. In diesem Sinne: Frohes Fest!</p>
+der Parameter HF1 und HF2 im <a href="input.php">Eingabeformular</a> (unter "Engine") aktiviert werden. In diesem Sinne: Frohes Fest!</p>
 <center>* * *</center>
 <p>=> Hier finden Sie <a href="old_news.php">ältere News-Einträge</a>.
 <br>
