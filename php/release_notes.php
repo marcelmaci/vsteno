@@ -79,6 +79,7 @@ Steno Engine:
     <li>Inverted mode (teilweise, nur für Entwicklung)</li>
     <li><b>Engine</b>:<br>
     - Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte) (to do)</li>
+    <li><b>Debugging</b>: Ausgabe Stage-Wechsel (nur Stages 3 und 4)</li>
 </ul>
 </li>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**)Nach Hephaistos und Ariadne dürfte nun wieder ein männlicher Name aus der griechischen 

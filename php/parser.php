@@ -371,6 +371,13 @@ function ExecuteEndParameters() {
                                     $actual_function = $argument;
                                 }
                                 break;
+                    case "#>" : //if ($word_at_beginning_of_function !== $act_word) {                     // branch if not equal
+                                    //$rules_pointer = $functions_table[$actual_model][$argument][0];
+                                    
+                                    $global_debug_string .= "<tr><td></td><td>--- " . mb_strtoupper($argument) . " ---</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                    //$actual_function = $argument;
+                                //}
+                                break;
                 }
         }
     }
@@ -379,7 +386,7 @@ function ExecuteEndParameters() {
 function ExecuteBeginParameters() {
     global $rules, $rules_pointer;
     global $std_form, $prt_form, $separated_std_form, $separated_prt_form, $result_after_last_rule;
-    global $original_word, $act_word, $word_at_beginning_of_function;
+    global $original_word, $act_word, $word_at_beginning_of_function, $global_debug_string;
     global $safe_std, $actual_function;                   // this global variable comes from database (in purgatorium1.php)
     
     //echo "execute begin<br>";
@@ -406,6 +413,13 @@ function ExecuteBeginParameters() {
                                 $result_after_last_rule = $safe_std; 
                             }
                             break;
+             //case "#>stage0" : break;
+             //case "#>stage1" : break;
+             //case "#>stage2" : break;
+             case "#>stage3" :  $global_debug_string .= "<tr><td></td><td>--- STAGE3 ---</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                break;
+             case "#>stage4" :  $global_debug_string .= "<tr><td></td><td>--- STAGE4 ---</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                break;
             //case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
         }
     }
