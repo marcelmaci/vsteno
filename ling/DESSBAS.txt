@@ -1,6 +1,6 @@
 #BeginSection(header)
 	DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)
-    	(c) 2018-2019  Marcel Maci
+    	(c) 2018-2020  Marcel Maci
 	
 	This program is free software: you can redistribute it and/or modify
     	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 	
 	#BeginSubSection(session)
 	"license" := "<p>DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)<br>
-    	(c) 2018-2019  Marcel Maci</p>
+    	(c) 2018-2020  Marcel Maci</p>
 	
 	<p>This program is free software: you can redistribute it and/or modify
     	it under the terms of the GNU General Public License as published by
@@ -69,12 +69,12 @@
 	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
-	"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
+	"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2020 Marcel Maci";
 		// model version
 		"model_version" := "1.3";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "21/12/19";
+		"model_date" := "08/01/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -115,7 +115,7 @@
 		"phonetic_alphabet" := "espeak";
 		// define prefixes, suffixes and stems for hunspell
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen";
-		"stems_list" := "gangen(?:e[rsnm]?)?, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts, [Ss]ekundar, [Ss]pr(?:u|ü)ng, [Kk]om-?mens, [Ss]a-?ge-?r(?:[sn]|in(?:-?en))?, [Kk]rä-?me-?rei-?(?:en)?";
+		"stems_list" := "gangen(?:e[rsnm]?)?, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts, [Ss]ekundar, [Ss]pr(?:u|ü)ng, [Kk]om-?mens, [Ss]a-?ge-?r(?:[sn]|in(?:-?en))?, [Kk]rä-?me-?rei-?(?:en)?, [Hh]a-?be-?r(?:s|in(?:-?nen)?)?";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, ba-?r(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?, seits, voll"; // use non caputuring groups! (?:)
 		// do not treat these as separate words (block_list)
 		//"block_list" := "der, den, dem";
@@ -712,6 +712,7 @@
 		"([Bb]ei)-?(tra-?g)" => "$1+$2";
 
 		"([Tt]rans)\|(por-?t)" => "$1+$2";
+		"([Kk]ür)\|(zun-?ge)" => "$1-$2";
 
 		"\+_" => "_"; // get rid of annoying tokens ... :)
 
@@ -1279,6 +1280,8 @@
 		"tstopt(0)[Ii]ch hoff" => "#ich_hoff";
 		"tstopt(0)[Vv]or kurz" => "#vor_kurz";
 		"tstopt(0)[Ee]rfuhr ich" => "#erfuhr_ich";
+		"tstopt(0)[Ww]erden [Ss]ie" => "#werden_sie";
+		"tstopt(0)[Mm]it dem" => "#mit_dem";
 		
 		"tstopt(0)[Zz]um Beispiel" => "zb";
 		"tstopt(0)[Ii]ch mag" => "#ich_mag";
@@ -1360,8 +1363,15 @@
 		"sch(a|ä)ft(s|-?l?er)?$" => { "{SCHAFT}$2", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
 		"schaf-te" => "{SCHAFT}e"; // gewirtschaftet
 		
+		// must come before decapitalizer
+		"tstopt(01)^Macht(\||$)" => "{MACHT}$1"; // well, another of these almost impossible cases ... Die Macht vs Macht das Fenster zu ... (written differently ...) 
+		"tstopt(01)^Ohn[#+-]?ma-?cht$" => "Ohn{MACHT}";
+
 		"([A-Z])" => "strtolower()";
-		"{schaft}" => "{SCHAFT}"; // restore upper case (.. yeah yeah ... start messing up ... :)
+		//"{schaft}" => "{SCHAFT}"; // restore upper case (.. yeah yeah ... start messing up ... :)
+		// restore abbreviations in general
+		"({.*?})" => "strtoupper()";
+
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(phonetizer)
 		// distinguishes character groups that are written the same way but have different pronunciation
@@ -1475,7 +1485,9 @@
 		"tstopt(01)[Ss]pri-?ch" => "{SPRICH}";
 		"tstopt(01)[Ss]pra-?ch" => "{SPRACH}";
 		"tstopt(01)[Ss]pru-?ch" => "{SPRUCH}";
+		"tstopt(01)[Ss]prü-?ch" => "{SPRÜCH}";
 		"tstopt(01)[Ss]pro-?ch" => "{SPROCH}";
+		"tstopt(01)[Mm]äch-?t" => "{MÄCHT}";
 		"tstopt(01)[Ss]chrum-?p-?f" => "{SCHRUMPF}";
 		"tstopt(01)ein\+?an-?der" => "{EINANDER}";
 		"tstopt(01)#so_ge[-\+]?nann-?t" => "{SO}g";
@@ -1581,6 +1593,9 @@
 		"tstopt(01)[Gg]e[+-]?({SCHRUMPF}-?t|schrumpf-?t)" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(hal-?te-?n)" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(wie-?se-?n)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(bo-?te-?n)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(la-?de-?n)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(kürz-?t)" => "$1"; 
 		
 		// not a participe but same principle
 		"tstopt(01)[Gg]e(?:\+|-|#)?(schäf-?t)" => "$1"; 
@@ -1591,6 +1606,10 @@
 		"tstopt(01)^([Ee]in|{EIN})[-+]?pr" => "{EIPR}"; // ein(ge)trocknet, einprägen
 		"tstopt(01)([Ee]in|{EIN})[-+]?(st)" => "ei$2"; // ein(ge)stiegen
 		"tstopt(01)^([Ee]in|{EIN})\+?([rf])" => "ei+$2"; // Einreise
+		
+		// must come before {IG}
+		"tstopt(01)[Kk]un-?f-?t" => "{KUNFT}";
+		"tstopt(01)[Kk]ün-?f-?t" => "{KÜNFT}";
 		
 		// MAC (opt 3)
 		// so here's my personal point of view: EVERYTHING ressembling a verb (and even other words:) will be abbreviated ... !
@@ -1639,6 +1658,8 @@
 		//"tstopt(01)^([Aa]n-?d)e-?r" => "$1"; // and(er)en // replaced by condenser rule
 		
 
+		"tstopt(01)[Kk]un-?d" => "{KUND}";
+		"tstopt(01)[Kk]ün-?d" => "{KÜND}";
 		"tstopt(01)[Zz]ah-?l" => "{ZAHL}";
 		"tstopt(01)[Zz]äh-?l" => "{ZÄHL}";
 		"tstopt(01)(?<!_)[Zz]ie-?h" => "{ZIEH}";
@@ -1697,7 +1718,7 @@
 		"tstopt(01)#wurd_wir" => "{WURDWIR}";
 		"tstopt(01)#wie_vie-?l" => "{WIE}{VIEL}";
 		"tstopt(01)#doch_noch" => "{DOCH}{NOCH}";
-		"tstopt(01)#soll_mann" => "{SOLL}{MAN}";
+		"tstopt(01)#soll_man" => "{SOLL}{MAN}";
 		"tstopt(01)#auch_noch" => "{AUCH}{NOCH}";
 		"tstopt(01)#auch_schon" => "{AUCH}{SCHON}";
 		"tstopt(01)#im-?mer_schon" => "{IMMER}{SCHON}";
@@ -1716,6 +1737,7 @@
 		"tstopt(01)#wer-?den_konn-?te" => "{WERDENKONNTE}";
 		"tstopt(01)#wer-?den_will" => "{WERDENWILL}";
 		"tstopt(01)#wer-?den_soll" => "{WERDENSOLL}";
+		"tstopt(01)#wer-?den_sie" => "{WERD}{SIE}";
 		"tstopt(01)#sein_wird" => "{SEINWIRD}";
 		"tstopt(01)#wir_sie" => "{WIRSIE}";
 		"tstopt(01)#nicht_mehr" => "{NICHTMEHR}";
@@ -1730,22 +1752,30 @@
 		"tstopt(01)#das_heisst" => "{DASHEISST}";
 		"tstopt(01)#sehr_lang" => "{SEHR}{LANG}";
 		"tstopt(01)#vor_kur-?z" => "{VOR}{KURZ}";
+		"tstopt(01)#mit_dem" => "{MIT}{EM}";
 		"tstopt(01)#ich_zie-?h" => "{ICH}{ZIEH}";
 		"tstopt(01)#ich_zog" => "{ICH}{ZOG}";
 		"tstopt(01)#ich_hof-?f" => "{ICHHOFF}";
 		"tstopt(01)#der\+?_z?eit" => "{DER}{ZEIT}";
 		
 		"tstopt(01)[euiao]?-?men-?t(?:en?)?" => "{MENT2}";
+		"tstopt(01)[Ff]üh-?l" => "{FÜHL}";
+		"tstopt(01)[Ff]ül-?l" => "{FÜLL}";
+		"tstopt(01)[Zz]eu-?g" => "{ZEUG}";
+		"tstopt(01)[Zz]ol-?l" => "{ZOLL}";
+		"tstopt(01)[Zz]öl-?l" => "{ZÖLL}";
+		"tstopt(01)[Ff]ie-?l" => "{FIEL}";
 		"tstopt(01)[Ww]ei-?s" => "{WEIS}";
 		"tstopt(01)[Ww]ie-?s" => "{WIES}";
 		"tstopt(01)[Ss]chie-?n" => "{SCHIEN}";
 		"tstopt(01)[Ss]chei-?n" => "{SCHEIN}";
 		"tstopt(01)[Kk]ur-?z" => "{KURZ}";
+		"tstopt(01)[Kk]ür-?z" => "{KÜRZ}";
 		"tstopt(01)[Hh]of-?f-?n?" => "{HOFF}";
 		"tstopt(01)[Gg]an-?z" => "{GANZ}";
+		"tstopt(01)[Gg]än-?z" => "{GÄNZ}";
 		"tstopt(01)[Gg]ros-?s" => "{GROSS}";
 		"tstopt(01)[Gg]rös-?s" => "{GRÖSS}";
-		"tstopt(01)[Kk](?:u|Ü)n-?f-?t" => "{KUNFT}";
 		"tstopt(01)[Zz]ei-?ch-?n?" => "{ZEICH}";
 		"tstopt(01){ZEICH}e-?t" => "{ZEICH}{ET}";
 		"tstopt(01)[Bb]rie-?f" => "{BRIEF}";
@@ -1761,6 +1791,7 @@
 		"tstopt(01)[Ss]tel-?l" => "{STELL}";
 		"tstopt(01)[Ss]te-?h" => "{STEH}";
 		"tstopt(01)[Ss]tan-?d" => "{STAND}";
+		"tstopt(01)[Ss]tän-?d" => "{STÄND}";
 		"tstopt(01)[Hh]ät-?t" => "{HÄTT}"; 
 		"tstopt(01){HÄTT}et" => "{HÄTT}{ET}"; 
 		"tstopt(01)[Mm]a-?ch" => "{MACH}"; 
@@ -1786,11 +1817,13 @@
 		"tstopt(01)[Mm]ö-?g" => "{MÖG}";
 		"tstopt(01)[Mm]öch" => "{MÖCH}";
 		"tstopt(01)[Hh]o-?c?h" => "{HOCH}";
+		"tstopt(01)[Hh]ö-?h" => "{HÖH}";
 		"tstopt(01)(?<![PpSsKk])[Ll]an-?g" => "{LANG}";
 		"tstopt(01)[Ll]än-?g" => "{LÄNG}";
 		"tstopt(01){LÄNG}e-?r" => "{LÄNG}{ER}";
 		"tstopt(01)[Dd]in-?g" => "{DING}";
 		"tstopt(01)[Kk]os-?t" => "{KOST}";
+		"tstopt(01)[Kk]ös-?t" => "{KÖST}";
 		"tstopt(01)^[Oo]-?der\+?$" => "{ODER}";
 		"tstopt(01)[Dd]e-?fi-?ni-?ti-?v\+?" => "def";
 		"tstopt(01)[Gg]e-?h(e?(?:s?t)?|en-?d)" => "{GEH}$1";
@@ -1813,7 +1846,9 @@
 		"tstopt(01)^[Ii]m-?mer" => "{IMMER}";
 		"tstopt(01)[Ff]alls" => "{FALLS}";
 		"tstopt(01)[Ff]al-?l" => "{FALL}";
+		"tstopt(01)[Ff]äl-?l" => "{FÄLL}";
 		"tstopt(01)^[Ff]a-?c-?h" => "{FACH}";
+		"tstopt(01)^[Ff]ä-?c-?h" => "{FÄCH}";
 		"tstopt(01)^[Bb]an-?k" => "{BANK}";
 		"tstopt(01)[Dd]an-?k" => "{DANK}";
 		"tstopt(01)[Dd]en-?k" => "{DENK}";
@@ -1826,6 +1861,7 @@
 		"tstopt(01)[Bb]al-?d" => "{BALD}";
 		"tstopt(01)[Bb]ah-?n" => "{BAHN}";
 		"tstopt(01)[Bb]an-?d" => "{BAND}";
+		"tstopt(01)[Bb]än-?d" => "{BÄND}";
 		"tstopt(01)el([ns])?$" => "{EL}$1";
 		"tstopt(01)[Ss]a-?g(t)?(e|e?s?t|en)" => "{SAG}$1$2";
 		"tstopt(01)[Ii]n[-+#]?so[-+#]?fer[-+#]?n" => "{INSOFERN}";
@@ -1839,6 +1875,7 @@
 		
 		"tstopt(01)[Bb]is(?!t)" => "{BIS}";
 		"tstopt(01)[Mm]an-?n?(?!-?d)" => "{MAN}";
+		"tstopt(01)[Mm]än-?n" => "{MÄNN}";
 		"tstopt(01)^[Nn]ur$" => "{NUR}";
 		"tstopt(01)[Mm]eh-?r" => "{MEHR}";
 		"tstopt(01)(?<!lo-|lo|s|s-)[Ss]eh?-?r" => { "{SEHR}", "[Uu]n-?s-?e-?r", "ser\+?[sn]$" };
@@ -2228,6 +2265,7 @@
 		"tstopt(0)(?:{ER})?#?ba-?r" => "{BAR}";
 		"tstopt(0)(?:ge)?[Kk]om-?m?" => { "{KOMM}", "[Kk]om-?m[ui]" };
 		"tstopt(0)(^|\+)[Kk]am(?!-?(?:m|pf))" => { "{KAM}", "[Kk]a-?me-?r" };
+		"tstopt(0)[Kk]öm-?m" => "{KÖMM}";
 		"tstopt(0)(^|\+)[Kk]au-?f" => "$1{KAUF}";
 		"tstopt(0)(^|\+)[Kk]äu-?f" => "$1{KÄUF}";
 		"tstopt(0)(^|\+)[Ll]au-?f" => "$1{LAUF}";
@@ -2244,6 +2282,7 @@
  		"tstopt(01){VER}\+?{SICHER}\+?un-?g" => "{VERSICHERUNG}";
 
 		"tstopt(01){KOMM}en{HEIT}" => "{KOMM}{HEIT}";
+		"tstopt(01){IG}{ER}" => "{IGER}";
 		
 		
 	#EndSubSection(shortener)
@@ -2331,7 +2370,10 @@
 		"tstopt(01)s#?({LOS})" => "$1"; // hoffnungslos
 		"tstopt(01){ER}({LICH})" => "$1"; // zögerlich
 		 
+		"tstopt(01)([aeiou]|ä|ö|ü)(.*?)es" => { "$1$2", "[Ss]el-?te-?nes" }; // gutes, Raumes
+		"tstopt(01)e-?nes$" => "es"; // seltenes
 		
+		"tstopt(01)({HOFF})ung({LOS})" => "$1$2"; // hoffnungslos (cut once more)
 
 	#EndSubSection(condenser)
 	#BeginSubSection(bundler)
@@ -3117,14 +3159,33 @@
 		"tstopt(01)^{ZÖG}" => "[0N-][Ö][G]"; 
 		"tstopt(01){ZÖG}" => "[Ö][G]"; 
 		"tstopt(01){WEITAUS}" => "[0N-][&EITAUS]"; 
+		"tstopt(01)^{FÜHL}" => "[0N-][Ü][L]";  
+		"tstopt(01){FÜHL}" => "[Ü][L]";  
+		"tstopt(01)^{FÜLL}" => "[0N-][Ü][L]";  
+		"tstopt(01){FÜLL}" => "[Ü][L]";  
 		
 
 		// kind of a rewriter part in substituter ..
-		"tstopt(01)B{ER}" => "[B@R6]";
-		"tstopt(01)\[?(L|NN)\]?{ER}" => "[$1@R6]"; // Zähler, Nenner
+		"tstopt(01)\[?(B|L)\]?{ER}" => "[$1@R6]";
+		"tstopt(01)\[?(L|NN|N)\]?{ER}" => "[$1@R6]"; // Zähler, Nenner
 		
 		"tstopt(01){SEHRVIEL}" => "[SER][#5-][0U-][#5-][I][@L]"; // welcome to the jungle ... no other solution for the moment ... 
 		"tstopt(01)^{ICH}" => "[0N-][I][^CH]"; 
+		"tstopt(01)^{ZOLL}" => "[0N-][O][L]";  
+		"tstopt(01){ZOLL}" => "[O][L]";  
+		"tstopt(01)^{ZÖLL}" => "[0N-][Ö][L]";  
+		"tstopt(01){ZÖLL}" => "[Ö][L]";  
+		"tstopt(01)^{ZEUG}" => "[0N-][EU][G]";  
+		"tstopt(01){ZEUG}" => "[EU][G]";  
+		"tstopt(01){FIEL}" => "[I][F]";  
+		"tstopt(01){KUND}" => "[U][K]";  
+		"tstopt(01){KÜND}{EN}" => "[U][K][Ü][-EI]";  
+		"tstopt(01){KÜND}{IGUNG}" => "[U][K][EU][NG]";  
+		"tstopt(01){KÜND}" => "[U][K]";  
+		"tstopt(01){MACHT}" => "[A][M][&T]"; // NOUN ONLY!  
+		"tstopt(01){MÄCHT}\[-E\]" => "[A][M][&EIT&E][-E]";   
+		"tstopt(01){MÄCHT}{EN}" => "[A][M][&EIT&E][EN]";   
+		"tstopt(01){MÄCHT}{IG}" => "[A][M][&EITG]";   
 		"tstopt(01){GRÖSSER}" => "[O][G@ARR3S]"; // hm ... try this new combined token ... 
 		"tstopt(01){_ICH}" => "[_CH]"; 
 		"tstopt(01){ICHHOFF}" => "[0N-][I][^CH][O][H]"; 
@@ -3146,6 +3207,13 @@
 		"tstopt(01)^{WIES}" => "[0N-][I][S]"; 
 		"tstopt(01){WIES}" => "[I][S]"; 
 		"tstopt(01){KURZ}" => "[U][K]"; 
+		"tstopt(01){KÜRZ}{LICH}" => "[U][K][EI][H]"; 
+		"tstopt(01){KÜRZ}{EN}" => "[U][K][Ü][-EI]"; 
+		"tstopt(01){KÜRZ}{ER}" => "[U][K][EI][AR]"; 
+		"tstopt(01){KÜRZ}\[?[Uu]\]?\[NG\]" => "[U][K][EU][NG]"; 
+		"tstopt(01){KÜRZ}\[-E\]" => "[U][K][Ü][-EI]"; 
+		"tstopt(01){KÜRZ}-?T{ER}" => "[U][K][&EITVR]"; 
+		"tstopt(01){KÜRZ}" => "[U][K]"; // no distinction in all other cases 
 		"tstopt(01){ENTWICKLUNG}" => "[0U-][ANT]"; 
 		"tstopt(01){WISSENSCHAFT}" => "[I][SCHAFT]"; 
 		"tstopt(01){VERSICHERNIHNEN}" => "\\[0U-][#4][AR][I][N][EN]"; 
@@ -3174,6 +3242,7 @@
 		"tstopt(01)^M{MENT2}" => "[O][M][#9][EM]"; // Moment
 		"tstopt(01){MENT2}" => "[#9][EM]"; 
 		"tstopt(01){KUNFT}" => "[U][K]"; 
+		"tstopt(01){KÜNFT}" => "[U][K]"; 
 		"tstopt(01){GLEICHZEITIG}" => "[G@L3][&EITG]"; 
 		"tstopt(01){WIRSIE}" => "[W][S][/I]"; 
 		"tstopt(01)^{SITZ}" => "[0N-][I][Z]"; 
@@ -3182,6 +3251,10 @@
 		"tstopt(01){PREIS}" => "[EI][S]"; 
 		//"tstopt(01)^{HOCH}" => "[0N-][O][H]";  // NOT NECESSARY
 		"tstopt(01){HOCH}" => "[O][H]"; 
+		"tstopt(01){HÖH}-?TES" => "[O][H][&EITES]"; 
+		"tstopt(01){HÖH}-?T$" => "[O][H][HEIT]"; 
+		"tstopt(01){HÖH}-?T" => "[O][H][&EIT&E]"; 
+		"tstopt(01){HÖH}" => "[O][H]"; 
 		"tstopt(01){ICHTIG}" => "[I][G]"; 
 		"tstopt(01){ICHTUNG}" => "[AU][NG]"; 
 		"tstopt(01){ICHT}" => "{IG}"; // same abbreviation 
@@ -3248,6 +3321,10 @@
 		"tstopt(01){BEISPIEL}\[-E\]" => "{BEISPIEL}[&E][-E]";
 		"tstopt(01){EBENSO}" => "[0N-][E][B][_SO]";
 		"tstopt(01){UMSO}" => "[0N-][U][M][_SO]";
+		"tstopt(01){JAHR}{LICH}" => "[A][J][EI][H]"; // {JÄHR} not implemented! (passed as {JAHR})
+		"tstopt(01){JAHR}-?T$" => "[A][J][HEIT]";
+		"tstopt(01){JAHR}-?TES" => "[A][J][&EITES]";
+		"tstopt(01){JAHR}-?T" => "[A][J][&EIT&E]";
 		"tstopt(01){JAHR}" => "[A][J]";
 		"tstopt(01){JE}{MAL}" => "[J][Ä][M]";
 		"tstopt(01)\[EI\]N{MAL}" => "[EU][M]";
@@ -3289,6 +3366,9 @@
 		"tstopt(01){WOLL}" => "[O][L]";
 		"tstopt(01){STELL}" => "[ST]";
 		"tstopt(01){STEH}" => "[ST]";
+		"tstopt(01){STÄND}\[?-E\]?" => "[A][ST][Ü][-EI]";
+		"tstopt(01){STÄND}{ER}" => "[A][ST][EI][AR]";
+		"tstopt(01){STÄND}" => "[A][ST]";
 		"tstopt(01){STAND}" => "[A][ST]";
 		"tstopt(01){HÄTT}" => "[TT]";
 		"tstopt(01){MACH}{EN}" => "\\[0U1-]{EN}"; // does this work? baseline + 1 => not very logic ...
@@ -3337,6 +3417,9 @@
 		"tstopt(01){LÄNG}" => "[0N-][Ä][NG]";
 		"tstopt(01){DING}" => "[I][NG]";
 		"tstopt(01){KOST}" => "[O][K]";
+		"tstopt(01){KÖST}{LICH}" => "[O][K][EI][H]";
+		"tstopt(01){KÖST}{IGUNG}" => "[O][K][EU][NG]";
+		"tstopt(01){KÖST}" => "[O][K]";
 		"tstopt(01){ODER}" => "[0N-][O][D]";
 		"tstopt(01){GEH}" => "[G]";
 		"tstopt(01){GING}" => "[I][NG]";
@@ -3357,13 +3440,20 @@
 		"tstopt(01){HER}" => "[H]";
 		"tstopt(01){BIS}" => "[I][B]";
 		"tstopt(01){MAN}" => "[A][M]";
+		"tstopt(01){MÄNN}{ER}" => "[A][M][EI][AR]";
+		"tstopt(01){MÄNN}{LICH}" => "[A][M][EI][H]";
 		"tstopt(3){DENN}" => "[Y]";
 		"tstopt(01)^{DENN}" => "[0N-][E][NN]";
 		"tstopt(01){NUR}" => "[U][VR]";
 		"tstopt(01){SCHON}" => "[O][SCH]";
 		"tstopt(01){IMMER}" => "[0D-][I][MM]";
 		"tstopt(01){FALL}" => "[A][F]";
+		"tstopt(01){FÄLL}\[-E\]" => "[A][F][Ü][-EI]";
+		"tstopt(01){FÄLL}-?T$" => "[A][F][HEIT]";
+		"tstopt(01){FÄLL}-?T" => "[A][F][&EIT&E]";
+		"tstopt(01){FÄLL}" => "[A][F]";
 		"tstopt(01){FACH}" => "[A][F]";
+		"tstopt(01){FÄCH}{ER}" => "[A][F][EI][AR]";
 		"tstopt(01){BANK}" => "[A][NK]";
 		"tstopt(01){DANK}" => "[A][NK]";
 		"tstopt(01){DENK}" => "[NK]";
@@ -3377,6 +3467,10 @@
 		"tstopt(01){BALD}" => "[A][B]";
 		"tstopt(01){BAHN}" => "[A][B]";
 		"tstopt(01){BAND}" => "[A][B]";
+		"tstopt(01){BÄND}\[-E\]" => "[A][B][Ü][-EI]";
+		"tstopt(01){BÄND}{ER}" => "[A][B][EI][AR]";
+		"tstopt(01){BÄND}{IGUNG}" => "[A][B][EU][NG]";
+		"tstopt(01){BÄND}" => "[A][B]"; // all other cases: don't take care of umlaut
 		"tstopt(01){REINFALL}" => "[AR][EU][F]";
 		"tstopt(01){EINFALL}" => "[0D-][EU][F]";
 		"tstopt(01){EINFACH}" => "[0D-][EU][F]";
@@ -3391,6 +3485,8 @@
 		"tstopt(01)^{SPRICH}" => "[I][SP@R6]";
 		"tstopt(01){SPRICH}" => "\\[I][SP@R6]";
 		"tstopt(01){SPRUCH}" => "[U][SP@R6]";
+		"tstopt(01){SPRÜCH}\[-E\]" => "[U][SP@R6][Ü][-EI]";
+		"tstopt(01){SPRÜCH}(?:\[H\]|{LICH})" => "[U][SP@R6][EI][H]";
 		"tstopt(01){SPROCH}" => "[O][SP@R6]";
 		"tstopt(01){ZUVIEL}" => "[Z][#3][I][@L]";
 		"tstopt(01){MÜSSWIR}" => "[0N-][Ü][SS][W]";
@@ -3398,8 +3494,16 @@
 		"tstopt(01){GEHENSIE}" => "[G][S][/I]";
 		"tstopt(01){TRANS}" => "[A][T@R]";
 		"tstopt(01){GANZ}" => "[A][G]";
+		"tstopt(01){GÄNZ}E\[ND\]" => "[A][G][EI][ND]";
+		"tstopt(01){GÄNZ}-?T$" => "[A][G][&EIT]";
+		"tstopt(01){GÄNZ}-?T" => "[A][G][&EIT&E]";
+		"tstopt(01){GÄNZ}" => "[A][G]";
 		"tstopt(01){GENAU}" => "[AU][G]";
 		"tstopt(01){GROSS}" => "[O][G@R]";
+		"tstopt(01){GRÖSS}-T$" => "[O][G@R][&EIT]";
+		"tstopt(01){GRÖSS}-T" => "[O][G@R][&EIT&E]";
+		"tstopt(01){GRÖSS}\[-E\]" => "[O][G@R][Ü][-EI]";
+		"tstopt(01){GRÖSS}{EN}" => "[O][G@R][Ü][-EI]";
 		"tstopt(01){GRÖSS}" => "[O][G@R]"; // treat it like gross
 		"tstopt(01){TRANSPORT}" => "[U][T@R]";
 		"tstopt(01){WIRIHNEN}" => "[W][I][N][EN]";
@@ -3549,6 +3653,7 @@
 		// optional abbreviations (option0: MAC)		
 		"tstopt(01){BAR}" => "[A][B]";
 		"tstopt(01){KOMM}" => "[O][K]";
+		"tstopt(01){KÖMM}\[H\]" => "[O][K][EI][H]";
 		"tstopt(01){KAM}" => "[A][K]";
 		"tstopt(01)^{KAUF}" => "[0N-][AU][F]";
 		"tstopt(01){KAUF}" => "[AU][F]";
@@ -3676,6 +3781,11 @@
 		
 		"tstopt(01)\[HEIT\]\[H\]" => "[&EITH]"; // weither, zeitlich
 
+		"\[?(G)\]?\[?L\]?" => "[G@L3]"; // would be fabulous to have kind of gosub branching (rewriter could be recalled at this point ...)
+
+		// Machthaber
+		"\[&T\]\|?\[HAB\]\[VR\]" => "[A][&TB@R6]";
+ 
 	#EndSubSection(laterewriter)
 	#BeginSubSection(latesubstituter)
 		"{BE}" => "[B]";
