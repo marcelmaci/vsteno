@@ -6,6 +6,7 @@
 <?php
 global $include_for_regex_gen;
 $include_for_regex_gen = true;
+
 require_once "data.php";
 $include_for_regex_gen = false;
 

@@ -411,7 +411,7 @@ function InsertAuxiliaryLines( $width ) {
         $color = $_SESSION['auxiliary_upper3_color'];
         $stroke_dasharray = $_SESSION['upper3_style'];
         $tempy = 1 * $standard_height;
-           $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" style=\"stroke:$color;stroke-width:$thickness\" />";
+           $lines_string .= "<line x1=\"0\" y1=\"$tempy\" x2=\"$width\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
     }
     if ($_SESSION['auxiliary_upper12yesno']) {
         $thickness = $_SESSION['auxiliary_upper12_thickness'];
