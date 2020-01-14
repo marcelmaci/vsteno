@@ -1299,6 +1299,7 @@
 		"tstopt(0)[Aa]uf den" => "#auf_den";
 		"tstopt(0)[Aa]uf uns" => "#auf_uns";
 		"tstopt(0)[Mm]it [Ii]hnen" => "#mit_ihnen";
+		"tstopt(0)[Nn]icht viel" => "#nicht_viel";
 		
 		"tstopt(0)[Zz]um Beispiel" => "zb";
 		"tstopt(0)[Ii]ch mag" => "#ich_mag";
@@ -1494,8 +1495,23 @@
 		"tstopt(01)((?:[ae]|ä)[ui])(?:-|\+)?e([sn])" => "$1$2";
 		
 		// longer words at beginning of shortener
+		"tstopt(01)[Ll]ie-?f-?e-?r\+?" => "{LIEFER}";  		
+		"tstopt(01)[Vv]er[#+-]?hält[#+-]?nis-?s?" => "{VERHÄLTNIS}";  		
+		"tstopt(01)([Ii]n|{IN})[#+-]?dus[#+-]?tri-?(a-?l)" => "{INDUSTRIE}$2";
+		"tstopt(01)([Ii]n|{IN})[#+-]?dus[#+-]?tri-?el-?l" => "{INDUSTRIE}{IELL}";  		
+		"tstopt(01)([Ii]n|{IN})[#+-]?dus[#+-]?trie" => "{INDUSTRIE}";  		
+		"tstopt(01)[Kk]om-?mis-?si-?o-?n" => "{KOMMISSION}";  		
 		"tstopt(01)[Pp]er[#+-]?s(o|ö)-?n(?:en)?" => "{PERSON}";  		
 		"tstopt(01)[Kk]re-?di-?t" => "{KREDIT}";  		
+		"tstopt(01)[Bb]il-?d" => "{BILD}";  		
+		"tstopt(01)[Bb]rin[#+-]?g" => "{BRING}";  		
+		"tstopt(01)[Mm]er[#+-]?k" => "{MERK}";  		
+		"tstopt(01)[Mm]ar[#+-]?kt?" => "{MARK}";  		
+		"tstopt(01)[Mm]är[#+-]?k-?t" => "{MÄRKT}";  		
+		"tstopt(01)[Ww]er[#+-]?k" => "{WERK}";  		
+		"tstopt(01)[Bb]rach[#+-]?t" => "{BRACHT}";  		
+		"tstopt(01)[Ll]an[#+-]?d" => "{LAND}";  		
+		"tstopt(01)[Dd]ie[#+-]?n" => "{DIEN}";  		
 		"tstopt(01)[Nn]a-?ti-?o-?n" => "{NATION}";  		
 		"tstopt(01)[Dd]eut-?sch" => "{DEUTSCH}";  		
 		"tstopt(01)[Ss]chwei-?z" => "{SCHWEIZ}";  		
@@ -1534,6 +1550,7 @@
 		"tstopt(01)#ver\+?si-?c-?her\+?n_ih-?nen" => "{VERSICHERNIHNEN}";
 		"tstopt(01)[Gg]e\++sell#{SCHAFT}" => "{GESELLSCHAFT}";
 		"tstopt(01)[Rr]ich-?t" => "{RICHT}";
+		"tstopt(01){RICHT}e-?t" => "{RICHT}{ET}";
 		"tstopt(01)[Rr]ech-?t[#+|-]?zei-?ti-?g" => "{RECHTZEITIG}";
 		"tstopt(01)[Nn]ie-?d-?e?-?r" => "n{IEDER}";
 		"tstopt(01)[Rr]ech-?t" => "{RECHT}";
@@ -1661,6 +1678,9 @@
 		"tstopt(01)[Gg]e[+-]?(trie-?be-?n|{TRIEB})" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(wech-?sel-?t|{WECHSEL})" => "$1"; 
 		"tstopt(01)[Gg]e[+-]?(fres-?se-?n)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(fer-?tig-?t)" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(lie-?fer-?t|{LIEFER})" => "$1"; 
+		"tstopt(01)[Gg]e[+-]?(merk?t|{MERK}t)" => "$1"; 
 		
 		// not a participe but same principle
 		"tstopt(01)[Gg]e(?:\+|-|#)?(schäf-?t)" => "$1"; 
@@ -1692,6 +1712,8 @@
 		// option MA2 must be checked first (if rule is not applied => MA1 will be applied)
 		"tstopt(1)([MmGg](?:u|ü)-?t)i-?g(?:-?t)?(e[snm]?)?$" => "$1{IG}"; // mutig, gütig
 		"tstopt(1)([Tt](?:ä)-?t)i-?g(?:-?t)?(e[snm]?)?$" => "$1{IG}"; // tätig
+		"tstopt(1)([Nn](?:ö)-?t)i-?g(?:-?t)?(e[snm]?)?$" => "$1{IG}"; // nötig
+		"tstopt(1)([Hh](?:eu)-?t)i-?g(?:-?t)?(e[snm]?)?$" => "$1{IG}"; // heutig
 		"tstopt(1)((?<!s-|s)t)?(?<!e)i-?g(?:-?t)?(e[snm]?)?$" => "{IG}"; // don't abbreviate -er (comparative)
 		// trendiger must be placed before -er in base model
 		"tstopt(0)((?<!s-|s)t)?(?<!e)i-?g(?:-?t)?((?:st)?e[rsnm]?)?$" => "{IG}$2";
@@ -1834,6 +1856,7 @@
 		"tstopt(01)#auf_den" => "{AUF_DEN}";
 		"tstopt(01)#auf_uns" => "{AUF}{UNS}";
 		"tstopt(01)#mit_ih-?nen" => "{MITIHNEN}";
+		"tstopt(01)#nicht_viel" => "{NICHTVIEL}";
 		
 		"tstopt(01)[euiao]?-?men-?t(?:en?)?" => { "{MENT2}", "[Nn]a-?men-?t" };
 		"tstopt(01)[Aa]nt[#+-]?wor-?t" => "{ANTWORT}";
@@ -2361,7 +2384,7 @@
 
 		// optional abbreviations (option1: MAC)
 		"tstopt(0)(?:{ER})?#?ba-?r" => "{BAR}";
-		"tstopt(0)(?:ge)?[Kk]om-?m?" => { "{KOMM}", "[Kk]om-?m[ui]" };
+		"tstopt(0)(?:ge)?[Kk]om-?m?" => "{KOMM}"; // apply to all  "[Kk]om-?m[ui]" };
 		"tstopt(0)(^|\+)[Kk]am(?!-?(?:m|pf))" => { "{KAM}", "[Kk]a-?me-?r" };
 		"tstopt(0)[Kk]öm-?m" => "{KÖMM}";
 		"tstopt(0)(^|\+)[Kk]au-?f" => "$1{KAUF}";
@@ -2461,6 +2484,8 @@
 		"tstopt(01)ens[#+-]?(wer-?t|la-?g)" => "$1"; // verdankenswert, Vermögenslage
 		"tstopt(01)ens$" => ""; // Erachtens, Wissens
 		"tstopt(01)s(\|{VER})" => "$1"; // Gesangsvereins
+		"tstopt(01)({KOMMISSION})[Ss]\|" => "$1|"; // Gesangsvereins
+		
 		"tstopt(01)(an-?d|un-?s)-?(?:{ER}\+?s?|er\+?s?)" => "$1"; // andere, unsere
 		"tstopt(01){ER}(un-?g)" => "$1"; // Verlängerung
 		"tstopt(01){ER}\+?n$" => ""; // gestern, verlängern
@@ -2761,7 +2786,7 @@
 		"z" => "Z";
 
 		"I(-?){EN}" => "[&I]$1{EN}";
-		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{[ZS]IEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "VIEL}", "{HIER}", "{SIE}", "{FIEL}", "SCHRIEB", "BRIEF", "WIRSIE", "TRIEB", "SOWIESO", "GEHENSIE", "WIRKÖNNENSIE", "SCHIEN", "SCHLIESS", "WIES", "IEDER", "EMPFIEHL", "ISIER"  }; // very unclean rule ...
+		"I(-?)(Ä|Ö|Ü|[AEOU])(?!N)" => { "[&I]$1$2", "{[ZS]IEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "VIEL}", "{HIER}", "{SIE}", "{FIEL}", "SCHRIEB", "BRIEF", "WIRSIE", "TRIEB", "SOWIESO", "GEHENSIE", "WIRKÖNNENSIE", "SCHIEN", "SCHLIESS", "WIES", "IEDER", "EMPFIEHL", "ISIER", "INDUSTRIE", "DIEN", "LIEFER"  }; // very unclean rule ...
 
 		"\[&T\]-?{HAB}" => "[&T34]{HAB}";
 		"\[EU\](-?){(ER|E[MN])}" => "[EU]$1[&E]{$2}";
@@ -2893,6 +2918,7 @@
 		"tstopt(01)({ICHT})\|({UNTER})" => "$1\\$2";
 
 		"tstopt(01)({LEBEN}\|?{MITTL})\|" => "$1[#4]\\"; Lebensmittelkonzern
+		"tstopt(01)\|({KOMMISSION})" => "\\$1";
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -3104,7 +3130,7 @@
 		"\[VR\]\|?\[VR\]" => "[VR+AR]";
 		"^{HEIT}" => "[0N-]{HEIT}";
 		"I-?U" => "[&I]U";
-		"I-?E" => { "[&I]E", "{[SZ]IEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "VIEL}", "{HIER}", "{SIE}", "{FIEL}", "SCHRIEB", "BRIEF", "WIRSIE", "TRIEB", "SOWIESO", "GEHENSIE", "WIRKÖNNENSIE", "SCHIEN", "SCHLIESS", "WIES", "IEDER", "EMPFIEHL", "ISIER" }; // ugly ...
+		"I-?E" => { "[&I]E", "{[SZ]IEH}", "{IELL}", "{LIE[GF]}", "{INDIES?", "{SIESICH}", "{LIESS}", "{BEISPIEL}", "VIEL}", "{HIER}", "{SIE}", "{FIEL}", "SCHRIEB", "BRIEF", "WIRSIE", "TRIEB", "SOWIESO", "GEHENSIE", "WIRKÖNNENSIE", "SCHIEN", "SCHLIESS", "WIES", "IEDER", "EMPFIEHL", "ISIER", "INDUSTRIE", "DIEN", "LIEFER" }; // ugly ...
 		"I-?A" => "[&I]A";
 		"I-?O([^N])" => "[&I]O$1";
 		"I-?I" => "[&I]I";
@@ -3280,6 +3306,7 @@
 		"tstopt(01)\[?(L|NN|N)\]?{ER}" => "[$1@R6]"; // Zähler, Nenner
 		
 		"tstopt(01){SEHRVIEL}" => "[SER][#5-][0U-][#5-][I][@L]"; // welcome to the jungle ... no other solution for the moment ... 
+		"tstopt(01){NICHTVIEL}" => "[I][N=][I][@L]"; //[#0][LUI]";
 		"tstopt(01)^{ICH}" => "[0N-][I][^CH]"; 
 		"tstopt(01)^{ZOLL}" => "[0N-][O][L]";  
 		"tstopt(01){ZOLL}" => "[O][L]";  
@@ -3288,7 +3315,24 @@
 		"tstopt(01)^{ZEUG}" => "[0N-][EU][G]";  
 		"tstopt(01){IEDER}" => "[#1-][I][INTER]";  
 		"tstopt(01){ZEUG}" => "[EU][G]";  
+		"tstopt(01)^{DIEN}" => "[I][D]";  
+		"tstopt(01){DIEN}" => "\\[I][D]";  
+		"tstopt(01)^{BRING}" => "[I][B@R6]";  
+		"tstopt(01){BRING}" => "\\[I][B@R6]";  
+		"tstopt(01){MERK}" => "[M@R6]";  
+		"tstopt(01){MARK}" => "[A][M@R6]"; // also Markt  
+		"tstopt(01){MÄRKT}" => "[A][M@R6][&EIT&E]";  
+		"tstopt(01){WERK}" => "[W@R6]";  
+		"tstopt(01){BRACHT}" => "[A][B@R6]";  
+		"tstopt(01)^{LIEFER}" => "[I][L@R6]";  
+		"tstopt(01){LIEFER}" => "\\[I][L@R6]";  
+		"tstopt(01){LAND}" => "[A][L]";  
 		"tstopt(01){HAFT}" => "[HAFT]";  
+		"tstopt(01)^{KOMMISSION}" => "[0D-][ANT]";  
+		"tstopt(01)\\{KOMMISSION}" => "\\[0D-][ANT]";  
+		"tstopt(01){INDUSTRIE}" => "\\[U][IN]";  
+		"tstopt(01)^{VERHÄLTNIS}" => "[0N-][EN][RÜCK]";  
+		"tstopt(01){VERHÄLTNIS}" => "[EN][RÜCK]";  
 		"tstopt(01){FREI}{LICH}" => "[EI][H]";  
 		"tstopt(01)^{FREI}{WILL}" => "[0N-][EI][@L]";  
 		"tstopt(01){FREI}{WILL}" => "[EI][@L]";  
@@ -3307,6 +3351,7 @@
 		"tstopt(01)\|{DEUTSCH}" => "\\[I][^SCH]";  
 		"tstopt(01){DEUTSCH}" => "[I][^SCH]";  
 		"tstopt(01){SCHWEIZ}" => "[SCHW]";  
+		"tstopt(01){BILD}" => "\\[I][B]";  
 		"tstopt(01)^{HALT}" => "[0N-][&T]";  
 		"tstopt(01)^{HALT}{ER}" => "[0N-][&TVR]";  
 		"tstopt(01){HALT}{ER}" => "[&TVR]";  
@@ -3992,9 +4037,9 @@
 		"\]#" => "]"; // get rid of annoying # ... :)
 		"}-" => "}"; // get rid of annoying - ... :)
 		
-		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CH|NG|NK|ND|RR|SER|AR|CH|MPF|G@R|ANT|W@L)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](?:\[?-?E\]?\[?S\]?|E)" => "[$1][&TES]"; 
-		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CH|NG|NK|ND|RR|SER|AR|CH|MPF|G@R|ANT|W@L)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
-		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CH|NG|NK|ND|RR|SER|AR|CH|MPF|G@R|ANT|W@L)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
+		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CH|NG|NK|ND|RR|SER|AR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](?:\[?-?E\]?\[?S\]?|E)" => "[$1][&TES]"; 
+		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CH|NG|NK|ND|RR|SER|AR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
+		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CH|NG|NK|ND|RR|SER|AR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
 		"\[&T\]\[ET\]" => "[&T&E][ET3/4]";
 		"\[&T\]\[E([NM])\]" => "[&T&E][E$1]";
 		"tstopt(01)\[EI\]\[O\]" => "[EI][&E][O]"; // parteilos 01
@@ -4013,7 +4058,9 @@
 		
 		// haltestelle
 		"\[&T\]E" => "[&T][&E][E]";
-
+		"\[&T\]\[-E\]" => "[&T][&E][-E]";
+		"\[ANT\]\[EN\]" => "[ANT][&E][EN]"; // Kommissionen
+		
 	#EndSubSection(laterewriter)
 	#BeginSubSection(latesubstituter)
 		"{BE}" => "[B]";
