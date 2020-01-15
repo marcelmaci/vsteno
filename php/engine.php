@@ -2571,7 +2571,21 @@ function TokenShifter( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg
     // If arg1 and arg2 are integer values => use classic functionality
     // Otherwhise (= if they are strings) => use shrinking
     //echo "TokenShifter(): $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2<br>";
-    if ((is_integer($arg1)) || (is_integer($arg2))) TokenShifterClassic( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2);
+    // MODIFY THIS FUNCTION ONCE MORE ... !
+    // The problem is as follows:
+    // - TokenShifterClassic by default deletes the group information in the header (= offset 23). This leads to correct spacing with RX-GEN
+    // for all shiftings used in the base system of Stolze-Schrey. Unfortunately, the next faster level of Stolze-Schrey (Eilschrift) makes
+    // use of 3-lines-high tokens that must be shifted 1 line lower. These new tokens, however, need a group information in order to get
+    // correct spacing. It's no option to simply copy the group information for all tokens (because then, tokens of base system will get wrong
+    // spacing). Only solution: copying of group information must be selectable.
+    // Best way to integrate that: 
+    // - check only arg1 (integer or string?) to know if TokenShifterClassic or TokenShifterShrinking must be called
+    // - use arg2 as in two different forms:
+    // (1) integer => delete group information (classic behaviour, backward compatibility)
+    // (2) string => convert string to integer an use value like in classic TokenShifter, but don't delete group information!
+    // this is probably a bizarre way to do things, but backwards compatibility must be garantueed!!!
+    //if ((is_integer($arg1)) || (is_integer($arg2))) TokenShifterClassic( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2);
+    if (is_integer($arg1)) TokenShifterClassic( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2);
     else TokenShifterShrinking( $base_token, $key_for_new_token, $delta_x, $delta_y, $arg1, $arg2 );    
 }
 
@@ -2663,12 +2677,14 @@ function TokenShifterClassic( $base_token, $key_for_new_token, $delta_x, $delta_
     for ($i = 0; $i < header_length; $i++) {
         $new_token[] = $steno_tokens_master[$base_token][$i]; //echo "Offset $i: " . $steno_tokens_master[$base_token][$i] . "<br>";
     }
-    $new_token[offs_group] = ""; // delete group information in shifter => for regex_helper.php
+    if (is_integer($inconditional_delta_y_after)) $new_token[offs_group] = ""; // delete group information in shifter => for regex_helper.php
+    // if $inconditional_delta_y_after is string, group information is not deleted!
     
     // now adjust inconditional_deltay_before/after (offsets 13 & 14) and new width (add delta_x to width)
     //echo "<br>Adjustments:<br>";
     $new_token[offs_token_width] += $delta_x;
     $new_token[offs_inconditional_delta_y_before] += /*$steno_tokens_master[$base_token][offs_inconditional_delta_y_before] +*/ $inconditional_delta_y_before;
+    // if $inconditional_delta_y_after is of type string an implicit type conversion will be done in the following line
     $new_token[offs_inconditional_delta_y_after] += /*$steno_tokens_master[$base_token][offs_inconditional_delta_y_after] +*/ $inconditional_delta_y_after;
     //echo "delta_y_before: " . $new_token[offs_inconditional_delta_y_before] . "<br>";
     //echo "delta_y_after: " . $new_token[offs_inconditional_delta_y_after] . "<br><br>";

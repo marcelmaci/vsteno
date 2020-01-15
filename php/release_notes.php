@@ -77,8 +77,9 @@ Steno Engine:
     Import/Export via file (MDUMP/MLOAD)<br>
     Optionale Regeln</li>
     <li>Inverted mode (teilweise, nur für Entwicklung)</li>
-    <li><b>Engine</b>:<br>
-    - Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte) (to do)</li>
+    <li><b>Engine</b><br>
+    - Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte) (to do)<br>
+    - TokenShifter: Funktionserweiterung Spacer (Zeichengruppeninformation)</li>
     <li><b>Debugging</b>: Ausgabe Stage-Wechsel (nur Stages 3 und 4)</li>
 </ul>
 </li>
