@@ -83,8 +83,8 @@ $base = array();
 $combiner = array();
 $shifter = array();
 $font = array();            // former $steno_tokens_master
-$rules = array();           // use only 1 variable for all rules and parts
-$analyzer = array();
+$rules = array(); $rules_options = array();           // use only 1 variable for all rules and parts
+$analyzer = array(); $analyzer_options = array();
 $rules_pointer = 0; 
 $insertion_key = "";        // key that identifies inserted models (several models can be loaded and used in new parser) 
                             // data will be addressed by: $rules[$key][data] (example for rules: $key identifies array of data)
@@ -274,7 +274,7 @@ function ImportSession() {
 
 // analyzer
 function ImportAnalyzer() {
-    global $analyzer_subsection, $analyzer;
+    global $analyzer_subsection, $analyzer, $analyzer_options;
     $i = 0;
     
     while ($analyzer_subsection !== "") {
@@ -286,6 +286,11 @@ function ImportAnalyzer() {
     if ($result == 1) {
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
         $condition = $matches[1];
+        // extension: separate tstopt(x) from base condition
+        //echo "Analyzer-Rule: $rules_pointer<br>";
+        list($condition, $bare_opt) = SeparateTstoptFromBaseCondition($condition);
+        $analyzer_options[$i][] = $bare_opt; // no insertion key ... (no distinction for model ...)
+        
         $consequence = $matches[2];
         //echo "condition => consequence: $condition => $consequence<br>";
         $analyzer_subsection = $matches[3];
@@ -500,7 +505,7 @@ function ImportRulesFromSubSection() {
 }
 */
 function ImportRulesFromGenericSubSection() {
-    global $shrinking_generic_subsection, $rules, $rules_pointer, $insertion_key, $global_error_string;
+    global $shrinking_generic_subsection, $rules, $rules_pointer, $insertion_key, $global_error_string, $rules_options;
     //$result = preg_match( "/^[ ]*?\"(.*?)\"[ ]*?=>(.*?)[,;](.*)/", $shrinking_generic_subsection, $matches);
   //$result = preg_match( "/\"(.)\"[ ]*?=>[ ]*?(.*?)[,;](.*)/", $shrinking_generic_subsection, $matches);
   while ($shrinking_generic_section !== "") {
@@ -513,6 +518,12 @@ function ImportRulesFromGenericSubSection() {
     if ($result == 1) {
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
         $condition = $matches[1];
+        // extension: separate tstopt(x) from base condition
+        //echo "Rule: $rules_pointer<br>";
+        list($condition, $bare_opt) = SeparateTstoptFromBaseCondition($condition);
+        //echo "Insert Option: key: $insertion_key rules_pointer: $rules_pointer option: $bare_opt<br>";
+        $rules_options["$insertion_key"][$rules_pointer][] = $bare_opt;
+                
         $consequence = $matches[2];
         if (preg_match("/=>/", $condition) === 1) $global_error_string .= "WARNING: \"$condition\" => \"$consequence\" (possibly malformed rule)<br>";
         if (preg_match("/=>/", $consequence) === 1) $global_error_string .= "WARNING: \"$condition\" => \"$consequence\" (possibly malformed rule)<br>";
@@ -557,6 +568,26 @@ function ImportRulesFromGenericSubSection() {
                 
                 //echo "result2: $result2 matches1(1): " . $matches2[1] . " rulespointer: $rules_pointer<br>";
                 //$rules["$insertion_key"][] = $rules_pointer;
+                // extension: tstopt(x)condition => filter out tstopt(x) from condition
+/*
+                echo "CHECK if rule[$rules_pointer] with 1 consequence contains tstopt(x) ...<br>";
+                echo "condition: $condition<br>";
+                $resultopt = preg_match( "/tstopt\((.*?)\)/", $condition, $tstopt);
+                if ($resultopt === 1) {
+                    echo "YES: modify condition: $condition => ";
+                    //echo "Pattern: " . $tstopt[0] . "<br>";
+                    $condition = preg_replace( "/" . preg_quote($tstopt[0]) . "/", "", $condition);
+                    echo "$condition <br>";
+                    $bare_option = $tstopt[1];
+                    echo "bare_option: $bare_option<br>";
+                    $rules_options["$insertion_key"][$rules_pointer][] = $bare_option;
+                } else {
+                    echo "NO: Rule[$rules_pointer] doesn't contain additional options (set to null)<br>";
+                    $rules_options["$insertion_key"][$rules_pointer][] = null;
+            }
+*/
+                
+                // is the following line correct?!?
                 $rules["$insertion_key"][] = array( $condition, $matches2[1]);        // rules[model][x][0] = condition of rule x in model
                 //$rules["$insertion_key"][$rules_pointer][] = $matches2[1];      // rules[model][x][1] = consequence of rule x in model
                 $rules_pointer++;
@@ -564,6 +595,23 @@ function ImportRulesFromGenericSubSection() {
         }
     } else return null;
   }
+}
+
+function SeparateTstoptFromBaseCondition($condition) {
+        //echo "SeparateTstoptFromBaseCondition()<br>";
+        //echo "condition: $condition<br>";
+        $resultopt = preg_match( "/tstopt\((.*?)\)/", $condition, $tstopt);
+        if ($resultopt === 1) {
+                //echo "YES: modify condition: $condition => ";
+               $condition = preg_replace( "/" . preg_quote($tstopt[0]) . "/", "", $condition);
+                //echo "$condition <br>";
+                $bare_opt = $tstopt[1];
+                //echo "bare_option: $bare_option<br>";
+        } else {
+                //echo "NO: Rule doesn't contain additional options (set to null)<br>";
+                $bare_opt = null;
+        }
+        return array($condition, $bare_opt);
 }
 
 function WriteParamListToRulesArray( $type, $param_list ) {

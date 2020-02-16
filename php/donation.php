@@ -9,6 +9,11 @@ Name:   Marcel Maci
         Avenue du Guintzet 15
         1700 Fribourg
 </pre>
+<p>SEPA-Zahlungen (Ausland):</p>
+<pre>
+SWIFT-BIC: RAIF22
+BC-Nr.:    80808
+</pre>
 <p>Spenden sind grundsätzlich anonym und werden nur mit dem Einverständnis der/des Spenderin/s namentlich erwähnt.</p>
 
 <h1>Barometer</h1>

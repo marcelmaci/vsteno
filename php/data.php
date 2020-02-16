@@ -52,7 +52,7 @@ require_once "share_font.php";
 //require_once "regex_helper_functions.php";
 
 global $font, $combiner, $shifter;
-global $rules, $functions_table;
+global $rules, $functions_table, $rules_options;
 global $insertion_key;
 global $global_error_string;
 $global_error_string = "";
