@@ -521,7 +521,7 @@ function ExecuteRule( /*$word*/ ) {
 
 // CheckTstopt(): Checks if an option is set and test it if yes
 $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
-
+//echo "Rule ($rules_pointer): $condition => ... Result: [$option_result]<br>";
 // set output before eventual break
 $output = $act_word;
 
@@ -795,7 +795,7 @@ function IsAnyOfAllArguments( $argument ) {
 }
 
 function PreProcessGlobalParserFunctions( $text ) {
-        global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string, $global_debug_string;
+        global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string, $global_debug_string, $rules_options;
         //echo "start_word_parser: $start_word_parser<br>";
         $rules_pointer = 0;
         $global_textparser_debug_string = "";
@@ -821,7 +821,9 @@ if (preg_match("/^tstopt\(([0-9]+)\).*$/", $rules["$actual_model"][$rules_pointe
 }
 */
 
+//$option_to_test = $rules_options["$actual_model"][$rules_pointer][0];
 $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
+//echo "Rule ($rules_pointer): " . $rules["$actual_model"][$rules_pointer][0] . " => ... Option: [$option_to_test] Result: [$option_result]<br>";
 
 $rule_condition = $rules["$actual_model"][$rules_pointer][0];
 $simple_string = $option_string[1];
