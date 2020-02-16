@@ -269,7 +269,8 @@ if ($backport_revision1) {
         $steno_tokens_temp[$token][4] *= $factor; // scale additional width before -- bugfix: this scaling has been forgotten in legacy SE1
         $steno_tokens_temp[$token][5] *= $factor; // scale additional width after -- bugfix: this scaling has been forgotten in legacy SE1
        
-        for ($i = header_length; $i < count($definition); $i += 8) {
+        $length = count($definition);  // optimise (this function shouldn't be called inside loop
+        for ($i = header_length; $i < $length; $i += 8) {
             $steno_tokens_temp[$token][$i] *= $factor;
             $steno_tokens_temp[$token][$i+1] *= $factor;
         }
