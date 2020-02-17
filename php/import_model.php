@@ -287,9 +287,37 @@ function ImportAnalyzer() {
         //echo "#" . $matches[1] . "# => #" . $matches[2] . "#<br>";
         $condition = $matches[1];
         // extension: separate tstopt(x) from base condition
-        //echo "Analyzer-Rule: $rules_pointer<br>";
+        //echo "Analyzer-Rule: $i<br>";
+        //echo "Condition: $condition<br>";
         list($condition, $bare_opt) = SeparateTstoptFromBaseCondition($condition);
-        $analyzer_options[$i][] = $bare_opt; // no insertion key ... (no distinction for model ...)
+        //$analyzer_options[$i][] = $bare_opt; // no insertion key ... (no distinction for model ...)
+        if ($bare_opt === null) {
+            $analyzer_options[$i][] = null; // element 0
+            $analyzer_options[$i][] = ""; // element 1
+        } else {
+            $analyzer_options[$i][] = str_split($bare_opt); // element 0
+            $analyzer_options[$i][] = $bare_opt; // element 1
+        }
+        // optimise wrt (idem)
+        list($temp, $value) = SeparateWrtLngOptionFromBaseCondition($condition, "wrt");
+        if ($value === null) $analyzer_options[$i][] = false;
+        else {
+            $new_condition = $temp;
+            //echo "A: replace old condition $condition by $condition<br>"; 
+            // replace original condition by new bare condition
+            //$analyzer[$i][0] = $condition;
+            $analyzer_options[$i][] = true; // push element [2]
+        }
+        // optimise lng (idem)
+        list($temp, $value) = SeparateWrtLngOptionFromBaseCondition($condition, "lng");
+        if ($value === null) $analyzer_options[$i][] = false;
+        else { 
+            $new_condition = $temp;
+            //echo "A: replace old condition $condition by $new_condition<br>"; 
+            // replace original condition by new bare condition
+            //$analyzer[$i][0] = $condition;
+            $analyzer_options[$i][] = true; // push element [3]
+        }
         
         $consequence = $matches[2];
         //echo "condition => consequence: $condition => $consequence<br>";
@@ -522,14 +550,52 @@ function ImportRulesFromGenericSubSection() {
         //echo "Rule: $rules_pointer<br>";
         list($condition, $bare_opt) = SeparateTstoptFromBaseCondition($condition);
         //echo "Insert Option: key: $insertion_key rules_pointer: $rules_pointer option: $bare_opt<br>";
-        $rules_options["$insertion_key"][$rules_pointer][] = $bare_opt;
-                
+        //$rules_options["$insertion_key"][$rules_pointer][] = $bare_opt;
+        if ($bare_opt === null) {
+            $rules_options["$insertion_key"][$rules_pointer][] = null;      
+            $rules_options["$insertion_key"][$rules_pointer][] = "";
+        } else {
+            $rules_options["$insertion_key"][$rules_pointer][] = str_split($bare_opt); // push as element [0]
+            $rules_options["$insertion_key"][$rules_pointer][] = $bare_opt; // push as element [1]
+        }
+        // further optimisations
+        $new_condition = $condition;
+        // optimise wrt (idem)
+        list($temp, $value) = SeparateWrtLngOptionFromBaseCondition($condition, "wrt");
+        if ($value === null) $rules_options["$insertion_key"][$rules_pointer][] = false;
+        else {
+            $new_condition = $temp;
+            //echo "R: replace old condition = $condition by $new_condition<br>"; 
+            // replace original condition by new bare condition
+            //$rules["$insertion_key"][$rules_pointer][0] = $condition;
+            $rules_options["$insertion_key"][$rules_pointer][] = true; // push element [2]
+        }
+        // optimise lng (idem)
+        list($temp, $value) = SeparateWrtLngOptionFromBaseCondition($condition, "lng");
+        if ($value === null) $rules_options["$insertion_key"][$rules_pointer][] = false;
+        else { 
+            $new_condition = $temp;
+            //echo "R: replace old condition $condition by $new_condition<br>"; 
+            // replace original condition by new bare condition
+            //$rules["$insertion_key"][$rules_pointer][0] = $condition;
+            $rules_options["$insertion_key"][$rules_pointer][] = true; // push element [3]
+        }
+       
+        /*
+        $test = str_split($bare_opt);
+        if ($bare_opt !== null) {
+            echo "bare option: $bare_opt bare option splitted (array): "; var_dump($test);
+            echo "rules_options: "; var_dump($rules_options["$insertion_key"][$rules_pointer][0]);
+        } 
+        */
         $consequence = $matches[2];
         if (preg_match("/=>/", $condition) === 1) $global_error_string .= "WARNING: \"$condition\" => \"$consequence\" (possibly malformed rule)<br>";
         if (preg_match("/=>/", $consequence) === 1) $global_error_string .= "WARNING: \"$condition\" => \"$consequence\" (possibly malformed rule)<br>";
         //if (mb_strlen($global_error_string)>0) echo $global_error_string;
         //if ($condition === "«") echo "consequence: >$consequence<<br>";  
-        //echo "condition => consequence: $condition => $consequence<br>";
+        //echo "condition => consequence: " . htmlspecialchars($condition) . " => $consequence<br>";
+        //echo "new condition: $new_condition<br>";
+        
         $shrinking_generic_subsection = $matches[3];
         $result1 = preg_match( "/^{[ ]*?(\".*\")[ ]*?}$/", $consequence, $matches1); 
         //echo "rule $rules_pointer: $condition => $consequence<br>";
@@ -537,7 +603,8 @@ function ImportRulesFromGenericSubSection() {
             //$nil = preg_match( "/^{(.*)}$/", $consequence, $matches1); // $nil should always be true ... ! ;-) 
             case "1" : 
                 // multiple consequences
-                $rules["$insertion_key"][$rules_pointer][] = $condition;
+                //echo "INSERT new condition: $new_condition<br>";
+                $rules["$insertion_key"][$rules_pointer][] = $new_condition;
                 //echo "condition: $condition<br>";
                 //echo "multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
                 $matches1[1] = replace_all("/\"([^ ]*?),([^ ]*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
@@ -555,9 +622,11 @@ function ImportRulesFromGenericSubSection() {
                     $bare_element = preg_replace("/^[ ]*?\"(.*?)\"[ ]*?/", "$1", $element);
                     //echo "element: #$element# => bare_element: #$bare_element#<br>";
                     //$rules["$insertion_key"][] = $rules_pointer;
-                
+                    
                     $rules["$insertion_key"][$rules_pointer][] = replace_all( "/#C#O#M#A#/", ",", $bare_element); // resubstitute #C#O#M#A#
                 }
+                //echo "Final insertion:<br>"; var_dump($rules["$insertion_key"][$rules_pointer]); echo "<br>";
+                //echo "Options: <br>"; var_dump($rules_options["$insertion_key"][$rules_pointer]); echo "<br>";
                 $rules_pointer++;
                 break;
             default : 
@@ -588,7 +657,10 @@ function ImportRulesFromGenericSubSection() {
 */
                 
                 // is the following line correct?!?
-                $rules["$insertion_key"][] = array( $condition, $matches2[1]);        // rules[model][x][0] = condition of rule x in model
+                //echo "123Final insertion: <br>Condition: " . htmlspecialchars($new_condition) . "<br>Consequence(s):"; var_dump($matches2[1]); echo "<br>";
+                //echo "Options: <br>"; var_dump($rules_options["$insertion_key"][$rules_pointer]); echo "<br>";
+                
+                $rules["$insertion_key"][] = array( $new_condition, $matches2[1]);        // rules[model][x][0] = condition of rule x in model
                 //$rules["$insertion_key"][$rules_pointer][] = $matches2[1];      // rules[model][x][1] = consequence of rule x in model
                 $rules_pointer++;
                 break;
@@ -612,6 +684,20 @@ function SeparateTstoptFromBaseCondition($condition) {
                 $bare_opt = null;
         }
         return array($condition, $bare_opt);
+}
+
+function SeparateWrtLngOptionFromBaseCondition($condition, $option) {
+        // returns:
+        // - bare condition
+        // - true (if tstoption must be tested) / null (if it is a standard rule)
+        $resultopt = preg_match( "/tst$option\((.*?)\)/", $condition, $tstopt);
+        if ($resultopt === 1) {
+                // new condition is argument x of tstwrt(x) / tstlng(x)
+                $condition = $tstopt[1];
+                // function returns true
+                $value = true;
+        } else $value = null;
+        return array($condition, $value);
 }
 
 function WriteParamListToRulesArray( $type, $param_list ) {

@@ -456,15 +456,16 @@ function CheckAndApplyHybridRule($condition1, $condition2, $consequence, $writte
     return $result;
 }
 
-function CheckTstopt($option) {
+function CheckTstopt(/* $option*/ $char_array) {
    // returns true if option matches, false if not (or null if option == null)
    
    // optimised faster version => even more optimised (using no variables but direct returns)
    // this function is called as often as ExecuteRule(), i.e. very often (in test example 144000 times)
    // optimisations have therefore a big impact on overall performance (10%)
    // CAVEAT: str_split() doesn't seem to be multibyte safe (shouldn't be a problem with options that are in the [0-9] single char range)
-   if ($option === null) return null;
-   $char_array = str_split($option); // mb_str_split() doesn't work?!
+ //  if ($option === null) return null;
+    if ($char_array === null) return null;
+//   $char_array = str_split($option); // mb_str_split() doesn't work?!
    foreach($char_array as $char)
         if ($_SESSION["model_option$char" . "_yesno"]) 
             return true; // even more radical to break out of this loop .. ;-)
@@ -503,9 +504,12 @@ function CheckTstopt($option) {
 */
 }
 
+function OptionString($options_array) {
+    return join("", $options_array);
+}
 
 // ExecuteRule replaces GenericParser from old parser
-function ExecuteRule( /*$word*/ ) {
+function ExecuteRule() {
 
     global $original_word, $result_after_last_rule, $global_debug_string, $global_number_of_rules_applied;
     global $rules, $rules_pointer, $actual_function, $rules_options;
@@ -517,186 +521,219 @@ function ExecuteRule( /*$word*/ ) {
     switch ($condition) {
         case "BeginFunction()" : ExecuteBeginParameters(); $output = $act_word; break;
         case "EndFunction()" : ExecuteEndParameters(); $output = $act_word; break;
-        default : // normal condition
-// ***********************************************************************************************************************
-// another extension: before testing anything (= multiple evolutions, hybrid or normal rule) check if rule has this format:
-//
-// tstopt([0-9+)rule
-//
-// if so: 
-// check first, if required option is selected:
-//      if so: execute rules as before (=> needs modification for rule parsing!)
-//      if not: do not execute the rule
-// if not: execute rule as before
-//
-// tstopt(123) means: if one of the options is selected (logical or: 1 or 2 or 3)
-// ************************************************************************************************************************
+        default : // normal rule
+                // ***********************************************************************************************************************
+                // extension: before testing anything (= multiple evolutions, hybrid or normal rule) check if rule contains options:
+                //
+                // if so: 
+                // check first, if required option is selected:
+                //      if so: execute rules as before
+                //      if not: do not execute the rule
+                // if not: execute rule as before
+                //
+                // tstopt(123) means: if one of the options is selected (logical or: 1 or 2 or 3)
+                // ************************************************************************************************************************
+                
+                // set output and terminate early if options don't match
+                $output = $act_word;
+                $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
+                if ($option_result === false) break; 
+               
+                $option_test = $rules_options["$actual_model"][$rules_pointer][0] !== null;
+                $option_string = $rules_options["$actual_model"][$rules_pointer][1]; //OptionString($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_show = $option_test;
+                
+                //echo "option_test: [$option_test] option_result: [$option_result] option_string: [$option_string]<br>";
+                
+                // these additional variables are not needed (or only for debugging?!)
+                // eliminate them for performance reasons
+                // $rule_condition = $condition; 
+                // $simple_string = $condition;
 
-// CheckTstopt(): Checks if an option is set and test it if yes
-//$option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
-//echo "Rule ($rules_pointer): $condition => ... Result: [$option_result]<br>";
-// set output before eventual break
-$output = $act_word;
+                // otherwhise apply rule
 
-//if ($option_result === false) echo "BREAK EXPECTED!<br>";
-if (CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]) === false) break; // terminate here if option doesn't match
-// optimise (no performance gain)
-//if (CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]) === false) break;
-  
-// for performance reasaons: set these variables only now
-$rule_condition = $rules["$actual_model"][$rules_pointer][0];
-$simple_string = $rules_options["$actual_model"][$rules_pointer][0]; //$option_string[1];
-
-// otherwhise continue with adapted regex for rules
-
-            //$output = $act_word;
-            $length = count($rules["$actual_model"][$rules_pointer]);
-            if ($length == 2) {
-                // normal rule: 1 condition => 1 consequence
-                $preceeding_result = $output;
-                //$temp = $output; // superfluous
-                // not necessary any more
-                //$pattern = preg_replace("/^(tstopt\([0-9]+\))?(.*)$/", "$2", $rules["$actual_model"][$rules_pointer][0]); // adapt for options
-                $pattern = $rules["$actual_model"][$rules_pointer][0];
-                $replacement = $rules["$actual_model"][$rules_pointer][1];
-                $output = extended_preg_replace( "/$pattern/", $replacement, $output );
-                //echo "\nStandardProcedureForRule: pattern: #$pattern# => replacement: #$replacement#<br>word: $preceeding_result result: $output last: $result_after_last_rule<br>";
-                //echo "$pattern => $replacement // $preceeding_result => $output<br>";
-                if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
-                    $result_after_last_rule = $output;
-                    $global_number_of_rules_applied++;
-                    $_SESSION['rules_count'][$rules_pointer]++;
-                    if ($_SESSION['output_format'] === "debug") {
-                        //$wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
-                        $wrapped_pattern = CropStringAfterNCharacters($pattern, 20);
-                        $option_debug_string = "";
-                        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
-                        //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
-                        // optimize mb_strlen() call (slow)
-                        elseif ($simple_string !== '') $option_debug_string = "OPT: $simple_string: no<br>";
-                        $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
+                // find out which type of rule (single or multiple consequences)
+                $length = count($rules["$actual_model"][$rules_pointer]);
+                if ($length == 2) {
+                    // normal rule: 1 condition => 1 consequence
+                    $preceeding_result = $output;
+                    //$pattern = $rules["$actual_model"][$rules_pointer][0];
+                    $replacement = $rules["$actual_model"][$rules_pointer][1];
+                    //$output = extended_preg_replace( "/$pattern/", $replacement, $output );
+                    $output = extended_preg_replace( "/$condition/", $replacement, $output );
+                    //echo "\nStandardProcedureForRule: pattern: #$pattern# => replacement: #$replacement#<br>word: $preceeding_result result: $output last: $result_after_last_rule<br>";
+                    //echo "$pattern => $replacement // $preceeding_result => $output<br>";
+                    if ($output !== $preceeding_result) {           // maybe wrong: should be $result_after_last_rule?!
+                        $result_after_last_rule = $output;
+                        $global_number_of_rules_applied++;
+                        $_SESSION['rules_count'][$rules_pointer]++;
+                        if ($_SESSION['output_format'] === "debug") {
+                            //$wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
+                            $wrapped_pattern = CropStringAfterNCharacters($condition, 20);
+                            $option_debug_string = "";
+                            if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>"; // $condition replaces former $simple_string (also below)
+                            //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                            // optimize mb_strlen() call (slow)
+                            elseif ($option_show && $option_string !== '') $option_debug_string = "OPT: $option_string: no<br>";
+                            $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($wrapped_pattern) . " <b>⇨</b> " . htmlspecialchars($replacement) . "</td><td>" . strtoupper($actual_function) . "</td></tr>"; 
+                        }
                     }
-                }
                 //echo "GDS: $global_debug_string<br>";
                 //echo "Match: word: $word output: $output FROM: rule: $pattern => $replacement <br>";
             
-            } else {
-//echo "several consequences: rules<br>"; var_dump($rules["$actual_model"][$rules_pointer]); echo "<br>";
-//echo "last_written_form: $last_written_form parallel_lng_form: $parallel_lng_form<br>";
+                } else {
+                    // rule has several consequences
+                    // special case: if phonetic transcription is selected condition can be tested on the written form of the word (instead of transcription)
+                    // in that case, the following formalism is valid:
+                    // "condition1" => { "condition2", "consequence" };
+                    // with condition1 = tstwrt(condition)        applied to written form
+                    //      condition2 = normal condition         applied to phonetic form
+                    //      consequence = normal consequence      applied to phonetic form
+                    // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
 
-                // special rule: 1 condition => several consequences
-                // special case: if phonetic transcription is on condition can be tested on the written form of the word (instead of transcription)
-                // in that case, the following formalism is valid:
-                // "condition1" => { "condition2", "consequence" };
-                // with condition1 = tstwrt(condition)        applied to written form
-                //      condition2 = normal condition         applied to phonetic form
-                //      consequence = normal consequence      applied to phonetic form
-                // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
-// test if phonetical transcription is selected and if condition has to be tested on written form
+                    // test if phonetic transcription is selected and if condition has to be tested on written form
 
-// tstopt() probably not necessary any more
-//$match_wrt = preg_match("/^(tstopt\([0-9]+\))?tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt()
-//$match_lng = preg_match("/^(tstopt\([0-9]+\))?tstlng\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt()
-// optimise without tstopt()
-//echo "test wrt and lng: " . $rules["$actual_model"][$rules_pointer][0] . "<br>";
-$match_wrt = preg_match("/^tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt()
-$match_lng = preg_match("/^tstlng\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt()
-
-if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
-    // chose wrt or lng form for hybrid rule (offering to variants for comparison)
-    // quantifier must be greedy for condition1 in order to go to the last ) !!!
-    if ($match_wrt) {
-        //echo "match_wrt: " . $rules["$actual_model"][$rules_pointer][0] . "<br>";
-        //$hybrid_condition1 = preg_replace("/(?:tstopt\([0-9]+\))?tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
-        // probably tstopt() can be left out
-        $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
-        $test_form = $last_written_form;
-        $hybrid_type = "H-WRT";
-    } else if ($match_lng) {
-        //echo "match_lng: " . $rules["$actual_model"][$rules_pointer][0] . "<br>";
-        //$hybrid_condition1 = preg_replace("/(?:tstopt\([0-9]+\))?tstlng\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
-        // probably tstopt() can be left out
-        $hybrid_condition1 = preg_replace("/tstlng\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
-        $test_form = $parallel_lng_form;
-        $hybrid_type = "H-LNG";
-    }
-    //echo "hybrid_condition1: $hybrid_condition1<br>";
-    $hybrid_condition2 = $rules["$actual_model"][$rules_pointer][1];
-    $hybrid_consequence = $rules["$actual_model"][$rules_pointer][2];
-    //echo "line 515: test_form: $test_form $condition1_check $condition2_check<br>";
-    $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $test_form, $act_word);
-    if ($result !== null) {
-        // result is valid
-        $output = $result;
-        $global_number_of_rules_applied++;
-        $_SESSION['rules_count'][$rules_pointer]++;
-        // set variables for debugging
-        //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
-        //$replacement = $hybrid_consequence;
-        $option_debug_string = "";
-        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
-        //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
-        // optimize mb_strlen call (slow)
-        elseif ($simple_string !== '') $option_debug_string = "OPT: $simple_string: no<br>";
+                    //$match_wrt = preg_match("/^tstwrt\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt()
+                    //$match_lng = preg_match("/^tstlng\(/", $rules["$actual_model"][$rules_pointer][0]); // adapt for tstopt() 
+                    
+                    //$match_wrt = preg_match("/^tstwrt\(/", $condition); // adapt for tstopt()
+                    //$match_lng = preg_match("/^tstlng\(/", $condition); // adapt for tstopt()
+                    // optimised
+                    $match_wrt = $rules_options[$actual_model][$rules_pointer][2]; 
+                    $match_lng = $rules_options[$actual_model][$rules_pointer][3]; 
+                    
+                    if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
+                    
+                        //echo "Rule($rules_pointer): has multiple consequences<br>";
+                    
+                        //echo "... phonetics is set and it's a hybrid rule<br>";
+                        //echo "condition is: " . htmlspecialchars($condition) . "<br>";
+                        
+                        //$match_wrt = preg_match("/^tstwrt\(/", $condition); // adapt for tstopt()
+                        //$match_lng = preg_match("/^tstlng\(/", $condition); // adapt for tstopt()
+                        //echo "COMPARE<br>";
+                        //echo "match_wrt: [$match_wrt] match_lng: [$match_lng]<br>";
+                        //echo "rules_options: [" . $rules_options[$actual_model][$rules_pointer][2] . "] - [" . $rules_options[$actual_model][$rules_pointer][3] . "]<br>";
+                        
+                        // optimised
+                        //$match_lng = $rules_options[$actual_model][$rules_pointer][2];
+                        //$match_wrt = $rules_options[$actual_model][$rules_pointer][3];
+                        /*
+                        if ($match_wrt) {
+                            echo "WRT-Rule($rules_pointer): " . $rules[$actual_model][$rules_pointer][0] . " => " . $rules[$actual_model][$rules_pointer][1] . "<br>"; 
+                            //echo "Rules_options($rules_pointer)(1) = [" . $rules_options[$actual_model][$rules_pointer][0] . "]<br>";
+                            echo "Rules_options($rules_pointer):"; var_dump($rules_options[$actual_model][$rules_pointer]); echo "<br>";
+                    }
+                    */
+                        // chose wrt or lng form for hybrid rule (offering two variants for comparison)
+                        // quantifier must be greedy for condition1 in order to go to the last ) !!!
+                        
+                        // invert order for performance (match_lng is more frequent case)
+                        // do match_wrt only when needed
+                        /*
+                        if ($match_wrt) {
+                            //echo "match_wrt: " . $rules["$actual_model"][$rules_pointer][0] . "<br>";
+                            //$hybrid_condition1 = preg_replace("/(?:tstopt\([0-9]+\))?tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+                            // probably tstopt() can be left out
+                            $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+                            $test_form = $last_written_form;
+                            $hybrid_type = "H-WRT";
+                        } else
+                        */
+                        if ($match_lng) {
+                            //echo "match_lng: " . $rules["$actual_model"][$rules_pointer][0] . "<br>";
+                            //$hybrid_condition1 = preg_replace("/(?:tstopt\([0-9]+\))?tstlng\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+                            // probably tstopt() can be left out
+                            //$hybrid_condition1 = preg_replace("/tstlng\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+                            $hybrid_condition1 = $condition; //preg_replace("/tstlng\((.*)\)/", "$1", $condition);
+                            $test_form = $parallel_lng_form;
+                            $hybrid_type = "H-LNG";
+                        } elseif ( /*preg_match("/^tstwrt\(/", $condition)*/ $match_wrt) {
+                            //echo "match_wrt: " . $rules["$actual_model"][$rules_pointer][0] . "<br>";
+                            //$hybrid_condition1 = preg_replace("/(?:tstopt\([0-9]+\))?tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+                            // probably tstopt() can be left out
+                            //$hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $rules["$actual_model"][$rules_pointer][0]);
+                            $hybrid_condition1 = $condition; //preg_replace("/tstwrt\((.*)\)/", "$1", $condition);
+                            $test_form = $last_written_form;
+                            $hybrid_type = "H-WRT";
+                        }
+                    
+                        //echo "hybrid_condition1: $hybrid_condition1<br>";
+                        $hybrid_condition2 = $rules["$actual_model"][$rules_pointer][1];
+                        $hybrid_consequence = $rules["$actual_model"][$rules_pointer][2];
+                        $result = CheckAndApplyHybridRule($hybrid_condition1, $hybrid_condition2, $hybrid_consequence, $test_form, $act_word);
+                        if ($result !== null) {
+                            // result is valid
+                            $output = $result;
+                            $global_number_of_rules_applied++;
+                            $_SESSION['rules_count'][$rules_pointer]++;
+                            // set variables for debugging
+                            //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
+                            //$replacement = $hybrid_consequence;
+                            $option_debug_string = "";
+                            if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>"; // $simple_condition
+                            //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                            // optimize mb_strlen call (slow)
+                            elseif ($option_show && $option_string !== '') $option_debug_string = "OPT: $option_string: no<br>";
                      
-        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . "$hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
-    }
-} else {
-// apply "normal" rule as usual
-                //if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
-                //$pattern = $rules["$actual_model"][$rules_pointer][0];
-                // not necessary any more!?!
-                //$pattern = preg_replace("/^(tstopt\([0-9]+\))?(.*)$/", "$2", $rules["$actual_model"][$rules_pointer][0]); // adapt for options
-                $pattern = $rules["$actual_model"][$rules_pointer][0]; // adapt for options
-                $replacement = $rules["$actual_model"][$rules_pointer][1];
-                //$extra_replacement = $rules["$actual_model"][$rules_pointer][1];
-                $word = $act_word;
-                $output = extended_preg_replace( "/$pattern/", $replacement, $output );
-                //echo "word: $word output: $output FROM: rule: $pattern => $replacement <br>";
-                if ($output !== $word) {   // rule has been applied => test, if there are exceptions
-                    //echo "Rule applied: word: $word output: $output FROM: rule: $pattern => $extra_replacement <br>";
-                    $length = count($rules["$actual_model"][$rules_pointer]); // number of elements as consequence + 1 (condition is counted)
-                    $there_is_a_match = false;
-                    for ($i=2; $i<$length; $i++) {  // element 2 = first exception
-                        $extra_pattern = $rules["$actual_model"][$rules_pointer][$i];
-                        //$original_word = "Pflicht"; // must be the original word without any modifications! => take it from constants before rewrite as OOP
-                        //echo "TEST: pattern: $extra_pattern in Original: $original_word<br>";
+                            if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . "$hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                        }
+                    } else {
+                        // apply "normal" rule as usual
+                        //if ($rules_pointer == 43) echo "rule(43): " . $rules["$actual_model"][$rules_pointer][0] . " => " . $rules["$actual_model"][$rules_pointer][1] . "<br>";
+                        //$pattern = $rules["$actual_model"][$rules_pointer][0];
+                        // not necessary any more!?!
+                        //$pattern = preg_replace("/^(tstopt\([0-9]+\))?(.*)$/", "$2", $rules["$actual_model"][$rules_pointer][0]); // adapt for options
+                        $pattern = $rules["$actual_model"][$rules_pointer][0]; // adapt for options
+                        $replacement = $rules["$actual_model"][$rules_pointer][1];
+                        //$extra_replacement = $rules["$actual_model"][$rules_pointer][1];
+                        $word = $act_word;
+                        $output = extended_preg_replace( "/$pattern/", $replacement, $output );
+                        //echo "word: $word output: $output FROM: rule: $pattern => $replacement <br>";
+                        if ($output !== $word) {   // rule has been applied => test, if there are exceptions
+                            //echo "Rule applied: word: $word output: $output FROM: rule: $pattern => $extra_replacement <br>";
+                            $length = count($rules["$actual_model"][$rules_pointer]); // number of elements as consequence + 1 (condition is counted)
+                            $there_is_a_match = false;
+                            for ($i=2; $i<$length; $i++) {  // element 2 = first exception
+                                $extra_pattern = $rules["$actual_model"][$rules_pointer][$i];
+                                //$original_word = "Pflicht"; // must be the original word without any modifications! => take it from constants before rewrite as OOP
+                                //echo "TEST: pattern: $extra_pattern in Original: $original_word<br>";
                        
-                        //if (mb_strlen($extra_pattern)>0) $result = preg_match( "/$extra_pattern/", $original_word );
-                        // optimize mb_strlen (slow)
-                        if ($extra_pattern !== "") $result = preg_match( "/$extra_pattern/", $original_word );
-                        if ($result == 1) {  // exception matches
-                            $there_is_a_match = true;
-                            $matching_pattern = $extra_pattern;
-                            //echo "Match with: $extra_pattern in Original: $original_word result_after_last_rule: $result_after_last_rule<br>";
+                                //if (mb_strlen($extra_pattern)>0) $result = preg_match( "/$extra_pattern/", $original_word );
+                                // optimize mb_strlen (slow)
+                                if ($extra_pattern !== "") $result = preg_match( "/$extra_pattern/", $original_word );
+                                if ($result == 1) {  // exception matches
+                                    $there_is_a_match = true;
+                                    $matching_pattern = $extra_pattern;
+                                    //echo "Match with: $extra_pattern in Original: $original_word result_after_last_rule: $result_after_last_rule<br>";
+                                }
+                            }
+                
+                            if ($there_is_a_match) {
+                                //echo "Don't apply rule!<br>";
+                                //$output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
+                                // why must it be set to result_after_last_rule ... ??? this is wrong with "höhere" ... set it back to $word and keep an eye on that ...
+                                $output = $word;
+                                //echo "result after last rule: $result_after_last_rule word: $word<br>";
+                                $option_debug_string = "";
+                                if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>";
+                                //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                                // optimize mb_strlen (slow)
+                                elseif ($option_show && $option_string !== "") $option_debug_string = "OPT: $option_string: no<br>";
+                                if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                            } else {
+                                $global_number_of_rules_applied++;
+                                $_SESSION['rules_count'][$rules_pointer]++;
+                                $option_debug_string = "";
+                                if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>";
+                                //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                                // optimize mb_strlen (slow)
+                                elseif ($option_show && $option_string !== "") $option_debug_string = "OPT: $option_string: no<br>";
+                                if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                            }
                         }
                     }
-                
-                    if ($there_is_a_match) {
-                        //echo "Don't apply rule!<br>";
-                        //$output = $result_after_last_rule; // $word; // don't apply rule (i.e. set $output back to $word) => Wrong! set it to result after last applied rule
-                        // why must it be set to result_after_last_rule ... ??? this is wrong with "höhere" ... set it back to $word and keep an eye on that ...
-                        $output = $word;
-                        //echo "result after last rule: $result_after_last_rule word: $word<br>";
-                        $option_debug_string = "";
-                        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
-                        //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
-                        // optimize mb_strlen (slow)
-                        elseif ($simple_string !== "") $option_debug_string = "OPT: $simple_string: no<br>";
-                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
-                    } else {
-                        $global_number_of_rules_applied++;
-                        $_SESSION['rules_count'][$rules_pointer]++;
-                        $option_debug_string = "";
-                        if ($option_result) $option_debug_string = "OPT: $simple_string: ✓<br>";
-                        //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
-                        // optimize mb_strlen (slow)
-                        elseif ($simple_string !== "") $option_debug_string = "OPT: $simple_string: no<br>";
-                        if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
-                    }
                 }
-}
-            }
     }
     //if ($output === "") echo "output = null / rule = $rules_pointer<br>";
     //echo "$output<br>";
@@ -706,75 +743,34 @@ if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
     //else { echo "return result $result"; return $result; }
    // return $output;
     //return $word;
-
 }
 
 function ParserChain( $text, $start = null, $end = null ) {
-        global $font, $combiner, $shifter, $rules, $functions_table, $rules_pointer;
-        global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $rules_pointer_start_std2prt;
+        global $rules, $functions_table, $rules_pointer;
+        global $processing_in_parser, $rules_pointer_start_std2prt;
         global $original_word, $result_after_last_rule, $act_word, $start_word_parser;
-        // test if word is in dictionary: if yes => return immediately and avoid parserchain completely (= word will be transcritten directly by steno-engine
-        
+
         $processing_in_parser = "R"; // suppose word will been obtained by processing the rules
-        //list($res_std, $res_prt) = Lookuper( $text ); // database-function
-      /*  
-        if ((mb_strlen($res_std) > 0) || ((mb_strlen($res_prt)>0))) {
-            $processing_in_parser = "D";  // mark word as taken from dictionary
-            $std_form = $res_std;
-            $prt_form = $res_prt;
-            $separated_std_form = ""; // must be "", otherwise result will be "doubled" (i.e. 2x std, 2x prt) => why?!
-            $separated_prt_form = "";
-            return $res_prt;
-        }
-        */
-        
+
         // set rules pointer
-        $rules_pointer = $start_word_parser; // default
-        if ($_SESSION['original_text_format'] === "std") {
-            $rules_pointer = $rules_pointer_start_std2prt; // start with STD form (after bundler)
-            $act_word = $text;
-        }
         if ($start !== null) {
             $rules_pointer = $start;
             $act_word = $text;
-        }
-        $actual_model = $_SESSION['actual_model'];
+        } elseif ($_SESSION['original_text_format'] === "std") {
+            $rules_pointer = $rules_pointer_start_std2prt; // start with STD form (after bundler)
+            $act_word = $text;
+        } else $rules_pointer = $start_word_parser; // default
+
         if ($end !== null) $stop = $end;
-        else $stop = count($rules[$actual_model]);
-        
-        
-       //echo "set rules_pointer to $start_word_parser<br>";
-        
-        //$act_word = $text;
+        else $stop = $_SESSION['actual_model_number_of_rules']; // count($rules[$_SESSION['actual_model']]);
         
         $original_word = $text;
         $result_after_last_rule = $act_word;
         
-        //$temp = isset($rules[$actual_model][$rules_pointer]);
-        //echo "actual_model: $actual_model";
-        //var_dump($rules);
-        //$number_of_rules = count($rules[$actual_model]);
-        //echo "number of rules: $number_of_rules rules_pointer: $rules_pointer<br>";
-        //echo "ParserChain: Start: $rules_pointer Word: $act_word<br>";
-        //echo "std_form: $std_form<br>";
-        while ($rules_pointer < $stop) { // (isset($rules[$actual_model][$rules_pointer])) { // ($rules_pointer < 45) { // only apply 45 rules for test // 
-            //echo "before executerule: $rules_pointer<br>";
-            //$act_word = ExecuteRule( $act_word );
-            //echo "rule($rules_pointer) actword = $act_word<br>";
-            //echo "ParserChain: act_word = $act_word (before)<br>";
+        while ($rules_pointer < $stop) {
             ExecuteRule();
-            //echo "ParserChain: act_word = $act_word (after executerule())<br>";
-            
-            // show a single rule
-            //if ($rules_pointer == 1472) echo "rule: " . $rules[$actual_model][$rules_pointer][0] . " => " . $rules[$actual_model][$rules_pointer][1] . "<br>";
-            
-            //echo "rule($rules_pointer) actword = $act_word<br>";
-            //echo "after execute";
             $rules_pointer++;
         }
-        //echo "ParserChain: Stop: $stop Result: $act_word<br>";
-        //echo "std_form: $std_form<br>";
-        
         return $act_word;
 }
 
@@ -854,15 +850,17 @@ if (preg_match("/^tstopt\(([0-9]+)\).*$/", $rules["$actual_model"][$rules_pointe
     //echo "option check: [$option_result]<br>";
 }
 */
+//echo "in PreProcessGlobalParserFunctions() - Rule: $rules_pointer ... <br>";
 
 //$option_to_test = $rules_options["$actual_model"][$rules_pointer][0];
 $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
 //echo "Rule ($rules_pointer): " . $rules["$actual_model"][$rules_pointer][0] . " => ... Option: [$option_to_test] Result: [$option_result]<br>";
 
 $rule_condition = $rules["$actual_model"][$rules_pointer][0];
-$simple_string = $option_string[1];
+//$simple_string = $option_string[1];
    
-   
+//echo "Rule condition: $rule_condition<br>";
+
 // set output before eventual break
 $output = $act_word;
 //if ($option_result === false) echo "BREAK EXPECTED!<br>";
@@ -927,11 +925,12 @@ if ($option_result === false) {
 }
 
 function PostProcessDataFromLinguisticalAnalyzer($word) {
-    global $analyzer; // contains postprocess-rules
+    global $analyzer, $analyzer_options; // contains postprocess-rules
     global $global_linguistical_analyzer_debug_string, $last_written_form, $parallel_lng_form, $condition1_check, $condition2_check;
     global $parallel_lng_form;
     $number_analyzer_rules = 0;
-    for ($i=0; $i<count($analyzer); $i++) {
+    $length = count($analyzer);
+    for ($i=0; $i<$length; $i++) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
         //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . " ($word / $last_written_form)<br>";
        
@@ -944,18 +943,21 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
 //      consequence = normal consequence      applied to phonetic form
 // this will be called a "hybrid" rule (since it applies half to written, half to phonetic form)
 // test if phonetical transcription is selected and if condition has to be tested on written form
-$match_wrt = preg_match("/^tstwrt\(/", $analyzer[$i][0]);
-$match_lng = preg_match("/^tstlng\(/", $analyzer[$i][0]);
+// optimised (untested)
+$match_wrt = $analyzer_options[$i][2]; // preg_match("/^tstwrt\(/", $analyzer[$i][0]);
+$match_lng = $analyzer_options[$i][3]; // preg_match("/^tstlng\(/", $analyzer[$i][0]);
 if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
     //echo "Analyzer[$i]: hybrid rule<br>";
     // quantifier must be greedy for condition1 in order to go to the last ) !!!
     // chose wrt or lng form for hybrid rule (offering to variants for comparison)
     if ($match_wrt) {
-        $hybrid_condition1 = preg_replace("/tstwrt\((.*)\)/", "$1", $analyzer[$i][0]);
+        // optimised (untested)
+        $hybrid_condition1 = $analyzer[$i][0]; // preg_replace("/tstwrt\((.*)\)/", "$1", $analyzer[$i][0]);
         $test_form = $last_written_form;
         $hybrid_type = "H-WRT";
     } else if ($match_lng) {
-        $hybrid_condition1 = preg_replace("/tstlng\((.*)\)/", "$1", $analyzer[$i][0]);
+        // optimised (untested)
+        $hybrid_condition1 = $analyzer[$i][0]; // preg_replace("/tstlng\((.*)\)/", "$1", $analyzer[$i][0]);
         $test_form = $parallel_lng_form;
         $hybrid_type = "H-LNG";
     }

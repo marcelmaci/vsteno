@@ -184,7 +184,7 @@ function CalculateStenoPage() {
     
     $text = isset($_POST['original_text']) ? $_POST['original_text'] : "";
     $text = AddMarkings($text);
-    
+   
     // if there is text, insert title&introduction and SVG(s)
     if (strlen($text) > 0) {
         // if text is ascii format insert html-tags by converting \n to <br>

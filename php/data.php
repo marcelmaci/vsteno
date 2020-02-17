@@ -130,6 +130,9 @@ if ($_POST['font_borrow_yesno'] === "yes") {  // use POST (SESSION not yet set)
 
 $test = ImportModelFromText($text_to_parse);
 $actual_model = $_SESSION['actual_model'];
+// create new session variable with number of rules for global use (this is faster than repeated count() calls)
+$_SESSION['actual_model_number_of_rules'] = count($rules[$actual_model]);
+
 $_SESSION['last_updated_model'] = $actual_model;
 
 // set statistics
