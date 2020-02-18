@@ -608,6 +608,7 @@
 		"M" => { "ISIM", 4, 10, 0, 1 }
 	#EndSubSection(shifter)
 #EndSection(font)
+
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text spanisch

@@ -299,11 +299,12 @@ function ImportAnalyzer() {
             $analyzer_options[$i][] = $bare_opt; // element 1
         }
         // optimise wrt (idem)
+        $new_condition = $condition;
         list($temp, $value) = SeparateWrtLngOptionFromBaseCondition($condition, "wrt");
         if ($value === null) $analyzer_options[$i][] = false;
         else {
             $new_condition = $temp;
-            //echo "A: replace old condition $condition by $condition<br>"; 
+            //echo "A: replace old condition $condition by $new_condition<br>"; 
             // replace original condition by new bare condition
             //$analyzer[$i][0] = $condition;
             $analyzer_options[$i][] = true; // push element [2]
@@ -330,7 +331,7 @@ function ImportAnalyzer() {
             //$nil = preg_match( "/^{(.*)}$/", $consequence, $matches1); // $nil should always be true ... ! ;-) 
             case "1" : 
                 // multiple consequences
-                $analyzer[$i][] = $condition;
+                $analyzer[$i][] = $new_condition;
                 //echo "analyzer condition: $condition<br>";
                 //echo "analyzer multiple: #" . htmlspecialchars($matches1[1]) . "#<br>";
                 $matches1[1] = replace_all("/\"([^ ]*?),([^ ]*?)\"([ ]*?[,}])/", "\"$1#C#O#M#A#$2\"$3", $matches1[1]);
@@ -690,10 +691,12 @@ function SeparateWrtLngOptionFromBaseCondition($condition, $option) {
         // returns:
         // - bare condition
         // - true (if tstoption must be tested) / null (if it is a standard rule)
-        $resultopt = preg_match( "/tst$option\((.*?)\)/", $condition, $tstopt);
+        // IMPORTANT: regex must be greedy (unlike tstopt()) - see french rule "effort"
+        $resultopt = preg_match( "/tst$option\((.*)\)/", $condition, $tstopt);
         if ($resultopt === 1) {
                 // new condition is argument x of tstwrt(x) / tstlng(x)
                 $condition = $tstopt[1];
+                //echo "new conditon: $condition<br>";
                 // function returns true
                 $value = true;
         } else $value = null;

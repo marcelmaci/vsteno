@@ -76,11 +76,15 @@ Steno Engine:
     <li><b>Modelle</b>:<br>
     Import/Export via file (MDUMP/MLOAD)<br>
     Optionale Regeln</li>
-    <li>Inverted mode (teilweise, nur für Entwicklung)</li>
+    <li><b>Ausgabe</b><br>
+    - Inverted mode (teilweise, nur für Entwicklung)</li>
     <li><b>Engine</b><br>
     - Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte) (to do)<br>
-    - TokenShifter: Funktionserweiterung Spacer (Zeichengruppeninformation)</li>
-    <li><b>Debugging</b>: Ausgabe Stage-Wechsel (nur Stages 3 und 4)</li>
+    - TokenShifter: Funktionserweiterung Spacer (Zeichengruppeninformation)<br>
+    - Diverse Performance-Optimierungen</li>
+    <li><b>Debugging</b><br>
+    - Ausgabe Stage-Wechsel (nur Stages 3 und 4)<br>
+    - Angabe zum Caching</li>
 </ul>
 </li>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**)Nach Hephaistos und Ariadne dürfte nun wieder ein männlicher Name aus der griechischen 

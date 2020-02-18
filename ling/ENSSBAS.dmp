@@ -287,6 +287,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"^g'aslaIt(s)?" => "gäs|laIt$1"; // gaslight(s)
 		"^(p.*?s)(port(s)?)" => "$1|$2"; // passports
 		"^(S'u:)(meIk3)" => "$1|$2"; // shoemaker
+		"p3:\|h'?aps" => "p3:haps";
 
 		// morphological markings
 		// prefixes
@@ -328,7 +329,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		// con/com-
 		"tstwrt(^[Cc]o[nm])" => { "^(k[',]?.[:;]?[nm])", "CON+" };
 		// per/pur- (p'3:)
-		"tstwrt(^[Pp][eu]r)" => { "^(p[',]?(?:3[:;]?|Er))", "PER+" };
+		"tstwrt(^[Pp][eu]r(?!haps))" => { "^(p[',]?(?:3[:;]?|Er))", "PER+" };
 		// sur- (s3)
 		"tstwrt(^[Ss]ur)" => { "^(s[',]?(?:3:?|Er))", "SUR+" }; // surrender = surender
 		// trans/tran-
@@ -1058,7 +1059,10 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		// empty
-	#EndSubSection(dasher,#>stage3)
+	#EndSubSection(dasher)
+	#BeginSubSection(preshortener)
+		"tstwrt(^[Ww]ithin$)" => { "^.*?n$", "{WITH}{IN}" };
+	#EndSubSection(preshortener,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
 		// check if word contains more then 1 upper case
 		// mark it with #£# to have a branch condition
@@ -1091,7 +1095,6 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 
 		// others
 		"tstwrt(up$)" => { "öp$", "{UP}" };
-		"tstwrt(^[Ww]ithin$)" => { "^.*?n$", "{WITH}{IN}" };
 		"tstwrt(^[Cc]ontrariet(y|ies)$)" => { "^[^{]*?([sz])?$", "{CONTR}{ITY}$1" };
 		"tstwrt(^[Bb]efore)" => { "^(.*?r)", "{BE1}{FOR}" };
 		"tstwrt(^[Ii]sn\'t)" => { "^.*?$", "{ISNT}" }; 
@@ -1110,7 +1113,7 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstlng((?:^|\|)[Tt]here(?:$|\|))" => { "^D.*?r$", "{THERE}" }; 
 		"tstlng(^[Yy]oursel(f|ves)$)" => { "^.*?([zs])?$", "{YOUR}{SELF}$1" }; 
 		"tstwrt(^[Ss]omehow$)" => { "^.*?$", "{SOME}\{HOW}" }; 
-		"tstwrt(^[Ss]omewhere$)" => { "^.*?$", "{SOME}{WHERE}" }; 
+		//"tstwrt(^[Ss]omewhere$)" => { "^s.*?$", "{SOME}{WHERE}" }; 
 		"tstwrt(^[Ss]ome)" => { "^.*?m(.*?)$", "{SOME}$1" }; 
 		"tstwrt(ever$)" => { "(.*?)[Ee]v[Ee]r$", "$1{EVER}" };
 		"tstwrt(how$)" => { "h[^h]*?$", "{HOW}" };
@@ -1176,13 +1179,13 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"tstwrt(^[Ee]very?)" => { "^.*?r(.*?)$", "{EVER}$1" }; 
 		"tstwrt(^[Uu]nder)" => { "^.*?r(.*?)$", "{UNDER}$1" }; 
 		"tstwrt(^[Ff]ore?$)" => { "^.*?$", "{FOR}" }; 
-		"tstwrt([Ww]here)" => { "w[^w]*?r", "{WHERE}" }; 
+		"tstwrt([Ww]here)" => { "(we[E@]|wör)", "{WHERE}" }; 
 		"tstwrt(^[Ww]ere(n't)?$)" => { "^.*?r(.*?)$", "{WERE}$1" }; 
 		"tstwrt(^[Oo]ver)" => { "^.*?r(.*?)$", "{OVER}$1" }; 
 		"tstwrt(overs?$)" => { "o[^o]*?r(s)?$", "{OVER}$1" }; 
 		"tstwrt(^[Ff]rom$)" => { "^.*?$", "{FROM}" }; 
 		"tstwrt(^[Yy]our)" => { "^(.*?r)", "{YOUR}" }; 
-		"tstwrt(^[Pp]erhaps$)" => { "^.*?$", "{PERHAPS}" }; 
+		"tstwrt(^[Pp]erhaps$)" => { "^p.*?$", "{PERHAPS}" }; 
 		"tstwrt(^[Cc]ontrar)" => { "^(.*?Er)", "{CONTRAR}" }; 
 		"tstwrt(^[Gg]ener)" => { "^(.*?r)", "{GENER}" }; 
 		"tstwrt(^[Nn]ever$)" => { "^.*?$", "{NEVER}" }; 

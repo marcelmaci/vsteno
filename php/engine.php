@@ -1304,7 +1304,7 @@ function GetDebugInformation( $word ) {
         global $globalizer_table, /*$trickster_table, $dictionary_table,*/ $filter_table, $shortener_table, $normalizer_table, 
             $bundler_table, $transcriptor_table, $substituter_table, $global_debug_string, $global_number_of_rules_applied,
             $processing_in_parser, $separated_std_form, $separated_prt_form, $global_textparser_debug_string, $std_form, $prt_form;
-        global $global_linguistical_analyzer_debug_string;
+        global $global_linguistical_analyzer_debug_string, $cached_result;
             
 /*
         $original = $word;
@@ -1325,9 +1325,10 @@ function GetDebugInformation( $word ) {
     
         if (($global_linguistical_analyzer_debug_string !== "") || ($global_debug_string !== ""))
             $debug_text .= "<br><b>WORD: $word</b><br><div id='debug_table'><table><tr><td><b>STEPS</b></td><td><b>RULES</b></td><td><b>FUNCTIONS</b></td></tr>" . "$global_linguistical_analyzer_debug_string" . "$global_debug_string</table></div>" . "<p>STD: " . mb_strtoupper($std_form) . "<br>PRT: $prt_form<br>TYPE: $processing_in_parser<br>RULES: $global_number_of_rules_applied</p>";
-        else 
-            $debug_text .= "<br><b>WORD: $word</b><br>no rules<br>";
-    
+        else {
+            if ($cached_result) $debug_text .= "<br><b>WORD: $word</b><br>no rules (cached)<br>";
+            else $debug_text .= "<br><b>WORD: $word</b><br>no rules<br>";
+        }
         $global_number_of_rules_applied = 0; // suppose, this function is called at the end of the calculation (not before ... since this will give false information then ... ;-)
         return $debug_text;        
     

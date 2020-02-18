@@ -536,12 +536,13 @@ function ExecuteRule() {
                 
                 // set output and terminate early if options don't match
                 $output = $act_word;
-                $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
-                if ($option_result === false) break; 
+                if (CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]) === false) break; 
                
-                $option_test = $rules_options["$actual_model"][$rules_pointer][0] !== null;
-                $option_string = $rules_options["$actual_model"][$rules_pointer][1]; //OptionString($rules_options["$actual_model"][$rules_pointer][0]);
-                $option_show = $option_test;
+                
+                //$option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
+                //$option_test = $rules_options["$actual_model"][$rules_pointer][0] !== null;
+                //$option_string = $rules_options["$actual_model"][$rules_pointer][1]; //OptionString($rules_options["$actual_model"][$rules_pointer][0]);
+                //$option_show = $option_test;
                 
                 //echo "option_test: [$option_test] option_result: [$option_result] option_string: [$option_string]<br>";
                 
@@ -568,6 +569,11 @@ function ExecuteRule() {
                         $global_number_of_rules_applied++;
                         $_SESSION['rules_count'][$rules_pointer]++;
                         if ($_SESSION['output_format'] === "debug") {
+                $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_test = $rules_options["$actual_model"][$rules_pointer][0] !== null;
+                $option_string = $rules_options["$actual_model"][$rules_pointer][1]; //OptionString($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_show = $option_test;
+                
                             //$wrapped_pattern = WrapStringAfterNCharacters($pattern, 30);
                             $wrapped_pattern = CropStringAfterNCharacters($condition, 20);
                             $option_debug_string = "";
@@ -670,13 +676,20 @@ function ExecuteRule() {
                             // set variables for debugging
                             //$pattern = "Hybrid[1] " . $hybrid_condition1 . " [2] " . $hybrid_condition2;
                             //$replacement = $hybrid_consequence;
+                            
+                            if ($_SESSION['output_format'] === "debug") {
+                               $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_test = $rules_options["$actual_model"][$rules_pointer][0] !== null;
+                $option_string = $rules_options["$actual_model"][$rules_pointer][1]; //OptionString($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_show = $option_test;
                             $option_debug_string = "";
                             if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>"; // $simple_condition
                             //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
                             // optimize mb_strlen call (slow)
                             elseif ($option_show && $option_string !== '') $option_debug_string = "OPT: $option_string: no<br>";
                      
-                            if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . "$hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                               $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . "$hybrid_type: $test_form<br>[1$condition1_check]: " . htmlspecialchars($hybrid_condition1) . "<br>[2$condition2_check]: " . htmlspecialchars($hybrid_condition2) . " <b>⇨</b> " . htmlspecialchars($hybrid_consequence) . "</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                            }
                         }
                     } else {
                         // apply "normal" rule as usual
@@ -715,21 +728,35 @@ function ExecuteRule() {
                                 // why must it be set to result_after_last_rule ... ??? this is wrong with "höhere" ... set it back to $word and keep an eye on that ...
                                 $output = $word;
                                 //echo "result after last rule: $result_after_last_rule word: $word<br>";
-                                $option_debug_string = "";
-                                if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>";
-                                //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
-                                // optimize mb_strlen (slow)
-                                elseif ($option_show && $option_string !== "") $option_debug_string = "OPT: $option_string: no<br>";
-                                if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                if ($_SESSION['output_format'] === "debug") {
+                                    $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_test = $rules_options["$actual_model"][$rules_pointer][0] !== null;
+                $option_string = $rules_options["$actual_model"][$rules_pointer][1]; //OptionString($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_show = $option_test;
+                                        $option_debug_string = "";
+                                        if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>";
+                                        //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
+                                        // optimize mb_strlen (slow)
+                                        elseif ($option_show && $option_string !== "") $option_debug_string = "OPT: $option_string: no<br>";
+                                
+                                        $global_debug_string .= "<tr><td><b>[X]</b> $output</td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($rules["$actual_model"][$rules_pointer][1]) . ", ... }<br>NOT APPLIED: $matching_pattern (EXCEPTION)</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                }
                             } else {
                                 $global_number_of_rules_applied++;
                                 $_SESSION['rules_count'][$rules_pointer]++;
                                 $option_debug_string = "";
+                                if ($_SESSION['output_format'] === "debug") {
+                                    $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_test = $rules_options["$actual_model"][$rules_pointer][0] !== null;
+                $option_string = $rules_options["$actual_model"][$rules_pointer][1]; //OptionString($rules_options["$actual_model"][$rules_pointer][0]);
+                $option_show = $option_test;
                                 if ($option_show && $option_result) $option_debug_string = "OPT: $option_string: ✓<br>";
                                 //elseif (mb_strlen($simple_string)>0) $option_debug_string = "OPT: $simple_string: no<br>";
                                 // optimize mb_strlen (slow)
                                 elseif ($option_show && $option_string !== "") $option_debug_string = "OPT: $option_string: no<br>";
-                                if ($_SESSION['output_format'] === "debug") $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                
+                                    $global_debug_string .= "<tr><td><b>[$global_number_of_rules_applied]</b> $output </td><td><b>[R$rules_pointer]</b> $option_debug_string" . htmlspecialchars($pattern) . " <b>⇨</b> { " . htmlspecialchars($replacement) . ", ... }</td><td>" . strtoupper($actual_function) . "</td></tr>";
+                                }
                             }
                         }
                     }
@@ -826,6 +853,7 @@ function IsAnyOfAllArguments( $argument ) {
 
 function PreProcessGlobalParserFunctions( $text ) {
         global $rules, $actual_model, $rules_pointer, $start_word_parser, $global_textparser_debug_string, $global_debug_string, $rules_options;
+        //echo "PreProcessGlobalParserFunctions():<br>"; 
         //echo "start_word_parser: $start_word_parser<br>";
         $rules_pointer = 0;
         $global_textparser_debug_string = "";
@@ -850,7 +878,7 @@ if (preg_match("/^tstopt\(([0-9]+)\).*$/", $rules["$actual_model"][$rules_pointe
     //echo "option check: [$option_result]<br>";
 }
 */
-//echo "in PreProcessGlobalParserFunctions() - Rule: $rules_pointer ... <br>";
+//echo "Rule: $rules_pointer: " . $rules[$actual_model][$rules_pointer][0] . " => " . $rules[$actual_model][$rules_pointer][1] . "<br>";
 
 //$option_to_test = $rules_options["$actual_model"][$rules_pointer][0];
 $option_result = CheckTstopt($rules_options["$actual_model"][$rules_pointer][0]);
@@ -928,12 +956,15 @@ function PostProcessDataFromLinguisticalAnalyzer($word) {
     global $analyzer, $analyzer_options; // contains postprocess-rules
     global $global_linguistical_analyzer_debug_string, $last_written_form, $parallel_lng_form, $condition1_check, $condition2_check;
     global $parallel_lng_form;
+    //echo "PostProcessDataFromLinguisticalAnalyzer():<br>";
+    
     $number_analyzer_rules = 0;
     $length = count($analyzer);
     for ($i=0; $i<$length; $i++) {
         // uses extended_preg_replace (i.e. strtolower()/strtoupper() can be used) but no extended formalism (i.e. no multiple consequences!!! (even if multiple consequences have been stored to $analyzer by import_model.php))
         //echo "postprocess: /" . $analyzer[$i][0] . "/ => " . $analyzer[$i][1] . " ($word / $last_written_form)<br>";
-       
+        //echo "A: Rule ($i): " . $analyzer[$i][0] . " => " . $analyzer[$i][1] . "<br>";
+
 // special rule: (1 condition => several consequences &&) hybrid rule
 // special case: if phonetic transcription is on condition can be tested on the written form of the word (instead of transcription)
 // in that case, the following formalism is valid:
@@ -1045,7 +1076,7 @@ if (($_SESSION['phonetics_yesno']) && (($match_wrt) || ($match_lng))) {
 //}
 
 function MetaParser( $text ) {          // $text is a single word!
-    global $font, $combiner, $shifter, $rules, $functions_table;
+    global $font, $combiner, $shifter, $rules, $functions_table, $cached_result;
     global $std_form, $prt_form, $processing_in_parser, $separated_std_form, $separated_prt_form, $original_word, $lin_form;
     global $punctuation, $combined_pretags, $combined_posttags, $global_debug_string;
     global $safe_std;       // this global variable comes from database (in purgatorium1.php)
@@ -1070,6 +1101,7 @@ function MetaParser( $text ) {          // $text is a single word!
     // be a problem coming from the parser), but actually this problem is due the fact, that "dies" and "ist" get cached as
     // shorthand words first and are then copy&pasted without considering that the token_type may have changed in the meantime.
     // The solution for now: limit caching strictly to shorthand words (see last AND in following if-statement)
+    $cached_result = false;
     if ((isset($cached_results[$text])) && ($cached_results[$text] !== false) && ($_SESSION['token_type'] === "shorthand")){
         //echo "<b>get cached: " . $cached_results[$text] . "</b><br>";
         // due to the global variables used throughout parser and engine, these must be set accordingly to get correct results ...
@@ -1080,6 +1112,7 @@ function MetaParser( $text ) {          // $text is a single word!
             case "meta_prt" : $prt_form = $cached_results[$text]; $pretokens = ""; $posttokens = ""; $last_pretoken_list = ""; $last_posttoken_list = ""; $combined_pretags = ""; $combined_posttags = ""; 
                             break;
         }
+        $cached_result = true;
         return $cached_results[$text];
     }
     

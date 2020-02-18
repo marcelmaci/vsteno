@@ -1918,24 +1918,24 @@
 	#BeginSubSection(diacritics)
 		"([a-z]|Ä|Ö|Ü)" => "strtolower()";
 		
-		"tstwrt(^B)" => { "\[b\]", "[B@#_]" };
-		"tstwrt(^R)" => { "\[ar\]", "[AR@#_]" };
-		"tstwrt(^b$)" => { "\[b\]", "[B@#/]" };
-		"tstwrt(^[Ww])" => { "\[w\]", "[W@#.]" };
-		"tstwrt(res$)" => { "\[vr\]$", "[VR@#/_]" };
-		"tstwrt(aient$)" => { "\[heit\]$", "[heit@#/_]" }; 
-		"tstwrt(ces$)" => { "\[s\]$", "[s@#/_]" }; 
-		"tstwrt(tes$)" => { "\[t\]$", "[t@#/_]" }; 
-		"tstwrt(^r$)" => { "\[ar\]$", "[ar@#/]" };
+		"tstwrt(^B)" => { "\[[Bb]\]", "[B@#_]" };
+		"tstwrt(^R)" => { "\[(?:ar|AR])\]", "[AR@#_]" };
+		"tstwrt(^b$)" => { "\[[Bb]\]", "[B@#/]" };
+		"tstwrt(^[Ww])" => { "\[[Ww]\]", "[W@#.]" };
+		"tstwrt(res$)" => { "\[(?:vr|VR)\]$", "[VR@#/_]" };
+		"tstwrt(aient$)" => { "\[(?:heit|HEIT)\]$", "[heit@#/_]" }; 
+		"tstwrt(ces$)" => { "\[[Ss]\]$", "[s@#/_]" }; 
+		"tstwrt(tes$)" => { "\[[Tt]\]$", "[t@#/_]" }; 
+		"tstwrt(^r$)" => { "\[(?:ar|AR)\]$", "[ar@#/]" };
 		
 		// complete words
-		"tstwrt(^ânes?$)" => { "\[n\]$", "[n@#/]" };
-		"tstwrt(^Andes$)" => { "\[d\]$", "[d@#/]" }; // book: writen in the middle of long a~ (VSTENO under d)
-		"tstwrt(^[Ll]és(?!s))" => { "^(.*?)\[s\]", "$1[S@#.]" };
-		"tstwrt(^[Pp]ois(?!s))" => { "^(.*?)\[s\]", "$1[S@#.]" };
-		"tstwrt(^[Cc]ous(?![sc]))" => { "^(.*?)\[s\]", "$1[S@#.]" };
-		"tstwrt(^[Dd]att)" => { "^(.*?)\[t\]", "$1[T@#/.]" };
-		"tstwrt(^[Ee]lles$)" => { "\[l\]$", "[L@#/_]" };
+		"tstwrt(^ânes?$)" => { "\[[Nn]\]$", "[n@#/]" };
+		"tstwrt(^Andes$)" => { "\[[Dd]\]$", "[d@#/]" }; // book: writen in the middle of long a~ (VSTENO under d)
+		"tstwrt(^[Ll]és(?!s))" => { "^(.*?)\[[Ss]\]", "$1[S@#.]" };
+		"tstwrt(^[Pp]ois(?!s))" => { "^(.*?)\[[Ss]\]", "$1[S@#.]" };
+		"tstwrt(^[Cc]ous(?![sc]))" => { "^(.*?)\[[Ss]\]", "$1[S@#.]" };
+		"tstwrt(^[Dd]att)" => { "^(.*?)\[[Tt]\]", "$1[T@#/.]" };
+		"tstwrt(^[Ee]lles$)" => { "\[[Ll]\]$", "[L@#/_]" };
 
 	#EndSubSection(diacritics)
 	#BeginSubSection(finalizer)

@@ -74,6 +74,9 @@ Buchhandlung des Allgemeinen Schweizerischen Stenographenvereins, Druckerei Wetz
 		"model_date" := "10. Oktober 2019";
 		"required_version" := "0.2";
 		"model_se_revision" := "1";
+		// options
+		//"model_option0_text" := "TST";  // only for testing
+		//"model_option0_yesno" := "no";
 		// configure linguistical analysis
 		"analysis_type" := "selected";
 		"hyphenate_yesno" := "yes";       // new feature for english: combine 3 types of analysis
