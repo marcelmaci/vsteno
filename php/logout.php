@@ -1,4 +1,13 @@
-<?php
+<?php session_start();
+// terminate session with normal display after logout
+// do this operation without testing password
+$_SESSION['display_mode'] = "normal";
+$_SESSION['token_color'] = "black";
+$_SESSION['title_color'] = "black";
+$_SESSION['introduction_color'] = "black";
+$_SESSION['output_page_number_color'] = "black";
+$_SESSION['output_line_number_color'] = "black";
+
 require_once "vsteno_template_top.php";
 require_once "session.php";
 

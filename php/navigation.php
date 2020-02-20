@@ -22,7 +22,11 @@
                 <p><b>Kontakt</b></p>
                 <ul>
                 <li><A href="collaborate.php">Mitmachen!</A></li>
-                <li><A href="mailto:m.maci@gmx.ch"><img src="../web/email_icon_grau_transparent.png" height="13" width="23"> Mail</A></li>
+                <li><?php
+                     if ($_SESSION['display_mode'] === "inverted") echo '<A href="mailto:m.maci@gmx.ch"><img src="../web/email_icon_grau_transparent_inverted.png" height="13" width="23"> Mail</A>';
+                     else echo '<A href="mailto:m.maci@gmx.ch"><img src="../web/email_icon_grau_transparent.png" height="13" width="23"> Mail</A>';
+                ?>
+                </li>
                 </ul>
                 <p><b>Start</b></p>
                 <ul>
@@ -50,5 +54,11 @@
                         echo "<li><a href='dump_models.php'>->MDUMP</a></li>";
                         echo "<li><a href='load_models.php'>->MLOAD</a></li>";
                         echo "</ul>";
+                        echo "<ul><p><b>View</b></p>";
+                        if ($_SESSION['display_mode'] === "inverted") {
+                            echo "<li>&nbsp;&nbsp;<img src='../web/yinyang_small_inverted.png' width='15' height='15'><a href='yinyang.php'>YANG</a><img src='../web/yinyang_small_inverted.png' width='15' height='15'></li>";
+                        } else {
+                            echo "<li>&nbsp;&nbsp;<img src='../web/yinyang_small.png' width='15' height='15'><a href='yinyang.php'>YIN</a><img src='../web/yinyang_small.png' width='15' height='15'></li>";
+                        }
                       }
                 ?>

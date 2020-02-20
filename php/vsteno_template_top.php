@@ -2,8 +2,9 @@
 // QUICK&DIRTY way to set inverted mode
 // session variable for normal or inverted mode
 // comment out for normal mode
+// the following value overrides value set in yinyang.php!
 // $_SESSION['display_mode'] = "inverted";
-$_SESSION['display_mode'] = "normal";
+//$_SESSION['display_mode'] = "normal";
 
 ?>
 <!DOCTYPE HTML>

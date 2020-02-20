@@ -1620,6 +1620,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             $angle = $_SESSION['token_inclination'];
             $stroke_width = $_SESSION['token_thickness'];
             $scaling = $_SESSION['token_size'];
+            // not sure how the following line affects the output ...
             $svg_color = "black";  // fix this with a hardcoded value for the moment (too complicated otherwhise to fix this bug ...)
             $stroke_dasharray = $_SESSION['token_style_custom_value']; 
             
@@ -1628,8 +1629,9 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                             $tx = ($word_position_x + $align_shift_x) / $scale;
                             $ty = $word_position_y / $scale; // + $extra_shift_y;
                             // $svg_color = $_SESSION['token_color'];                  // use same color as shorthand text (that was a bad idea by the way ... :)
-                            $svg_color = "black";  // fix this with a hardcoded value for the moment (too complicated otherwhise to fix this bug ...)
-          
+                            //$svg_color = "black";  // fix this with a hardcoded value for the moment (too complicated otherwhise to fix this bug ...)
+                            $svg_color = $_SESSION['token_color']; // might not produce correct results in every case, but better than hardcoded ... (?!)
+                            
                             $ttext = $word_splines[$i][2];                          // element 2 contains text
                             //echo "SVG: height=$svg_height width=$svg_width baseline=$svg_baseline color=$svg_color text=$text<br>";
                             //$to_add = "<text x=\"$0\" y=\"0\" fill=\"$svg_color\" font-size=\"14px\" transform=\"scale($scale) translate($tx $ty)\" font-family=\"Courier\">$ttext Fuck</text>";

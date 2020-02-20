@@ -1,4 +1,12 @@
-<?php
+<?php session_start();
+// start with inverted display mode after login
+// do this operation without testing password
+$_SESSION['display_mode'] = "inverted";
+$_SESSION['token_color'] = "white";
+$_SESSION['title_color'] = "white";
+$_SESSION['introduction_color'] = "white";
+$_SESSION['output_page_number_color'] = "white";
+$_SESSION['output_line_number_color'] = "white";
 
 require_once "vsteno_template_top.php";
 require_once "session.php";
