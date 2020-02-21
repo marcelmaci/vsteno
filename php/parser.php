@@ -1086,7 +1086,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $parallel_lng_form, $last_written_form;
     
     $global_linguistical_analyzer_debug_string = "";
-    //echo "processing: $text => ";
+    //echo "Metaparser(): $text<br>";
     // check if word has been cached
     //echo "isset: " . isset($cached_results[$text]) . " value: " . $cached_results[$text] . " ";
     
@@ -1191,10 +1191,17 @@ if ($_SESSION['analysis_type'] === "selected") {
                     //echo "stems_list: " . $_SESSION['stems_list'] . "<br>";
                     //echo "suffixes_list: " . $_SESSION['suffixes_list'] . "<br>";
                     //echo "session(block_list): " . $_SESSION['block_list'] . "<br>";
-                    if (($pos1 !== false) || ($pos2 !== false)) {
-                        //echo "only do hyphens<br>";
-                        $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], false, $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list'], $_SESSION['block_list']);    
-                    } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list'], $_SESSION['block_list']);    
+                    
+                    // somewhere during Ariadne+ development captchas got broken (again ...)
+                    // the bug seems to be in the following lines
+                    // so to avoid it, introduce a session variable and avoid the code when calculating captchas ... 
+                    // (ugly, yes ... :)
+                    if ($_SESSION['captcha_processing'] === false){ 
+                        if (($pos1 !== false) || ($pos2 !== false)) {
+                            //echo "only do hyphens<br>";
+                            $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], false, $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list'], $_SESSION['block_list']);    
+                        } else $test = analyze_word_linguistically($word, $_SESSION['hyphenate_yesno'], $_SESSION['composed_words_yesno'], $_SESSION['composed_words_separate'], $_SESSION['composed_words_glue'], $_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list'], $_SESSION['block_list']);    
+                    } else $test = $word;
                     //$test = preg_replace("/\|/", "", $test); // horrible ... filter out |, so that only \ from analizer will get separated ...
                     // write debug info
                   

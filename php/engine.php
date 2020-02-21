@@ -1210,6 +1210,7 @@ function MetaForm2TokenList( $text ) {
 
 function NormalText2TokenList( $text ) {
     //list( $pre, $word, $post ) = GetPreAndPostTags( $text );
+    //echo "NormalText2TokenList(): text = $text<br>";
     $text = htmlspecialchars_decode( $text );
     $metaform = MetaParser( $text );
     //echo "NormalText2tokenlist(): text = $text metaform = $metaform<br>";
@@ -1228,7 +1229,7 @@ function SingleWord2SVG( $text, $angle, $stroke_width, $scaling, $color_htmlrgb,
     //echo "Singleword2svg(): text = $text<br>";
    
     $tokenlist = NormalText2TokenList( $text );
-    //echo "Singleword2svg(): text: $text tokenlist = $tokenlist<br>";
+    //echo "(2)Singleword2svg(): text: $text tokenlist = $tokenlist<br>";
     //var_dump($tokenlist); echo "<br>";
     
     //echo "SingleWord2SVG(): tokenlist dump: "; var_dump($tokenlist);

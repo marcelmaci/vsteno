@@ -32,7 +32,7 @@ Captcha:<br>
 </td> 
 <td>
 Captcha:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-<?php $temp = GetShorthandCaptcha(4); echo $temp; ?>
+<?php $temp = GetSimplifiedShorthandCaptcha(4); echo $temp; ?>
 
 </td>
 <td>
