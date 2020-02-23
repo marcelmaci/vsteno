@@ -189,7 +189,7 @@ function CalculateStenoPage() {
     if (strlen($text) > 0) {
         // if text is ascii format insert html-tags by converting \n to <br>
         if ($_SESSION['original_text_ascii_yesno']) { // don't insert breaks if text already contains html-tags
-            if (!preg_match("/<br>|<p>|<\/p>/", "$text")) {
+            if (!preg_match("/<br>|<p>|<\/p>|<newpage>/", "$text")) {
                 $text = preg_replace( "/\n/", "<br>", $text);
                 //echo "after: " . htmlspecialchars($text) . "<br>";
             }

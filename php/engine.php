@@ -1424,6 +1424,7 @@ function LayoutedSVGProcessHTMLTags( $html_string ) {
                 case "<br>" : $number_linebreaks++; break;
                 case "</p>" : $number_linebreaks++; break;
                 case "<p>" : $number_linebreaks++; break;
+                case "<newpage>" : $number_linebreaks=9999; break; // let's try ...
         }
     }
     return $number_linebreaks;
@@ -1554,6 +1555,7 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
 
 function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, $force_left_align ) {
     global $distance_words, $vector_value_precision, $baseline_y, $word_tags;
+    //echo "DrawOneLineInLayoutedSVG(): word_position_y = $word_position_y<br>";
     //var_dump($word_tags);
     $angle = $_SESSION['token_inclination'];
     $stroke_width = $_SESSION['token_thickness'];
@@ -1980,6 +1982,8 @@ function CalculateLayoutedSVG( $text_array ) {
             */ 
             if (mb_strlen($bare_word)>0) $actual_word++;
             
+            //echo "number_linebreaks = $number_linebreaks<br>";
+            
             if ($number_linebreaks > 0) {
                 // echo "num_linebreaks: $number_linebreaks => inserting linebreak ...<br>";
                 $last_word = $actual_word;
@@ -1994,8 +1998,9 @@ function CalculateLayoutedSVG( $text_array ) {
                 //$last_word = 2;
                 $temp_width = 0;
                 $word_position_x = $left_margin;
+                //echo "add several lines ($number_linebreaks)<br>";
                 $word_position_y += $line_height * $number_linebreaks;  // what happens if number_linebreaks exceeds bottom limit ... ?!?
-                
+                //if ($number_linebreaks == 9999) $word_position_y = $top_start_on_page; // doesn't work: newpage is drawn at correct y position but on the SAME page (no new svg)
             }
             
             // echo "position_x: $word_position_x temp_width: $temp_width<br>";
@@ -2039,12 +2044,14 @@ function CalculateLayoutedSVG( $text_array ) {
                 $old_temp_width = $temp_width;
                 $last_word = 2;
                 $temp_width = $left_margin + $word_width[0];
+                //echo "add one line ...<br>";
                 $word_position_y += $line_height;
                 // echo "word_position_y: $word_position_y bottom_limit: $bottom_limit<br>";
                 
                 
             }
             if (($word_position_y > $bottom_limit) && ($key != $text_array_length-1)) {
+                //echo "<br>-------------------------------<br>start new page (linebreaks = $number_linebreaks)...<br>";
                 //echo "word_position_y: $word_position_y max_height: $max_height bottom_margin: $bottom_margin => start new svg ...<br>";
                 // close svg-tag 
                 $svg_string .= "</g>$svg_not_compatible_browser_text</svg>";
@@ -2090,6 +2097,11 @@ function CalculateLayoutedSVG( $text_array ) {
         
                 // $word_position_y = $baseline_y- (10 * $_SESSION['token_size']) + $top_margin; // baseline_bug ....................................
                 $word_position_y = $top_start_on_page;
+                /*
+                if ($number_linebreaks == 9999) {
+                    echo "case 1: word_position_y = $word_position_y top_start_on_page = $top_start_on_page number_linebreaks = $number_linebreaks<br>";
+                    $word_position_y -= (10 * $_SESSION['token_size']) * $_SESSION['num_system_lines'];
+                }*/
             } else {
                 $filtered_word = FilterOriginalWord($single_word);
                 $original_text_last_page_buffer .= "$filtered_word ";
@@ -2117,6 +2129,13 @@ function CalculateLayoutedSVG( $text_array ) {
             $svg_string .= InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height);
             //echo "auxiliary: " . htmlspecialchars(InsertAuxiliaryLinesInLayoutedSVG()) . "<br>";
             $word_position_y = $baseline_y- (10 * $_SESSION['token_size']) + $top_margin; // baseline_bug ....................................
+            //if ($number_linebreaks == 9999) $word_position_y -= (10 * $_SESSION['token_size']) * $_SESSION['num_system_lines']; // NOT TESTED
+            /*
+            if ($number_linebreaks == 9999) {
+                echo "case 2<br>";
+                $word_position_y = $top_start_on_page; // NOT TESTED
+            }
+            */
         }
         //echo "insert last line<br>";
         //var_dump($word_splines);

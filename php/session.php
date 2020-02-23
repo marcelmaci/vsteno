@@ -50,6 +50,7 @@ function InitializeSessionVariables() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
     $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model, $standard_models_list;
     // set standard values for use in session
+    $_SESSION['captcha_processing'] = false;
     $_SESSION['standard_models_list'] = $standard_models_list;
     $_SESSION['license'] = "";
     $_SESSION['release_notes'] = "";
