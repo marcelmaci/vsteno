@@ -252,6 +252,7 @@ Fenster:
 <input type="radio" name="output_format" value="meta_prt" <?php echo ($_SESSION['output_format'] === "meta_prt") ? "checked" : "";?>> PRT
 <input type="radio" name="output_format" value="train" <?php echo ($_SESSION['output_format'] === "train") ? "checked" : "";?>> Training
 <input type="radio" name="output_format" value="debug" <?php echo ($_SESSION['output_format'] === "debug") ? "checked" : "";?>> Debug 
+<input type="checkbox" name="debug_show_points" value="debug_show_points_yes" <?php echo ($_SESSION['debug_show_points_yesno']) ? "checked" : "";?>> Punkte
 => <a href="rules_statistics.php">Regeln</a>
 <br>
 

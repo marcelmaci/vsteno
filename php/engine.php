@@ -502,7 +502,12 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             // search 2 tuplets ahead because data af knot 2 is stored in preceeding knot 1 (so knot 3 contains draw_no_connection info at offset offs_dr) 
             if ($splines[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
             $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
+            // add knots
+            if ($_SESSION['debug_show_points_yesno']) $svg_string .= "<circle cx=\"$x1\" cy=\"$y1\" r=\"2\" stroke=\"red\" stroke-width=\"1\" fill=\"red\" />";
         }
+        // add last knot
+        if ($_SESSION['debug_show_points_yesno']) $svg_string .= "<circle cx=\"$x2\" cy=\"$y2\" r=\"2\" stroke=\"red\" stroke-width=\"1\" fill=\"red\" />";
+        
         // add separate_spline to svg
         //echo "create svg for separate_spline<br>";
         //var_dump($separate_spline); echo "<br>";

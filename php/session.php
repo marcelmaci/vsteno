@@ -51,6 +51,7 @@ function InitializeSessionVariables() {
     $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model, $standard_models_list;
     // set standard values for use in session
     $_SESSION['captcha_processing'] = false;
+    $_SESSION['debug_show_points_yesno'] = false;
     $_SESSION['standard_models_list'] = $standard_models_list;
     $_SESSION['license'] = "";
     $_SESSION['release_notes'] = "";
@@ -329,6 +330,8 @@ if ($_POST['token_size'] != "") {
     $_SESSION['output_page_number_posx'] = htmlspecialchars($_POST['page_number_posx']);
     $_SESSION['output_page_number_posy'] = htmlspecialchars($_POST['page_number_posy']);
     $_SESSION['output_page_number_color'] = htmlspecialchars($_POST['page_number_color']);
+    
+    $_SESSION['debug_show_points_yesno'] = (htmlspecialchars($_POST['debug_show_points']) === "debug_show_points_yes") ? true : false;
     
     $_SESSION['mark_wordlist'] = htmlspecialchars($_POST['marker_word_list']);
     
