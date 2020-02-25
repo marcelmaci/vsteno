@@ -108,6 +108,7 @@ Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo (
 Rendering: 
 <?php /*echo "test:" . $_SESSION['rendering_middleline_yesno'] . "<";*/?>
 <input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 
+[<input type="checkbox" name="interpolated_yesno" value="yes" <?php echo ($_SESSION['interpolated_yesno']) ? "checked" : ""?>>interpoliert]
 <input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon 
 <input type="text" name="rendering_polygon_color"  size="4" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
 Deckkraft <input type="text" name="rendering_polygon_opacity"  size="2" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">

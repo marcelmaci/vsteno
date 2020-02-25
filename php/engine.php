@@ -115,6 +115,7 @@ require_once "data.php";
 require_once "constants.php";
 require_once "rendering.php";
 require_once "svgtext.php";
+require_once "interpolate.php";
 
 // SE1-BACKPORTS: revision1
 // disable SE1 rev1 again: problem with vertical_compensation_x ?!
@@ -323,8 +324,58 @@ function GetControlPoints( $px0, $py0, $px1, $py1, $px2, $py2, $t1, $t2) {
     return [ new Point( p1x, p1y ), new Point( p2x, p2y ) ];
 */
 }
+/*
+function AvoidDivisionBy0($x) {
+  if ($x == 0) return (float)0.000000000000001; // yes ... learn to live with imperfections ... ! :x)  
+} 
+*/
+function CalculateBezierPoint($p1x, $p1y, $c1x, $c1y, $p2x, $p2y, $c2x, $c2y, $percent) {
+	// considers length of complete bezier curve as 100%
+	// calculates point situated at percent percent of the curve (starting at p1)
+	// returns coordinates of point and m of tangent
+	// calculate 3 outer lines 
+	// note: code comes from global_functions.js
+    $dx1 = $c1x - $p1x;
+    $dy1 = $c1y - $p1y;
+    $dx2 = $c2x - $c1x;
+    $dy2 = $c2y - $c1y;
+    $dx3 = $p2x - $c2x;
+    $dy3 = $p2y - $c2y;
+	// calculate 2 inner lines
+	// coordinates
+	$factor = 1 / 100 * $percent;
+	//console.log("factor: ", factor);
+	$ix1 = $p1x + $dx1 * $factor;
+    $iy1 = $p1y + $dy1 * $factor;
+    $ix2 = $c1x + $dx2 * $factor;
+    $iy2 = $c1y + $dy2 * $factor;
+    $ix3 = $c2x + $dx3 * $factor;
+    $iy3 = $c2y + $dy3 * $factor;
+	// deltas
+	$dix1 = $ix2 - $ix1;
+    $diy1 = $iy2 - $iy1;
+    $dix2 = $ix3 - $ix2;
+    $diy2 = $iy3 - $iy2;
+	// calculate last inner line that touches bezier curve
+	// coordinates
+	$tx1 = $ix1 + $dix1 * $factor;
+    $ty1 = $iy1 + $diy1 * $factor;
+    $tx2 = $ix2 + $dix2 * $factor;
+    $ty2 = $iy2 + $diy2 * $factor;
+	// deltas
+	$dtx = $tx2 - $tx1;
+    $dty = $ty2 - $ty1; // avoid division by 0 for bm!?
+	// calculate bezier point (coordinates and m)
+	$bx = $tx1 + $dtx * $factor;
+    $by = $ty1 + $dty * $factor;
+    //$bm = $dtx / AvoidDivisionBy0($dty);
+	return array($bx, $by); //, $bm);  // bm is not necessary here 
+}
 
 function CalculateWord( $splines ) {     // parameter $splines
+        // interpolate 
+        if ($_SESSION['interpolated_yesno']) $splines = InterpolateSpline($splines);
+        // define length
         $array_length = count( $splines );
         // set control points for first knot to coordinates of first knot
         $splines[2] = $splines[0];

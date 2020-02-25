@@ -48,6 +48,7 @@ require_once "import_model.php";
 require_once "engine.php";
 require_once "parser.php";
 require_once "share_font.php";
+//require_once "interpolate.php";
 
 //require_once "regex_helper_functions.php";
 
@@ -135,31 +136,6 @@ $_SESSION['actual_model_number_of_rules'] = count($rules[$actual_model]);
 
 $_SESSION['last_updated_model'] = $actual_model;
 
-// set statistics
-//$_SESSION['statistics_tokens'] = count($steno_tokens_master[$actual_model]);
-//$_SESSION['statistics_rules'] = count($rules);
-
-
-/* not sure whether this is a good idea ...
-// The problem with data.php is that you can't control the moment when the model is loaded.
-// It is loaded automatically whenever data.php is included via require_once.
-// This leads to the result that when calculate.php is invoked via input form, first the
-// model is loaded (because of require_once) and only then the new form values are set.
-// To solve this for the moment: Introduce a new function LoadModel() which will allow
-// other program parts to (Re)Load the actual model at any moment. It is not very beautiful
-// solution because it means that sometimes the same model has to be loaded twice, but
-// the advantage is that it garantuees 100% backwards compatibility with code that relies
-// on the immediate model loading via require_once.
-function LoadModel() {
-    global $actual_model;
-    echo "Model reloaded<br>";
-    $model_to_load = $_SESSION['actual_model'];
-    $text_to_parse = LoadModelFromDatabase($model_to_load);
-    //echo "text: $text_to_parse<br><br>";
-
-    $test = ImportModelFromText($text_to_parse);
-    $actual_model = $_SESSION['actual_model'];
-}
-*/
+//InterpolateFont($font[$_SESSION['actual_model']]);
 
 ?>

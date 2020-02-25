@@ -85,6 +85,7 @@ Steno Engine:
     - Diverse Performance-Optimierungen</li>
     <li><b>Debugging</b><br>
     - Ausgabe Stage-Wechsel (nur Stages 3 und 4)<br>
+    - Anzeigen von Punkten (inline)<br>
     - Angabe zum Caching</li>
 </ul>
 </li>
