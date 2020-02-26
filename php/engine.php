@@ -501,11 +501,84 @@ function InsertAuxiliaryLines( $width ) {
     return $lines_string;
 }
 
+function InsertGrid($width) {
+    global $standard_height, $space_before_word;
+    // define values
+    $shift_x = $space_before_word;
+    $grid_string = "";
+    $leftx = 0; $rightx = $width;
+    $stroke_dasharray = "1,1";
+    $color = $_SESSION['token_color']; // make it work with inverted mode
+    $csc = "red"; // color screen coordinates
+    $coc = ($color === "white") ? "yellow" : "blue"; // color original coordinates
+    $thickness = 1;
+    $thickness_border = 2;
+    $bottom = 6*$standard_height;
+    $top = 0;
+    $standard_width = 10*$_SESSION['token_size'];
+    
+    // add horizontal lines
+    for ($y=$bottom; $y>=$top; $y-=$standard_height) {
+        $grid_string .= "<line x1=\"$leftx\" y1=\"$y\" x2=\"$rightx\" y2=\"$y\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
+    }
+
+    // add vertical lines
+    for ($x=$leftx+$shift_x; $x<=$rightx+$shift_x; $x+=$standard_width) {
+        $grid_string .= "<line x1=\"$x\" y1=\"$top\" x2=\"$x\" y2=\"$bottom\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
+    }
+
+    // add borders
+    $grid_string .= "<rect width=\"$rightx\" height=\"$bottom\" style=\"stroke-width:$thickness_border;stroke:$color;$fill:white;fill-opacity:0\" />"; 
+    
+    // add labels
+    // screen coordinates
+    // horizontal
+    for ($x=$leftx+$shift_x; $x<=$rightx+$shift_x; $x+=$standard_width) {
+        $posx = $x+5;
+        $posy =  3 * $_SESSION['token_size'];
+        $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$csc\">$x</text>"; 
+    }
+    
+    // vertical
+    for ($y=$standard_height; $y<=$bottom; $y+=$standard_height) {
+        $posx = $shift_x - 8;
+        $posy = $y + 3 * $_SESSION['token_size'];
+        $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$csc\">$y</text>"; 
+    }
+
+    // original coordinates
+    // horizontal
+    $orig_x = 0;
+    for ($x=$leftx; $x<=$rightx; $x+=$standard_width) {
+        $posx = $shift_x + $x + 5;
+        $posy =  $bottom - 2 * $_SESSION['token_size'];
+        $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$coc\">$orig_x</text>"; 
+        $orig_x += 10;
+    }
+    
+    // vertical
+    $orig_y = 30;
+    for ($y=$standard_height; $y<=$bottom; $y+=$standard_height) {
+        $posx = $width - 4 * $_SESSION['token_size'];
+        $posy = $y + 3 * $_SESSION['token_size'];
+        $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$coc\">$orig_y</text>"; 
+        $orig_y -= 10;
+    }
+
+    
+    return $grid_string; 
+}
+
 function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
     $combined_pretags, $separate_spline, $space_before_word;;
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
-
+    $csc = "red"; // color screen coordinates
+    $coc = ($_SESSION['token_color'] === "white") ? "yellow" : "blue"; // color original coordinates
+    
+    // text list with coordinates of points
+    $points_list = "";
+    
     // calculate polygon shadow before generating svg
     // reason: in some cases GetPolygon() has to adjust values in splines
     // these modifications have to occur before so that the take effect in the final svg
@@ -521,8 +594,10 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
         //echo "CreateSVG:<br>Pre: $pre<br>Post: $post<br>colorhtmlrgb: $color_htmlrgb<br>";
         //if (mb_strlen($pre)>0) ParseAndSetInlineOptions( $pre );        // set inline options
         $svg_string = "<svg width=\"$width\" height=\"$svg_height\"><title>$alternative_text</title><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\">\n"; // stroke-linejoin=\"round\" stroke-dasharray=\"2,2\">";
-        // draw auxiliary lines
-        $svg_string .= InsertAuxiliaryLines( $width );
+        // draw grid or auxiliary lines
+        if ($_SESSION['debug_show_grid_yesno']) $svg_string .= InsertGrid($width);
+        else $svg_string .= InsertAuxiliaryLines( $width ); // don't draw auxiliary lines when grid is selected
+        
         $svg_string .= "\n"; // separate line from curves in html
         $array_length = count( $splines );
 
@@ -554,10 +629,29 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
             if ($splines[$n+(2*tuplet_length)+offs_dr] == draw_no_connection) { $q2x = $x2; $q2y = $y2; } 
             $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
             // add knots
-            if ($_SESSION['debug_show_points_yesno']) $svg_string .= "<circle cx=\"$x1\" cy=\"$y1\" r=\"2\" stroke=\"red\" stroke-width=\"1\" fill=\"red\" />";
+            if ($_SESSION['debug_show_points_yesno']) {
+                $svg_string .= "<circle cx=\"$x1\" cy=\"$y1\" r=\"2\" stroke=\"$csc\" stroke-width=\"1\" fill=\"$csc\" />";
+                $point_i = $n / tuplet_length + 1;
+                $points_list .= "<font color=\"$csc\">P($point_i): $x1 / $y1";
+                // original coordinates
+                $ox = round(($x1-$shift_x) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
+                $oy = round(((4*$standard_height) - $y1) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
+                $points_list .= "<font color=\"" . $_SESSION['token_color'] . "\"> <=> <font color=\"$coc\">O($point_i): $ox / $oy<br>";
+            }
         }
         // add last knot
-        if ($_SESSION['debug_show_points_yesno']) $svg_string .= "<circle cx=\"$x2\" cy=\"$y2\" r=\"2\" stroke=\"red\" stroke-width=\"1\" fill=\"red\" />";
+        if ($_SESSION['debug_show_points_yesno']) { 
+            $svg_string .= "<circle cx=\"$x2\" cy=\"$y2\" r=\"2\" stroke=\"red\" stroke-width=\"1\" fill=\"red\" />";
+            $point_i = $n / tuplet_length + 1;
+            $points_list .= "<font color=\"$csc\">P($point_i): $x1 / $y1";
+            // original coordinates
+            $ox = round(($x1-$shift_x) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $oy = round(((4*$standard_height) - $y1) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $points_list .= "<font color=\"" . $_SESSION['token_color'] . "\"> <=> <font color=\"$coc\">O($point_i): $ox / $oy<br>";
+            $points_list .= "<font color=\"" . $_SESSION['token_color'] . "\">";
+            $points_list .= "<br>ShiftX: $shift_x<br>";
+            $points_list .= "Factor: " . $_SESSION['token_size'];
+        }
         
         // add separate_spline to svg
         //echo "create svg for separate_spline<br>";
@@ -600,6 +694,9 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
         $svg_string .= "$polygon_shadow</g>$svg_not_compatible_browser_text</svg>";
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
     // } 
+    // add points string if not empty
+    if (mb_strlen($points_list)>0) $svg_string .= "\n<p>$points_list</p>\n";
+    
     return $svg_string;
 }
 

@@ -52,6 +52,7 @@ function InitializeSessionVariables() {
     // set standard values for use in session
     $_SESSION['captcha_processing'] = false;
     $_SESSION['debug_show_points_yesno'] = false;
+    $_SESSION['debug_show_grid_yesno'] = false;
     $_SESSION['interpolated_yesno'] = false;
     $_SESSION['standard_models_list'] = $standard_models_list;
     $_SESSION['license'] = "";
@@ -333,6 +334,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['output_page_number_color'] = htmlspecialchars($_POST['page_number_color']);
     
     $_SESSION['debug_show_points_yesno'] = (htmlspecialchars($_POST['debug_show_points']) === "debug_show_points_yes") ? true : false;
+    $_SESSION['debug_show_grid_yesno'] = (htmlspecialchars($_POST['debug_show_grid']) === "yes") ? true : false;
     $_SESSION['interpolated_yesno'] = (htmlspecialchars($_POST['interpolated_yesno']) === "yes") ? true : false;
     
     $_SESSION['mark_wordlist'] = htmlspecialchars($_POST['marker_word_list']);

@@ -7,7 +7,7 @@ require_once "parser.php";
 function GetShorthandCaptcha( $length ) {
 // captcha completely broken
 // use simplified version always
-return $GetSimplifiedshorthandCaptcha($length);
+return GetSimplifiedshorthandCaptcha($length);
 /*
         $vowels = array( "a", "e", "i", "o", "u", "au", "ei"); // don't use umlaut for simplicity: "ö", "ü", "ä" ); // don't use äu / eu (ambigous)
         $beginning = array( "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "w", "x", "y", "z", 
