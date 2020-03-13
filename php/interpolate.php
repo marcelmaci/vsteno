@@ -81,7 +81,7 @@ function InterpolateSpline($spline) {
     return $spline;
 }
 
-function CalculateIntermediatePointAndPrepareTupletToInsert($p1x, $p1y, $c1x, $c1y, $p2x, $p2y, $c2x, $c2y, $percent, $intth, $p1t1 ,$p1t2) {
+function CalculateIntermediatePointAndPrepareTupletToInsert($p1x, $p1y, $c1x, $c1y, $p2x, $p2y, $c2x, $c2y, $percent, $intth, $p1t1, $p1t2, $dr) {
     //echo "CalculateBezierPoint($percent%):<br>";
     //echo "p1x = $p1x<br>p1y = $p1y<br>c1x = $c1x<br>c1y = $c1y<br>p2x = $p2x<br>p2y = $p2y<br>c2x = $c2x<br>c2y = $c2y<br>";
     list($intx, $inty) = CalculateBezierPoint($p1x, $p1y, $c1x, $c1y, $p2x, $p2y, $c2x, $c2y, $percent);
@@ -92,7 +92,7 @@ function CalculateIntermediatePointAndPrepareTupletToInsert($p1x, $p1y, $c1x, $c
     
     // set fix tensions 0.5 in order to create a "smooth" integration into curve
     // set knot types d1, d2 and dr to 0 (normal point)
-    return array($intx,$inty,$p1t1,0,$intth,0,0,$p1t2);
+    return array($intx,$inty,$p1t1,0,$intth,$dr,0,$p1t2);
 }
 
 function GetConnectedControlPoint( $p1x, $p1y, $cx, $cy, $color) {
@@ -154,6 +154,9 @@ function CreateNewInterpolatedSpline($spline, $patch_list) {
         $p1t2 = $spline[$i_p1+offs_t2];
         $p2t1 = $spline[$i_p1+offs_t2]; 
         $p2t2 = $spline[$i_p2+offs_t1]; // exists always, may not be valid, but will be ignored (?!)
+        // dr-field
+        $p1dr = $spline[$i_p1+offs_dr];
+        $p2dr = $spline[$i_p2+offs_dr];
         // preceeding point
         // coordinates
         $p0x = ($i_p1 == 0) ? $p1x : $spline[$i_p1-tuplet_length+offs_x1];
@@ -165,6 +168,7 @@ function CreateNewInterpolatedSpline($spline, $patch_list) {
         //echo "i_p2 = $i_p2 / length = $length<br>";
         $p3x = ($i_p2 >= $length-tuplet_length) ? $p2x : $spline[$i_p2+tuplet_length+offs_x1];
         $p3y = ($i_p2 >= $length-tuplet_length) ? $p2y : $spline[$i_p2+tuplet_length+offs_y1];
+        $p3dr = $spline[$i_p2+tuplet_length+offs_dr];
         // tensions
         $p3t1 = ($i_p2 >= $length-tuplet_length) ? $p2t1 : $spline[$i_p2+tuplet_length+offs_t1];
         $p3t2 = ($i_p2 >= $length-tuplet_length) ? $p2t2 : $spline[$i_p2+tuplet_length+offs_t2];
@@ -191,7 +195,8 @@ function CreateNewInterpolatedSpline($spline, $patch_list) {
             $p1c2x = $p1x;
             $p1c2y = $p1y;
         }
-    
+        
+        
         //echo "GetControlPoints():<br>p1x = $p1x<br>p1y = $p1y<br>p2x = $p2x<br>p2y = $p2y<br>p3x = $p3x<br>p3y = $p3y<br>";
         //list($p1c1x, $p1c1y, $p1c2x, $p1c2y) = GetControlPoints($p1x,$p1y,$p2x,$p2y,$p3x,$p3y,$p2t1,$p2t2);
         if ($_SESSION['debug_show_points_yesno']) {
@@ -220,7 +225,13 @@ function CreateNewInterpolatedSpline($spline, $patch_list) {
             $p2c2x = $p2x;
             $p2c2y = $p2y;
         }
-    
+        // and in the list of never ending special cases - here is another one:
+        // when the following point is non connecting (dr field == 5), connection points must also be corrected
+        if ($p3dr == 5) {
+            $p2c1x = $p2x;
+            $p2c1y = $p2y;
+        }
+        
         //echo "2nd:<br>P1($p1x/$p1y) - P2($p2x/$p2y) - P3($p3x/$p3y) - P2T12($p2t1;$p2t2)<br>";
         //echo "P2[C1]: $p2c1x/$p2c1y - P2[C2]: $p2c2x/$p2c2y<br><br>";
         if ($_SESSION['debug_show_points_yesno']) {
@@ -229,8 +240,11 @@ function CreateNewInterpolatedSpline($spline, $patch_list) {
             $global_interpolation_debug_svg .= GetCubicBezierCurve($p1x, $p1y, $p1c2x, $p1c2y, $p2c1x, $p2c1y, $p2x, $p2y, "purple"); 
             
         }
+        // determine dr-field
+        $dr_new = $p2dr;
+        // echo "P($i): dr = $p1dr - P(i+1): dr = $p2dr<br>";
         // now get the entire tuplet
-        $intermediate_point_as_tuplet = CalculateIntermediatePointAndPrepareTupletToInsert($p1x, $p1y, $p1c2x, $p1c2y, $p2x, $p2y, $p2c1x, $p2c1y, 50, $th_new, $p1t1, $p2t2);
+        $intermediate_point_as_tuplet = CalculateIntermediatePointAndPrepareTupletToInsert($p1x, $p1y, $p1c2x, $p1c2y, $p2x, $p2y, $p2c1x, $p2c1y, 50, $th_new, $p1t1, $p2t2, $dr_new);
         
         // slice original array and new point to new spline
         // first part: from last_slice to i_p1 (inclusive) / i_p2 (exclusive)
@@ -284,7 +298,15 @@ function GetPatchListForAllPoints($spline) {
                         $th_new = ($th_last + $th_act) / 2; // decrease thickness by 50%
                     }
                 } else {
-                    $th_new = ($th_last + $th_act) / 2; // not correct for decreasing thickness
+                    // this part is for increasing thicknesses
+                    // if incoming tension of following knot is 0, don't increase thickness (must be a sharp transition)
+                    $test_tension = $spline[$i+offs_t1];
+                    if ($test_tension == 0) {
+                        $th_new = $th_last; // same thickness
+                    } else {
+                        // normal case
+                        $th_new = ($th_last + $th_act) / 2; 
+                    }
                 }
                 //echo " (th_new = $th_new)<br>";
                 $patch_list[] = array( $i_last, $th_last, $i, $th_act, $th_new);
