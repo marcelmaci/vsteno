@@ -334,7 +334,8 @@ function CalculateBezierPoint($p1x, $p1y, $c1x, $c1y, $p2x, $p2y, $c2x, $c2y, $p
 	// calculates point situated at percent percent of the curve (starting at p1)
 	// returns coordinates of point and m of tangent
 	// calculate 3 outer lines 
-	// note: code comes from global_functions.js
+	//echo "CalculateBezierPoint():<br>P1($p1x/$p1y) C1($c1x/$c1y) P2($p2x/$p2y) C2($c2x/$c2y)<br>";
+    // note: code comes from global_functions.js
     $dx1 = $c1x - $p1x;
     $dy1 = $c1y - $p1y;
     $dx2 = $c2x - $c1x;
@@ -373,6 +374,8 @@ function CalculateBezierPoint($p1x, $p1y, $c1x, $c1y, $p2x, $p2y, $c2x, $c2y, $p
 }
 
 function CalculateWord( $splines ) {     // parameter $splines
+        global $global_interpolation_debug_svg;
+       // $global_interpolation_debug_svg = "";
         // interpolate 
         if ($_SESSION['interpolated_yesno']) $splines = InterpolateSpline($splines);
         // define length
@@ -535,14 +538,14 @@ function InsertGrid($width) {
     // horizontal
     for ($x=$leftx+$shift_x; $x<=$rightx+$shift_x; $x+=$standard_width) {
         $posx = $x+5;
-        $posy =  3 * $_SESSION['token_size'];
+        $posy =  18; //3 * $_SESSION['token_size'];
         $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$csc\">$x</text>"; 
     }
     
     // vertical
     for ($y=$standard_height; $y<=$bottom; $y+=$standard_height) {
         $posx = $shift_x - 8;
-        $posy = $y + 3 * $_SESSION['token_size'];
+        $posy = $y + 18; //3 * $_SESSION['token_size'];
         $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$csc\">$y</text>"; 
     }
 
@@ -551,7 +554,7 @@ function InsertGrid($width) {
     $orig_x = 0;
     for ($x=$leftx; $x<=$rightx; $x+=$standard_width) {
         $posx = $shift_x + $x + 5;
-        $posy =  $bottom - 2 * $_SESSION['token_size'];
+        $posy =  $bottom - 12; // * $_SESSION['token_size'];
         $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$coc\">$orig_x</text>"; 
         $orig_x += 10;
     }
@@ -559,8 +562,8 @@ function InsertGrid($width) {
     // vertical
     $orig_y = 30;
     for ($y=$standard_height; $y<=$bottom; $y+=$standard_height) {
-        $posx = $width - 4 * $_SESSION['token_size'];
-        $posy = $y + 3 * $_SESSION['token_size'];
+        $posx = $width - 24; //4 * $_SESSION['token_size'];
+        $posy = $y + 18; //3 * $_SESSION['token_size'];
         $grid_string .= "<text x=\"$posx\" y=\"$posy\" fill=\"$coc\">$orig_y</text>"; 
         $orig_y -= 10;
     }
@@ -571,7 +574,9 @@ function InsertGrid($width) {
 
 function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke_dasharray, $alternative_text ) {
     global $svg_height, $standard_height, $html_comment_open, $space_before_word, $svg_not_compatible_browser_text, $vector_value_precision,
-    $combined_pretags, $separate_spline, $space_before_word;;
+    $combined_pretags, $separate_spline, $space_before_word;
+    global $global_interpolation_debug_string, $global_interpolation_debug_svg;
+   
     $shift_x = $space_before_word ; // use session-variable for $space_before_word when implemented // don't multiply with $_SESSION['token_size']; (consider both values as absolute ?!) 
     $csc = "red"; // color screen coordinates
     $coc = ($_SESSION['token_color'] === "white") ? "yellow" : "blue"; // color original coordinates
@@ -642,15 +647,18 @@ function CreateSVG( $splines, $x, $width, $stroke_width, $color_htmlrgb, $stroke
         // add last knot
         if ($_SESSION['debug_show_points_yesno']) { 
             $svg_string .= "<circle cx=\"$x2\" cy=\"$y2\" r=\"2\" stroke=\"red\" stroke-width=\"1\" fill=\"red\" />";
+            $svg_string .= "\n$global_interpolation_debug_svg\n";
             $point_i = $n / tuplet_length + 1;
-            $points_list .= "<font color=\"$csc\">P($point_i): $x1 / $y1";
+            $points_list .= "<font color=\"$csc\">P($point_i): $x2 / $y2";
             // original coordinates
-            $ox = round(($x1-$shift_x) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
-            $oy = round(((4*$standard_height) - $y1) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $ox = round(($x2-$shift_x) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
+            $oy = round(((4*$standard_height) - $y2) / $_SESSION['token_size'], $vector_value_precision, PHP_ROUND_HALF_UP);
             $points_list .= "<font color=\"" . $_SESSION['token_color'] . "\"> <=> <font color=\"$coc\">O($point_i): $ox / $oy<br>";
             $points_list .= "<font color=\"" . $_SESSION['token_color'] . "\">";
             $points_list .= "<br>ShiftX: $shift_x<br>";
             $points_list .= "Factor: " . $_SESSION['token_size'];
+            // dont show svg debug text
+            //$points_list .= "<p><br>" .  htmlspecialchars($global_interpolation_debug_svg) . "</p>";
         }
         
         // add separate_spline to svg
