@@ -460,7 +460,7 @@ Laissez le passé! Ne le lésez pas! Est-ce que c'est du poison. Son cousin lui 
 Il était revenu: ils étaient revenu. Société d'assurance, sociétés d'assurances, factures et traites, il augmente, ils augmentent.
 Elle confectionne, elles confectionnent, il mentionne, ils mentionnent, les lions, les lionnes, 
 mannequin, camping, tournesol, westend à Londres. Le meeting eut lieu hier à Annecy. 
-// all number are written in full phonetic transcription, i.e. as if they stand alone: sis, huit with final -s and -t!
+// all numbers are written in full phonetic transcription, i.e. as if they stand alone: sis, huit with final -s and -t!
 // (difference with the book)
 
 CH10c)
