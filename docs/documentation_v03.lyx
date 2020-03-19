@@ -2492,6 +2492,23 @@ target "https://www.vsteno.ch/docs/mitmachen_bei_vsteno.pdf"
 .
 \end_layout
 
+\begin_layout Subsection*
+Bildschirm
+\end_layout
+
+\begin_layout Standard
+Das Anlegen eines Benutzerkontos hat auch den Vorteil, dass Sie ab Version
+ 0.3 (Hyperion) die Yinyang-Funktion verwenden können, mit der zwischen schwarzer
+ und weisser Schrift bzw.
+ weissem und schwarzem Hintergrund umgeschaltet werden kann.
+ Bei längerem Arbeiten ist der schwarze Modus sehr zu empfehlen, deshalb
+ ist dies der Standard-Modus, wenn Sie sich einloggen.
+ Zum Wechseln zwischen den zwei Modi können Sie anschliessend einfach auf
+ den Navigations-Link Yinyang im linken Bereich klicken.
+ Zum Ausdrucken muss zwingend der Standard-Modus (schwarze Schrift auf weissem
+ Hintergrund verwendet werden).
+\end_layout
+
 \begin_layout Section*
 Stenografische Zeichen
 \end_layout
@@ -7851,6 +7868,136 @@ AUCH
 .
 \end_layout
 
+\begin_layout Standard
+Mit Version 0.3 (Hyperion) erhält der TokenShifter eine zusätzliche Funktionalitä
+t.
+ Im Normalfall löscht der TokenShifter die Gruppeninformation (Offset 23)
+ des Basiszeichens.
+ Dadurch wird erreicht, dass an gewisse Zeichen (wie typischerweise das
+ Aufstrich-T) direkt angeschlossen werden kann.
+ Für die Eilschrift Stolze-Schrey wäre es aber praktisch, wenn man Zeichen
+ so verschieben könnte, dass sie ihre Gruppeninformation (und somit auch
+ ihren Abstand für den Spacer) bewahren.
+ Dies kann erreicht werden, indem das letzte Argument (= vertikale Verschiebung)
+ in Anführungszeichen (= Stringformat) gesetzt wird:
+\end_layout
+
+\begin_layout LyX-Code
+"TT" => { "TT1", 0, -10, 0, "-1" }
+\end_layout
+
+\begin_layout Standard
+Generiert ausgehend vom Grundzeichen 
+\begin_inset Quotes eld
+\end_inset
+
+TT
+\begin_inset Quotes erd
+\end_inset
+
+ ein neues Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+TT1
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Die Verschiebung auf der x-Achse beträgt 0, auf der y-Achse -10 (d.h.
+ das Zeichen wird um eine ganze Stufe nach unten versetzt).
+ Das vorgängige Delta-y beträgt 0, das nachträgliche Delta-y beträgt -1
+ (d.h.
+ die Schreibzeile verschiebt sich um eine Zeile nach unten, nachfolgende
+ Zeichen werden also eine Zeile tiefer angeschlossen).
+ Gleichzeitig bleibt - wegen der Anführungszeichen - die Gruppeninformation
+ des ursprünglichen Zeichens 
+\begin_inset Quotes eld
+\end_inset
+
+TT
+\begin_inset Quotes erd
+\end_inset
+
+ erhalten (wird also nach 
+\begin_inset Quotes eld
+\end_inset
+
+TT1
+\begin_inset Quotes erd
+\end_inset
+
+ kopiert), sodass auf TT1 folgende Zeichen den gleichen Abstand haben wie
+ auf TT folgende Zeichen.
+ Mit anderen Worten: 
+\begin_inset Quotes eld
+\end_inset
+
+TT
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+TT1
+\begin_inset Quotes erd
+\end_inset
+
+ verhalten sich absolut gleich, nur dass 
+\begin_inset Quotes eld
+\end_inset
+
+TT
+\begin_inset Quotes erd
+\end_inset
+
+ auf der Grundlinie steht und 
+\begin_inset Quotes eld
+\end_inset
+
+TT1
+\begin_inset Quotes erd
+\end_inset
+
+ eine Zeile tiefer
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Dieses Zeichen wird zum Beispiel in der Eilschrift-Variante der Wörter 
+\begin_inset Quotes eld
+\end_inset
+
+tatsächlich
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes eld
+\end_inset
+
+Tatsache
+\begin_inset Quotes erd
+\end_inset
+
+ verwendet (das schattierte Zeichen 
+\begin_inset Quotes eld
+\end_inset
+
+TT1
+\begin_inset Quotes erd
+\end_inset
+
+ steht für die Abkürzung {TAT}).
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection*
 Diakritische Zeichen
 \end_layout
@@ -9082,6 +9229,88 @@ en zurückzusetzen bzw.
 \begin_layout Standard
 Weitere Einblicke in das Font-Sharing gibt das Modell DESSBAS (Stolze-Schrey
  Deutsch), welches das Font GESSBAS aus der Datei GESSBAS.txt verwendet.
+\end_layout
+
+\begin_layout Subsection*
+Modelle importieren / exportieren
+\end_layout
+
+\begin_layout Standard
+Mit Version 0.3 (Hyperion) stehen Funktionen für den Import und den Export
+ von Modellen als Datein zur Verfügung.
+ Gehen Sie für den Export folgendermassen vor:
+\end_layout
+
+\begin_layout Standard
+Nachdem Sie sich eingeloggt haben, wählen Sie die Funktion MDUMP (= model
+ dump) in der linken Navigationsspalte.
+ Sie gelangen auf die MDUMP-Informationsseite, auf der alle Modelle aufgeführt
+ werden, die auf die Harddisk (des Servers) gespeichert werden.
+ Es sind dies die Standard-Modelle, sowie ihr eigenes CUSTOM-Model (z.B.
+ [XM0000002]).
+ Klicken Sie anschliessend auf 
+\begin_inset Quotes eld
+\end_inset
+
+bestätigen
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Sie gelangen auf eine Bestätigungsseite, auf welcher der Zielpfad der Dateien
+ (normalerweise ../ling/) und die Form der Dateinamen (MODELLNAME.dmp) angezeigt
+ wird.
+ Sie können nun in das Verzeichnis ../ling/ wechseln und von dort die Dateien
+ weiterverwenden.
+ Mit der Funktion MDUMP werden ALLE Standard- und Custom-Modell gespeichert
+ (es können keine einzelnen Modelle ausgewählt werden).
+\end_layout
+
+\begin_layout Standard
+Zum Importieren einer Datei gehen Sie wie folgt vor: Klicken Sie in der
+ linken Navigationsspalte auf MLOAD (= model load).
+ Sie gelangen auf die MLOAD-Seite, wo Sie die Modelle markieren können,
+ die Sie importieren möchten.
+ Die Modelle müssen die Endung (Dateierweiterung) .txt aufweisen.
+ Wenn Sie also vorgängig ein Modell mit MDUMP gespeichert haben (z.B.
+ XM00000002.dmp), dann müssen Sie diese Datei zuerst nach XM00000002.txt umbenenne
+n / kopieren.
+ Wählen Sie danach unter MLOAD das Modell XM00000002 zum Importieren aus
+ und klicken Sie auf 
+\begin_inset Quotes eld
+\end_inset
+
+bestätigen
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Auf der nächsten Seite erhalten Sie eine Status-Meldung, ob der Import
+ geklappt hat oder eine Fehlermeldung aufgetreten ist.
+\end_layout
+
+\begin_layout Standard
+Mit Version 0.3 (Hyperion) bleibt das manuelle Übertragen eines Modells (via
+ Webformular) nach wie vor möglich.
+ Die Funktionen MDUMP und MLOAD sind einfach schnellere und einfachere Möglichke
+iten, wenn Sie mehrere Fonts (zum Beispiel von einem Server zum anderen)
+ übertragen möchten
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+VSTENO holt sich die Liste der Modelle aus der Variablen $standard_models_list
+ in constants.php.
+ Es ist zusätzlich zu beachten: Da das Laden und Speichern von Dateien auf
+ dem Server sicherheitsrelevant sein kann, können mit MDUMP und MLOAD nur
+ jene Fonts verwendet werden, die in der Variablen $font_files_list in constants.
+php enthalten sind.
+ Diese Variable muss also vorgängig manuell angepasst werden.
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Part*
@@ -16132,6 +16361,58 @@ cription_list im Session-Teil (im Header) zugewiesen werden:
 Dies ein Beispiel für eine französische Patchliste.
  Auch hier können REGEX-Ausdrücke (inklusive Klammern und Variablen im Transkrip
 tionsteil) zur Erfassung verschiedener Formen verwendet werden.
+\end_layout
+
+\begin_layout Subsection*
+Akronyme
+\end_layout
+
+\begin_layout Standard
+Wenn die phonetische Transkription eingeschaltet ist, so hat dies den Nachteil,
+ dass auch Akronyme transkribiert werden.
+ Um dies zu verhindern können folgende Variablen im Header-Teil (oder im
+ Eingabe-Formular) gesetzt werden:
+\end_layout
+
+\begin_layout LyX-Code
+"phonetics_acronyms_yesno" := "no";
+\end_layout
+
+\begin_layout LyX-Code
+"phonetics_acronyms_lowercase_yesno" := "yes";
+\end_layout
+
+\begin_layout Standard
+Die Variable phonetics_acronyms_yesno bestimmt also, ob Akronyme transkribiert
+ werden oder nicht (die Standardeinstellung ist 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ = keine Transkription), die Variable phonetics_acronyms_lowercase_yesno
+ definiert, ob Akronyme in Kleinbuchstaben umgewandelt werden sollen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Diese Funktion ist nützlich, weil im Kirschenbaum Alphabet Grossbuchstaben
+ andere Bedeutungen haben als Kleinbuchstaben.
+ Durch die Umwandlung kann sichergestellt werden, dass die Zeichen so in
+ Steno übertragen werden, wie sie auch in der Langschrift sind.
+ Das Übertragen von Akronymen in Steno ist allerdings eine komplexe Sache:
+ u.U.
+ ist es deshalb besser, dies mit einer eigenen Funktion (z.B.
+ Akronymator wie im deutschen Modell DESSBAS) und eigenen Regeln (die auch
+ diakritische Zeichen - z.B.
+ Unterstrich für Grossbuchstaben - einfügen können) zu lösen.
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection*

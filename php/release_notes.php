@@ -1,5 +1,33 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Release notes</h1>
+<h1>Hyperion (Version 0.3)</h1>
+<p>Die Version 0.3 mit dem Namen <a href="https://de.wikipedia.org/wiki/Hyperion_(Titan)">Hyperion</a> wurde am 20. März 2020 veröffentlicht und 
+enthält folgende Verbesserungen.</p>
+
+<ul>
+    <li><b>Modelle</b>:<br>
+    Export/Import von Modellen via Datei auf Server (MDUMP/MLOAD)<br>
+    Optionale Regeln: definierbare Optionen in Eingabeformular (Prüfung innerhalb Regeln)</li>
+    <li><b>Ausgabe</b><br>
+    - Yinyang-Funktion: Umschalten heller / dunkle Darstellung (nur wenn eingeloggt)<br>
+    - &LT;newpage&GT;-Tag: manuelles Einfügen von Seitenumbrüchen</li>
+    <li><b>Engine</b><br>
+    - TokenShifter: Funktionserweiterung Spacer (Zeichengruppeninformation)<br>
+    - Performance: diverse Optimierungen (Anpassen von Algorithmen und Code in Kernfunktionen)<br>
+    - Interpolation: Errechnen von Zwischenpunkten (bessere Auflösung / Druckqualität)<br>
+    - Akronyme: phonetische Transkription / Konvertierung zu Kleinbuchstaben selektierbar</li>
+    <li><b>Debugging</b><br>
+    - Stage-Wechsel: wird für Stages 3 und 4 angegeben<br>
+    - Grafische Darstellung: Punkten & Koordinaten bei Interpolation (inline)<br>
+    - Caching: Angabe, ob ein Resultat aus dem Cache stammt oder nicht</li>
+    <li><b>Modelle</b><br>
+    - Deutsch (DESSBAS): die Eilschrift nach Hanspeter Frech integriert (selektierbare Option)<br>
+    - Spanisch (SPSSBAS): keine Änderungen<br>
+    - Französisch (FRSSBAS): diverse Korrekturen (hohe Zuverlässigkeit)<br>
+    - English (ENSSBAS): keine Änderungen<br>
+    </li>
+</ul>
+
 <h1>Ariadne (Version 0.2)</h1>
 <p>Die Version 0.2 mit dem Namen <a href="http://de.wikipedia.org/wiki/Ariadne">Ariadne</a> wurde am 20. November 2019 veröffentlicht und 
 enthält folgende Verbesserungen.</p>
@@ -68,31 +96,11 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <li>Installer: Skript zur automatischen Installation unter Trisquel GNU/Linux 8</li>
 </ul>
 
+
 <h1>Preview</h1>
 <p>Das Publikationsdatum der nächsten Release ist offen(*) und der Name ist noch nicht festgelegt(**). Im Folgenden eine Liste mit Features, die nach und nach integriert werden.</p>
 
-Steno Engine:
-<ul>
-    <li><b>Modelle</b>:<br>
-    Import/Export via file (MDUMP/MLOAD)<br>
-    Optionale Regeln</li>
-    <li><b>Ausgabe</b><br>
-    - Inverted mode (teilweise, nur für Entwicklung)<br>
-    - &LT;newpage&GT;-Tag (Seitenumbruch)</li>
-    <li><b>Engine</b><br>
-    - Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte) (to do)<br>
-    - TokenShifter: Funktionserweiterung Spacer (Zeichengruppeninformation)<br>
-    - Diverse Performance-Optimierungen<br>
-    - Interpolation zur Steigerung der Druckqualität<br>
-    - Phonetische Transkription von Akronymen selektierbar<br>
-    - Selektierbare Konvertierung von Akronymen zu Kleinbuchstaben</li>
-    <li><b>Debugging</b><br>
-    - Ausgabe Stage-Wechsel (nur Stages 3 und 4)<br>
-    - Anzeigen von Punkten & Koordinaten (inline)<br>
-    - Angabe zum Caching</li>
-</ul>
-</li>
-<p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**)Nach Hephaistos und Ariadne dürfte nun wieder ein männlicher Name aus der griechischen 
+<p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**) Nach Hephaistos, Ariadne und Hyperion dürfte wieder ein weiblicher Name (vielleicht mit A:) aus der griechischen 
 Mythologie zum Zuge kommen ... :)</i></p>
 
 <a href="input.php"><br><button>zurück</button></a>
