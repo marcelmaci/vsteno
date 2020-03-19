@@ -83,7 +83,9 @@ Steno Engine:
     - Rendering: Refine-Funktion mit Mittellinienmodellierung (Zwischenpunkte) (to do)<br>
     - TokenShifter: Funktionserweiterung Spacer (Zeichengruppeninformation)<br>
     - Diverse Performance-Optimierungen<br>
-    - Interpolation zur Steigerung der Druckqualität</li>
+    - Interpolation zur Steigerung der Druckqualität<br>
+    - Phonetische Transkription von Akronymen selektierbar<br>
+    - Selektierbare Konvertierung von Akronymen zu Kleinbuchstaben</li>
     <li><b>Debugging</b><br>
     - Ausgabe Stage-Wechsel (nur Stages 3 und 4)<br>
     - Anzeigen von Punkten & Koordinaten (inline)<br>

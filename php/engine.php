@@ -375,9 +375,11 @@ function CalculateBezierPoint($p1x, $p1y, $c1x, $c1y, $p2x, $p2y, $c2x, $c2y, $p
 
 function CalculateWord( $splines ) {     // parameter $splines
         global $global_interpolation_debug_svg;
-       // $global_interpolation_debug_svg = "";
+        // $global_interpolation_debug_svg = "";
         // interpolate 
-        if ($_SESSION['interpolated_yesno']) $splines = InterpolateSpline($splines);
+        if ($_SESSION['interpolated_yesno']) 
+            for ($i=0; $i<$_SESSION['interpolated_iterations']; $i++) $splines = InterpolateSpline($splines);
+            
         // define length
         $array_length = count( $splines );
         // set control points for first knot to coordinates of first knot

@@ -54,6 +54,7 @@ function InitializeSessionVariables() {
     $_SESSION['debug_show_points_yesno'] = false;
     $_SESSION['debug_show_grid_yesno'] = false;
     $_SESSION['interpolated_yesno'] = false;
+    $_SESSION['interpolated_iterations'] = 1;
     $_SESSION['standard_models_list'] = $standard_models_list;
     $_SESSION['license'] = "";
     $_SESSION['release_notes'] = "";
@@ -197,6 +198,8 @@ function InitializeSessionVariables() {
     $_SESSION['phonetics_transcription_list'] = "";
     $_SESSION['phonetics_transcription_array'] = "";
     $_SESSION['phonetics_single_char_yesno'] = false;
+    $_SESSION['phonetics_acronyms_yesno'] = false; // don't transcribe acronyms by default
+    $_SESSION['phonetics_acronyms_lowercase_yesno'] = yes; // transform acronyms to lower case by default
     // shared font
     $_SESSION['font_borrow_yesno'] = true;
     $_SESSION['font_borrow_model_name'] = "GESSBAS";
@@ -336,6 +339,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['debug_show_points_yesno'] = (htmlspecialchars($_POST['debug_show_points']) === "debug_show_points_yes") ? true : false;
     $_SESSION['debug_show_grid_yesno'] = (htmlspecialchars($_POST['debug_show_grid']) === "yes") ? true : false;
     $_SESSION['interpolated_yesno'] = (htmlspecialchars($_POST['interpolated_yesno']) === "yes") ? true : false;
+    $_SESSION['interpolated_iterations'] = htmlspecialchars($_POST['interpolated_iterations']);
     
     $_SESSION['mark_wordlist'] = htmlspecialchars($_POST['marker_word_list']);
     
@@ -391,6 +395,8 @@ if ($_POST['token_size'] != "") {
     $_SESSION['language_espeak'] = htmlspecialchars($_POST['language_espeak']);
     $_SESSION['phonetic_alphabet'] = htmlspecialchars($_POST['phonetic_alphabet']);
     $_SESSION['phonetics_single_char_yesno'] = ($_POST['phonetics_single_char_yesno'] === "yes") ? true : false;;
+    $_SESSION['phonetics_acronyms_yesno'] = ($_POST['phonetics_acronyms_yesno'] === "yes") ? true : false;;
+    $_SESSION['phonetics_acronyms_lowercase_yesno'] = ($_POST['phonetics_acronyms_lowercase_yesno'] === "yes") ? true : false;;
     $_SESSION['spacer_autoinsert'] = ($_POST['spacer_autoinsert'] === "yes") ? true : false;
     $_SESSION['rendering_middleline_yesno'] = ($_POST['rendering_middleline_yesno'] === "yes") ? true : false;
     $_SESSION['rendering_polygon_yesno'] = ($_POST['rendering_polygon_yesno'] === "yes") ? true : false;

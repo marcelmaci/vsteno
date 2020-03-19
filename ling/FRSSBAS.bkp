@@ -707,6 +707,9 @@
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text french
+		// strange characters
+		"’" => "'"; // strange apostrophe
+
 		// eliminate upper case at beginnings (otherwhise the model will use diacritics for all words that
 		// start with upper case).
 		//"(?<=^|[\.\?\:\!-])((?:.*?)(?:[A-Z]|Ä|Ö|Ü|À|Á|Â|É|È|Ê|Ó|Ò|Ô|Ú|Ù|Û))" => "strtolower()";
@@ -732,6 +735,13 @@
 		"(?<=^| )[Ss]\.[Aa]\.(?=[ ,\.-]|$)" => "#socanon";
 		"(?<=^| )[Cc]\.-(?:à|a)-d\.(?=[ ,\.-]|$)" => "#cad";
 		"(?<=^| )[Pp]\.ex\.(?=[ ,\.-]|$)" => "#parex";
+
+		// ok, here's the problem: un avion / l'avion / les avions vs nous avions / nous les avions
+		// this is not an unimportant distinction for "Vol de nuit" by Antoine de St-Exupéry for example ... :)
+		// so, let's try to figure that out as good as we can ...
+		// the trick is to mark all verbal forms as #avions (and not to mark avion/avions as a noun)
+		"([Nn])ous (ne |n')?(les )?avions" => "$1ous $2$3#avions";
+		
 
 		// eliminate upper case vowels with accents (produces gibberish)
 		"À" => "A";
@@ -841,7 +851,7 @@
 		"(?<=^| )[Pp]lus(ieurs)?(?=[ ,\.]|$)" => "#plus$1";
 		"(?<=^| )[Pp]lupart(?=[ ,\.]|$)" => "#plupart";
 		"(?<=^| )[Ll]es(?=[ ,\.]|$)" => "#les";
-		"(?<=^| )[Aa]v(ai[st]|i?ons|i?ez|aient|oir)(?=[ ,\.]|$)" => "#av$1";
+		"(?<=^| )[Aa]v(ai[st]|ons|i?ez|aient|oir)(?=[ ,\.]|$)" => "#av$1"; // don't include avions! (has been marked earlier)
 		"(?<=^| )([CLSMTclsmt]es|[VNvn]os|[Ll]eurs) #avions(?=[ ,\.]|$)" => "$1 avions"; // don't mark it (delete mark again)
 		//"(?<=^| )[Nn]\'y(?= |$)" => "#n'#y";
 		"(?<=^| )[Yy](?=[ ,\.]|$)" => "#y";
@@ -1112,10 +1122,10 @@
 		"^pl\[ü\]to$" => "{PLUS}{TOT}";
 		"^#plusieurs$" => "{PLUS}[ö]r";
 		"^#plupart$" => "{PLUS}par";
-		"^l\[ü\]i$" => "{LUI}";
+		"tstwrt(^[Ll]ui$)" => { "^l\[ü\]i$", "{LUI}" }; // only pronoun "lui", not verb "luire" (luit)
 		"^#les$" => "{LES}";
 		"#av(ai[st]|aient)" => "{AV}e";
-		"#avions" => "{AV}j[o~]";
+		"tstwrt(^(?:n'?)?#avions$)" => { "^(n'?)?.*?$", "$1{AV}j[o~]" }; // should only be applied to verbs now
 		"#avons" => "{AV}[o~]";
 		"#aviez" => "{AV}je";
 		"#avez" => "{AV}e";
@@ -1159,7 +1169,7 @@
 		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
 
 		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
-		"e~ter" => "{INTER}";
+		"(?<!t)e~ter" => "{INTER}"; // not in "tintèrent"
 		"^(l)?e~tr(?!uvabl)" => "$1{INTER}" };
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
 		"^(?:in)(?!(?:j|$))" => { "{IN}", "[Ee]~si ?$" }; // why is original word with E uppercase?!? (see ExecuteRule())
@@ -1178,9 +1188,14 @@
 		// checks written form in order to determine if ma~ comes form ment$ or mant$, mand$, end$
 		// abbreviation {MENT} can only be applied to ment$
 		"tstwrt((?:an[dt]|end)$)" => { "ma~", "[M][EN]" };   
-
-		"(?<!^)m[Aa]~t" => "{MENT}"; // also inside word
-		"(?<!^)m[Aa]~(?!d)" => "{MENT}"; // don't apply to: commander
+		
+		// original rules
+		//"(?<!^)m[Aa]~t" => "{MENT}"; // also inside word
+		//"(?<!^)m[Aa]~(?!d)" => "{MENT}"; // don't apply to: commander
+		"koma~sma~" => "KOMa~s{MENT}"; // special case: (re)commencement 
+		"tstwrt(ment)" => { "(?<!^)m[Aa]~t", "{MENT}" }; // also inside word
+		"tstwrt(ment)" => { "(?<!^)m[Aa]~(?!d)", "{MENT}" }; // don't apply to: commander
+		
 		"^#moimeme$" => "{MOIMEME}";
 		"^#toimeme$" => "{TOIMEME}";
 		"^#soimeme$" => "{SOIMEME}";
@@ -1211,7 +1226,7 @@
 		"^fort" => "{FORTE}";
 		"^for(?!s)" => "{FORT}";
 		"^sito$" => "{SI}{TOT}";
-		"i?to$" => { "{TOT}", "^f[Oo]t[Oo]" };
+		"i?to$" => { "{TOT}", "^f[Oo]t[Oo]", "^to$" };
 		"#bienetre$" => "{BIENETRE}";
 		"^okel$" => "{AUQUEL}";
 		"^#maintenant$" => "{MAINTENANT}";
@@ -1348,6 +1363,7 @@
 		"kaze" => "ka[S@#.]e"; // distinguish: casser vs caser (diacritics)
 		"faz" => "fa[S@#.]"; // face vs phase (diacritics)
 		"zel" => "[S=@#.]el"; // sel vs zèle (diacritics)
+		"z2" => "s"; // paysan
 		"z" => "s";
 		
 		"\[BR\]" => "[B@R6]";
@@ -1407,6 +1423,7 @@
 		"i(e|\[e~\]|\[ö\])" => "i[&E]$1"; 
 		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
 		"tstwrt(^vien)" => {  "j(\[e~\])", "i[&E]$1" }; // vient
+		"ije$" => "i[H]e"; // scintillait
 		"(?<!\[ö\]|[AaEe]|a\])j(e|\[e~\])" => "I[&E]$1"; // Pierre; don't apply to: veuillez, payez, travaillez
 		"(?<!\[wa\]|i|[eE])j(a|\[a~\])" => "I[&E]$1"; // mariage; don't apply to: voyageur, brillamment, ayant, envoyé
 		"j(o|\[o~\])" => "I[&E]$1"; // curiosité
@@ -1453,6 +1470,7 @@
 		"^(\[ü\])(?!\[(sch)\])" => "[0D-]$1"; // une
 		"^(\[ü\])(?=\[(sch)\])" => "[0N-]$1";
 		
+		"^(\[ö\])$" => "[0N-]$1"; // no example in the book, but according to german should be correct 
 		"^(\[ö\])(?!\[(sch)\])" => "[0D-]$1"; 
 		"^(\[ö\])(?=\[(sch)\])" => "[0N-]$1";
 		

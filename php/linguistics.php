@@ -489,6 +489,20 @@ function GetPhoneticTranscription($word) {
     //if (mb_substr($word, 0, 1) !== "#") {  // do not transcribe words starting with # (can be used to mark words that have to be written literaly)
 // if word is single char, only transcribe it if session-variable is set
 if ((mb_strlen($word) > 1) || ($_SESSION['phonetics_single_char_yesno'])) {
+  // strangely enough the first letter of $word is lower case ... no idea why this is so ... !?
+  // so, test if word starts with two uppercase chars via [A-Z]{2,} is impossible
+  // as a workaround (... yes, more and more workarounds in this program ...)
+  // simply test the second character: if it is uppercase, assume the word is an 
+  // acronym (and if corresponding option is set, don't transcribe it
+  //echo "SESSION[phonetics_acronyms_yesno] = [" . $_SESSION['phonetics_acronyms_yesno'] . "]<br>";
+  //$test = preg_match("/.[A-Z]/", $word);
+  //echo "preg_match(/.[A-Z]/) = [$test]<br>";
+  if (($_SESSION['phonetics_acronyms_yesno'] === false) && (preg_match("/.[A-Z]/", $word) === 1)) {  
+        //echo "NO TRANSCRIPTION<br>";
+        if ($_SESSION['phonetics_acronyms_lowercase_yesno']) $output = mb_strtolower($word);
+        else $output = $word; // don't transcribe acronyms (leave it up to the model to convert upper to lower case if needed!)
+  } else {
+    //if (($_SESSION['phonetics_acronyms_yesno']) && (preg_match("/.[A-Z]/", $word) !== 1)) {  
     $check = mb_strpos($word, "#");
     if ($check === false) {  // do not transcribe words containing # (at any position)
         //echo "<br>transcribe: $word<br>";
@@ -521,6 +535,7 @@ if ((mb_strlen($word) > 1) || ($_SESSION['phonetics_single_char_yesno'])) {
          // in n#avais, n can be treated as phonem and the abbreviation #avais can be applied normally
         $output = $word;
     }
+ } 
 } else {
   // word is single character => don't transcribe
   $output = $word;

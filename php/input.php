@@ -107,8 +107,10 @@ Font: <input type="checkbox" name="font_borrow_yesno" value="yes" <?php echo ($_
 Spacer: <input type="checkbox" name="spacer_autoinsert" value="yes" <?php echo ($_SESSION['spacer_autoinsert']) ? "checked" : ""?>> automatisch => <a href="spacer_parameters.php">Parameter</a><br>
 Rendering: 
 <?php /*echo "test:" . $_SESSION['rendering_middleline_yesno'] . "<";*/?>
-<input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie 
-[<input type="checkbox" name="interpolated_yesno" value="yes" <?php echo ($_SESSION['interpolated_yesno']) ? "checked" : ""?>>interpoliert]
+<input type="checkbox" name="rendering_middleline_yesno" value="yes" <?php echo ($_SESSION['rendering_middleline_yesno']) ? "checked" : ""?>> Mittellinie: 
+<input type="checkbox" name="interpolated_yesno" value="yes" <?php echo ($_SESSION['interpolated_yesno']) ? "checked" : ""?>>interpoliert 
+<input type="text" name="interpolated_iterations"  size="1" value="<?php echo $_SESSION['interpolated_iterations']; ?>">
+ Iterationen<br>
 <input type="checkbox" name="rendering_polygon_yesno" value="yes" <?php echo ($_SESSION['rendering_polygon_yesno']) ? "checked" : ""?>> Polygon 
 <input type="text" name="rendering_polygon_color"  size="4" value="<?php echo $_SESSION['rendering_polygon_color']; ?>">
 Deckkraft <input type="text" name="rendering_polygon_opacity"  size="2" value="<?php echo $_SESSION['rendering_polygon_opacity']; ?>">
@@ -155,6 +157,12 @@ Analyse:
 <br>Einzelbuchstabe: 
 <input type="radio" name="phonetics_single_char_yesno" value="yes"<?php echo ($_SESSION['phonetics_single_char_yesno']) ? " checked" : "";?>>yes
 <input type="radio" name="phonetics_single_char_yesno" value="no"<?php echo ($_SESSION['phonetics_single_char_yesno'] !== true) ? " checked" : "";?>>no
+&nbsp;&nbsp;Akronyme: 
+<input type="radio" name="phonetics_acronyms_yesno" value="yes"<?php echo ($_SESSION['phonetics_acronyms_yesno']) ? " checked" : "";?>>yes
+<input type="radio" name="phonetics_acronyms_yesno" value="no"<?php echo ($_SESSION['phonetics_acronyms_yesno'] !== true) ? " checked" : "";?>>no
+=>
+<input type="checkbox" name="phonetics_acronyms_lowercase_yesno" value="yes"<?php echo ($_SESSION['phonetics_acronyms_lowercase_yesno']) ? " checked" : "";?>> Kleinbuchstaben
+
 
 <br>
 Markieren:<br>

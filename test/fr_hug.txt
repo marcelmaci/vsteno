@@ -364,12 +364,12 @@ est-ce, la-dessus, au-dessus, au-dessous, au-devant, ci-dessus, ci-inclus, ?, no
 autrement, autrefois, bien-être, parce que, parce qu'on, parfois, peut-être, pourquoi, surement, lui-même, celui, vous-même, toutefois, partout, dedans, serai-je
 là-haut, celle-ci, celui-ci, celui-là, en tout cas, rendez-vous, prénom, peux-je, là-bas, ici-bas, va-et-vient
 
-CH7c)
+CH8c)
 jusque, jusqu'à, aujourd'hui, général, générosité
 quel, quelle, qu'elle, qu'elles, quelles, quels, quelque, quelques, quelqu'un, quelques-uns, quelques-unes, 
 fort, forte, fortement, fortune, bientôt, plutôt, aussitôt, sitôt
 
-CH7(33):
+CH8(33):
 Jusque, jusqu'en, jusqu'aux, jusqu'ici, jusqu'alors, jusqu'après, jusque-là, jusqu'à ce que, d'aujourd'hui, général, généraux, généreux, généreuse, généraliser,
 génération, générosité, je me gènerais, lequel, laquelle, lesquels, lesquelles, duquel, qu'elle vienne! quelque, quelqu'un, quelconque, quelquefois, quelques-unes,
 quelques-uns, fort, le confort, un contrefort, coffre-fort, forte, fortifier, fortification, forteresse, fortune, fortement, la force.

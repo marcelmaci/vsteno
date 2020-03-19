@@ -88,6 +88,8 @@
 		"suffixes_list" := ""; // use non caputuring groups! (?:)
 		// set phonetics parameters
 		"phonetics_single_char_yesno" := "no";
+		"phonetics_acronyms_yesno" := "no"; // don't transcribe acronyms
+		"phonetics_acronyms_lowercase_yesno" := "yes"; // convert acronyms to lower case
 		"phonetics_transcription_list" := "
 			"laids?":"lE",
 			"(?:(l)')?aspects?":"$1aspE", // use full regex for phonetic transcriptions
@@ -709,6 +711,8 @@
 		// global replacements in the whole text french
 		// strange characters
 		"’" => "'"; // strange apostrophe
+		"«" => """; // no french apostrophes for the moment ... :-/
+		"»" => """;
 
 		// eliminate upper case at beginnings (otherwhise the model will use diacritics for all words that
 		// start with upper case).
@@ -1057,6 +1061,7 @@
 		"[Dd]#il" => "{DIL}";
 		"([Kk]|[Qq]u)#ils" => "{KIL}"; // don't use diacritics here
 		"([Kk]|[Qq]u)#il" => "{KIL}";
+		"puis{KIL}" => "P[Ü][&E][C][-E]"; // send it the direct way ...
 		"#ils" => "{ILS}";
 		"#il" => "{IL}";
 		"#quon" => "{QUON}";
@@ -1226,7 +1231,8 @@
 		"^fort" => "{FORTE}";
 		"^for(?!s)" => "{FORT}";
 		"^sito$" => "{SI}{TOT}";
-		"i?to$" => { "{TOT}", "^f[Oo]t[Oo]", "^to$" };
+		//"i?to$" => { "{TOT}", "^f[Oo]t[Oo]", "^to$" };
+		"tstwrt(tôt)" => { "i?to$", "{TOT}" }; // more precise rule for -tôt (bientôt, sitôt, aussitôt etc.)
 		"#bienetre$" => "{BIENETRE}";
 		"^okel$" => "{AUQUEL}";
 		"^#maintenant$" => "{MAINTENANT}";
@@ -1282,7 +1288,8 @@
 		"(?<!\[)o~" => "[O~]";
 		"(?<!\[)(e|w)~" => { "[E~]", "sirkw~" }; // no distinction: dinde vs humble
 		"(?<!\[)#?wa" => "[WA]";
-		"(?<!\[)w\[E~\]" => "[WE~]";
+		"(?<!\[)#?w\[E~\]$" => "[WE~]"; // moins vs lointain - what happens to # in #w?!?
+		"(?<!\[)#?w\[E~\]" => "[&O][E~]"; // lointain
 		"(?<!#)w" => "[Ö]";  // wa vs W (lower vs upper case) => if it leads to confusion here, put this rule inside early bundler
 		// restore original #w
 		"#wikend" => "[W@#.]ikend";
@@ -1423,7 +1430,7 @@
 		"i(e|\[e~\]|\[ö\])" => "i[&E]$1"; 
 		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
 		"tstwrt(^vien)" => {  "j(\[e~\])", "i[&E]$1" }; // vient
-		"ije$" => "i[H]e"; // scintillait
+		"ije(\[vr\])?$" => "i[H]e$1"; // scintillait, cordillère
 		"(?<!\[ö\]|[AaEe]|a\])j(e|\[e~\])" => "I[&E]$1"; // Pierre; don't apply to: veuillez, payez, travaillez
 		"(?<!\[wa\]|i|[eE])j(a|\[a~\])" => "I[&E]$1"; // mariage; don't apply to: voyageur, brillamment, ayant, envoyé
 		"j(o|\[o~\])" => "I[&E]$1"; // curiosité
@@ -1439,7 +1446,7 @@
 		"^\[?u\]?(\[?[eaoui]~?\]?)" => "[0N-][A][&U]$1";
 		"\[?u\]?(\[?[eaoui]~?\]?)" => "[A][&U]$1";
 
-		"\[?o\]?(\[?[eaoui]~?\]?)" => "[&O]$1";
+		"\[?(?<!&)o\]?(\[?[eaoui]~?\]?)" => "[&O]$1";
 
 		"\[ö\](\[?[eaouiü]~?\]?)" => "[E][&O]$1";
 
