@@ -40,6 +40,12 @@ Götterwelt entnommen. Im folgenden die bis jetzt veröffentlichten, offiziellen
 <td>November 2019</td>
 <td><a href="release_notes.php">release notes</a></td>
 </tr>
+<tr>
+<td>0.3</td>
+<td>Hyperion</td>
+<td>März 2020</td>
+<td><a href="release_notes.php">release notes</a></td>
+</tr>
 
 </table>
 </div>
