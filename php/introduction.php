@@ -15,16 +15,20 @@ Stenografie-Systeme definiert werden können.
 </p>
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
+
+<p><b>20/03/20</b><p>
+<p><h2>Der Titan ist da ... :)</h2></p>
 <p>Mitte April werden es zwei Jahre sein, das ich an VSTENO arbeite. Rund 1300 Stunden sind inzwischen in dieses Programm geflossen -
-ein eigentliches Mammutprojekt, das mir zwischendurch (vor allem wenn es nicht lief ... ;-) doch einiges abverlangte! Umso mehr freue ich mich,
-hier nun die dritte Version 0.3 namens <a href="https://de.wikipedia.org/wiki/Hyperion_(Titan)">Hyperion</a> vorzustellen.</p>
+ein eigentliches Mammutprojekt, das mir zwischendurch (vor allem wenn es nicht lief ... ;-) doch einiges abverlangte!</p>
+<p>Umso mehr freue ich mich,
+hier nun die Version 0.3 namens <a href="https://de.wikipedia.org/wiki/Hyperion_(Titan)">Hyperion</a> vorzustellen.</p>
 
 <p><h2>Highlights</h2></p>
 <p>Aus meiner Sicht gibt es vor allem drei wichtige Neuerungen:</p>
 <ul>
 <li><p><b>Eilschrift:</b> Im deutschen System wurden die Regeln der <a href="https://de.wikipedia.org/wiki/Stolze-Schrey">Eilschrift</a> 
 integriert und zwar so, dass sie nun 
-via Optionen im Eingabeformular zu- oder abschaltbar (sodass flexibel zwischen Verkehrs- und Eilschrift gewechselt werden kann). 
+via Optionen im Eingabeformular zu- oder abschaltbar sind (sodass flexibel zwischen Verkehrs- und Eilschrift gewechselt werden kann). 
 <br><i>=> Hanspeter Frech, <a href="http://www.steno.ch/0/index.php/lehrmittel">"Die superschnelle Geheimschrift. Gekürzte Stenografie"</a>, 
 Schweizerischer Stenografenverband Stolze/Schrey (SSV), Wetzikon, November 2017 (Band 2).</p></li>
 <li><p><b>Französisch:</b> Die Grundschrift wurde mit realen Texten getestet und viele Fehler korrigiert. Die Qualität ist inzwischen so gut, 

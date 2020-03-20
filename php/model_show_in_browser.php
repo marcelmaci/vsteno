@@ -7,7 +7,7 @@
     echo "<h1>$actual_model</h1>";
     echo "<p>Anbei die Definitionen, welche es VSTENO ermöglichen, Langschrifttexte in Kurzschrift zu übertragen. Die Definitionen bestehen
     aus drei Hauptsektionen: Header, Font und Rules. Sie können dieses Modell oder Teile daraus kopieren und für eigene Stenosysteme verwenden.
-    Weitere Informationen finden Sie in der <a href='../docs/documentation_v02.pdf'>Hauptdokumentation</a>.</p>";
+    Weitere Informationen finden Sie in der <a href='../docs/documentation_v03.pdf'>Hauptdokumentation</a>.</p>";
     $model_code = LoadModelFromDatabase($actual_model);
     echo "<pre>$model_code</pre>";
     
