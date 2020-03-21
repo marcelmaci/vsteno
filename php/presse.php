@@ -1,7 +1,7 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Presse</h1>
 
-<p>Im Januar erschien ein erster Artikel zu VSTENO im 
+<p>Im Januar erschien ein erster Artikel (<a href="../docs/artikel_schweizer_stenograf.pdf">PDF</a>) zu VSTENO im 
 <a href="https://steno.ch/0/index.php/der-schweizer-stenograf">Schweizer Stenograf</a>.</p>
 
 <p><h1>

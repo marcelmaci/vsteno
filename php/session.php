@@ -54,7 +54,7 @@ function InitializeSessionVariables() {
     $_SESSION['debug_show_points_yesno'] = false;
     $_SESSION['debug_show_grid_yesno'] = false;
     $_SESSION['interpolated_yesno'] = false;
-    $_SESSION['interpolated_iterations'] = 1;
+    $_SESSION['interpolated_iterations'] = 2;
     $_SESSION['standard_models_list'] = $standard_models_list;
     $_SESSION['license'] = "";
     $_SESSION['release_notes'] = "";

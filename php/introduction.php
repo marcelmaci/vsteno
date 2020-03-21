@@ -64,7 +64,7 @@ Druck würde als reine Stenoausgabe oder als Paralleledition (mit Langschrifttex
 romande</a> bereits als 
 <a href="https://ebooks-bnr.com/saint-exupery-antoine-de-vol-de-nuit/">freies E-Book</a> 
 verfügbar. Zusätzlich habe ich hier vor drei Jahren eine schweizerdeutsche Übersetzung z.T. nach Richtlinien und mit Materialien von 
-<a href="http://zuerituetsch.ch/">Viktor Schobinger</a> erstellt. Die Idee wäre hier also eine eine Parelledition mit französischer Steno
+<a href="http://zuerituetsch.ch/">Viktor Schobinger</a> erstellt. Die Idee wäre hier also eine Parelledition mit französischer Steno
 und schweizerdeutscher Übersetzung.</li>
 </ul>
 
