@@ -18,10 +18,10 @@ Stenografie-Systeme definiert werden können.
 
 <p><b>20/03/20</b><p>
 <p><h2>Der Titan ist da ... :)</h2></p>
-<p>Mitte April werden es zwei Jahre sein, das ich an VSTENO arbeite. Rund 1300 Stunden sind inzwischen in dieses Programm geflossen -
-ein eigentliches Mammutprojekt, das mir zwischendurch (vor allem wenn es nicht lief ... ;-) doch einiges abverlangte!</p>
-<p>Umso mehr freue ich mich,
-hier nun die Version 0.3 namens <a href="https://de.wikipedia.org/wiki/Hyperion_(Titan)">Hyperion</a> vorzustellen.</p>
+<p>Nach 23 Monaten und rund 1300 Entwicklungsstunden freue ich mich,
+die Version 0.3 namens <a href="https://de.wikipedia.org/wiki/Hyperion_(Titan)">Hyperion</a> vorzustellen. Im 
+<a href="https://steno.ch/0/index.php/der-schweizer-stenograf">Schweizer Stenograf</a> (Januar) erschien  
+ein <a href="presse.php">Artikel</a> zu VSTENO.</p>
 
 <p><h2>Highlights</h2></p>
 <p>Aus meiner Sicht gibt es vor allem drei wichtige Neuerungen:</p>
@@ -71,6 +71,10 @@ und schweizerdeutscher Übersetzung.</li>
 <p>Im Idealfall würden diese Bücher mit einer Gruppe von Stenograf/innen erstellt. Ob und wie sich das umsetzen lässt wird sich zeigen ... 
 Es ist aber auf jeden Fall meine erklärte Absicht, in den nächsten Monaten weniger zu programmieren und gewissermassen mehr in den 
 editorialen Bereich zu wechseln ... :)</p>
+
+<p><h2>Serendipity</h2></p>
+<p>Und dann noch dies: Vor kurzem erhielt ich den Hinweis, dass es tatsächlich ein weiteres Programm gibt, das Langschrift nach Stolze-Schrey 
+überträgt. Es ist dies <a href="https://steno.tu-clausthal.de/Stolze-Schrey.php">text2Stolze-Schrey</a> von Prof. Sarman. 
 
 <center>* * *</center>
 <p>=> Hier finden Sie <a href="old_news.php">ältere News-Einträge</a>.
