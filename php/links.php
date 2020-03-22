@@ -3,8 +3,10 @@
 <p>Im Folgenden einige Webseiten und Artikel rund um Stenografie.</p>
 <h2>Programme</h2>
 <ul>
-<li><p><a href="http://steno.tu-clausthal.de/DEK.php">Text2DEK</a>: Text2DEK ist ein von Dr. Stanislav Jan Šarman verfasstes Programm, das deutsche Langschrift-Texte in die Deutsche Einheitskurzschrift (DEK) überträgt. 
-Vom gleichen Autor (und auf der gleichen Seite) gibt es auch eine Übertragung in Gregg (Text2Gregg), Pitman (Text2Pitman) und Sütterlin (Text2Suetterlin).</p><p>=> Weitere theoretische Informationen
+<li><p><a href="https://steno.tu-clausthal.de/Stolze-Schrey.php">text2Stolze-Schrey</a>: Dies ist ein von Dr. Stanislav Jan Šarman verfasstes Programm, das deutsche Langschrift-Texte nach Stolze-Schrey überträgt. 
+Vom gleichen Autor (und auf der gleichen Seite) gibt es auch Übertragungen nach DEX (<a href="https://steno.tu-clausthal.de/DEK.php">text2DEK</a>),  
+Gregg (<a href="https://steno.tu-clausthal.de/Gregg.php">Text2Gregg</a>), Pitman (<a href="https://steno.tu-clausthal.de/Pitman.php">Text2Pitman</a>) 
+und Sütterlin (<a href="https://steno.tu-clausthal.de/Suetterlin.php">Text2Suetterlin</a>).</p><p>=> Weitere theoretische Informationen
 zu diesen höchst spannenden Projekten unter <i>Artikel</i>.</p></li>
 </ul>
 <h2>Artikel</h2>

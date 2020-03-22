@@ -16,12 +16,17 @@ einzelnen Versionen von VSTENO.</p>
 </ol>
 <p>Gültige Versionen sind:</p>
 <ol>
-<li><b>0.1</b>: version 0.1 (Hephaistos)</li>
-<li><b>Hephaistos</b>: wie 0.1</li>
+<li><b>0.3</b>: version 0.3 (Hyperion)</li>
+<li><b>Hyperion</b>: wie 0.3</li>
+<li><b>0.2</b>: version 0.2 (Ariadne)*</li>
+<li><b>Ariadne</b>: wie 0.2*</li>
+<li><b>0.1</b>: version 0.1 (Hephaistos)*</li>
+<li><b>Hephaistos</b>: wie 0.1*</li>
 <li><b>lateststable</b>: letzte stabile (= garantiert lauffähige) Version</li>
 <li><b>latest</b>: allerneueste Version (Lauffähigkeit nicht garantiert)</li>
 <li><b>commit</b>: eine beliebige Commit-Nummer aus dem <a href="https://github.com/marcelmaci/vsteno/commits/master">Github-Repository</a>.</li>
 </ol>
+<p>* Diese Versionen sind veraltet und werden nur der Vollständigkeit halber aufgeführt.</p>
 <h2>Ablauf</h2>
 <p>Die Skripts aktualisieren die Paketquellen (sudo apt-get update) und installieren diverse Programme (falls Sie dies nicht möchten - 
 weil Sie z.B. auf bestimmte, ältere Programmversionen von hunspell, eSpeak, mySQL, git etc. angewiesen sind -, führen Sie den Installer nicht 
@@ -61,7 +66,7 @@ sudo service mysql restart
 </pre>
 Ersetzen Sie 'user' und 'password' durch eigene Angaben und rufen Sie dann das Skript ./configure_database.sh erneut auf.</p>
 <li><b>Debian:</b> Im Unterschied zu Trisquel und Ubuntu fügt Debian Standard-Nutzer nicht automatisch zu den "sudoers" hinzu. Loggen Sie sich deshalb als
-root (System-Administrator) ein und fügen Sie den Nutzer mit <i>usermod-aG sudo username</i> manuell dazu (ersetzen Sie username durch Ihren eigenen 
+root (System-Administrator) ein und fügen Sie den Nutzer mit <i>usermod -aG sudo username</i> manuell dazu (ersetzen Sie username durch Ihren eigenen 
 Benutzernamen). Wie Ubuntu legt Debian nicht automatisch einen separaten Datenbank-Nutzer an (gehen Sie deshalb wie oben beschrieben vor). 
 Ausserdem muss unter Debian 10 (Buster) das Paket default-mysql-server (statt mysql-server) installiert werden und das Paket mysql-workbench wurde
 aus Sicherheitsgründen aus den offiziellen Paketquellen entfernt (Sie müssen dieses also ebenfalls manuell installieren).</li>

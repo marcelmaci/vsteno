@@ -1,5 +1,18 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Gemeinschaftsprojekt</h1>
+<b><p>ACHTUNG: DIESE SEITE IST VERALTET UND WIRD GELEGENTLICH ÜBERARBEITET! FÜR DEN MOMENT GELTEN FOLGENDE HINWEISE:</p>
+<p>
+Eine Zusammenarbeit ist nach wie vor in verschiedensten Bereichen möglich und willkommen:<br>
+- Weiterentwicklung des Programmes<br>
+- Weiter- oder Neuentwicklung von Modellen (Stolze-Schrey oder andere)<br>
+- Herausgabe von Steno-Lektüre (wie in der Einleitung erwähnt)<br></p>
+<p>
+Gerne biete ich auch individuelle Hilfestellung und Unterstützung in den genannten oder anderen Bereichen. Vereine oder Gruppen, die an einem 
+Referat oder Workshops zu VSTENO interessiert sind, können sich gerne per Mail an mich wenden.
+</p>
+</b>
+<center>* * *</center>
+
 <h2>Anfang</h2>
 <p>VSTENO begann als privates Projekt im April 2018.</p><p>Im Mai 2018 gelangte eine erste lauffähige Version auf GitHub (<a href="http://www.github.com/marcelmaci/vsteno">www.github.com/marcelmaci/vsteno</a>).</p>
 <h2>Konkretisierung</h2>
