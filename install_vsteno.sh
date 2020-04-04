@@ -6,13 +6,16 @@ fi
 if [ -z $1 ]; then
 	echo "ERROR: you must give a version as argument: ./install_vsteno version"
 	echo "Valid arguments for version are:"
-	echo "0.2: version 0.2 (Ariadne)"
-	echo "Ariadne: same as preceeding"
-	echo "0.1: version 0.1 (Hephaistos)"
-	echo "Hephaistos: same as preceeding"
+	echo "0.3: version 0.3 (Hyperion)"
+	echo "Hyperion: same as preceeding"
+	echo "0.2: version 0.2 (Ariadne)*"
+	echo "Ariadne: same as preceeding*"
+	echo "0.1: version 0.1 (Hephaistos)*"
+	echo "Hephaistos: same as preceeding*"
 	echo "lateststable: lastest stable version"
 	echo "latest: latest version (might not work properly)"
 	echo "commit: any commit number from https://github.com/marcelmaci/vsteno"	
+	echo "(* obsolete version (only listed for historical reasons)"
 	exit 1
 fi
 
@@ -47,27 +50,27 @@ case "$1" in
 	Hyperion)
             version_number=0.3
             version_name=Hyperion
-            version_date="20/03/20"
-            commit=61c905d46cc3bb13c238c406f091834be8c0ad87
+            version_date="22/03/20"
+            commit=c09d834dc133142612c85c598cdb45d19bbdce57
             ;;
 
         0.3)
             version_number=0.3
             version_name=Hyperion
-            version_date="20/03/20"
-            commit=61c905d46cc3bb13c238c406f091834be8c0ad87
+            version_date="22/03/20"
+            commit=c09d834dc133142612c85c598cdb45d19bbdce57
             ;;
 	lateststable)
             version_number=lateststable
             version_name=Hyperion
-            version_date="20/03/20"
-            commit=61c905d46cc3bb13c238c406f091834be8c0ad87
+            version_date="22/03/20"
+            commit=c09d834dc133142612c85c598cdb45d19bbdce57
             ;;
          
         latest)
             version_number=latest
             version_name=Hyperion
-            version_date="20/03/20"
+            version_date="22/03/20"
 	    	commit=origin/master
             ;;
         *)

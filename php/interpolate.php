@@ -92,6 +92,11 @@ function CalculateIntermediatePointAndPrepareTupletToInsert($p1x, $p1y, $c1x, $c
     
     // set fix tensions 0.5 in order to create a "smooth" integration into curve
     // set knot types d1, d2 and dr to 0 (normal point)
+    // there's definitely something wrong with the tensions: [A][G] with interpolation leads to "missing parts" between segments
+    // try to go with an earlier idea that was to set tensions of interpolated points to 0.5 by default
+    // not sure if this works in all cases ... but results for [A][G] are definitely better!
+    // $p1t1 = 0.5; $p1t2 = 0.5;
+    // ok, that doesn't work ... In words like "Laterne" the "t" isn't strait and especially the last knot of t is rendered completely wrong!
     return array($intx,$inty,$p1t1,0,$intth,$dr,0,$p1t2);
 }
 
@@ -190,6 +195,7 @@ function CreateNewInterpolatedSpline($spline, $patch_list) {
         }
         // similar problem inside spline: sharp tensions (tensions == 0) need the control point to be corrected
         if (($p0t2 == 0) && ($p1t1 == 0)) {
+            //echo "sharp tension at beginning ...<br>";
             $p1c1x = $p1x;
             $p1c1y = $p1y;
             $p1c2x = $p1x;
@@ -220,6 +226,7 @@ function CreateNewInterpolatedSpline($spline, $patch_list) {
         }
         // similar problem inside spline: sharp tensions (tensions == 0) need the control point to be corrected
         if (($p1t2 == 0) && ($p2t1 == 0)) {
+            //echo "sharp tension at the end ...<br>";
             $p2c1x = $p2x;
             $p2c1y = $p2y;
             $p2c2x = $p2x;

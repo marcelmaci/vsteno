@@ -193,7 +193,7 @@ function GenerateSpacerRulesAndPrintData() {
         $temp1 = "";
         //echo "calculate vowel group: $key<br>";
         // calculate or-string
-        var_dump($vowel_groups[$key]);
+        //var_dump($vowel_groups[$key]);
         $temp1 = GetRegexOrString($vowel_groups[$key]);
         //echo "result(temp1): $temp1<br>";
         // write full regex and insert
