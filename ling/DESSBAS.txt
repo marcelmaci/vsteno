@@ -5032,13 +5032,6 @@
 	#BeginSubSection(postspacer)
 		// empty (just for shared font)
 	#EndSubSection(postspacer)
-	#BeginSubSection(beautifier)
-		"\[ar\]((?:\[#.\])?\[(?:i|au)\])" => "[AR^]$1"; 
-		"\[ar\]((?:\[#.\])?\[st\])" => "[AR^]$1";
-		"(\[\^ch\])(\[&t\])" => "$1[#3]$2"; // add a slight spacing
-		"(\[pf\])(\[&t\])" => "$1[#3]$2"; // idem
-		"\[den\]" => "[0N-][#1][den]"; // make den a little bit longer
-	#EndSubSection(beautifier)
 	#BeginSubSection(finisher)
 		// make all tokens upper case for rendering and assing prt
 		"([a-z]*?)" => "strtoupper()";
