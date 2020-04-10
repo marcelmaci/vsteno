@@ -225,7 +225,7 @@ function InitializeSessionVariables() {
     $_SESSION['rendering_lineoverpass_start_factor'] = 0.3;
     $_SESSION['rendering_lineoverpass_end_factor'] = 0.3;
 
-    $_SESSION['handwriting_marker'] = "";
+    $_SESSION['handwriting_marker'] = "0";
 
 
 /*

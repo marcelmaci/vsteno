@@ -327,7 +327,7 @@
 		"zäh\|lun-gen$" => "zäh-lun-gen";
 		"([Mm])it\|tag" => "$1it-tag";
 		"([Vv])iel\|leicht" => "$1iel-leicht";
-		"^([Pp])ro\|" => "$1ro-";
+		"^((?:[Aa]us[+#-|]?)?[Pp])ro\|" => "$1ro-";
 		"e\|ren$" => "e-ren";	// näheren
 		"(\+|\|)ge(-?)n(e[nrs]?)?$" => "-ge$2n$3";
 		"\|([kh])ei\|t(.?.?)$" => "=$1ei-t$2"; 
@@ -563,7 +563,7 @@
 		"^([Uu]n\+?)?([GgBbFf]er)\+n" => "$1$2-n";
 		"^([Uu]n\+?)?([Ss]ter)\+n" => "$1$2-n";
 
-		"^([Ee])r\+(s-?t)(?!au)" => { "$1r$2", "[Ee]r[-+]ste-?l" };
+		"^((?:[Aa]-?l-?ler\+?[|#-]?)?[Ee])r\+(s-?t)(?!au)" => { "$1r$2", "[Ee]r[-+]ste-?l" };
 		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
 		"^([Bb]er)\+k" => "$1-k";		// Berkeley
 		"b-?er\+g" => "ber-g";			// Aarberg(er) (Berg)
@@ -1390,6 +1390,7 @@
 		// tokens at beginning
 		"^(\[A\]\[&A@#_\])" => "[0N-][#4]$1";
 		"^(\[A\]\[&U@#_\])" => "[0N-][#4]$1";
+		"^(\[&I@#_\])" => "[0N-][#3]$1";
 		//"([a-z])" => "strtoupper()";  // leave other tokens as untreated (will be processed normally)
 	#EndSubSection(acronymater)
 	#BeginSubSection(packer)
@@ -2620,7 +2621,7 @@
 		"tstopt(01)([aeiou]|ä|ö|ü)l-?(sch|[z])" => "$1$2"; // falsch, Holz
 		
 		"tstopt(01)r-?([bdgkmns])" => { "$1", "^[Ee]r[#+-]?s-?t", "^[Bb]orst-?li" }; // fern, Argument, Arbeit, fördern, Form, Börse
-		"([Rr])e-?a" => "$1a"; // Reaktion
+		//"([Rr])e-?a" => "$1a"; // Reaktion ??? => disactivated
 
 		"tstopt(01)((?:[aeiou]|ä|ö|ü).*?)(?<!i)elt(e(?:[nrsmn]|st)?)?" => "$1{EL}t$2"; // wandelt
 		"tstopt(01)el-?(haf-?t|{HAFT})" => "{EL}$1"; // tölpelhaft
@@ -4573,6 +4574,8 @@
 	#BeginSubSection(latesubstituter)
 		"{BE}" => "[B]";
 		"{GE}" => "[G]";  // Getue (must be placed here because of &t in laterewriter)
+		"{VOR}" => "[VOR]"; // must be substituted here in order to get correct spacing
+		"{SELB}" => "[SELB]"; // idem
 	#EndSubSection(latesubstituter)
 	#BeginSubSection(rewriter2)
 		//"\[&T\]-?\[H\]" => "[&T3/4][H]";
