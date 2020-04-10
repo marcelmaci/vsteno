@@ -63,14 +63,14 @@ case "$1" in
 	lateststable)
             version_number=lateststable
             version_name=Hyperion
-            version_date="22/03/20"
-            commit=c09d834dc133142612c85c598cdb45d19bbdce57
+            version_date="10/04/20"
+            commit=d9df55086b0b4f177b83060198c01f50850e81d8
             ;;
          
         latest)
             version_number=latest
             version_name=Hyperion
-            version_date="22/03/20"
+            version_date="10/04/20"
 	    	commit=origin/master
             ;;
         *)

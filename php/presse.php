@@ -64,8 +64,8 @@ heute hat.
 </p><p>
 Interessiert, mehr über VSTENO zu erfahren? Dann gibt es hier weitere
 Infos: (1) auf der Webseite www.vsteno.ch und (2) an der
-Abgeordnetenversammlung am 16. Mai 2020, zu der ich freundlicherweise
-eingeladen bin, um eine kurze Live-Demo zu zeigen.
+Abgeordnetenversammlung am 16. Mai 2020 (*), zu der ich freundlicherweise
+eingeladen bin, um eine kurze Live-Demo zu zeigen. 
 </p>
-
+<p>(*) Aufgrund der Corona-Krise ist die Abgeordetenversammlung vom 16. Mai 2020 abgesagt.</p>
 <?php require "vsteno_template_bottom.php"; ?>

@@ -545,7 +545,7 @@
 		
 
 		// prefix ge+
-		"([Gg]e)\+(he)" => "$1-$2";
+		"([Gg]e)\+(he)" => { "$1-$2", "[Gg]e\+hef-?t" };
 		"([Gg]e)\+(gen)" => "$1-$2";
 		"([Gg]e)\+(be(?:-|\+)?n(?:d?(?:st)?e[mrsn]?)?)" => "$1-$2";
 		"([Gg]e)\+(cko)" => "$1-$2";
@@ -738,6 +738,8 @@
 		"([Mm]o-?nast-?er)\+" => "$1";
 		"([Bb]e\+ge)\+(hu-?n-?g)" => "$1-$2";
 		"([Ss]onn)\|(ta-?g)" => "$1-$2"; 
+		"([Ee]in\+ge)\+(b)(?!un-?d)" => "$1$2";
+		"([Aa]k-?ku)\|?(ra-?t)" => "$1-$2";
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1421,6 +1423,7 @@
 		"[Ss]y-?ri" => "sü-ri"; // syrisches, Syrien
 		
 		// e.g. ie: nie, Knie vs Familie, Linie
+		"([Tt])o(u-?r)" => "$1$2"; // Tour
 		"([Ll]i-?)nie" => "$1ni-e";
 		"([Ff]a-?mi-?)lie" => "$1li-e";
 		"([Pp]or-?t)ier" => { "$1i-er", "[Tt]rans\+?por-?tier" };
@@ -2310,7 +2313,7 @@
 		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		
-		"(?<!^|s)(i-)?tä-?t" => "{HEIT}";
+		"(?<!^|s)(i-)?tä-?t" => { "{HEIT}", "(?:[Ww]ohl\|?)?tä-?tig" };
 		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
 		
 		"zu(\+|-)rück(\+|-)" => "{ZURÜCK}+";
@@ -2528,7 +2531,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas" };
+		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3526,6 +3529,7 @@
 
 		"\[&[Tt]\]\[&[Ee]\]" => "[&T&E]"; // Sonntag
 		"\[&[Tt]\]-?(?:\[[Nn]\]|[Nn])" => "[&TN]"; // Gesprächspartner
+		"\[&T-1\]-?\[?L\]?" => "[&T#L]"; // Bewusstlosigkeit
 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -4526,6 +4530,9 @@
 		"tstopt(01){EIPR}" => "[0D-][EI][P@R6]";
 		
 		//"{AN}" => "[0N-][A][N]";
+
+		"(.){DIS}" => "$1[#1-][I][S]"; // überdies
+
 	#EndSubSection(substituter)
 	#BeginSubSection(laterewriter)
 		// due to additional abbreviations in MAC some combinations / transcription / rewritings
