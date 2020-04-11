@@ -170,7 +170,7 @@ $y_values = array( offs_delta_y_before, offs_delta_y_after, offs_additional_delt
                     offs_inconditional_delta_y_before, offs_alternative_exit_point_y );
 
 // parser
-$punctuation = ".,:;!?…";                        // metaparser recognizes these tokens as punctuation and treats them differently 
+$punctuation = ".,:;!?…*";                        // metaparser recognizes these tokens as punctuation and treats them differently 
 $upper_case_punctuation = ".:!?";
 $numbers = "01234567890";
 $only_pretokens = "(\[{\"\'¿¡";                 // include pretokens for spanish (question mark / exclamation mark)

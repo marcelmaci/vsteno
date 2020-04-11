@@ -740,6 +740,9 @@
 		"([Ss]onn)\|(ta-?g)" => "$1-$2"; 
 		"([Ee]in\+ge)\+(b)(?!un-?d)" => "$1$2";
 		"([Aa]k-?ku)\|?(ra-?t)" => "$1-$2";
+		"([Aa]uf)-?(ge)-?(frisch)" => "$1+$2+$3";
+ 		"([Aa]uf)-?(fri-?sch)" => "$1+$2";
+ 		"([Vv]or\+?be)r\+?(ei-?t)" => "$1+r$2";
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2332,7 +2335,7 @@
 		"ur\+" => "{UR}+";
 
 		"#li-?ch" => "{LICH}";
-		"(-|\+)li-?ch(e-?r\+?|-?s?-?t)?(e[rnsm]?)?$" => "$1{LICH}$2$3";
+		"(-|\+)li-?ch(e-?r\+?|-?s?-?t)?(e[rnsm]?)?$" => { "$1{LICH}$2$3", "[Zz]wil-?li-?ch" };
 
 		"ent\+" => "{ANT}+";
 		"ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste 
@@ -3166,6 +3169,7 @@
 		"tstopt(01)({LEBEN}\|?{MITTL})\|" => "$1[#4]\\"; Lebensmittelkonzern
 		"tstopt(01)\|({KOMMISSION})" => "\\$1";
 		"tstopt(01)\|({VER})" => "\\$1"; // Lastschriftverfahren
+		"({EN})\|(\[AR\])" => "$1\\$2"; // Ulmenreihen
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -4532,6 +4536,7 @@
 		//"{AN}" => "[0N-][A][N]";
 
 		"(.){DIS}" => "$1[#1-][I][S]"; // überdies
+		"{RÜCK}" => "[rück]";
 
 	#EndSubSection(substituter)
 	#BeginSubSection(laterewriter)

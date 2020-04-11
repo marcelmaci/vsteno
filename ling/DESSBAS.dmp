@@ -743,6 +743,10 @@
 		"([Aa]uf)-?(ge)-?(frisch)" => "$1+$2+$3";
  		"([Aa]uf)-?(fri-?sch)" => "$1+$2";
  		"([Vv]or\+?be)r\+?(ei-?t)" => "$1+r$2";
+		"([Ii]n)-?(i-?ti)" => "$1+$2"; // initiieren, Initialen
+
+		"([Aa]u-?to)\|" => "$1+"; // autobiografisch
+		"([Bb]io)\|" => "$1+"; // idem
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1194,12 +1198,17 @@
 		"&ls?aquo;" => "»";
 		"›" => "»";
 		"‹" => "«";
+		"„" => """;
+		"“" => """;
 		"ß" => "ss";
 		"&szlig;" => "ss";
 		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
 		"»" => """; //"|[#5][#Q#]|";	
 		" [Ee]s( *?)ist " => " es_ist ";  // avoid "semicolon-look of "Es ist";
 	
+		// special rule for acronyms like FBI-Spezialeinheit (separate words)
+		"([A-Z]{2,})-" => "$1[=] ";
+
 		// since it is not possible to include more than one function in global (for the moment)
 		// include the "abbreviator" this way 
 
@@ -1370,7 +1379,7 @@
 		//"([A-Z]|Ä|Ö|Ü)" => "strtolower()";
 		// only transform upper case of potential 2nd word (suppose acronym is 1st word ...)
 		"(=(?:[A-Z]|Ä|Ö|Ü))" => "strtolower()";
-		"(?<!\|)=" => "|=\\"; // mark word as 2 words
+		"(?<!\||\[)=" => "|=\\"; // mark word as 2 words
 		"(?<!\[)=" => "[=]";	// necessary because of packer
 		// now only transform upper case words (from acronym)
 		"(?<!\[)([BCDFGHJKLMPQTVWXYZ])" => "[$1@#_][#6]"; // add diacritics _
@@ -2340,7 +2349,7 @@
 		"ent\+" => "{ANT}+";
 		"ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste 
 		
-		"(?<!a)un-?te-?r" => "{UNTER}";
+		"(?<![ahH])un-?te-?r" => "{UNTER}";
 		"{UNTER}-" => "{UNTER}+";
 
 		"un\+" => "{UN}+"; 
