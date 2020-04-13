@@ -748,9 +748,9 @@
 		"([Aa]u-?to)\|" => "$1+"; // autobiografisch
 		"([Bb]io)\|" => "$1+"; // idem
 		"^([Bb]er)\+(s-?t)" => "$1$2"; // bersten
-		"^(Pan)-?g-?(los-?s?)" => "$1|g$2"; // ;-)
+		"^(Pan)-?g-?(lo-?s-?s?)" => "$1|g$2"; // ;-)
 		"^([Ee]in)[+|-]?(und)\|" => "$1+$2+";	
-		"([Zz]u)\+(ges)?" => "$1-$2";
+		"([Zz]u)\+(ges)?" => { "$1-$2", "[Zz]u\+vor", "[Zz]u\+st" };
 		"([Hh]erzen)\|sein\|(falt)" => "$1s|ein|$2"; // Voltaire
 		"([Bb]a-ron)\|(es)\|(sin)" => "$1-$2-$3";
 		"([Ww]er)\+f" => "$1f"; // werfen
@@ -760,6 +760,16 @@
 		"([Pp]-?er)(?:\||\+)(rü-?cke?)" => "$1-$2";
 		"([Ee]r)\+(\'s)" => "$1$2"; 
 		"([Ww]as)-?(er\+?lei)" => "$1+$2"; // waserlei
+		"([Zz]o)-?o\|l" => "$1-o-l"; // zoologisch 
+		"([Ee]r)\+(lo-?sch)" => "$1+|$2"; // erloschen
+		"([Hh]ol)\|(l(?:a|ä)n-?d)" => "$1-$2"; // Holland
+		"([Bb]e)\+(li-?al)" => "$1-$2"; // Belialsbrut
+		"([Hh])-?(er)\+(zi-?g)" => "$1$2-$3"; // barmherzig
+		"([Ii]s)-(t\'s)" => "$1$2"; // ist's 
+		"([Gg]e)\+?(nug)-?(tu)-?(u-?n-?g)" => "$1+$2|$3-$4";
+		"([Jj]e)\|(sui-?t)" => "$1-$2"; // Jesuiten
+		"([Hh]in-?ter)\|n" => "$1n""; // Hintern
+		"([Ww]er)\|(d's)" => "$1$2"; // werd's
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3222,6 +3232,8 @@
 		"^([{\[]&?EIT)(?!R)" => "[0N-]$1";
 		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
 		"\\Ö" => "[0N-][Ö]"; 
+		"O-?O" => "[&O]O"; // zoologisch
+		"U-?U" => "[A][&U][U]"; // Genugtuung
 
 		"^([AEOU]|Ä|Ö|Ü)" => "[0N-]$1";
 		"\\([AEOU]|Ä|Ö|Ü)" => "\\[0N-]$1";
@@ -3559,7 +3571,7 @@
 
 		"\[ET\]\[&E\]" => "[&ET&E]";
 
-		"}\+([Tt])" => "}|$1";  // zerteilen
+		"}\+([Tt])" => { "}|$1", "{WIDER}\+([Tt]e?n?)$", "{M}\+([Tt])" };  // zerteilen
 		"}\+" => "}";  // get rid of annoying +
 		"-{" => "{";  // get rid of annoying -
 
@@ -4581,6 +4593,8 @@
 		"\]#" => "]"; // get rid of annoying # ... :)
 		"}-" => "}"; // get rid of annoying - ... :)
 		
+		"(\[W@R6\])\[?T\]?" => "$1[&T]";
+
 		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CK|CH|NG|NK|NZ|ND|RR|SER|AR|VR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6|B@R6|D@L3|T@R|SP@R6|F@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](?:\[?-?E\]?\[?S\]?|E)" => "[$1][&TES]"; 
 		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CK|CH|NG|NK|NZ|ND|RR|SER|AR|VR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6|B@R6|D@L3|T@R|SP@R6|F@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
 		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CK|CH|NG|NK|NZ|ND|RR|SER|AR|VR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6|B@R6|D@L3|T@R|SP@R6|F@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt]" => "[$1][&T]"; // kommt, kauft
@@ -4622,6 +4636,9 @@
 		"{GE}" => "[G]";  // Getue (must be placed here because of &t in laterewriter)
 		"{VOR}" => "[VOR]"; // must be substituted here in order to get correct spacing
 		"{SELB}" => "[SELB]"; // idem
+		"{WERD}" => "[WERD]";
+		"{M}" => "[M]";
+
 	#EndSubSection(latesubstituter)
 	#BeginSubSection(rewriter2)
 		//"\[&T\]-?\[H\]" => "[&T3/4][H]";
