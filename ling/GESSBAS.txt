@@ -1141,7 +1141,7 @@
 		"\[&ts\]\[a\]\[m\]" => "[&TS][#5][A][M]"; // seltsam
 		"(\[(?:n=|w|n|m|l|f)\])\[#.\](\[[uo]\]\[(?:vr|n|g|l)\])" => "$1[#1]$2"; // nur, wurde, nun
 		"(\[(?:n=|w|n)\])\[#.\](\[a\]\[(?:vr|n|g)\])" => "$1[#2]$2"; // nur, wurde, nun
-		"(\[[VvUu][Rr](?:10)?\])\[#.\](\[a\])?(\[[sn]\])" => "$1[#1-]$2$3"; // Vers, fern
+		"(\[[VvUu][Rr](?:10)?\])\[#.\](\[a\])?(\[(?:[sn]|n@r6)\])" => "$1[#1-]$2$3"; // Vers, fern
 		"(\[vr\])\[#.\](\[a\])?(\[(?:[gmkz]|sch|vor)\])" => "$1[#1]$2$3"; // Vers, fern, warm, stärker, kurzem
 		"(\[auf\])\[#.\](\[(?:g|s|sch@l3|z)\])" => "$1[#1-]$2"; // aufgestossen
 		"(\[auf\])\[#.\](\[(?:st|f@r6)\])" => "$1[#1]$2"; // aufstossen
@@ -1164,7 +1164,7 @@
 		"(\[n\])\[#.\](\[z\])" => "$1[#1][Z]"; // ganz
 		"(\[t@r\])\[#.\]\[i\](\[tt\])" => "$1[#6][I][tt]"; // Fusstritten
 		"(\[b\])\[#.\]\[a\](\[nk@r\])" => "$1[#1-][A]$2"; // Bankrottiers - correction of probably wrong shifter values ...
-
+		"(\[(?:l|m|n|b)\])\[#.\]\[i\](\[(?:tt|pp)\])" => "$1[#6][I]$2"; // erlitten, Lippen (spacing)
 		
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)
