@@ -397,7 +397,7 @@
 		"#seits" => "|seits";
 
 		// prefix in-
-		"(^|\|)(Volks\|)?([Ii])n-(?!ter)" => "$1$2$3n+";
+		"(^|\|)(Volks\|)?([Ii])n-(?!ter)" => { "$1$2$3n+", "[Ii]n-?n" }; // innig
 		"(=|\|)([Ii])n-?i-?t" => "$1$2n+i-t"; // Pestizid-initative => careful with that rule
 
 		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
@@ -788,6 +788,9 @@
 		"([Dd]e)\|(gen)" => "$1-$2"; // Degen
 		"([Ff]an)\|(gen)" => "$1-$2"; // Gefangenschaft
 		"^([Hh]in)\+(ge)$" => "$1-$2"; // hinge
+		"\+her\+" => "#her+"; // umhertreiben
+		"([Dd]e)-?m(un)-?(ge)-?(ach-?te-?t)" => "$1m+$2+$3+$4"; // demungeachtet
+		"([Ss]pie)\|(lin)" => "$1-$2"; // Gespielinnen
 		
 
 	#EndSubSection(analyzer)
@@ -2441,14 +2444,14 @@
 		"([+#])wie$" => "+{WI}";
 
 		"^so(\+|#)" => "{SO}$1";
-		"([#-])so$" => { "$1{SO}", "o-?so$" }; // amoroso
+		"([#-])so$" => { "$1{SO}", "[os]-?so$" }; // amoroso, Tasso
 		"^so$" => "{SO}";
 		
 		"un-?ter" => "{UNTER}";
 		
 		"er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
-		"(?<!d)er\+" => { "{ER}", "[Ww]ie?-?d-?er" }; // more general rule
+		"(?<!d|#h)er\+" => { "{ER}", "[Ww]ie?-?d-?er" }; // more general rule
 		"\+er$" => "{ER}";
 		"(n-?d)er\+" => "$1{ER}+";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
@@ -2559,7 +2562,7 @@
 		"für" => { "{FÜR}", "[Ff]ürs-?t", "[Ff]ürch" };
 		"ge-?habt" => "{GEHABT}";
 		"(?<![Cc])ha-?b" => "{HAB}";
-		"^[Hh]at(-t)?" => "{HAT}";
+		"^[Hh]at(-?t)?" => "{HAT}";
 		"^chin" => "[CH]in";
 
 		"^hin-?zu" => "{HIN}{ZU}";
@@ -2593,7 +2596,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t" };
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -2653,7 +2656,7 @@
 		//"(?<!\[)#" => "-";	// not a good idea ...
 		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
 
-		"er\+" => "{ER}"; // Studers (hasn't been recognized until now)
+		"(?<!#h)er\+" => "{ER}"; // Studers (hasn't been recognized until now)
 		"{LOS}e-?r" => "{LOS}{ER}";
 
 		// optional abbreviations (option1: MAC)
@@ -2746,7 +2749,7 @@
 
 		"uhr" => "ur";
 		
-		"ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie" }; // list with exceptions
+		"ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e" }; // list with exceptions
 		"ie" => "i-e"; // separation (2 syllables)
 
 		"ühr" => "ür";
@@ -2936,6 +2939,10 @@
 		"(\[.*?\])" => "strtoupper()";
 	#EndSubSection(relancer1)
 	#BeginSubSection(transcriptor)
+
+		// copied from separator
+		"(l-?te-?s{ER})\|" => "$1\\"; // Malteserritter
+
 		////////////////////////////////////////////////////////
 		// 1st step: transform all single (lower case) tokens //
 		// depending on context: insert directly printable    //
@@ -2977,6 +2984,7 @@
 		"([bcdfghjklmnpqrvwxyz])(-)?t" => "$1$2[&T]";
 		"({HIN})-?t" => "$1[&T]";
 		"\[(CH|SCH|NS)\]-?t" => "[$1][&T]";
+		"\[(CH)\]-?\[TR\]" => "[$1][&TAR5]";
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF|MPF|NG|ND)\]-?t" => "[$1][&T]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TL\]" => "$1$2[&T@L3]";
 		"([bcdfghjklmnpqrvwxyz])(-?)\[TR\]" => "$1$2[&T@R]";
@@ -3230,7 +3238,7 @@
 		"tstopt(01)\|({VER})" => "\\$1"; // Lastschriftverfahren
 		"({EN})\|(\[AR\])" => "$1\\$2"; // Ulmenreihen
 		"(\[&E\])\|(\[AR\])" => "$1\\$2"; // Blauröcke
-
+		
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// logically speaking the completor is part of the transcriptor
@@ -3288,7 +3296,7 @@
 		"(?<!\['\])\\S" => "\\[S=]";
 
 		// dem/den at beginning
-		"^{(DE[MN])}([-+#]?)(?=N)" => "[^$1]$2";
+		"^{(DE[MN])}([-+#]?)(?=N|{UN})" => "[^$1]$2"; // demungeachtet
 		"^{(DE[MN])}([-+#]?)(?=J)" => "[^^$1]$2";
 
 		// completor in the end (also necessary)
@@ -3307,6 +3315,8 @@
 		// some token combinations need to be rewritten
 		// that's done in this part (was first part of
 		// transcriptor
+
+		"\\\[VR\]" => "\\[AR]"; // Malteserritter
 
 		// taken from substituter
 		"tstopt(01)^{HEIT}U\[NG\]" => "[0N-][A][&EITNG]";
@@ -3336,6 +3346,8 @@
 
 		"{ET}A" => "{ET}[&E]A";
 		"(\[ET3\/4\])({EN})" => "$1[&E]$2";
+
+		"\[&T\]-?H" => "[&TH]"; // allenthalben
 
 		// correct position for &T
 		// 1- und 2-stufige Zeichen: [&T-1]
@@ -4604,6 +4616,7 @@
 
 		"(.){DIS}" => "$1[#1-][I][S]"; // überdies
 		"{RÜCK}" => "[rück]";
+		"{ANT}" => "[ANT]";
 
 	#EndSubSection(substituter)
 	#BeginSubSection(laterewriter)
