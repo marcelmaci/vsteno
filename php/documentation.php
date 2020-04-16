@@ -4,6 +4,7 @@
 <h2>Aktuell</h2>
 <p>
 - <b>Programm</b>: <a href="../docs/documentation_v03.pdf">Hauptdokumentation</a> (gültig für Verson 0.3 Hyperion)<br>
+- <b>Reference</b>: <a href="../docs/ref/vsteno_reference.txt">Quick Reference</a> (englisch, Version 0.2 Ariadne)<br>
 - <b>Linguistik</b>: <a href="../docs/gel_speiende_spiegel.pdf">Gel speiende Spiegel</a><br>
 - <b>Datenbank</b>: ursprünglich veröffentlicht als <a href="../docs/mitmachen_bei_vsteno.pdf">Mitmachen bei VSTENO</a>*<br>
 - <b>Stenoengine</b>: Unterschiede <a href="../docs/stenoengines.pdf">SE1 vs SE2</a>**
