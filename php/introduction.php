@@ -15,9 +15,44 @@ Stenografie-Systeme definiert werden können.
 </p>
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
+<p><b>15/04/20 - Happy Birthday VSTENO!</b><p>
+<p>Ziemlich genau zwei Jahre ist es her, dass an einem einzigen Tag die ersten Codezeilen für VSTENO entstanden: eine simple Funktion, welche 
+die nötigen Kontrollpunkte berechnete, um eine Folge von Bezier-Kurven (so genannte Splines) durch eine Reihe frei wählbarer Punkte zu legen.
+<pre>
+function GetControlPoints($px0, $py0, $px1, $py1, $px2, $py2, $t1, $t2) {
+    // returns control points for p1
+    $d01 = sqrt(pow($px1-$px0,2)+pow($py1-$py0,2));
+    $d12 = sqrt(pow($px2-$px1,2)+pow($py2-$py1,2));
+    $fa = $t1*$d01 / ($d01+$d12);
+    $fb = $t2*$d12 / ($d01+$d12);
+    $c1x = $px1 - $fa*($px2-$px0);
+    $c1y = $py1 - $fa*($py2-$py0);
+    $c2x = $px1 + $fb*($px2-$px0);
+    $c2y = $py1 + $fb*($py2-$py0);
+    return array($c1x, $c1y, $c2x, $c2y);
+}
+</pre>
+Bis heute ist es für mich erstaunlich zu sehen, dass kein von VSTENO berechnetes Stenogramm ohne diese Funktion auskommt!</p>
+<p>Obwohl in diesen (mitunter pythagoräischen) Zeilen im Prinzip die ganze Magie von VSTENO steckt, reicht dies allein noch nicht für 
+ein Programm. Stattdessen bedurfte es zweier Jahre, um die "mathematische Essenz" in technische (informatische) Formen zu giessen: ein Programm, 
+welches - ausgehend von der Langschrift - Stenogramme erzeugt, die im Browser angezeigt und als PDF exportiert werden können.</p>
+<p>Für Stenograf/innen bedeuteten diese zwei Jahre eine lange Durststrecke: Die Stenogramme kamen vorerst 
+einigermassen holprig, d.h. mit argen Unschönheiten und plumpen Fehlern behaftet, daher. Zwar verbesserten sie sich im Laufe der Zeit, dennoch 
+waren dieser Entwicklung in der ersten Phase relativ enge Grenzen gesetzt. Denn es galt: 
+erst das Programm, dann die Stenogramme! Anders gesagt: Es bestand schlicht nicht die Zeit, um nebst der Programmentwicklung zusätzlich an 
+der Verbesserung der Stenogramme zu arbeiten.</p>
+<p>Dies soll sich nun - im dritten Entwicklungsjahr - ändern. Ein Programm wie VSTENO ist zwar nie fertig (..), aber gerade deshalb ist es wichtig,
+hier - und an diesem Jahrestag - einen Strich zu ziehen und das Projekt offiziell auf Eis zu legen. D.h. es werden inskünftig 
+keine neuen Funktionalitäten mehr in VSTENO integriert und nur noch Bugfixes vorgenommen. </p>
+<p>Stattdessen soll die Zeit nun konsequent für die Entwicklung der stenografischen Modelle verwendet werden. 
+Für das deutsche System ist die Arbeit seit einigen Wochen im Gang. Die Stenogramme haben sich bereits stark verbessert und werden in 
+den kommenden Wochen und Monaten weiter optimiert. Ultimatives Ziel, wie bereits erwähnt, wird es sein, komplette Romane - in elektronischer 
+und gedruckter Form - zu publizieren.</p>
+<p>In diesem Sinne: Stay tuned ... there's more to come ... ! ;-)</p>
 
-<p><b>20/03/20</b><p>
-<p><h2>Der Titan ist da ... :)</h2></p>
+<center>* * *</center>
+
+<p><b>20/03/20 - Der Titan ist da ... :)</b><p>
 <p>Nach 23 Monaten und rund 1300 Entwicklungsstunden freue ich mich,
 die Version 0.3 namens <a href="https://de.wikipedia.org/wiki/Hyperion_(Titan)">Hyperion</a> vorzustellen. Im 
 <a href="https://steno.ch/0/index.php/der-schweizer-stenograf">Schweizer Stenograf</a> (Januar) erschien  

@@ -25,6 +25,11 @@ Einverständnis hiezu gegeben haben, namentlich verdankt.</p>
     Spenden: 220.- <i>(Total / Summe aller Spenden)</i><br>
     Danke: Nebst anonymen Spenden verdanken wir an dieser Stelle namentlich die Spende des SSV (Schweizer Stenografenverband).
     </li>
+    <li><u><b>Jahr 2:</b></u><br>
+    Zeitraum: April 2019 - April 2020<br>
+    Spenden: 0.- <i>(Total / Summe aller Spenden)</i><br>
+    Danke: Danke an alle, welche dieses Projekt ideell und in anderer Form (z.B. Melden falscher Stenogramme) unterstützen.
+    </li>
 </ul>
 
 <h1>Kosten</h1>
