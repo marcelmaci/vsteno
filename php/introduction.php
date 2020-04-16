@@ -49,7 +49,9 @@ Für das deutsche System ist die Arbeit seit einigen Wochen im Gang. Die Stenogr
 den kommenden Wochen und Monaten weiter optimiert. Ultimatives Ziel, wie bereits erwähnt, wird es sein, komplette Romane - in elektronischer 
 und gedruckter Form - zu publizieren.</p>
 <p>In diesem Sinne: Stay tuned ... there's more to come ... ! ;-)</p>
-
+<p><i><b>[UPDATE 16/04/20]:</b> Eben erreicht mich die traurige Nachricht, dass Luís Sepúlveda, ein Autor, den ich wegen seiner Menschlichkeit 
+und seinem gesunden Menschenverstand besonders geschätzt habe, am Coronavirus verstorben ist. Zu seinem Gedenken hier das <a href='../docs/sepulveda_gaviota_cap9.pdf'>Kapitel 9</a> aus Historia 
+de una gaviota y del gato que le enseño a volar ... Descansa en paz, ¡compañero!</i></p>
 <center>* * *</center>
 
 <p><b>20/03/20 - Der Titan ist da ... :)</b><p>
