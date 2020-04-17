@@ -797,8 +797,17 @@
 		"([Aa]n)-?(ge)-?(se-?hen)" => "$1+$2+$3"; // angesehensten
 		"([Ww]ei)-?t(ärm-?li-?g)" => "$1t|$2"; // weitärmlig
 		"([Ee]i)\|(len-?d)" => "$1-$2"; // eilenden
-		"([Gg]ou-?ver)\+(ne-men-?t)" => "$1-$2"; // Gouvernement
-		"([Bb]e)\+(cher)" => "$1-$2"; 
+		"([Gg]ou-?ver)\+(n)" => "$1-$2"; // Gouvernement, Gouverneur
+		"([Bb]e)\+(cher)" => "$1-$2"; // Becher
+		"([Gg]e-?ne)\|(ra-?l)" => "$1-$2"; // this error only occurs on remote server! (probably different version of hunspell)
+		"([Oo]-?ben)\|(ein)" => "$1-$2"; // obenein
+		"([Bb]en)\|(gel)" => "$1-$2"; // Bengel
+		"([Ss]che)r\+(en?)(\||$)" => "$1-r$2$3"; // Schere
+		"([Ss]au)\|(be-?r)" => "$1-$2"; // saubern
+		"([Gg]e)\+(be-?r)(in(?:-?nen)|s)?$" => "$1-$2$3"; // Ratgeber(in)
+		"([Ss]ie)\|(he)" => "$1-$2"; // Siehe
+		"([Aa]uf)[-+](ge)[-+](ho-?b)" => "$1+$2+$3"; // aufgehobnen
+		"([Aa]uf)[-+](prus-?t)" => "$1+$2"; // aufprusteten 
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1532,6 +1541,7 @@
 		"([Gg])o(?:u|û)t$" => "$1u"; // Goût
 		"([Gg])o(?:u|û)-?t" => "$1ut"; // goutieren
 		"([Gg])ou-?ver" => "$1u-ver"; // Gouvernement
+		"[Cc](on-?do-?r)" => "k$1"; // Kondor
 		
 		
 	#EndSubSection(phonetizer)
@@ -2411,7 +2421,7 @@
 		"ent\+" => "{ANT}+";
 		"ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste 
 		
-		"(?<![ahHMm])un-?te-?r" => "{UNTER}";
+		"(?<![ahHMmBbGg])un-?te-?r" => "{UNTER}";
 		"{UNTER}-" => "{UNTER}+";
 
 		"un\+" => "{UN}+"; 
@@ -2444,7 +2454,7 @@
 
 		
 		"ver(\+)" => "{VER}$1";
-		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?ne-?men-?t" }; // can produce wrong results (exclude Overall, Universum)
+		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n" }; // can produce wrong results (exclude Overall, Universum)
 
 		"^all$" => "{ALL}";
 		"\+all$" => "+{ALL}";
@@ -2484,6 +2494,7 @@
 		"^was$" => "{WAS}";
 		"(\||#)was$" => "$1{WAS}";
 		
+		"([RrHh]o)-?hei-?t" => "$1h{HEIT}"; // add h in Hoheit, Roheit
 		"(?<![Ss]c)[#-]?[hk]?ei-?t" => "{HEIT}";
 		
 		"#li-?ch" => "{H}";
@@ -2605,7 +2616,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t" };
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -2638,7 +2649,7 @@
 		"^an-?ti" => "{ANTI}";
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
-		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)" };
+		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r" };
 		"i-?[o|ö]-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
 		"(^|\|)(un)?zer\+" => "$1$1{ZER}";
@@ -2731,7 +2742,8 @@
 		"'(i|au|eu|äu|ei)" => "|[']\[0D-]$1";
 		"'(a|e|o|u)" => "|[']\[0N-]$1";
 		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
-		"thr" => "tHr"; // Thriller
+		"thr" => { "tHr", "[Tt]hro-?n" }; // Thriller, not: Thron
+		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
 		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$" };
 		//"th(?!er)" => "t";
 		//"th(?!in)" => "t";
@@ -3624,6 +3636,7 @@
 		"\[&T-1\]-?\[?L\]?" => "[&T#L]"; // Bewusstlosigkeit
 		"O{EN}" => "[&O]{EN}"; // Hoboen
 		"Ä{ER}" => "Ä[&E]{ER}"; // Europäern
+		"\[&T\]-?\[CH\]" =>  "[&T^CH]"; // "[HEIT&UL][CH]"; // "[&TCH]"; // Wörtchen - not sure if this is correct
 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -4498,7 +4511,8 @@
 		"{HAB}T" => "[HAB][&T]";
 		"{HAB}" => "[HAB]";
 		"{ZUSAMMEN}" => "[Z][A][S]";
-		"{ER}L(\[#.\]\[-EI\])$" => "[VR@L]$1"; // waserlei
+		"{ER}L(\[#.\]\[-EI\])$" => "[VR@L]$1"; // waserlei, allerlei
+		"{ER}L((?:\[#.\])?(?:\[I\]|I)\[NG\](?:S|\[S\]|\[-E\])?$)" => "[VR@L]$1"; // Pfifferling[se]
 		"{ER}" => "[VR]";
 		"^{INTER}" => "[INTER]";
 		"{INTER}" => "[I][INTER]";
