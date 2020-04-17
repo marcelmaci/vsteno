@@ -207,7 +207,7 @@ $left_margin = 5;                               // margins for layouted svg
 $right_margin = 25;
 $top_margin = 5;
 $bottom_margin = 30;
-$num_system_lines = 3;                          // number of shortand system lines between two text lines (lower values = narrower)
+$num_system_lines = 3.7;                          // number of shortand system lines between two text lines (lower values = narrower)
 
 // flags
 $dont_connect = 0;
