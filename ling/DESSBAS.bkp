@@ -124,6 +124,9 @@
 		"introduction_text" := "Grundschrift (Stolze-Schrey)";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
+		
+		"([Ww]ei-?ter)\+" => "$1|";
+		
 		// additional syllables
 		"ebe(-?)n" => "e-be$1n";  // bug in phpSyllable: eben is not hyphenated!?
 		"oder" => "o-der"; 	// same ...
@@ -232,7 +235,7 @@
 
 		// additional separations
 		"([Nn]acht)-?(tisch)" => "$1|$2";
-		"([Ww]ei-?ter)\+" => "$1|";
+		
 		"([Ss]er-?vier)-" => "$1|$2";	// Serviertochter
 		"-lied" => "|lied"; 	// Beresinalied
 		"Erb-l" => "Erb|l";	// Erb-lassers (most probable decision for noun vs Er-blasser)
@@ -620,7 +623,7 @@
 		"([Ee]nt)-?(f-?er)\+" => "$1+$2";
 		"(Ger)\+(zen)" => "$1-$2"; // Gerzenstein (Glauser, der Chinese)
 		"([Mm])a-?t-e-?ri-?e" => "Ma-te-ri-e"; // recorrection/resyllabation
-		"er\+v" => "er-v"; // audacious rule ... Nerven, Verve
+		"er\+v(?!er)" => "er-v"; // audacious rule ... Nerven, Verve, but not: weiterverkaufen
 		"([Bb]er)\+(lin)" => "$1-$2";
 		"([Ss]cher)\+?-?(be)" => "$1-$2"; // +- because of recorrected |ben ... (et l'horreur continue ... :)
 		"([Vv]or\+der)-" => "$1+"; 
@@ -1486,7 +1489,7 @@
 		//"(?<!\[)=" => "[=]\";
 	#EndSubSection(packer)
 	#BeginSubSection(decapitalizer)
-		"sch(a|ä)ft(s|-?l?er)?$" => { "{SCHAFT}$2", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
+		"sch(a|ä)ft(s|-?l?er)?($|\|)" => { "{SCHAFT}$2$3", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
 		"schaf-te" => "{SCHAFT}e"; // gewirtschaftet
 		
 		// must come before decapitalizer
