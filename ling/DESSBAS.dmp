@@ -832,6 +832,17 @@
 		"([a-z])(ur)\|(tei-?l)" => "$1|$2+$3"; // gesundurteilende
 		"([Qq]uer)\+" => "$1"; // Quere 
 		"([Uu]n)\+(ge)-?(heu-?er)" => "$1+$2+$3"; // Ungeheuer
+		"([Ww]er)\+(-?)(b)" => "$1$2$3"; // erwerben
+		"([Ss]ter)\+n" => "$1n"; // Morgenstern
+		"([Ss]ams)\|(ta-?g)" => "$1-$2"; // Samstage
+		"([Gg]e)\+b(u-?n-?g)" => "$1-b$2"; // Umgebung
+		"([Aa]us)-?(schlie)" => "$1+$2"; // ausschliessen
+		"([Uu]n\+ent)-" => "$1+"; // unentgeltlich
+		"([Ee]in)-(k(?:ü|u)nf)" => "$1+$2"; // Einkünfte
+		"([Ee]r#war)\|(tu)" => "$1-$2"; // Erwartung 
+		"(#[Ww]a-?ren)-(an|be|ge)-" => "$1|$2+"; // special problem Waren- ...
+		"-(#[Ww]a-?ren)" => "|$1"; // special problem -waren ...
+		 
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1292,6 +1303,13 @@
 		"»" => """; //"|[#5][#Q#]|";	
 		" [Ee]s( *?)ist " => " es_ist ";  // avoid "semicolon-look of "Es ist";
 	
+
+		// mark all recognizable Waren (not verb) with #Waren
+		"(?<=[^ #])war(en|t)" => "#war$1"; // Backwaren (something + waren); Torwart
+		"(?<!#)Waren(?![ .,;:?!])" => "#Waren"; // Warenbehälter (Waren + something)
+		"(?<!#)Waren(?! *?[Ss]ie[ .,!?])" => "#Waren$1"; // Waren + no inversion (sie / Sie)
+		"(?<!#)([Ww]ar[tn])([^.,;:?!]*?)(\!)" => "#$1$2$3"; // wart! (exclamation mark)
+
 		// special rule for acronyms like FBI-Spezialeinheit (separate words)
 		"([A-Z]{2,})-" => "$1[=] ";
 
@@ -1621,6 +1639,7 @@
 	#EndSubSection(preshortener)
 	#BeginSubSection(shortener,#>stage3)
 
+		"#[Ww]a-?r" => "{#WAR}"; // noun Waren (no shortening!) 
 		"[Dd]rauf" => "dr{AUF}";
 		"viel-?leicht" => "{VILLEICHT}";
 		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
@@ -2421,9 +2440,10 @@
 		"^[Ww]ir$" => "{WIR}";
 		"^[Ww]ir'" => "{WIR}'";
 		
-		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
+		"^wa-?r(e?st|(?:e|\')?n|e?t)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
-		
+		"{WAR}et$" => "{WAR}{ET}";
+
 		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen" };
 		"(?<!^|s)(i-?)?tä-?ten" => "{HEIT}en";
 		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
@@ -2664,7 +2684,7 @@
 		"#sch(a|ä)f-?t" => { "#{SCHAFT}", "[Gg]e[-+#]schäf-?t" };
 		//"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // hm ... must be placed before decapitalizer!
 				
-
+		"({ER})t(?:u|ü)-?m" => "$1{TUM}"; // altertümlich
 		"t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH}|{ER})?$" => { "{TUM}$2", "a-?t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH})?$" }; // not: Da-tum
 		"^(ein|an|au[fs]|zu|ab|nieder|auseinander)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
@@ -2741,6 +2761,9 @@
 
 		"tstopt(01)((?:[aeiou]|ä|ö|ü).*?)(?<!i)elt(e(?:[nrsmn]|st)?)?" => "$1{EL}t$2"; // wandelt
 		"tstopt(01)el-?(haf-?t|{HAFT})" => "{EL}$1"; // tölpelhaft
+
+		// special rule for Waren (noun)
+		"{#WAR}" => "war"; 
 
 	#EndSubSection(shortener)
 	#BeginSubSection(demorpher)
@@ -3672,6 +3695,7 @@
 		"Ä{ER}" => "Ä[&E]{ER}"; // Europäern
 		"\[&T\][#-]?\[CH\]" =>  "[&T^CH]"; // "[HEIT&UL][CH]"; // "[&TCH]"; // Wörtchen, Wichtchen - not sure if this is correct
 		"\[&T\][+-]\[B@L\]" => "[&TBL]"; // Kaltblütigkeit 
+		//"(\[&T-1\])(\[H\])" => "$1[#1]$2"; //"[&TH]"; // &th is not better! => new token necessary!
 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -4514,6 +4538,7 @@
 		"{SI}" => "[S=][/I]";
 		"{UN}" => "[#NS][&U]";
 		"{IN}" => "[IN]";
+		"{WAR}T$" => "[0U-][#0S][&A][&T]";
 		"{WAR}" => "[0U-][#0S][&A]";
 		"{WÄR}" => "[0U-][#WS][&A]";
 		"{ET}" => "[ET]";

@@ -115,7 +115,7 @@
 		"phonetic_alphabet" := "espeak";
 		// define prefixes, suffixes and stems for hunspell
 		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen";
-		"stems_list" := "gangen(?:e[rsnm]?)?, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts, [Ss]ekundar, [Ss]pr(?:u|ü)ng, [Kk]om-?mens, [Ss]a-?ge-?r(?:[sn]|in(?:-?en))?, [Kk]rä-?me-?rei-?(?:en)?, [Hh]a-?be-?r(?:s|in(?:-?nen)?)?, [Ee]m-?men, sil-?bi-?g(?:e[rsnm]?)?, schaun$, stehn$, gehn$, [Pp]fün-?der[sn]?, wärts, schlitz-?t(?:e[rstnm])?, backne[rsnm]?, ziehns?, sie-?ben-?zig, ge-?leits";
+		"stems_list" := "gangen(?:e[rsnm]?)?, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts, [Ss]ekundar, [Ss]pr(?:u|ü)ng, [Kk]om-?mens, [Ss]a-?ge-?r(?:[sn]|in(?:-?en))?, [Kk]rä-?me-?rei-?(?:en)?, [Hh]a-?be-?r(?:s|in(?:-?nen)?)?, [Ee]m-?men, sil-?bi-?g(?:e[rsnm]?)?, schaun$, stehn$, gehn$, [Pp]fün-?der[sn]?, wärts, schlitz-?t(?:e[rstnm])?, backne[rsnm]?, ziehns?, sie-?ben-?zig, ge-?leits, Al-?ber-?tus, [Gg]r(?:e|ä)u-?el, (?:bor|worf)-?n(?:e[rsnm]?)?, [Ss]chnupfs?";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), los(?:(?:es)?e[snmr]?)?, ba-?r(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?, seits, voll"; // use non caputuring groups! (?:)
 		// do not treat these as separate words (block_list)
 		//"block_list" := "der, den, dem";
@@ -816,6 +816,22 @@
 		"([Pp]fer)\+d" => "$1d"; // Pferd
 		"([Rr]eis)\|(sen-?d)" => "$1-$2"; // reissenden
 		"([Ss]ter)\+(ling)" => "$1-$2"; // Sterling
+		"(Alb-?er)\+(tus)" => "$1-$2"; // Albertustaler
+		"([Ss]chrei)\|(ber)" => "$1-$2"; // Schreiberlinge
+		"([Ss]ch)-?(wes)-?(ter)" => "$1$2-$3"; // Betschwestern
+		"([Dd]ra-?ma)\|(ti-?sch)" => "$1-$2"; // dramatische
+		"(Bett)\|(lern)" => "$1-$2"; // Bettlern
+		"([Hh]and)\|(lun-?g)" => "$1-$2"; // Handlungen (computers are stupid ...)
+		"([Ff]ünf)\|(zig)-?(tau-?sen-?d)" => "$1-$2|$3"; // no idea why this one is done wrong, while "zwanzigtausend" is correct .. . ?!?
+		"([Ee]i-?nem)(m-?al)" => "$1|$2"; // mit einemmal
+		"([Uu]n)-?(aus)-?(steh)-?(li-?ch)" => "$1+$2+$3#$4"; // unausstehlich
+		"([Ww]eit)-?(schwei-?fi-?g)" => "$1|$2"; // weitschweifigste
+		"([Dd]ia)\|(lo-?g)" => "$1-$2"; // wohldialogierte
+		"([Vv]er)\+(si-?fi)" => "$1-$2"; // wohlversifizierte
+		"(Ge\+sun)\|d" => "$1d"; // gesund
+		"([a-z])(ur)\|(tei-?l)" => "$1|$2+$3"; // gesundurteilende
+		"([Qq]uer)\+" => "$1"; // Quere 
+		"([Uu]n)\+(ge)-?(heu-?er)" => "$1+$2+$3"; // Ungeheuer
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1511,6 +1527,7 @@
 		// e.g. ie: nie, Knie vs Familie, Linie
 		"([Tt])o(u-?r)" => "$1$2"; // Tour
 		"([Ll]i-?)nie" => "$1ni-e";
+		"([Bb]an-?k)-?ier" => "$1-i-e";
 		"([Ff]a-?mi-?)lie" => "$1li-e";
 		"([Pp]or-?t)ier" => { "$1i-er", "[Tt]rans\+?por-?tier" };
 		"([Kk]ar-?r)ie(re)" => "$1[&I]E$2";
@@ -2407,7 +2424,7 @@
 		"^wa-?r(st|en|et)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		
-		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => "{HEIT}";
+		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen" };
 		"(?<!^|s)(i-?)?tä-?ten" => "{HEIT}en";
 		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
 		
@@ -2432,7 +2449,7 @@
 		"ent\+" => "{ANT}+";
 		"ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste 
 		
-		"(?<![ahHMmBbGg])un-?te-?r" => "{UNTER}";
+		"(?<![ahHMmBbGgKk])un-?te-?r" => "{UNTER}";
 		"{UNTER}-" => "{UNTER}+";
 
 		"un\+" => "{UN}+"; 
@@ -2465,7 +2482,7 @@
 
 		
 		"ver(\+)" => "{VER}$1";
-		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n" }; // can produce wrong results (exclude Overall, Universum)
+		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n", "[Vv]er-?si-?fi" }; // can produce wrong results (exclude Overall, Universum)
 
 		"^all$" => "{ALL}";
 		"\+all$" => "+{ALL}";
@@ -2627,7 +2644,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch" };
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -2898,6 +2915,9 @@
 		"s-?t" => { "[ST]", "[Gg]rin-?s-?t" };
 		//"^eins" => "[EI][N]s";
 		"ch" => "[CH]";
+		// theoretically it is possible to combine h|r, but the result isn't beautiful (see: Sehröhren)
+		// separate them in this case
+		"h\|r" => "[H]\\R";
 		"h[-\|+]?r" => "[HR]";
 		"s-?p" => "[SP]";
 		"(?<!#)n-?s" => "[NS]";
@@ -3650,7 +3670,8 @@
 		"\[&T-1\]-?\[?L\]?" => "[&T#L]"; // Bewusstlosigkeit
 		"O{EN}" => "[&O]{EN}"; // Hoboen
 		"Ä{ER}" => "Ä[&E]{ER}"; // Europäern
-		"\[&T\]-?\[CH\]" =>  "[&T^CH]"; // "[HEIT&UL][CH]"; // "[&TCH]"; // Wörtchen - not sure if this is correct
+		"\[&T\][#-]?\[CH\]" =>  "[&T^CH]"; // "[HEIT&UL][CH]"; // "[&TCH]"; // Wörtchen, Wichtchen - not sure if this is correct
+		"\[&T\][+-]\[B@L\]" => "[&TBL]"; // Kaltblütigkeit 
 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -4413,6 +4434,7 @@
 
 		"^{SO}" => "[0n-][SS]";
 		"(\||\\){SO}" => "$1[0n-][SS]";
+		"L{SO}$" => "L[SS]"; // also
 		"#?{SO}$" => "[0N-][SS]";
 		"{SO}$" => "[SS]";
 		
@@ -4685,7 +4707,7 @@
 
 		// Machthaber
 		"\[&T\]\|?\[HAB\]\[VR\]" => "[A][&TB@R6]";
- 		"\[&TM\]\[VR\]" => "[&TM@R6]";
+ 		//"\[&TM\]\[VR\]" => "[&TM@R6]"; // Reichtümer: this rule is wrong!?
 		"\[&T\]\[HAFT\]" => "[A][&TF]"; // gesamthaft
 		"\[&T\]\|?\[?B\]?" => "[&TB]"; // Wartburg
 		
@@ -4704,6 +4726,7 @@
 		"\[&T&E\]\[HAB\]" => "[A][&TB]"; // recorrection Guthaben
 		"\[HEIT\]S" => "[&EITS]"; // einerseits
 		//"\[VR\]L" => "[VR@L]"; // waserlei
+		"\[ET\]\[VR\]" => "[&ETVR]"; // geendeter
 
 	#EndSubSection(laterewriter)
 	#BeginSubSection(latesubstituter)
