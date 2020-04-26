@@ -1142,16 +1142,16 @@
 		// correct spacings manually
 		"(\[b@r6\])(?:\[#.\])?(\[u\]\[d\])" => "$1[#6]$2"; // Bruder
 		"(\[(?:k|d)\])(?:\[#.\])?(\[[auo]\]\[(?:t|pp)\])" => "$1[#7]$2"; // Katapult, Kuppel
-		"(\[(?:t|t@r)\])(?:\[#.\])?(\[[auo]\]\[(?:p|pp|ck)\])" => "$1[#7]$2"; // Katapult, Truppen, Trockne
+		"(\[(?:t|t@r)\])(?:\[#.\])?(\[[auo]\]\[(?:p|pp|ck|pf)\])" => "$1[#7]$2"; // Katapult, Truppen, Trockne, tapfer
 		"(\[t@r\])\[#.\](\[au\]\[t\])" => "$1[#6]$2"; // vertrauten
 		"(\[AR\^\])\[#.\](\[t@r\])" => "$1[#2]$2"; // vertrauten
 		"\[&ts\]\[a\]\[m\]" => "[&TS][#5][A][M]"; // seltsam
 		"(\[(?:n=|w|n|m|l|f)\])\[#.\](\[[uo]\]\[(?:vr|n|g|l)\])" => "$1[#1]$2"; // nur, wurde, nun
 		"(\[(?:n=|w|n)\])\[#.\](\[a\]\[(?:vr|n|g)\])" => "$1[#2]$2"; // nur, wurde, nun
 		"(\[(?:[VvUu][Rr](?:10)?|vor)\])\[#.\](\[a\])?(\[(?:[sn]|n@r6)\])" => "$1[#1-]$2$3"; // Vers, fern
-		"(\[vr\])\[#.\](\[a\])?(\[(?:[gmkz]|sch|vor)\])" => "$1[#1]$2$3"; // Vers, fern, warm, stärker, kurzem
+		"(\[vr\])\[#.\](\[a\])?(\[(?:[gmkz]|sch|vor|g@r)\])" => "$1[#1]$2$3"; // Vers, fern, warm, stärker, kurzem
 		"(\[auf\])\[#.\](\[a\])?(\[(?:g|s|sch@l3|sch|z|w|n|vr)\])" => "$1[#1-]$2$3"; // aufgestossen
-		"(\[auf\])\[#.\](\[(?:st|f@r6)\])" => "$1[#1]$2"; // aufstossen
+		"(\[auf\])\[#.\](\[(?:st|f@r6|t@r)\])" => "$1[#1]$2"; // aufstossen, Auftritt
 		"(\[auf\])\[#.\](\[(?:b|b@r6|h|l)\])" => "$1[#0]$2"; // Aufbruch, auflauernd
 		"(\[auf\])\[#.\](\[o\]\[(?:pf)\])" => "$1[#2-]$2"; // aufopfern
 		"(\[m\])\[#.\](\[(?:s)\])" => "$1[#1]$2"; // umsonst
@@ -1202,7 +1202,14 @@
 		"(\[\^ch@l3\])(\[vr\])" => "$1[#6]$2"; // heuchlerisch
 		"\[&u\]\[#.\](\[ar\])" => "[&U][#1]$1"; // Unreifheit
 		"(\[[lb]\])(\[#.\])(\[i\])?\[q\]" => "$1[#5]$3[Q]"; // Reliquie
-
+		//"(\[tt\])(\[haft\])" => "$1[#4]$2"; // unstatthaft => not necessary: haft => f in substituter
+		"(\[&t\])\[#n\](\[&o\])" => "$1[#2-]$2"; // Konto
+		"\[ant\]\[#.\]\[ar\]" => "[ANT][#6-][ar]"; // entrüstet
+		"(\[&th\])(\[vr\])" => "$1[#4]$2"; // öffentlicher
+		"\[&u\]\[#.\](\[ar\]|\[AR\^\])" => "[&U][#1]$1"; // Unrat
+		"(\[n=@r6\])\[#.\](\[AR\^?\])" => "$1[#2]$2"; // Unterricht
+		"(\[[lb]\])\[#.\]\[a\](\[nd\])" => "$1[#5][A]$2"; // Landschaft
+		"(\[s\])\[#.\]\[o\](\[nd\])" => "$1[#5][O]$2"; // besonders
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt

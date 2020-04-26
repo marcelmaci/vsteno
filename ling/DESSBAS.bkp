@@ -193,6 +193,7 @@
 		"([Dd](?:ie|er|es|as|em|en))-?(je-?ni-?ge)" => "$1+$2";
 
 		// don't separate -zer, -der, -er at end of words
+		//"([Ss]au)\|(er)" => "$1-$2"; // sauer
 		"(.?)\|([dz]?er)\+?$" => "$1-$2";
 
 		// correct wrong separations
@@ -842,7 +843,12 @@
 		"([Ee]r#war)\|(tu)" => "$1-$2"; // Erwartung 
 		"(#[Ww]a-?ren)-(an|be|ge)-" => "$1|$2+"; // special problem Waren- ...
 		"-(#[Ww]a-?ren)" => "|$1"; // special problem -waren ...
-		 
+
+		"([Ss]au)-?(er)(?!\+)" => "$1-$2+"; // sauer
+		"(Spa)-?(ni)-?e-?rin" => "$1-$2-er+in"; // Spanierin
+		"(Spa)-?(ni)-?(e-?r)" => "$1-$2-$3"; // Spanierin
+		"([Rr]o)-?(man)\|(ti)(-?s-?c-?h)" => "$1-$2-$3$4"; // romantisch
+		"^([Uu]n)-?(um)-?" => "$1+$2-"; // unumstürzliche
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1303,6 +1309,8 @@
 		"»" => """; //"|[#5][#Q#]|";	
 		" [Ee]s( *?)ist " => " es_ist ";  // avoid "semicolon-look of "Es ist";
 	
+		// old ortograph
+		"([Gg]ar)(nicht)" => "$1 $2"; 
 
 		// mark all recognizable Waren (not verb) with #Waren
 		"(?<=[^ #])war(en|t)" => "#war$1"; // Backwaren (something + waren); Torwart
@@ -1543,6 +1551,7 @@
 		
 		
 		// e.g. ie: nie, Knie vs Familie, Linie
+		"([Rr]e)-?li-?quie" => "$1-li-qi-e";
 		"([Tt])o(u-?r)" => "$1$2"; // Tour
 		"([Ll]i-?)nie" => "$1ni-e";
 		"([Bb]an-?k)-?ier" => "$1-i-e";
@@ -2430,6 +2439,7 @@
 		"hin(-?ter)" => "{HIN}$1";
 
 		"([Hh])ei-?ter" => "$1{HEIT}er";	// Heiterkeit, angeheitert etc.
+		//"([Hh])ei-?t-?{ER}" => "$1{HEIT}{ER}";	// Heiterkeit, angeheitert etc.
 		
 		"es_ist" => "{ESIST}";
 
@@ -2516,7 +2526,7 @@
 		
 		"un-?ter" => "{UNTER}";
 		
-		"er#" => "{ER}"; // imm-er#hin
+		"(?<!i)er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
 		"(?<!d|#h)er\+" => { "{ER}", "[Ww]ie?-?d-?er" }; // more general rule
 		"\+er$" => "{ER}";
@@ -2543,6 +2553,7 @@
 		"(\||#)was$" => "$1{WAS}";
 		
 		"([RrHh]o)-?hei-?t" => "$1h{HEIT}"; // add h in Hoheit, Roheit
+		"^hei-?t(e-?r|-?{ER})" => "h{HEIT}$1"; // heitere
 		"(?<![Ss]c)[#-]?[hk]?ei-?t" => "{HEIT}";
 		
 		"#li-?ch" => "{H}";
@@ -2613,7 +2624,7 @@
 		"^dem" => "{DEM}";
 		"^denn" => "de[NN]";
 		"^den$" => "{DEN}";
-		"^den-(?!k)" => "{DEN}";
+		"^den-(?!k)" => { "{DEN}", "[Dd]en-?noch" };
 		"^de-nen" => "{DEN}[O][&E]{EN}"; // probably the only case where {EN} can follow {DEN} => add &E here directly
 		//"\|den-" => "{DEN}";
 		"^des(?![p-])" => "{DES}";
@@ -2629,7 +2640,7 @@
 		//"fürch" => "Fürch";
 		"für" => { "{FÜR}", "[Ff]ürs-?t", "[Ff]ürch" };
 		"ge-?habt" => "{GEHABT}";
-		"(?<![Cc])ha-?b" => { "{HAB}", "^[Hh]a-?bers?$" };
+		"(?<![Cc])ha-?b" => { "{HAB}", "^[Hh]a-?bers?$", "[Hh]a-?b-?ich-?t" };
 		"^[Hh]at(-?t)?" => "{HAT}";
 		"^chin" => "[CH]in";
 
@@ -2664,7 +2675,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti" };
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3221,6 +3232,7 @@
 		
 		"{HEIT}(S?)\|T" => "{HEIT}$1\\[#4]T"; // write separatedly (2 words) - add additional spacing
 		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
+		"{HEIT}((?:\[&E\])?\[E\]\[ST\])\|" => "{HEIT}$1\\"; // weitestverbreitete
 		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
 		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
 		"\[&T\]S\|" => "[&T]S\\";
@@ -3289,7 +3301,7 @@
 
 		// if one word is separated => separate all the words!
 		"\|(.*)\\" => "\\$1\\";
-		"\\(.*)\|" => "\\$1\\";
+		"\\(.*)(?<!\[EI\]N)\|" => "\\$1\\"; // do not separate prefixes!
 
 		// if word is not separated => write vowels at the end of each word
 		"E\|" => "E[&E]";
