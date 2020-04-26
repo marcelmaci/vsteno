@@ -849,6 +849,27 @@
 		"(Spa)-?(ni)-?(e-?r)" => "$1-$2-$3"; // Spanierin
 		"([Rr]o)-?(man)\|(ti)(-?s-?c-?h)" => "$1-$2-$3$4"; // romantisch
 		"^([Uu]n)-?(um)-?" => "$1+$2-"; // unumstürzliche
+		"([Gg]e)[-+](le)\|(ge-?n)" => "$1+$2-$3"; // nächstgelegene
+		"([Tt]ä)-?(te)\|(rin)" => "$1-$2-$3"; // Wohltäterinnen
+		"([Ss]o)\+(li-?d)" => "$1-$2"; // solider
+		"([Gg]e)\+(be)\+?r(in)" => "$1-$2r+$3"; // Geberinnen
+		"([Ff])er\+n" => "$1ern"; // entfernen
+		"([Vv]er)\|(mö)" => "$1+$2"; // Vermögen
+		"(Kas-?sa)-" => "$1|"; // Kassaraum
+		"([Vv]er)\+(un)-(st)" => "$1+$2+$3"; // Verunstaltung
+		"([Ss]chön)\|(hei)" => "$1#$2"; // Schönheit
+		"([Aa]n)-?(neh-?m)" => "$1+$2"; // annehmbaren
+		"([Gg]ross)-(tu)" => "$1|$2"; // Grosstuerei
+		"([Bb]is)h-?er\+(i-?g)" => "$1-he-r$2"; // bisherigen
+		"([Ss]chrift)-?(stel)" => "$1|$2"; // Schriftstellerei
+		"([Ff]ei)-(er)" => "$1-$2+"; // Feierabend
+		"([Kk]lein)\|(li)-?(ch)" => "$1#$2$3"; // kleinlichen
+		"([Zz]ier)-?(li-?ch)" => "$1#$2"; // zierliches
+		"([Ee]i-?gen)-(nü|nu)" => "$1|$2"; // eigennützig
+		"([Ss]au)\|(sen)" => "$1-$2"; // dahersausende 
+		"([Aa]uf)-?(pas)" => "$1+$2"; // Aufpasser
+		"([Gg]e)-(he-?t-?z)" => "$1+$2"; // Gehetz
+		"([Dd]a)h-(er)+" => "$1+h$2-"; // hochdaherstolzierenden
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1311,6 +1332,7 @@
 	
 		// old ortograph
 		"([Gg]ar)(nicht)" => "$1 $2"; 
+		"([Mm]it) (nichten)" => "$1$2"; mit nichten / mitnichten
 
 		// mark all recognizable Waren (not verb) with #Waren
 		"(?<=[^ #])war(en|t)" => "#war$1"; // Backwaren (something + waren); Torwart
@@ -1330,7 +1352,7 @@
 		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
 		"(Nr|Prosp|Qual|[Ss]og|Tel|Jan|Febr|Apr|Jun|Jul|Aug|Sept|Okt|Nov|Dez)\." => "$1";
 		// words with two points
-		"[Dd]\.h\." => "das+h";
+		"[Dd]\. ?h\." => "das+h";
 		"[Uu]\.a\." => "UA";
 		"[Zz]\.B\." => "ZB";
 		"[Aa]nm\. ?d\. ?[Rr]ed\.?" => "Anm der Red";
@@ -1548,7 +1570,8 @@
 		// distinguishes character groups that are written the same way but have different pronunciation
 		"[Ss]y-?ri" => "sü-ri"; // syrisches, Syrien
 		"([Ii]n)[-+]?ge-?ni-?eu-?r" => "in+sche-ni-ör"; Ingenieur
-		
+		"[Mm]on-?si-?eur" => "mös-si-ö"; // Monsieur
+		"[Mm]on-teur" => "Mon-tör"; // Monteur 
 		
 		// e.g. ie: nie, Knie vs Familie, Linie
 		"([Rr]e)-?li-?quie" => "$1-li-qi-e";
@@ -1653,6 +1676,8 @@
 		"viel-?leicht" => "{VILLEICHT}";
 		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
 		"[Ww]as\+" => "{WAS}"; // waserlei
+		"[Mm]it[-+]?nich-?ten" => "{MIT}\\{NICHT2}{EN}"; // mitnichten
+		
 		
 		// cut out vowels
 		"tstopt(01)er\+li-?ch" => "er{LICH}";
@@ -2640,7 +2665,7 @@
 		//"fürch" => "Fürch";
 		"für" => { "{FÜR}", "[Ff]ürs-?t", "[Ff]ürch" };
 		"ge-?habt" => "{GEHABT}";
-		"(?<![Cc])ha-?b" => { "{HAB}", "^[Hh]a-?bers?$", "[Hh]a-?b-?ich-?t" };
+		"(?<![Cc])ha-?b" => { "{HAB}", "^[Hh]a-?bers?$", "[Hh]a-?b-?ich-?t", "[Ee]r[-+]ha-?be-?n" };
 		"^[Hh]at(-?t)?" => "{HAT}";
 		"^chin" => "[CH]in";
 
@@ -3241,6 +3266,7 @@
 		"(\[&T\]O\[NS\])\|" => "$1\\";
 		"(\[RR\].*?)\|" => "$1\\"; // Karrierepläne (separate after rr)
 		"\[&T\]E\|" => "[&T]E\\";  // Produktepalette 
+		"({HEIT}{ER}|\[&EITVR\]|{HEIT}\[VR\])\|" => "$1\\"; // heiterhellen 
 
 		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
 		"(\[TUNG\]S)\|F" => "$1[#3]\\F"; // Unterhaltungsfonds
@@ -3301,7 +3327,7 @@
 
 		// if one word is separated => separate all the words!
 		"\|(.*)\\" => "\\$1\\";
-		"\\(.*)(?<!\[EI\]N)\|" => "\\$1\\"; // do not separate prefixes!
+		"\\(.*)(?<!\[EI\]N|AN)\|" => "\\$1\\"; // do not separate prefixes!
 
 		// if word is not separated => write vowels at the end of each word
 		"E\|" => "E[&E]";
@@ -3340,6 +3366,7 @@
 		// specific function of completor: adds dummy tokens at beginning and end of a word
 		// for tokens that need this "completion" (e.g. n, s at beginning; vowels at the end etc.
 		
+		"U{ER}" => "[A][&U]{ER}"; // Grosstuerei
 		"(?<![&-AEIOU])\[?([A])\]?$" => "[$1][&$1]";
 		"(?<![&-AEIOU])\[?([IOU])\]?$" => "[#N][&$1]";
 
@@ -4716,6 +4743,7 @@
 		"(.){DIS}" => "$1[#1-][I][S]"; // überdies
 		"{RÜCK}" => "[rück]";
 		"{ANT}" => "[ANT]";
+		"{HAFT}" => "[A][F]";
 
 	#EndSubSection(substituter)
 	#BeginSubSection(laterewriter)

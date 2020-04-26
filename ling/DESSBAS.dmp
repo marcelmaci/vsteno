@@ -595,7 +595,7 @@
 		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
 		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
 		
-		"(?<![Vv])([Ee]r)\+(le)(?!i)" => "$1$2"; 			// Erle: first transform all
+		"(?<![Vv])([Ee]r)\+(le)(?!i)" => { "$1$2", "[Aa]uf\+er\+" }; 			// Erle: first transform all, not: auferlegt
 
 		"([Ee]r)(le-)(?=[dsbghmprtwz])" => "$1+$2"; 	// reseparate: erlesen, erledigen etc.
 		"([Ee]r)(ler\+)" => "$1+$2"; 	// reseparate: erlernen, erlernt etc.
@@ -843,8 +843,9 @@
 		"([Ee]r#war)\|(tu)" => "$1-$2"; // Erwartung 
 		"(#[Ww]a-?ren)-(an|be|ge)-" => "$1|$2+"; // special problem Waren- ...
 		"-(#[Ww]a-?ren)" => "|$1"; // special problem -waren ...
+		"(#wa-ren)-l" => "$1|l"; // Warenlieferung 
 
-		"([Ss]au)-?(er)(?!\+)" => "$1-$2+"; // sauer
+		"((?:[Ss]|[Tt]r)au)-?(er)(?!\+)" => "$1-$2+"; // sauer, Trauer
 		"(Spa)-?(ni)-?e-?rin" => "$1-$2-er+in"; // Spanierin
 		"(Spa)-?(ni)-?(e-?r)" => "$1-$2-$3"; // Spanierin
 		"([Rr]o)-?(man)\|(ti)(-?s-?c-?h)" => "$1-$2-$3$4"; // romantisch
@@ -870,6 +871,17 @@
 		"([Aa]uf)-?(pas)" => "$1+$2"; // Aufpasser
 		"([Gg]e)-(he-?t-?z)" => "$1+$2"; // Gehetz
 		"([Dd]a)h-(er)+" => "$1+h$2-"; // hochdaherstolzierenden
+		"([Bb]ar)-?(ri)(e)(re)" => "$1-$2-$3-$4"; // Barriere
+		"([Ii]hr)-?(er)(?!\+)" => "$1-$2+"; // ihrerseits
+		"([Vv]a)-?ri(é|e)-?t(é|e)" => "$1-ri-e-te"; // Varietebühnen
+		"([Vv]a-ri-e-te)-([^ s])" => "$1|$2"; // Varietebühnen
+		"([Aa]uf\+recht\+)(st)" => "$1|$2"; // aufrechtstehen
+		"(ungs)-(ta-?t)" => "$1|$2"; // Verzweiflungstaten
+		"([Bb]e)\+ob\|(ach)\|t(un-?g)" => "$1+o-b$2-t$3"; // Beobachtungen
+		"([Ee]nt)-?(kor-?k)" => "$1+$2"; // entkorke
+		"([Ee]i)\|(fer)" => "$1-$2+"; // nachzueifern
+		"([Bb]ei\+sam-?men)\+(sein)" => "$1|$2"; // Beisammenseins
+		"(war)\|(tet)" => "$1-$2"; // erwartet
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1572,6 +1584,7 @@
 		"([Ii]n)[-+]?ge-?ni-?eu-?r" => "in+sche-ni-ör"; Ingenieur
 		"[Mm]on-?si-?eur" => "mös-si-ö"; // Monsieur
 		"[Mm]on-teur" => "Mon-tör"; // Monteur 
+		"[Dd]res-?seur" => "dres-sör"; // Dresseur
 		
 		// e.g. ie: nie, Knie vs Familie, Linie
 		"([Rr]e)-?li-?quie" => "$1-li-qi-e";
@@ -1677,7 +1690,7 @@
 		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
 		"[Ww]as\+" => "{WAS}"; // waserlei
 		"[Mm]it[-+]?nich-?ten" => "{MIT}\\{NICHT2}{EN}"; // mitnichten
-		
+		"[Ii]n[-+]so[-+]fern" => "{IN}{SO}fern"; // insofern
 		
 		// cut out vowels
 		"tstopt(01)er\+li-?ch" => "er{LICH}";
@@ -2565,6 +2578,7 @@
 		"(?<!f)ant-" => "{ANT}";
 
 		"an\+" => "{AN}+";
+		"[Aa]l-?le-?dem" => "{ALL}E{DEM}"; 
 
 		"schien" => "schin";	// hm .. ;-)
 		"(er-?)dem$" => "{ER}{DEM}";
@@ -2700,7 +2714,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t" };
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti" };
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3250,6 +3264,8 @@
 		// separates two words in one
 		// there must be a possibility to disable this function manually (i.e. via input form)!
 
+		//"(.{2,}){SEIN}([Ss])?" => "$1\\{SEIN}$2"; // Beisammensein
+
 		//"(EITS\])\|" => "$1\\";
 		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
 		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
@@ -3616,6 +3632,7 @@
 		"\[&T&E\]E" => "[&T&E][-E]";
 		"\[&T\]{HAFT}" => "[&THAFT]";
 		"{HEIT}{LICH}" => "[&EITH]";
+		"{HEIT}#H" => "[&EITH]"; // seither 
 		"\[&T\]{SCHAFT}" => "[&TSCHAFT]";
 		"{HEIT}{SCHAFT}" => "[&EITSCHAFT]";
 		"\[&T\]{ION}" => "[&TION]";
@@ -3739,6 +3756,8 @@
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
+		"{IN}{SO}" => "[IN][#4][SS]"; // insofern
+ 
 		// substitutions that must come before rewriter part in substituter
 		"tstopt(01)^{ZAHL}" => "[0N-][A][L]"; 
 		"tstopt(01){ZAHL}" => "[A][L]"; 
@@ -4514,6 +4533,7 @@
 		"{ET}(e[^s]|{EN}|{EM})" => "{ET}[&E]$1";
 		"\[EI\]t" => "[EI]T";
 
+		"{ALL}E{DEM}" => "[A][L][-E]\\[DEM]"; // alledem
 		//"{VOR}r" => "[VOR+AR]";
 		//"{ER}r" => "[VR+AR]";
 		"(.){DES}" => "$1[S]";
@@ -4744,6 +4764,7 @@
 		"{RÜCK}" => "[rück]";
 		"{ANT}" => "[ANT]";
 		"{HAFT}" => "[A][F]";
+		"{FORT}" => "[FORT]"; 
 
 	#EndSubSection(substituter)
 	#BeginSubSection(laterewriter)
