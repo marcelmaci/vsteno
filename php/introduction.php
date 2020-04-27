@@ -52,6 +52,9 @@ und gedruckter Form - zu publizieren.</p>
 <p><i><b>[UPDATE 16/04/20]:</b> Eben erreicht mich die traurige Nachricht, dass Luís Sepúlveda, ein Autor, den ich wegen seiner Menschlichkeit 
 und seinem gesunden Menschenverstand besonders geschätzt habe, am Coronavirus verstorben ist. Zu seinem Gedenken hier das <a href='../docs/sepulveda_gaviota_cap9.pdf'>Kapitel 9</a> aus Historia 
 de una gaviota y del gato que le enseño a volar ... Descansa en paz, ¡compañero!</i></p>
+<p><i><b>[UPDATE 27/04/2020]:</b> VSTENO publiziert sein erstes stenografisches <a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_27042020.pdf">eBook</a>! 
+In der neu geschaffenen Ecke namens <a href="library.php">Bibliothek</a> sollen in 
+Zukunft weitere eBooks aufgeschaltet werden.</i></p>
 <center>* * *</center>
 
 <p><b>20/03/20 - Der Titan ist da ... :)</b><p>
