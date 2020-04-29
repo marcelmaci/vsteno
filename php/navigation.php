@@ -1,4 +1,4 @@
-                <p><b>Program</b></p>
+                <p><b>Programm</b></p>
                 <ul>
                 <li><A href="introduction.php">Einführung</A></li>
                 <li><A href="documentation.php">Dokumente</a></li>
@@ -14,10 +14,11 @@
                 <li><A href="logout.php">Ausloggen</A></li>
                 <li><A href="delete_account.php">Löschen</A></li>
                 </ul>
-                <p><b>Stenografie</b></p>
+                <p><b>Steno</b></p>
                 <ul>
                 <li><A href="thoughts.php">Gedanken</A></li>
                 <li><A href="links.php">Wegweiser</A></li>
+                <li><a href="library.php">Bibliothek</a></li>
                 </ul>
                 <p><b>Kontakt</b></p>
                 <ul>

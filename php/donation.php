@@ -14,7 +14,7 @@ Name:   Marcel Maci
 SWIFT-BIC: RAIF22
 BC-Nr.:    80808
 </pre>
-<p>Spenden sind grundsätzlich anonym und werden nur mit dem Einverständnis der/des Spenderin/s namentlich erwähnt.</p>
+<p>Spenden sind grundsätzlich nicht öffentlich (anonym) und werden nur mit dem Einverständnis der/des Spenderin/s namentlich erwähnt.</p>
 
 <h1>Barometer</h1>
 <p>Der Transparenz halber werden hier eingegangene Spenden (Gesamtsumme) pro Entwicklungsjahr aufgeführt und Spender/innen, welche ihr 
@@ -31,7 +31,12 @@ Einverständnis hiezu gegeben haben, namentlich verdankt.</p>
     Danke: Danke an alle, welche dieses Projekt ideell und in anderer Form (z.B. Melden falscher Stenogramme) unterstützen.
     </li>
 </ul>
-
+<h1>Verwendung</h2>
+<p>Mit Datum des 27.04.2020 werden auf www.vsteno.ch erstmals auch stenografische eBooks (PDF) veröffentlicht. Wie unter 
+<a href="library_copyright.php">Copyright</a> erläutert, ist es möglich, dass für gewisse Werke Lizenzgebühren anfallen. Sollte mit den 
+eingegangenen Spenden ein "Gewinn" erzielt werden, so werden damit zunächst die besagten Lizenzgebühren gemäss dieser 
+<a href="license_fees.php">Regelung</a> abgegolten.</p>
+</p>
 <h1>Kosten</h1>
 <p>Die rein materiellen Betriebskosten von VSTENO sind bescheiden:</p>
 <ul>
@@ -39,6 +44,6 @@ Einverständnis hiezu gegeben haben, namentlich verdankt.</p>
     - Hosting (shared): ca. 100.- / Jahr<br>
 </ul>
 <p>Aufwändiger hingegen ist die Entwicklung von VSTENO. Dies betrifft sowohl die Programmierung als auch das Entwickeln von stenografischen 
-Modellen. Weitere Beiträge dienen somit der Abgeltung der geleisteten Arbeitsstunden.</p>
+Modellen. Weitere Beiträge (i.e. nach Abzug von etwaigen Lizenzgebühren für eBooks) dienen somit der Abgeltung der geleisteten Arbeitsstunden.</p>
 
 <?php require "vsteno_template_bottom.php"; ?>
