@@ -1157,6 +1157,7 @@
 		"(\[(?:[VvUu][Rr](?:10)?|vor)\])\[#.\](\[a\])?(\[(?:[sn]|n@r6)\])" => "$1[#1-]$2$3"; // Vers, fern
 		"(\[vr\])\[#.\](\[a\])?(\[(?:[gmkz]|sch|vor|g@r)\])" => "$1[#1]$2$3"; // Vers, fern, warm, stärker, kurzem
 		"(\[auf\])\[#.\](\[a\])?(\[(?:g|s|sch@l3|sch|z|w|n|vr)\])" => "$1[#1-]$2$3"; // aufgestossen
+		"(\[auf\])\[#.\](\[a\])?(\[(?:sch@r)\])" => "$1[#7-]$2$3"; // Aufschrei
 		"(\[auf\])\[#.\](\[(?:st|f@r6|t@r)\])" => "$1[#1]$2"; // aufstossen, Auftritt
 		"(\[auf\])\[#.\](\[(?:b|b@r6|h|l)\])" => "$1[#0]$2"; // Aufbruch, auflauernd
 		"(\[auf\])\[#.\](\[o\]\[(?:pf)\])" => "$1[#2-]$2"; // aufopfern
@@ -1234,7 +1235,12 @@
 		"\[ant\]\[#.\](\[l\])" => "[ANT][#0]$1"; // Antlitz
 		"(\[&tion\])(\[s\])" => "$1[#3]$2"; // Konfektionsgeschäftsausläufer
 		"\[ch\]\[#.\]\[selb\]" => "[ch][#7][SELB]"; // welchselbiges
-
+		"\[nn\]\[#.\]\[AR\^\]" => "[NN][#2-][AR^]"; // Spinnrocken
+		"\[n\]\[#.\](\[vr\+ar\])" => "[N][#6]$1"; // Schreckenerregende (obsolete [#n])
+		"(\[nicht\])(\[s\])" => "$1[#2]$2"; // nichts
+		"\[ant\]\[#.\](\[AR\^\])" => "[ANT][#6-]$1"; // entrissen
+		"(\[mpf\])(\[@r\])" => "$1[#8]$2"; // Schimpfrede
+		
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
 		"(\[&t(?:&e|e?s)?\])(.)(\[[tp]\])" => "$1$2[#7]$3"; // impossible to place \\ inside regex condition !?!?!? (bug?!) => use (.) instead
