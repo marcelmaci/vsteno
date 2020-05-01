@@ -171,7 +171,7 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "^[Tt]er-?r" }; // Terrain
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
@@ -896,6 +896,24 @@
 		"(ier)-?(li-?c-?h)((?:s-?t)?e[rsnm]?)?$" => "$1#$2$3"; // possierlich
 		"-(tei-?li-?g)" => "|$1"; // fünfteiliges
 		"^([Ee]nt)-?(ge-?g)" => "$1+$2"; // entgegnete
+		"([Aa]uf)-?(wi)(-?sch)" => "$1+$2$3"; // aufwischen
+		"([Vv]er)[-+]?(an)-?(la-?g)" => "$1+$2+$3"; // veranlagte
+		"([Hh]art)-?(nä-?cki-?g)" => "$1|$2"; // Hartnäckigkeit (use this for separation)
+		"([Bb]e)m-?(er)\+?k" => "$1+m$2-k"; // Zwischenbemerkung
+		"([Ll]an)\+(des)" => "$1-$2"; // landesüblich
+		"(Ver\+giss\|mein\|nicht)(?!\|)" => "$1|"; // Vergissmeinnichtaugen
+		"([Pp]ro)-?(sa)(i-?s-?c-?h)" => "$1-$2-$3"; // prosaischste
+		"((?:[Zz]w|[Qq]u)et)-?(schg?en)-" => "$1-$2|"; // (Zw|Qu)etsch(g)enkuchenrest
+		"([Ss]ter)\+b" => "$1b"; // sterblicher
+		"([Rr]hi-?zi-?nus)-" => "$1|"; // Rhizinuspillen
+		"([Hh]e)f-(en)(teig)" => "$1-f$2|$3"; // Hefenteig
+		"([Ee]nt)-?(zü-?ck)" => "$1+$2"; // Entzückens
+		"([Zz]u)\+(recht)\+(.)" => "$1+$2|$3"; // zurechtwies (separate)
+		"([Aa]n)[-+]?(ge)-?(be-?t)" => "$1+$2+$3"; // Angebetete
+		"([Uu]n)[-+]?(ge)-?(hemm)" => "$1+$2+$3"; // Ungehemmten
+		"([Zz]ar)\|(tes)" => "$1-$2"; // zartesten
+		"([Bb]e)\+(sche)r\+(ung)" => "$1+$2-r$3"; // Weihnachtsbescherung
+		"([Bb]ös)\|(ar)\|(ti-?g)" => "$1-$2-$3"; // bösartig
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1627,6 +1645,7 @@
 		// ou = u
 		"([Tt])ou(-?ris)" => "$1u$2"; 
 		"([Rr])o(u-?t[ie])" => "$1$2";
+		"ou-?i-?l-?l" => "u-ill"; // Patrouille 
 
 		"([Dd]i)eu" => "$1ö";	// french word
 		
@@ -1651,7 +1670,9 @@
 		"[Cc](on-?do-?r)" => "k$1"; // Kondor
 		"([Ss])ou-?per" => "$1u-pe"; // Souper
 		
-		
+		// rh-
+		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => "$1$2$3"; // Rhizinus, Rhetorik etc.
+
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
 		"sis-?te(-?)m" => "sis-tE$1m";	// mark accentuated vowel with uppercase (so that they won't get transformed)
@@ -2473,7 +2494,8 @@
 		"tstopt(01)[Jj](?:a|ä)h-?r" => "{JAHR}";
 		"tstopt(01)[Ff]ie-?l" => "{FIEL}";
 		
-
+		"([Hh]er)-?bei" => "$1{BEI}"; 
+ 
 		"#er" => "{ER}";
 		"zer\+" => "{ZER}+";
 
@@ -2556,7 +2578,7 @@
 		
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
-		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zern", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zern", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+" };
@@ -2707,7 +2729,7 @@
 		"^in$" => "{IN}";
 		"^ist(s?)$" => "{IST}$1";
 		"mitt" => "m1i2t3t4";
-		"mit(?!(t|-t))" => { "{M}", "Eremit" };
+		"mit(?!([tz]|-[tz]))" => { "{M}", "Eremit" };
 		"m1i2t3t4" => "mitt";
 		"^nicht" => "{NICHT2}";
 		"^sie$" => "{SI}";
@@ -2731,7 +2753,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "[Kk]i-?lo-?me-?ter", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti" };
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3285,6 +3307,7 @@
 		// there must be a possibility to disable this function manually (i.e. via input form)!
 
 		//"(.{2,}){SEIN}([Ss])?" => "$1\\{SEIN}$2"; // Beisammensein
+		"\|{NICHT2}\|" => "\\{NICHT2}\\"; // Vergissmeinnichtaugen
 
 		//"(EITS\])\|" => "$1\\";
 		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
@@ -3455,6 +3478,8 @@
 		// dem/den at beginning
 		"^{(DE[MN])}([-+#]?)(?=N|{UN})" => "[^$1]$2"; // demungeachtet
 		"^{(DE[MN])}([-+#]?)(?=J)" => "[^^$1]$2";
+
+		"\\\[AU]" => "\\[0D-][AU]"; // Vergissmeinnichtaugen - not correct for ch, sch etc.
 
 		// completor in the end (also necessary)
 		"O\|" => "[#N][&O]|"; // Autobahn
@@ -4653,6 +4678,7 @@
 		"{HAB}" => "[HAB]";
 		"{ZUSAMMEN}" => "[Z][A][S]";
 		"{ER}L(\[#.\]\[-EI\])$" => "[VR@L]$1"; // waserlei, allerlei
+		"\[&T\]\[VR\]L(\[EI\]N)" => "[&TVR@L]$1"; // Töchterlein		
 		"{ER}L((?:\[#.\])?(?:\[I\]|I)\[NG\](?:S|\[S\]|\[-E\])?$)" => "[VR@L]$1"; // Pfifferling[se]
 		"{ER}" => "[VR]";
 		"^{INTER}" => "[INTER]";
@@ -4786,6 +4812,7 @@
 		"{ANT}" => "[ANT]";
 		"{HAFT}" => "[A][F]";
 		"{FORT}" => "[FORT]"; 
+		"{ION}" => "[ION]"; 
 
 	#EndSubSection(substituter)
 	#BeginSubSection(laterewriter)
