@@ -547,7 +547,7 @@
 		"([Bb]e)\+(te(?:n|st|t(?:en?)?|nd(?:en?)?))" => "$1-$2";
 		"([Bb]e)\+(b(?:en|e?st|e?t(?:en?)?|nd(?:en?)?))" => "$1-$2";
 		"([Bb]e)\+(sens?)" => "$1-$2";
-		"([Bb]e)\+(ne(?!-?tz))" => "$1-$2";
+		"([Bb]e)\+(ne(?!-?tz|h-?m))" => "$1-$2";
 		"([Bb]e)\+(x)" => "$1$2";
 		
 
@@ -570,7 +570,7 @@
 		"^([Uu]n\+?)?([GgBbFf]er)\+n" => "$1$2-n";
 		"^([Uu]n\+?)?([Ss]ter)\+n" => "$1$2-n";
 
-		"^((?:[Aa]-?l-?ler\+?[|#-]?)?[Ee])r\+(s-?t)(?!au)" => { "$1r$2", "[Ee]r[-+]ste-?l" };
+		"^((?:[Aa]-?l-?ler\+?[|#-]?)?[Ee])r\+(s-?t)(?!au|a|u)" => { "$1r$2", "[Ee]r[-+]ste-?l" };
 		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
 		"^([Bb]er)\+k" => "$1-k";		// Berkeley
 		"b-?er\+g" => "ber-g";			// Aarberg(er) (Berg)
@@ -914,6 +914,24 @@
 		"([Zz]ar)\|(tes)" => "$1-$2"; // zartesten
 		"([Bb]e)\+(sche)r\+(ung)" => "$1+$2-r$3"; // Weihnachtsbescherung
 		"([Bb]ös)\|(ar)\|(ti-?g)" => "$1-$2-$3"; // bösartig
+		"([Ss]pinn)-?(ro-?cken)" => "$1|$2"; // Spinnrocken
+		"([Ss]chlei)-?(er)\|" => "$1-$2+|"; // Schleiertanz
+		"([Tt]ur-?tel)-t" => "$1|t"; // Turteltäubchen
+		"([Ff]u-?ri)e" => "$1-e"; // Furie
+		"([Vv]or-?bei)s-(au-?s)" => "$1|s$2"; // vorbeisauste
+		"([Ee]r)(#war)\|t" => "$1+$2t"; // erwarte
+		"([Bb]är)\|(ti-?g)" => "$1-$2"; // weissbärtiger (Weissbär-Tiger;)
+		"([Hh]o-?[kc]us)-?(po-?[kc]u-?s)" => "$1|$2"; // Hokuspokus
+		"([Tt]i-?ckel)-?(ta-?ckel)" => "$1|$2"; // tickeltackel
+		"([Hh]er)-?\+?(ein)-?k" => "$1-$2+k"; // hereinkam
+		"([Gg]e)-?(nu-?del)" => "$1+$2"; // gutegenudelte
+		"([Ee]in)-?(sa-?m)" => "$1+$2"; // Einsamer
+		"([Ii]n-?ter)\|(es)\|(sie)" => "$1+$2-$3"; // interessieren
+		"([Gg]e\+richts)#(voll)\|z" => "$1|$2-z"; // Gerichtsvollzieher 
+		"([Ww]ett-?be)-?(werb)" => "$1+$2"; // Drachenwettbewerb
+		"([Mm]äus-?chen)-" => "$1|"; // mäuschenklein (analysis works locally, but doesn't work on server - probably different version hunspell)
+		"([Ee])n-?er\+?(gi-?s-?c-?h)" => "$1-ner-$2"; // energisch
+		"([Hh]ol)t-?(er)[-+]?(di)-?(pol-?ter)" => "$1-t$2|$3|$4"; // holterdipolter
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1613,6 +1631,7 @@
 	#BeginSubSection(phonetizer)
 		
 		"([Kk]as-?s)ie(-?re-?r)" => "$1i$2"; // Kassierer/in vs Kassier
+		"([Kk]on-?kur-?ri)-e(-?r)" => "$1$2"; // konkurrieren
 
 		// distinguishes character groups that are written the same way but have different pronunciation
 		"[Ss]y-?ri" => "sü-ri"; // syrisches, Syrien
@@ -1669,7 +1688,7 @@
 		"([Gg])ou-?ver" => "$1u-ver"; // Gouvernement
 		"[Cc](on-?do-?r)" => "k$1"; // Kondor
 		"([Ss])ou-?per" => "$1u-pe"; // Souper
-		
+		"([Ss])ou(f-?f-?lie-?r)" => "$1u$2"; // Soufflierte
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => "$1$2$3"; // Rhizinus, Rhetorik etc.
 
@@ -1685,6 +1704,7 @@
 		"(\+?[Gg])e(r-?ne?)" => "$1E$2";
 		"([Kk]on-?z)e(r-?t)" => "$1E$2"; 
 		"([Ll]a-?t-?)e(r-?n)" => "$1E$2";
+		"([Pp]o)-?(li)-?(phem|fem)" => "$1-$2-fEM"; // Polyphem
 		
 	#EndSubSection(accentizer)
 	#BeginSubSection(preshortener)
@@ -2495,6 +2515,7 @@
 		"tstopt(01)[Ff]ie-?l" => "{FIEL}";
 		
 		"([Hh]er)-?bei" => "$1{BEI}"; 
+ 		"([Vv]or)-?bei" => "$1{BEI}"; 
  
 		"#er" => "{ER}";
 		"zer\+" => "{ZER}+";
@@ -2753,7 +2774,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -2774,7 +2795,7 @@
 		//"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // hm ... must be placed before decapitalizer!
 				
 		"({ER})t(?:u|ü)-?m" => "$1{TUM}"; // altertümlich
-		"t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH}|{ER})?$" => { "{TUM}$2", "a-?t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH})?$" }; // not: Da-tum
+		"t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|-?{LICH}e[mnrs]?|{ER})?$" => { "{TUM}$2", "a-?t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH})?$" }; // not: Da-tum
 		"^(ein|an|au[fs]|zu|ab|nieder|auseinander)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"(^|\|)be(un|ur)" => "$1{BE}$2";
@@ -3376,7 +3397,7 @@
 		// something is odd with this \ anyway: doesn't behave like | in SmoothenEntryExitPoints either
 
 		// more general rule: if word contains &t => separate
-		"^(.*?)(\[&T\])(.*?)\|" => "$1$2$3\\"; // ex: Manteltaschen
+		"^(.*?)(\[&T\])(.*?)\|(?!{SCHAFT})" => "$1$2$3\\[#5]"; // ex: Manteltaschen
 
 		// sein => separate
 		"\|{SEIN}" => "\\{SEIN}";
@@ -3803,6 +3824,7 @@
 	#BeginSubSection(substituter)
 
 		"{IN}{SO}" => "[IN][#4][SS]"; // insofern
+		"^{D(E[MN])}\|?{SELB}{EN}" => "[0N-][$1][SELB][EN]"; // de(nm)selben
  
 		// substitutions that must come before rewriter part in substituter
 		"tstopt(01)^{ZAHL}" => "[0N-][A][L]"; 
@@ -4871,6 +4893,7 @@
 		"{WERD}" => "[WERD]";
 		"{M}" => "[M]";
 		"{GEGEN}" => "[GEGEN]";
+		"{NICHT2}" => "[NICHT]";
 	#EndSubSection(latesubstituter)
 	#BeginSubSection(rewriter2)
 		//"\[&T\]-?\[H\]" => "[&T3/4][H]";
