@@ -944,6 +944,17 @@
 		"([Kk]on)\+(zer)\+t" => "$1-$2t"; // konzertieren
 		"([Ss]chil)-?de-r" => "$1d-er+"; // Schilderungen
 		"([Hh]yst-?e)r\+(i-?sch)" => "$1-r$2"; // hysterisch
+		"([Ee]in)-?(lul)" => "$1+$2"; // Einlullungsversuchen
+		"(#war)\|t" => "$1t"; // only on server: erwarte
+		"-(köpf)-?(chen)" => "|$1-$2"; // Grisettenköpfchen
+		"([Gg]e)-?(neh)-?(m)" => "$1+$2-$3"; // unangenehm
+		"([Ee]in)-?(tra-?g)" => "$1+$2"; // Eintragung
+		"([Aa]n)-?(las-?s)" => "$1+$2"; // Veranlassung
+		"(Gla-?cé)-?" => "$1|"; // Glacéhandschuhen
+		"([Bb]e\+er)\+(di-?g)" => "$1-$2"; // Beerdingung
+		"([Aa]r)\|(ran)\|(gie-?r)" => "$1-$2-$3"; // arrangieren
+		"([Ff]o-?to)\|(gra-?f)" => "$1-$2"; // Fotograf (but: Fotomodell - two words)
+		"([Ee]nt)-?(ste-?h)" => "$1+$2"; // Entstehung
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1701,6 +1712,8 @@
 		"[Cc](on-?do-?r)" => "k$1"; // Kondor
 		"([Ss])ou-?per" => "$1u-pe"; // Souper
 		"([Ss])ou(f-?f-?lie-?r)" => "$1u$2"; // Soufflierte
+		"([Pp])ou(s-?sie-?r)" => "$1u$2"; // poussierten
+
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => "$1$2$3"; // Rhizinus, Rhetorik etc.
 
@@ -2567,7 +2580,7 @@
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"{WAR}et$" => "{WAR}{ET}";
 
-		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen" };
+		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel" };
 		"(?<!^|s)(i-?)?tä-?ten" => "{HEIT}en";
 		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
 		
@@ -2789,7 +2802,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3350,6 +3363,8 @@
 		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
 		"\[&T\]\|({AN})" => "[&T]\\$1"; // write separatedly (2 words) - prefix an-
 		
+		"{HEIT}(U\[NG\]S)\|([TP])" => "{HEIT}$1\\[#4]$2"; // Zeitungspapier - add additional spacing
+		
 		"{HEIT}(S?)\|([TP])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
 		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
 		"{HEIT}((?:\[&E\])?\[E\]\[ST\])\|" => "{HEIT}$1\\"; // weitestverbreitete
@@ -3461,6 +3476,9 @@
 		// specific function of completor: adds dummy tokens at beginning and end of a word
 		// for tokens that need this "completion" (e.g. n, s at beginning; vowels at the end etc.
 		
+		"I-?\[AU\]" => "[&I][AU]"; // miauen
+		"\[EU\]-?I" => "[EU][&E]I"; // Neuigkeiten
+
 		"U{ER}" => "[A][&U]{ER}"; // Grosstuerei
 		"(?<![&-AEIOU])\[?([A])\]?$" => "[$1][&$1]";
 		"(?<![&-AEIOU])\[?([IOU])\]?$" => "[#N][&$1]";

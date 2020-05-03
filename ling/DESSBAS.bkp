@@ -482,7 +482,7 @@
 		"([Ee]nt)-?(b|sch)" => "$1+$2";
 
 		// un-
-		"(?<!e)([Uu]n)-(z)(?!e)" => "$1+$2"; // wrong: neunziger => neun+ziger
+		"(?<!e)([Uu]n)-(z)(?!e)" => { "$1+$2", "[Dd]e-?nun-?zi" }; // wrong: neunziger => neun+ziger, Denunziation
 		"([Uu]n)-(b)" => "$1+$2";
 		"([Uu]n)-?(nach-?)" => "$1+$2";
 		"^([Uu]n)-(er|ver|ge|be|an)-" => "$1+$2+";
@@ -932,6 +932,18 @@
 		"([Mm]äus-?chen)-" => "$1|"; // mäuschenklein (analysis works locally, but doesn't work on server - probably different version hunspell)
 		"([Ee])n-?er\+?(gi-?s-?c-?h)" => "$1-ner-$2"; // energisch
 		"([Hh]ol)t-?(er)[-+]?(di)-?(pol-?ter)" => "$1-t$2|$3|$4"; // holterdipolter
+		"^Der\+p$" => "Derp"; // Clotilde Derp (name) 
+		"([Ss]chlei)-?(er)(?!\+)" => "$1-$2+"; // Schleier
+		"(zäh)\|(li-?g)" => "$1-$2"; // unzähligen
+		"([Tt]e)-?(le)\|(gra)" => "$1-$2-$3"; // Telegraf, Telegramm
+		"(schö-?ne)-ru" => "$1r+u"; // Verschönerungen
+		"([Kk]on)\+(to)" => "$1-$2"; // Privatkontor
+		"([Gg]e)-?(knif)" => "$1+$2"; // zusammengekniffenen
+		"([Nn]ach)-?(läs|las)" => "$1+$2"; // vernachlässigt
+		"([Gg]lück)\|?(li-?c-?h)" => "$1#$2"; // glücklich-neckenden
+		"([Kk]on)\+(zer)\+t" => "$1-$2t"; // konzertieren
+		"([Ss]chil)-?de-r" => "$1d-er+"; // Schilderungen
+		"([Hh]yst-?e)r\+(i-?sch)" => "$1-r$2"; // hysterisch
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1710,6 +1722,9 @@
 	#BeginSubSection(preshortener)
 		// "early shortener"
 		// i.e. shortener that applies to composed words
+
+		"([Tt]eil\|)ha-?ber" => "$1{HAB}{ER}"; // can't be done in stage 3
+
 		// not sure if this works correctly ... there might be other implications if stage3 doesn't follow
 		// stage2 ... leave it for the moment ...
 		
@@ -2765,7 +2780,7 @@
 		"^uns(er.*)?$" => "u[NS]$1";
 		"(^|\|)({?des}?)?inter" => "$1$2{INTER}";
 		
-		"^der(?![+-]?b)" => "{DER}";
+		"^der(?![+-]?[pb])" => "{DER}"; // Derp (name)
 		
 		
 		"(^|\|)[Aa]n-?ti[kc]on" => "$1{ANTI}{C}";
@@ -3335,7 +3350,7 @@
 		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
 		"\[&T\]\|({AN})" => "[&T]\\$1"; // write separatedly (2 words) - prefix an-
 		
-		"{HEIT}(S?)\|T" => "{HEIT}$1\\[#4]T"; // write separatedly (2 words) - add additional spacing
+		"{HEIT}(S?)\|([TP])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
 		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
 		"{HEIT}((?:\[&E\])?\[E\]\[ST\])\|" => "{HEIT}$1\\"; // weitestverbreitete
 		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
@@ -3630,6 +3645,7 @@
 		"\[NR\]" => "[N@R6]";
 		"\[NL\]" => "[N@L]";
 		"\[KL\]" => "[K@L3]";
+		"(I|\[AU\])\[ZL\]" => "$1[^Z1@L3]"; // kitzle
 		"\[ZL\]" => "[Z@L3]";
 		"\[SCHL\]" => "[SCH@L3]";
 		"\[CHL\]" => "[CH@L3]";
@@ -3823,6 +3839,7 @@
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
+		"\\{ER}" => "\\[0N-][#4][VR]"; // Begleiterscheinung
 		"{IN}{SO}" => "[IN][#4][SS]"; // insofern
 		"^{D(E[MN])}\|?{SELB}{EN}" => "[0N-][$1][SELB][EN]"; // de(nm)selben
  
@@ -4894,6 +4911,8 @@
 		"{M}" => "[M]";
 		"{GEGEN}" => "[GEGEN]";
 		"{NICHT2}" => "[NICHT]";
+		"{HEIT}{HEIT}" => "[&EIT&E][HEIT]"; // Gescheitheit
+
 	#EndSubSection(latesubstituter)
 	#BeginSubSection(rewriter2)
 		//"\[&T\]-?\[H\]" => "[&T3/4][H]";
