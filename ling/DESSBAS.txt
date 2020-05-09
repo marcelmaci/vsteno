@@ -558,7 +558,7 @@
 		"([Gg]e)\+(cko)" => "$1-$2";
 		"([Gg]e)\+(le(?:-|\+)?n(?:d?e[mrsn]?)?)" => "$1-$2"; // eingelen (if it exists ... ;-)
 		"([Gg]e)\+(l-?t(?:e[mrsn]?)?)" => "$1-$2";
-		"([Gg]e)\+(ne?[sn]?)" => "$1-$2";
+		"([Gg]e)\+(ne?[sn]?)" => { "$1-$2", "[Gg]e[-+]?nus-?s" };
 		"([Gg]e)-?(no)" => "$1+$2";	// re-correction of re-correction
 		"([Gg]e)-?(hei)" => "$1+$2"; // rere
 		"([Gg]e)-(nü)" => "$1+$2"; // rere
@@ -955,6 +955,13 @@
 		"([Aa]r)\|(ran)\|(gie-?r)" => "$1-$2-$3"; // arrangieren
 		"([Ff]o-?to)\|(gra-?f)" => "$1-$2"; // Fotograf (but: Fotomodell - two words)
 		"([Ee]nt)-?(ste-?h)" => "$1+$2"; // Entstehung
+		"^([Ii]n)-?t-?(er)\+(n)(e[rsnm]?)?$" => "$1+t$2$3$4"; // intern
+		"([Ee]nt)-?(lau-?b)" => "$1+$2"; // entlaubten
+		"([Aa]us)-?(stat)" => "$1+$2"; // Ausstattung
+		"([Ll]eicht)-?(le-?b)" => "$1|$2"; // leichtlebig
+		"([Gg]e[-+]?gen)[-+]?(sei)\|(ti-?g)" => "$1+$2-$3"; // gegenseitiger
+		"([Hh]e)\|(rin-?g)" => "$1-$2"; // Heringe
+		"([Vv]er)\+(zer)\+r" => "$1+$2r"; // verzerrte
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1730,6 +1737,7 @@
 		"([Kk]on-?z)e(r-?t)" => "$1E$2"; 
 		"([Ll]a-?t-?)e(r-?n)" => "$1E$2";
 		"([Pp]o)-?(li)-?(phem|fem)" => "$1-$2-fEM"; // Polyphem
+		"([Ii]n\+t)e(r-?n)" => "$1E$2"; // intern
 		
 	#EndSubSection(accentizer)
 	#BeginSubSection(preshortener)
@@ -2747,7 +2755,8 @@
 		"^dar[+#]" => "{DA@R}";
 		"^dar$" => "{DA@R}";
 
-		"dass?(?!t)" => "{DASS}";
+		"^[Dd]ass?$" => "{DASS}";
+		"dass(?!t)" => "{DASS}";
 		"^dem" => "{DEM}";
 		"^denn" => "de[NN]";
 		"^den$" => "{DEN}";
@@ -3854,6 +3863,8 @@
 		"\[&T\][+-]\[B@L\]" => "[&TBL]"; // Kaltblütigkeit 
 		//"(\[&T-1\])(\[H\])" => "$1[#1]$2"; //"[&TH]"; // &th is not better! => new token necessary!
 
+		"\[TUNG\]" => "[A][&TNG]"; // Richtung
+
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
@@ -4671,6 +4682,7 @@
 		"^\{ER\}" => "[0N-][#4][VR]";
 		//"\[&T\]{ER}" => "[&TVR]"; // even 2x ...
 		// trivial ones
+		"(.){DASS?}" => "$1[A][S]"; // sodass, ebendas
 		"{DASS?}" => "[#NS][S=]";
 		"{HEIT}{ER}" => "[&EITVR]";
 		//"{ER}" => "[E][VR]";

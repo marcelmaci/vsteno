@@ -1319,7 +1319,7 @@
 		"\[&u\]\[#.\](\[ar\]|\[AR\^\])" => "[&U][#1]$1"; // Unrat
 		"(\[n=@r6\])\[#.\](\[AR\^?\])" => "$1[#2]$2"; // Unterricht
 		"(\[[lbt]\])\[#.\]\[a\](\[nd\])" => "$1[#5][A]$2"; // Landschaft
-		"\[s(=?)\]\[#.\](\[[oua]\])(\[(?:nd|ff|tt|&a)\])" => "[S$1][#6]$2$3"; // besonders, ersoffen, gesund
+		"\[s(=?)\]\[#.\](\[[oua]\])(\[(?:nd|ff|tt|&a|d)\])" => "[S$1][#6]$2$3"; // besonders, ersoffen, gesund
 		"(\[n\])\[#.\](\[(?:ar|AR\^?)\])" => "[N][#1-]$2"; // hinreichen
 		"\[aus\]\[#.\](\[(?:ar|AR\^)\])" => "[AUS][#2]$1"; // ausrasierte
 		"(\[&ts\])(\[l\])" => "$1[#4]$2"; // rücksichtslos
@@ -1342,6 +1342,8 @@
 		"(\[nicht\])(\[s\])" => "$1[#2]$2"; // nichts
 		"\[ant\]\[#.\](\[AR\^\])" => "[ANT][#6-]$1"; // entrissen
 		"(\[mpf\])(\[@r\])" => "$1[#8]$2"; // Schimpfrede
+		"\[ch\]\[#.]\[&i\]" => "[CH][#4][&i]"; // Petrarchio
+		"(\[&eitg\])(\[vr\])" => "$1[#4]$2"; // gegenseitiger
 		
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
