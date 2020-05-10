@@ -269,6 +269,19 @@ function CalculateStenoPage() {
 // main
 if ($_POST['action'] === "abschicken") {
     
+    // allow higher local max_execution_time for superuser
+    // otherwhise use default max_execution_time (e.g. 300 seconds)
+    if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'] == 2)) {
+        $local_execution_time = 3600; // seconds
+        $local_execution_memory = '2048M'; // 2GB
+        //echo "set local max_execution_time: $local_execution_time<br>";
+        set_time_limit($local_execution_time);
+        session_set_cookie_params($local_execution_time); // set session cookie lifetime to 1 hour if fullpage is selected as output
+        ini_set('session.gc_maxlifetime', $local_execution_time); // idem for session maxlifetime
+        //ini_set('max_input_time', $local_execution_time); // idem pour max_input_time
+        ini_set('memory_limit', $local_execution_memory);
+    }
+
     // reset rules statistics    
     $_SESSION['rules_count'] = null;
     $_SESSION['rules_count'] = array();

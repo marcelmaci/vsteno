@@ -1,4 +1,11 @@
-<?php session_start(); ?>
+<?php 
+//session_set_cookie_params(3600); // set session cookie lifetime to 1 hour if fullpage is selected as output
+//ini_set('session.gc_maxlifetime', 3600); // idem for session maxlifetime
+////ini_set('max_input_time', 3600); // idem pour max_input_time
+//ini_set('memory_limit', '2048M');
+session_start(); 
+?>
+
 <!-- <!DOCTYPE HTML> -->
 <html>
 <head>

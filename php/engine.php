@@ -1780,9 +1780,9 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             case "string" : // treat it as svgtext (...)
                             //echo "Treat it as svgtext ... word_tags($i): " . $word_tags[$i] . "<br>";
                             // process word tags
-            //echo "before: " . $_SESSION['token_color'] . "<br>";
+            //echo "before: " . $_SESSION['token_type'] . " " . $word_splines[$i][2] . " <br>";
             ParseAndSetInlineOptions($word_tags[$i]);
-            //echo "after: " . $_SESSION['token_color'] . "<br>";
+            //echo "after: " . $_SESSION['token_type'] . "<br>";
             $angle = $_SESSION['token_inclination'];
             $stroke_width = $_SESSION['token_thickness'];
             $scaling = $_SESSION['token_size'];
@@ -1809,9 +1809,9 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             default :       // treat it as splines
             //echo "treated as spline ... word_tags($i): " . $word_tags[$i] . "<br>";
             // process word tags
-            //echo "before: " . $_SESSION['token_color'] . "<br>";
+ //           echo "before: " . $_SESSION['token_type'] . " tags($i): " . $word_tags[$i] . "<br>";
             ParseAndSetInlineOptions($word_tags[$i]);
-            //echo "after: " . $_SESSION['token_color'] . "<br>";
+ //           echo "after: " . $_SESSION['token_type'] . "<br>";
             $angle = $_SESSION['token_inclination'];
             $stroke_width = $_SESSION['token_thickness'];
             $scaling = $_SESSION['token_size'];
@@ -2051,14 +2051,14 @@ function CalculateLayoutedSVG( $text_array ) {
     foreach ( $text_array as $key => $single_word ) {
             $global_debug_string = ""; // even if there is no debug output in layouted svg, set $debug_string = "" in order to avoid accumulation of data in this variable by parser functions
     //if ($_SESSION['token_type'] === "shorthand") {
-            
+     //       echo "-------------------------------------------- $single_word -----------------------------------------<br>";
             $original_word = $single_word;
             //echo "-----------------------------<br>layoutedsvg: key: $key word: " . htmlspecialchars($single_word) . "<br>";
             $bare_word = GetWordSetPreAndPostTags( $single_word ); // ???"<@token_type=\"svgtext\">" );
             $temp_pre = $combined_pretags;
-            $collected_inline_option_tags .= $temp_pre;
+            $collected_inline_option_tags .= $temp_pre; ///////////////////// is this correct ?!?!?!?
             $temp_post = $combined_posttags;
-            //echo "$temp_pre - $bare_word - $temp_post<br>";
+      //      echo "pro/bare/post: $temp_pre - $bare_word - $temp_post<br>";
             $result_after_last_rule = $bare_word;
             //echo "CalculateLayouted(): bare_word = $bare_word pretags: $temp_pre posttags: $temp_post<br>";
             /*
@@ -2093,11 +2093,13 @@ function CalculateLayoutedSVG( $text_array ) {
             if ((count($tokenlist) > 0) || ($_SESSION['token_type'] === "svgtext")) { // adapt this for svgtext!
                 //echo "Processing tokenlist ...<br>";
                 //echo "inserting: key: $key word: $single_word => word_splines($actual_word)<br>";
-                //echo "collected inline-option tags: $collected_inline_option_tags<br>"; 
+      //          echo "collected inline-option tags: $collected_inline_option_tags<br>"; 
+      //          echo "collected post inline-option tags: $combined_posttags<br>"; 
+                
                 //echo "token_type: " . $_SESSION['token_type'] . "<br>";
                 // build a "parallel" array: $word_tags[$actual_word] contains all inline-options belonging to 
                 // (preceeding the) $word_splines[$actual_word]
-                $word_tags[$actual_word] = $collected_inline_option_tags;
+                $word_tags[$actual_word] = $combined_posttags; // $collected_inline_option_tags; // ist this correct ?!?!?!?!?
                 $collected_inline_option_tags = ""; // reset variable for next word
                 //var_dump($word_tags);
                 
