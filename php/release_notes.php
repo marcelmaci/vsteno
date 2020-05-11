@@ -100,6 +100,15 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <h1>Preview</h1>
 <p>Das Publikationsdatum der nächsten Release ist offen(*) und der Name ist noch nicht festgelegt(**). Im Folgenden eine Liste mit Features, die nach und nach integriert werden.</p>
 
+<ul>
+<li><b>Modelle:</b>
+<br>DESSBAS: Umfassende Verbesserungen in den Regeln betreffend Grundschrift
+<br>GESSBAS: Umfassende Verbesserungen der Zeichendarstellungen (geteiltes Font)</li>
+<li><b>Bugfixes:</b>
+<br>Switching: Wechseln von Kurzschrift zu Handschrift in Layouted-Modus (Zeilenumbruch nun i.O.)
+</li>
+
+</ul>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**) Nach Hephaistos, Ariadne und Hyperion dürfte wieder ein weiblicher Name (vielleicht mit A:) aus der griechischen 
 Mythologie zum Zuge kommen ... :)</i></p>
 
