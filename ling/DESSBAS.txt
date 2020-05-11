@@ -962,6 +962,10 @@
 		"([Gg]e[-+]?gen)[-+]?(sei)\|(ti-?g)" => "$1+$2-$3"; // gegenseitiger
 		"([Hh]e)\|(rin-?g)" => "$1-$2"; // Heringe
 		"([Vv]er)\+(zer)\+r" => "$1+$2r"; // verzerrte
+		"([Gg]e)-?(n(?:ä|a)-?h)" => "$1+$2"; // genähert
+		"([Kk]om-?bi)\|(nie-?r)" => "$1-$2"; // kombinieren (computers are stupid ... :)
+		"([Ee]nt)-?(hül)" => "$1+$2"; // Enthüllung
+		"([Nn]as-?s)(trü-?b)" => "$1|$2"; // nasstrüben
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1396,6 +1400,10 @@
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text
 		" # " => " dash "; // # filtered out in parallel edition, so write it as a word (workaround)
+
+		// special rules for texts coming from Project Gutenberg
+		"#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
+		
 		"(-)([.,!?;:])" => "$1 $2"; // separate for later rule " - "
 		"([.,!?;:])(-)" => "$1 $2"; // separate for later rule " - "
 		"&ndash;" => "-"; // blocks calculation in layouted mode
@@ -1669,6 +1677,7 @@
 		"[Mm]on-?si-?eur" => "mös-si-ö"; // Monsieur
 		"[Mm]on-teur" => "Mon-tör"; // Monteur 
 		"[Dd]res-?seur" => "dres-sör"; // Dresseur
+		"([Ff]ri-?s)eu" => "$1ö"; // Friseur
 		
 		// e.g. ie: nie, Knie vs Familie, Linie
 		"([Rr]e)-?li-?quie" => "$1-li-qi-e";
@@ -3476,6 +3485,8 @@
 		"(\[&E\])\|(\[AR\])" => "$1\\$2"; // Blauröcke
 
 		"({DA}).?({SEIN})" => "$1\\$2"; // Dasein 
+		
+		"({HEIT}U\[NG\]S)\|" => "$1\\[#5]"; // Zeitungsgeschichte
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
