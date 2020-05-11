@@ -55,6 +55,16 @@ de una gaviota y del gato que le enseño a volar ... Descansa en paz, ¡compañe
 <p><i><b>[UPDATE 27/04/2020]:</b> VSTENO publiziert sein erstes stenografisches <a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_27042020.pdf">eBook</a>! 
 In der neu geschaffenen Ecke namens <a href="library.php">Bibliothek</a> sollen in 
 Zukunft weitere eBooks aufgeschaltet werden.</i></p>
+<p><i><b>[UPDATE 11/05/2020]:</b> Es freut mich, heute in der Bibliothek das erste längere mit VSTENO generierte eBook auf&shy;zu&shy;schalten. Es ist dies
+<a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_11052020B.pdf">Der Widerspenstigen Zähmung</a> von Karl Ettlinger (230 Seiten) - meines Erachtens 
+ein äusserst vergnügliches Werkchen, welches die Charaktere der Hauptfiguren 
+auf humoristische Weise und konsequent bis zum Ende ausleuchtet.</p>
+<p><b>Technische Info:</b> Das eBook wurde zuerst auf einem Core2Duo mit 2.53Ghz 
+generiert, was rund 40 min dauerte. Um das Ganze etwas zu verschnellern, habe ich inzwischen eine separate Maschine mit einem i5 3.3Ghz 
+aufgesetzt, welche das Ganze in 20 min schafft.</p><p><b>Druckversion:</b> Nach wie vor trage ich mich mit dem Gedanken, Steno-Lektüre auch in 
+gedruckter Version herauszugeben. Ziel in den nächsten Wochen wird es deshalb sein, Schrift und Stenogramme dieses Werks weiter zu verbessern 
+und es dann als "Book on demand" herauszugeben.</i></p>
+
 <center>* * *</center>
 
 <p><b>20/03/20 - Der Titan ist da ... :)</b><p>
