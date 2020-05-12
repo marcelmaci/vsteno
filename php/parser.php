@@ -233,7 +233,11 @@ function ExecuteEndParameters() {
     $length = count($rules["$actual_model"][$rules_pointer]);
     for ($i=1; $i<$length; $i++) {
         switch ($rules["$actual_model"][$rules_pointer][$i]) {
-            case "=:std" : /*echo "=:std: #$result_after_last_rule# act_word = $act_word act_function: $actual_function rules_pointer=$rules_pointer<br>";*/ $std_form = $result_after_last_rule; break;
+            case "=:std" : //echo "=:std: #$result_after_last_rule# act_word = $act_word act_function: $actual_function rules_pointer=$rules_pointer<br>"; 
+                            //$std_form = $result_after_last_rule; // this is wrong!!!! word "testword" contains no bundled [st]!!!
+                            $std_form = $act_word; 
+                            
+                            break;
             case "=:prt" : /*echo "=:prt: #$result_after_last_rule#<br>";*/ $prt_form = $result_after_last_rule; break;
             //case "@@dic" :  // obsolete: replaced by stages
       /*          list($temp_std, $temp_prt) = Lookuper($act_word);
@@ -955,7 +959,7 @@ if ($option_result === false) {
 function PostProcessDataFromLinguisticalAnalyzer($word) {
     global $analyzer, $analyzer_options; // contains postprocess-rules
     global $global_linguistical_analyzer_debug_string, $last_written_form, $parallel_lng_form, $condition1_check, $condition2_check;
-    global $parallel_lng_form;
+    global $parallel_lng_form, $std_form, $original_word;
     //echo "PostProcessDataFromLinguisticalAnalyzer():<br>";
     
     $number_analyzer_rules = 0;
@@ -1086,7 +1090,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $parallel_lng_form, $last_written_form;
     
     $global_linguistical_analyzer_debug_string = "";
-    //echo "Metaparser(): $text<br>";
+    //echo "Metaparser(): $text / 'token_type' = " . $_SESSION['token_type'] . "<br>";
     // check if word has been cached
     //echo "isset: " . isset($cached_results[$text]) . " value: " . $cached_results[$text] . " ";
     
@@ -1133,22 +1137,26 @@ function MetaParser( $text ) {          // $text is a single word!
             $safe_std = "";
             $safe_prt = "";
     } elseif ($text_format === "std") {
-            $safe_std = mb_strtoupper($text, "UTF-8");
+            $safe_std = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($text, "UTF-8") : $text;
             $safe_prt = "";
     } elseif ($text_format === "prt") {
             $safe_std = ""; 
-            $safe_prt = mb_strtoupper($text, "UTF-8");
+            $safe_prt = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($text, "UTF-8") : $text;
+            // mb_strtoupper($text, "UTF-8");
     }
 //////////////////        
     if  ($safe_prt !== "") return $safe_prt;    // no parsing at all
     elseif ($safe_std !== "") {
-        // parse from std2stage4
-        $std2stage4 = ParserChain($safe_std, $rules_pointer_start_std2prt, $rules_pointer_start_stage4);
-        // parse from stage4 to end (= prt)
-        //echo "go to stage4";
-        $actual_model = $_SESSION['actual_model'];
-        $final_prt = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
-        //echo "final_prt: $final_prt<br>";
+        switch ($_SESSION['token_type']) {
+            case "handwriting" : $final_prt = GetHandwriting($safe_std); break;
+            default :
+                // parse from std2stage4
+                $std2stage4 = ParserChain($safe_std, $rules_pointer_start_std2prt, $rules_pointer_start_stage4);
+                // parse from stage4 to end (= prt)
+                //echo "go to stage4";
+                $actual_model = $_SESSION['actual_model'];
+                $final_prt = ParserChain($std2stage4, $rules_pointer_start_stage4, count($rules[$actual_model]));
+            }
         return $final_prt;
     } else {
         // word is not in dictionary => parse from stage3 (= after dictionary) to stage4 (start) using word splitting (composed words)
@@ -1353,6 +1361,14 @@ if ($_SESSION['analysis_type'] === "selected") {
   
                     break;
                 case "handwriting":
+                
+                    $output = GetHandwriting($word);
+                    
+                    /*
+                    // **********************************************************************************************
+                    // THE FOLLOWING LINES HAVE BEEN INTEGRATED IN FUNCTION GETHANDWRITING(WORD) AND CAN BE REPLACED 
+                    // (JUST LEAVE THEM FOR THE MOMENT IN ORDER TO TEST THE FUNCTION)
+                    // **********************************************************************************************
                     //echo "handwriting marker: " . $_SESSION['handwriting_marker'] . " output: $output<br>";
                     $output = $word;
                     // tokens without upper/lower case (+special cases)
@@ -1373,7 +1389,24 @@ if ($_SESSION['analysis_type'] === "selected") {
                     
                     $output = $hwpre . mb_strtoupper( $output ) . $hwpost;
                     //echo "final result (handwriting): $output<br>(pretokens: [$pretokens] / posttokens: [$posttokens]) <br>(hwpre: $hwpre / hwpost: $hwpost)<br>";
+                    //echo $_SESSION['output_format'];
+                    
                     if ($_SESSION['output_format'] === "debug") $global_debug_string .= "Handwriting: $output<br><br>";
+                    /*elseif ($_SESSION['output_format'] === "meta_lng") {
+                        echo "create std form for handwriting: $word<br>";
+                        $output = $word;
+                    }
+                    */
+                    
+                    switch ($_SESSION['output_format']) {
+                        // case "inline" : break; // default case: return $output
+                        case "debug" : $global_debug_string .= "Handwriting: $output<br><br>"; break; // default case + debug info
+                        case "meta_lng" : $output = $original_word; break; // for meta forms: don't process handwritten text parts
+                        case "meta_std" : $std_form = $original_word; break;
+                        case "meta_prt" : $prt_form = $original_word; break;
+                        //case "layouted" : break; // default case (same as inline)
+                    }
+                
                     return $output;
             }
 
@@ -1382,7 +1415,34 @@ if ($_SESSION['analysis_type'] === "selected") {
 
 }
 
-
+function GetHandwriting($word) {
+    global $global_debug_string;
+    //echo "handwriting marker: " . $_SESSION['handwriting_marker'] . " output: $output<br>";
+    $output = $word;
+    // tokens without upper/lower case (+special cases)
+    //echo "before: $output<br>";
+    $output = preg_replace( "/(?<![<>])-{1,1}/", "[#-" . $_SESSION['handwriting_marker'] . "]", $output ); 
+    //$output = preg_replace( "/(?<![<>])([0-9]){1,1}/", "[#$1" . $_SESSION['handwriting_marker'] . "]", $output ); 
+    //echo "after: $output<br>";
+    // tokens with distinciton upper/lower case
+    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]|Ä|Ö|Ü){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
+    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]|ä|ö|ü){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
+    // prepare handwriting pretokens (hwpre)
+    // Example: ! => [#!0] (if marker is 0, so each token is inside [], preceeded by # and followed by marker)
+    $hwpre = "";
+    for ($p=0; $p<mb_strlen($pretokens); $p++) $hwpre .= "[#" . mb_substr($pretokens, $p, 1) . $_SESSION['handwriting_marker'] . "]";
+    // idem posttokens (hwpost)
+    $hwpost = "";
+    for ($p=0; $p<mb_strlen($posttokens); $p++) $hwpost .= "[#" . mb_substr($posttokens, $p, 1) . $_SESSION['handwriting_marker'] . "]";
+                    
+    $output = $hwpre . mb_strtoupper( $output ) . $hwpost;
+    //echo "final result (handwriting): $output<br>(pretokens: [$pretokens] / posttokens: [$posttokens]) <br>(hwpre: $hwpre / hwpost: $hwpost)<br>";
+    //echo $_SESSION['output_format'];
+                    
+    if ($_SESSION['output_format'] === "debug") $global_debug_string .= "Handwriting: $output<br><br>";
+    
+    return $output;
+}
 ////////////////////////////////////////////// end of parser functions ///////////////////////////////////
 
 

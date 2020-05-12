@@ -2388,6 +2388,8 @@ function CalculateTrainingSVG( $text_array ) {
             }
             
             $output .= "</center></td>";
+            //echo "std_form_upper: $std_form<br>";
+            //$std_form_upper = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($std_form ) : $std_form;
             $std_form_upper = mb_strtoupper($std_form );
             
             // modification (05.03.19): use old cmp form as new lng (lin/ling) form
@@ -2455,8 +2457,11 @@ function CalculateInlineSTD( $text_array ) {
             //echo "nil: " . htmlspecialchars($nil) . "<br>";
             //echo "std_form: " . htmlspecialchars($std_form) . "<br>";
             // check if { and ] have already been added by MetaParser (don't add them twice)
-            if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($std_form) . $last_posttoken_list  . $combined_posttags . " ";
-            else $output .= $combined_pretags . mb_strtoupper($std_form) . $combined_posttags . " ";
+            $final_std_form = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($std_form) : $std_form; 
+            if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . $final_std_form . $last_posttoken_list  . $combined_posttags . " ";
+            else $output .= $combined_pretags . $final_std_form . $combined_posttags . " ";
+            //if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($std_form) . $last_posttoken_list  . $combined_posttags . " ";
+            //else $output .= $combined_pretags . mb_strtoupper($std_form) . $combined_posttags . " ";
         } else {
             $output .= $combined_pretags . $combined_posttags . " ";
         }
@@ -2483,8 +2488,12 @@ function CalculateInlinePRT( $text_array ) {
             //echo "nil: " . htmlspecialchars($nil) . "<br>";
             //echo "prt_form: " . htmlspecialchars($prt_form) . "<br>";
             // check if { and ] have already been added by MetaParser (don't add them twice)
-            if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($prt_form) . $last_posttoken_list  . $combined_posttags . " ";
-            else $output .= $combined_pretags . mb_strtoupper($prt_form) . $combined_posttags . " ";
+            $final_prt_form = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($prt_form) : $prt_form; 
+            if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . $final_prt_form . $last_posttoken_list  . $combined_posttags . " ";
+            else $output .= $combined_pretags . $final_prt_form . $combined_posttags . " ";
+       
+            //if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($prt_form) . $last_posttoken_list  . $combined_posttags . " ";
+            //else $output .= $combined_pretags . mb_strtoupper($prt_form) . $combined_posttags . " ";
        
             //$output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($separated_prt_form) . $last_posttoken_list . $combined_posttags . " ";
         } else {
@@ -2520,6 +2529,7 @@ function CalculateInlineLNG($text_array) {
             //echo "lin_form: $lin_form<br>";
             //echo "prt_form: " . htmlspecialchars($prt_form) . "<br>";
             // check if { and ] have already been added by MetaParser (don't add them twice)
+            
             if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . $lin_form . $last_posttoken_list  . $combined_posttags . " ";
             else $output .= $combined_pretags . $lin_form . $combined_posttags . " ";
        

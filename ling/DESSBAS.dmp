@@ -82,6 +82,8 @@
 		"model_option1_yesno" := "no";
 		"model_option3_text" := "MAC";
 		"model_option3_yesno" := "no";
+		"model_option9_text" := "GB"; // filter out # in stage0 for texts coming from Project Gutenberg
+		"model_option9_yesno" := "yes"; // activate this option by default
 		// wide distance
 		"token_distance_wide" := "17";
 		// font
@@ -1402,7 +1404,7 @@
 		" # " => " dash "; // # filtered out in parallel edition, so write it as a word (workaround)
 
 		// special rules for texts coming from Project Gutenberg
-		"#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
+		"tstopt(9)#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
 		
 		"(-)([.,!?;:])" => "$1 $2"; // separate for later rule " - "
 		"([.,!?;:])(-)" => "$1 $2"; // separate for later rule " - "
@@ -2820,7 +2822,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3173,6 +3175,8 @@
 
 		// copied from separator
 		"(l-?te-?s{ER})\|" => "$1\\"; // Malteserritter
+		"{ET}[Ee][Ss]$" => "[&ETES]"; // getestetes
+
 
 		////////////////////////////////////////////////////////
 		// 1st step: transform all single (lower case) tokens //
@@ -3573,7 +3577,7 @@
 		// transcriptor
 
 		"\\\[VR\]" => "\\[AR]"; // Malteserritter
-
+		
 		// taken from substituter
 		"tstopt(01)^{HEIT}U\[NG\]" => "[0N-][A][&EITNG]";
 		
@@ -3875,7 +3879,7 @@
 		//"(\[&T-1\])(\[H\])" => "$1[#1]$2"; //"[&TH]"; // &th is not better! => new token necessary!
 
 		"\[TUNG\]" => "[A][&TNG]"; // Richtung
-
+		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
