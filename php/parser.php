@@ -1437,7 +1437,7 @@ function GetHandwriting($word) {
     $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]|Ä|Ö|Ü){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
     $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]|ä|ö|ü){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
     $marker = $_SESSION['handwriting_marker'];
-    $output = preg_replace( "/(?<![<>])(\!|\?){1,1}/", "[#$1+$marker]", $output ); // lower case
+    $output = preg_replace( "/(?<![<>])(\!|\?|\'|\"|\.|\,|\;|\:|\(|\)){1,1}/", "[#$1+$marker]", $output ); // lower case
     
     // prepare handwriting pretokens (hwpre)
     // Example: ! => [#!0] (if marker is 0, so each token is inside [], preceeded by # and followed by marker)
