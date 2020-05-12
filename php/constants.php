@@ -276,4 +276,7 @@ $cached_results = array();
 // fortune cookie
 $fortune_cookie = "be_lucky"; //"be_lucky"; // if this is set to an int number, this cookie is returned // value 0 doesn't work (use -1 in get_fortune() instead) 
 
+// caching
+$caching_temporarily_disabled = false;
+
 ?>

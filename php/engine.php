@@ -1556,8 +1556,17 @@ function CalculateInlineSVG( $text_array ) {
         if (mb_strlen($bare_word)>0) {
             $alternative_text = ($_SESSION['output_texttagsyesno']) ? /*$SingleWord->Original*/ $bare_word : "";
             //echo "CalculateInlineSVG()1111: bare_word: $bare_word<br>";
-            $output .= $html_pretags . SingleWord2SVG( /*$SingleWord->Original*/ $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
-            
+            switch ($_SESSION['token_type']) {
+                case "handwriting" : 
+                    $hw_meta = GetHandwriting($bare_word);
+                    //echo "Handwriting: $hw_meta<br>";
+                    $hw_token_list = MetaForm2TokenList($hw_meta);
+                    $output .= TokenList2SVG( $hw_token_list, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], $_SESSION['token_style_custom_value'], $alternative_text );
+                    break;
+                default:
+                    $output .= $html_pretags . SingleWord2SVG( /*$SingleWord->Original*/ $bare_word, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], GetLineStyle(), $alternative_text);
+            }
+        
             $debug_information = GetDebugInformation( /*$SingleWord->Original*/ $bare_word );       // revert back to procedural-only version
         } else {
             $output .= $html_pretags;
@@ -2058,7 +2067,7 @@ function CalculateLayoutedSVG( $text_array ) {
             $temp_pre = $combined_pretags;
             $collected_inline_option_tags .= $temp_pre; ///////////////////// is this correct ?!?!?!?
             $temp_post = $combined_posttags;
-      //      echo "pro/bare/post: $temp_pre - $bare_word - $temp_post<br>";
+     //       echo "pro/bare/post: $temp_pre - $bare_word - $temp_post<br>";
             $result_after_last_rule = $bare_word;
             //echo "CalculateLayouted(): bare_word = $bare_word pretags: $temp_pre posttags: $temp_post<br>";
             /*
@@ -2067,7 +2076,7 @@ function CalculateLayoutedSVG( $text_array ) {
             $temp_post = $combined_posttags;
             */ 
             
-            $tokenlist = NormalText2TokenList( $single_word );
+            $tokenlist = NormalText2TokenList( $bare_word );
             //var_dump($tokenlist);
             //echo "pretags: " . htmlspecialchars($pre) . "<br>";
             //echo "Session(token_color): " . $_SESSION['token_color'] . "<br>";
@@ -2104,6 +2113,15 @@ function CalculateLayoutedSVG( $text_array ) {
                 //var_dump($word_tags);
                 
                 if (($_SESSION['token_type'] === "shorthand") || ($_SESSION['token_type'] === "handwriting")) {
+                    if ($_SESSION['token_type'] === "handwriting") {
+                        // create tokenlist for handwriting
+                        //echo "word: " . $word_separate_spline[$actual_word] . " - $bare_word<br>"; 
+                        $hw_meta = GetHandwriting($bare_word);
+                        //echo "Handwriting: $hw_meta<br>";
+                        $tokenlist = MetaForm2TokenList($hw_meta);
+                        //$output .= TokenList2SVG( $hw_token_list, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], $_SESSION['token_style_custom_value'], $alternative_text );
+                    
+                    }
                     list( $word_splines[$actual_word], $word_separate_spline[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
                     $word_width[$actual_word] = $delta_width;
                     //var_dump($word_splines[$actual_word]);
@@ -2441,6 +2459,10 @@ function CalculateTrainingSVG( $text_array ) {
 function CalculateInlineSTD( $text_array ) {
     global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied;
     global $std_form, $separated_std_form, $combined_posttags, $last_pretoken_list, $last_posttoken_list;
+    global $caching_temporarily_disabled;
+    $format = $_SESSION['original_text_format'];
+    if (($format === "prt") || ($format === "std")) return "Wrong or identical input->output format (" . $format . "->std)";
+    $caching_temporarily_disabled = true;
     $output = "";
     //var_dump($text_array);
     foreach ( $text_array as $this_word ) {
@@ -2457,7 +2479,7 @@ function CalculateInlineSTD( $text_array ) {
             //echo "nil: " . htmlspecialchars($nil) . "<br>";
             //echo "std_form: " . htmlspecialchars($std_form) . "<br>";
             // check if { and ] have already been added by MetaParser (don't add them twice)
-            $final_std_form = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($std_form) : $std_form; 
+            $final_std_form = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($std_form) : $bare_word; 
             if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . $final_std_form . $last_posttoken_list  . $combined_posttags . " ";
             else $output .= $combined_pretags . $final_std_form . $combined_posttags . " ";
             //if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($std_form) . $last_posttoken_list  . $combined_posttags . " ";
@@ -2466,14 +2488,18 @@ function CalculateInlineSTD( $text_array ) {
             $output .= $combined_pretags . $combined_posttags . " ";
         }
     }
+    $caching_temporarily_disabled = true;
     return $output;
 }
 
 function CalculateInlinePRT( $text_array ) {
     global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied;
-    global $separated_prt_form, $prt_form, $std_form, $separated_std_form, $combined_posttags, $last_pretoken_list, $last_posttoken_list;
+    global $separated_prt_form, $prt_form, $std_form, $separated_std_form, $combined_posttags, $last_pretoken_list, $last_posttoken_list, $original_word;
+    //global $caching_temporarily_disabled;
+    $format = $_SESSION['original_text_format'];
+    if ($format === "prt") return "Wrong or identical input->output format (" . $format . "->prt)";
+    //$caching_temporarily_disabled = true; // not necessary: cached result always corresponds to prt
     $output = "";
-   
     foreach ( $text_array as $this_word ) {
         //echo "this word: $this_word<br>";
         $global_debug_string = "";
@@ -2486,9 +2512,9 @@ function CalculateInlinePRT( $text_array ) {
         if (mb_strlen($bare_word)>0) {
             $nil = MetaParser( $bare_word );
             //echo "nil: " . htmlspecialchars($nil) . "<br>";
-            //echo "prt_form: " . htmlspecialchars($prt_form) . "<br>";
+            //echo "prt_form: " . htmlspecialchars($prt_form) . " original word: $original_word<br>";
             // check if { and ] have already been added by MetaParser (don't add them twice)
-            $final_prt_form = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($prt_form) : $prt_form; 
+            $final_prt_form = ($_SESSION['token_type'] !== "handwriting") ? mb_strtoupper($prt_form) : $original_word; 
             if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . $final_prt_form . $last_posttoken_list  . $combined_posttags . " ";
             else $output .= $combined_pretags . $final_prt_form . $combined_posttags . " ";
        
@@ -2500,12 +2526,17 @@ function CalculateInlinePRT( $text_array ) {
             $output .= $combined_pretags . $combined_posttags . " ";
         }
     }
+    //$caching_temporarily_disabled = true;
     return $output;
 }
      
 function CalculateInlineLNG($text_array) {
     global $original_word, $combined_pretags, $html_pretags, $result_after_last_rule, $global_debug_string, $global_numbers_of_rules_applied;
     global $separated_prt_form, $prt_form, $std_form, $lin_form, $separated_std_form, $combined_posttags, $last_pretoken_list, $last_posttoken_list;
+    //global $caching_temporarily_disabled;
+    $format = $_SESSION['original_text_format'];
+    if (($format === "prt") || ($format === "std") || ($format === "lng")) return "Wrong or identical input->output format (" . $format . "->lng)";
+    //$caching_temporarily_disabled = true; // not necessary: caching starts after lng-form
     $output = "";
     //var_dump($text_array);
     foreach ( $text_array as $this_word ) {
@@ -2523,16 +2554,22 @@ function CalculateInlineLNG($text_array) {
         $result_after_last_rule = $bare_word;
         //echo "bare_word: >$bare_word< SESSION(original_text_format): " . $_SESSION['original_text_format'] . "<br>";
         if (mb_strlen($bare_word)>0) {
-            $lin_form = MetaParser( $bare_word );
-            $lin_form = $pretokens . $lin_form . $posttokens;
-            //echo "nil: " . htmlspecialchars($nil) . "<br>";
-            //echo "lin_form: $lin_form<br>";
-            //echo "prt_form: " . htmlspecialchars($prt_form) . "<br>";
-            // check if { and ] have already been added by MetaParser (don't add them twice)
+            switch ($_SESSION['token_type']) {
+                    case "handwriting" : 
+                        //echo "generate handwriting<br>"; 
+                        $output .= $combined_pretags . $bare_word . $combined_posttags . " ";
+                        break;
+                    default:
+                        $lin_form = MetaParser( $bare_word );
+                        $lin_form = $pretokens . $lin_form . $posttokens;
+                        //echo "nil: " . htmlspecialchars($nil) . "<br>";
+                        //echo "lin_form: $lin_form<br>";
+                        //echo "prt_form: " . htmlspecialchars($prt_form) . "<br>";
+                        // check if { and ] have already been added by MetaParser (don't add them twice)
             
-            if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . $lin_form . $last_posttoken_list  . $combined_posttags . " ";
-            else $output .= $combined_pretags . $lin_form . $combined_posttags . " ";
-       
+                        if (($last_pretoken_list !== "{") && ($last_pretoken_list !== "[")) $output .= $combined_pretags . $last_pretoken_list . $lin_form . $last_posttoken_list  . $combined_posttags . " ";
+                        else $output .= $combined_pretags . $lin_form . $combined_posttags . " ";
+            }
             //$output .= $combined_pretags . $last_pretoken_list . mb_strtoupper($separated_prt_form) . $last_posttoken_list . $combined_posttags . " ";
         } else {
             // fix bug: words consisting only of pre/posttokens and/or numbers are returned as empty strings when LNG-form is calculated
@@ -2540,6 +2577,7 @@ function CalculateInlineLNG($text_array) {
             $output .= $combined_pretags . $pretokens . $posttokens . $combined_posttags . " ";
         }
     }
+    //$caching_temporarily_disabled = true;
     //echo "<pre>$output</pre><br>";
     return $output;
 }

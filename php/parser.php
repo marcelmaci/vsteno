@@ -1088,6 +1088,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $cached_results;
     global $global_linguistical_analyzer_debug_string;
     global $parallel_lng_form, $last_written_form;
+    global $caching_temporarily_disabled;
     
     $global_linguistical_analyzer_debug_string = "";
     //echo "Metaparser(): $text / 'token_type' = " . $_SESSION['token_type'] . "<br>";
@@ -1105,6 +1106,13 @@ function MetaParser( $text ) {          // $text is a single word!
     // be a problem coming from the parser), but actually this problem is due the fact, that "dies" and "ist" get cached as
     // shorthand words first and are then copy&pasted without considering that the token_type may have changed in the meantime.
     // The solution for now: limit caching strictly to shorthand words (see last AND in following if-statement)
+    //
+    // And here's another example (from the series "how caching can go wrong"):
+    // When you calculate intermediate steps (like std and prt form), VSTENO catches the final result (replacing the intermediate
+    // form by the catched final form from the second occurrence on ...)
+    // Therefore implement possibility to dissable caching in this case via global variable $caching_temporarily_discabled
+
+if (!$caching_temporarily_disabled) {
     $cached_result = false;
     if ((isset($cached_results[$text])) && ($cached_results[$text] !== false) && ($_SESSION['token_type'] === "shorthand")){
         //echo "<b>get cached: " . $cached_results[$text] . "</b><br>";
@@ -1119,7 +1127,7 @@ function MetaParser( $text ) {          // $text is a single word!
         $cached_result = true;
         return $cached_results[$text];
     }
-    
+}    
     
     // this is a good place to lookup words!
     // after that branch to  std2prt oder stage4
