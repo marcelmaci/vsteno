@@ -1398,8 +1398,9 @@ if ($_SESSION['analysis_type'] === "selected") {
                     $output = $hwpre . mb_strtoupper( $output ) . $hwpost;
                     //echo "final result (handwriting): $output<br>(pretokens: [$pretokens] / posttokens: [$posttokens]) <br>(hwpre: $hwpre / hwpost: $hwpost)<br>";
                     //echo $_SESSION['output_format'];
-                    
-                    if ($_SESSION['output_format'] === "debug") $global_debug_string .= "Handwriting: $output<br><br>";
+                    */
+                    /*if ($_SESSION['output_format'] === "debug")*/ $global_debug_string .= "Handwriting: $output<br><br>";
+                    /*
                     /*elseif ($_SESSION['output_format'] === "meta_lng") {
                         echo "create std form for handwriting: $word<br>";
                         $output = $word;
@@ -1435,6 +1436,9 @@ function GetHandwriting($word) {
     // tokens with distinciton upper/lower case
     $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]|Ä|Ö|Ü){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
     $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]|ä|ö|ü){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
+    $marker = $_SESSION['handwriting_marker'];
+    $output = preg_replace( "/(?<![<>])(\!|\?){1,1}/", "[#$1+$marker]", $output ); // lower case
+    
     // prepare handwriting pretokens (hwpre)
     // Example: ! => [#!0] (if marker is 0, so each token is inside [], preceeded by # and followed by marker)
     $hwpre = "";
@@ -1447,8 +1451,14 @@ function GetHandwriting($word) {
     //echo "final result (handwriting): $output<br>(pretokens: [$pretokens] / posttokens: [$posttokens]) <br>(hwpre: $hwpre / hwpost: $hwpost)<br>";
     //echo $_SESSION['output_format'];
                     
-    if ($_SESSION['output_format'] === "debug") $global_debug_string .= "Handwriting: $output<br><br>";
-    
+    if ($_SESSION['output_format'] === "debug") {
+        // following line doesn't work!?!
+        $global_debug_string .= "Handwriting: $output<br><br>";
+        // use this as a replacement
+        // not possible ... only manual workaround
+        //if ($_SESSION['token_type'] === "handwriting") echo "Handwriting: $output";
+    }
+
     return $output;
 }
 ////////////////////////////////////////////// end of parser functions ///////////////////////////////////
