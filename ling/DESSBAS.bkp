@@ -968,6 +968,9 @@
 		"([Kk]om-?bi)\|(nie-?r)" => "$1-$2"; // kombinieren (computers are stupid ... :)
 		"([Ee]nt)-?(hül)" => "$1+$2"; // Enthüllung
 		"([Nn]as-?s)(trü-?b)" => "$1|$2"; // nasstrüben
+		"([Ee]i-?er)(?!\+)" => "$1+"; // Meier, Dreier, Eier etc.
+		"([Ff]or)t-?un?-?a" => "$1-tu-na"; // Fortunatussäckel
+		"(.+?)(-)?(?<!\|)([Ss]ä-?c-?kel)" => "$1|$3"; // Fortunatussäckel
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1404,7 +1407,7 @@
 		" # " => " dash "; // # filtered out in parallel edition, so write it as a word (workaround)
 
 		// special rules for texts coming from Project Gutenberg
-		"tstopt(9)#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
+		"tstopt(9)(?<!\[)#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
 		
 		"(-)([.,!?;:])" => "$1 $2"; // separate for later rule " - "
 		"([.,!?;:])(-)" => "$1 $2"; // separate for later rule " - "
@@ -2744,7 +2747,7 @@
 		"^wie$" => "{WI}";
 		"wird" => "{WIRD}";
 		"vor(?!})" => "{VOR}";
-		"fort" => "{FORT}";
+		"fort" => { "{FORT}", "[Ff]or-?t-?u-?n-?a" };
 		"eiht" => "eit";
 		//"^([Hh])a(f-?t)" => "$1A$2"; // avoid application of following rule
 		"(?<!sc|\+)haf-?t(e|en|es)?" => { "{HAFT}$1", "^[Hh]af-?t" }; // not: ver+haften
@@ -4909,6 +4912,7 @@
 		"}-" => "}"; // get rid of annoying - ... :)
 		
 		"(\[W@R6\])\[?T\]?" => "$1[&T]";
+		"(\\\[#.\])S" => "$1[S=]"; // Fortunatussäckel 
 
 		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CK|CH|NG|NK|NZ|ND|RR|SER|AR|VR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6|B@R6|D@L3|T@R|SP@R6|F@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](?:\[?-?E\]?\[?S\]?|E)" => "[$1][&TES]"; 
 		"tstopt(01)\[((?:NN|S=|SS|@L|ST|0U-|MM|CK|CH|NG|NK|NZ|ND|RR|SER|AR|VR|CH|MPF|G@R|ANT|W@L|L@R6|M@R6|W@R6|B@R6|D@L3|T@R|SP@R6|F@R6)|[BCDFGHJKLMNPQRSVWXYZ])\][Tt](E|\[-E\])" => "[$1][&T&E]$2"; 
