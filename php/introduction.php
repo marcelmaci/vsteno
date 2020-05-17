@@ -56,7 +56,7 @@ de una gaviota y del gato que le enseño a volar ... Descansa en paz, ¡compañe
 In der neu geschaffenen Ecke namens <a href="library.php">Bibliothek</a> sollen in 
 Zukunft weitere eBooks aufgeschaltet werden.</i></p>
 <p><i><b>[UPDATE 11/05/2020]:</b> Es freut mich, heute in der Bibliothek das erste längere mit VSTENO generierte eBook auf&shy;zu&shy;schalten. Es ist dies
-<a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_11052020B.pdf">Der Widerspenstigen Zähmung</a> von Karl Ettlinger (230 Seiten) - meines Erachtens 
+<a href="library.php">Der Widerspenstigen Zähmung</a> von Karl Ettlinger (230 Seiten) - meines Erachtens 
 ein äusserst vergnügliches Werkchen, welches die Charaktere der Hauptfiguren 
 auf humoristische Weise und konsequent bis zum Ende ausleuchtet.</p>
 <p><b>Technische Info:</b> Das eBook wurde zuerst auf einem Core2Duo mit 2.53Ghz 

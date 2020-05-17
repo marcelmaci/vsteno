@@ -1411,7 +1411,10 @@
 		// special rules for texts coming from Project Gutenberg
 		"tstopt(9)(?<!\[)#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
 		"tstopt(9)--" => "[~~]"; // -- in Project Gutenberg corresponds to long single -		
-		"tstopt(9)_([^ <>@]+)_" => "$1"; // _X_ means italic in Gutenberg
+		"tstopt(9)(?<![^ ])_([^_]+)_(?![^ -.,;:!?])" => "$1"; // _X_ means italic in Gutenberg
+		"tstopt(9)^_([^_]+)_(?![^ -.,;:!?])" => "$1"; // _X_ means italic in Gutenberg
+		"tstopt(9)(?<![^ ])_([^_]+)_$" => "$1"; // _X_ means italic in Gutenberg
+		"tstopt(9)^_([^_]+)_$" => "$1"; // _X_ means italic in Gutenberg
 
 		"(-)([.,!?;:])" => "$1 $2"; // separate for later rule " - "
 		"([.,!?;:])(-)" => "$1 $2"; // separate for later rule " - "
@@ -1691,7 +1694,7 @@
 		// e.g. ie: nie, Knie vs Familie, Linie
 		"([Rr]e)-?li-?quie" => "$1-li-qi-e";
 		"([Tt])o(u-?r)" => "$1$2"; // Tour
-		"([Ll]i-?)nie" => "$1ni-e";
+		"([Ll]i-?)nie(?!r)" => "$1ni-e";
 		"([Bb]an-?k)-?ier" => "$1-i-e";
 		"([Ff]a-?mi-?)lie" => "$1li-e";
 		"([Pp]or-?t)ier" => { "$1i-er", "[Tt]rans\+?por-?tier" };

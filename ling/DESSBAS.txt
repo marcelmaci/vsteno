@@ -80,8 +80,10 @@
 		"model_option0_yesno" := "no";
 		"model_option1_text" := "HF2";
 		"model_option1_yesno" := "no";
-		"model_option3_text" := "MAC";
+		"model_option3_text" := "MM";
 		"model_option3_yesno" := "no";
+		"model_option8_text" := "SEP"; // separate words that finish by -e (nahekommen, Variétébühne, Höhepunkt etc.)
+		"model_option8_yesno" := "yes";
 		"model_option9_text" := "GB"; // filter out # in stage0 for texts coming from Project Gutenberg
 		"model_option9_yesno" := "yes"; // activate this option by default
 		// wide distance
@@ -128,6 +130,7 @@
 	#BeginSubSection(analyzer)
 		
 		"([Ww]ei-?ter)\+" => "$1|";
+		"([Aa]lt)-?(vor-?dern)" => "$1|$2"; // Altvordern
 		
 		// additional syllables
 		"ebe(-?)n" => "e-be$1n";  // bug in phpSyllable: eben is not hyphenated!?
@@ -707,8 +710,8 @@
 		"([Gg]e)[+-](wor)[+-](de)" => "$1+$2-$3";
  
 		// hinter- / vorder- (separate words)
-		"([Hh]in)-?t-?er\+" => "$1-ter|";
-		"([Vv]or)-?d-?er\+" => "$1-der|";
+		"([Hh]in)-?t-?er\+(?!n$)" => "$1-ter|";
+		"([Vv]or)-?d-?er\+(?!n$)" => "$1-der|";
 
 		"([Kk]er)\+(l)" => "$1-$2";
 
@@ -973,6 +976,14 @@
 		"(.+?)(-)?(?<!\|)([Ss]ä-?c-?kel)" => "$1|$3"; // Fortunatussäckel
 		"([Ee]in)-?(deu)" => "$1+$2"; // eindeutig
 		"([Ww]eh)-?m(u|ü)" => "$1|m$2"; // wehmütige
+		"(ü|Ü)b-?(er)\+#(wie)\|g" => "$1-b$2+$3-g"; // überwiegende (überwiegend is correct:)
+		"([Ee]r)[+-]?(in-?ne)-?r(?!\+)" => "$1+$2r+"; // Erinnerungen
+		"([Kk]it)\|(zel)" => "$1-$2"; // kitzelte
+		"([Dd]om)-?(pfaf)" => "$1|$2"; // Dompfaff
+		"([Ff]rie-?dens)-?(tau)" => "$1|$2"; // Friedenstaube
+		"([Hh]aupt)([aeiou]|ä|ö|ü)" => "$1|$2"; // Haupt-
+
+		"\|zu\+" => "|zu|"; // bekanntzugeben => this is a audacious rule ... caution: could produce wrong results!
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2673,7 +2684,7 @@
 		"\+all$" => "+{ALL}";
 		
 		"^wie([+#])" => "{WI}$1";
-		"([+#])wie$" => "+{WI}";
+		"(?<!{ÜBER})([+#])wie$" => "+{WI}";
 
 		"^so(\+|#)" => "{SO}$1";
 		"([#-])so$" => { "$1{SO}", "[os]-?so$" }; // amoroso, Tasso
@@ -3388,6 +3399,8 @@
 		// separates two words in one
 		// there must be a possibility to disable this function manually (i.e. via input form)!
 
+		"tstopt(8)E\|" => "E\\"; // this is a new era of separation ... (I don't like it ...)
+
 		//"(.{2,}){SEIN}([Ss])?" => "$1\\{SEIN}$2"; // Beisammensein
 		"\|{NICHT2}\|" => "\\{NICHT2}\\"; // Vergissmeinnichtaugen
 
@@ -3398,8 +3411,12 @@
 		
 		"{HEIT}(U\[NG\]S)\|([TP])" => "{HEIT}$1\\[#4]$2"; // Zeitungspapier - add additional spacing
 		
-		"{HEIT}(S?)\|([TP])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
+		"{HEIT}(S?)\|([TPF]|\[FR\])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
 		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
+		"(\[&T@R\])O\|" => "$1[&O]\"; // Elektrotechniker
+		"(\[&T@R\]\[A\]\[&A\])\|" => "$1\"; // Extrareise
+
+
 		"{HEIT}((?:\[&E\])?\[E\]\[ST\])\|" => "{HEIT}$1\\"; // weitestverbreitete
 		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
 		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
@@ -3414,7 +3431,8 @@
 		"(\[&T\]\[&E\]AG)\|" => "$1\\"; // Sonntagmorgen
 		"(\[TUNG\]S)\|F" => "$1[#3]\\F"; // Unterhaltungsfonds
 		"(\[TUNG\]S)\|" => "$1\\"; 
-		"(\[&T\]{ION}S)\|" => "$1\\"; // Sektionsprotokoll 
+		"(\[&T\]{ION}S)\|([P]|\[(?:PL|PR)\])" => "$1\\[#4]$2"; // Lektionsplan, Sektionsprotokoll 
+		"(\[&T\]{ION}S)\|" => "$1\\"; // -tions|.. 
 		"\[&T&I\]\|" => "[&T&I]\\"; // Sentimentalität
 
 		"\[&T\]\[EI\]\|\[EI\]" => "[&T][&E]E[-EI]\\[0D-][EI]";  // parteieigener
@@ -3427,7 +3445,7 @@
 		"({HEIT}{ER})\|" => "$1\\";
 		"({HEIT}{EN})\|" => "$1\\";
 
-		"\\{ÜBER}" => "\\[0N-]{ÜBER}"; // needs dummy token if separated
+		"\\(\[#.\])?{ÜBER}" => "\\$1[0N-]{ÜBER}"; // needs dummy token if separated
 
 		"(\[(EI|AU|EU)\])\|" => "$1[&E]|";
 		"{ET}\|" => "{ET}\\";
@@ -4755,6 +4773,7 @@
 		"\\{UNTER}" => "\\[N=@R6]";
 		"{UNTER}" => "[N@R6]";
 		"^{ÜBER}" => "[0N-][#WS][&U]";
+		"\\(\[#.\]){ÜBER}" => "\\[0N-]$1[#WS][&U]";
 		"{ÜBER}" => "[#WS][&U]";
 		"{WI}" => "[W][/I]";
 		"{WIDER}" => "[W@R6]";
