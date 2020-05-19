@@ -1397,6 +1397,9 @@
 		"(\[b\])\[#.\](\[g@r\])" => "$1[#0]$2"; // begrüsste
 		"(\[s=\])(\[\/i\])" => "$1[#1-]$2"; // sie
 		"(\[l\])\[#.\]\[u\](\[d\])" => "$1[#6][U]$2"; // lud
+		"(\[nk\])\[#.\](\[s\])" => "$1[#1-]$2"; // links
+		"(\[rück\])\[#.\](\[s\])" => "$1[#1-]$2"; // rücksichtslos
+		"(\[&t&e\])\[o\](\[ff\])" => "$1[#4][O]$2"; // Pantoffel
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
