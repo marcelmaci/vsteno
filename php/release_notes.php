@@ -107,7 +107,8 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <li><b>Bugfixes:</b>
 <br>Switching: Wechseln von Kurzschrift zu Handschrift in Layouted-Modus (Zeilenumbruch nun i.O.)
 </li>
-
+<li><b>Neu:</b>
+<br>Statistik: Anzahl Regeln Analyzer / Anzahl gecachte Resultate
 </ul>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**) Nach Hephaistos, Ariadne und Hyperion dürfte wieder ein weiblicher Name (vielleicht mit A:) aus der griechischen 
 Mythologie zum Zuge kommen ... :)</i></p>

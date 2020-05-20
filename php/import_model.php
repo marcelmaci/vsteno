@@ -857,6 +857,9 @@ function ImportModelFromText($text) {
     // parse data
     //ImportSession(); // do that only when loading the page for the 1st time or when reset button is clicked (not whenever a calculation is made: user must have the possibility to override session variables!)
     ImportAnalyzer();
+    
+    $_SESSION['statistics_analyzer_rules'] = count($analyzer); 
+    
     //var_dump($analyzer);
     // genious: even slower if tokens are not loaded ... :) :) :)
     //if (($_SESSION['output_format'] === "meta_lng") || ($_SESSION['output_format'] === "meta_std") || ($_SESSION['output_format'] === "meta_prt")) {

@@ -29,12 +29,13 @@
     else echo "<p>empty</p>";
     echo "<h1>Stats</h1>";
     $number_rules = $_SESSION['statistics_rules'];
+    $number_analyzer_rules = $_SESSION['statistics_analyzer_rules'];
     $number_tokens = $_SESSION['statistics_tokens'];
     $number_base = $_SESSION['statistics_base'];
     $number_combined = $_SESSION['statistics_combined'];
     $number_shifted = $_SESSION['statistics_shifted'];
     $number_subsections = $_SESSION['statistics_subsections'];
-    echo "<p>Tokens: $number_tokens (base: $number_base / combined: $number_combined / shifted: $number_shifted)<br>Rules: $number_rules (subsections: $number_subsections)<br></p>";
+    echo "<p>Tokens: $number_tokens (base: $number_base / combined: $number_combined / shifted: $number_shifted)<br>Rules: SE: $number_rules (subsections: $number_subsections) / Analyzer: $number_analyzer_rules<br></p>";
     echo "<h1>More</h1>";
     echo "<p><a href='show_analyzer_parameters.php'>Linguistische Parameter</a><br>
     <a href='model_show_in_browser.php'>Quellcode</a></p>";

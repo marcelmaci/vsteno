@@ -175,7 +175,7 @@ function AddMarkings($text) {
 }
 
 function CalculateStenoPage() {
-    global $global_debug_string, $global_error_string, $backport_revision1;
+    global $global_debug_string, $global_error_string, $backport_revision1, $cached_results;
     $global_debug_string = "";
     CopyFormToSessionVariables();
     InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
@@ -288,6 +288,8 @@ if ($_POST['action'] === "abschicken") {
     for ($i=0; $i<count($rules[$actual_model]); $i++) $_SESSION['rules_count'][$i] = 0;
     
     CalculateStenoPage();
+    $_SESSION['statistics_cached_results'] = count($cached_results);
+    
 } else {                // don't test for "zurücksetzen" (if it should be tested, careful with umlaut ...)
     ResetSessionGetBackPage();
 }

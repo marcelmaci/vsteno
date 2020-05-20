@@ -1365,6 +1365,7 @@ if ($_SESSION['analysis_type'] === "selected") {
                     }
                     // cache result
                     if (isset($cached_results[$text])) $cached_results[$text] = $output;
+    
                     return $output;
   
                     break;
@@ -1458,7 +1459,6 @@ function GetHandwriting($word) {
         // not possible ... only manual workaround
         //if ($_SESSION['token_type'] === "handwriting") echo "Handwriting: $output";
     }
-
     return $output;
 }
 ////////////////////////////////////////////// end of parser functions ///////////////////////////////////

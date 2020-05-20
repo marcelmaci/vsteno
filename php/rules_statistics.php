@@ -16,6 +16,9 @@ if (isset($_SESSION['rules_count'])) {
     echo "<h2>Hinweis</h2>";
     echo "Da Wörter, die im Text mehrmals vorkommen 'gecachet' (zwischengespeichert) werden, geben die Werte lediglich an, wie häufig eine Regel angewandt wurde (nicht aber, in wie vielen Wörtern, bzw. wie oft das durch die Regel abgedeckte Phänomen im ganzen Text vorkommt!)<br>";
     
+    $number_cached = $_SESSION['statistics_cached_results'];
+    echo "<h2>Cache</h2><p>Cached results: $number_cached</p>";
+    
     echo "<h2>Verwendet</h2>";
 
     for ($i=0; $i<count($rules[$model]); $i++) {
