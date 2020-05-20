@@ -8,8 +8,8 @@ von <a href="license_fees.php">Lizenzgebühren</a>. Foto: (c) <a href="https://w
 <p><h1>eBooks</h1></p>
 
 <ul>
-    <li>Franz Kafka, Ein Bericht für eine Akademie: <a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_27042020.pdf">PDF 27/04/2020</a> 
-    (<a href="http://www.gutenberg.org/files/21989/21989-0.txt">Original</a>)</li>
+    <li>Franz Kafka, Ein Bericht für eine Akademie: <a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_19052020.pdf">PDF 19/05/2020</a> 
+    (<a href="http://www.gutenberg.org/files/21989/21989-0.txt">Original</a>) [ältere Version: <a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_27042020.pdf">PDF 27/04/2020</a>]</li>
     <li>Karl Ettlinger, Der Widerspenstigen Zähmung: <a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_16052020.pdf">PDF 16/05/2020</a>
     (<a href="http://www.gutenberg.org/cache/epub/31733/pg31733.txt">Original</a>)</li>
 </ul>
