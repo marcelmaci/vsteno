@@ -983,6 +983,7 @@
 		"([Ff]rie-?dens)-?(tau)" => "$1|$2"; // Friedenstaube
 		"([Hh]aupt)([aeiou]|ä|ö|ü)" => "$1|$2"; // Haupt-
 		"([Ss]chau)\|(kel)" => "$1-$2"; // schaukelten (computers are stupid)
+		"([Nn]a)-?he\|zu" => "$1-he-zu"; // nahezu (no separation)
 
 		"\|zu\+" => "|zu|"; // bekanntzugeben => this is a audacious rule ... caution: could produce wrong results!
 
@@ -3915,6 +3916,8 @@
 
 		"\[TUNG\]" => "[A][&TNG]"; // Richtung
 		"\[&T-1\]\[G\]" => "[&TG]"; // mächtigen
+
+		"\[&T-1\]\[H\]" => "[&TH]"; // bekanntlich
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -4762,6 +4765,7 @@
 		"{DEN}" => "[0N-][EN]";
 		"{SI}" => "[S=][/I]";
 		"{UN}" => "[#NS][&U]";
+		"{IN}\[EM\]" => "[IN-][EM]"; // indem
 		"{IN}" => "[IN]";
 		"{WAR}T$" => "[0U-][#0S][&A][&T]";
 		"{WAR}" => "[0U-][#0S][&A]";

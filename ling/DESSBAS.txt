@@ -46,7 +46,7 @@
 	</p>
 	<p>This model was further improved using transcriptions of different novels (mainly from Friedrich Glauser) and articles which where corrected manually starting in February 2019.</p>
 	<p>The model produces >90% of correct transcriptions an can be considered an official release.</p>
-	<p>This file was originately generated as export from old parser, then 
+	<p>This file was originally generated as export from old parser, then 
 	later completed with manual additions to form DESSBAS (DD=Deutsch, 
 	SS=Stolze-Schrey, BAS=Grundschrift).</p> 
 	
@@ -54,7 +54,7 @@
 	inclination of 60 degrees.</p>
 	
 	<p>In December 2019 the optional variants HF1 and HF2 were added. The new rules introduce additional abbreviations for shorthand used in the so called 'Eilschrift' (2nd level) and 'Redeschrift' (3rd level). These abbreviations are based on:</p>
-	<p>[3]Hanspeter Frech, "Die superschnelle Geheimschrift. Gekürzte Stenografie", Schweizerischer Stenografenverband Stolze/Schrey (SSV), Wetzikon, November 2017.</p>
+	<p>[3] Hanspeter Frech, "Die superschnelle Geheimschrift. Gekürzte Stenografie", Schweizerischer Stenografenverband Stolze/Schrey (SSV), Wetzikon, November 2017.</p>
 	<p>HF1 means standard abbreviations (leaving endings without modification), HF2 means extreme abbreviations (that affect also endings, for example: trendige Dinge => trendig Dinge; wichtiges Dossier => wichtig Dossier). Additionally, it is planned to add the variant MAC which adds rules for abbreviations that I use personally. In combination with HF1 and HF2 this leads to a personal, individualised and non-standard shorthand system.</p>  
 	";
 
@@ -199,6 +199,7 @@
 
 		// don't separate -zer, -der, -er at end of words
 		//"([Ss]au)\|(er)" => "$1-$2"; // sauer
+		"([Nn]eu)\|(e-?r\+?)$" => "$1-$2";
 		"(.?)\|([dz]?er)\+?$" => "$1-$2";
 
 		// correct wrong separations
@@ -583,7 +584,8 @@
 		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
 		"([Ee]r)\+(ker)" => "$1-$2";
 		"([Ee]r)\+(bt)" => "$1$2";
-		"r\+$" => "r";
+		"(?<![^e]e)r\+$" => "r";
+		//"eer\+$" => "eer";
 		"r\+\|" => "r|";
 		"([TtGg]er)\+m" => "$1-m";
 		"([Zz]er)\+(be-?r\+)" => "$1-$2";	// Zerberus
@@ -3015,7 +3017,7 @@
 		"\(" => "";
 		"\)" => "";
 		//"\"" => "";
-		"zz" => { "z", "Buzz" };
+		"z-?z" => { "z", "Buzz" };
 		"ih#" => "i#";
 
 	#EndSubSection(normalizer)
@@ -3918,6 +3920,8 @@
 		"\[&T-1\]\[G\]" => "[&TG]"; // mächtigen
 
 		"\[&T-1\]\[H\]" => "[&TH]"; // bekanntlich
+		"\[MPF\](?:\[EN\]|{EN})" => "[MPF][-EN2]"; // dumpfen
+		"\[MPF\](?:\[EM\]|{EM})" => "[MPF][-EM2]"; // dumpfem
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -4999,6 +5003,7 @@
 		"{GEGEN}" => "[GEGEN]";
 		"{NICHT2}" => "[NICHT]";
 		"{HEIT}{HEIT}" => "[&EIT&E][HEIT]"; // Gescheitheit
+		"{BEI}" => "[BEI]"; Beifallsbezeugung
 
 	#EndSubSection(latesubstituter)
 	#BeginSubSection(rewriter2)
