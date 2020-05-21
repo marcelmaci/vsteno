@@ -19,6 +19,7 @@
                 <li><A href="thoughts.php">Gedanken</A></li>
                 <li><A href="links.php">Wegweiser</A></li>
                 <li><a href="library.php">Bibliothek</a></li>
+                <li><A href="presse.php">Presse</A></li>
                 </ul>
                 <p><b>Kontakt</b></p>
                 <ul>

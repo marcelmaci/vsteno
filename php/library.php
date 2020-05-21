@@ -1,7 +1,7 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Bibliothek</h1>
 <img src="../web/bookshelf_horizontal2_scaled850.png" style="width:830px;">
-<i>Auf dieser Seite finden Sie Lektüre in Stolze-Schrey. Bitte beachten Sie die Hinweise zu <a href="library_copyright.php">Copyright</a>, 
+<i>Auf dieser Seite finden Sie Lektüre in Stolze-Schrey. Bitte beachten Sie die Hinweise zu <a href="library_copyright.php">Urheberrecht</a>, 
 <a href="library_philosophy.php">Publikations&shy;philosophie</a> und zur Abgeltung 
 von <a href="license_fees.php">Lizenzgebühren</a>. Foto: (c) <a href="https://www.flickr.com/photos/scosanf/">Scott Sanford</a> (CC BY-NC-SA 2.0).</i>
 
