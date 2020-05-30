@@ -1480,6 +1480,8 @@
 		"(\[-aus\])(\[s\])" => "$1[#3]$2"; // Voraussetzungen
 		"(\[b@r6\])\[#.\]\[a\](\[nd\])" => "$1[#7][A]$2"; // Brand
 		"\[j\]\[#.\]\[a\](\[p\])" => "[J^][#5][A]$1"; // Japetos
+		"(\[&ts\])(\[h\])" => "$1[#4]$2"; // rechtshin
+		"(\[da\])\[#.\](\[durch\])" => "$1[#2]$2"; // dadurch
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
