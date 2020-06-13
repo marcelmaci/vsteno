@@ -14,6 +14,9 @@ von <a href="license_fees.php">Lizenzgebühren</a>. Foto: (c) <a href="https://w
     (<a href="http://www.gutenberg.org/cache/epub/31733/pg31733.txt">Original</a>)</li>
     <li>Platon, Gastmahl (96 Seiten): <a href="../books/platon_gastmahl_24052020.pdf">PDF 24/05/2020</a>
     (<a href="http://www.gutenberg.org/files/24899/24899-0.txt">Original</a>)</li>
+    <li>Plinius der Jüngere, Vesuvbriefe (12 Seiten): 
+    <a href="../books/plinius_vesuvbriefe_30052020.pdf">PDF 30/05/2020</a> 
+    (<a href="https://babel.hathitrust.org/cgi/pt?id=inu.30000134569080&view=1up&seq=10">Original</a>/Neubearbeitung)</li>
 </ul>
 
 <?php require "vsteno_template_bottom.php"; ?>
