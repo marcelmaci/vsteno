@@ -2,7 +2,7 @@
 	// 
 	// ITSSBAS - VSTENO shorthand model for Italian
 	// Set of rules interpreted and processed by VSTENO (www.vsteno.ch) 
-	// (c) 2020 - Marcel Maci (m.maci@gmx.ch)
+	// (c) 2019-2020 - Marcel Maci (m.maci@gmx.ch)
  	//
 	// This program* is free software: you can redistribute it and/or modify it under	
 	// the terms of the GNU General Public License as published by the Free Software
@@ -72,20 +72,12 @@
 		"model_date" := "14. Juni 2020";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		// select options for linguistical analysis
-		// general option => select it to get acces to analyzer rules - disable all other analysis! 
-		"analysis_type" := "selected";
-		// hyphenation and composed words
+		// disable linguistical analysis
 		"hyphenate_yesno" := "no";
 		"composed_words_yesno" := "no";
-		// phonetics
-		"phonetics_yesno" := "no";
-		"phonetic_alphabet" := "espeak";
-		"phonetics_transcription_list" := "";
 		// set language
 		"language_hunspell" := "it";		// set it, even if not used
 		"language_hyphenator" := "it";
-		"language_espeak" := "it";
 		// set morphological parameters
 		"prefixes_list" := "";
 		"stems_list" := "";
@@ -202,15 +194,7 @@
 			R56:[C28,V2,D56,]";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
-		// only global analysis is selected in order to make use of analyzer rules
-		// all other analysis (hyphenation, word composition, phonetics) are disabled
-
-		// separate enclitic particles
-		"etene$" => "ete|ne"; // tenetene 
-		"atosi$" => "ato|si"; // chiamatosi
-		"itimi$" => "iti|mi"; // fornitimi
- 		"atevi$" => "ate|vi"; // aiutatevi
-
+		// empty
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -648,7 +632,7 @@
 		"»" => """; //"|[#5][#Q#]|"; 
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
-		"(\+|#)" => "-"; // ignore linguistical analysis except word boundaries | (if not already disabled in header)
+		"(\+|#|\|)" => "-"; // ignore linguistical analysis (if not already disabled in header)
 		"([Rr]adio)(emisi(?:ó|o)n)" => "$1|$2"; // separate word
 	#EndSubSection(dasher,#>stage3)
 	#BeginSubSection(splitter1,#>stage3)
@@ -698,7 +682,6 @@
 	#BeginSubSection(earlyshortener)
 		"^[Ee]star(é|á[ns]?|emos|éis)" => "{ESTAR}$1";
 		"^[Ee]star(ía[ns]?|ía(?:mos|is))" => "{ESTAR}$1";
-		"ie?tà$" => "{IETA}";
 	#EndSubSection(earlyshortener)
 	#BeginSubSection(normalizer)
 		"é(?!$)" => "e";
@@ -715,14 +698,6 @@
 		//"r-?r" => "r";
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
-		"(?<!it)[auioe]ment([aeiou])bile?" => "{MENT}$1{BILE}";
-		"^impr" => "{IN}pr"; // impressionante
-		"bile$" => "{BILE}";
-		"bilmente$" => "{BILE}{MENT}";
-		"bil{IETA}$" => "{BILE}{IETA}";
-		"bili$" => "{BILI}";
-		"[aeiou]zion" => "{ZION}";
-		"^ri" => "{RI}";
 		"^extract" => "estract";
 		"^extrae" => "estrae";
 		"^extrai" => "estrai";
@@ -794,13 +769,9 @@
 		"^ustedes$" => "{USTEDES}";
 		"^nuestr([oa]s?)$" => "{NUESTR}$1";
 		"^vuestr([oa]s?)$" => "{VUESTR}$1";
-		//"(?<!c)[cs](ion)" => "{SION}";
-		//"(cc|x)(ion)" => "k{SION}";
-		"(?<!^)[auioe]mental" => "{MENTAL}";
-		"(?<!^)[auioe]mentar" => "{MENTAR}";
-		"(?<!^)[auioe]mentissim([oai])" => "{MENT}{ISIM}$1"; // clementissimo
-		"(?<!^)[auioe]menti" => "{MENTI}";
-		"(?<!it|^)[auioe]ment[eo]" => "{MENT}";
+		"(?<!c)[cs](ion)" => "{SION}";
+		"(cc|x)(ion)" => "k{SION}";
+		"(?<!^)mi?ent" => "{MENT}";
 		"^(re)?ex(ped)" => "$1{EX}ped";	// (re)expedición
 		"^ex(quisit)" => "es$1";	// exquisito
 		"^(in|co)?ex(?!(?:c[rluao]|[pt]))" => "$1{EX}$2";
@@ -821,7 +792,7 @@
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
 		"^(in)?contro?" => "$1{CONTR}";
-		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "^[Cc]oop$", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]", "[Cc]ocin", "[Cc]olga", "[Cc]olilla", "[Cc]ord", "[Cc]opas?", "[Cc]odazo", "[Cc][oó]m[ií]", "[Cc]orp", "[Cc]ort" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
+		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]", "[Cc]ocin", "[Cc]olga", "[Cc]olilla", "[Cc]ord", "[Cc]opas?", "[Cc]odazo", "[Cc][oó]m[ií]", "[Cc]orp", "[Cc]ort" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobrent" => "{SOBRE}ent"; // sobrentender (sobreentender)
 		"^sopr|sovr|super" => "{SOBRE}";
 		"^gener" => "{GENER}";
@@ -833,23 +804,21 @@
 		"^se(ñ|n)ora$" => "{SENORA}";
 		"^suiz" => "{SUIZ}";
 		"^(des)?in" => { "$1{IN}", "[Ii]ndi[oa]" };
-		
+		"qu" => "k"; // transferred from bundler: must be placed befor {TAD} (otherwhise equidad gets reduced to eq{TAD})
 		"^edad(es)?$" => "e{TAD}$1";
 		"^ciudad(es)?$" => "s{TAD}$1"; // claro ... eso se llama: mutilar una palabra ...
 		"rt(?!(?:ud|ad)(?:es)?)" => "[RT]"; // early bundler: avoid following rule in apartado, portador etc.
 		"c[ei](?:t[au]|da)d(?![oa]s?)" => "s{TAD}"; // 1st vowel falls out
 		"(?:ui|[ei])?(?:t[au]|da)d(es)?$" => "{TAD}$1"; // 1st vowel falls out
 		"ntud(es)?$" => "n{TAD}$1"; // juventud
-		"c(?:í|i)ssim([oai])$" => "[CH]{ISIM}$1";
-		"(?:í|i)ssim([oai])$" => "{ISIM}$1";
-		// the following 4 rules may not be applied to bisilabic words
-		"[iae]to$" => { "{ITO}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
-		"[iae]ta(mente)?$" => { "{ITA}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
-		"[iae]te$" => { "{ITE}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
-		"[iae]ti$" => { "{ITI}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
-		"{ITA}mente" => "{ITA}{MENT}"; 
-		//"ete$" => "{ETE}";
-		//"etes$" => "{ETES}";
+		"c(?:í|i)sim([oa]s?)$" => "s{ISIM}$1";
+		"(?:í|i)sim([oa]s?)$" => "{ISIM}$1";
+		"ito$" => "{ITO}";
+		"ita$" => "{ITA}";
+		"itos$" => "{ITOS}";
+		"itas$" => "{ITAS}";
+		"ete$" => "{ETE}";
+		"etes$" => "{ETES}";
 		"otr([oa])(s?)$" => "{OTR}$1$2";
 		"^me$" => "{ME}";
 		//"^$" => "{}";
@@ -873,11 +842,6 @@
 		"([aeiou])y$" => "$1j";
 		"{IN}n" => "{IN}";
 		"{INTER}r" => "{INTER}";
-		"(?<![ng])gio" => "[H]o"; // Giosuè 
-		"(?<![ng])g([ei])" => "[H]$1"; // logico 
-		"(?<!c)c(?={MENT)" => "k"; // documento
-		"(?<!c)c(?={IT)" => "[CH]"; // esplicitamente
-		
 	#EndSubSection(phonetizer)
 	#BeginSubSection(bundler)
 		
@@ -909,6 +873,8 @@
 		"sci" => "[SCI]"; // lascio
 		"[sx]p" => "[SP]";
 		"[sx]t" => "[ST]";
+		//"qu" => "k";
+		"gu([ei])" => "g$1"; // regular vs Miguel vs agua
 		"n-?d" => "[ND]";
 		"s-?t" => "[ST]";
 		"s-?p" => "[SP]";
@@ -933,7 +899,6 @@
 		"t-?t" => "[TT]"; // iattura
 		"v-?v" => "[VV]"; // sopravvivenza
 		"c-?c(?![ei])" => "[K]"; // sovraccarico
-		"q-?u" => "[Q]"; // interloquire
 		
 		// combinations consonant + r/l (copied over from DESSBAS)
 		// l
@@ -973,9 +938,6 @@
 		"s-?r" => "[SR]";
 		"t-?r" => "[TR]";
 		"z-?z" => "[ZZ]";
-		"s-?c([aou])" => "[SC]$1"; 
-		"s-?s" => "[SS]";
-		"d-?d" => "[DD]";
 		
 		
 		// special
@@ -987,9 +949,11 @@
 		"u-?a" => "[UA]"; // guadagni
 		"i-?(o|ó)" => "[IO]";
 		"u-?o" => "[UO]"; // duomo
+		"i-?(e|é)" => "[IE]"; // no difference if accentuated or not
 		"i-?ais" => "I[LES][AI]s";
 		"i-?a" => "[IA]";
-		
+		"a-?i" => "[AI]";
+
 		// special: copied from phonetizer
 		"c([aouáóú])" => "k$1";
 		
@@ -999,27 +963,9 @@
 	#EndSubSection(relancer1)
 	#BeginSubSection(transcriptor)
 		// double vowels
-		"\[UO\]" => "[E][&O]"; // promiscuo
-		"iò$" => "[EI][&O]"; // fuorviò
-		"ìo$" => "[EI][&E]"; // rullìo
-		"eo$" => "[E][&A]"; // Orfeo
-		"\[EA\]$" => "[Ä][&A]"; // linea
-		"\[AU\]$" => "[I][&E]"; // Herisau (shadowed?!)
-		"uò$" => "[A][&U][&O]"; // abituò
-		"uì$" => "[A][&U][I][&E]"; // seguì
-		"uè$" => "[A][&U][E][&E]"; // Giosuè
-		"ue$" => "[A][&U][-E]"; // esangue
-		"iù$" => "[I][&E][A][&U]"; // Mariù
-		"ii$" => "[I][&E][/I]"; // addii
-		"(?:ie|ìe)$" => "[I][&E][-E]"; // sedie, arpìe
-		"iè$" => "[I][&E][E][&E]"; // compiè
-		"\[IA\]$" => "[I][&E][EN]"; // storia
-		"eò$" => "[E][&E][&O]"; // roteò 
-		"ao$" => "[A][&A][&O]"; // Bilbao
-		"ei$" => "[E][&E][/I]"; // Pompei
 		"(?<!^)a([aeou])" => "A[&A]$1";
-		"^a([aeiou])" => "[0N-]A[&A]$1";
-		"e([aeouAEIOU]|\[IA\])" => "E[&E]$1";
+		"^a([aeou])" => "[0N-]A[&A]$1";
+		"e([aeiouAEIOU]|\[IA\])" => "E[&E]$1";
 		"o([aeéiu]|\[IA\])" => "[&O]$1";
 		"u([io]|\[IA\])" => "A[&U]$1";
 		"iu" => "i[LES]u"; // viudo
@@ -1027,14 +973,6 @@
 		"i{ISIM}" => "[I][&E]{ISIM}";
 		"u({IT)" => "A[&U]$1";
 		"e({IT)" => "E[&E]$1";
-		"ai$" => "[A][&A][/I]"; // vedrai
-		"ai" => "[A][&A][I]"; // ammaino
-		"ei" => "[E][&E][I]"; // Leida
-		"ie" => "[I][&E][E]"; // fieno
-		"ii" => "[I][&E][I]"; // avviino
-		"ue" => "[A][&U][E]"; // duetto 
-		"oo" => "[&O][O]"; // Coop 
-
 		// other sounds
 		"^({SUB})?r" => "$1[AR]"; // initial r (Anlaut-r)
 		"\[(RT|MP)\]r" => "[$1][AR]";
@@ -1061,13 +999,13 @@
 		"\[CCH\]" => "[K]"; // occhiali
 		"\[TT\]" => "[T]"; // iattura
 		"\[VV\]" => "[W]"; // sopravvivenza
-		"\[SC\]" => "[C]"; // scomparso
-		"\[SS\]" => "[S]"; 
-		"\[DD\]" => "[D]"; // addii 
 		
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
-		// empty
+		//"{CONTR}A" => "{CONTR}\A";
+		"{CONTR}[Aa]([aeiouAEIOU])" => { "{CONTR}A[&A]$1", "^{CONTR}[Aa]$" }; // problem is more complex, solve it like that for now
+		//"({BIEN})({ESTAR})" => "$1[LES]$2";
+		"\|" => "\\"; // radioemisión
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// vowels at beginning of word
@@ -1094,7 +1032,7 @@
 
 		// diptongs at end of the word
 		"\[IA\]$" => "I[LES]";
-		"(?<![gc])\[IO\]($|\\)" => "[#W][-EI]$1";
+		"\[IO\]($|\\)" => "[#W][-EI]$1";
 		"\[UA\]$" => "[#WS][&U]";
 		"\[UE\]$" => "[#WS][&A]"; // not clear whether this should be shadowed?! (probably yes)
 		"\[AI\]$" => "[AI][LES]";
@@ -1207,12 +1145,6 @@
 
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
-		"{MENT}(\[?[AEIOUaeiou]\]?){BILE}" => "[EM][O][&E]$1{BILE}"; 
-		"{MENT}{ISIM}" => "[EM][O][&E]{ISIM}"; 
-
-		"{RI}\[VR\]" => "[AR][AR]"; // rirompere
-		"{RI}" => "[AR]"; // rilancio
-
 		"{BIEN}(.*?){ESTAR}" => "[B]$1[RÜCK]";
 		"{LA}" => "AL";
 		"{DA}" => "AD";
@@ -1278,7 +1210,7 @@
 		"{NUESTR}" => "[N=@R6]";
 		"{VUESTR}" => "[W@R6]";
 		"{SION}" => "[SS]";
-		"{MENT}" => "[EM]";
+		"{MENT}" => "[MPF]";
 		"{EX}" => "[LES]";
 		"{IN}\[VR\]" => "[IN][AR]";
 		"{IN}" => "[IN]";
@@ -1323,16 +1255,6 @@
 		"VOS{OTR}([AO])S" => "[W][&T@R]$1OS";
 		"{OTR}" => "[0N-][&T@R]";
 		"{ME}" => "M";
-		"{IETA}" => "[HEIT]";
-		"{ITE}" => "[&T&E][-E]";
-		"{ITI}" => "[&T&E][/I]";
-		"{BILE}" => "[B]";
-		"{BILI}" => "[B][/I]";
-		"{MENTI}" => "[EM]\\[#9-][IST]";
-		"{MENTAL}" => "[EM][@L]";
-		"{MENTAR}" => "[EM][A][AR]";
-		"{ZION}" => "[ON]"; 
-	
 		//"{}" => "";
 
 		//"{}" => "";
