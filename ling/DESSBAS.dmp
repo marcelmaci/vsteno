@@ -1013,6 +1013,11 @@
 
 		"\|zu\+" => "|zu|"; // bekanntzugeben => this is a audacious rule ... caution: could produce wrong results!
 
+		// designierter: very strange ... correct results on laptop but wrong on tablet and phones ... ?!?!?!?
+		// wrong prefix is corrected in analyzer (works with laptops), recorrect it here (hoping it will work with tablets and phones too ...)
+		"([Dd]e)\|" => "$1-"; 
+		// ok, this does the trick - but why the hell doesn't it work the same on all devices ... ?!?!?
+
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)

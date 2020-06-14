@@ -76,6 +76,14 @@
 		// general option => select it to get acces to analyzer rules - disable all other analysis! 
 		"analysis_type" := "selected";
 		// hyphenation and composed words
+		// **********************************************************************************************
+		// The italian model can use hunspell (it_IT) for word composition. In that case, the hyphens and 
+		// analyzer for composed words must be activated and the language for the dictionary set.
+		// Since dictionary is actually not installed on server and composed words can be written without
+		// separation in italien system, do not activate the analyzer.
+		// **********************************************************************************************
+		//"hyphenate_yesno" := "yes";
+		//"composed_words_yesno" := "yes";
 		"hyphenate_yesno" := "no";
 		"composed_words_yesno" := "no";
 		// phonetics
@@ -83,7 +91,8 @@
 		"phonetic_alphabet" := "espeak";
 		"phonetics_transcription_list" := "";
 		// set language
-		"language_hunspell" := "it";		// set it, even if not used
+		//"language_hunspell" := "it_IT";		// use hunspell for word composition
+		"language_hunspell" := "it_IT";			// set it even if not used 
 		"language_hyphenator" := "it";
 		"language_espeak" := "it";
 		// set morphological parameters
@@ -210,6 +219,12 @@
 		"atosi$" => "ato|si"; // chiamatosi
 		"itimi$" => "iti|mi"; // fornitimi
  		"atevi$" => "ate|vi"; // aiutatevi
+
+		// articles and pronouns => separate them by | in order to make all abbreviations work 
+		"([lmts])'" => "$1|";
+
+		// eliminate separation in monosyllables
+		"^([lmts])\|h([ao])$" => "$1$2";
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -646,6 +661,8 @@
 		"&szlig;" => "ss";
 		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
 		"»" => """; //"|[#5][#Q#]|"; 
+
+		"[Pp]er esempio" => "per_esempio";
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 		"(\+|#)" => "-"; // ignore linguistical analysis except word boundaries | (if not already disabled in header)
@@ -660,6 +677,7 @@
 	#BeginSubSection(acronymator)
 		// filter marker #acronym# out again
 		"#acronym#" => "";
+		"C" => "K"; // abbreviations like BBC and FCL are writen with [K] in italian
 		//"([A-Z]|Ä|Ö|Ü)" => "strtolower()";
 		// only transform upper case of potential 2nd word (suppose acronym is 1st word ...)
 		"(=(?:[A-Z]|Ä|Ö|Ü))" => "strtolower()";
@@ -714,7 +732,49 @@
 		"Ú" => "u";
 		//"r-?r" => "r";
 	#EndSubSection(normalizer)
+	#BeginSubSection(monosyllabizer)
+		// capital letters not strictly necessary due to preceeding decapitalizer (leave it anyway)
+		// add dummy space [#0] at beginning to avoid start from base line
+		// vowel a
+		"'ha" => "a"; // m'ha, l'ha etc.
+		"^([BbCcDdFfGgJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(a|à)h?$" => "[#0]$2$1";
+		"(\[#0\])à" => "$1A"; // eliminate accents
+		// vowel e
+		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(e|è)h?$" => "[#0]$1";
+		// vowel o
+		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(o|ò)h?$" => "[#0]$2$1";
+		"(\[#0\])ò" => "$1O"; // eliminate accents
+		// vowel u
+		"^(ch|gn|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(u|ù)h?$" => "[#0]$2$1";
+		"(\[#0\])ù" => "$1U"; // eliminate accents
+		
+	#EndSubSection(monosyllabizer)
 	#BeginSubSection(shortener)
+
+		"[Aa]bbiamo" => "{ABBIAMO}"; 
+		"[Aa]ssolut" => "{ASSOLUT}";
+		"[Bb]isogn" => "{BISOGN}";
+		"^[Bb]u?on([oaei])?$" => "{BUON}$1";
+		"^[Cc]ome$" => "{COME}";
+		"^[Dd]opo$" => "{DOPO}";  
+		"[Dd]urante" => "{DURANTE}";
+		"^[Mm]olt([oeai])$" => "{MOLT}$1"; 
+		"^[Nn]on$" => "{NON}";
+		"^[Pp]och?([ao]|[ei])$" => "{POC}$1";
+		"^[Ss]ono$" => "{SONO}";
+		"^[Ss]ott" => "{SOTT}";
+		"^[Tt]utt([oaei])$" => "{TUTT}$1"; 
+
+		"^[Dd]omand" => "{DOMAND}";
+		"^[Pp]iù$" => "{PIU}";
+		"^[Pp]iuttosto" => "{PIUTTOSTO}";
+		"^[Qq]uando$" => "{QUANDO}";
+		"^[Qq]uest([oaei])$" => "{QUEST}$1";
+		"^[Ss]econd" => "{SECOND}";
+		"^[sS]pess([oaei])$" => "{SPESS}$1";
+		"^[Tt]emp([oaei])$" => "{TEMP}$1";   
+		"^per_esempio$" => "{PERESEMPIO}";   
+
 		"(?<!it)[auioe]ment([aeiou])bile?" => "{MENT}$1{BILE}";
 		"^impr" => "{IN}pr"; // impressionante
 		"bile$" => "{BILE}";
@@ -729,7 +789,7 @@
 		"^extra(?!ñ|nj)" => "{EXTRA}";
 		"^coin" => "{CON}{IN}";
 		"^la$" => "{LA}";
-		"^da$" => "{DA}";
+		"^(?:da|dà)$" => "{DA}";
 		"^le$" => "{LE}";
 		"^d(e|é)$" => "{DE}";
 		"^qu(e|é)$" => "{QUE}";
@@ -738,11 +798,12 @@
 		"^mi$" => "{MI}";
 		"^ni$" => "{NI}";
 		"^si$" => "{SI}";
-		"^h?a$" => "{HA}";
+		"^(?:ha|a|ad|ah)$" => "{HA}";
+		"^(?:e|ed|eh)$" => "{ED}";
 		"^el$" => "{EL}";
 		"^en$" => "{EN}";
 		"^he$" => "{HE}";
-		"^es$" => "{ES}";
+		"^(?:È|è)$" => "{IST}";
 		"^(y|e)$" => "{Y/E}";
 		"^las$" => "{LAS}";
 		"^les$" => "{LES}";
@@ -766,7 +827,7 @@
 		"^so$" => "{SO}";
 		"^su$" => "{SU}";
 		"^sus$" => "{SUS}";  
-		"^tan-?t?([oa]s?)?$" => "{TANT}$1";
+		"^tan-?t?([oaie])?$" => "{TANT}$1";
 		"^to-?d([oa]s?)" => "{TOD}$1"; // todavía
 		"^t(u|ú)(s)?$" => "{TU}$2";
 		"^tam-?bi-?(é|e)n$" => "{TAMBIEN}"; // é already reduced at this point
@@ -779,7 +840,7 @@
 		"^gran$" => "{GRAN}";
 		"^grand(es?)" => "{GRAND}$1";
 		"^mediante$" => "{MEDIANTE}";
-		"^mism([oa]s?)" => "{MISM}$1";
+		"^medesim([oaie])" => "{MEDESIM}$1";
 		"^no$" => "{NO}";
 		"^nosotr([oa]s)$" => "{NOS1}{OTR}$1"; // nos1 = on baseline
 		"^vosotr([oa]s)$" => "{VOS}{OTR}$1"; // vos only here!
@@ -809,7 +870,7 @@
 		"^(in)?tran?s" => { "$1{TRAS}", "[Tt]rastos?$", "[Tt]raser" };
 		"^(des)?inte?r" => { "$1{INTER}", "[Ii]ntermin", "[Ii]ntrad" }; // not: interminable, intraducible
 		"^(bien)?estar$" => "$1{ESTAR}";
-		"^bi-?en" => "{BIEN}";
+		"^bene$" => "{BENE}";
 		"^estuv" => "{ESTUV}";
 		"^est(?!r)" => { "{EST}", "[Ee]stac", "[Ee]sti", "[Ee]sten", "[Ee]st(?:é|e)r", "[Ee]stanc", "[Ee]stud", "[Ee]stant", "[Ee]stad[íi]", "[Ee]stab" }; // does not apply to estación, estirar etc.
 		"^ser(é|á[ns]?|emos|éis|ía(?:[sn]|amos|ais)?)?$" => "{SER}$1";
@@ -843,10 +904,17 @@
 		"c(?:í|i)ssim([oai])$" => "[CH]{ISIM}$1";
 		"(?:í|i)ssim([oai])$" => "{ISIM}$1";
 		// the following 4 rules may not be applied to bisilabic words
-		"[iae]to$" => { "{ITO}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
-		"[iae]ta(mente)?$" => { "{ITA}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
-		"[iae]te$" => { "{ITE}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
-		"[iae]ti$" => { "{ITI}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$" };
+		// again: this rule is a (linguistically speaking) very imprecise stenographical rule ...
+		// according to examples, trisyllabic words like beato do not use abbreviation neither!
+		// examples: beato, beata, beati, beate
+		// so complete rules with confirmed examples with these exceptions too
+		// ok, so it seems to be so for all eato/a/e/i
+		// example: l'alleato
+		// => adapt rules
+		"[iae]to$" => { "{ITO}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
+		"[iae]ta(mente)?$" => { "{ITA}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
+		"[iae]te$" => { "{ITE}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
+		"[iae]ti$" => { "{ITI}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
 		"{ITA}mente" => "{ITA}{MENT}"; 
 		//"ete$" => "{ETE}";
 		//"etes$" => "{ETES}";
@@ -917,6 +985,7 @@
 		"n-?k" => "[NK]";
 		"n-?g" => "[NG]";
 		"n-?s" => "[NS]";
+		"m-?b" => "[MB]"; // italian
 		"m-?p" => "[MP]"; // spanish
 		"c-?h" => "[K]";
 		"[ck]-?t" => "[CT]"; // transcribe later to ck, ff, pt etc.
@@ -1052,6 +1121,7 @@
  		"\[NT\]" => "[NN]";
 		"\[RT\]" => "[RR]";
 		"\[GH\]" => "[G]";
+		"\[SS\]" => "[S]"; 
 		"\[GN\]" => "[SS]";
 		"\[GGI\]" => "[H]"; // faggio
 		"\[CCI\]" => "[CH]"; // taccio
@@ -1062,8 +1132,10 @@
 		"\[TT\]" => "[T]"; // iattura
 		"\[VV\]" => "[W]"; // sopravvivenza
 		"\[SC\]" => "[C]"; // scomparso
-		"\[SS\]" => "[S]"; 
 		"\[DD\]" => "[D]"; // addii 
+		// monosyllables
+		"(\[#0\])([aeiouAEIOU])([NnSs])" => "$1$2[$3=]"; 
+		"\[#0\][uU](\[SS\])" => "[0D-]A$1"; 
 		
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
@@ -1126,7 +1198,7 @@
 		"\[SC\]" => "C";	
 		"\[LL\]" => "[L]"; // mulinello
 		"\[MP\]l" => "[MP][@L]";
-
+		"\[MB\]" => "[MPF]"; 
 
 		// rewrite diptongs
 		"^\[UE\]" => "[0N-][Ä]";	// keep german vowel system
@@ -1213,6 +1285,22 @@
 		"{RI}\[VR\]" => "[AR][AR]"; // rirompere
 		"{RI}" => "[AR]"; // rilancio
 
+		"{ABBIAMO}" => "[BMPF]"; // special token
+		"{ED}" => "[0N-][-E]";
+ 
+		"{ASSOLUT}" => "[0N-]UT";
+		"{BISOGN}" => "[0D-][SS]";
+		"{BUON}" => "OB";
+		"{COME}" => "OK";
+		"{DOPO}" => "OD";
+		"{DURANTE}" => "A[NN]";
+		"{MOLT}" => "OM";
+		"{NON}" => "[0D-][ON]";
+		"{POC}" => "OP";
+		"{SOTT}" => "O[S=]";
+		"{TUTT}" => "UT";
+		
+		
 		"{BIEN}(.*?){ESTAR}" => "[B]$1[RÜCK]";
 		"{LA}" => "AL";
 		"{DA}" => "AD";
@@ -1228,7 +1316,7 @@
 		"{EL}" => "[0U-][#4-][-E]";
 		"{EN}" => "[ON-][#9][0N-][#1][EM]"; // no idea why double distance without intermediate token doesn't work ?!
 		"{HE}" => "[0N-][-E]";
-		"{ES}" => "[IST]";
+		"{IST}" => "[IST]";
 		"{Y\/E}" => "I[LES]";
 		"{LAS}" => "A[LES]";
 		"{LES}" => "[LES]";
@@ -1236,7 +1324,7 @@
 		"{LO}" => "OL";
 		"{DESDE}" => "D[-E]";
 		"{YA}" => "AJ";
- 		"{BIEN}"  => "B";
+ 		"{BENE}"  => "B";
 		"{BUEN}" => "UB";
 		"{CADA}" => "AK";
 		"{COMO}" => "OK";
@@ -1262,7 +1350,7 @@
 		"{GRAN}" => "A[G@R]";
 		"{GRAND}" => "A[G@R]";
 		"{MEDIANTE}" => "[0D-][AU][NN][-E]";
-		"{MISM}" => "[0D-][I][M]";
+		"{MEDESIM}" => "[0N-][M]";
 		"{NO}" => "[NO]";
 		"{NOS}" => "O[N=]";
 		"{NOS1}" => "[N=]"; // nosotros
@@ -1332,6 +1420,18 @@
 		"{MENTAL}" => "[EM][@L]";
 		"{MENTAR}" => "[EM][A][AR]";
 		"{ZION}" => "[ON]"; 
+		"{SONO}" => "O[SEIN]";
+		"{DOMAND}" => "DA[ND]";
+		"{PERESEMPIO}" => "[PERHAPS]";
+		"{PIU}" => "UP";
+		"{PIUTTOSTO}" => "UPO[ST]";
+		"{QUANDO}" => "A[ND]";
+		"{QUEST}" => "[ST]";
+		"{SECOND}" => "O[ND]";
+		"{SPESS}" => "[SP]";
+		"{TEMP}" => "[MP]";
+		
+		
 	
 		//"{}" => "";
 
