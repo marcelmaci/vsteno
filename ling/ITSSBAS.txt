@@ -798,6 +798,41 @@
 		"^[Ii]l$" => "{IL}";
 		"^[Mm]igliai([oaei])$" => "{MIGLIAI}$1";   
 
+		"^[Aa]bbastanz" => "{ABBASTANZ}";
+		"^[Aa]nche$" => "{ANCHE}";
+		"^[Aa]ncòr" => "{ANCOR}";
+		"^[Mm]ediante$" => "{MEDIANTE}";
+		"^[mM]iei$" => "{MIEI}";
+		"^[Qq]uant([oaei])$" => "{QUANT}$1";
+		"^[Ss]cors([oaei])$" => "{SCORS}$1";
+		 
+		"^[Aa]lcun" => "{ALCUN}";
+		"^[Aa]ltr" => "{ALTR}";
+		"^[Dd]ag?l(i)?$" => "{DAL}$1";
+		"^[Dd]eg?l(i)?$" => "{DEL}$1";
+		"^[Dd]ifferent" => "{DIFFERENT}";
+		"^[Dd]ifficil" => "{DIFFICIL}";
+		"^[Ff]orse$" => "{FORSE}";
+		"^[Ff]urono$" => "{FURONO}";
+		"^[Gg]rand([ei])" => "{GRAND}$1";
+		"^[Ll]oro$" => "{LORO}";
+		"^[Cc]oloro$" => "{COLORO}";
+		"^[Nn]eg?l?l?([ioae])?$" => "{NEL}$1";
+		"^[Nn]ostr([oaei])" => "{NOSTR}$1";
+		
+		"^[Oo]ltr([aeiou])?$" => "{OLTR}$1";
+		"^[Pp]ossibil" => "{POSSIBIL}";
+		"^[Pp]rim([oaei])" => "{PRIM}$1";
+		"^[Pp]ropr(io)?" => "{PROPR}";
+		"^[Qq]ualcosa" => "{QUALCOSA}";
+		"^[Qq]ualcuno" => "{QUALCUNO}";
+		"^[Qq]ual" => "{QUAL}";
+		"^[Qq]uel(lo)?$" => "{QUEL}";
+		"^[Qq]ue(?:gl|ll)([eia])$" => "{QUEL}$1";
+		"^[Ss]empre$" => "{SEMPRE}";
+		"^[Ss]opra$" => "{SOPRA}";
+		"^[Ss]traordinar" => "{STRAORDINAR}";
+		
 		"(?<!it)[auioe]ment([aeiou])bile?" => "{MENT}$1{BILE}";
 		"^impr" => "{IN}pr"; // impressionante
 		"bile$" => "{BILE}";
@@ -862,7 +897,6 @@
 		"^del$" => "{DEL}";
 		"^gran$" => "{GRAN}";
 		"^grand(es?)" => "{GRAND}$1";
-		"^mediante$" => "{MEDIANTE}";
 		"^medesim([oaie])" => "{MEDESIM}$1";
 		"^no$" => "{NO}";
 		"^nosotr([oa]s)$" => "{NOS1}{OTR}$1"; // nos1 = on baseline
@@ -1006,7 +1040,6 @@
 		"s-?p" => "[SP]";
 		"s-?k" => "[SC]";
 		"l-?l" => "[LL]";
-		"n-?k" => "[NK]";
 		"n-?g" => "[NG]";
 		"n-?s" => "[NS]";
 		"m-?b" => "[MB]"; // italian
@@ -1085,6 +1118,8 @@
 		
 		// special: copied from phonetizer
 		"c([aouáóú])" => "k$1";
+		"n-?k" => "[NK]";
+		
 		
 	#EndSubSection(bundler,=:std)
 	#BeginSubSection(relancer1)	
@@ -1373,7 +1408,6 @@
 		"{DEL}" => "[D@L3]";
 		"{GRAN}" => "A[G@R]";
 		"{GRAND}" => "A[G@R]";
-		"{MEDIANTE}" => "[0D-][AU][NN][-E]";
 		"{MEDESIM}" => "[0N-][M]";
 		"{NO}" => "[NO]";
 		"{NOS}" => "O[N=]";
@@ -1467,8 +1501,46 @@
 		"{IL}" => "I[ES]";
 		"{MIGLIAI}" => "I[EST]";
 		
+		"{ABBASTANZ}" => "A[NS]";
+		"{ANCHE}" => "A[NK]";
+		"{ANCOR}" => "A[NK]";
+		"{MEDIANTE}" => "[0D-][EU][NN]";
+		"{MIEI}" => "IM[/I]";
+		"{QUANT}" => "AQ";
+		"{SCORS}" => "OC";
+		
+		"{ALCUN}" => "[0D-][#5][@L]";
+		"{ALTR}" => "[0N-]A[L@R6]";
+		"{DAL}" => "A[D@L3]";
+		"{DEL}" => "[D@L3]";
+		"{DIFFERENT}" => "I[D@R]";
+		"{DIFFICIL}" => "I[D@L3]";
+		"{FORSE}" => "[F@R6][#9-][#9-][0U-]"; // just for now, replace later
+		"{FURONO}" => "U[F@R6]";
+		"{GRAND}" => "[G@R]";
+		"{LORO}" => "[L@R6]";
+		"{COLORO}" => "KO[L@R6]";
+		"{NEL}" => "[N=@L]";
+		"{NOSTR}" => "[N=@R6]";
+		
+		"{OLTR}" => "[AUF+AR]"; // shouldn't be shadowed => change it later
+		"{POSSIBIL}" => "[LUI]";
+		"{PRIM}" => "I[P@R6]";
+		"{PROPR}" => "O[P@R6]";
+		"{QUAL}" => "[0N-][#4][@L]";
+		"{QUALCOSA}" => "[0N-][#4][@L]OS[EN]";
+		"{QUALCUNO}" => "[0N-][#4][@L]UN";
+		"{QUEL}" => "[Q@L3]";
+		"{SEMPRE}" => "[SP@R6]";
+		"{SOPRA}" => "[SOBRE]";
+		"{STRAORDINAR}" => "A[ST@R]";
+		
 		//"{}" => "";
-
+		//"{}" => "";
+		
+		
+		//"{}" => "";
+		
 		//"{}" => "";
 
 	#EndSubSection(substituter)

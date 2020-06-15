@@ -209,6 +209,7 @@
 			R54:[C27,V2,D54,],
 			R55:[C28,V1,D55,?],
 			R56:[C28,V2,D56,]";
+		"spacer_autoinsert" := "yes";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 		// only global analysis is selected in order to make use of analyzer rules
@@ -737,16 +738,26 @@
 		// add dummy space [#0] at beginning to avoid start from base line
 		// vowel a
 		"'ha" => "a"; // m'ha, l'ha etc.
-		"^([BbCcDdFfGgJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(a|à)h?$" => "[#0]$2$1";
+		"^([BbCcDdFfGgJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(a|à)h?([aeiou])?$" => "[#0]$2$1$3";
+		"^[Gg]ià$" => "[#0][A][H]"; 
 		"(\[#0\])à" => "$1A"; // eliminate accents
 		// vowel e
-		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(e|è)h?$" => "[#0]$1";
+		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(e|è)h?([aeiou])?$" => "[#0]$1$3";
+		"^[Cc]e$" => "[#0][CH]";
+		"^[Qq]uei$" => "[#0][Q][/I]"; 
 		// vowel o
-		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(o|ò)h?$" => "[#0]$2$1";
+		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(o|ò)h?([aeiou])?$" => "[#0]$2$1$3";
+		"^[Cc]iò" => "[#0][O][CH]";
 		"(\[#0\])ò" => "$1O"; // eliminate accents
 		// vowel u
-		"^(ch|gn|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(u|ù)h?$" => "[#0]$2$1";
+		"^(ch|gn|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(u|ù)h?([aeiou])?$" => "[#0]$2$1$3";
+		"^[Gg]iù$" => "[#0][U][H]"; 
+		"^[Cc]ui$" => "[#0][U][K][/I]";
 		"(\[#0\])ù" => "$1U"; // eliminate accents
+		// vowel i
+		"^([BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(i|ì)h?([aeiou])?$" => "[#0]$2$1$3";
+		"^[cC]hi" => "[#0][I][K]";
+		"(\[#0\])ì" => "$1I"; // eliminate accents
 		
 	#EndSubSection(monosyllabizer)
 	#BeginSubSection(shortener)
@@ -774,6 +785,18 @@
 		"^[sS]pess([oaei])$" => "{SPESS}$1";
 		"^[Tt]emp([oaei])$" => "{TEMP}$1";   
 		"^per_esempio$" => "{PERESEMPIO}";   
+
+		"^[Cc]entral" => "{CENTRAL}";
+		"^[Cc]ioè" => "{CIOE}";
+		"^[Ss]enza$" => "{SENZA}";
+
+		"^[Cc]ento$" => "{CENTO}";
+		"^[cC]entinai([aoei])$" => "{CENTINAI}$1";
+		"^[cC]osì$" => "{COSI}";
+		"^[eE]sser" => "{ESSER}";
+		"^[Ii]$" => "{I}";
+		"^[Ii]l$" => "{IL}";
+		"^[Mm]igliai([oaei])$" => "{MIGLIAI}$1";   
 
 		"(?<!it)[auioe]ment([aeiou])bile?" => "{MENT}$1{BILE}";
 		"^impr" => "{IN}pr"; // impressionante
@@ -888,7 +911,7 @@
 		"^gener" => "{GENER}";
 		"^([Ii]n)?[Nn]ecesar" => "$1{NECESAR}";
 		"^porque$" => "{PORQUE}";
-		"^por(?!t)" => "{POR}"; // not applied in portador, portal etc.
+		"^por(?![tr])" => "{POR}"; // not applied in portador, portal etc.
 		"^sin$" => "{SIN}";
 		"^se(ñ|n)or" => "{SENOR}";
 		"^se(ñ|n)ora$" => "{SENORA}";
@@ -945,6 +968,7 @@
 		"(?<![ng])g([ei])" => "[H]$1"; // logico 
 		"(?<!c)c(?={MENT)" => "k"; // documento
 		"(?<!c)c(?={IT)" => "[CH]"; // esplicitamente
+		"(?<!c)h" => "[HCH]"; // Lehmann (foreign words)
 		
 	#EndSubSection(phonetizer)
 	#BeginSubSection(bundler)
@@ -1431,8 +1455,18 @@
 		"{SPESS}" => "[SP]";
 		"{TEMP}" => "[MP]";
 		
+		"{CENTRAL}" => "[CH]N"; 
+		"{CIOE}" => "O[CH][-E]"; 
+		"{SENZA}" => "Z"; 
 		
-	
+		"{CENTO}" => "I[AR]";
+		"{CENTINAI}" => "I[AR]";
+		"{COSI}" => "[SEIN]";
+		"{ESSER}" => "[0N-][VR]";
+		"{I}" => "I[&E]";
+		"{IL}" => "I[ES]";
+		"{MIGLIAI}" => "I[EST]";
+		
 		//"{}" => "";
 
 		//"{}" => "";
