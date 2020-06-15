@@ -43,10 +43,12 @@ string groups[MAXGROUPS];
 // according to documentation extraction only works iff 
 // number of matched sub-patterns is >= number of supplied pointers;
 // as a workaround, supply additional dummy groups to pattern
-// in the end
+// at the end
 // additional groups are tolerated (they may slow down execution a 
 // little bit)
 // maybe there's another (more elegant way) to do that?!
+// => hm ... even inside /usr/include/pcrecpp.h arguments for capturing
+// groups seem to be hardcoded and limited to 16 ... (?!)
 string dummy_groups = "()()()()()()()()()()";
 
 int number_patterns = sizeof(search_pattern)/sizeof(search_pattern[0]);
@@ -97,9 +99,10 @@ void regex_replace_test_sequence(void) {
 		// re.PartialMatch(test_text, &groups[0], &groups[1], &groups[2]);		
 		// reset array before extracting (to be sure it is empty)
 		for (int i=0; i<MAXGROUPS; i++)	groups[i] = "";		
-		grre.PartialMatch(test_text, &groups[0], &groups[1], &groups[2], &groups[3], &groups[4], &groups[5], &groups[6], &groups[7], &groups[8], &groups[9]);		
-		cout << "GROUPS: " << endl;
-		for (int i=0; i<MAXGROUPS; i++) {	// recreate i as new local variable inside this for-loop ;-)
+		grre.PartialMatch(test_text, &groups[0], &groups[1], &groups[2], &groups[3], &groups[4], &groups[5], &groups[6], &groups[7], &groups[8], &groups[9]);	
+		int used_groups = re.NumberOfCapturingGroups();
+		cout << "GROUPS(" << used_groups << "):" << endl;
+		for (int i=0; i<used_groups; i++) {	// recreate i as new local variable inside this for-loop ;-)
 			cout << "$" << (i+1) << "=" << groups[i] << " " << endl;   
 		}		
 		cout << "------------------------------------------------------------------------" << endl;
