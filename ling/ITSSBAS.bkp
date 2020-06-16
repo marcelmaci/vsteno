@@ -757,6 +757,8 @@
 		// vowel i
 		"^([BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(i|ì)h?([aeiou])?$" => "[#0]$2$1$3";
 		"^[cC]hi" => "[#0][I][K]";
+		"^[Cc]i$" => "[#0]I[^CH]";
+		"^[Ss]ci$" => "[#0]I[^SCH]";
 		"(\[#0\])ì" => "$1I"; // eliminate accents
 		
 	#EndSubSection(monosyllabizer)
@@ -833,6 +835,13 @@
 		"^[Ss]opra$" => "{SOPRA}";
 		"^[Ss]traordinar" => "{STRAORDINAR}";
 		
+		"^[Tt]icin" => "{TICIN}";
+		"^[sS]vizzer" => "{SVIZZER}"; 
+
+		"^[Bb]en([a-z])" => "{BEN}$1"; 
+
+		"^[Cc]irca$" => "{CIRCA}"; 
+
 		"(?<!it)[auioe]ment([aeiou])bile?" => "{MENT}$1{BILE}";
 		"^impr" => "{IN}pr"; // impressionante
 		"bile$" => "{BILE}";
@@ -841,6 +850,7 @@
 		"bili$" => "{BILI}";
 		"[aeiou]zion" => "{ZION}";
 		"^ri" => "{RI}";
+		"{RI}con" => "{RI}{CON}"; // riconsigliare
 		"^extract" => "estract";
 		"^extrae" => "estrae";
 		"^extrai" => "estrai";
@@ -922,8 +932,9 @@
 		"^(re)?ex(ped)" => "$1{EX}ped";	// (re)expedición
 		"^ex(quisit)" => "es$1";	// exquisito
 		"^(in|co)?ex(?!(?:c[rluao]|[pt]))" => "$1{EX}$2";
-		"^(in)?sub" => { "$1{SUB}", "[Ss](ú|u)bit", "[Ss]ubi", "^[Ss]ub(?:o|e[ns]?|ís|a[sn]?|amos|áis)$" };
-		"^(im)?per" => { "$1{PER}", "perd(?!u)", "pérd", "[Pp]er(u|ú)", "^[Pp]ere[sz]?$", "^[Pp]eras?$", "[Pp]erl", "[Pp]eriodista", "[Pp]erit", "[Pp]erro", "[Pp]ericia", "[Pp]er(?:i|í)(?:o|ó)d", "[Pp]erilla" }; // not perder and all its forms
+		"^(in)?sub" => { "$1{SUB}", "[Ss](ú|u)bit" };
+		"{SUB}in" => "{SUB}{IN}"; // subingresso 
+		"^(im)?per" => { "$1{PER}", "^[Pp]er[oae]$" }; 
 		"^(in)?tran?s" => { "$1{TRAS}", "[Tt]rastos?$", "[Tt]raser" };
 		"^(des)?inte?r" => { "$1{INTER}", "[Ii]ntermin", "[Ii]ntrad" }; // not: interminable, intraducible
 		"^(bien)?estar$" => "$1{ESTAR}";
@@ -935,13 +946,15 @@
 		"^unos" => "{UNO}os"; // not clear: unos (as "unas" also): no indication in Meier!
 		//"^uno?$" => "{UNO}";
 		"^una(s?)$" => "{UNA}$1";
-		"^ant[ei]" => { "{ANTE}", "[Aa]ntena", "[Aa]nt(?:í|i)[gqc]", "[Aa]ntera" };
+		"^ant[ei]" => { "{ANTE}", "[Aa]ntena" };
+		"{ANTE}con" => "{ANTE}{CON}"; // anticonformismo 
 		"^circun?" => "{CIRCUN}";
 		"^aco[mn]" => { "{ACOM}", "acompas" }; // not applied to acompasado
-		"^(in)?contro?" => "$1{CONTR}";
+		"^(in)?contr(o|ar)?" => "$1{CONTR}";
 		"^(de|p?re|in)?co[mn]?" => { "$1{CON}", "^[Cc]oop$", "[Cc]omer(?!c)", "[Cc]ometa", "[Cc]olor", "[Cc]olega", "[Cc]osa", "[Cc]opia", "[Cc]oriza", "[Cc]orr", "[Cc]orr(?:i|í)", "[Cc]obr", "[Cc]olecc", "[Cc]og[eií](?!sti)", "[Cc]ostumbre", "^[Cc]onos?$", "^[Cc]ola", "^[Cc]oraz", "[Cc]och[eai]", "[Cc]oj[oóae]", "[Cc]ocin", "[Cc]olga", "[Cc]olilla", "[Cc]ord", "[Cc]opas?", "[Cc]odazo", "[Cc][oó]m[ií]", "[Cc]orp", "[Cc]ort" }; // well, always the same ... how do we detect all forms of comer (considering, in addition, that cómo, como y como are three forms ... rather that becoming a linguist become a mathematician: it's a way more precise business ...
 		"^sobrent" => "{SOBRE}ent"; // sobrentender (sobreentender)
 		"^sopr|sovr|super" => "{SOBRE}";
+		"{SOBRE}in" => "{SOBRE}{IN}"; // sovrintendenza
 		"^gener" => "{GENER}";
 		"^([Ii]n)?[Nn]ecesar" => "$1{NECESAR}";
 		"^porque$" => "{PORQUE}";
@@ -993,7 +1006,6 @@
 	#BeginSubSection(phonetizer,#>stage4)
 		"{EX}s" => "{EX}"; // simplificación
 		"([aeiou])h([aeiou])" => "$1[H']$2"; // preserve h 
-		"j" => "h";
 		"y([aeiou])" => "j$1";
 		"([aeiou])y$" => "$1j";
 		"{IN}n" => "{IN}";
@@ -1002,6 +1014,7 @@
 		"(?<![ng])g([ei])" => "[H]$1"; // logico 
 		"(?<!c)c(?={MENT)" => "k"; // documento
 		"(?<!c)c(?={IT)" => "[CH]"; // esplicitamente
+		"^[Hh]?i([eu])" => "[J]$1"; // hieri
 		"(?<!c)h" => "[HCH]"; // Lehmann (foreign words)
 		
 	#EndSubSection(phonetizer)
@@ -1067,6 +1080,8 @@
 		"c-?l" => "[CL]";
 		"d-?l" => "[DL]";
 		"f-?l" => "[FL]";
+		"([aeiou])g-?li([iaeou])" => "$1[L@L]$2"; // Pugliese
+		"([aeiou])g-?li$" => "$1[L@L][/I]"; // Pugliese
 		"g-?l" => "[GL]";
 		"k-?l" => "[KL]";
 		"l-?l" => "[LL]";
@@ -1205,6 +1220,7 @@
 		"(^|\\)e" => "$1[0N-]e";
 		"^ae" => "[0N-]A[&A]e";
 		"^a" => "[0N-]a";
+		"^i(\[CH\])" => "[0N-]I$1";
 		"^i" => "[0D-]i";
 		"^o$" => "[0N-][&O]";
 		"^o" => "[0N-]o";
@@ -1214,6 +1230,7 @@
 		"^\[(AI|IE)\]" => "[0D-][$1]";
 		"^\[(IO|EI)\]" => "[0D-][$1]";
 		"^\[(AU)\]" => "[0D-][$1]"; // augurio
+		"^\[(IA)\](\[CH\])" => "[0N-][$1]$2"; // iato
 		"^\[(IA)\]" => "[0D-][$1]"; // iato
 
 		// vowels after prefix
@@ -1342,7 +1359,7 @@
 		"{MENT}{ISIM}" => "[EM][O][&E]{ISIM}"; 
 
 		"{RI}\[VR\]" => "[AR][AR]"; // rirompere
-		"{RI}" => "[AR]"; // rilancio
+		//"{RI}" => "[AR]"; // rilancio
 
 		"{ABBIAMO}" => "[BMPF]"; // special token
 		"{ED}" => "[0N-][-E]";
@@ -1430,7 +1447,6 @@
 		"{IN}" => "[IN]";
 		"{SUB}" => "[&U]"; // let's try;-)
 		"{INTER}" => "[INTER]";
-		"{PER}" => "[P]";
 		"{TRAS}" => "A[T@R]";
 		"{EST}" => "I[EST]";
 		"{ESTAR}" => "[0N-][#3][RÜCK]";
@@ -1534,7 +1550,19 @@
 		"{SEMPRE}" => "[SP@R6]";
 		"{SOPRA}" => "[SOBRE]";
 		"{STRAORDINAR}" => "A[ST@R]";
+
+		"{TICIN}" => "[0N-]I[^CH]"; 
+		"{SVIZZER}" => "IZ"; 
 		
+		"{BEN}([aeiouAEIOU])" => "B[&E]$1"; 
+		"{BEN}" => "B"; 
+		"{RI}([aeiouAEIOU])" => "[AR][&E]$1"; 
+		"{RI}" => "[AR]"; 
+		"{PER}([aeiouAEIOU]|\[(?:IO|EI)\])" => "P[&E]$1"; 
+		"{PER}" => "P"; 
+		
+		"{CIRCA}" => "[CH@R][EN]";
+ 
 		//"{}" => "";
 		//"{}" => "";
 		

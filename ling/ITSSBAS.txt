@@ -222,11 +222,30 @@
  		"atevi$" => "ate|vi"; // aiutatevi
 
 		// articles and pronouns => separate them by | in order to make all abbreviations work 
-		"([lmts])'" => "$1|";
+		"^([lmts])'" => { "$1|", "[MmSs]'è" };
 
 		// eliminate separation in monosyllables
 		"^([lmts])\|h([ao])$" => "$1$2";
 
+		"^([aA]l)(quanto)$" => "$1|$2";
+		"^([Dd]a)p(per)(tutto)$" => "$1|$2|$3"; 
+		"^([Ff]ra)t(tempo)$" => "$1|$2";
+		"^([Ss]i)s(signore)$" => "$1|$2";
+
+		// word composition (two words => separate them)
+		"^([Cc]arta)(carbone)" => "$1|$2";
+		"^([Ee]lettro)(semaforo)" => "$1|$2";
+		"^([Vv]ice)(direttore)" => "$1|$2";
+		"^([Ff]ranco)(forte)" => "$1|$2";
+		"^([Nn]otte)(tempo)" => "$1|$2";
+		//"^([Ss]ol)(tanto)" => "$1|$2";
+		"^([Vv]olta)(faccia)" => "$1|$2";
+		"^([Bb]uona)(mano)" => "$1|$2";
+		"^([Cc]os)ic(ch)è$" => "$1ì|$2e";
+		"^([Nn]on)(ostante)" => "$1|$2";
+		"^([Tt]utto)(fare)" => "$1|$2";
+		//"^([])()" => "$1|$2";
+		 
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -718,6 +737,11 @@
 		"^[Ee]star(é|á[ns]?|emos|éis)" => "{ESTAR}$1";
 		"^[Ee]star(ía[ns]?|ía(?:mos|is))" => "{ESTAR}$1";
 		"ie?tà$" => "{IETA}";
+		"città$" => "[CH]{IETA}";
+		"^[Cc]'è" => "{C_E}";
+		"^[Cc]h'è" => "{CH_E}";
+		"^([MTLSmtls])'è" => "$1{_E}";
+		"^[Qq]uant'è" => "{QUANT_E}";
 	#EndSubSection(earlyshortener)
 	#BeginSubSection(normalizer)
 		"é(?!$)" => "e";
@@ -736,9 +760,17 @@
 	#BeginSubSection(monosyllabizer)
 		// capital letters not strictly necessary due to preceeding decapitalizer (leave it anyway)
 		// add dummy space [#0] at beginning to avoid start from base line
+		// Here's why stenographical rules are quite absurd: the "rule" says that monosyllabic words
+		// (that use higher/lower position of first token and shadowing on first token) can be extended
+		// to bisyllabic words. Examples: de => dea, fa => fai, le => lei, no => noi, si => sii, su => sue,
+		// cui, lui, quei ... (as written in chapter 7.4, page 28). So far so good. Then, on chapter 12.3
+		// (page 46) they present the word "Goa" - which, apparently, can't be written using the same rule
+		// (i.e. lowerd "g" + "a"). And what about "boa", "Lea" or similar (which?) words? Anyway: Never ask
+		// a shorthand writer to explain you what he/she does (and why a certain word is written the way it  
+		// is ...)  
 		// vowel a
 		"'ha" => "a"; // m'ha, l'ha etc.
-		"^([BbCcDdFfGgJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(a|à)h?([aeiou])?$" => "[#0]$2$1$3";
+		"^([BbCcDdFfGgJjKkLlMmNnPpQqRrSsTtVvWwXxZz]|[Ff]r)(a|à)h?([aeiou])?$" => "[#0]$2$1$3";
 		"^[Gg]ià$" => "[#0][A][H]"; 
 		"(\[#0\])à" => "$1A"; // eliminate accents
 		// vowel e
@@ -746,7 +778,7 @@
 		"^[Cc]e$" => "[#0][CH]";
 		"^[Qq]uei$" => "[#0][Q][/I]"; 
 		// vowel o
-		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(o|ò)h?([aeiou])?$" => "[#0]$2$1$3";
+		"^(ch|[BbDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvWwXxZz])(o|ò)h?([aeiou])?$" => { "[#0]$2$1$3", "^Goa$" };
 		"^[Cc]iò" => "[#0][O][CH]";
 		"(\[#0\])ò" => "$1O"; // eliminate accents
 		// vowel u
@@ -842,13 +874,26 @@
 
 		"^[Cc]irca$" => "{CIRCA}"; 
 
+		"r?rebbe$" => "{EBBE}";
+		"r?rebbero$" => "{EBBERO}";
+
+		"^[Aa]vev" => "{AVEV}"; 
+		"^{AVEV}ate" => "{AVEV}ATe"; 
+		"^avete$" => "{AV}{ITE}";
+		"^[Vv]olt([ae])" => "{VOLT}$1"; 
+
+		"^[Ss]ignor" => "{SIGNOR}";
+
 		"(?<!it)[auioe]ment([aeiou])bile?" => "{MENT}$1{BILE}";
 		"^impr" => "{IN}pr"; // impressionante
 		"bile$" => "{BILE}";
 		"bilmente$" => "{BILE}{MENT}";
 		"bil{IETA}$" => "{BILE}{IETA}";
 		"bili$" => "{BILI}";
-		"[aeiou]zion" => "{ZION}";
+		"^([BbDdFfGgLlMmNnPpQqRrSsTtVvWwXxZz]|[Ff]r)([aeiou])zion" => "[#0]$2$1{ZION}"; // special rule "monosyllables" 
+		"izion" => "{IZION}"; // use diacritics (point above)
+		"[uo]zion" => "{UZION}"; // use diacritics (pont below)
+		"[aeiou]zion" => "{ZION}";  // original standard rule (preceeding vowel is omitted)
 		"^ri" => "{RI}";
 		"{RI}con" => "{RI}{CON}"; // riconsigliare
 		"^extract" => "estract";
@@ -924,10 +969,11 @@
 		"^vuestr([oa]s?)$" => "{VUESTR}$1";
 		//"(?<!c)[cs](ion)" => "{SION}";
 		//"(cc|x)(ion)" => "k{SION}";
-		"(?<!^)[auioe]mental" => "{MENTAL}";
+		"(?<!^)[auioe]mental([ei]|mente)?" => "{MENTAL}$1";
 		"(?<!^)[auioe]mentar" => "{MENTAR}";
 		"(?<!^)[auioe]mentissim([oai])" => "{MENT}{ISIM}$1"; // clementissimo
 		"(?<!^)[auioe]menti" => "{MENTI}";
+		"^([BbDdFfGgLlMmNnPpQqRrSsTtVvWwXxZz]|[Ff]r)([auioe])ment[eo]" => "[#0]$2$1{MENT}"; // frumento
 		"(?<!it|^)[auioe]ment[eo]" => "{MENT}";
 		"^(re)?ex(ped)" => "$1{EX}ped";	// (re)expedición
 		"^ex(quisit)" => "es$1";	// exquisito
@@ -981,8 +1027,10 @@
 		// ok, so it seems to be so for all eato/a/e/i
 		// example: l'alleato
 		// => adapt rules
+		"^[Ss]ubit" => "{SUBIT}"; 
 		"[iae]to$" => { "{ITO}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
 		"[iae]ta(mente)?$" => { "{ITA}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
+		"^([Qq]u)(i)[iae]te$" => { "[#0]$2$1{ITE}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" }; // quiete ...
 		"[iae]te$" => { "{ITE}$1", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
 		"[iae]ti$" => { "{ITI}", "^[^aeiou]*?[aeiou][^aeiou]*?[aeiou][^aeiou]*?$", "eat[aoei]$" };
 		"{ITA}mente" => "{ITA}{MENT}"; 
@@ -1069,6 +1117,7 @@
 		"g-?n" => "[GN]"; // bogno
 		"m-?m" => "[MM]"; // rendemmo
 		"n-?z" => "[NZ]"; // manzo
+		"ttr" => "[TTR]";
 		"t-?t" => "[TT]"; // iattura
 		"v-?v" => "[VV]"; // sopravvivenza
 		"c-?c(?![ei])" => "[K]"; // sovraccarico
@@ -1142,7 +1191,7 @@
 	#EndSubSection(relancer1)
 	#BeginSubSection(transcriptor)
 		// double vowels
-		"\[UO\]" => "[E][&O]"; // promiscuo
+		"\[UO\]$" => "[E][&O]"; // promiscuo
 		"iò$" => "[EI][&O]"; // fuorviò
 		"ìo$" => "[EI][&E]"; // rullìo
 		"eo$" => "[E][&A]"; // Orfeo
@@ -1154,6 +1203,7 @@
 		"ue$" => "[A][&U][-E]"; // esangue
 		"iù$" => "[I][&E][A][&U]"; // Mariù
 		"ii$" => "[I][&E][/I]"; // addii
+		"ìa$" => "I[&E][EN]"; // Mattìa
 		"(?:ie|ìe)$" => "[I][&E][-E]"; // sedie, arpìe
 		"iè$" => "[I][&E][E][&E]"; // compiè
 		"\[IA\]$" => "[I][&E][EN]"; // storia
@@ -1206,14 +1256,17 @@
 		"\[TT\]" => "[T]"; // iattura
 		"\[VV\]" => "[W]"; // sopravvivenza
 		"\[SC\]" => "[C]"; // scomparso
-		"\[DD\]" => "[D]"; // addii 
+		"A\[DD\]II" => "ADII"; 
+		"\[DD\]" => { "[D]", "^[Aa]dd" }; // addii => see preceeding rule
+		"\[DD\]" => "[D@#/.]"; // use diacritics for exception words in preceeding rule (..)
 		// monosyllables
 		"(\[#0\])([aeiouAEIOU])([NnSs])" => "$1$2[$3=]"; 
 		"\[#0\][uU](\[SS\])" => "[0D-]A$1"; 
 		
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
-		// empty
+		"{NON}\|" => "{NON}"; 
+		"\|" => "\\[#3]";
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
 		// vowels at beginning of word
@@ -1250,13 +1303,13 @@
 		
 		// vowels at end of the words
 		"^fe$" => "f"; // according to p. 20
-		"e$" => "[-E]";
+		"e($|\||\\)" => "[-E]$1";
 		"\[RL\]a$" => "[RL]O[EN]"; // keep token names as in original (mother) system
 		"^ba$" => "AB"; // like "da" (probably for all words with one syllable?!)
-		"a$" => "[EN]"; // keep token names as in original (mother) system
+		"a($|\||\\)" => "[EN]$1"; // keep token names as in original (mother) system
 		//"^({EST})o$" => "$1[EM]"; // keep -o because otherwhise it would be too similar to "el" ?! => no: example "esto viene de perlas" cap. 5d (Meier) p. 11/12
 		"[Dd]id[gh]e\[VR\]idoo" => "didherido";
-		"(?<!\[(?:&E|&U)\])o$" => { "", "pa-?ro", "(?<!.)paso", "^[Oo]slo$", "[Dd]idgerido" }; // not sure if -o stays after &e in any case? (ex: momentáneo) // esto: not sure, just interpreting because it would be too similar to "el" ?!
+		"(?<!\[(?:&E|&U)\])o($|\\|\|)" => { "$1", "pa-?ro", "(?<!.)paso", "^[Oo]slo$", "[Dd]idgerido" }; // not sure if -o stays after &e in any case? (ex: momentáneo) // esto: not sure, just interpreting because it would be too similar to "el" ?!
 		"o$" => "[EM]";
 		"i$" => "[-I]";
 		"u$" => "A[&U]";
@@ -1266,6 +1319,8 @@
 
 		"u\[&O\]$" => "A[&U][&O]";
 		"\[IE\]$" => "[IE][LES]";
+
+		"(\\\[#.\]|\|)[Ss]" => "$1[S=]";
 		
 		
 	#EndSubSection(completor)
@@ -1305,6 +1360,7 @@
 		"\[STR\]" => "[ST@R]";
 		"\[BL\]" => "[B@L]";
 		"\[XL\]" => "[X][@L]";
+		"\[TTR\]" => "[T@R]";
 		
 		"\[ML\]" => "[M@L]";
 		"\[FL\]" => "[F@L]";
@@ -1493,6 +1549,8 @@
 		"{MENTI}" => "[EM]\\[#9-][IST]";
 		"{MENTAL}" => "[EM][@L]";
 		"{MENTAR}" => "[EM][A][AR]";
+		"{IZION}" => "[ON@#/.]"; // use diacritics
+		"{UZION}" => "[ON@#.]"; // use diacritics
 		"{ZION}" => "[ON]"; 
 		"{SONO}" => "O[SEIN]";
 		"{DOMAND}" => "DA[ND]";
@@ -1531,7 +1589,7 @@
 		"{DEL}" => "[D@L3]";
 		"{DIFFERENT}" => "I[D@R]";
 		"{DIFFICIL}" => "I[D@L3]";
-		"{FORSE}" => "[F@R6][#9-][#9-][0U-]"; // just for now, replace later
+		"{FORSE}" => "[FORSE]"; // new token
 		"{FURONO}" => "U[F@R6]";
 		"{GRAND}" => "[G@R]";
 		"{LORO}" => "[L@R6]";
@@ -1562,7 +1620,24 @@
 		"{PER}" => "P"; 
 		
 		"{CIRCA}" => "[CH@R][EN]";
- 
+
+		"{EBBE}" => "[EBBE]";
+		"{EBBERO}" => "[EBBERO]";
+		
+ 		"{AVEV}" => "A[&E]"; 
+		"{AV}" => "A[&E]"; 
+
+		"{SUBIT}[Aa]" => "U[S=][&T&E][EN]";
+		"{SUBIT}[Oo]?" => "U[S=][&T]";
+
+		"{VOLT}" => "[0N-][&T&E]"; 
+
+		"{C_E}" => "[CH]E[&E]";
+		"{CH_E}" => "KE[&E]";
+		"([MTLSmtls]|\[S=\]){_E}" => "$1E[&E]";
+		"{QUANT_E}" => "AQE[&E]";
+		
+		"{SIGNOR}" => "[0U-][#1][SS]";
 		//"{}" => "";
 		//"{}" => "";
 		
@@ -1576,9 +1651,6 @@
 		"\[AR\](\[&T)" => "[AR^]$1";
 		"\[AR\]([iI])" => "[AR^]$1";
 	#EndSubSection(laterewriter)
-	#BeginSubSection(separator)
-		// empty
-	#EndSubSection(separator)
 	#BeginSubSection(relancer2)	
 		// empty
 	#EndSubSection(relancer2)
@@ -1745,6 +1817,9 @@
 		"ä" => "Ä";	// strtolower() works with umlaut, but strtoupper() doesn't ?!
 		"ö" => "Ö";
 		"ü" => "Ü"; 
+
+		// special rules for vr@l with -en/-em (no alternative exit point)
+		"\[(?:vr@l|VR@L)\]" => "[VR_NAEP@L]"; // shoud be safe to replace it in any case, not just -en/em (!?)
 		
 	#EndSubSection(postspacer,=:prt)
 #EndSection(rules)
