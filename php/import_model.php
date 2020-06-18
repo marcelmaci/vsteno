@@ -131,7 +131,7 @@ function LoadModelToShareFromFile($name) {
     // same as LoadModelFromDatabase but without setting global variables
     global $conn, $insertion_key, $font, $combiner, $shifter, $rules, $functions_table;
     $complete_filename = "../ling/$name.txt";
-    //echo "$complete_filename<br>";
+    //echo "Load model from file: $complete_filename<br>";
     $myfile = fopen("$complete_filename", "r"); // font must be in ling directory
     if ($myfile === false) {
         die("Unable to open file!");
