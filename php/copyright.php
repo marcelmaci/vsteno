@@ -22,7 +22,7 @@ tatsächlich soweit, ihre Programme als gratis zu deklarieren, verbunden mit der
 <li><p>Drittens füge ich persönlich an: Ich war nie ein Fan der Idee, dass Freie Software gratis sein soll. Als Student, das ist wahr, habe ich für Freie Software praktisch nie bezahlt (war damals
 auch eine Frage des Budgets). Heute ist es für mich keine Frage, dass ich für Freie Software, die ich verwende, auch bezahle. Ich sehe das so: Würde ich kommerzielle (also unfreie) Programme
 verwenden, müsste ich diese kaufen (und dabei Lizenzgebühren entrichten). Warum soll ich also für Freie Software nicht bezahlen - zumal mir diese Programme, im Unterschied zur kommerziellen Software,
-zusätzliche Freiheiten gewährt?
+zusätzliche Freiheiten gewähren?
 </p></li>
 <li><p>Als letztes: Diese "zusätzlichen Freiheiten" stellen einen Mehrwert der Software dar, der nicht unerheblich ist. So dürfen Sie das Programm zum Beispiel auf so vielen Geräten installieren
 wie Sie möchten und sogar die "Lizenzgebühr" können Sie frei wählen (also z.B. mehr oder weniger spenden, je nachdem, ob Sie ein Programm oft oder selten verwenden oder ein Projekt mehr oder 

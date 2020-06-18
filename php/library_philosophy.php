@@ -3,7 +3,7 @@
 <h2>Grundsatz</h2>
 <p>Es werden nur Werke veröffentlicht, die gemeinfrei sind oder deren Publikation mit den Rechteinhabern abgesprochen ist. Sollte die Publikation 
 an Lizenzgebühren gebunden sein, so werden diese gemäss der folgenden <a href="license_fees.php">Regelung</a> entrichtet und transparent gemacht.</p>
-<p>Die Abklärung bestehender Urheberrechte wird mit grosser Sorgfalt geführt. Im Zweifelsfall - als bei unklarer Rechtslage - wird auf die 
+<p>Die Abklärung bestehender Urheberrechte wird mit grosser Sorgfalt geführt. Im Zweifelsfall - also bei unklarer Rechtslage - wird auf die 
 Publikation eines Textes verzichtet. Sollten Sie dennoch der Meinung sein, dass ein Text nicht korrekt veröffentlicht wurde, so nehmen Sie bitte 
 via <a href="mailto:m.maci@gmx.ch">m.maci@gmx.ch</a> Kontakt mit mir auf.</p>
 <p>Bei rechtlichen Unstimmigkeiten bin ich jederzeit bereit, entsprechende Texte wieder vom Netz zu nehmen oder die Entrichtung von Lizenzgebühren 
