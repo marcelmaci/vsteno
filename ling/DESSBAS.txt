@@ -175,13 +175,13 @@
 		"^([Ee]in)-(ge)-" => "$1+$2+";
 
 		// -er-
-		"([Ee]r)-" => { "$1+", "^[Tt]er-?r" }; // Terrain
+		"([Ee]r)-" => { "$1+", "^[Tt]er-?r", "[Ss]er-?bi" }; // Terrain, Serbien
 		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
-		"er(?!\+)" => { "er+", "^[Tt]er" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
+		"er(?!\+)" => { "er+", "^[Tt]er", "[Ss]er-?bi" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		////////////////////////////////////// end new approach ///////////////////////////////////////
 
@@ -353,8 +353,8 @@
 		"([Ee]nt)-(fer-?n)" => "$1+$2";
  
 
-		"in-dem" => "in+dem";
-		"zu-dem" => "zu+dem";
+		"^[Ii]n-dem" => "in+dem";
+		"^[Zz]u-dem" => "zu+dem";
 		"^([Gg]e)[-+]?(gen)\|" => "$1-$2+";
 		"^(Ü|ü)(-?)ber-" => "$1$2ber+"; 
 		"([Bb]e)-?(rei-?t)" => "$1+$2";
@@ -696,7 +696,7 @@
 		"([Mm])o-?de\|ra-?ti-?o" => "$1o-der+a-tio";
 
 		"lieb\+t" => "lieb-t"; // beliebteste
-		"er\+c" => "erc"; // Clerc
+		"er\+c(?!h)" => "erc"; // Clerc, not: Köfferchen
 		"([Ee])nt\|meh-r" => "$1nt+meh-r"; // Entmehrung
 
 		// recorrect suffix -chen (not diminutive)
@@ -1017,6 +1017,11 @@
 		// wrong prefix is corrected in analyzer (works with laptops), recorrect it here (hoping it will work with tablets and phones too ...)
 		"([Dd]e)\|" => "$1-"; 
 		// ok, this does the trick - but why the hell doesn't it work the same on all devices ... ?!?!?
+
+		"^([Uu]r)-?(ah-?n)" => "$1+$2"; // Urahn
+		"([Ee]nt)\+(thron)\|t" => "$1+$2-t"; // entthrontesten
+
+		"(Main)(?!\||$)" => "$1\|"; // Mainufer, Mainkähne etc. 
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1453,7 +1458,7 @@
 		" # " => " dash "; // # filtered out in parallel edition, so write it as a word (workaround)
 
 		// special rules for texts coming from Project Gutenberg
-		"tstopt(9)(?<!\[)#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
+		"tstopt(9)(?<!\[|\[.||\[..|\[...||\[....)#" => ""; // eliminate all other dashes: this is due to the Gutenberg Project, where all "Fraktur" are marked with dash (eliminate this rules if it modifies your original text in an undesired way)
 		"tstopt(9)--" => "[~~]"; // -- in Project Gutenberg corresponds to long single -		
 		"tstopt(9)(?<![^ ])_([^_]+)_(?![^ -.,;:!?])" => "$1"; // _X_ means italic in Gutenberg
 		"tstopt(9)^_([^_]+)_(?![^ -.,;:!?])" => "$1"; // _X_ means italic in Gutenberg
@@ -1762,7 +1767,7 @@
 		"([Pp]s)y(-?c-?h)" => "$1ü$2";
 		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y" };
+		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
@@ -2769,6 +2774,8 @@
 		
 		"([RrHh]o)-?hei-?t" => "$1h{HEIT}"; // add h in Hoheit, Roheit
 		"^hei-?t(e-?r|-?{ER})" => "h{HEIT}$1"; // heitere
+		"[Hh]ai-?ti" => "H{HAIT}I"; // Haiti (diacritics)
+		"[Ss]ai-?t(e|{EN})" => "s{HAIT}$1"; // Saite (diacritics)
 		"(?<![Ss]c)[#-]?[hk]?[ea]i-?t" => "{HEIT}"; // also: Saiten (might have side effects ...)
 		
 		"#li-?ch" => "{H}";
@@ -3229,7 +3236,8 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => "[EI]";
+		"ai" => { "[EI]", "[Mm]ain" };
+		"ai" => "[AI]";
 
 		"tstopt(01)n-?z" => "[NZ]";
 
@@ -3312,6 +3320,12 @@
 		// heit + l/r
 		"{HEIT}-?l" => "[&EIT@L3]";
 		"{HEIT}-?r" => "[&EIT@R]";
+
+		// heit + i
+		"{HEIT}-?i" => "[&EIT&I]";
+		"{HAIT}-?i" => "[&AI@#/.][&EIT&I]"; // Haiti (diacritics)
+		"{HAIT}-?e" => "[#4][&AI@#/.][&EIT&E]e"; // Saite (diacritics)
+		"{HAIT}-?{EN}" => "[#4][&AI@#/.][&EIT&E]{EN}"; // Saiten (diacritics)
 
 		// yr: no combined token
 		"\[YR\]" => "[Y][AR]";
@@ -3666,6 +3680,9 @@
 		//"E" => "A";
 		"\[EI\]\[?A\]?" => "[EI][&E][A]"; // Mantineia
 
+		// ehelich
+		"([eE])(-?{LICH})" => "$1[&E]$2";
+
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
 		// at this point, all characters are upper case
@@ -3986,6 +4003,9 @@
 
 		"\[EI\]\[CH@L3\]" => "[EI][^CH@L3]"; // schmeichlerisch
 		"\[&T-1\]-?W" => "[&TW]"; // derentwillen
+
+		// Main (diacritics)
+		"(?<!\[&AI@#\/\.\])\[AI\]" => "[&AI@#/.][AI]"; // Mainufer
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
