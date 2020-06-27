@@ -4,7 +4,7 @@
 <p>Via Banküberweisung:</p>
 <pre>
 Bank:   Raiffeisenbank Küssnacht am Rigi
-IBAN:   CH44 8135 1000 0048 9219 6
+IBAN:   CH67 8080 8007 0487 7064 8
 Name:   Marcel Maci
         Avenue du Guintzet 15
         1700 Fribourg
