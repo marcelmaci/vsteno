@@ -3565,7 +3565,7 @@
 		// something is odd with this \ anyway: doesn't behave like | in SmoothenEntryExitPoints either
 
 		// more general rule: if word contains &t => separate
-		"^(.*?)(\[&T\])(.*?)\|(?!{SCHAFT})" => "$1$2$3\\[#5]"; // ex: Manteltaschen
+		"^(.*?)(\[&T\])(.*?)\|(?!{SCHAFT})" => "$1$2$3\\[#5]\\"; // ex: Manteltaschen
 
 		// sein => separate
 		"\|{SEIN}" => "\\{SEIN}";
