@@ -23,6 +23,8 @@ zu diesen höchst spannenden Projekten unter <i>Artikel</i>.</p></li>
 <ul>
 <li><p><a href="https://www.steno.ch">Schweizerischer Stenografenverband</a>: Sehr gut gemachte und informationsreiche Seite des Schweizerischen Stenografenverbands (System Stolze/Schrey). 
 Hier finden Sie weiterführende Links zu Lehrmitteln, Kursen, Wettschreiben, regionalen Vereinen etc.)</p>
+<li><p><a href="http://www.stolze-schrey.de">Stenografenverband Stolze-Schrey Deutschland</a>: Hier finden Sie Hintergrundinformationen zu Heinrich 
+August Wilhelm Stolze und Ferdinand Schrey. Der Verband ist die offizielle Anlaufstelle für Interessierte in Deutschland und gibt regelmässig die "Stolze-Schrey-Post" heraus.</p>
 </ul>
 
 <?php require "vsteno_template_bottom.php"; ?>
