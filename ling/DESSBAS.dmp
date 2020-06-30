@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "29/06/20";
+		"model_date" := "30/06/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1033,6 +1033,9 @@
 
 		"(schau)\|(un)(?:\+|-)?g" => "$1-$2g"; // Eheanschauungen
 		"([Gg]e)\+(ber)" => "$1-$2"; // Gastgeber
+
+		"([Tt]au)\|(sen-?d)" => "$1-$2"; // tausende (computers are stupid)
+		"([Bb]er)\+(li-chin-gen)" => "$1-$2"; // Berlichingen
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2949,7 +2952,7 @@
 		"^an-?ti" => "{ANTI}";
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
-		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r" };
+		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r", "^[Cc]on-?rad" };
 		"i-?[o|ö]-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
 		"(^|\|)(un)?zer\+" => "$1$1{ZER}";
@@ -3061,7 +3064,7 @@
 		"ö[oh](-)?([flmnrst])" => "ö$1$2";
 		"üh(-)?([flmnrst])" => "ü$1$2"; // bemüht (without h)
 		"ieh([tmn])" => "i$1";
-		"e([eh])(-)?([flmnrst])" => "e$2$3";
+		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$" }; // Brehm: Name
 		"äh([nrl])" => "ä$1";
 		"öh-(?={LICH})" => "ö[H]"; // conserve h
 		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
@@ -3504,6 +3507,7 @@
 		//"(EITS\])\|" => "$1\\";
 		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
 		"(\[&T\])\|(\[ST\])" => "$1\\[#2]$2"; // Luftstösse
+		"\[&T\]\|(F)" => "[&T]\\[#2]\\$1"; // zartfühlend
 		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
 		"\[&T\]\|({AN})" => "[&T]\\$1"; // write separatedly (2 words) - prefix an-
 		
@@ -3518,6 +3522,7 @@
 		"{HEIT}((?:\[&E\])?\[E\]\[ST\])\|" => "{HEIT}$1\\"; // weitestverbreitete
 		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
 		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
+		"\[&T\]S\|V" => "[&T]S\\[#2]\\V"; // Gerichtsvollzieher
 		"\[&T\]S\|\[FR\]" => "[&T]S\\[#5]\\[FR]"; // Geschäftsfräuleins
 		"\[&T\]S\|" => "[&T]S\\";
 		"\[&T\]\|{ER}" => "[&T]\\[0N-]{ER}";
@@ -4032,6 +4037,7 @@
 		"(?<!\[&AI@#\/\.\])\[AI\]" => "[&AI@#/.][AI]"; // Mainufer
 
 		"\[&T-1\]-?B" => "[&TB]"; // sichtbar
+		"\[&T\]#?N" => "[&TN]"; // Erkenntnis
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)

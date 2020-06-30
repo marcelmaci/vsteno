@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "28/06/20";
+		"model_date" := "29/06/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -185,7 +185,7 @@
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
-		"er(?!\+)" => { "er+", "^[Tt]er", "[Ss]er-?bi" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
+		"er(?!\+|st$)" => { "er+", "^[Tt]er", "[Ss]er-?bi" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		////////////////////////////////////// end new approach ///////////////////////////////////////
 
@@ -757,7 +757,7 @@
 		"([Mm]o-?nast-?er)\+" => "$1";
 		"([Bb]e\+ge)\+(hu-?n-?g)" => "$1-$2";
 		"([Ss]onn)\|(ta-?g)" => "$1-$2"; 
-		"([Ee]in\+ge)\+(b)(?!un-?d|o-?r)" => "$1$2";
+		"([Ee]in\+ge)\+(b)(?!un-?d|o-?[rg])" => "$1$2";
 		"([Aa]k-?ku)\|?(ra-?t)" => "$1-$2";
 		"([Aa]uf)-?(ge)-?(frisch)" => "$1+$2+$3";
  		"([Aa]uf)-?(fri-?sch)" => "$1+$2";
@@ -3343,7 +3343,7 @@
 		"{HEIT}-?r" => "[&EIT@R]";
 
 		// heit + i
-		"{HEIT}-?i" => "[&EIT&I]";
+		"{HEIT}-?i(?!g)" => "[&EIT&I]";
 		"{HAIT}-?i" => "[&AI@#/.][&EIT&I]"; // Haiti (diacritics)
 		"{HAIT}-?e" => "[#4][&AI@#/.][&EIT&E]e"; // Saite (diacritics)
 		"{HAIT}-?{EN}" => "[#4][&AI@#/.][&EIT&E]{EN}"; // Saiten (diacritics)
@@ -3518,6 +3518,7 @@
 		"{HEIT}((?:\[&E\])?\[E\]\[ST\])\|" => "{HEIT}$1\\"; // weitestverbreitete
 		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
 		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
+		"\[&T\]S\|\[FR\]" => "[&T]S\\[#5]\\[FR]"; // Geschäftsfräuleins
 		"\[&T\]S\|" => "[&T]S\\";
 		"\[&T\]\|{ER}" => "[&T]\\[0N-]{ER}";
 		"(\[&T\]ON)\|" => "$1\\";
