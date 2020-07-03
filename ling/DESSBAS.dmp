@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "30/06/20";
+		"model_date" := "03/07/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1036,6 +1036,10 @@
 
 		"([Tt]au)\|(sen-?d)" => "$1-$2"; // tausende (computers are stupid)
 		"([Bb]er)\+(li-chin-gen)" => "$1-$2"; // Berlichingen
+
+		"([Dd]a)-?(hin)(?![|-])" => "$1#$2|$3"; // dahindöste
+
+		"((?:ö|Ö)f-?fent)-?(lich)" => "$1#$2"; // veröffentlichter
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3507,6 +3511,7 @@
 		//"(EITS\])\|" => "$1\\";
 		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
 		"(\[&T\])\|(\[ST\])" => "$1\\[#2]$2"; // Luftstösse
+		"(\[&T\])\|(\[KL\])" => "$1\\[#2]$2"; // zurechtkleben
 		"\[&T\]\|(F)" => "[&T]\\[#2]\\$1"; // zartfühlend
 		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
 		"\[&T\]\|({AN})" => "[&T]\\$1"; // write separatedly (2 words) - prefix an-
@@ -4038,6 +4043,8 @@
 
 		"\[&T-1\]-?B" => "[&TB]"; // sichtbar
 		"\[&T\]#?N" => "[&TN]"; // Erkenntnis
+		"\[&T(?:-1)?\]-?M" => "[&TM]"; // sanftmütig
+		
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -5129,10 +5136,18 @@
 
 	#EndSubSection(latesubstituter)
 	#BeginSubSection(rewriter2)
+
+		"(\[VR@L\])-?T" => "$1[&T]"; // perlte
+
 		//"\[&T\]-?\[H\]" => "[&T3/4][H]";
 		"\[&T\]-?\[H\]" => "[&TH]";
 		"\[&T\]-?\[VR\]" => "[&TVR]";
 		"\[&T\]\[?S\]?(?!CHAFT)" => "[&TS]";
+		"(\[&TH\])T" => "$1[&T]"; // veröffentlichten (&t after secondary &th)
+		"\[&T\](\[E[MN]\])" => "[&T&E]$1"; // idem
+		"\[&T\]\[VR\]" => "[&TVR]"; // idem (all these secondary groups ...)
+		"\[&T\]ES" => "[&TES]"; // idem
+		"\[&T\](\[-E\])" => "[&T&E]$1"; // perlte
 
 	#EndSubSection(rewriter2)
 	#BeginSubSection(separator2)
