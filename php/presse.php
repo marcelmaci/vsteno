@@ -1,8 +1,18 @@
 <?php require "vsteno_template_top.php"; ?>
 <h1>Presse</h1>
 
-<p>Im Januar erschien ein erster Artikel (<a href="../docs/artikel_schweizer_stenograf.pdf">PDF</a>) zu VSTENO im 
-<a href="https://steno.ch/0/index.php/der-schweizer-stenograf">Schweizer Stenograf</a>.</p>
+<h2>Übersicht</h2>
+<p>
+<ul>
+    <li><a href="#artikel1">Schweizer Stenograf (Januar 2020)</a></li>
+    <li><a href="#artikel2">Stolze-Schrey-Post (Juni 2020)</a></li>
+</ul>
+</p>
+<p><center>* * *</center></p>
+<a name="artikel1"></a>
+<p><i>Im Januar erschien ein Artikel zu VSTENO im 
+<a href="https://steno.ch/0/index.php/der-schweizer-stenograf">Schweizer Stenograf</a> (verfügbar als Volltext oder als 
+<a href="../docs/artikel_schweizer_stenograf.pdf">PDF</a>).</i></p>
 
 <p><h1>
 VSTENO oder: Wenn Computer Steno lernen …</h1></p>
@@ -67,5 +77,68 @@ Infos: (1) auf der Webseite www.vsteno.ch und (2) an der
 Abgeordnetenversammlung am 16. Mai 2020 (*), zu der ich freundlicherweise
 eingeladen bin, um eine kurze Live-Demo zu zeigen. 
 </p>
-<p>(*) Aufgrund der Corona-Krise ist die Abgeordetenversammlung vom 16. Mai 2020 abgesagt.</p>
+<p><i>(*) Aufgrund der Corona-Krise ist die Abgeordetenversammlung vom 16. Mai 2020 abgesagt.</i></p>
+<p><center>* * *</center></p>
+<a name="artikel2"></a>
+<p><i>Im Juni 2020 erschien ein Artikel in der Stolze-Schrey-Post des <a href="http://www.stolze-schrey.de">
+Stenografenverbands Stolze-Schrey</a> (verfügbar als Volltext oder als <a href="../docs/ssp_2020_2.pdf">PDF</a>).</i></p>
+
+<p><h1>Stenolektüre Reloaded</h1>
+<i>Oder: Wie Sie jedwedes eBook in Stolze-Schrey lesen können</i></p>
+
+<p>Vielleicht geht es Ihnen wie mir: Sie lesen gerne. Es gibt Autor/innen, die Sie buchstäblich verschlungen haben: Romane, Tagebücher, Briefe … 
+Es gibt Bücher, die Sie hypnotisch in Ihren Bann zogen. Bestseller, die wie eine Droge wirkten. Die 569 Seiten von Carlos Ruiz Zafóns La sombra 
+del viento hatte ich in drei Tagen gelesen. Oder vielmehr: in zwei Nächten. Danach fühlte ich mich leer, verlassen (von den Figuren des Romans), 
+müde – aber glücklich. Verzeihen Sie, dass mir als erstes ein spanischer Autor einfällt (ich bin Romanist). Romane, die einfahren wie eine Droge, 
+gibt es natürlich in allen Sprachen. Hinsichtlich durchwachter Nächte beispielsweise kann Ihnen sicher auch der Vorarlberger Elias Alder aus 
+Robert Schneiders unvergesslichem Schlafes Bruder ein (Orgel-)lied singen.</p>
+
+<p>Da Sie diese Zeilen lesen, haben Sie vermutlich eine zweite Leidenschaft: die Stenografie. Wofür und wie haben Sie diese kuriose Schrift bis 
+anhin verwendet: Einkaufslisten, Gesprächsnotizen, Textentwürfe, Reisetagebücher? Anders gefragt: Sehen Sie in den „schnellen Schnörkeln“ 
+hauptsächlich einen praktischen Nutzen (Einkaufsliste) oder verfassen Sie damit auch längere Texte, die Sie mit Genuss wiederlesen 
+(Reisetagebücher)? Worauf ich hinaus will: Hatten Sie vielleicht schon einmal Gelegenheit, autografierte (stenografische) Kurzgeschichten oder 
+gar Romane zu lesen? Nein? Würden Sie solche Bücher lesen, haben vielleicht sogar schon im Handel danach gesucht, aber keine gefunden?</p>
+
+<p>Damit wären wir beim Punkt: Stenolektüre – ein rares Gut! Da gibt es Silvia Seeholzer (Küssnacht/Schweiz), welche Lesehefte mit Geschichten 
+aktueller Autor/innen herausgibt. Da gibt es vielleicht auch die SLUB (Dresden) oder andere Bibliotheken, wo man sein Glück im gelagerten Fundus 
+versuchen kann. Plus einige Lektüren und Texte (Geschäftsbriefe:) im Zusammenhang mit Lehrmitteln. Und sonst? Das Angebot ist enttäuschend 
+dürftig, wie gesagt. „Was also tun?“, überlegte ich mir im April 2018. Der Grund, warum keine (oder nur wenig) Lektüre in Steno herausgegeben 
+wird, lässt sich wohl auf zwei Punkte zusammenfassen: (1) die Herstellung ist aufwändig (der ganze Text muss autografiert, also von Hand 
+geschrieben werden) und (2) die potenzielle Leserschaft solcher Bücher ist klein (leider nimmt die Zahl der Stenograf/innen ja eher ab als zu …). 
+Kein lukratives Geschäft für Verleger also.</p>
+
+<p>Das Ziel musste es somit sein, Herstellungsaufwand und -kosten solcher Bücher signifikant zu senken. Das Mittel der Wahl: ein 
+Computerprogramm, welches die Übertragung automatisiert vornehmen und eine Druckvorlage erstellen kann. Da ich seit den 80er-Jahren (Stichworte: 
+C64 und Amiga) ein absoluter „Computer-Nerd“ bin (nicht immer zur Freude aller, übrigens:) reizte mich die Aufgabe ungemein. Kurzum: Dies war 
+der Beginn des Projektes VSTENO, ein Name, der für „Vector Shorthand Tool with Enhanced Notational Options“ steht. Oder eben: ein 
+„Kurzschrift-Werkzeug mit zusätzlichen Darstellungsoptionen“.</p>
+
+<p>Wie funktioniert VSTENO? Im Prinzip handelt es sich um eine „abstrakte Stenografiermaschine“, die mithilfe von Regeln programmiert werden 
+kann. Dies bedeutet, dass sich mit VSTENO grundsätzlich jedes (sic!) stenografische System umsetzen lässt (z.B. DEK, Gregg, Duployé etc.). Da 
+ich selber Stolze-Schrey schreibe, habe ich mich natürlich an dieses gehalten. Nach etwas mehr als zwei Jahren (oder rund 1450 Stunden) 
+Entwicklungszeit, sind nun vier Sprachen verfügbar: Deutsch, Französisch, Spanisch, Englisch. Bezüglich der Korrektheit liefert Deutsch die 
+besten Resultate, gefolgt von Französisch und Spanisch (brauchbar) und Englisch (experimentell). </p>
+
+<p>Im Rahmen eines Artikels auf die Funktionsweise von VSTENO einzugehen, ist natürlich unmöglich. Eine kleine Anekdote möchte ich doch anfügen. 
+Sie soll aufzeigen, wie unbedarft-blauäugig sich ein Computer an die Steno heranwagt bzw. woran sich ein Algorithmus zwangsläufig die Zähne 
+ausbeisst. Zusammengesetzte Wörter zum Beispiel: Gastrecht, Hauptgang, Honigtopf … oder meinetwegen auch Dampfschifffahrts­kapitäns­jacken­knopfloch (der deutschen Sprache sind hier ja keine Grenzen gesetzt). Man kann einem Computer natürlich nun „beibringen“, dass zusammengesetzte Wörter Wörter sind, die sich in kleinere Einzelteile auftrennen lassen, welche wiederum als selbstständige Wörter vorkommen. Das wären also: Gast, Recht, Haupt, Gang, Honig, Topf und Dampf, Schiff, Fahrt(s), Kapitän(s), Jacke(n), Knopf, Loch. So weit, so gut (denkt man sich …), bis die Sache mit Wörtern wie Handlungen (Hand-Lungen, im Unterschied zu Ohr-, Bein- und Fuss-Lungen vermutlich:) und Moderation (wohl Mode, die nur rationiert vorkommt:) ein jähes Ende nimmt ...
+Kurzum: VSTENO ist nicht perfekt. Aber: Es erreicht inzwischen eine sehr hohe Trefferquote (typischerweise 1-2 Fehler pro A5-Seite in einem 
+literarischen, deutschsprachigen Text). Damit eröffnen sich völlig neue Möglichkeiten: Sie möchten einen Zeitungsartikel, ein E-Mail, einen 
+Artikel oder ein eBook in Stolze-Schrey lesen? Dann besuchen Sie ganz einfach die Webseite von VSTENO, kopieren den gewünschten Text ins 
+Eingabeformular – et voilà! Zusätzlich können Sie verschiedene Darstellungsoptionen wählen (Seitenränder, Zeilenabstand, Schriftgrösse, 
+Zeichenfarbe etc.) und das Resultat nach Ihren Bedürfnissen anpassen. Die Stenogramme lassen sich direkt im Browser lesen oder als PDF 
+exportieren. Letzteres wiederum kann ausgedruckt oder auf einen eReader übertragen werden.</p>
+
+<p>Damit schliesst sich der Kreis: Ich weiss nicht, wie es Ihnen geht, aber für mich persönlich geht – Digitalisierung hin oder her – nichts 
+über einen gedrucktes Buch! Gerade in unserer schnelllebigen Zeit, lässt sich damit so herrlich entschleunigen: sich aufs Sofa oder in den 
+Schaukelstuhl verkriechen, Materie gewordenen Geist anfassen, umblättern … Unter dem Stichwort „Haptik statt Hektik“ wird es deshalb in den 
+nächsten Monaten mein Ziel sein, einige ausgewählte und mit VSTENO übertragene Werke der Weltliteratur auch als „Printedition“ (Achtung 
+neudeutsch:) herauszugeben.  Als erstes Werk in dieser Reihe soll Der Widerspenstigen Zähmung von Karl Ettlinger erscheinen. Wer die 
+unterhaltsame Geschichte von Katharina und Adolf trotzdem (oder zusätzlich) in elektronischer Form lesen möchte, findet diese bereits jetzt 
+(in einer provisorisch lektorierten Vorab-Version) zum Download auf der Webseite.</p>
+Weitere Infos zu VSTENO (Programm, Dokumentation, Artikel, eBooks etc.) finden Sie unter www.vsteno.ch. Bereits jetzt wünsche ich Ihnen viel Freude mit der Stenografie und angeregte Lesestunden.
+
+<p><i>Anm.: Der Text wurde für die Druckausgabe an die Deutsche Schreibweise angepasst. Ausserdem gibt es ein Korrigendum: Der Autor des 
+schlafraubenden Romans heisst "Carlos Ruiz Zafón". Und hierzu auch die traurige Ergänzung, dass er leider am 19. Juni 2020 verstorben ist.</i></p>
+
 <?php require "vsteno_template_bottom.php"; ?>
