@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "03/07/20";
+		"model_date" := "05/07/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1041,6 +1041,15 @@
 
 		"((?:ö|Ö)f-?fent)-?(lich)" => "$1#$2"; // veröffentlichter
 
+		"([Cc]ou-?ver)\+t" => "$1t"; // Couvert
+		"([Ss]e-kret)t" => "$1|t"; // Sekrettröpfchen => why doesn't phpsyllable separate that?!?
+		
+		"^([Aa]us)-?(br)" => "$1+$2"; // Ausbreitung, ausbrechen etc. => do it here instead of analyzer
+
+		"([Mm]ass)\|(nah-?me)" => "$1-$2"; // Massnahmen (avoid separation)
+
+		"([Bb]a-?de)-?(?!s$)" => "$1|"; // Badespass => there must be a bug in the analyzer ... Spassbade => recognized; Badespass => not recognized ... why?
+
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -1694,6 +1703,7 @@
 		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
 		"(?<!\|)'" => "|'"; // apostrophizer: hat's 
 		"(?<!\[)\/" => "[/]"; // mark / that where originally there (e.g. km/h)
+		"[Cc]ou-?ver" => "ku-ver"; // Couvert
 
 		"tstopt(01)'s$" => "s";
 		"tstopt(01)\|s$" => "s";
@@ -1748,7 +1758,7 @@
 		//"(?<!\[)=" => "[=]\";
 	#EndSubSection(packer)
 	#BeginSubSection(decapitalizer)
-		"sch(a|ä)ft(s|-?l?er)?($|\|)" => { "{SCHAFT}$2$3", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
+		"sch(a|ä)ft(s|-?l?er\+?)?($|\|)" => { "{SCHAFT}$2$3", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
 		"schaf-te" => "{SCHAFT}e"; // gewirtschaftet
 		
 		// must come before decapitalizer
@@ -2745,7 +2755,7 @@
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zern", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err" }; // use - to detect preceeding syllable
-		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+" };
 
@@ -3519,6 +3529,7 @@
 		"{HEIT}(U\[NG\]S)\|([TP])" => "{HEIT}$1\\[#4]$2"; // Zeitungspapier - add additional spacing
 		
 		"{HEIT}(S?)\|([TPF]|\[FR\])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
+		"{HEIT}(S?)\|(\[?D\]?)" => "{HEIT}$1\\[#5]$2"; // Gesundheitsdirektion
 		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
 		"(\[&T@R\])O\|" => "$1[&O]\"; // Elektrotechniker
 		"(\[&T@R\]\[A\]\[&A\])\|" => "$1\"; // Extrareise
@@ -3587,7 +3598,7 @@
 		// something is odd with this \ anyway: doesn't behave like | in SmoothenEntryExitPoints either
 
 		// more general rule: if word contains &t => separate
-		"^(.*?)(\[&T\])(.*?)\|(?!{SCHAFT})" => "$1$2$3\\[#5]\\"; // ex: Manteltaschen
+		"^(.*?)(\[&T\])([^|\\]*?)\|(?!{SCHAFT})" => "$1$2$3\\[#5]\\"; // ex: Manteltaschen, not: holterdipolter
 
 		// sein => separate
 		"\|{SEIN}" => "\\{SEIN}";
@@ -4809,6 +4820,8 @@
 		"{AN}" => "AN";
 		
 		"{WI}(-)?(.?)" => "[W][/I]\\$2";
+
+		"{HEIT}{HEIT}" => "[&EIT&E][HEIT]"; // Gescheitheit
 
 		"^{SO}" => "[0n-][SS]";
 		"(\||\\){SO}" => "$1[0n-][SS]";
