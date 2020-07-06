@@ -1048,7 +1048,11 @@
 
 		"([Mm]ass)\|(nah-?me)" => "$1-$2"; // Massnahmen (avoid separation)
 
-		"([Bb]a-?de)-?(?!s$)" => "$1|"; // Badespass => there must be a bug in the analyzer ... Spassbade => recognized; Badespass => not recognized ... why?
+		"([Bb]a-?de)(?!s$|t$|-?te)" => "$1|"; // Badespass => there must be a bug in the analyzer ... Spassbade => recognized; Badespass => not recognized ... why?
+
+		"([Bb]as-?ket)-?(b(?:a|ä)l-?l)" => "$1|$2"; // Basketball, -bälle
+
+		"([Vv]er)\+(miss)\+(test)" => "$1+$2-$3"; // vermisstest
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1533,7 +1537,7 @@
 		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
 		"»" => """; //"|[#5][#Q#]|";	
 		" [Ee]s( *?)ist " => " es_ist ";  // avoid "semicolon-look of "Es ist";
-	
+		
 		// old ortograph
 		"([Gg]ar)(nicht)" => "$1 $2"; 
 		"([Mm]it) (nichten)" => "$1$2"; mit nichten / mitnichten
@@ -2754,7 +2758,7 @@
 		
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
-		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zern", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zern", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+" };
@@ -4807,6 +4811,7 @@
 		"tstopt(01){MISS}" => "[I][SS]";
 		"tstopt(01){EL}" => "[#5][@L]";
 
+		"{MISS}-?T" => "MI[SS][&T]"; // bleeding with MA12 => place MA12 rule before!
 		"{MISS}" => "MI[SS]"; // bleeding with MA12 => place MA12 rule before!
 
 		"tstopt(01){ESIST}" => "[ES][#6-][U][IST]";		// spacing comes from token definition
