@@ -19,7 +19,7 @@
 
 function ShowListOrEmpty($string) {
     if (mb_strlen($string) === 0) return "(empty)";
-    else return $string;
+    else return htmlspecialchars($string);
 }
 
 require "vsteno_template_top.php"; 
