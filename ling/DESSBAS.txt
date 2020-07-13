@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "05/07/20";
+		"model_date" := "13/07/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1079,6 +1079,7 @@
 
 		"([Bb]in)\|(den)" => "$1-$2"; // Bartbindenplakate
 		"([Ss]char)\|(lach)" => "$1-$2"; // Scharlach
+		"([Rr]an)\|(gie-?r)" => "$1-$2"; // ausrangierten
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1930,6 +1931,7 @@
 	#BeginSubSection(shortener,#>stage3)
 
 		"#[Ww]a-?r" => "{#WAR}"; // noun Waren (no shortening!) 
+		"[Gg]e({#WAR})" => "{GE}$1"; // also gewartet
 		"[Dd]rauf" => "dr{AUF}";
 		"viel-?leicht" => "{VILLEICHT}";
 		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
@@ -3392,7 +3394,7 @@
 		"{HEIT}-?r" => "[&EIT@R]";
 
 		// heit + i
-		"{HEIT}-?i(?!g)" => "[&EIT&I]";
+		"{HEIT}-?i(?!g|-g)" => "[&EIT&I]";
 		"{HAIT}-?i" => "[&AI@#/.][&EIT&I]"; // Haiti (diacritics)
 		"{HAIT}-?e" => "[#4][&AI@#/.][&EIT&E]e"; // Saite (diacritics)
 		"{HAIT}-?{EN}" => "[#4][&AI@#/.][&EIT&E]{EN}"; // Saiten (diacritics)
