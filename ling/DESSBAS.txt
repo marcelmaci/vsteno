@@ -968,7 +968,7 @@
 		"(Gla-?cé)-?" => "$1|"; // Glacéhandschuhen
 		"([Bb]e\+er)\+(di-?g)" => "$1-$2"; // Beerdingung
 		"([Aa]r)\|(ran)\|(gie-?r)" => "$1-$2-$3"; // arrangieren
-		"([Ff]o-?to)\|(gra-?f)" => "$1-$2"; // Fotograf (but: Fotomodell - two words)
+		"((?:[Ff]|[Pp]h)o-?to)\|(gra-?(?:f|ph))" => "$1-$2"; // Fotograf (but: Fotomodell - two words) + old spelling
 		"([Ee]nt)-?(ste-?h)" => "$1+$2"; // Entstehung
 		"^([Ii]n)-?t-?(er)\+(n)(e[rsnm]?)?$" => "$1+t$2$3$4"; // intern
 		"([Ee]nt)-?(lau-?b)" => "$1+$2"; // entlaubten
@@ -1076,6 +1076,9 @@
 
 		"([Aa]b)\-?(ge)\-?(ra\-?ck)" => "$1+$2+$3"; // abgerackert
 		"([Zz]u)-?(fluchts)-?" => "$1+$2|"; // Zufluchtsstätte
+
+		"([Bb]in)\|(den)" => "$1-$2"; // Bartbindenplakate
+		"([Ss]char)\|(lach)" => "$1-$2"; // Scharlach
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3557,7 +3560,7 @@
 		
 		"{HEIT}(U\[NG\]S)\|([TP])" => "{HEIT}$1\\[#4]$2"; // Zeitungspapier - add additional spacing
 		
-		"{HEIT}(S?)\|([TPF]|\[FR\])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
+		"{HEIT}(S?)\|([TPFK]|\[FR\])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
 		"{HEIT}(S?)\|(\[?D\]?)" => "{HEIT}$1\\[#5]$2"; // Gesundheitsdirektion
 		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
 		"(\[&T@R\])O\|" => "$1[&O]\"; // Elektrotechniker
