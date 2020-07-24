@@ -16,6 +16,16 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 </p>
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
+<p><b>24/07/20 "Der Widerspenstigen Zähmung" von Karl Ettlinger (gedruckte Ausgabe)</b></p>
+<p>Wie bereits angekündigt soll in Bälde eine erste, vollständig mit VSTENO generierte Printausgabe erscheinen. Gewählt wurde der Roman 
+"Der Widerspenstigen Zähmung" von Karl Ettlinger. Der stenografierte Text wurde inzwischen korpuslektoriert und liegt nun in einer 
+<a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_prefinal_15072020.pdf">Prefinal-Version</a> vor. Diese wird nun ein letztes 
+Mal komplett Korrektur gelesen. Im Anschluss daran werde ich den Druck organisieren. Im Moment ist noch nicht klar, in welcher Auflage das Werk 
+erscheinen wird und was der Druck genau kostet. Wer gerne ein Exemplar vorreservieren möchte, kann sich via 
+<a href="mailto:marcel.maci@gmx.ch">Mail</a> bei mir melden.</p>
+<p>Die definitive Ausgabe wird - analog zur Ausgabe in der <a href="library.php">Bibliothek</a> - mit einer Titel und einer Schlussseite versehen 
+sein. Wer Fehler in der Prefinal-Version findet, darf diese natürlich auch gerne via Mail melden!</p>
+
 <p><b>18/06/20 Italienisch</b></p>
 <p>Als inzwischen fünfte Variante von Stolze-Schrey ist ab heute ein italienisches Modell (ITSSBAS) online verfügbar. Es wurde ausgehend von den 
 Regeln für Spanisch erstellt und ist zu diesem Zeitpunkt noch absolut experimentell. Für Rückmeldungen zu Fehlern bin ich dankbar.</p>
