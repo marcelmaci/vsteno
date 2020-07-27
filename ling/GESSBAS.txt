@@ -1316,7 +1316,7 @@
 		"(\[(?:vr|vor)\])\[#.\](\[(?:sch@l3|sch@r|z|zw)\])" => "$1[#1-]$2"; // dahin
 		"(\[nd\])(\[et\])" => "$1[#4]$2"; // findet
 		"(\[sch(?:@r|@l3)?\])\[#.\](\[(?:[iu]|au)\]\[(?:ck|f|\^ch|rr|k|sp)\])" => "$1[#2][sch.][#5]$2"; // geschickt, Schlucker, schlicht
-		"(\[sch(?:@r|@l3)?\])\[#.\](\[[ia]\]\[(?:ff|ff@l|tt|ss|b|pp|mm|p)\])" => "$1[#2][sch.][#4]$2"; // schliff, schritt, Schlappen, schlimmer
+		"(\[sch(?:@r|@l3)?\])\[#.\](\[(?:[ia]|au)\]\[(?:ff|ff@l|tt|ss|b|pp|mm|p)\])" => "$1[#2][sch.][#4]$2"; // schliff, schritt, Schlappen, schlimmer
 		"(\[sch(?:@r|@l3)?\])\[#.\](\[[uo]\]\[(?:ff|ff@l|tt|pp|ck)\])" => "$1[#2][sch.][#4]$2"; // not for: Vorschuss, Vorschub etc.
 		"(\[sch@r\])(\[[e]\]\[(?:ck)\])" => "$1[#3][sch.1]$2"; // schrecklich
 		"\[rück\]\[#.\]\[k\]" => "[rück5][#0][k]"; // Rückkehr
@@ -2050,6 +2050,16 @@
 		"(\[w\])\[#.\](\[a\]\[nk\])" => "$1[#1]$2"; // wankte
 		"(\[nk\])(\[&t)" => "$1[#1]$2"; // idem
 		"(\[wenn\])(\[g@l3\])" => "$1[#2]$2"; // wenngleich
+		"(\[aus\])\[#.\](\[sch@r\])" => "$1[#1-]$2"; // ausschraubte
+		"(\[sch@r\]\[#2\]\[sch\.\])\[#4\](\[au\]\[b\])" => "$1[#2]$2"; // idem (recorrection)
+		"(\[all\])(\[em\])" => "$1[#8-]$2"; // allem
+		"(\[t\])\[#.\](\[k@r\])" => "$1[#2]$2"; // Tatkraft
+		"(\[b@l\])\[#.\](\[&i\])" => "$1[#5]$2"; // Bibliothek
+		"(\[f\])\[#.\](\[a\]\[l\])" => "$1[#5]$2"; // falschen
+		"(\[l\])\[#.\](\[sch\])" => "$1[#2]$2"; // idem
+		"(\[&t&e\])(\[em\])" => "$1[#8-]$2"; // gesenktem
+		"(\[durch\])\[#.\](\[s\])" => "$1[#1-]$2"; // durchs
+		"(\[b@l\])\[#.\](\[i\]\[ck\])" => "$1[#9]$2"; // Blick
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
