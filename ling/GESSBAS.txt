@@ -2084,6 +2084,14 @@
 		"(\[n\])\[#n\](\[-e\])" => "$1[#2-]$2"; // Schneeflocken
 		"(\[f@l\])\[#.\](\[o\]\[ck\])" => "$1[#7]$2"; // idem
 		"(\[(?:VR10|vr10)\])\[#.\](\[ch\])" => "$1[#0]$2"; // Kirchturmuhr
+		"(\[st\])\[#.\](\[u\]\[z\])" => "$1[#2]$2"; // stutzte
+		"(\[t@r\])\[#.\](\[[Ii]\]\[pp\])" => "$1[#7]$2"; // trippelte (recorrection)
+		"(\[z\])\[#.\](\[a\]\[l)" => "$1[#5]$2"; // zahlreichen
+		"(\[vr\])\[#.\](\[g@r\])" => "$1[#2-]$2"; // ergriff (recorrection)
+		"(\[b@l\])\[#.\](\[u\]\[m\])" => "$1[#5]$2"; // Blumen
+		"(\[da@r\])\[#.\](\[g\])" => "$1[#2]$2"; // dargestellt
+		"(\[q\])\[#.\](\[i\]\[ck\])" => "$1[#8]$2"; // Erquickung
+		"(\[vr@l\])(\[o\]\[-e\])" => "$1[#3-]$2"; // Kerle
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt

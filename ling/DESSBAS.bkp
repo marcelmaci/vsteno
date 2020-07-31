@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "27/07/20";
+		"model_date" := "31/07/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1096,6 +1096,10 @@
 		"^(Kon)\+(ra-?d)" => "$1-$2"; // name
 		"^([Rr]au)-?b(lüs-?t)" => "$1b|$2"; // raublüstern
 		"^([Pp]fer-?de)-?(ku-?r)" => "$1|$2"; // Pferdekur
+
+		"^([Ee]r)-?(den-?k)" => "$1+$2"; // erdenkliche 
+
+		"^([Ww]ie-?sen)-?(tha-?l)" => "$1#$2"; // name => mark it with # so that entire word can be tested in shortener
 
 
 	#EndSubSection(analyzer)
@@ -3132,7 +3136,7 @@
 		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
 		"thr" => { "tHr", "[Tt]hro-?n" }; // Thriller, not: Thron
 		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
-		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$" };
+		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l" };
 		//"th(?!er)" => "t";
 		//"th(?!in)" => "t";
 		//"th(?!aft)" => "t";
@@ -3337,7 +3341,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai" };
 		"ai" => "[AI]";
 
 		"tstopt(01)n-?z" => "[NZ]";
@@ -4120,6 +4124,7 @@
 		"\[&T-1\]-?W" => "[&TW]"; // derentwillen
 
 		// Main (diacritics)
+		"\[AI\]$" => "[&AI@#/.][#W][-EI]"; // Mai
 		"(?<!\[&AI@#\/\.\])\[AI\]" => "[&AI@#/.][AI]"; // Mainufer
 
 		"\[&T-1\]-?B" => "[&TB]"; // sichtbar

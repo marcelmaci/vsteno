@@ -1589,9 +1589,16 @@
 		"ß" => "ss";
 		"&szlig;" => "ss";
 		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
-		"»" => """; //"|[#5][#Q#]|";	
+		"»" => """; //"|[#5][#Q#]|";
+
+
+		// protect handwritten "Es ist"
+		"(handwriting.*? [Ee]s) (ist .*?shorthand>)" => "$1#$2";
+		// substitute shorthand "Es ist" 
 		" [Ee]s( *?)ist " => " es_ist ";  // avoid "semicolon-look of "Es ist";
-		
+		// rewrite handwritten "Es ist"
+		"([Ee]s)#(ist)" => "$1 $2"; 
+
 		// old ortograph
 		"([Gg]ar)(nicht)" => "$1 $2"; 
 		"([Mm]it) (nichten)" => "$1$2"; mit nichten / mitnichten
