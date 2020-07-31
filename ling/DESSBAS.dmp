@@ -593,7 +593,7 @@
 		"([Ee]r)\+(bt)" => "$1$2";
 		"(?<![^e]e)r\+$" => "r";
 		//"eer\+$" => "eer";
-		"(?<!eu-e|eue|[msd]eine|[msd]ein-e|[msd]ei-ne)r\+\|" => { "r|", "^[Ee]u-?er*" }; // not: euerseits
+		"(?<![Ee]u-e|[Ee]ue|[Ee]u-re|[Ee]ur-e|[MmSsDd]eine|[msd]ein-e|[MmSsdd]ei-ne|[Ee]ine|[Ee]i-ne|[Ee]in-e|[Aa]n-dre|[Aa]nd-re|[Aa]ndr-e|[Ii]h-re|[Ii]hr-e|[Uu]ns-re|[Uu]nsr-e)r\+\|" => { "r|", "^[Ee]u-?er*" }; // not: euerseits, meinerseits, deinerseits etc.
 		//"r\+\|" => { "r|", "^[Ee]u-?er*" }; // not: euerseits
 		"([TtGg]er)\+m" => "$1-m";
 		"([Zz]er)\+(be-?r\+)" => "$1-$2";	// Zerberus
@@ -1093,6 +1093,9 @@
 		"^([Vv]er)\+?(un)-?" => "$1+$2+"; // verunmöglicht
 		"^([Ww]er)\|de" => "$1-de"; // Werdegang
 		"^([Ee]r)\+?(ra-?ti)" => "$1-$2"; // erratisch
+		"^(Kon)\+(ra-?d)" => "$1-$2"; // name
+		"^([Rr]au)-?b(lüs-?t)" => "$1b|$2"; // raublüstern
+		"^([Pp]fer-?de)-?(ku-?r)" => "$1|$2"; // Pferdekur
 
 
 	#EndSubSection(analyzer)
@@ -1950,6 +1953,8 @@
 		
 	#EndSubSection(preshortener)
 	#BeginSubSection(shortener,#>stage3)
+
+		"^([Rr])aus$" => "$1{AUS}";
 
 		"([Ss]a-?n)i-?tä-?t" => "$1{HEIT}"; // Sanitäter
 
@@ -3027,7 +3032,7 @@
 		"^an-?ti" => "{ANTI}";
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
-		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r", "^[Cc]on-?rad" };
+		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r", "^[CcKk]on-?rad" };
 		"i-?[o|ö]-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
 		"(^|\|)(un)?zer\+" => "$1$1{ZER}";

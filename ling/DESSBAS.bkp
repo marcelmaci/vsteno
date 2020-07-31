@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "25/07/20";
+		"model_date" := "27/07/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1007,7 +1007,6 @@
 		"(fan)\|(ge-?n)" => "$1-$2"; // angefangenen
 		"([Ff]urcht)\|(sa-?m)" => "$1-$2"; // furchtsamen
 		"([Dd]rin)\|(gen)" => "$1-$2"; // dringender
-		"^([Pp]er)$" => "$1+"; // per
 		"([Zz]u)-?(gä-?n-?g)" => "$1+$2"; // unzugänglich
 		"([Gg]e)-?(heu-?l)" => "$1+$2"; // Geheul
 		"([Nn]eu)\|(gier-?de)" => "$1-$2"; // Neugierde vs Neugier???
@@ -5002,7 +5001,7 @@
 		//"{SOLCH}" => "[SOLCH]"; // with following rules token [solch] probably becomes obsolete
 		"^{SOLCH}" => "[S=]O[CH]";
 		"{SOLCH}" => "SO[CH]";
-		"{WELCH}" => "[CH]";
+		"{WELCH}" => "[WELCH]";
 		"{HEIT}{HIN}" => "[&EITH][#0][N]";
 		"{HIN}" => "[H][#0][N]";
 		"\[&T\]{EN}$" => "[&T][&E][EN]";
