@@ -2099,6 +2099,10 @@
 		"(\[t@r\])\[#.\](\[au\]\[(?:VR|vr)10\])" => "$1[#5]$2"; // traurig
 		"(\[d@r\])\[#.\](\[i\]\[nn\])" => "$1[#5]$2"; // drinnen
 		"(\[st\])\[#.\](\[u\]\[b\])" => "$1[#5]$2"; // Dachstube
+		"(\[&th\])(\[u\]\[ng\])" => "$1[#2]$2"; // Veröffentlichung
+		"(\[&tschaft\])(\[s\])" => "$1[#3]$2"; // Präsidentschaftswahlen
+		"(\[auf\])\[#.\](\[g@r\])" => "$1[#5-]$2"; // aufgrund
+		"(\[&tns\])(\[w\])" => "$1[#4]$2"; // beachtenswert
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
@@ -2110,6 +2114,7 @@
 
 		// kind of "rewriter" in postspacer ...
 		"^\[ch\]" => "[welch]"; // Chef
+		//"\[ei\]\[&e\](\\)" => "[-EI]$1"; // correction: Zweiparteiensystem => doesn't work: escaping problem! => investigate later
 
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)

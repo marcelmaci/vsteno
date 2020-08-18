@@ -19,7 +19,7 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 <p><b>24/07/20 "Der Widerspenstigen Zähmung" von Karl Ettlinger (gedruckte Ausgabe)</b></p>
 <p>Wie bereits angekündigt soll in Bälde eine erste, vollständig mit VSTENO generierte Printausgabe erscheinen. Gewählt wurde der Roman 
 "Der Widerspenstigen Zähmung" von Karl Ettlinger. Der stenografierte Text wurde inzwischen korpuslektoriert und liegt nun in einer 
-<a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_prefinal_15072020.pdf">Prefinal-Version</a> vor. Diese wird nun ein letztes 
+<a href="../books/ettlinger_der_widerspenstigen_zaehmung_31072020.pdf">Prefinal-Version</a> vor. Diese wird nun ein letztes 
 Mal komplett Korrektur gelesen. Im Anschluss daran werde ich den Druck organisieren. Im Moment ist noch nicht klar, in welcher Auflage das Werk 
 erscheinen wird und was der Druck genau kostet. Wer gerne ein Exemplar vorreservieren möchte, kann sich via 
 <a href="mailto:marcel.maci@gmx.ch">Mail</a> bei mir melden.</p>

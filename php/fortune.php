@@ -53,7 +53,13 @@ $cookie_table = array(
    /*24*/ array( 300, 120, "align_left", 5, 0, 20, 0, 3.1, 3.5, 1.2, 14, "Die Zeit verwandelt uns nicht, sie entfaltet uns nur.<@token_type=handwriting> <@handwriting_marker=0> Max Frisch<@token_type=shorthand>" ),
    /*25*/ array( 300, 120, "align_left", 5, 0, -5, 0, 3.1, 3.5, 1.2, 14, "Wenn ich übers Wasser laufe, dann sagen meine Kritiker, nicht mal schwimmen kann er.<@token_type=handwriting> <@handwriting_marker=0> Berti Vogt<@token_type=shorthand>" ),
    /*26*/ array( 300, 120, "align_left", 5, 0, 20, 0, 3.1, 3.5, 1.2, 14, "Humor ist der Knopf, der verhindert, dass uns der Kragen platzt.<@token_type=handwriting> <@handwriting_marker=0> Joachim Ringelnatz<@token_type=shorthand>" ),
-    
+   /*27*/ array( 390, 120, "align_left", 5, 0, 0, 0, 3.1, 3.2, 1.1, 14, "Bei der Eroberung des Weltraums sind zwei Probleme zu lösen: die Schwerkraft und der Papierkrieg. Mit der Schwerkraft wären wir fertig geworden.<@token_type=handwriting> <@handwriting_marker=0> Wernher von Braun<@token_type=shorthand>" ),
+   /*28*/ array( 410, 120, "align_left", 5, 0, 0, 0, 3.1, 3.2, 1.1, 14, "Jeder ist ein Genie! Aber wenn du einen Fisch danach beurteilst, ob er auf einen Baum klettern kann, wird er sein ganzes Leben glauben, dass er dumm ist.<@token_type=handwriting> <@handwriting_marker=0> Albert Einstein<@token_type=shorthand>" ),
+   /*29*/ array( 320, 120, "align_left", 5, 0, 0, 0, 3.1, 2.6, 1.3, 14, "Wer A sagt, musst nicht B sagen. Er kann auch erkennen, dass A falsch war.<@token_type=handwriting> <@handwriting_marker=0> Bertolt Brecht<@token_type=shorthand>" ),
+   /*30*/ array( 350, 120, "align_left", 5, 0, 0, 0, 3.1, 3.3, 1.1, 14, "Gott hat den Menschen erschaffen, weil er vom Affen enttäuscht war. Danach hat er auf weitere Experimente verzichtet.<@token_type=handwriting> <@handwriting_marker=0> Mark Twain<@token_type=shorthand>" ),
+   /*31*/ array( 350, 120, "align_left", 5, 0, 0, 0, 3.1, 3.3, 1.1, 14, "Nachdem Gott die Welt erschaffen hatte, schuf er Mann und Frau. Um das Ganze vor dem Untergang zu bewahren, erfand er den Humor.<@token_type=handwriting> <@handwriting_marker=0> Guillermo Mordillo<@token_type=shorthand>" ),
+   /*32*/ array( 360, 120, "align_left", 5, 0, 0, 0, 3.1, 3.2, 1.1, 14, "Ein Experte ist ein Mann, der hinterher genau sagen kann, warum seine Prognose nicht gestimmt hat.<@token_type=handwriting> <@handwriting_marker=0> Winston Churchill<@token_type=shorthand>" ),
+   
     
     
     /*  

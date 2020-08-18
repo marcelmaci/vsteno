@@ -1100,6 +1100,7 @@
 		"^([Ee]r)-?(den-?k)" => "$1+$2"; // erdenkliche 
 
 		"^([Ww]ie-?sen)-?(tha-?l)" => "$1#$2"; // name => mark it with # so that entire word can be tested in shortener
+		"^([Zz]u-?c-?ker)-?(?!\+)" => "$1+"; // Zuckerzeug
 
 
 	#EndSubSection(analyzer)
