@@ -415,7 +415,7 @@
 		"#seits" => "|seits";
 
 		// prefix in-
-		"(^|\|)(Volks\|)?([Ii])n-(?!ter)" => { "$1$2$3n+", "[Ii]n-?n" }; // innig
+		"(^|\||=)(Volks\|)?([Ii])n-(?!ter)" => { "$1$2$3n+", "[Ii]n-?n" }; // innig
 		"(=|\|)([Ii])n-?i-?t" => "$1$2n+i-t"; // Pestizid-initative => careful with that rule
 
 		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
@@ -1110,8 +1110,9 @@
 		"([Vv]er\+sa)\|g" => "$1-g"; // Versagens
 		"^([Aa]b)\+(ge)\+b" => "$1+$2-b"; // abgebe
 
-		"(^|=)([Bb]e)\|" => "$1$2+"; // Be|treiber
-		"(^|=)([Vv]or)\|" => "$1$2+"; // Vor|würfe
+		"(^|=|\|)([Bb]e)\|" => "$1$2+"; // Be|treiber
+		"(^|=|\|)([Vv]or)\|" => "$1$2+"; // Vor|würfe
+		"(^|=|\|)([Zz]u)\|" => "$1$2+"; // Zu|stand
 
 		"([Kk]on)-?z-?er\+n" => "$1-zer-n"; // Stromkonzerne
 		"(ren)\|(tie-?r)" => "$1-$2"; rentieren vs Rentieren (Ren-Tieren) - computers are stupid .... 
@@ -1124,6 +1125,11 @@
 		// most probable explanation: server uses a different dictionary
 		// probably the de_de variant instead of de_ch => swiss word "Velo" is not recognized
 		// solution (for now): include "Velo(s)" in stems list
+
+		// prefix auf- => try to formulate a general rule
+		"(^|-|\+|\|)([Aa]uf)-([abdeghklnpqrswz])" => "$1$2+$3";
+
+		"([Aa]l)l-?(er)\+g" => "$1-l$2-g"; // allergisch
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2965,7 +2971,7 @@
 		"#wo$" => "#{WO}";	
 	
 		"(?<!f)all(e[n|m|s]?)$" => "{ALL}$1";
-		"^al-?l(?!e-?e)" => { "{ALL}", "[Aa]l-?lü-?r", "[Aa]l-?lon-?ge" };
+		"^al-?l(?!e-?e)" => { "{ALL}", "[Aa]l-?lü-?r", "[Aa]l-?lon-?ge", "[Aa]l-?ler-?gi" };
 		"(\[^a-z\])all" => "{$1ALL}";
 		"{ALL}er" => "{ALL}r"; // doesn't respect step-by-step philosophy (but necessary for allerlei)
 

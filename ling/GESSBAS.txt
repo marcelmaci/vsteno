@@ -2111,6 +2111,19 @@
 		"(\[z\])\[#.\](\[a\]\[pf\])" => "$1[#6]$2"; Zapfsäule
 		"(\[b\])\[#.\](\[u\]\[nd\])" => "$1[#5]$2"; // angebunden
 		"(\[ch\])\[#.\](\[f@r6\])" => "$1[#6]$2"; // Nachfrage
+		"(\[@l\])(\[o\]\[w\])" => "$1[#4]$2"; // Slowenien
+		"(\[p\])\[#.\](\[u\]\[nk\])" => "$1[#1]$2"; // Punkband
+		"(\[nk\])\[#.\](\[b\])" => "$1[#4]$2"; // idem
+		"(\[rr\])\[#.\](\[u\]\[p\])" => "$1[#3]$2"; // Korruption (recorrection)
+		"(\[\^ch\])\[#.\](\[b\])" => "$1[#7]$2"; // brauchbar
+		"(\[0n-\])\[#.\](\[a\]\[l@l\])" => "$1[#5]$2"; // allergisch
+		"(\[auf\])\[#.\](\[k@l3\])" => "$1[#1]$2"; // Aufklärung
+		"(\[heit\]\[&e\])\[#.\](\[a\]\[g\])" => "$1[#1]$2"; // Freitag
+		"(\[sch\])\[#.\](\[u\]\[z\])" => "$1[#2]$2"; // Schutzanzüge
+		"(\[m\])\[#.\](\[a\]\[c@r\])" => "$1[#1]$2"; // Macron
+		"(\[f@r6\])\[#.\](\[a\]\[nk@r\])" => "$1[#0]$2"; // Frankreichs
+		"(\[s\])\[#n\](\[vr\+ar\])" => "$1[#6]$2"; // besorgniserregend (special)
+		"(\[&eith\])(\[vr\])" => "$1[#4]$2"; // gesundheitlicher
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
