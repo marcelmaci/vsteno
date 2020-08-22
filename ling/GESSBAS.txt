@@ -2124,6 +2124,10 @@
 		"(\[f@r6\])\[#.\](\[a\]\[nk@r\])" => "$1[#0]$2"; // Frankreichs
 		"(\[s\])\[#n\](\[vr\+ar\])" => "$1[#6]$2"; // besorgniserregend (special)
 		"(\[&eith\])(\[vr\])" => "$1[#4]$2"; // gesundheitlicher
+		"(\[st\])\[#.\](\[a\]\[g@r\])" => "$1[#1-]$2"; // Instagram
+		"(\[rr\])\[#.\](\[o\]\[vr\])" => "$1[#1]$2"; // Horror (recorrection)
+		"(\[auf\])\[#.\](\[p\])" => "$1[#2]$2"; // aufpassen
+		"(\[t\])\[#.\](\[i\]\[p\])" => "$1[#7]$2"; // typischen
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt

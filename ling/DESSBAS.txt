@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "19/08/20";
+		"model_date" := "22/08/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1113,6 +1113,7 @@
 		"(^|=|\|)([Bb]e)\|" => "$1$2+"; // Be|treiber
 		"(^|=|\|)([Vv]or)\|" => "$1$2+"; // Vor|würfe
 		"(^|=|\|)([Zz]u)\|" => "$1$2+"; // Zu|stand
+		"(^|=|\|)([Gg]e)\|" => "$1$2+"; // Fan-Ge|meinde
 
 		"([Kk]on)-?z-?er\+n" => "$1-zer-n"; // Stromkonzerne
 		"(ren)\|(tie-?r)" => "$1-$2"; rentieren vs Rentieren (Ren-Tieren) - computers are stupid .... 
@@ -1130,6 +1131,12 @@
 		"(^|-|\+|\|)([Aa]uf)-([abdeghklnpqrswz])" => "$1$2+$3";
 
 		"([Aa]l)l-?(er)\+g" => "$1-l$2-g"; // allergisch
+
+		// try to formulate more general rules
+		"([bfglnprs])\|(tes-?t)(e[rsnm]?)?(\+)?$" => "$1-$2$3$4";
+
+		"([Pp]i)\|(lo-?t)" => "$1-$2"; // Piloten
+		"([Ii]n)-?s-?t" => "$1+st"; // Instagram
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3200,7 +3207,7 @@
 
 		"uhr" => "ur";
 		
-		"ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e" }; // list with exceptions
+		"ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e" }; // list with exceptions
 		"ie" => "i-e"; // separation (2 syllables)
 
 		"ühr" => "ür";
@@ -3510,7 +3517,7 @@
 		"}r" => "}[AR]";
 		//"^s" => "[0n-][S]";
 		//"^n" => "[0n-][N]";
-		"^s" => "[S=]";
+		"(^|\\)s" => "$1[S=]";
 		"^n" => "[N=]"; // try new variant
 
 
@@ -4121,7 +4128,7 @@
 
 		"U-{EN}" => "A[&U]{EN}";
 		
-		"^s" => "[S=]"; // slowenischen (sl => s+@l only in rewriter)
+		"(^|\\)s" => "$1[S=]"; // slowenischen (sl => s+@l only in rewriter)
 
 		// freilich, erbaulich
 		"\[EI\]-?{LICH}" => "[EI][&E]{LICH}";
