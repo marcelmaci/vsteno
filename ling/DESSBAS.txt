@@ -1114,7 +1114,9 @@
 		"(^|=|\|)([Vv]or)\|" => "$1$2+"; // Vor|würfe
 		"(^|=|\|)([Zz]u)\|" => "$1$2+"; // Zu|stand
 		"(^|=|\|)([Gg]e)\|" => "$1$2+"; // Fan-Ge|meinde
-
+		"(^|=|\|)([Uu]n)\|" => "$1$2+"; // Un|fall
+		"(^|=|\|)([Aa]us)\|" => "$1$2+"; // Aus|flugsort
+		
 		"([Kk]on)-?z-?er\+n" => "$1-zer-n"; // Stromkonzerne
 		"(ren)\|(tie-?r)" => "$1-$2"; rentieren vs Rentieren (Ren-Tieren) - computers are stupid .... 
 		"([Aa]r-?bei-?te)\|r(in)" => "$1r+$2"; // Mitarbeiterinnen
@@ -1137,6 +1139,10 @@
 
 		"([Pp]i)\|(lo-?t)" => "$1-$2"; // Piloten
 		"([Ii]n)-?s-?t" => "$1+st"; // Instagram
+
+		"([Kk]alt)\+(her-?zi-?g)" => "$1|$2"; // kaltherzigen
+		"(Co)\|(rin-?ne)" => "$1-$2"; // Corinne
+		"(wer)\|(ti-?g)" => "$1-$2"; // gleichwertiger (Computers are stupid ... :)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3025,7 +3031,7 @@
 		"mitt" => "m1i2t3t4";
 		"mit(?!([tz]|-[tz]))" => { "{M}", "Eremit" };
 		"m1i2t3t4" => "mitt";
-		"^nich-?t" => "{NICHT2}";
+		"^nich-?t" => { "{NICHT2}", "^[Nn]ich-?ten?$" };
 		"^sie$" => "{SI}";
 		"^[Ss]in-?d$" => "{SIND}";
 		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
@@ -3758,6 +3764,7 @@
 		"({DA}).?({SEIN})" => "$1\\$2"; // Dasein 
 		
 		"({HEIT}U\[NG\]S)\|" => "$1\\[#5]"; // Zeitungsgeschichte
+		"(?<!&)[Oo](\\)" => "[&O]$1"; // Hobby-Rennvelofahrer
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
