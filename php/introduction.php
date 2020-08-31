@@ -16,6 +16,19 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 </p>
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
+<p><b>28/08/20 Post ... !</b></p>
+<p>Heute lag ein Päkchen im Briefkasten.</p><p>Lang erwartetes und ersehntes, in Karton gepacktes Objekt von 240 Gramm.</p><p>
+Der Traum von VSTENO war es, eines Tages ein gedrucktes Buch in Händen zu halten. Haptik statt Hektik. Blättern 
+statt Wischen, Papier statt Bildschirm. Und voilà - hier ist es, das allererste, vollständig mit VSTENO generierte, gedruckte und gebundene 
+BOD*:</p>
+<img src="../web/dwz_bod1.JPG" height="300"> <img src="../web/dwz_bod2.JPG" height="300">
+<p>Es handelt sich vorerst noch um ein Unikat.</p><p>Es ist schwierig abzuschätzen, wie ein Buch letzten Endes aussieht, wenn man es vollständig 
+digital erstellt. In diesem Sinne ging es bei diesem Exemplar darum, 1:1 zu sehen, wie sich Titelseite und Text beim Blättern präsentieren, 
+wie die Schriftgrösse, das gewählte Papier und das Format wirken.</p><p>Natürlich geht es auch darum, das Werk nun ein letztes Mal Korrektur zu lesen:
+Stimmen die Stenogramme? Was muss noch korrigiert werden? Die Fertigstelltung der "Widerspenstigen" scheint mir nun näher als je. 
+Insofern: Wer das Buch vorbestellen möchte, kann dies gerne 
+per Mail tun.</p>
+<p>* Man lese: Book on Demand</p>
 <p><b>24/07/20 "Der Widerspenstigen Zähmung" von Karl Ettlinger (gedruckte Ausgabe)</b></p>
 <p>Wie bereits angekündigt soll in Bälde eine erste, vollständig mit VSTENO generierte Printausgabe erscheinen. Gewählt wurde der Roman 
 "Der Widerspenstigen Zähmung" von Karl Ettlinger. Der stenografierte Text wurde inzwischen korpuslektoriert und liegt nun in einer 
