@@ -1910,9 +1910,12 @@ function InsertPageNumber() {
     // IMPORTANT:
     // the book layout (deltax for odd vs even pages) doesn't take are of first and start values 
     // it is always calculated directly from raw variable actual_page_number!
+    // due to inverted variables, take deltax value from last page
+    $last_page_deltax = GetDeltaXForActualPage($actual_page_number-1);
+    //echo "actual_page_number: $actual_page_number actual_page_deltax: $actual_page_deltax last_page_deltax: $last_page_deltax<br>"; 
     $first = $_SESSION['output_page_number_first'];     // first page number that has to be printed
     $start = $_SESSION['output_page_number_start'];     // first page on which first page number has to be printed
-    $posx = $_SESSION['output_page_number_posx'] + $actual_page_deltax;
+    $posx = $_SESSION['output_page_number_posx'] + $last_page_deltax;
     $posy = $_SESSION['output_page_number_posy'];
     $color = $_SESSION['output_page_number_color'];
     
