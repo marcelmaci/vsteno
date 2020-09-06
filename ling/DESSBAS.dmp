@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "23/08/20";
+		"model_date" := "24/08/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1133,7 +1133,7 @@
 
 		// prefix auf- => try to formulate a general rule
 		"(^|-|\+|\|)([Aa]uf)-([abdeghklnpqrswz])" => "$1$2+$3";
-		"(^|-|\+|\|)([Aa]us)-([abdghklnpqrswz])" => "$1$2+$3";
+		"(^|-|\+|\|)([Aa]us)-([abdghklnpqrwz])" => "$1$2+$3";
 
 		"([Aa]l)l-?(er)\+g" => "$1-l$2-g"; // allergisch
 
@@ -1154,6 +1154,11 @@
 		"([Aa]m)\|(man)" => "$1-$2"; // Ammann
 		"([Ii]m)\|(mo-?bi-?l)" => "$1-$2"; // Immobilien
 		"-(sum-?men?)$" => "|$1"; // -summe
+
+		"([Aa]h-?nungs)-?(ver)" => "$1|$2"; // Ahnungsvermögen
+		"([Ss]chmer-?zen)\|s(e-?he)" => "$1s|$2"; // Schmerzensehe
+		"([Ee]in\+?lul-?lungs)-?(ver)" => "$1|$2"; // Einlullungsversuchen
+		"([Hh]erbst)(aus)[-+]?" => "$1|$2+"; // Herbstausverkauf
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1813,6 +1818,9 @@
 		
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
+
+		"^D=" => "[D@#_]="; // D-Zug
+		
 		//"([Rr]en-?dez)=[Vv]ous" => "$1=vus"; // "early-phonetizer because it's easier to do it here 
 
 		"(?<!\[)=" => "\\[=]\\";
@@ -1826,6 +1834,8 @@
 
 		"tstopt(01)'s$" => "s";
 		"tstopt(01)\|s$" => "s";
+
+		"^S$" => "[S=@#_]"; // S. Durchlaucht (Ettlinger)
 	
 	#EndSubSection(dasher)
 	#BeginSubSection(splitter1)

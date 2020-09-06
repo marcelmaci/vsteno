@@ -17,7 +17,7 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
 <p><b>28/08/20 Post ... !</b></p>
-<p>Heute lag ein Päkchen im Briefkasten.</p><p>Lang erwartetes und ersehntes, in Karton gepacktes Objekt von 240 Gramm.</p><p>
+<p>Heute lag ein Päckchen im Briefkasten.</p><p>Lang erwartetes und ersehntes, in Karton gepacktes Objekt von 240 Gramm.</p><p>
 Der Traum von VSTENO war es, eines Tages ein gedrucktes Buch in Händen zu halten. Haptik statt Hektik. Blättern 
 statt Wischen, Papier statt Bildschirm. Und voilà - hier ist es, das allererste, vollständig mit VSTENO generierte, gedruckte und gebundene 
 BOD*:</p>

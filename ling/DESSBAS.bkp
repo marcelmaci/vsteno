@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "22/08/20";
+		"model_date" := "23/08/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -131,6 +131,8 @@
 		"introduction_text" := "Grundschrift (Stolze-Schrey)";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
+
+		"([Ww]er)\|t" => "$1-t"; // Disziplinenwertungen (crazy word ...)
 		
 		"(^|=)([Ll]a)d-?ein" => "$1$2-de|in"; // Ladeinfrastruktur
 
@@ -270,7 +272,7 @@
 		
 
 		// in general: don't separate -[brt]en (..)
-		"\|ren" => "-ren";
+		"\|ren(?!n)" => "-ren";
 		"\|ten" => "-ten";  // why is "ten" recognized as a word (in german)?!?
 		"\|ben" => "-ben";
 
@@ -647,7 +649,7 @@
 		"([Ll]a-?t-?er)\+(n)" => "$1$2";
 		"([Ww]er)\+k" => "$1k";
 		"([Zz]er)\+r(e|t(?:e|en|est|et)?)" => "$1r$2"; 
-		"([Ww]er)\+(t)" => "$1$2";
+		"([Ww]-?er)\+(t)" => "$1$2";
 		"([Ww]er)(te)" => "$1-$2"; // resyllabation
 		"([Bb]er)\+g" => "$1g";
 		"([Bb]er)(ge)" => "$1-$2"; // resyllabation
@@ -1131,6 +1133,7 @@
 
 		// prefix auf- => try to formulate a general rule
 		"(^|-|\+|\|)([Aa]uf)-([abdeghklnpqrswz])" => "$1$2+$3";
+		"(^|-|\+|\|)([Aa]us)-([abdghklnpqrswz])" => "$1$2+$3";
 
 		"([Aa]l)l-?(er)\+g" => "$1-l$2-g"; // allergisch
 
@@ -1143,6 +1146,14 @@
 		"([Kk]alt)\+(her-?zi-?g)" => "$1|$2"; // kaltherzigen
 		"(Co)\|(rin-?ne)" => "$1-$2"; // Corinne
 		"(wer)\|(ti-?g)" => "$1-$2"; // gleichwertiger (Computers are stupid ... :)
+		"([Ss]pie)\|(ler)" => "$1-$2"; // Spielern - computers are stupid ... :)
+		"([Bb]e[-+]fug)\|(nis)" => "$1-$2"; // Befugnisse
+
+		"([Aa]uf\+recht)\+(?!$)" => "$1|"; // aufrechterhalten => separate
+
+		"([Aa]m)\|(man)" => "$1-$2"; // Ammann
+		"([Ii]m)\|(mo-?bi-?l)" => "$1-$2"; // Immobilien
+		"-(sum-?men?)$" => "|$1"; // -summe
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1581,7 +1592,8 @@
 		// its a bug that should be corrected in source code
 		// for the moment fix it with a regex-rule
 		"\(([0-9]+)\)" => "($1[#0])"; // inserting artificial distance 0 separates pre- and posttokens 
-
+		"\(([0-9]+)([.])(\))?" => "($1[#0]$2[#0]$3"; // further corrections to avoid bug
+		
 		// global replacements in the whole text
 		" # " => " dash "; // # filtered out in parallel edition, so write it as a word (workaround)
 
@@ -3053,7 +3065,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t(?!ums?$)" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3651,7 +3663,7 @@
 		"{HEIT}(U\[NG\]S)\|([TP])" => "{HEIT}$1\\[#4]$2"; // Zeitungspapier - add additional spacing
 		
 		"{HEIT}(S?)\|([TPFK]|\[FR\])" => "{HEIT}$1\\[#4]$2"; // write separatedly (2 words) - add additional spacing
-		"{HEIT}(S?)\|(\[?D\]?)" => "{HEIT}$1\\[#5]$2"; // Gesundheitsdirektion
+		"{HEIT}(S?)\|(\[?[DP]\]?)" => "{HEIT}$1\\[#5]$2"; // Gesundheitsdirektion, Gesundheitsproblem
 		"{HEIT}(S?)\|" => "{HEIT}$1\\"; // write separatedly (2 words)
 		"(\[&T@R\])O\|" => "$1[&O]\"; // Elektrotechniker
 		"(\[&T@R\]\[A\]\[&A\])\|" => "$1\"; // Extrareise
@@ -3669,6 +3681,7 @@
 		"(\[&T\]O\[NS\])\|" => "$1\\";
 		"(\[RR\].*?)\|" => { "$1\\", "[Ii]rr(?:-|\|)?sinn" }; // Karrierepläne (separate after rr)
 		"\[&T\]E\|" => "[&T]E\\";  // Produktepalette 
+		"({HEIT}{ER}|\[&EITVR\]|{HEIT}\[VR\])\|(\[?[Ff])" => "$1\\[#5]$2"; // weiterführen
 		"({HEIT}{ER}|\[&EITVR\]|{HEIT}\[VR\])\|" => "$1\\"; // heiterhellen 
 
 		"(\[&T\]\[&E\]AG)\|(\[(?:PR)\])" => "$1\\[#4]$2"; // Sonntagprogramm
