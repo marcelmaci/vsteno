@@ -310,6 +310,18 @@ Umbruch <input type="text" name="layouted_original_text_wrap"  size="3" value="<
 <input type="radio" name="layouted_original_text_position" value="before" <?php echo ($_SESSION['layouted_original_text_position'] === "before") ? "checked" : "";?>> vorher
 <input type="radio" name="layouted_original_text_position" value="after" <?php echo ($_SESSION['layouted_original_text_position'] !== "before") ? "checked" : "";?>> nachher
 <br>
+<input type="checkbox" name="layouted_book_yesno" value="yes" <?php echo ($_SESSION['layouted_book_yesno']) ? "checked" : "";?>> Buch: 
+Delta-X: 
+gerade: <input type="text" name="layouted_book_deltax_odd"  size="3" value="<?php echo $_SESSION['layouted_book_deltax_odd']; ?>">
+ungerade: <input type="text" name="layouted_book_deltax_even"  size="3" value="<?php echo $_SESSION['layouted_book_deltax_even']; ?>"> -
+Zeilen: 
+gerade 
+<input type="checkbox" name="layouted_book_lines_odd_yesno" value="yes" <?php echo ($_SESSION['layouted_book_lines_odd_yesno']) ? "checked" : "";?>> ein
+<input type="text" name="layouted_book_lines_posx_odd"  size="3" value="<?php echo $_SESSION['layouted_book_lines_posx_odd']; ?>">
+ungerade 
+<input type="checkbox" name="layouted_book_lines_even_yesno" value="yes" <?php echo ($_SESSION['layouted_book_lines_even_yesno']) ? "checked" : "";?>> ein
+<input type="text" name="layouted_book_lines_posx_even"  size="3" value="<?php echo $_SESSION['layouted_book_lines_posx_even']; ?>">
+<br>
 Filter: 
 <input type="checkbox" name="layouted_original_text_filter_brackets" value="yes" <?php echo ($_SESSION['layouted_original_text_filter_brackets']) ? "checked" : "";?>> Brackets []
 <input type="checkbox" name="layouted_original_text_filter_dashes" value="yes" <?php echo ($_SESSION['layouted_original_text_filter_dashes']) ? "checked" : "";?>> Dashes #

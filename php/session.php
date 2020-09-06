@@ -207,6 +207,17 @@ function InitializeSessionVariables() {
     $_SESSION['font_exportable_yesno'] = false;
     $_SESSION['font_load_from_file_yesno'] = true;
     
+    // options for book layouts
+    // IMPORTANT: variable names are exactly the other way around
+    // i.e. "even" means "odd"
+    $_SESSION['layouted_book_yesno'] = false;
+    $_SESSION['layouted_book_deltax_odd'] = 0; 
+    $_SESSION['layouted_book_deltax_even'] = 20; 
+    $_SESSION['layouted_book_lines_odd_yesno'] = true; 
+    $_SESSION['layouted_book_lines_posx_odd'] = 658;   
+    $_SESSION['layouted_book_lines_even_yesno'] = false; 
+    $_SESSION['layouted_book_lines_posx_even'] = 0; 
+    
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
     $_SESSION['spacer_vowel_groups'] = "";
@@ -360,6 +371,15 @@ if ($_POST['token_size'] != "") {
     $_SESSION['upper12_nomargin_yesno'] = (htmlspecialchars($_POST['upper12_nomargin']) === "nomargin") ? true : false;
     $_SESSION['upper3_nomargin_yesno'] = (htmlspecialchars($_POST['upper3_nomargin']) === "nomargin") ? true : false;
     $_SESSION['lower_nomargin_yesno'] = (htmlspecialchars($_POST['lower_nomargin']) === "nomargin") ? true : false;
+    
+    // options for book layouts
+    $_SESSION['layouted_book_yesno'] = (htmlspecialchars($_POST['layouted_book_yesno']) === "yes") ? true : false;
+    $_SESSION['layouted_book_deltax_odd'] = htmlspecialchars($_POST['layouted_book_deltax_odd']);
+    $_SESSION['layouted_book_deltax_even'] = htmlspecialchars($_POST['layouted_book_deltax_even']);
+    $_SESSION['layouted_book_lines_odd_yesno'] = (htmlspecialchars($_POST['layouted_book_lines_odd_yesno']) === "yes") ? true : false;
+    $_SESSION['layouted_book_lines_posx_odd'] = htmlspecialchars($_POST['layouted_book_lines_posx_odd']);
+    $_SESSION['layouted_book_lines_even_yesno'] = (htmlspecialchars($_POST['layouted_book_lines_even_yesno']) === "yes") ? true : false;
+    $_SESSION['layouted_book_lines_posx_even'] = htmlspecialchars($_POST['layouted_book_lines_posx_even']);
     
     // layouted svg
     $_SESSION['left_margin'] = htmlspecialchars($_POST['left_margin']);

@@ -109,6 +109,7 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 </li>
 <li><b>Neu:</b>
 <br>Statistik: Anzahl Regeln Analyzer / Anzahl gecachte Resultate
+<br>Buch: Horizontaler Versatz und Zeilennummern in Abhängigkeit gerader / ungerader Seiten
 </ul>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**) Nach Hephaistos, Ariadne und Hyperion dürfte wieder ein weiblicher Name (vielleicht mit A:) aus der griechischen 
 Mythologie zum Zuge kommen ... :)</i></p>

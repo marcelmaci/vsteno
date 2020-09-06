@@ -1603,6 +1603,7 @@ function LayoutedSVGProcessHTMLTags( $html_string ) {
 }
 
 function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_height ) {
+    global $actual_page_deltax;
     $lines_string = "";
     $x = 0; //$_SESSION['left_margin'];
     $width = $_SESSION['output_width'];
@@ -1620,9 +1621,9 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
             $stroke_dasharray = $_SESSION['upper3_style'];
             $tempy = $y - 3 * $system_line_height;
             
-            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
-            if ($_SESSION['upper3_nomargin_yesno']) $rightx = $width;
-            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'] + $actual_page_deltax;
+            if ($_SESSION['upper3_nomargin_yesno']) $rightx = $width + $actual_page_deltax;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'] + $actual_page_deltax;
             
             $lines_string .= "<line x1=\"$leftx\" y1=\"$tempy\" x2=\"$rightx\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
@@ -1631,9 +1632,9 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
             $color = $_SESSION['auxiliary_upper12_color'];
             $stroke_dasharray = $_SESSION['upper12_style'];
             
-            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
-            if ($_SESSION['upper12_nomargin_yesno']) $rightx = $width;
-            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'] + $actual_page_deltax;
+            if ($_SESSION['upper12_nomargin_yesno']) $rightx = $width + $actual_page_deltax;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'] + $actual_page_deltax;
             
             for ($i = 1; $i < 3; $i++) {
                 $tempy = $y - $i * $system_line_height;
@@ -1646,9 +1647,9 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
             $stroke_dasharray = $_SESSION['baseline_style'];
             $tempy = $y;
             
-            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
-            if ($_SESSION['baseline_nomargin_yesno']) $rightx = $width;
-            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'] + $actual_page_deltax;
+            if ($_SESSION['baseline_nomargin_yesno']) $rightx = $width + $actual_page_deltax;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'] + $actual_page_deltax;
             
             $lines_string .= "<line x1=\"$leftx\" y1=\"$tempy\" x2=\"$rightx\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
@@ -1658,9 +1659,9 @@ function InsertAuxiliaryLinesInLayoutedSVG( $starty, $system_line_height, $line_
             $stroke_dasharray = $_SESSION['lower_style'];
             $tempy = $y + $system_line_height;
             
-            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'];
-            if ($_SESSION['lower_nomargin_yesno']) $rightx = $width;
-            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'];
+            $leftx = $x + $_SESSION['auxiliary_lines_margin_left'] + $actual_page_deltax;
+            if ($_SESSION['lower_nomargin_yesno']) $rightx = $width + $actual_page_deltax;
+            else $rightx = $width - $_SESSION['auxiliary_lines_margin_right'] + $actual_page_deltax;
             
             $lines_string .= "<line x1=\"$leftx\" y1=\"$tempy\" x2=\"$rightx\" y2=\"$tempy\" stroke-dasharray=\"$stroke_dasharray\" style=\"stroke:$color;stroke-width:$thickness\" />";
         }
@@ -1726,7 +1727,7 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
 }
 
 function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, $force_left_align ) {
-    global $distance_words, $vector_value_precision, $baseline_y, $word_tags;
+    global $distance_words, $vector_value_precision, $baseline_y, $word_tags, $actual_page_deltax;
     //echo "DrawOneLineInLayoutedSVG(): word_position_y = $word_position_y<br>";
     //var_dump($word_tags);
     $angle = $_SESSION['token_inclination'];
@@ -1766,16 +1767,16 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
         if ($_SESSION['show_distances']) {
             // mark distances graphically
             // normal distance = blue
-            $ndx = $word_position_x - $normal_distance;
+            $ndx = $word_position_x - $normal_distance + $actual_page_deltax;
             $ndy = $word_position_y - 30;
-            $ndwidth = $normal_distance;
+            $ndwidth = $normal_distance + $actual_page_deltax;
             $ndheight = 40;
             //echo "ndx: $ndx ndy: $ndy normal_distance: $normal_distance ndwidth: $ndwidth ndheight: $ndheight<br>";
             if ($i > 0) $svg_string .= "<rect x=\"$ndx\" y=\"$ndy\" width=\"$ndwidth\" height=\"$ndheight\" style=\"fill:white;stroke:blue;stroke-width:1;opacity:0.5\" />";
             // additional distance = purple
-            $adx = $ndx + $normal_distance;
+            $adx = $ndx + $normal_distance + $actual_page_deltax;
             $ady = $word_position_y - 30;
-            $adwidth = $align_shift_x;
+            $adwidth = $align_shift_x + $actual_page_deltax;
             $adheight = 40;
             //echo "ndx: $ndx ndy: $ndy normal_distance: $normal_distance ndwidth: $ndwidth ndheight: $ndheight<br>";
             if ($i > 0) $svg_string .= "<rect x=\"$adx\" y=\"$ady\" width=\"$adwidth\" height=\"$adheight\" style=\"fill:white;stroke:purple;stroke-width:1;opacity:0.5\" />";
@@ -1801,7 +1802,7 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             
                             $scale = 1;
                             $tsize = $word_splines[$i][1] ;                         // element 1 contains size
-                            $tx = ($word_position_x + $align_shift_x) / $scale;
+                            $tx = ($word_position_x + $align_shift_x) / $scale + $actual_page_deltax;
                             $ty = $word_position_y / $scale; // + $extra_shift_y;
                             // $svg_color = $_SESSION['token_color'];                  // use same color as shorthand text (that was a bad idea by the way ... :)
                             //$svg_color = "black";  // fix this with a hardcoded value for the moment (too complicated otherwhise to fix this bug ...)
@@ -1834,18 +1835,18 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             // insert word
             for ($n = 0; $n < count($word_splines[$i])-tuplet_length; $n+=tuplet_length) {
             
-                $x1 = round($word_splines[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $x1 = round($word_splines[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $y1 = round($word_splines[$i][$n+1] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-                $q1x = round($word_splines[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q1x = round($word_splines[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $q1y = round($word_splines[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $relative_thickness = ($_SESSION['rendering_middleline_yesno']) ? $word_splines[$i][$n+4] : 1.0;
                 $relative_thickness = AdjustThickness($relative_thickness);
                 // adjustment for shadowed parts
                 if ($original_thickness > 1.0) $relative_thickness *= $_SESSION['token_shadow'];
                 $unused = $word_splines[$i][$n+5];
-                $q2x = round($word_splines[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q2x = round($word_splines[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $q2y = round($word_splines[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-                $x2 = round($word_splines[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $x2 = round($word_splines[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $y2 = round($word_splines[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
                 // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
@@ -1864,17 +1865,17 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             // (note: there's only one separate spline per word ... which means: only one token can use a diacritic token per word ...
             for ($n=0; $n<count($word_separate_spline[$i])-tuplet_length; $n+=tuplet_length) {
                 
-                $x1 = round($word_separate_spline[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $x1 = round($word_separate_spline[$i][$n] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $y1 = round($word_separate_spline[$i][$n+1] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-                $q1x = round($word_separate_spline[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q1x = round($word_separate_spline[$i][$n+2] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $q1y = round($word_separate_spline[$i][$n+3] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $relative_thickness = $word_separate_spline[$i][$n+4];
                 $relative_thickness = AdjustThickness($relative_thickness);
                 
                 $unused = $word_separate_spline[$i][$n+5];
-                $q2x = round($word_separate_spline[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $q2x = round($word_separate_spline[$i][$n+6] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $q2y = round($word_separate_spline[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
-                $x2 = round($word_separate_spline[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP);
+                $x2 = round($word_separate_spline[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $y2 = round($word_separate_spline[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
                 // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
@@ -1904,11 +1905,14 @@ function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
 }
 
 function InsertPageNumber() {
-    global $actual_page_number;
+    global $actual_page_number, $actual_page_deltax;
     $output = "";
+    // IMPORTANT:
+    // the book layout (deltax for odd vs even pages) doesn't take are of first and start values 
+    // it is always calculated directly from raw variable actual_page_number!
     $first = $_SESSION['output_page_number_first'];     // first page number that has to be printed
     $start = $_SESSION['output_page_number_start'];     // first page on which first page number has to be printed
-    $posx = $_SESSION['output_page_number_posx'];
+    $posx = $_SESSION['output_page_number_posx'] + $actual_page_deltax;
     $posy = $_SESSION['output_page_number_posy'];
     $color = $_SESSION['output_page_number_color'];
     
@@ -1919,17 +1923,44 @@ function InsertPageNumber() {
                     }
                     break;
     }
+    // must be done outside of this function with book options active
     $actual_page_number++;      // InsertPageNumber() increments page number (in order to be sure that it's incremented each time function is called and only here)
+    $actual_page_deltax = GetDeltaXForActualPage($actual_page_number); // adjust global variable actual_page_deltax just once (after incrementing actual_page_number)
     return $output;
 }
 
 function InsertLineNumbers() {
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
-        $global_debug_string, $global_number_of_rules_applied, $actual_page_number;
+        $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $actual_page_deltax;
     
-    $output = "";
-    
-   if ($_SESSION['output_line_number_yesno']) {
+   $output = "";
+   $output_line_numbers_on_this_page = false;
+   //echo "layouted_book_yesno: >" . $_SESSION['layouted_book_yesno'] . "<<br>";
+   // define x position for line number
+   $posx = $_SESSION['output_line_number_posx']; // default value
+   // check if book layout is selected and adjust value if necessary
+   // We're definitely fighting spaghetti code here ... turns out that the algorithm works, BUT:
+   // things are exactly the other way around, i.e: deltax and line numbers are inserted on odd
+   // pages when even pages are selected and viceversa ... I suppose this comes from the fact
+   // that page number is automatically incremented when InsertPageNumber() is called.
+   // separating incrementation from this function is not possible (produces strange horizontal
+   // layouts). So personally I think it's better to live with this imperfection and simply
+   // change the labelling of the fields in the input form, i.e: where it says "even" actually
+   // the odd value is set and viceversa ...
+   if ($_SESSION['layouted_book_yesno']) {
+        switch ($actual_page_number % 2) { 
+            case 1 : $posx = $_SESSION['layouted_book_lines_posx_odd'] + $actual_page_deltax; 
+                     if ($_SESSION['layouted_book_lines_odd_yesno']) $output_line_numbers_on_this_page = true;
+                     break;
+            case 0 : $posx = $_SESSION['layouted_book_lines_posx_even'] + $actual_page_deltax;
+                     if ($_SESSION['layouted_book_lines_even_yesno']) $output_line_numbers_on_this_page = true;
+                     break;
+        }
+   }
+   //echo "actual_page_number: >$actual_page_number< actual_page_deltax: >$actual_page_deltax< output_line_numbers_on_this_page: >$output_line_numbers_on_this_page<<br>";
+   if ((($_SESSION['layouted_book_yesno'] === false) && ($_SESSION['output_line_number_yesno']))
+       || (($_SESSION['layouted_book_yesno']) && ($output_line_numbers_on_this_page))) {   
+        //echo "page: $actual_page_number => print line numbers on posx: $posx<br>";
         $standard_height = 10; // why does standard_height get modified?!? (shouldn't!)
         $system_line_height = $standard_height * $_SESSION['token_size'];
         $num_system_lines = $_SESSION['num_system_lines'];
@@ -1945,7 +1976,7 @@ function InsertLineNumbers() {
         $bottom_limit = $max_height-$bottom_margin; // -$line_height; // baseline_y-bug: impossible to set baseline to 0 in calculation; extra_shift_y to correct bug etc. => has to be investigated!
     
         $step = $_SESSION['output_line_number_step'];
-        $posx = $_SESSION['output_line_number_posx'];
+        // $posx = $_SESSION['output_line_number_posx'];  // has been defined above
         $color = $_SESSION['output_line_number_color'];
     
         $loop_end = (int)(($_SESSION['output_height'] - $bottom_margin - $starty) / $line_height) + 1;
@@ -1967,14 +1998,16 @@ function InsertLineNumbers() {
 }
 
 function InsertSeparatePageForOriginalText($max_width, $max_height, $svg_string, $original_text_last_page_buffer, $where) {
-    global $actual_page_number;
+    global $actual_page_number, $actual_page_deltax;
     if ($where === "before") {
             // adjust page number
             //echo "actual_page_number: $actual_page_number<br>";
             $actual_page_number -= 2;   // reference is first shorthand page: if this one has page number 1, preceeding page with original text will have number 0
+            $actual_page_deltax = GetDeltaXForActualPage($actual_page_number); // no guaranteed to work ...
             $separate_page = GetCompleteSVGTextPage($max_width, $max_height, $_SESSION['layouted_original_text_size'], $original_text_last_page_buffer);
             // restore original page number + 1
             $actual_page_number += 2; // only add 2 because actual page number has be incremented by InsertPageNumber() called via GetCompleteSVGTextPage()
+            $actual_page_deltax = GetDeltaXForActualPage($actual_page_number); // no guaranteed to work ...
             $svg_string = preg_replace("/#P#L#A#C#E#H#O#L#D#E#R#B#E#F#O#R#E#/", "\n$separate_page", $svg_string);     
     } else {
             // if page with original text comes after page with shorthand text, no adaptions are necessary
@@ -1995,13 +2028,26 @@ function FilterOriginalWord($word) {
     return $word;
 }
 
+function GetDeltaXForActualPage( $page ) {
+    switch ($page % 2) {
+        // return delta x for left (odd) page
+        case 1 : if ($_SESSION['layouted_book_yesno']) return $_SESSION['layouted_book_deltax_odd'];
+                 else return 0; 
+                 break;
+        // return delta x for right (even) page
+        case 0 : if ($_SESSION['layouted_book_yesno']) return $_SESSION['layouted_book_deltax_even'];
+                 else return 0;
+                 break;
+    }
+}
 
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
-        $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $word_tags;
+        $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $actual_page_deltax, $word_tags;
     // set variables
     $actual_page_number = 1;
+    $actual_page_deltax = GetDeltaXForActualPage($actual_page_number);
     $original_text_last_page_buffer = "";
     //$left_margin = 5; $right_margin = 5;
     //$num_system_lines = 3;  // inline = 6 (default height); 5 means that two shorthand text lines share bottom and top line; 4 means that they share 2 lines aso ...
@@ -2292,6 +2338,7 @@ function CalculateLayoutedSVG( $text_array ) {
     //} else {
         // NormalText2NormalTextInLayoutedSVG();
     //}   
+    
     }
     // PROBLEM: (1) if temp_width exceeds right border at the same time as last
     // element in array is reached (in foreach-loop), the remaining word won't
