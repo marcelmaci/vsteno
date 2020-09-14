@@ -217,7 +217,24 @@ function InitializeSessionVariables() {
     $_SESSION['layouted_book_lines_posx_odd'] = 658;   
     $_SESSION['layouted_book_lines_even_yesno'] = false; 
     $_SESSION['layouted_book_lines_posx_even'] = 0; 
-    
+   
+    // books: page and text dimensions
+    // page
+    $_SESSION['layouted_book_page_dimension_yesno'] = false;
+    $_SESSION['layouted_book_page_dimension_x1'] = 0;
+    $_SESSION['layouted_book_page_dimension_y1'] = 0;
+    $_SESSION['layouted_book_page_dimension_x2'] = $_SESSION['output_width'];
+    $_SESSION['layouted_book_page_dimension_y2'] = $_SESSION['output_height'];
+    $_SESSION['layouted_book_page_dimension_color'] = "black";
+/*
+    // text
+    $_SESSION['layouted_book_text_dimension_yesno'] = false;
+    $_SESSION['layouted_book_text_dimension_x1'] = 0;
+    $_SESSION['layouted_book_text_dimension_y1'] = 0;
+    $_SESSION['layouted_book_text_dimension_x2'] = 0;
+    $_SESSION['layouted_book_text_dimension_y2'] = 0;
+    $_SESSION['layouted_book_text_dimension_color'] = "black";
+*/    
     // spacer variables
     $_SESSION['spacer_autoinsert'] = false;
     $_SESSION['spacer_vowel_groups'] = "";
@@ -373,6 +390,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['lower_nomargin_yesno'] = (htmlspecialchars($_POST['lower_nomargin']) === "nomargin") ? true : false;
     
     // options for book layouts
+    // left/right shifting and line numbers
     $_SESSION['layouted_book_yesno'] = (htmlspecialchars($_POST['layouted_book_yesno']) === "yes") ? true : false;
     $_SESSION['layouted_book_deltax_odd'] = htmlspecialchars($_POST['layouted_book_deltax_odd']);
     $_SESSION['layouted_book_deltax_even'] = htmlspecialchars($_POST['layouted_book_deltax_even']);
@@ -381,6 +399,23 @@ if ($_POST['token_size'] != "") {
     $_SESSION['layouted_book_lines_even_yesno'] = (htmlspecialchars($_POST['layouted_book_lines_even_yesno']) === "yes") ? true : false;
     $_SESSION['layouted_book_lines_posx_even'] = htmlspecialchars($_POST['layouted_book_lines_posx_even']);
     
+    // books: page and text dimensions
+    // page
+    $_SESSION['layouted_book_page_dimension_yesno'] = (htmlspecialchars($_POST['layouted_book_page_dimension_yesno']) === "yes") ? true : false;
+    $_SESSION['layouted_book_page_dimension_x1'] = htmlspecialchars($_POST['layouted_book_page_dimension_x1']);
+    $_SESSION['layouted_book_page_dimension_y1'] = htmlspecialchars($_POST['layouted_book_page_dimension_y1']);
+    $_SESSION['layouted_book_page_dimension_x2'] = htmlspecialchars($_POST['layouted_book_page_dimension_x2']);
+    $_SESSION['layouted_book_page_dimension_y2'] = htmlspecialchars($_POST['layouted_book_page_dimension_y2']);
+    $_SESSION['layouted_book_page_dimension_color'] = htmlspecialchars($_POST['layouted_book_page_dimension_color']);
+/*    
+    // books: text
+    $_SESSION['layouted_book_text_dimension_yesno'] = (htmlspecialchars($_POST['layouted_book_text_dimension_yesno']) === "yes") ? true : false;
+    $_SESSION['layouted_book_text_dimension_x1'] = htmlspecialchars($_POST['layouted_book_text_dimension_x1']);
+    $_SESSION['layouted_book_text_dimension_y1'] = htmlspecialchars($_POST['layouted_book_text_dimension_y1']);
+    $_SESSION['layouted_book_text_dimension_x2'] = htmlspecialchars($_POST['layouted_book_text_dimension_x2']);
+    $_SESSION['layouted_book_text_dimension_y2'] = htmlspecialchars($_POST['layouted_book_text_dimension_y2']);
+    $_SESSION['layouted_book_text_dimension_color'] = htmlspecialchars($_POST['layouted_book_text_dimension_color']);
+*/    
     // layouted svg
     $_SESSION['left_margin'] = htmlspecialchars($_POST['left_margin']);
     $_SESSION['right_margin'] = htmlspecialchars($_POST['right_margin']);

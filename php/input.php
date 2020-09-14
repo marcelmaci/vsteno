@@ -310,7 +310,7 @@ Umbruch <input type="text" name="layouted_original_text_wrap"  size="3" value="<
 <input type="radio" name="layouted_original_text_position" value="before" <?php echo ($_SESSION['layouted_original_text_position'] === "before") ? "checked" : "";?>> vorher
 <input type="radio" name="layouted_original_text_position" value="after" <?php echo ($_SESSION['layouted_original_text_position'] !== "before") ? "checked" : "";?>> nachher
 <br>
-<input type="checkbox" name="layouted_book_yesno" value="yes" <?php echo ($_SESSION['layouted_book_yesno']) ? "checked" : "";?>> Buch: 
+<input type="checkbox" name="layouted_book_yesno" value="yes" <?php echo ($_SESSION['layouted_book_yesno']) ? "checked" : "";?>> Buch:
 Delta-X: 
 gerade: <input type="text" name="layouted_book_deltax_odd"  size="3" value="<?php echo $_SESSION['layouted_book_deltax_odd']; ?>">
 ungerade: <input type="text" name="layouted_book_deltax_even"  size="3" value="<?php echo $_SESSION['layouted_book_deltax_even']; ?>"> -
@@ -321,6 +321,26 @@ gerade
 ungerade 
 <input type="checkbox" name="layouted_book_lines_even_yesno" value="yes" <?php echo ($_SESSION['layouted_book_lines_even_yesno']) ? "checked" : "";?>> ein
 <input type="text" name="layouted_book_lines_posx_even"  size="3" value="<?php echo $_SESSION['layouted_book_lines_posx_even']; ?>">
+<br>
+<input type="checkbox" name="layouted_book_page_dimension_yesno" value="yes" <?php echo ($_SESSION['layouted_book_page_dimension_yesno']) ? "checked" : "";?>> 
+Beschnitt: 
+x1<input type="text" name="layouted_book_page_dimension_x1"  size="3" value="<?php echo $_SESSION['layouted_book_page_dimension_x1']; ?>">
+y1<input type="text" name="layouted_book_page_dimension_y1"  size="3" value="<?php echo $_SESSION['layouted_book_page_dimension_y1']; ?>">
+x2<input type="text" name="layouted_book_page_dimension_x2"  size="3" value="<?php echo $_SESSION['layouted_book_page_dimension_x2']; ?>">
+y2<input type="text" name="layouted_book_page_dimension_y2"  size="3" value="<?php echo $_SESSION['layouted_book_page_dimension_y2']; ?>">
+Farbe<input type="text" name="layouted_book_page_dimension_color"  size="3" value="<?php echo $_SESSION['layouted_book_page_dimension_color']; ?>">
+
+<!--
+<br>
+<input type="checkbox" name="layouted_book_text_dimension_yesno" value="yes" <?php echo ($_SESSION['layouted_book_text_dimension_yesno']) ? "checked" : "";?>> 
+Spiegel:
+x1<input type="text" name="layouted_book_text_dimension_x1"  size="3" value="<?php echo $_SESSION['layouted_book_text_dimension_x1']; ?>">
+y1<input type="text" name="layouted_book_text_dimension_y1"  size="3" value="<?php echo $_SESSION['layouted_book_text_dimension_y1']; ?>">
+x2<input type="text" name="layouted_book_text_dimension_x2"  size="3" value="<?php echo $_SESSION['layouted_book_text_dimension_x2']; ?>">
+y2<input type="text" name="layouted_book_text_dimension_y2"  size="3" value="<?php echo $_SESSION['layouted_book_text_dimension_y2']; ?>">
+Farbe<input type="text" name="layouted_book_text_dimension_color"  size="3" value="<?php echo $_SESSION['layouted_book_text_dimension_color']; ?>">
+-->
+
 <br>
 Filter: 
 <input type="checkbox" name="layouted_original_text_filter_brackets" value="yes" <?php echo ($_SESSION['layouted_original_text_filter_brackets']) ? "checked" : "";?>> Brackets []

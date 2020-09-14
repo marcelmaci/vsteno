@@ -2044,6 +2044,31 @@ function GetDeltaXForActualPage( $page ) {
     }
 }
 
+function InsertPageAndTextDimensions() {
+    $output="";
+    if ($_SESSION['layouted_book_page_dimension_yesno']) {
+        $x1 = $_SESSION['layouted_book_page_dimension_x1'];
+        $y1 = $_SESSION['layouted_book_page_dimension_y1'];
+        $width = $_SESSION['layouted_book_page_dimension_x2'] - $x1;
+        $height = $_SESSION['layouted_book_page_dimension_y2'] - $y1;
+        $color = $_SESSION['layouted_book_page_dimension_color'];
+        $output .= "<rect x='$x1' y='$y1' width='$width' height='$height' style='stroke:$color;stroke-width:5;stroke-width:5;fill:white;fill-opacity:1' />";
+    }
+/*
+    if ($_SESSION['layouted_book_text_dimension_yesno']) {
+        $x1 = $_SESSION['layouted_book_text_dimension_x1'];
+        $y1 = $_SESSION['layouted_book_text_dimension_y1'];
+        $width = $_SESSION['layouted_book_text_dimension_x2'] - $x1;
+        $height = $_SESSION['layouted_book_text_dimension_y2'] - $y1;
+        $color = $_SESSION['layouted_book_text_dimension_color'];
+        // correct x
+        $x1 += GetDeltaXForActualPage();
+        $output .= "<rect x='$x1' y='$y1' width='$width' height='$height' style='stroke:$color;stroke-width:5;fill:white;fill-opacity:1' />";
+    }
+*/
+    return $output;
+}
+
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
@@ -2078,6 +2103,7 @@ function CalculateLayoutedSVG( $text_array ) {
     $svg_string = "$placeholder<svg width=\"$max_width\" height=\"$max_height\"><g stroke-linecap=\"miter\" stroke-linejoin=\"miter\" stroke-miterlimit=\"20\" style=\"shape-rendering:geometricPrecision\">\n";
     $svg_string .= InsertPageNumber();
     $svg_string .= InsertLineNumbers();
+    $svg_string .= InsertPageAndTextDimensions();
     
     if ($_SESSION['show_margins']) {
         // rectangle to show width&heigt of svg
@@ -2318,6 +2344,7 @@ function CalculateLayoutedSVG( $text_array ) {
                 // insert page number
                 $svg_string .= InsertPageNumber();
                 $svg_string .= InsertLineNumbers();
+                $svg_string .= InsertPageAndTextDimensions();
     
                  // rectangle to show width&heigt of svg
                 if ($_SESSION['show_margins']) $svg_string .= "<rect width=\"$max_width\" height=\"$max_height\" style=\"fill:white;stroke:red;stroke-width:5;opacity:0.5\" />";
