@@ -18,10 +18,10 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 <h1>Neuigkeiten</h1>
 <p><b>25/09/20 Druckausgabe "Der Widerspenstigen Zähmung" lieferbar!</b><p>
 <p>Das erste vollumfänglich mit VSTENO generierte Buch ist nun lieferbar:<br><p>
-<table>
+<table style="border-spacing:0px">
 <tr>
 <td>
-<img src="../web/cover_final_bw.jpg" height="300"></td>
+<a href="dwz_details.php"><img src="../web/cover_final.jpg" height="300"></a></td>
 <td>
 Die Geschichte des gutmütigen Offenbacher Auslaufers Adolf Borges und seiner boshaften Gattin Katharina vereint die Leichtigkeit des Humors mit menschlicher Tragik. Der bis dahin eher als Spaßmacher bekannte Karl Ettlinger mausert sich in diesem Werk zum Meistererzähler, der sich nicht scheut, Shakespeares Klassiker neu in Szene zu setzen.
 
@@ -33,8 +33,9 @@ Münchener Zeitung, 19.11.1919</p>
 </td>
 </tr>
 </table>
-</p>
-<p>Möchten Sie genaueres wissen? Dann machen Sie sich ein Bild mit dem <a href="dwz_details.php">Blick ins Buch</a> oder laden Sie das Werk als <a href="library.php">E-Book</a> herunter.</p>
+
+<p>Möchten Sie genaueres wissen? Dann machen Sie sich ein Bild mit dem <a href="dwz_details.php">Blick ins Buch</a> oder laden Sie das Werk 
+als <a href="library.php">eBook</a> herunter.</p>
 
 <center>* * *</center>
 <p>=> Hier finden Sie <a href="old_news.php">ältere News-Einträge</a>.
