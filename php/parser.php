@@ -150,9 +150,9 @@ function GenericParser( $table, $word ) {
 
 function extended_preg_replace( $pattern, $replacement, $string) {
         global $global_warnings_string, $avoid_empty_result;
-        if ($pattern === "/(\\)/") {
-                echo "PATTERN: " . htmlspecialchars($pattern) . " REPLACEMENT: " . htmlspecialchars($replacement) . " STRING: " . htmlspecialchars($string) . "<br>";
-        }
+        //if ($pattern === "/(\\)/") {
+          //      echo "PATTERN: " . htmlspecialchars($pattern) . " REPLACEMENT: " . htmlspecialchars($replacement) . " STRING: " . htmlspecialchars($string) . "<br>";
+        //}
         switch ($replacement) {
                 // tried to replace $word[1] by mb_substr($word, 0, 1) - didn't work! (why?!)
                 // characters with umlaut (ä,ö,ü) are not handled correctly, neither by strtoupper() nor strtolower() ! (BUG)
