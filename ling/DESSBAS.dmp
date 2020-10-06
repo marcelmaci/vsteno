@@ -186,8 +186,8 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "^[Tt]er-?r", "[Ss]er-?bi", "Pier-?re" }; // Terrain, Serbien
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
-		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber" }; // Schil-der+ung: reorganize syllabical structure ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
@@ -487,7 +487,7 @@
 		"(?<!#)-?(lich(?:-|#)?kei-?t)" => "#$1";
 
 		// -bar(ensr)
-		"\|(ba-?r(?:(?:e-?r)?e[rsnm]?)?)" => "-$1";
+		"\|(ba-?r(?!t)(?:(?:e-?r)?e[rsnm]?)?)" => "-$1"; // added (?!t) because auf Rübezahlbart
 
 		// in vs inner
 		"([Ii]n)\+(ner)" => "$1-$2";
@@ -1178,9 +1178,20 @@
 		"([Ww]al)\|(len-?de)" => "$1-$2"; // Wal-Lende (Computers are stupid ... and funny! :):):)
 
 		"([Tt]rau)-?m-?(un)-?(ge)-?(tü-?m)" => "$1m|$2+$3+$4"; // Traumungetüm
+		"([Dd]op-?pel)-?(ver.?d)" => "$1|$2"; // Doppelverdienertum
+
+		"([Ll])(?:e|é)-?g-?(?:e|è)-?r.?er\+" => "$1e-ger-er+"; // legerer (lé-gè-rer+)
+		"^([Ss]o).?(und).?(so)$" => "$1|$2|$3";
+
+		"([Ww]aadt)-?l" => "$1|l"; // Waadtland (purists probably are not going to agree, since England is written with @l3 ... nevermind:)
 
 		"([Rr]e-?de)#?(wen-?dung)" => "$1|$2"; // Redewendung
 		"([Mm]aus)(to-?t)" => "$1|$2"; // maustot (why doesn't phpsyllable recognize any syllable here?)
+
+		"([Aa]uf)-?g-?e-?r\+?eg(-?t)" => "$1+ge+reg$2"; // aufgeregter
+		"([Ss]cheu-?nen)-?(dre-?scher)" => "$1|$2"; // another strange case where phpsyllable doesn't recognize the syllables
+
+
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2003,6 +2014,11 @@
 		"[Mm]atch" => "matsch";
 
 		"([Pp]a-?ra)-?p-?lu-?ie" => "$1-plüi"; // Parapluie
+		"[Ll](?:e|é)-?g-?er\+?s?$" => "le[G^][#2][-E]";
+		"[Ll]e-?ge-?r" => "le[G^]er";
+		"([Cc]ha-?rak)-?t-?e-?re" => "$1[&T&E][E][VR]e"; // Charakteren
+		"([Mm]i-?li-?)eu(s)?" => "$1ö$2";
+		"([Rr]e-?p-?)er.?(toi-?re)" => "$1Er-$2"; // Repertoire 
 
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => { "$1$2$3", "[Rr]hein" }; // Rhizinus, Rhetorik etc.
@@ -2926,7 +2942,7 @@
 		
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
-		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
@@ -3150,7 +3166,7 @@
 		"^([Ss]ch|[Zz])ien$" => "$1[I]n";
 		"(?<=pb)ien$" => "[&I]{EN}";
 		//"je" => "[J][E]";
-		"iet" => "[I]t";
+		"iet" => { "[I]t", "[Nn]iet-?z-?sche" };
 		"([^c])(haft)$" => "$1{HAFT}";
 		"{ANT}{LICH}" => "en{TLICH}";
 		"{ET}t" => "e[TT]";
@@ -3259,7 +3275,7 @@
 		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
 		"ih(-)?([rnm])" => "i$1$2";
 		"äht" => "ät";
-		"t-?z" => "z"; // conserve syllable?
+		"t-?z" => { "z", "[Nn]ie-?t-?z-?sche" }; // conserve syllable?
 		"ph" => "f";
 		"ß" => "ss";
 		"üh(-)?([lrmn])" => "ü$1$2";
@@ -3268,7 +3284,7 @@
 
 		"uhr" => "ur";
 		
-		"ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re" }; // list with exceptions
+		"ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re", "[Nn]ie-?t-?z-?sche" }; // list with exceptions
 		"ie" => "i-e"; // separation (2 syllables)
 		
 		"ühr" => "ür";
@@ -5042,7 +5058,7 @@
 
 		"{ALL}E{DEM}" => "[A][L][-E]\\[DEM]"; // alledem
 		//"{VOR}r" => "[VOR+AR]";
-		//"{ER}r" => "[VR+AR]";
+		"{ER}\[AR\]" => "[VR+AR]";
 		"(.){DES}" => "$1[S]";
 		"{DES}" => "[S=]";
 		"^{DE(M|N)}$" => "[DE$1]";
