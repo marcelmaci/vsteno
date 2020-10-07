@@ -26,6 +26,9 @@ enthält folgende Verbesserungen.</p>
     - Französisch (FRSSBAS): diverse Korrekturen (hohe Zuverlässigkeit)<br>
     - English (ENSSBAS): keine Änderungen<br>
     </li>
+    <li><b>Dokumentation</b><br>
+    - Printeditions: Anleitungen zur Erstellung von Taschenbüchern<br>
+    </li>
 </ul>
 
 <h1>Ariadne (Version 0.2)</h1>

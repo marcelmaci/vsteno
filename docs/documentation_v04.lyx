@@ -2089,6 +2089,120 @@ passen
 \end_layout
 
 \begin_layout Subsubsection*
+Textformatierung
+\end_layout
+
+\begin_layout Standard
+Bevor wir mit der Bucherstellung beginnen können, muss natürlich der Drucktext
+ selber erst formatiert, d.h.
+ z.B.
+ in Abschnitte, Kapitel unterteilt oder mit speziellen Formathinweisen versehen
+ werden.
+ Hierfür können die Inline-Option-Tags (siehe dort) verwendet werden.
+ Zur Illustration einige Beispiele von Formatierungen, wie sie z.B.
+ in Karl Ettlingers 
+\begin_inset Quotes eld
+\end_inset
+
+Der Widerstenstigen Zähmung
+\begin_inset Quotes erd
+\end_inset
+
+, dem ersten Buch, das vollständig mit VSTENO editiert wurde, zur Anwendung
+ kamen:
+\end_layout
+
+\begin_layout Itemize
+Abschnitte können mit Zeilenumbrüchen realisiert werden (im folgenden Beispiel
+ wird jeweils mit zwei <br>-Tags eine Leerzeile zwischen den Paragraphen
+ eingefügt):
+\end_layout
+
+\begin_layout LyX-Code
+Dies ist der erste Abschnitt
+\end_layout
+
+\begin_layout LyX-Code
+<br> <br> Dies ist der zweite Abschnitt.
+\end_layout
+
+\begin_layout LyX-Code
+<br> <br> Dies ist der dritte Abschnitt.
+\end_layout
+
+\begin_layout Itemize
+Neue Seiten können mit dem Newpage-Tag eingefügt werden:
+\end_layout
+
+\begin_layout LyX-Code
+Erste Seite
+\end_layout
+
+\begin_layout LyX-Code
+<newpage> zweite Seite
+\end_layout
+
+\begin_layout LyX-Code
+<newpage> dritte Seite
+\end_layout
+
+\begin_layout Itemize
+Nützlich ist auch das Wechseln zwischen Kurzschrift und Langschrift (z.B.
+ zur Wiedergabe von mundartlichen Passagen, welche in Langschrift geschrieben
+ werden sollen):
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=shorthand> Text in Kurzschrift.
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=handwriting> Text wird in Langschrift.
+\end_layout
+
+\begin_layout LyX-Code
+<@token_type=shorthand> Zurück zur Kurzschrift
+\end_layout
+
+\begin_layout Standard
+Standardmässig wird für die Langschrift der Schrifttyp 1 verwendet.
+ Weitere Schrifttypen können neu erstellt, mit dem TokenShifter skaliert
+ und mit <@handwriting_marker=x> selektiert werden (x entspricht dem Schrifttyp)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Vordefiniert wurden die Typen '' = Basistyp gross (100%), 0 = Basistyp klein
+ (50%), 1 = Standardtyp, passend zu Kurzschrift (Skalierung horizontal/vertikal
+ = 50%/70%) .
+ Der Basistyp gross wird mit <@handwriting_marker=''> (leer) definiert.
+ Die Angabe des Langschrift-Schrifttyps ist auch im Eingabeformular MAXI
+ unter 
+\begin_inset Quotes eld
+\end_inset
+
+Zeichen
+\begin_inset Quotes erd
+\end_inset
+
+ => 
+\begin_inset Quotes eld
+\end_inset
+
+Handwriting
+\begin_inset Quotes erd
+\end_inset
+
+ möglich.
+ 
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
 Titel
 \end_layout
 

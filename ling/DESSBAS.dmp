@@ -1213,6 +1213,7 @@
 		"^([Ss]chön).?(ge).?" => "$1|$2+"; // schöngestrählt
 		"([Ss]ei)\|(et)" => "$1-$2"; // seiet
 		"([Ee]in)-?(sich)" => "$1+$2"; // Uneinsichtigkeit
+		"([Gg]e)-?(nies-?s)" => "$1+$2"; // geniessen 
 
 	#EndSubSection(analyzer)
 #EndSection(header)
