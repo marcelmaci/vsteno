@@ -330,10 +330,10 @@
 		"(wir)\|(ren)" => "$1-$2";
 		"(wir)\|(ren)\|(der)?" => "$1-$2-$3";
 		"(wor)\+(ren)" => "$1-$2";
-		"([Mm]it)\+(ta-?g)" => "$1-$2";
+		"([Mm]it)\+(t(?:a|ä)-?g)" => "$1-$2";
 		"([Oo]h)\|(ren)" => "$1-$2";
 		"([Bb]al-?dri-?an)-?(?!\|)" => "$1|"; // word unknown by hunspell
-		"(?<![Bb])([Aa])u\|g" => "$1u-g";
+		"(?<![Bb])([Aa])u\|g" => { "$1u-g", "[Bb]lau\|ge" }; // not: blaugestrichenen
 		"([Aa]u)\|(tor)" => "$1-$2";
 		"([Ww]en)\|(n)" => "$1$2";  // this linguistical analyzer really does strange things (with "wenn's")
 		"([Ee]in)-?(tö-?nig)" => "$1+$2";
@@ -610,7 +610,7 @@
 		"(er)\+(i-?e)(?!r-?te)" => "$1$2";
 		"([Bb]er)\+(e-?si-?na)" => "$1$2";
 		"([Mm]er)\+k" => "$1k";
-		"([Ee]r)\+(ns)" => "$1$2"; 	// ernst
+		"([Ee]r)\+(ns)" => { "$1$2", "dau.?er.?ns" }; 	// ernst, not: bedauernswert
 		"([Zz]u)\+(er)\+(st)" => "$1+$2$3"; 
 		"([Pp]er)\+(l)" => "$1$2"; 	// Perle
 		
@@ -622,7 +622,7 @@
 		
 		"([Ll]er)\+n" => "$1n";
 		"([Ww]er)\+?(-?de)" => "$1$2";
-		"([Hh]er)\+r" => "$1r";
+		"([Hh]er)\+r" => { "$1r", "[Hh]er\+rüh-?r" }; // not: herrühren
 		"([Hh]er)\+(ein|aus|auf|un-?ter|nach)" => "$1-+$2"; // well, -+ is audacious ...
 		"([Ee]r)\+(i-?ka)(?!-?ni-?sch)" => "$1$2"; // Erika, Amerika; amerikanisch
 		"([Ff]er)\+t" => "$1t";
@@ -661,7 +661,7 @@
 
 		// per+ her+
 		"^([Pp]er)\+" => "$1-"; 
-		"^([Hh]er)\+" => "$1-"; 
+		"^([Hh]er)\+" => { "$1-", "[Hh]er\+rüh-?r" }; // not: herrühren 
 		
 		// er+ and in+
 		"([Ii]n)\+(der|di-?e-?[rn])" => "$1-$2";
@@ -724,7 +724,7 @@
 		"([Gg]e)[+-](wor)[+-](de)" => "$1+$2-$3";
  
 		// hinter- / vorder- (separate words)
-		"([Hh]in)-?t-?er\+(?!n$)" => "$1-ter|";
+		"([Hh]in)-?t-?er\+(?!n$)" => { "$1-ter|", "[Hh]in.?ter.?s.?t" }; // not: hinterste
 		"([Vv]or)-?d-?er\+(?!n$)" => "$1-der|";
 
 		"([Kk]er)\+(l)" => "$1-$2";
@@ -764,7 +764,7 @@
 		"([Mm]o-?nast-?er)\+" => "$1";
 		"([Bb]e\+ge)\+(hu-?n-?g)" => "$1-$2";
 		"([Ss]onn)\|(t(?:a|ä)-?g)" => "$1-$2"; 
-		"([Ee]in\+ge)\+(b)(?!un-?d|o-?[rg])" => { "$1$2", "^[Ee]in\+ge\+br" };
+		"([Ee]in\+ge)\+(b)(?!un-?d|o-?[rg])" => { "$1$2", "^[Ee]in\+ge\+b(?:r|ü)" };
 		"([Aa]k-?ku)\|?(ra-?t)" => "$1-$2";
 		"([Aa]uf)-?(ge)-?(frisch)" => "$1+$2+$3";
  		"([Aa]uf)-?(fri-?sch)" => "$1+$2";
@@ -1069,7 +1069,7 @@
 		// (2) analyzer rules offer full regex
 		// (3) analyzer rules can be debugged (this can't be done with filter)
 		// so here's the regex-rule for Badespass and kreidebleich:
-		"(?<![BbLl]a-|[Kk]rei-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|he-?r", "^Ge\+?trei-?de", "^Re-de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus
+		"(?<![BbLl]a-|[Kk]rei-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|he-?r", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
 
 		"([Bb]as-?ket)-?(b(?:a|ä)l-?l)" => "$1|$2"; // Basketball, -bälle
 
@@ -1115,7 +1115,7 @@
 
 		"(^|=|\|)([Bb]e)\|" => "$1$2+"; // Be|treiber
 		"(^|=|\|)([Vv]or)\|" => "$1$2+"; // Vor|würfe
-		"(^|=|\|)([Zz]u)\|" => "$1$2+"; // Zu|stand
+		"(^|=|\|)([Zz]u)\|" => { "$1$2+", "[Gg]e.?ra-?de\|zu\|" } ; // Zu|stand, not: gerade|zu|biegen
 		"(^|=|\|)([Gg]e)\|" => "$1$2+"; // Fan-Ge|meinde
 		"(^|=|\|)([Uu]n)\|" => "$1$2+"; // Un|fall
 		"(^|=|\|)([Aa]us)\|" => "$1$2+"; // Aus|flugsort
@@ -1190,7 +1190,17 @@
 
 		"([Aa]uf)-?g-?e-?r\+?eg(-?t)" => "$1+ge+reg$2"; // aufgeregter
 		"([Ss]cheu-?nen)-?(dre-?scher)" => "$1|$2"; // another strange case where phpsyllable doesn't recognize the syllables
-
+		"([Rr]echt)-?(sch)" => "$1|$2"; // rechtschaffenen
+		"([Aa]sth?-?ma)\|(ti-?sch)" => "$1-$2"; // asthmatische (Computers are stupid ...)
+		"([Aa]uf)-?(mer-?k)" => "$1+$2"; // aufmerksam
+		"([Aa]uf).?(ge)-?(bahr)" => "$1+$2+$3"; // aufgebahrt
+		"([Ss]top-?pe)\|(li-?g)" => "$1-$2"; // stoppeligen
+		"([Aa]uf).?(g-?e)(r.?ei-?s)" => "$1+ge+$3"; // aufgereiset (schweizerdeutsch)
+		"([Ff]eg)-?(lum-?pen)" => "$1|$2"; // Feglumpen
+		"([Aa]n).?(gi.?na)" => "$1-$2"; // Angina
+		"((?:[Uu]n|[Rr]e).?kon)-?(?!\+)" => "$1+"; // unkontrollierbar 
+		"([Pp]an)\|(zer)" => "$1-$2"; // Panzerkreuzer
+		"([Ff]ar-?b-?en)-?(tu-?p-?f)" => "$1|$2"; // Farbentupf (helv.)
 
 
 	#EndSubSection(analyzer)
@@ -2019,6 +2029,11 @@
 		"([Cc]ha-?rak)-?t-?e-?re" => "$1[&T&E][E][VR]e"; // Charakteren
 		"([Mm]i-?li-?)eu(s)?" => "$1ö$2";
 		"([Rr]e-?p-?)er.?(toi-?re)" => "$1Er-$2"; // Repertoire 
+		"([Ss]chi-?zo-?phr)en" => "$1En"; // schizophren
+		"([Ww]).?er.?t" => "$1Ert";  // bedauernswerte
+
+		"([Cc]h)er.?(che)" => "$1E[VR]-$2"; // cherchez
+		"([Pp]sü.?cho.?g)en" => "$1En"; // psychogen
 
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => { "$1$2$3", "[Rr]hein" }; // Rhizinus, Rhetorik etc.
@@ -2943,7 +2958,7 @@
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re" }; // use - to detect preceeding syllable
-		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
 
@@ -2953,7 +2968,7 @@
 
 		
 		"(^|\+|\|)ver(\+)(?!$)" => "$1{VER}$2";
-		"ver-" => { "{VER}+", "Ver-?si-?on", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n", "[Vv]er-?si-?fi", "[Vv]er-?gi-?l" }; // can produce wrong results (exclude Overall, Universum)
+		"ver-" => { "{VER}+", "[Vv]er-?si-?o-?n", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n", "[Vv]er-?si-?fi", "[Vv]er-?gi-?l" }; // can produce wrong results (exclude Overall, Universum)
 
 		"^all$" => "{ALL}";
 		"\+all$" => "+{ALL}";
@@ -2970,6 +2985,7 @@
 		
 		"(?<!i)er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
+		"^[Hh]er\+r" => "HE[VR+AR]"; // herrühren
 		"(?<!d|#h)er\+" => { "{ER}", "[Ww]ie?-?d-?er" }; // more general rule
 		"\+er$" => "{ER}";
 		"(n-?d)er\+" => "$1{ER}+";
@@ -2979,7 +2995,7 @@
 		"^sel-?b" => "{SELB}";
 
 		"ant\+" => "{ANT}+";
-		"(?<!f)ant-" => "{ANT}";
+		"(?<!f)ant-" => { "{ANT}", "es-?sant" }; // not: interessantere
 
 		"an\+" => "{AN}+";
 		"[Aa]l-?le-?dem" => "{ALL}E{DEM}"; 
@@ -3135,9 +3151,11 @@
 		"(?<!sc)([Hh])all" => "[$1]a[LL]";
 		"(?<![Aa])e([ao])" => "[#W][&E]$1";
 		"ei-?([aeou])" => "[EI][&E]$1";
+		"ai-?([aeou])" => "[AI][&E]$1";
 		
 		"eu-?([aeou]|lich)" => "[EU][&E]$1";
 		"ei-?([aeou]|lich)" => "[EI][&E]$1";
+		"ai-?([aeou]|lich)" => "[AI][&E]$1";
 		"^([Aa])n([bfghklmnprswz][aeiouäöü])" => { "$1[N]$2", ".*[Aa]nker.*" };
 		
 		"sch(a|ä)ft[#-]?{LICH}" => { "{SCHAFT}{LICH}", "[Gg]e(?:-|\+|#)schäf-?t" };
@@ -3157,6 +3175,7 @@
 		"^an-?ti" => "{ANTI}";
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
+		"kon\+" => "{CON}"; // unkontrollierbar 
 		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r", "^[CcKk]on-?rad" };
 		"i-?[o|ö]-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
@@ -3284,7 +3303,7 @@
 
 		"uhr" => "ur";
 		
-		"ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re", "[Nn]ie-?t-?z-?sche" }; // list with exceptions
+		"(?<!a|a-)ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re", "[Nn]ie-?t-?z-?sche" }; // list with exceptions
 		"ie" => "i-e"; // separation (2 syllables)
 		
 		"ühr" => "ür";
@@ -3462,7 +3481,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se" };
 		"ai" => "[AI]";
 
 		"tstopt(01)n-?z" => "[NZ]";
@@ -5104,6 +5123,7 @@
 		"{FÜR}" => "[F]";
 		"{LICH}" => "[H]";
 		"{ALS}" => "[L]";
+		"^\[AR\]E{CON}" => "[AR][E][&E][C]"; // rekonstruieren (qué chorrada ... )
 		"{CON}" => "[C]";
 		"{ES}" => "[ES]";
 		"{WENN}" => "[WENN]";

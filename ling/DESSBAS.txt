@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "05/10/20";
+		"model_date" := "07/10/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -174,7 +174,7 @@
 		///////////// mark all er as affix and filter out "false positive" at the end //////////////////
 		// be- and ge- must be done before -er (because of ber- ger-)
 		// be-
-		"^([Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
+		"^([Bb]e)-(?!c-?k|t-?t|s-?s)" => { "$1+", "Be-?re-?si-?na" };
 		"(\|[Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
 
 		// ge-
@@ -186,7 +186,7 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "^[Tt]er-?r", "[Ss]er-?bi", "Pier-?re" }; // Terrain, Serbien
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
@@ -1201,7 +1201,10 @@
 		"((?:[Uu]n|[Rr]e).?kon)-?(?!\+)" => "$1+"; // unkontrollierbar 
 		"([Pp]an)\|(zer)" => "$1-$2"; // Panzerkreuzer
 		"([Ff]ar-?b-?en)-?(tu-?p-?f)" => "$1|$2"; // Farbentupf (helv.)
-
+		"([Gg]e)#(wan-?n)" => "$1+$2"; // gewann
+		"([Gg]eh).?(rö.?c.?ken)" => "$1|$2"; // Gehröcken
+		"^([Uu]n.)?([Ee]nt).(st|sch)" => "$1$2+$3"; // entstandene, unentschiedene
+		"^In.?ter.?es.?sen.?ge.?mein" => "In-ter+es-sen|ge+mein"; // Interessengemeinschaft
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2034,6 +2037,7 @@
 
 		"([Cc]h)er.?(che)" => "$1E[VR]-$2"; // cherchez
 		"([Pp]sü.?cho.?g)en" => "$1En"; // psychogen
+		"[Pp]or.?te.?mon.?n(a.?i.?e|ee?)" => "port|mon-ne"; // Portemonnaie, Portemonnee (Systemurkunde recommends: [Ä][A] (-ä) or [AI][&E][-E] (-aie, literally), but I don't agree ... :)
 
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => { "$1$2$3", "[Rr]hein" }; // Rhizinus, Rhetorik etc.
@@ -2933,7 +2937,7 @@
 		"(-|\+)li-?ch(e-?r\+?|-?s?-?t)?(e[rnsm]?|m)?$" => { "$1{LICH}$2$3", "[Zz]wil-?li-?ch" };
 
 		"ent\+" => "{ANT}+";
-		"(?<![Dd]er\+|[Dd]er-|[Dd]er)ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste, not: derentwillen
+		"(?<![Dd]er\+|[Dd]er-|[Dd]er|[Dd]es-s|[Dd]ess)ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste, not: derentwillen
 		
 		"(?<![ahHMmBbGgKk])un-?te-?r" => "{UNTER}";
 		"{UNTER}-" => "{UNTER}+";
@@ -3382,7 +3386,7 @@
 		"n-?g-?r" => "[NGR]";
 		"n-?k-?l" => "[NKL]";
 		"ns-?l" => "[NSL]";
-		"ng-?l" => "[NGL]";
+		"n-?g-?l" => "[NGL]"; // Jüngling, jonglieren
 		"r-?r-?l" => "[RRL]";
 		"n-?l" => "[NL]";
 		"n-?d[-\|+]?r" => "[NDR]";
@@ -3481,7 +3485,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais" };
 		"ai" => "[AI]";
 
 		"tstopt(01)n-?z" => "[NZ]";
