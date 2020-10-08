@@ -16,32 +16,27 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 </p>
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
-<p><b>28/08/20 Post ... !</b></p>
-<p>Heute lag ein Päckchen im Briefkasten.</p><p>Lang erwartetes und ersehntes, in Karton gepacktes Objekt von 240 Gramm.</p><p>
-Der Traum von VSTENO war es, eines Tages ein gedrucktes Buch in Händen zu halten. Haptik statt Hektik. Blättern 
-statt Wischen, Papier statt Bildschirm. Und voilà - hier ist es, das allererste, vollständig mit VSTENO generierte, gedruckte und gebundene 
-BOD*:</p>
-<img src="../web/dwz_bod1.JPG" height="300"> <img src="../web/dwz_bod2.JPG" height="300">
-<p>Es handelt sich vorerst noch um ein Unikat.</p><p>Es ist schwierig abzuschätzen, wie ein Buch letzten Endes aussieht, wenn man es vollständig 
-digital erstellt. In diesem Sinne ging es bei diesem Exemplar darum, 1:1 zu sehen, wie sich Titelseite und Text beim Blättern präsentieren, 
-wie die Schriftgrösse, das gewählte Papier und das Format wirken.</p><p>Natürlich geht es auch darum, das Werk nun ein letztes Mal Korrektur zu lesen:
-Stimmen die Stenogramme? Was muss noch korrigiert werden? Die Fertigstelltung der "Widerspenstigen" scheint mir nun näher als je. 
-Insofern: Wer das Buch vorbestellen möchte, kann dies gerne 
-per Mail tun.</p>
-<p>* Man lese: Book on Demand</p>
-<p><b>24/07/20 "Der Widerspenstigen Zähmung" von Karl Ettlinger (gedruckte Ausgabe)</b></p>
-<p>Wie bereits angekündigt soll in Bälde eine erste, vollständig mit VSTENO generierte Printausgabe erscheinen. Gewählt wurde der Roman 
-"Der Widerspenstigen Zähmung" von Karl Ettlinger. Der stenografierte Text wurde inzwischen korpuslektoriert und liegt nun in einer 
-<a href="../books/ettlinger_der_widerspenstigen_zaehmung_31072020.pdf">Prefinal-Version</a> vor. Diese wird nun ein letztes 
-Mal komplett Korrektur gelesen. Im Anschluss daran werde ich den Druck organisieren. Im Moment ist noch nicht klar, in welcher Auflage das Werk 
-erscheinen wird und was der Druck genau kostet. Wer gerne ein Exemplar vorreservieren möchte, kann sich via 
-<a href="mailto:marcel.maci@gmx.ch">Mail</a> bei mir melden.</p>
-<p>Die definitive Ausgabe wird - analog zur Ausgabe in der <a href="library.php">Bibliothek</a> - mit einer Titel und einer Schlussseite versehen 
-sein. Wer Fehler in der Prefinal-Version findet, darf diese natürlich auch gerne via Mail melden!</p>
+<p><b>25/09/20 Druckausgabe "Der Widerspenstigen Zähmung" lieferbar!</b><p>
+<p>Das erste vollumfänglich mit VSTENO generierte Buch ist nun lieferbar:<br><p>
+<table style="border-spacing:0px">
+<tr>
+<td>
+<a href="dwz_details.php"><img src="../web/cover_final.jpg" height="300"></a></td>
+<td>
+Die Geschichte des gutmütigen Offenbacher Auslaufers Adolf Borges und seiner boshaften Gattin Katharina vereint die Leichtigkeit des Humors mit menschlicher Tragik. Der bis dahin eher als Spaßmacher bekannte Karl Ettlinger mausert sich in diesem Werk zum Meistererzähler, der sich nicht scheut, Shakespeares Klassiker neu in Szene zu setzen.
 
-<p><b>18/06/20 Italienisch</b></p>
-<p>Als inzwischen fünfte Variante von Stolze-Schrey ist ab heute ein italienisches Modell (ITSSBAS) online verfügbar. Es wurde ausgehend von den 
-Regeln für Spanisch erstellt und ist zu diesem Zeitpunkt noch absolut experimentell. Für Rückmeldungen zu Fehlern bin ich dankbar.</p>
+<p><i>Ein humoristischer Roman großen Stils</i><br>
+Münchener Zeitung, 19.11.1919</p>
+
+<p>Taschenbuch (12x19cm), 238 Seiten, mattweiss mit grünem Cover. <br>Preis: 20.- CHF (zzgl. Versandkosten CHF 5.-)</p> 
+<p>Bestellen: <a href="mailto:m.maci@gmx.ch">Mail</a></p>
+</td>
+</tr>
+</table>
+
+<p>Möchten Sie genaueres wissen? Dann machen Sie sich ein Bild mit dem <a href="dwz_details.php">Blick ins Buch</a> oder laden Sie das Werk 
+als <a href="library.php">eBook</a> herunter.</p>
+
 <center>* * *</center>
 <p>=> Hier finden Sie <a href="old_news.php">ältere News-Einträge</a>.
 <br>

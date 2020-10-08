@@ -2,6 +2,33 @@
 <h1>Old News</h1>
 <p>Hier finden Sie archivierte, ältere News-Einträge.</p>
 
+<p><b>28/08/20 Post ... !</b></p>
+<p>Heute lag ein Päckchen im Briefkasten.</p><p>Lang erwartetes und ersehntes, in Karton gepacktes Objekt von 240 Gramm.</p><p>
+Der Traum von VSTENO war es, eines Tages ein gedrucktes Buch in Händen zu halten. Haptik statt Hektik. Blättern 
+statt Wischen, Papier statt Bildschirm. Und voilà - hier ist es, das allererste, vollständig mit VSTENO generierte, gedruckte und gebundene 
+BOD*:</p>
+<img src="../web/dwz_bod1.JPG" height="300"> <img src="../web/dwz_bod2.JPG" height="300">
+<p>Es handelt sich vorerst noch um ein Unikat.</p><p>Es ist schwierig abzuschätzen, wie ein Buch letzten Endes aussieht, wenn man es vollständig 
+digital erstellt. In diesem Sinne ging es bei diesem Exemplar darum, 1:1 zu sehen, wie sich Titelseite und Text beim Blättern präsentieren, 
+wie die Schriftgrösse, das gewählte Papier und das Format wirken.</p><p>Natürlich geht es auch darum, das Werk nun ein letztes Mal Korrektur zu lesen:
+Stimmen die Stenogramme? Was muss noch korrigiert werden? Die Fertigstelltung der "Widerspenstigen" scheint mir nun näher als je. 
+Insofern: Wer das Buch vorbestellen möchte, kann dies gerne 
+per Mail tun.</p>
+<p>* Man lese: Book on Demand</p>
+<p><b>24/07/20 "Der Widerspenstigen Zähmung" von Karl Ettlinger (gedruckte Ausgabe)</b></p>
+<p>Wie bereits angekündigt soll in Bälde eine erste, vollständig mit VSTENO generierte Printausgabe erscheinen. Gewählt wurde der Roman 
+"Der Widerspenstigen Zähmung" von Karl Ettlinger. Der stenografierte Text wurde inzwischen korpuslektoriert und liegt nun in einer 
+<a href="../books/ettlinger_der_widerspenstigen_zaehmung_31072020.pdf">Prefinal-Version</a> vor. Diese wird nun ein letztes 
+Mal komplett Korrektur gelesen. Im Anschluss daran werde ich den Druck organisieren. Im Moment ist noch nicht klar, in welcher Auflage das Werk 
+erscheinen wird und was der Druck genau kostet. Wer gerne ein Exemplar vorreservieren möchte, kann sich via 
+<a href="mailto:marcel.maci@gmx.ch">Mail</a> bei mir melden.</p>
+<p>Die definitive Ausgabe wird - analog zur Ausgabe in der <a href="library.php">Bibliothek</a> - mit einer Titel und einer Schlussseite versehen 
+sein. Wer Fehler in der Prefinal-Version findet, darf diese natürlich auch gerne via Mail melden!</p>
+
+<p><b>18/06/20 Italienisch</b></p>
+<p>Als inzwischen fünfte Variante von Stolze-Schrey ist ab heute ein italienisches Modell (ITSSBAS) online verfügbar. Es wurde ausgehend von den 
+Regeln für Spanisch erstellt und ist zu diesem Zeitpunkt noch absolut experimentell. Für Rückmeldungen zu Fehlern bin ich dankbar.</p>
+
 <p><b>15/04/20 - Happy Birthday VSTENO!</b><p>
 <p>Ziemlich genau zwei Jahre ist es her, dass an einem einzigen Tag die ersten Codezeilen für VSTENO entstanden: eine simple Funktion, welche 
 die nötigen Kontrollpunkte berechnete, um eine Folge von Bezier-Kurven (so genannte Splines) durch eine Reihe frei wählbarer Punkte zu legen.

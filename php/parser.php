@@ -64,6 +64,7 @@ function replace_all( $pattern, $replacement, $string ) {
         $old_string = $string; // so it is probably not necessary (and even "pernicious" (risk of infinite loop)) to include a while-loop here => watch this carefully (if errors ocurr in calculation, this might be the cause)
 */
         $string = extended_preg_replace( $pattern, $replacement, $string );
+        
 //    } while ($old_string !== $string );
     //echo "replace_all: string = $string";
     return $string;
@@ -148,7 +149,10 @@ function GenericParser( $table, $word ) {
 // nonetheless, it would have been much simpler, if php offered a regex-syntax like: "([A-Z])" => "\L$1" ...
 
 function extended_preg_replace( $pattern, $replacement, $string) {
-        global $global_warnings_string;
+        global $global_warnings_string, $avoid_empty_result;
+        //if ($pattern === "/(\\)/") {
+          //      echo "PATTERN: " . htmlspecialchars($pattern) . " REPLACEMENT: " . htmlspecialchars($replacement) . " STRING: " . htmlspecialchars($string) . "<br>";
+        //}
         switch ($replacement) {
                 // tried to replace $word[1] by mb_substr($word, 0, 1) - didn't work! (why?!)
                 // characters with umlaut (ä,ö,ü) are not handled correctly, neither by strtoupper() nor strtolower() ! (BUG)
@@ -175,12 +179,15 @@ function extended_preg_replace( $pattern, $replacement, $string) {
                            // and it'd drive me crayzy to rewrite that regex_helper.php which creates those rules (they are so complicated
                            // I don't event want to write them by hand ... :-)
                            // CAVEAT: OBSERVE VERY WELL IF THIS "APPLY-TWICE" WORKAROUND HAS ANY UNPLEASANT SIDE EFFECTS!!!
-                            $result = preg_replace( $pattern, $replacement, $string);
-                            if ($result !== $string) $result = preg_replace( $pattern, $replacement, $result);
+                            $result1 = preg_replace( $pattern, $replacement, $string);
+                            if ($result !== $string) $result = preg_replace( $pattern, $replacement, $result1);
                         break;
         }   
         //echo "extended_preg_replace: result = $result<br>";
-        if (($result === "") && ($string !== "")) $global_warnings_string .= "REGEX: RETURNS EMPTY STRING (\"$pattern\" => \"$replacement\")<br>";
+        if (($result1 === "") && ($string !== "")) {
+            $global_warnings_string .= "REGEX RETURNS EMPTY STRING: $pattern => $replacement<br>";
+            if ($avoid_empty_result) $result="EMPTY STRING"; //$string;
+        } 
         return $result;
 };
 
