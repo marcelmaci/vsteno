@@ -178,6 +178,7 @@ $only_posttokens = ")\]}\"\'";
 $pretokenlist = $numbers . $only_pretokens;               // metaparser recognizes these tokens as pre/posttokens and treats them differently 
 $posttokenlist = $punctuation . $only_posttokens . $numbers;  // treat punctuation and numbers as posttokens
 $cached_result = false;
+$avoid_empty_result = true;
 
 // variables
 $standard_height = 10;                          // height of one token like b, g, m etc.

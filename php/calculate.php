@@ -175,7 +175,7 @@ function AddMarkings($text) {
 }
 
 function CalculateStenoPage() {
-    global $global_debug_string, $global_error_string, $backport_revision1, $cached_results;
+    global $global_debug_string, $global_warnings_string, $global_error_string, $backport_revision1, $cached_results;
     $global_debug_string = "";
     CopyFormToSessionVariables();
     InitializeHunspellAndPHPSyllable(); // now that session variables have been set, initialize language for linguistics.php
@@ -253,8 +253,10 @@ function CalculateStenoPage() {
                     if (mb_strlen($global_error_string)>0) echo "<p>$global_error_string</p>";
                     else echo "<p>(empty)</p>";
                     echo "<h2>WARNINGS</h2>";
-                    if (mb_strlen($global_warnings_string)>0) echo "<p>$global_warnings_string</p>";
-                    else echo "<p>(empty)</p>";
+                    if (mb_strlen($global_warnings_string)>0) { 
+                        echo "<p>$global_warnings_string</p>";
+                        echo "<p>IMPORTANT:<br>It's possible that the listed rules are correct and that a preceeding rule is the culprit. Check the different caculation steps above to find the faulty rule.</p>";
+                    } else echo "<p>(empty)</p>";
                 } else echo "<h2>NO KNOWN* RUNTIME ERRORS.</h2><p style='font-size:10'>* ... there's a tremendously high chance for unknown unknowns ... ;-)</p>";
             } 
             InsertReturnButton();
