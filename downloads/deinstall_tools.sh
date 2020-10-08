@@ -1,25 +1,131 @@
 #!/bin/bash
-printf "Welcome to the VSTENO tools deinstallation script
-Note: This only works on DEBIAN-like systems with apt-get paket manager
-Tools hunspell and git, installed by install_tools.sh, are not removed."
+printf "Welcome to the VSTENO tools de-installation script.
 
-printf "\nremove webserver (apache2) ..."
-sudo apt-get --assume-yes remove apache2
+Note: This only works on DEBIAN-like systems with apt-get package manager.
 
-printf "\nremove php ..."
-sudo apt-get --assume-yes remove php php-common libapache2-mod-php php-cli php-mysql php-mbstring
+The installation of vsteno equally installed a number of tools.  This
+script allows you to decide which of them to remove [0], or retain [1]
+on your computer.  The following questions are mutually independent
+from each other since some the tools (e.g., git) may be used for other
+projects than vsteno, too.  Pressing 'Ctrl + C' will stop the script.
 
-printf "\nremove server ..."
-sudo apt-get --assume-yes remove mysql-server 
+It is your responsibility to backup relevant data.\n"
 
-printf "\ninstall client ..."
-sudo apt-get --assume-yes remove mysql-client
+# section apache2
+printf "\nChoose either to remove [0], or to retain [1] apache2 webserver\n"
+read APACHE
 
-printf "\ninstall workbench ..."
-sudo apt-get --assume-yes remove mysql-workbench
+case $APACHE in
+    0)
+        printf "apache2 webserver will be removed."
+        sudo apt-get --assume-yes remove apache2 ;;
+    1)
+        printf "You retain apache2 webserver as currently installed." ;;
+esac
 
-printf "\n
-Have a look at all messages from the paket manager and consider to use
-the 'sudo apt autoremove' to complete the deinstallation.  Note, this
-script kept tools git and hunspell installed by install_tools.sh on
-this system.  If there are no errors you are done ... :)\n"
+
+# section php
+printf "\n\nChoose either to remove [0], or to retain [1] php\n"
+read PHP
+case $PHP in
+    0)
+        printf "php will be removed."
+        sudo apt-get --assume-yes remove php php-common libapache2-mod-php php-cli php-mysql php-mbstring ;;
+    1) printf "You retain php as currently installed." ;;
+esac
+
+
+# section hunspell in general
+printf "\n\nChoose either to remove [0], or to retain [1] the basic
+hunspell spell check engine. This renders all hunspell dictionaries
+installed (see later questions) inaccessible.\n"
+read HUNSPELL
+case $HUNSPELL in
+    0)
+        printf "hunspell spell check engine will be removed."
+        sudo apt-get --assume-yes remove hunspell ;;
+    1)
+        printf "You retain the hunspell spell check engine as installed." ;;
+esac
+
+# section hunspell, de_CH
+printf "\n\nChoose either to remove [0], or to retain [1] hunspell's
+de_ch / Swiss German dictionary.\n"
+read DE_CH
+case $DE_CH in
+    0)
+        printf "Hunspell dictionary de_CH / Swiss German will be removed."
+        sudo apt-get --assume-yes remove hunspell-de-ch ;;
+    1)
+        printf "You retain the hunspell dictionary de_CH / Swiss German." ;;
+esac
+
+# section hunspell es
+printf "\n\nChoose either to remove [0], or to retain [1] hunspell's
+es / Spanish dictionary.\n"
+read ES
+case $ES in
+    0)
+        printf "Hunspell dictionary es / Spanish will be removed."
+        sudo apt-get --assume-yes remove hunspell-es ;;
+    1)
+        printf "You retain the hunspell dictionary es / Spanish." ;;
+esac
+
+# section hunspell fr
+printf "\n\nChoose either to remove [0], or to retain [1] hunspell's
+fr / French dictionary.\n"
+read FR
+case $FR in
+    0)
+        printf "Hunspell dictionary fr / French will be removed."
+        sudo apt-get --assume-yes remove hunspell-fr ;;
+    1)
+        printf "You retain the hunspell dictionary fr / French." ;;
+esac
+
+
+# section espeak
+printf "\n\nChoose either to remove [0], or to retain [1] espeak.\n"
+read ESPEAK
+case $ESPEAK in
+    0)
+        printf "The espeak engine will be removed."
+        sudo apt-get --assume-yes remove espeak ;;
+    1)
+        printf "You retain the espeack engine." ;;
+esac
+
+
+# section mysql
+printf "\n\nChoose either to remove [0], or to retain [1] mysql-server,
+mysql-client, and mysql-workbench.  An opt-out will affect all three
+at once, thus ensure data relevant for you are already backed-up.\n"
+read MYSQL
+case $MYSQL in
+    0)
+        printf "mysql-server, mysql-client, and mysql-workbench will be removed."
+        sudo apt-get --assume-yes remove mysql-server mysql-client mysql-workbench. ;;
+    1)
+        printf "You retain mysql-server, mysql-client, and mysql-workbench as installed." ;;
+esac
+
+
+# section git
+printf "\n\nChoose either to remove [0], or to retain [1] git.  A remove
+of git will not remove the .git directories in any project previously
+monitored by git.\n"
+read GIT
+case $GIT in
+    0)
+        printf "git will be removed from your computer."
+        sudo apt-get --assume-yes remove git ;;
+    1)
+        printf "You retain git as installed.\n" ;;
+esac
+
+# final word
+#
+printf "\nCheck all messages from the pakage manager.  Consider to use
+the 'sudo apt autoremove' to complete the de-installation.  If there are
+no errors you are done.\n"
