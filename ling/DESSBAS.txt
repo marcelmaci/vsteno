@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "07/10/20";
+		"model_date" := "09/10/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -186,7 +186,7 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "^[Tt]er-?r", "[Ss]er-?bi", "Pier-?re" }; // Terrain, Serbien
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
@@ -675,7 +675,7 @@
 		"^([Gg]e)-?(n(?:u|ü)-?g)" => "$1+$2";
 
 		// einmal, zweimal, dreimal etc. (where's the logic anyway ... ?:)
-		"(ein|zwei|drei|vier|fünf|sechs|sie-?ben|acht|neun|zehn|elf|zwölf)\|mal" => "$1-mal";
+		"([Ee]in|[Zz]wei|[Dd]rei|[Vv]ier|[Ff]ünf|[Ss]echs|[Ss]ie-?ben|[Aa]cht|[Nn]eun|[Zz]ehn|[Ee]lf|[Zz]wölf)\|mal" => "$1-mal";
 
 		// not separated
 		"([Dd])on-?ner\+?s\|?tag" => "$1on-ner+stag"; // where's the logic anyway ... :)
@@ -1214,6 +1214,14 @@
 		"([Ss]ei)\|(et)" => "$1-$2"; // seiet
 		"([Ee]in)-?(sich)" => "$1+$2"; // Uneinsichtigkeit
 		"([Gg]e)-?(nies-?s)" => "$1+$2"; // geniessen 
+		"([Nn]eu)\|(ro.?se)" => "$1-$2"; // Neurose (Computers are ... poets:)
+		"(^|\|)(O.?ber)(st)" => "$1$2+$3"; // Oberst
+		"([Bb]e).?(stal.?l)" => "$1+$2"; // wohlbestallter
+		"^(Thor).?(ber).?g$" => "$1-$2g"; // Thorberg (name)
+		"([Dd]i).?(ver).?s" => "$1-$2s"; // divers
+		"([Bb]ärn).?(dü.?t.?sch)" => "$1|$2"; // bärndütsch (helv.)
+		"([Ss]er-vie)r.?(et)" => "$1-r$2"; // servieret euch (Glauser)
+		"([Pp]fle).?(ge).?r(in)" => "$1-$2r+$3"; // Pflegerinnen
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1695,6 +1703,7 @@
 		"&rs?aquo;" => "«"; 
 		"&ls?aquo;" => "»";
 		"‘" => "'"; // there's a myriad of variants of ' ...
+		"’" => "'"; // another one from Matto regiert
 		"›" => "»";
 		"‹" => "«";
 		"„" => """;
@@ -1746,7 +1755,8 @@
 		// difficult ... I and V can't be included because of confusion with capital i and v
 		// in addition there are many roman numbers ... so just include these as examples
 		// problem must be solved differently (with function inside VSTENO)
-		" (II|III|IV|VI|VII|VIII|IX|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX) " => "<@token_type=svgtext> $1 <@token_type=shorthand>";
+		// the following rule doesn't work: use markers inside original text instead
+		//" (II|III|IV|VI|VII|VIII|IX|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX) " => "<@token_type=svgtext> #ncrnm#$1 <@token_type=shorthand>";
 
 		// 1990er (suffix)
 		"(?<=^| )((?:19|20)[0-9][0-9])er(?=[ ,\.-]|$)" => "$1#er";
@@ -1874,12 +1884,31 @@
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
 
-		"^D=" => "[D@#_]="; // D-Zug
-		"^O=" => "[0N-][#0][&O@#_]="; // // O-Beine
 		
 		//"([Rr]en-?dez)=[Vv]ous" => "$1=vus"; // "early-phonetizer because it's easier to do it here 
 
+		
+		// single letters with diacronics (upper case)
+		// combined with x- (<=> x=) => replaced with more general rules (see next)
+		//"^D=" => "[D@#_]="; // D-Zug
+		//"^O=" => "[0N-][#0][&O@#_]="; // // O-Beine
+		
+		// standing alone or combined
+		"^([BCDFGKLMPQTVWXY])(=|$)" => "[$1@#_]$2"; 
+		"^([NS])(=|$)" => "[$1=@#_]$2"; 
+		"^(R)(=|$)" => "[AR@#_]$2"; 
+		"^A(=|$)" => "[0N-][#4][A][&A@#_]$1"; 
+		"^E(=|$)" => "[0N-][E][&E@#_]$1";
+		"^I(=|$)" => "[0N-][#4][&I@#_]$1"; 
+		"^O(=|$)" => "[0N-][#2][&O@#_]$1"; 
+		"^U(=|$)" => "[0N-][#4][A][&U@#_]$1"; 
+		"^Ä(=|$)" => "[0N-][Ä][&A@#_]$1"; 
+		"^Ö(=|$)" => "[0N-][E][&O@#_]$1"; 
+		"^Ü(=|$)" => "[0N-][Ä][&U@#_]$1"; 
+		"^([HJZ])(=|$)" => "[$1@#_][#0]$2"; // add empty spacing => not considered as last character in chain (= fully written with underlength)
+
 		"(?<!\[)=" => "\\[=]\\";
+
 		"^(A)$" => "[#_#]\[#5-][#5-][0N-]$1"; // "underscorer"
 		"^(E)$" => "[#9][#_#]\[#9-][#5-][#5-][0N-]$1[&E]"; // "underscorer" => should be solved with diacritics ...
 		//"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer" => should be solved with diacritics ...
@@ -1897,11 +1926,11 @@
 	#BeginSubSection(splitter1)
 		// check if word contains more then 1 upper case
 		// mark it with #£# to have a branch condition
-		"(?<!#acronym#)([A-Z]|Ä|Ö|Ü)([A-Z]|Ä|Ö|Ü)" => "#acronym#$1$2";
+		"(?<!crnm#)([A-Z]|Ä|Ö|Ü)([A-Z]|Ä|Ö|Ü)" => "#crnm#$1$2"; // avoid vowels in #acronym# (because otherwhise phpsyllable will add - ...
 	#EndSubSection(splitter1,!>acronymator,=>packer)
 	#BeginSubSection(acronymator)
 		// filter marker #acronym# out again
-		"#acronym#" => "";
+		"#crnm#" => "";
 		//"([A-Z]|Ä|Ö|Ü)" => "strtolower()";
 		// only transform upper case of potential 2nd word (suppose acronym is 1st word ...)
 		"(=(?:[A-Z]|Ä|Ö|Ü))" => "strtolower()";
@@ -1941,6 +1970,7 @@
 		// in order to avoid that, "packer" bundles those characters adding brackets []
 		// later the transcriptor converts them back into normal characters
 		//"(?<!\[)=" => "[=]\";
+		//"#ncrnm#" => ""; 
 	#EndSubSection(packer)
 	#BeginSubSection(decapitalizer)
 		"sch(a|ä)ft(s|-?l?er\+?|-?chens?)?($|\|)" => { "{SCHAFT}$2$3", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
@@ -2036,8 +2066,8 @@
 		"[Mm]atch" => "matsch";
 
 		"([Pp]a-?ra)-?p-?lu-?ie" => "$1-plüi"; // Parapluie
-		"[Ll](?:e|é)-?g-?er\+?s?$" => "le[G^][#2][-E]";
-		"[Ll]e-?ge-?r" => "le[G^]er";
+		"^[Ll](?:e|é)-?g-?er\+?s?$" => "le[G^][#2][-E]";
+		"^[Ll]e-?ge-?r" => "le[G^]er";
 		"([Cc]ha-?rak)-?t-?e-?re" => "$1[&T&E][E][VR]e"; // Charakteren
 		"([Mm]i-?li-?)eu(s)?" => "$1ö$2";
 		"([Rr]e-?p-?)er.?(toi-?re)" => "$1Er-$2"; // Repertoire 
@@ -2915,7 +2945,7 @@
 
 		"ge[-+]?habt" => "{GEHABT}";	
 	
-		"(Ü|ü)-?ber" => "{ÜBER}";
+		"(Ü|ü)-?ber" => { "{ÜBER}", "[Ss]ü.?ü.?be.?r.?e" };
 
 		"^[Ww]ir$" => "{WIR}";
 		"^[Ww]ir'" => "{WIR}'";
@@ -2924,7 +2954,7 @@
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"{WAR}et$" => "{WAR}{ET}";
 
-		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel", "[Bb]e[+-]?tä-?ti-?g", "[Mm]a-?jes-?tä-?t" };
+		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel", "[Bb]e[+-]?tä-?ti-?g", "[Mm]a-?jes-?tä-?t", "[Gg]e.?tä.?tig" };
 		"(?<!^|s)(i-?)?tä-?ten" => "{HEIT}en";
 		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
 		
@@ -2972,7 +3002,7 @@
 		
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
-		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
@@ -3291,7 +3321,7 @@
 		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
 		"thr" => { "tHr", "[Tt]hro-?n" }; // Thriller, not: Thron
 		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
-		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l" };
+		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg" };
 		//"th(?!er)" => "t";
 		//"th(?!in)" => "t";
 		//"th(?!aft)" => "t";
@@ -3303,7 +3333,7 @@
 		"ö[oh](-)?([flmnrst])" => "ö$1$2";
 		"üh(-)?([flmnrst])" => "ü$1$2"; // bemüht (without h)
 		"ieh([tmn])" => "i$1";
-		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$" }; // Brehm: Name
+		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$", "^[Ff]ehl.?baum$" }; // Brehm, Fehlbaum: Name
 		"äh([nrl])" => "ä$1";
 		"öh-(?={LICH})" => "ö[H]"; // conserve h
 		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
