@@ -118,7 +118,7 @@
 		"language_espeak" := "de";
 		"phonetic_alphabet" := "espeak";
 		// define prefixes, suffixes and stems for hunspell
-		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, mei-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen, zwie";
+		"prefixes_list" := "in, kon, ge, zu, un, be, bei, ein, um, ur, anti, ver, inter, mit, ent, auf, ab, an, er, vor, wie?-?der, durch, ein, der, des, dem, her, ge-?gen, hin, zer, recht, sam-?men, un-?ter, aus, rück, da, nach, zwi-?schen, hin-?ten, hin-?ter, weg, ü-?ber, miss, dar, wei-?ter, los, lang, so, lieb, schief, scharf, statt, tief, wahr, weich, weis, wett, wohl, zwangs, fehl, fest, frei, gleich, kalt, kund, kurz, gut, nie-?der, wor?, m(?:ei|y)-?net, dei-?net, sei-?net, uns-?ret, eu-?ret, ih-?ret, jen, zwie";
 		"stems_list" := "gangen(?:e[rsnm]?)?, fähr, brochen, kannt, ra-?de(?:s-?te?)?[rsnm]?, höf, ständ, bun-?de-?n(?:e[nmrs]?)?, müt, schwenden, tüm, stöckig(?:e[srnm]?)?, nü-?t-?z, tei-?li-?g(?:e-?r(?:in(?:-?nen)?)?)?, sichts, nann-?t(?:e[rsnm]?)?, las-?se-?n(?:(?:e-?r)?e[rsnm]?)?, (?:[lg]eb-?nis(-?se[ns]?)?), heut, [Bb]lend, gin-?n, nom-?me-?n(?:e[rnsm]?)?, harm, [Ss]ehn, [Ss]uchts, [Ss]ekundar, [Ss]pr(?:u|ü)ng, [Kk]om-?mens, [Ss]a-?ge-?r(?:[sn]|in(?:-?en))?, [Kk]rä-?me-?rei-?(?:en)?, [Hh]a-?be-?r(?:s|in(?:-?nen)?)?, [Ee]m-?men, sil-?bi-?g(?:e[rsnm]?)?, schaun$, stehn$, gehn$, [Pp]fün-?der[sn]?, wärts, schlitz-?t(?:e[rstnm])?, backne[rsnm]?, ziehns?, sie-?ben-?zig, ge-?leits, Al-?ber-?tus, [Gg]r(?:e|ä)u-?el, (?:bor|worf)-?n(?:e[rsnm]?)?, [Ss]chnupfs?, rann-?t(?:e[rmsn]?)?, Si-?le-?nen?, nah-?men?, n(?:ü|u)-?-?tzi-?g(?:e[rsnm]?|e-?re[rsnm]?|s-?te[rsnm]?)?, bims, trags, lau-?fer, [Ll]üs-?ters?, [Bb]il-?lett?[se]?, tä-?gi-?g(?:e[rsnm]?)?, [Ss]chanks?, [Vv]e-?los?, [Ss]chand, [Kk]ri-?no-?li-?nen?, [Kk]in-?de, [Ll]um-?bal, Lo-?den, [Ll]ogen?, [Tt]y-?phus";
 		"suffixes_list" := "[kh]ei-?t(?:s|en)?, li-?ch(?:(?:e-?r)(?:e[srn]?)?)?, nis(?:sen?)?, w(?:ie|o|ann|as|e[rnm]), lo-?s(?:(?:es)?e[snmr]?)?, ba-?r(?:(?:st)?e[rnsm]?)?, sam(?:(?:st)e[rsnm]?)?, hin, her, so, sch(?:a|ä)f-?t(?:(?:s\|?|e-?[rn]?)(?:in-?(?:nen)?))?, un-?te-?r(?:(?:st)?e?[smnr]?), seits, chens?, seits, voll"; // use non caputuring groups! (?:)
 		// do not treat these as separate words (block_list)
@@ -569,7 +569,7 @@
 		
 
 		// prefix ge+
-		"([Gg]e)\+(he)" => { "$1-$2", "[Gg]e\+hef-?t" };
+		"([Gg]e)\+(he)" => { "$1-$2", "[Gg]e\+hef-?t", "[Gg]e\+hem" };
 		"([Gg]e)\+(gen)" => "$1-$2";
 		"([Gg]e)\+(be(?:-|\+)?n(?:d?(?:st)?e[mrsn]?)?)" => "$1-$2";
 		"([Gg]e)\+(cko)" => "$1-$2";
@@ -1222,6 +1222,8 @@
 		"([Bb]ärn).?(dü.?t.?sch)" => "$1|$2"; // bärndütsch (helv.)
 		"([Ss]er-vie)r.?(et)" => "$1-r$2"; // servieret euch (Glauser)
 		"([Pp]fle).?(ge).?r(in)" => "$1-$2r+$3"; // Pflegerinnen
+		"([Cc]h)\|(a-?bis)" => "$1$2"; // Chabis (Glauser)
+		"([Zz]wei).?(rä.?d)" => "$1|$2"; // zweirädrig
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1740,7 +1742,7 @@
 
 		// abbreviator: eliminates . in abbreviations (based on a list)
 		// all words conserve original upper/lower case distinction
-		"(Adr|[Aa]llg|Art|[Aa]usschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg)\." => "$1";
+		"(Adr|[Aa]llg|Art|[Aa]usschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg|[Mm]ed)\." => "$1";
 		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
 		"(Nr|Prosp|Qual|[Ss]og|Tel|Jan|Febr|Apr|Jun|Jul|Aug|Sept|Okt|Nov|Dez)\." => "$1";
 		// words with two points
@@ -2021,7 +2023,7 @@
 		"([Pp]s)y(-?c-?h)" => "$1ü$2";
 		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty" };
+		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
@@ -3129,6 +3131,7 @@
 		"^dar[+#]" => "{DA@R}";
 		"^dar$" => "{DA@R}";
 
+		"^[Dd]a-?as$" => "{DASS}"; // daas (dialect, Glauser)
 		"^[Dd]ass?$" => "{DASS}";
 		"dass(?!t)" => "{DASS}";
 		"^dem" => "{DEM}";
@@ -3300,7 +3303,7 @@
 		
 		"rrh$" => "rr";		// Katarrh
 		"ü-?ü" => "ü"; 	// rule for swiss german
-		"uu" => "u"; // gruusam (dialect)
+		"u-?u" => "u"; // gruusam, Buurli (dialect)
 		"û" => "ü";
 		"î" => "i";
 		"é" => "e";
@@ -3321,7 +3324,7 @@
 		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
 		"thr" => { "tHr", "[Tt]hro-?n" }; // Thriller, not: Thron
 		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
-		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg" };
+		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg", "^[Tt]hu-?n" };
 		//"th(?!er)" => "t";
 		//"th(?!in)" => "t";
 		//"th(?!aft)" => "t";
@@ -3678,6 +3681,7 @@
 		"äe$" => "ä[&E][-E]";
 		"e$" => "[-E]";
 		
+		"^i($|\\)" => "[0N-][#5][&I]$1";
 		"i($|\\)" => "[#5][&I]$1";
 		"io($|\\)" => "[&I][&O]$1";
 		"o($|\\)" => "[#N][&O]$1";
@@ -3871,10 +3875,7 @@
 
 		"(E-?HE)\|?({DEM})" => "$1\\[#9-]$2" }; // separate ehedem 
 
-		// if one word is separated => separate all the words!
-		"\|(.*)\\" => "\\$1\\";
-		"\\(.*)(?<!\[EI\]N|AN)\|" => "\\$1\\"; // do not separate prefixes!
-
+		
 		// if word is not separated => write vowels at the end of each word
 		"E\|" => "E[&E]";
 		"(\[FR\]\[EI\])\+" => "$1[&E]+"; 	// special case Freizeit (separated by +)
@@ -3911,6 +3912,11 @@
 		"(\[NK\])\|(\[AR\])" => "$1\\$2"; // Denkreise
 
 		"\[(?:NS|ns)\]\|\[(?:AR|ar)\]" => "[NS]\\[AR]"; // Namensregister
+	
+		// if one word is separated => separate all the words!
+		"\|(.*)\\" => "\\$1\\";
+		"\\(.*)(?<!\[EI\]N|AN)\|" => "\\$1\\"; // do not separate prefixes!
+
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -4335,6 +4341,8 @@
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
+
+		"\[ET3\/4\]{E(N|M)}" => "[ET3/4][&E][E$1]"; // erkaltetem
 
 		"(\[VR@L\]){E(N|M)}" => "$1[O][E$2]"; // Perlen
 		
