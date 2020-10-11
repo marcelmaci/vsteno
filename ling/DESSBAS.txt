@@ -649,7 +649,7 @@
 		"([Vv]or\+der)-" => "$1+"; 
 		"([Ll]a-?t-?er)\+(n)" => "$1$2";
 		"([Ww]er)\+k" => "$1k";
-		"([Zz]er)\+r(e|t(?:e|en|est|et)?)" => "$1r$2"; 
+		"([Zz]er)\+r(e|t(?:e|en|est|et)?)" => { "$1r$2", "[Zz]er.?re?is.?s" }; 
 		"([Ww]-?er)\+(t)" => "$1$2";
 		"([Ww]er)(te)" => "$1-$2"; // resyllabation
 		"([Bb]er)\+g" => "$1g";
@@ -1224,6 +1224,12 @@
 		"([Pp]fle).?(ge).?r(in)" => "$1-$2r+$3"; // Pflegerinnen
 		"([Cc]h)\|(a-?bis)" => "$1$2"; // Chabis (Glauser)
 		"([Zz]wei).?(rä.?d)" => "$1|$2"; // zweirädrig
+		"([Ww]acht).?(meisch.?ter)\+?" => "$1|$2+"; // Wachtmeischter (Glauser, helv.)
+		"([Rr]echt)\+?(ecki-?g)" => "$1|$2"; // rechteckigen
+		"([Bb]e)-?(schürz-?t)" => "$1+$2"; // weissbeschürzten
+		"(é)\|(mi-?nen-?ce)" => "$1-$2"; // l'éminence
+		"(Frank)\|(reich)" => "$1-$2"; // Frankreich (write it in one word)
+		"([Aa]n).?(ge).?(br)" => "$1+$2+$3"; // angebracht, angebrochen
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2023,7 +2029,7 @@
 		"([Pp]s)y(-?c-?h)" => "$1ü$2";
 		"([Aa]-?na-?l)y(-?se$)" => "$1ü$2"; // but "analisieren" ... an please stopp telling me language is logical ... ! :):):)
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$" };
+		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
