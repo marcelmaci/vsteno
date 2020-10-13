@@ -17,8 +17,8 @@ read APACHE
 
 case $APACHE in
     0)
-        printf "apache2 webserver will be removed."
-        sudo apt-get --assume-yes remove apache2 ;;
+        printf "apache2 webserver, data and utilities will be removed."
+        sudo apt-get --assume-yes remove apache2 apache2-data apache2-utils;;
     1)
         printf "You retain apache2 webserver as currently installed." ;;
 esac
@@ -35,7 +35,7 @@ case $PHP in
 esac
 
 
-# section hunspell in general
+# section hunspell checker in general
 printf "\n\nChoose either to remove [0], or to retain [1] the basic
 hunspell spell check engine. This renders all hunspell dictionaries
 installed (see later questions) inaccessible.\n"
@@ -49,51 +49,51 @@ case $HUNSPELL in
 esac
 
 # section hunspell, de_CH
-printf "\n\nChoose either to remove [0], or to retain [1] hunspell's
-de_ch / Swiss German dictionary.\n"
+printf "\n\nChoose either to remove [0], or to retain [1]
+hunspell-de-ch, the Swiss German dictionary.\n"
 read DE_CH
 case $DE_CH in
     0)
-        printf "Hunspell dictionary de_CH / Swiss German will be removed."
+        printf "hunspell-de_ch, the Swiss German dictionary will be removed."
         sudo apt-get --assume-yes remove hunspell-de-ch ;;
     1)
-        printf "You retain the hunspell dictionary de_CH / Swiss German." ;;
+        printf "You retain hunspell-de_ch, the Swiss German dictionary." ;;
 esac
 
 # section hunspell es
-printf "\n\nChoose either to remove [0], or to retain [1] hunspell's
-es / Spanish dictionary.\n"
+printf "\n\nChoose either to remove [0], or to retain [1]
+hunspell-es, the Spanish dictionary.\n"
 read ES
 case $ES in
     0)
-        printf "Hunspell dictionary es / Spanish will be removed."
+        printf "hunspell-es, the Spanish dictionary will be removed."
         sudo apt-get --assume-yes remove hunspell-es ;;
     1)
-        printf "You retain the hunspell dictionary es / Spanish." ;;
+        printf "You retain hunspell-es, the Spanish dictionary." ;;
 esac
 
 # section hunspell fr
-printf "\n\nChoose either to remove [0], or to retain [1] hunspell's
-fr / French dictionary.\n"
+printf "\n\nChoose either to remove [0], or to retain [1]
+hunspell-fr, the French French dictionary.\n"
 read FR
 case $FR in
     0)
-        printf "Hunspell dictionary fr / French will be removed."
+        printf "hunspell-fr, the French French dictionary will be removed."
         sudo apt-get --assume-yes remove hunspell-fr ;;
     1)
-        printf "You retain the hunspell dictionary fr / French." ;;
+        printf "You retain hunspell-fr, the French French dictionary." ;;
 esac
 
 
 # section espeak
-printf "\n\nChoose either to remove [0], or to retain [1] espeak.\n"
+printf "\n\nChoose either to remove [0], or to retain [1] espeak and its data.\n"
 read ESPEAK
 case $ESPEAK in
     0)
         printf "The espeak engine will be removed."
-        sudo apt-get --assume-yes remove espeak ;;
+        sudo apt-get --assume-yes remove espeak espeak-data ;;
     1)
-        printf "You retain the espeack engine." ;;
+        printf "You retain the espeack engine as installed." ;;
 esac
 
 
@@ -105,21 +105,34 @@ read MYSQL
 case $MYSQL in
     0)
         printf "mysql-server, mysql-client, and mysql-workbench will be removed."
-        sudo apt-get --assume-yes remove mysql-server mysql-client mysql-workbench. ;;
+        sudo apt-get --assume-yes remove mysql-common mysql-server* mysql-client* mysql-workbench*. ;;
     1)
         printf "You retain mysql-server, mysql-client, and mysql-workbench as installed." ;;
 esac
 
 
+# section mecab
+printf "\n\nChoose either to remove [0], or to retain [1] Mecab, a
+Japanese morphological analysis system, and its data.\n"
+read MECAB
+case $MECAB in
+    0)
+        printf "Mecab and its components will be removed."
+        sudo apt-get --assume-yes remove mecab* libmecab* ;;
+    1)
+        printf "You retain Mecab and its components as installed." ;;
+esac
+
+
 # section git
-printf "\n\nChoose either to remove [0], or to retain [1] git.  A remove
-of git will not remove the .git directories in any project previously
-monitored by git.\n"
+printf "\n\nChoose either to remove [0], or to retain [1] git.  Note,
+removing git will not remove the .git directories in any project 
+previously managed with git.\n"
 read GIT
 case $GIT in
     0)
         printf "git will be removed from your computer."
-        sudo apt-get --assume-yes remove git ;;
+        sudo apt-get --assume-yes remove git git-man ;;
     1)
         printf "You retain git as installed.\n" ;;
 esac
