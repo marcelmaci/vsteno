@@ -1,36 +1,36 @@
 #!/bin/bash
 function GetBrowser {
-    # returns first browser from list installed on target system 
-	# or empty string if no browser is found
-	local list="abrowser icecat chromium firefox opera chrome konqueror midori qupzilla"
-	local browser; local result; local installed;	
-	for browser in $list
-	do
-  		#echo Test $browser ...
-  		result=`which $browser`
-  		if [ -z ${result} ]
-  		then
-        	#echo $browser ist nicht installiert.
-			continue
-  		else
-        	#echo Browser $browser ist installiert.
-        	installed=$browser
-			break;
-  		fi
-	done
-	if  [ -n ${installed} ] 
-	then
-  		#echo "Es wurde ein Browser gefunden: $installed"
-  		#$installed http://localhost/vsteno/php/introduction.php
-		echo ${installed}
-	else
-		echo ""  		
-		#echo "Es wurde kein Browser gefunden."
-	fi
+    # returns first browser from list installed on target system
+    # or empty string if no browser is found
+    local list="abrowser icecat chromium firefox opera chrome konqueror midori qupzilla"
+    local browser; local result; local installed;
+    for browser in $list
+    do
+        #echo Test $browser ...
+        result=`which $browser`
+        if [ -z ${result} ]
+        then
+            #echo $browser ist nicht installiert.
+            continue
+        else
+            #echo Browser $browser ist installiert.
+            installed=$browser
+            break;
+        fi
+    done
+    if  [ -n ${installed} ]
+    then
+        #echo "Es wurde ein Browser gefunden: $installed"
+        #$installed http://localhost/vsteno/php/introduction.php
+        echo ${installed}
+    else
+        echo ""
+        #echo "Es wurde kein Browser gefunden."
+    fi
 }
 
 function WriteDatabaseVariables {
-    # set these variables as global with default values    
+    # set these variables as global with default values
     dbserver="localhost:3306"
     dbuser="root"
     dbpwd="test"
@@ -60,7 +60,7 @@ function WriteDatabaseVariables {
     if [ -n "$input" ]
     then
         dbname=$input
-    fi    
+    fi
     # now write variables to dbpw.php via sed
     sudo sed -i 's/db_servername = ".*\?";/db_servername = "'"$dbserver"'";/g' /var/www/html/vsteno/php/dbpw.php
     sudo sed -i 's/db_username = ".*\?";/db_username = "'"$dbuser"'";/g' /var/www/html/vsteno/php/dbpw.php
