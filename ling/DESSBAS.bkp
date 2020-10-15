@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "09/10/20";
+		"model_date" := "14/10/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -587,7 +587,8 @@
 		"^([Uu]n\+?)?([GgBbFf]er)\+n" => "$1$2-n";
 		"^([Uu]n\+?)?([Ss]ter)\+n" => "$1$2-n";
 
-		"^((?:[Aa]-?l-?ler\+?[|#-]?)?[Ee])r\+(s-?t)(?!au|a|u)" => { "$1r$2", "[Ee]r[-+]ste-?l", "[Ee]r[-+]sti-?c-?k" };
+		"^((?:[Aa]-?l-?ler\+?[|#-]?)?[Ee])r\+(s-?t)(?!au|a|u)" => { "$1r$2", "[Ee]r[-+]ste-?l", "[Ee]r[-+]sti-?c-?k", "^[Ee]r\+stre" };
+
 		"^([WwDdHhPp]?[Ee]r)\+$" => "$1";
 		"^([Bb]er)\+k" => "$1-k";		// Berkeley
 		"b-?er\+g" => "ber-g";			// Aarberg(er) (Berg)
@@ -1230,6 +1231,10 @@
 		"(é)\|(mi-?nen-?ce)" => "$1-$2"; // l'éminence
 		"(Frank)\|(reich)" => "$1-$2"; // Frankreich (write it in one word)
 		"([Aa]n).?(ge).?(br)" => "$1+$2+$3"; // angebracht, angebrochen
+		"([Aa])(sch)t.?(al.?t)" => "$1|$2|t$3"; // Aschtalt (dialect: consider a- as prefix, avoid &t)
+		"([Ss]enk)\|(rech-?t)" => "$1-$2"; // senkrecht
+		"(ü|Ü)-?ber\+?e-?keit" => "$1-be-re|kheit"; // überekeit (dialect)
+		"(Wirr)-?(warr)" => "$1|$2"; // Wirrwarr
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1888,6 +1893,8 @@
 		"tstopt(01)([Dd]urch[#+-]?)zu[#+-]?(se-?t-?zen)" => "$1$2"; // durchzusetzen
 		"tstopt(01)([Aa]n[#+-]?)zu[#+-]?(zün-?den)" => "$1$2"; // anzuzünden
 		"tstopt(01)([Aa]b[#+-]?)zu[#+-]?(le-?gen|{LEG}{EN})" => "$1$2"; 
+
+		"A propos" => "a propos"; // transform A to a in order to avoid underscore for a (single character) 
 		
 	#EndSubSection(global,#>stage1)
 	#BeginSubSection(dasher,#>stage2)
@@ -1901,7 +1908,7 @@
 		//"^D=" => "[D@#_]="; // D-Zug
 		//"^O=" => "[0N-][#0][&O@#_]="; // // O-Beine
 		
-		// standing alone or combined
+		// standing alone or combined with x-
 		"^([BCDFGKLMPQTVWXY])(=|$)" => "[$1@#_]$2"; 
 		"^([NS])(=|$)" => "[$1=@#_]$2"; 
 		"^(R)(=|$)" => "[AR@#_]$2"; 
@@ -1915,7 +1922,23 @@
 		"^Ü(=|$)" => "[0N-][Ä][&U@#_]$1"; 
 		"^([HJZ])(=|$)" => "[$1@#_][#0]$2"; // add empty spacing => not considered as last character in chain (= fully written with underlength)
 
-		"(?<!\[)=" => "\\[=]\\";
+		// combined at the end of a word -x
+		// standing alone or combined with x-
+		"=([BCDFGKLMPQTVWXY])($)" => "\\=\\[$1@#_]$2"; 
+		"=([NS])($)" => "\\=\\[$1=@#_]$2"; 
+		"=(R)($)" => "\\=\\[AR@#_]$2"; 
+		"=A($)" => "\\=\\[0N-][#4][A][&A@#_]$1"; 
+		"=E($)" => "\\=\\[0N-][E][&E@#_]$1";
+		"=I($)" => "\\=\\[0N-][#4][&I@#_]$1"; 
+		"=O($)" => "\\=\\[0N-][#2][&O@#_]$1"; 
+		"=U($)" => "\\=\\[0N-][#4][A][&U@#_]$1"; 
+		"=Ä($)" => "\\=\\[0N-][Ä][&A@#_]$1"; 
+		"=Ö($)" => "\\=\\[0N-][E][&O@#_]$1"; 
+		"=Ü($)" => "\\=\\[0N-][Ä][&U@#_]$1"; 
+		"=([HJZ])($)" => "\\=\\[$1@#_][#0]$2"; // add empty spacing => not considered as last character in chain (= fully written with underlength)
+
+
+		"(?<!\[|\[N)=(?!@)" => "\\[=]\\";
 
 		"^(A)$" => "[#_#]\[#5-][#5-][0N-]$1"; // "underscorer"
 		"^(E)$" => "[#9][#_#]\[#9-][#5-][#5-][0N-]$1[&E]"; // "underscorer" => should be solved with diacritics ...
@@ -1934,7 +1957,7 @@
 	#BeginSubSection(splitter1)
 		// check if word contains more then 1 upper case
 		// mark it with #£# to have a branch condition
-		"(?<!crnm#)([A-Z]|Ä|Ö|Ü)([A-Z]|Ä|Ö|Ü)" => "#crnm#$1$2"; // avoid vowels in #acronym# (because otherwhise phpsyllable will add - ...
+		"(?<!crnm#|\[)([A-Z]|Ä|Ö|Ü)([A-Z]|Ä|Ö|Ü)" => "#crnm#$1$2"; // avoid vowels in #acronym# (because otherwhise phpsyllable will add - ...
 	#EndSubSection(splitter1,!>acronymator,=>packer)
 	#BeginSubSection(acronymator)
 		// filter marker #acronym# out again
@@ -3194,7 +3217,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t(?!ums?$)" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3535,7 +3558,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re" };
 		"ai" => "[AI]";
 
 		"tstopt(01)n-?z" => "[NZ]";
