@@ -2443,8 +2443,15 @@
 		"(\[ch\])\[#.\](\[l\])" => "$1[#5]$2"; // nachlassenden
 		"(\[st@r\])\[#.\](\[i\]\[k\])" => "$1[#1][sch.][#4]$2"; // strikt
 		"(\[sp\])\[#.\](\[o\]\[vr\])" => "$1[#2]$2"; // Sport
-
-
+		"(\[s=\])\[#.\](\[a\]\[ND1\])" => "$1[#4]$2"; // Sandkörner
+		"(\[ND1\])\[#.\](\[k\])" => "$1[#3][d.][#3]$2"; // idem
+		"(\[ar\])\[#.\](\[pf\])" => "$1[#5]$2"; // verpfuscht
+		"(\[c@r\])\[#.\](\[o\]\[q\])" => "$1[#6]$2"; // Croquet
+		"(\[l\])\[#.\](\[o\]\[f\])" => "$1[#6]$2"; // Xylophon
+		"(\[vr\+ar\])\[#.\](\[o\]\[vr\])" => "$1[#0]$2"; // Hörrohr (like Meerrohrröhrchen:)
+		"(\[k@l3\])\[#.\](\[i\]\[m\])" => "$1[#5]$2"; // klimpern
+		"(\[vr\])\[#.\](\[i\]\[s\])" => "$1[#0]$2"; // Paris
+		
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
 		"(\[&t(?:&e|e?s)?\])(.)(\[[tp]\])" => "$1$2[#7]$3"; // impossible to place \\ inside regex condition !?!?!? (bug?!) => use (.) instead
@@ -2471,6 +2478,11 @@
 		"(\[[lt]\])\[#..?](\\\\)(\[=\])" => "$1[#2-]$2$3"; // Heil= und Pflegeanstalt, Brot-
 
 		"(\[&eits\])(\\\\)(\[m\])" => "$1$2[#4]$3"; // Gesundheitsminister
+		"(\[nd\])\[#..?\](\\\\)(\[=\])" => "$1[#3-]$2$3"; // schielend-fragenden
+		"(\[f\])\[#..?\](\\\\)(\[=\])" => "$1[#3-]$2$3"; // fünf- 
+
+		"(\[=\])(\\\\\\\\)(\[k)" => "$1\[#3-]$3"; // Männer-K => hm ... kind of a big problem here ... instead of \ an earlier rule introduced \\ ... with all escaping needed we end up with 8 x \ here ... two possibilities: a) fix initial rule (and verify all the following rules), b) deals with \\ (and the 8x \) from here on ... going with option b (easier, because no earlier rule has to be verified)
+
 
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)
