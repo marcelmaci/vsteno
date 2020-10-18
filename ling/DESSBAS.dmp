@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "15/10/20";
+		"model_date" := "18/10/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -598,7 +598,7 @@
 		"([Ee]r)\+(bt)" => "$1$2";
 		"(?<![^e]e)r\+$" => "r";
 		//"eer\+$" => "eer";
-		"(?<![Ee]u-e|[Ee]ue|[Ee]u-re|[Ee]ur-e|[MmSsDd]eine|[msd]ein-e|[MmSsdd]ei-ne|[Ee]ine|[Ee]i-ne|[Ee]in-e|[Aa]n-dre|[Aa]nd-re|[Aa]ndr-e|[Ii]h-re|[Ii]hr-e|[Uu]ns-re|[Uu]nsr-e)r\+\|" => { "r|", "^[Ee]u-?er*", "^Mau-?er" }; // not: euerseits, meinerseits, deinerseits etc.
+		"(?<![Ee]u-e|[Ee]ue|[Ee]u-re|[Ee]ur-e|[MmSsDd]eine|[msd]ein-e|[MmSsdd]ei-ne|[Ee]ine|[Ee]i-ne|[Ee]in-e|[Aa]n-dre|[Aa]nd-re|[Aa]ndr-e|[Ii]h-re|[Ii]hr-e|[Uu]ns-re|[Uu]nsr-e)r\+\|" => { "r|", "^[Ee]u-?er*", "^[MmDd]au-?er" }; // not: euerseits, meinerseits, deinerseits etc.
 		//"r\+\|" => { "r|", "^[Ee]u-?er*" }; // not: euerseits
 		"([TtGg]er)\+m" => "$1-m";
 		"([Zz]er)\+(be-?r\+)" => "$1-$2";	// Zerberus
@@ -1244,6 +1244,12 @@
 		"([Gg]e).?(ni-?c-?k)" => "$1+$2"; // Genick, zugenickt
 		"([Kk]u-?chi)-?(meit-?schi)" => "$1|$2"; // Kuchimeitschi (schweizerdeutsch)
 		"([Aa]l-?(?:p-?h|f)a)\|(be).?(ti.?s.?c.?h)" => "$1-$2-$3"; // alphabetisch
+		"([Pp]a-?tel-?lar)-?(?!\|)" => "$1|$2"; // Patellarreflex
+		"([Ss]ach)\|(li-?c-?h)" => "$1#$2"; // sachlich-wissenschaftlich
+		"([Bb]ät-?zi)-?" => "$1|"; // Bätziwasser
+		"([Vv]er.?schwö.?rungs)-?" => "$1|"; // Verschwörungstheorien
+		"([Pp]i)\|(kan-?t)" => "$1-$2"; // pikante
+		"([Bb]e).?(in).?(hal)" => "$1+$2+$3"; // beinhaltete
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2052,7 +2058,7 @@
 		"([Ll]i-?)nie(?!r)" => "$1ni-e";
 		"([Bb]an-?k)-?ier" => "$1-i-e";
 		"([Ff]a-?mi-?)lie" => "$1li-e";
-		"([Pp]or-?t)ier" => { "$1i-er", "[Tt]rans\+?por-?tier" };
+		"^([Pp]or-?t)ier" => { "$1i-er", "[Tt]rans\+?por-?tier", "^.+por-?tie-?r" };
 		"([Kk]ar-?r)ie(re)" => "$1[&I]E$2";
 		// phonetical treatment for y
 		"([Ss])y(n-?th)e(-?ti-?sch)" => "$1ü$2E$3"; // E = stressed
@@ -2098,7 +2104,7 @@
 		"([Ss])ou(f-?f-?lie-?r)" => "$1u$2"; // Soufflierte
 		"([Pp])ou(s-?sie-?r)" => "$1u$2"; // poussierten
 
-		"([Pp]or-?ti)-?er(s)?" => "$1-e$2"; // Portier
+		"^([Pp]or-?ti)-?er(s)?" => "$1-e$2"; // Portier
 
 		"([Ss]u-?b-?al-?t)-?er(-?n)" => "$1[E][VR]$2"; // subaltern
 		"[Pp]a-?s-?s-?e\|?par-?tout" => "Pass-par-tu"; // Passepartout
@@ -2122,6 +2128,8 @@
 		"[Bb]eef-?steak" => "Bif-stek"; // Beefsteak
 		"^([Nn]i)e(-?mer\+?)$" => "$1-e$2"; // niemer (schweizerdeutsch)
 		"^([Uu]-?me)-?(wäg)$" => "$1|$2"; // umewäg (schweizerdeutsch)
+		"([Kk]on-?duk-?t)eu" => "$1ö"; // Kondukteur
+		"([Bb])ou(-?teil-?le)" => "$1u$2"; // Bouteille
 
 
 		// rh-
@@ -3196,7 +3204,7 @@
 		"für" => { "{FÜR}", "[Ff]ürs-?t", "[Ff]ürch" };
 		"ge-?habt" => "{GEHABT}";
 		"(?<![CcPp])ha-?b" => { "{HAB}", "^[Hh]a-?bers?$", "[Hh]a-?b-?ich-?t", "[Ee]r[-+]ha-?be-?n" };
-		"^[Hh]at(-?t)?" => "{HAT}";
+		"^([Aa]n\+|{AN}\+)?[Hh]at(-?t)?" => "$1{HAT}";
 		"^chin" => "[CH]in";
 
 		"^hin-?zu" => "{HIN}{ZU}";
@@ -3366,7 +3374,7 @@
 		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
 		"thr" => { "tHr", "[Tt]hro-?n" }; // Thriller, not: Thron
 		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
-		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg", "^[Tt]hu-?n" };
+		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg", "^[Tt]hu-?n", "[Gg]oe-?t-?he" };
 		//"th(?!er)" => "t";
 		//"th(?!in)" => "t";
 		//"th(?!aft)" => "t";
@@ -3384,7 +3392,7 @@
 		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
 		"ih(-)?([rnm])" => "i$1$2";
 		"äht" => "ät";
-		"t-?z" => { "z", "[Nn]ie-?t-?z-?sche" }; // conserve syllable?
+		"t-?z" => { "z", "[Nn]ie-?t-?z-?sche", "[Aa]cht-?zi-?g" }; // conserve syllable?
 		"ph" => "f";
 		"ß" => "ss";
 		"üh(-)?([lrmn])" => "ü$1$2";
@@ -3571,8 +3579,9 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s" };
 		"ai" => "[AI]";
+		"\[AI\]-?{EN}" => "[AI][&E]{EN}";
 
 		"tstopt(01)n-?z" => "[NZ]";
 
@@ -3959,6 +3968,8 @@
 		"\|(.*)\\" => "\\$1\\";
 		"\\(.*)(?<!\[EI\]N|AN)\|" => "\\$1\\"; // do not separate prefixes!
 
+		"(\[&TG\]|\[&T-1\]\[G\])\|" => "$1\"; // giftiggrünen
+
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -4049,6 +4060,9 @@
 		// ehelich
 		"([eE])(-?{LICH})" => "$1[&E]$2";
 
+		// Oil
+		"(\[0N-\])\[O\]I" => "$1[&O]I"; // Oil
+
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
 		// at this point, all characters are upper case
@@ -4056,6 +4070,7 @@
 		// that's done in this part (was first part of
 		// transcriptor
 
+		"\[&T\]-?Z" => "[&TZ]"; // achtzig
 		"\\\[VR\]" => "\\[AR]"; // Malteserritter
 		
 		// taken from substituter
@@ -4166,6 +4181,8 @@
 		"\[CR\]" => "[C@R]";
 		"\[CK\]l" => "[CK@L]";
 		"\[GNL\]" => "[NG@L3]";
+		"^\[NR\]$" => "[N=@#_@R6]"; // abbreviation: Nr.
+		"^\[NR\]" => "[N=@R6]";
 		"\[NR\]" => "[N@R6]";
 		"\[NL\]" => "[N@L]";
 		"\[KL\]" => "[K@L3]";
