@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "18/10/20";
+		"model_date" := "19/10/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1070,7 +1070,7 @@
 		// (2) analyzer rules offer full regex
 		// (3) analyzer rules can be debugged (this can't be done with filter)
 		// so here's the regex-rule for Badespass and kreidebleich:
-		"(?<![BbLl]a-|[Kk]rei-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|he-?r", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
+		"(?<![BbLl]a-|[Kk]rei-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
 
 		"([Bb]as-?ket)-?(b(?:a|ä)l-?l)" => "$1|$2"; // Basketball, -bälle
 
@@ -1112,7 +1112,7 @@
 		"([Hh]er)-?\+?(aus)-" => "$1-$2#"; // Herausforderer
 		"([Pp]ro)\|(tes-?t)" => "$1-$2"; // Proteste
 		"([Vv]er\+sa)\|g" => "$1-g"; // Versagens
-		"^([Aa]b)\+(ge)\+b" => "$1+$2-b"; // abgebe
+		"^([Aa]b)\+(ge)\+b(?![lr])" => "$1+$2-b"; // abgebe, not: abgeblendet
 
 		"(^|=|\|)([Bb]e)\|" => "$1$2+"; // Be|treiber
 		"(^|=|\|)([Vv]or)\|" => "$1$2+"; // Vor|würfe
@@ -2107,7 +2107,8 @@
 		"^([Pp]or-?ti)-?er(s)?" => "$1-e$2"; // Portier
 
 		"([Ss]u-?b-?al-?t)-?er(-?n)" => "$1[E][VR]$2"; // subaltern
-		"[Pp]a-?s-?s-?e\|?par-?tout" => "Pass-par-tu"; // Passepartout
+		"[Pp]a-?s-?s-?e.?par-?tout(s)?" => "Pass-par-tu$1"; // Passepartout(s)
+		//"[Pp]a-?s-?s-?e.?par-?touts" => "Pass-par-tus"; // Passepartout
 		"[Ss]ous(-|=)?sol" => "[S=][#4][A][&U]\\[#6-][=]\\[S=]ol"; // Soussol
 		"[Mm]atch" => "matsch";
 
