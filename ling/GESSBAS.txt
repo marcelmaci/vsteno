@@ -2478,6 +2478,16 @@
 		"(\[l\])\[#.\](\[o\]\[ch\])" => "$1[#4]$2"; // Loch
 		"(\[p\])\[#.\](\[o\]\[sch\])" => "$1[#0]$2"; // poschte (schweizerisch)
 		"(\[\^sch\])\[#.\](\[k\])" => "$1[#3]$2"; // dischkuriert
+		"(\[pf\])\[#.\](\[h\])" => "$1[#3]$2"; // Kopfhaut
+		"(\[tt@r\])\[#.\](\[a\]\[nd\])" => "$1[#6]$2"; // Bettrand
+		"(\[-AUS\])\[#.\](\[ar\])" => "$1[#1]$2"; // herausragten
+		"(\[k@r\])\[#.\](\[i\]\[g\])" => "$1[#4]$2"; // Kriegstanz
+		"(\[s\])\[#.\](\[f\])" => "$1[#7]$2"; // Todesfälle
+		"(\[p@r6\])\[#.\](\[o\]\[b\])" => "$1[#5]$2"; // ausprobieren
+		"(\[st@r\])\[#.\](\[i\]\[tt\])" => "$1[#1][sch.][#5]$2"; // gestritten
+		"(\[g\])\[#.\](\[q\])" => "$1[#7]$2"; // gequetscht
+		"(\[n\])\[#.\](\[d@r\])" => "$1[#2]$2"; // eindringliches
+		"(\[ng\])\[#.\](\[h\])" => "$1[#3]$2"; // idem
 
 
 
@@ -2516,6 +2526,8 @@
 		"(\[h\])\[#..?](\\\\)(\[=\])" => "$1[#3-]$2$3"; // sachlich-wissenschaftlich
 
 		"(\[=\])(\\\\\\\\)(\[k)" => "$1\[#3-]$3"; // Männer-K => hm ... kind of a big problem here ... instead of \ an earlier rule introduced \\ ... with all escaping needed we end up with 8 x \ here ... two possibilities: a) fix initial rule (and verify all the following rules), b) deals with \\ (and the 8x \) from here on ... going with option b (easier, because no earlier rule has to be verified)
+		"(\[-ei\])\[#6-\]\\\\\[=\]" => "[-ei][#1-]\\[=]"; // zwei-, drei-, viermal => this whole escaping story is driving me crazy ...
+
 
 		// In VSTENO you go from one problem to another ...
 		// Reducing spacing before / after [=] seemed to be a good and straightforward idea.

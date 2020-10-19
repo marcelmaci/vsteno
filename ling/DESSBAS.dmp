@@ -1250,6 +1250,7 @@
 		"([Vv]er.?schwö.?rungs)-?" => "$1|"; // Verschwörungstheorien
 		"([Pp]i)\|(kan-?t)" => "$1-$2"; // pikante
 		"([Bb]e).?(in).?(hal)" => "$1+$2+$3"; // beinhaltete
+		"([Bb]ett)-?l" => "$1|l"; // bettlägerig (I know - purists wont agree ... :o)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
