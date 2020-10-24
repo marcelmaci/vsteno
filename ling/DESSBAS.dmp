@@ -191,7 +191,7 @@
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
-		"er(?!\+|st$)" => { "er+", "^[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
+		"er(?!\+|st$)" => { "er+", "^[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		////////////////////////////////////// end new approach ///////////////////////////////////////
 
@@ -210,7 +210,7 @@
 		// don't separate -zer, -der, -er at end of words
 		//"([Ss]au)\|(er)" => "$1-$2"; // sauer
 		"([Nn]eu)\|(e-?r\+?)$" => "$1-$2";
-		"grau\|er" => "grau-er";
+		"(gr|bl)au\|er" => "$1au-er";
 		"(.?)\|([dz]?er)\+?$" => "$1-$2" ;
 
 		// correct wrong separations
@@ -1251,6 +1251,13 @@
 		"([Pp]i)\|(kan-?t)" => "$1-$2"; // pikante
 		"([Bb]e).?(in).?(hal)" => "$1+$2+$3"; // beinhaltete
 		"([Bb]ett)-?l" => "$1|l"; // bettlägerig (I know - purists wont agree ... :o)
+		"Be.?ton(\||$)" => "Be-ton$1"; // Beton vs (ich) beton
+		"\|be.?ton(\||$)" => "|be-ton$1"; // Beton vs (ich) beton
+		"([Dd]et-?er).?m" => "$1m"; // Determination, determinieren (cut syllable)
+		"([Bb]\')-?(rich-?te-?t)" => "$1|$2"; // b'richtet (schwzdtsch)
+		"([Hh]err-?gotts)\|(donn-?e-?r)" => "$1-$2"; // Herrgottsdonnere (avoid separation)
+		"(Her).?(ber).?t" => "$1-$2t"; // Herbert
+		"([Ee]x)\|(por-?t)" => "$1-$2"; // Viehexportgeschäften
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1683,6 +1690,19 @@
 
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
+		
+		// abbreviator: eliminates . in abbreviations (based on a list)
+		// all words conserve original upper/lower case distinction
+		"(Adr|[Aa]llg|Art|[Aa]usschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg|[Mm]ed)\." => "$1";
+		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
+		"(Nr|Prosp|Qual|[Ss]og|Tel|Jan|Febr|Apr|Jun|Jul|Aug|Sept|Okt|Nov|Dez)\." => "$1";
+		// words with two points
+		"[Dd]\. ?h\." => "das+h";
+		"[Uu]\.a\." => "UA";
+		"[Zz]\.B\." => "z+b";
+		"[Zz]\.[Tt]\." => "z+t";
+		"[Aa]nm\. ?d\. ?[Rr]ed\.?" => "Anm der Red";
+
 		// numbers in parathesis are written twice
 		// e.g. (1959) => (1959 1959)
 		// this is due to handling of pre- and posttoken
@@ -1767,16 +1787,7 @@
 		// since it is not possible to include more than one function in global (for the moment)
 		// include the "abbreviator" this way 
 
-		// abbreviator: eliminates . in abbreviations (based on a list)
-		// all words conserve original upper/lower case distinction
-		"(Adr|[Aa]llg|Art|[Aa]usschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg|[Mm]ed)\." => "$1";
-		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
-		"(Nr|Prosp|Qual|[Ss]og|Tel|Jan|Febr|Apr|Jun|Jul|Aug|Sept|Okt|Nov|Dez)\." => "$1";
-		// words with two points
-		"[Dd]\. ?h\." => "das+h";
-		"[Uu]\.a\." => "UA";
-		"[Zz]\.B\." => "ZB";
-		"[Aa]nm\. ?d\. ?[Rr]ed\.?" => "Anm der Red";
+		
 		
 		"([Ee]ben)(des)" => "$1 $2"; // ebendeswegen
 
@@ -3057,7 +3068,7 @@
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
 		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s" }; // use - to detect preceeding syllable
-		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer", "[Dd]es-?sert", "[Hh]er-?bert" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
 
@@ -3102,7 +3113,7 @@
 		"schien" => "schin";	// hm .. ;-)
 		"(er-?)dem$" => "{ER}{DEM}";
 		"(ch-?)dem$" => "$1{DEM}"; 
-		"((?:.*?))en$" => { "$1{EN}", "[Ww]ie-?n", "[Dd]ie.?n" };
+		"((?:.*?))en$" => { "$1{EN}", "[Ww]ie-?n", "[Dd]ie.?n", "^[Rr]i-?en$" };
 		"([Ss]eit)-?dem" => "$1{DEM}"; 
 		"((?:.*?))em$" => "$1{EM}";
 
@@ -3249,7 +3260,8 @@
 		"\[RR\]" => "rr";
 		"qu" => "q";
 		"(?<!sc)([Hh])all" => "[$1]a[LL]";
-		"(?<![Aa])e([ao])" => "[#W][&E]$1";
+		"(?<![Aa])e([ao])" => "[E][&E]$1"; // changed [#W] to [E] (hope this doesn't have unexpected consequences
+		"ä(-?[ao])" => "[Ä][&A]$1"; // Archäologe
 		"ei-?([aeou])" => "[EI][&E]$1";
 		"ai-?([aeou])" => "[AI][&E]$1";
 		
@@ -3296,7 +3308,7 @@
 		"-wo$" => "{WO}";
 
 		"-(.*?)em$" => "-$1{EM}";
-		"-(.*?)en$" => "-$1{EN}";
+		"-(.*?)en$" => { "-$1{EN}", "[Rr](?:i|\[&I\])-?en" };
 
 
 		//"\+(?!\])" => "-";	// reduce + and # to simple - (syllable) in order to simplify following rules
@@ -3581,7 +3593,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re" };
 		"ai" => "[AI]";
 		"\[AI\]-?{EN}" => "[AI][&E]{EN}";
 
@@ -4064,6 +4076,8 @@
 
 		// Oil
 		"(\[0N-\])\[O\]I" => "$1[&O]I"; // Oil
+
+		"^\[SS\]" => "[0N-][#1][SS]"; // Ssä, ssä, ssä
 
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
