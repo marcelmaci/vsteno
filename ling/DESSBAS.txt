@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "19/10/20";
+		"model_date" := "25/10/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -408,7 +408,9 @@
 
 		"([Ww])ar\|um" => "$1a-rum";
 		"([Bb])e-?que(-?)m" => "$1e+que$2m";
-		"([Pp])fle-?ge\|r" => "$1fle-ge-r"; // Pflege-Rinnen (Computers are stupid ... :)
+		//"([Pp])fle-?ge\|r" => "$1fle-ge-r"; // Pflege-Rinnen (Computers are stupid ... :)
+		"\|(rin-?nen)" => "-$1"; // make this rule more general (following ruls might be obsolete)
+		
 		"([Aa])-?m-?e-?r\+?i-?ka\|ni" => "$1-mer+i-ka-ni";	// Amerika-Nische (Computers are stupid ... :)
 		"([Aa])-?f-?r-?i-?ka\|ni" => "$1-fri-ka-ni";	// Afrika-Nische (Computers are stupid ... :)
 		"([Nn])-?i-?g-?e-?r\+?i-?a\|ni" => "$1i-ger+i-a-ni";	// Nigeria-Nische (Computers are stupid ... :)
@@ -725,7 +727,7 @@
 		"([Gg]e)[+-](wor)[+-](de)" => "$1+$2-$3";
  
 		// hinter- / vorder- (separate words)
-		"([Hh]in)-?t-?er\+(?!n$)" => { "$1-ter|", "[Hh]in.?ter.?s.?t" }; // not: hinterste
+		"([Hh]in)-?t-?er[-+](?!n$)" => { "$1-ter|", "[Hh]in.?ter.?s.?t" }; // not: hinterste // Hinterbeine
 		"([Vv]or)-?d-?er\+(?!n$)" => "$1-der|";
 
 		"([Kk]er)\+(l)" => "$1-$2";
@@ -1258,7 +1260,11 @@
 		"([Hh]err-?gotts)\|(donn-?e-?r)" => "$1-$2"; // Herrgottsdonnere (avoid separation)
 		"(Her).?(ber).?t" => "$1-$2t"; // Herbert
 		"([Ee]x)\|(por-?t)" => "$1-$2"; // Viehexportgeschäften
-
+		"([Gg]i-?let)-?(t)" => "$1|$2"; // Gilettäschli
+		"e-?rin(-?nen)?$" => "er+in$1"; // Einwohnerinnen
+		"([Pp]a-?na-?ma)-?(?!\|)" => "$1|"; // Panamahut
+		"Lie-?b-?und-?gut" => "Lieb|und|gut"; // name
+		
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -2143,7 +2149,9 @@
 		"^([Uu]-?me)-?(wäg)$" => "$1|$2"; // umewäg (schweizerdeutsch)
 		"([Kk]on-?duk-?t)eu" => "$1ö"; // Kondukteur
 		"([Bb])ou(-?teil-?le)" => "$1u$2"; // Bouteille
-
+		"([Ss]il-?)hou(-?et-?te)" => "$1u$2"; // Silhouette
+		"[Ss]ans-?[Ss]ou-?ci" => "sans\suci"; // Sanssouci
+		"[Aa].?c.?h.?e.?cho" => "ache\[WELCH][#4]o"; // achecho (swiss german)
 
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => { "$1$2$3", "[Rr]hein" }; // Rhizinus, Rhetorik etc.
@@ -3251,7 +3259,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t(?!ums?$)" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t", "[Gg]i-?let", "[Pp]a-?t-?he-?tis-?c-?h" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3483,6 +3491,8 @@
 	#EndSubSection(condenser)
 	#BeginSubSection(bundler)
 
+		"{ER}lein" => "[VR@L]ein"; // Kämmerlein
+ 
 		"([bcdfghjklmnpqrvwxz])t(\|)r" => "$1T$2r"; // Schlachtreihe => don't combine => will be separated later
 		
 		"([aeiouäöüAEIOUÄÖÜ]\]?)ssch((\[|{)?[aeiouäöüAEIOUÄÖÜ])" => "$1[SS][CH]$2";
@@ -3520,7 +3530,7 @@
 		"(?<!n)nkr" => "[NKR]";
 		"(?<!n)nk-?l" => "[NKL]";
 		"(?<!s)st-?l" => "[STL]";
-		"(?<!s)sp-?l" => "[SPL]";
+		"(?<!s)s-?p-?l" => "[SPL]"; // Knösplein
 		"sp-?r" => "[SPR]";
 		"pf-?l" => "[PFL]";
 		"pf-?r" => "[PFR]";
@@ -5504,6 +5514,8 @@
 		"\[ET\]\[VR\]" => "[&ETVR]"; // geendeter
 
 		"\[&T\](\[F@L\])" => "[&T-1]$1"; // Sintflut
+
+		"\[ET\]-?L(\[#.\]\[&I\])" => "[&ET3@L3]$1"; // Heimetli
 
 	#EndSubSection(laterewriter)
 	#BeginSubSection(latesubstituter)

@@ -763,6 +763,7 @@
 		"L" => { "&T#L", 4, 10, 0, 1 }
 		"@L3" => { "&T@L3", 4, 16.5, 0, 1.5 }
 		"@L3" => { "&ET@L3", 4, 20, 0, 2 } // english: quietly (two system lines high instead of 1.5!)
+		"@L3" => { "&ET3@L3", 6, 30, 0, 3 } // Heimetli (swiss german)
 		"ALL" => { "&TALL", 4, 10, 0, 1 }
 		"M" => { "&TM", 4, 10, 0, 1 }
 		"M@R6" => { "&TM@R6", 4, 10, 0, 1 }
@@ -2506,6 +2507,17 @@
 		"(\[&u\])\[#.\](\[g@r\])" => "$1[#2-]$2"; // Übergriffe
 		"(\[f\])(\[&ai@#\/\.\])(\[ai\]\[vr\])" => "$1[#5]$2[#5-]$3"; // faire
 		"(\[auf\])\[#.\](\[d@r\])" => "$1[#3-]$2"; // aufdringlich
+		"(\[ck\])\[#.\](\[g@r\])" => "$1[#1]$2"; // sackgrob
+		"(\[l@l\])(\[em\])" => "$1[#6-]$2"; // hellem
+		"(\[b@r6\])\[#.\](\[au\]\[st\])" => "$1[#7]$2"; // brauste
+		"(\[mm\])(\[em\])" => "$1[#7-]$2"; // frommem
+		"(\[schw\])\[#.\](\[a\]\[nd\])" => "$1[#5]$2"; // verschwand
+		"(\[f\])\[#.\](\[a\]\[c\])" => "$1[#6]$2"; // Facettenaugen
+		"(\[h\])(\[em\])" => "$1[#5-]$2"; // selbstverständlichem
+		"(\[k\])\[#.\](\[i\]\[s\])" => "$1[#4]$2"; // Kies
+		"(\[ar\])\[#.\](\[o\]\[b\])" => "$1[#5]$2"; // robust
+		"(\[sch\])\[#.\](\[o\]\[k\])" => "$1[#2][sch.][#2]$2"; // Schokolade
+		"(\[fort\])\[#.\](\[z\])" => "$1[#1]$2"; // fortzulaufen
 
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
@@ -2560,6 +2572,10 @@
 		//   writing of the underscore can make a difference in meaning!
 
 		"(\[#..?\])(\\\\)(\[=\])" => "|$1$2$3"; // apply this to all distances and all = (example: griechisch-lateinisch)
+
+		// first tokens (at least some of them) arent written correctly if preceeded by " => insert \
+		//"^(\[schw\])" => "\\\\$1"; // this rule doesn't work ... at this point, regex has no control over " (only stage 0 can do that...)
+		// no solution for this problem for the moment ... 
 
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)
