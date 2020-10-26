@@ -186,7 +186,7 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "^[Tt]er-?r", "[Ss]er-?bi", "Pier-?re" }; // Terrain, Serbien
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
@@ -1264,6 +1264,9 @@
 		"e-?rin(-?nen)?$" => "er+in$1"; // Einwohnerinnen
 		"([Pp]a-?na-?ma)-?(?!\|)" => "$1|"; // Panamahut
 		"Lie-?b-?und-?gut" => "Lieb|und|gut"; // name
+		"([Aa]b)-?(len-?k)" => "$1+$2"; // Ablenkungsmanöver
+		"([Zz]u).?(o.?b).?(er).?(st)" => "$1+$2$3+$4"; // zuoberst
+		"([Jj]ung)\|(fer)" => "$1-$2"; // Jungern
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1708,6 +1711,8 @@
 		"[Zz]\.B\." => "z+b";
 		"[Zz]\.[Tt]\." => "z+t";
 		"[Aa]nm\. ?d\. ?[Rr]ed\.?" => "Anm der Red";
+		"[Aa]\. [cC][Tt]\." => "a ct"; // année courante
+		
 
 		// numbers in parathesis are written twice
 		// e.g. (1959) => (1959 1959)
@@ -1977,7 +1982,7 @@
 		"^(E)$" => "[#9][#_#]\[#9-][#5-][#5-][0N-]$1[&E]"; // "underscorer" => should be solved with diacritics ...
 		//"^([A-Z])$" => "[#_#]\[#5-][#5-]$1"; // "underscorer" => should be solved with diacritics ...
 		"(\[#_#\]\\\[#5-\]\[#5-\])[U]" => "$1[#U#]";
-		"(?<!\|)'" => "|'"; // apostrophizer: hat's 
+		"(?<!\|)'s" => "|'\[S]"; // apostrophizer: hat's 
 		"(?<!\[)\/" => "[/]"; // mark / that where originally there (e.g. km/h)
 		"[Cc]ou-?ver" => "ku-ver"; // Couvert
 
@@ -2224,6 +2229,8 @@
 		"[Mm]it[-+]?nich-?ten" => "{MIT}\\{NICHT2}{EN}"; // mitnichten
 		"[Ii]n[-+]so[-+]fern" => "{IN}{SO}fern"; // insofern
 		
+		"([Ww][Ee]r-?t)e-?t" => "$1{ET}"; // wertete
+
 		// cut out vowels
 		"tstopt(01)er\+li-?ch" => "er{LICH}";
 		"tstopt(01)((?:[ae]|ä)[ui])-?e(-?r)\+?" => "$1$2";
@@ -3393,7 +3400,8 @@
 		//"\[=" => "[-";
 		"'(i|au|eu|äu|ei)" => "|[']\[0D-]$1";
 		"'(a|e|o|u)" => "|[']\[0N-]$1";
-		"(?<!\|\[)'" => "|[']\";			// temporarily disabled
+		//"\|\'" => "[']\";			// temporarily disabled
+		//"(?<!\|\[)'" => "|[']\";			// temporarily disabled
 		"thr" => { "tHr", "[Tt]hro-?n" }; // Thriller, not: Thron
 		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
 		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg", "^[Tt]hu-?n", "[Gg]oe-?t-?he" };
