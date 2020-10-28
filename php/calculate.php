@@ -81,7 +81,7 @@ function ResetSessionGetBackPage() {
     if ($model_type !== false) {
         // set session variables beforehand
         $_SESSION['actual_model'] = $posted_model;
-        $_SESSION['model_custom_or_standard'] = $model_type;
+        $_SESSION['model_standard_or_custom'] = $model_type; // darned ... custom_or_standard !== standard_or_custom ...
         if ($model_type === "standard") $_SESSION['selected_std_model'] = $posted_model;
         // now load model based on session-variables
         //echo "model: " . $_SESSION['actual_model'];
@@ -107,7 +107,7 @@ function ResetSessionGetBackPage() {
         $session_subsection = GetSubSection($header_section, "session");
         //echo "session_text: $session_subsection<br>";
         ImportSession();
-        echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . "$borrow_text wurde geladen und die Optionen aktualisiert.</p>";
+        echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . "$borrow_text wurde geladen und die Optionen aktualisiert.<br>Modeltyp: $model_type</p>";
         echo GetErrorAndWarningSection();
         /*
         if ((mb_strlen($global_error_string)>0) || ((mb_strlen($global_warnings_string)>0))) {
