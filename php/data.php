@@ -76,17 +76,31 @@ $global_error_string = "";
 // adjust session variable so that correct model gets loaded
 // session-variable is also used to set correct rules pointers for regex-parser-functions!!!
 if (!(isset($_SESSION['actual_model']))) $_SESSION['actual_model'] = $default_model;
-$model_to_load = $_SESSION['actual_model'];
+switch ($_POST['action']) {
+    case 'abschicken' : $model_to_load = $_SESSION['actual_model']; break;
+    case 'aktualisieren' : $model_to_load = $_SESSION['actual_model']; break;
+    default :   if (!(isset($_POST['action']))) $model_to_load = $_SESSION['actual_model'];
+                else $model_to_load = $_POST['action']; 
+                break;
+}
+
+//echo "model to load: $model_to_load POST: " . $_POST['action'] . "<br>";
+$_SESSION['actual_model'] = $model_to_load;
+
+//$model_to_load="DESSBAS";
 
 // DO NOT ECHO DEBUG INFORMATION HERE => THATS BEFORE HTML HEAD!!!!!!!!!!
 $text_to_parse = LoadModelFromDatabase($model_to_load);
 //echo "text: $text_to_parse<br><br>";
+
 // barrow a font from another model
+//echo "post(font_borrow_yesno):" . $_POST['font_borrow_yesno'] . "<br>";
+
 
 ///////////////////// prepare patching to use one and the same font for all models //////////
 // idea is to "borrow a font from another model ///////////////////////////////////////////
 // use the following line to test (or comment out to use traditional functionality ///////
-if ($_POST['font_borrow_yesno'] === "yes") {  // use POST (SESSION not yet set)
+if (($_POST['font_borrow_yesno'] === "yes") && ($_POST['action'] === "abschicken")) {  // use POST (SESSION not yet set)
     $text_to_parse = BorrowFont( $text_to_parse, htmlspecialchars($_POST['font_borrow_model_name']));
     //echo "model_name: " . $_POST['font_borrow_model_name'];
 } else if ($include_for_cookie) {
@@ -112,6 +126,7 @@ if ($_POST['font_borrow_yesno'] === "yes") {  // use POST (SESSION not yet set)
     //echo "AFTER: $text_to_parse";
     
 } else {
+    
     // since foreign font loading is implemented as a check box it's not sure that font specific
     // variables are actual when calculation is launched.
     // therefore (re)load font-session variables even if no foreign font is loaded.
@@ -128,8 +143,9 @@ if ($_POST['font_borrow_yesno'] === "yes") {  // use POST (SESSION not yet set)
 }
     
 /////////////////// end of patching //////////////////////////////////////////////////////////
-
 $test = ImportModelFromText($text_to_parse);
+//echo "text to parse: $text_to_parse<br>";
+
 $actual_model = $_SESSION['actual_model'];
 // create new session variable with number of rules for global use (this is faster than repeated count() calls)
 $_SESSION['actual_model_number_of_rules'] = count($rules[$actual_model]);
@@ -137,5 +153,6 @@ $_SESSION['actual_model_number_of_rules'] = count($rules[$actual_model]);
 $_SESSION['last_updated_model'] = $actual_model;
 
 //InterpolateFont($font[$_SESSION['actual_model']]);
+
 
 ?>

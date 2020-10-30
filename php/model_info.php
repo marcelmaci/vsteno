@@ -1,6 +1,6 @@
 <?php require "vsteno_template_top.php"; ?>
 <?php
-    //echo "FontBorrow: " . $_SESSION['font_borrow_yesno'] . " " . $_SESSION['font_borrow_model_name'] . "<br>";
+     echo "FontBorrow: " . $_SESSION['font_borrow_yesno'] . " " . $_SESSION['font_borrow_model_name'] . "<br>";
     $_POST['font_borrow_yesno'] = ($_SESSION['font_borrow_yesno']) ? "yes" : "no"; // uh ... very ugly ... :):):) set POST to make data.php load borrowed font ...
     $_POST['font_borrow_model_name'] = $_SESSION['font_borrow_model_name'];
     require_once "data.php"; // unfortunately, this is necessary to have correct statistics data ...
@@ -28,7 +28,7 @@
     if (mb_strlen($_SESSION['copyright_footer'])>0) echo "<p>" . $_SESSION['copyright_footer'] . "</p>";
     else echo "<p>empty</p>";
     echo "<h1>Stats</h1>";
-    $number_rules = $_SESSION['statistics_rules'];
+    $number_rules = $_SESSION['statistics_rules'] - ($_SESSION['statistics_subsections'] * 2);
     $number_analyzer_rules = $_SESSION['statistics_analyzer_rules'];
     $number_tokens = $_SESSION['statistics_tokens'];
     $number_base = $_SESSION['statistics_base'];

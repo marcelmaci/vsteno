@@ -119,7 +119,7 @@ function LoadModelToShareFromDatabase($name) {
        // $shifter[] = $insertion_key;    // idem for $shifter
         //$rules[] = $insertion_key;      // idem for $rules
         //$functions_table[] = $insertion_key; // semper idem
-        //echo "output = $output<br>";
+        // echo "output = $output<br>";
         return $output;
     } else {
         die_more_elegantly("<p>Kein Eintrag in models.</p>");
@@ -159,7 +159,7 @@ function LoadModelFromDatabase($name) {
        // $shifter[] = $insertion_key;    // idem for $shifter
         $rules[] = $insertion_key;      // idem for $rules
         $functions_table[] = $insertion_key; // semper idem
-        //echo "output = $output<br>";
+        // echo "output = $output<br>";
         return $output;
     } else {
         die_more_elegantly("<p>Kein Eintrag in models.</p>");
@@ -365,11 +365,13 @@ function ImportAnalyzer() {
 /////////////////////////////////////////////////// import token definitions ///////////////////////////////////////
 function GetNextTokenDefinitionElementAndShrink() {
     global $shrinking_base_subsection;
+    //echo "GetNextTokenDefinitionElementAndShrink() - start<br>";
     $result = preg_match("/^[ ]*?(.*?)([,}])(.*)/", $shrinking_base_subsection, $matches);
     if ($result == 1) {
         $element = $matches[1];
         if ($matches[2] === "}") $last = true; else $last=false;  // $2 contains either , (= there are more elements) or } (= it is the last element)
         $shrinking_base_subsection = $matches[3];
+        //echo "return array<br>";
         return array($element, $last);
     } else return null;
 }
@@ -380,10 +382,16 @@ function GetNextTokenDefinitionKeyAndShrink() {
     if ($result == 1) {
         $key = $matches[1]; // corresponds to $1
         $shrinking_base_subsection = $matches[2]; // corresponds to $2
-    }
+     
+    
     //echo "Key: $key => ";
     $actual_key = $key;
    // $font[$insertion_key][] = $key;      // add token key to $font (actual model: $font["$insertion_key"])
+    } else {
+        $actual_key = null;
+        //echo "set actual key to null<br>";
+    }
+    //echo "end of GetNextTokenDefinitionKeyAndShrink()<br>";
 }
 
 function StripOutSpaces( $text ) {
@@ -411,16 +419,27 @@ function PurifyData( $data ) {
 function ImportBase() { 
     global $base_subsection, $imported_base, $shrinking_base_subsection, $font, $insertion_key, $actual_key;
     $shrinking_base_subsection = $base_subsection;
-    while ($shrinking_base_subsection !== "") {
+    $breakout=false;
+    while (($shrinking_base_subsection !== "") && ($breakout !== true)) {
         GetNextTokenDefinitionKeyAndShrink();
-        do {
-            list($element, $last) = GetNextTokenDefinitionElementAndShrink();
-            //if ($element !== null) if ($last !== true) echo "$element,"; else echo "$element";
-            $font[$insertion_key][$actual_key][] = StripOutQuotesAndCast( StripOutSpaces($element));    // add definition data to actual token (symbolically: font["model"]["token"])
-            //if ($actual_key === "@#/") echo "element: $element (last: $last)<br>";
-        } while ($last !== true);
-        //echo "}<br><br>";
+        //echo "actual key: >$actual_key<<br>";
+        //var_dump($actual_key);
+        //if ($actual_key !== null) echo "enter if-part<br>";
+        //else echo "set breakout<br>";
+        //echo "shrinking_base_subsection: >$shrinking_base_subsection<<br>";
+        if ($actual_key !== null) {
+            do {
+                list($element, $last) = GetNextTokenDefinitionElementAndShrink();
+                //if ($element !== null) if ($last !== true) echo "$element,"; else echo "$element";
+                $font[$insertion_key][$actual_key][] = StripOutQuotesAndCast( StripOutSpaces($element));    // add definition data to actual token (symbolically: font["model"]["token"])
+                //if ($actual_key === "@#/") echo "element: $element (last: $last)<br>";
+            } while ($last !== true);
+            //echo "}<br><br>";
+        } else $breakout=true;
+        //echo "breakout: >$breakout<<br>";
     }
+    //var_dump($font[$insertion_key]);
+    //echo "end of while ...";
 }
 
 ///////////////////////////////////////////////// import combiner ////////////////////////////////////////
@@ -430,19 +449,23 @@ function GetNextCombinerDefinitionKeyAndShrink() {
     if ($result == 1) {
         $key = $matches[1]; // corresponds to $1
         $shrinking_combiner_subsection = $matches[2]; // corresponds to $2
-    }
+        $actual_key = $key;
+    } else $actual_key = null;
     //echo "Key: $key => ";
-    $actual_key = $key;
+    //$actual_key = $key;
     //$combiner[$insertion_key][$actual_key][] = $key; 
 }
 
 // "D" => { "@R", /*delta*/ 0, 0 }
 function GetNextCombinerDefinitionAndShrink() {
     global $shrinking_combiner_subsection, $combiner, $insertion_key, $actual_key;
+    //echo "shrinking_combiner_subsection: $shrinking_combiner_subsection<br>"; 
+    
     $result = preg_match( "/^[ ]*?{[ ]*?\"(.*?)\"[ ]*?,[ ]*?(.*?)[ ]*?,[ ]*?(.*?)[ ]*?}(.*)/", $shrinking_combiner_subsection, $matches);
     if ($result == 1) {
         $shrinking_combiner_subsection = $matches[4];
         //echo "REST: " . $matches[4] . "<br>";
+        //echo "combiner($insertion_key)() = array($actual_key, " . $matches[1] , "," .  PurifyData($matches[2]) . "," . PurifyData($matches[3]) . ")<br>";
         $combiner[$insertion_key][] = array( $actual_key, $matches[1], PurifyData($matches[2]), PurifyData($matches[3]) ); 
         
         //$combiner[$insertion_key][$actual_key][] = $matches[1]; 
@@ -453,14 +476,18 @@ function GetNextCombinerDefinitionAndShrink() {
 }
 
 function ImportCombiner() {
-    global $combiner_subsection, $imported_combiner, $shrinking_combiner_subsection;
+    global $combiner_subsection, $imported_combiner, $shrinking_combiner_subsection, $actual_key;
     $shrinking_combiner_subsection = $combiner_subsection;
-    while ($shrinking_combiner_subsection !== "") {
+    $breakout = false;
+    while (($shrinking_combiner_subsection !== "") && ($breakout !== true)) {
         GetNextCombinerDefinitionKeyAndShrink();
-        list($second, $delta_x, $delta_y) = GetNextCombinerDefinitionAndShrink();
+        if ($actual_key !== null) list($second, $delta_x, $delta_y) = GetNextCombinerDefinitionAndShrink();
+        else $breakout = true;
         //echo "{ $second, $delta_x, $delta_y }<br>";
         // echo "REST: $shrinking_combiner_subsection<br>";
     }
+    //global $combiner, $insertion_key;
+    //var_dump($combiner[$insertion_key]);
 }
 
 ////////////////////////////////////////////////////// import shifter ///////////////////////////////////////////////////////////////////////////
@@ -470,9 +497,10 @@ function GetNextShifterDefinitionKeyAndShrink() {
     if ($result == 1) {
         $key = $matches[1]; // corresponds to $1
         $shrinking_shifter_subsection = $matches[2]; // corresponds to $2
-    }
+        $actual_key = $key;
+    } else $actual_key = null;
     //echo "Key: $key => ";
-    $actual_key = $key;
+    //$actual_key = $key;
     //$shifter["$insertion_key"][] = $key;
 }
 
@@ -495,11 +523,15 @@ function GetNextShifterDefinitionAndShrink() {
 }
 
 function ImportShifter() {
-    global $shifter_subsection, $imported_shifter, $shrinking_shifter_subsection;
+    global $shifter_subsection, $imported_shifter, $shrinking_shifter_subsection, $actual_key;
     $shrinking_shifter_subsection = $shifter_subsection;
-    while ($shrinking_shifter_subsection !== "") {
+    $breakout = false;
+    while (($shrinking_shifter_subsection !== "") && ($breakout !== true)) {
         GetNextShifterDefinitionKeyAndShrink();
-        list($newname, $shift_x, $shift_y, $delta_x, $delta_y) = GetNextShifterDefinitionAndShrink();
+        //echo "Shifter-Key: >$actual_key<<br>";
+        //var_dump($actual_key);
+        if ($actual_key !== null) list($newname, $shift_x, $shift_y, $delta_x, $delta_y) = GetNextShifterDefinitionAndShrink();
+        else $breakout = true;
         //echo "{ $newname, $shift_x, $shift_y, $delta_x, $delta_y }<br>";
         //echo "REST: $shrinking_shifter_subsection<br>";
     }
@@ -843,6 +875,9 @@ function ImportModelFromText($text) {
     $header_section = GetSection($output, "header");
     $font_section = GetSection($output, "font");
     $rules_section = GetSection($output, "rules");
+    //echo "header:<br> >$header_section<<br>----------------<br>";
+    //echo "font:<br> >$font_section<<br>---------------------<br>";
+    //echo "rules:<br> >$rules_section<<br>--------------------<br>";
     
     // get subsections
     // header
@@ -854,6 +889,8 @@ function ImportModelFromText($text) {
     $base_subsection = GetSubSection($font_section, "base");
     $combiner_subsection = GetSubSection($font_section, "combiner");
     $shifter_subsection = GetSubSection($font_section, "shifter");
+    //echo "font: $font_section<br>";
+    //echo "base: $base_subsection<br>";
     // parse data
     //ImportSession(); // do that only when loading the page for the 1st time or when reset button is clicked (not whenever a calculation is made: user must have the possibility to override session variables!)
     ImportAnalyzer();
@@ -865,11 +902,19 @@ function ImportModelFromText($text) {
     //if (($_SESSION['output_format'] === "meta_lng") || ($_SESSION['output_format'] === "meta_std") || ($_SESSION['output_format'] === "meta_prt")) {
     //    echo "don't load tokens (for performance reasons)<br>";
     //} else {
+        
+        
+    
+    
+        
+       // echo "canary0 ...";
         ImportBase();   // data is written to global variable $imported_base (which corresponds to $steno_tokens_master)
+       // echo "canary1 ...";
         ImportCombiner(); // idem to $imported_combiner
+       // echo "canary2 ...";
         ImportShifter(); // idem to $imported_shifter
-
-
+       // echo "canary3 ...";
+    
 // connect old variables
 // note: this is the easy (or should i say "quick and dirty";-) method to reuse old parser functions with new data
 // it works as long as you reassign the new data to the old variables whenever (each time!) the model changes!
@@ -882,6 +927,7 @@ $actual_model = $_SESSION['actual_model'];
 $steno_tokens_master = $font[$actual_model];
 $combiner_table = $combiner[$actual_model];
 $shifter_table = $shifter[$actual_model];
+
 
  global $token_groups, $group_combinations, $vowel_groups, $token_variants, $rules_list;
   
