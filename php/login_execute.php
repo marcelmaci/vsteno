@@ -63,7 +63,7 @@ if ($result->num_rows > 0) {
 }
 ?>
 <h1>Einloggen</h1>
-<p>Sie haben Sich erfolgreich eingeloggt!</p>
+<p>Sie haben sich erfolgreich eingeloggt!</p>
 <a href="input.php"><button>zurück</button></a><br><br>
 
 <?php

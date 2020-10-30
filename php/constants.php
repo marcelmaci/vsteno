@@ -25,10 +25,10 @@ ini_set('display_errors','off');    // turn off errors in order to keep error.lo
 error_reporting(0);                 // turn off all error reporting
 
 // version
-const version_name = "Hyperion (latest) - 12/07/2020"; // official release name
+const version_name = "Hyperion (latest) - 30/10/2020"; // official release name
 const version_number = "0.3"; // two digit version number (can be used to test compatibility with models)
-const version_commit_id = "2a3ba9da2f30c96f906b9e5b440a1789c13aff86";   // must be inserted manually after commit => could be from last commit if forgotten
-const version_date = "12/07/2020";  // idem
+const version_commit_id = "07ed22142e223ce5e6b2c5a40b4e9c2ed0a171e9";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_date = "30/10/2020";  // idem
 
 // constants
 // for steno tokens (array with header and data tuplets)

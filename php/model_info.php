@@ -1,6 +1,6 @@
 <?php require "vsteno_template_top.php"; ?>
 <?php
-     echo "FontBorrow: " . $_SESSION['font_borrow_yesno'] . " " . $_SESSION['font_borrow_model_name'] . "<br>";
+    //echo "FontBorrow: " . $_SESSION['font_borrow_yesno'] . " " . $_SESSION['font_borrow_model_name'] . "<br>";
     $_POST['font_borrow_yesno'] = ($_SESSION['font_borrow_yesno']) ? "yes" : "no"; // uh ... very ugly ... :):):) set POST to make data.php load borrowed font ...
     $_POST['font_borrow_model_name'] = $_SESSION['font_borrow_model_name'];
     require_once "data.php"; // unfortunately, this is necessary to have correct statistics data ...

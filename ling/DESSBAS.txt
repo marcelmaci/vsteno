@@ -1266,7 +1266,10 @@
 		"Lie-?b-?und-?gut" => "Lieb|und|gut"; // name
 		"([Aa]b)-?(len-?k)" => "$1+$2"; // Ablenkungsmanöver
 		"([Zz]u).?(o.?b).?(er).?(st)" => "$1+$2$3+$4"; // zuoberst
-		"([Jj]ung)\|(fer)" => "$1-$2"; // Jungern
+		"([Jj]ung)\|(fer)" => "$1-$2"; // Jungfern
+		"([Ss]ich-?le-?ten)-" => "$1|"; // Sichletennacht
+		"([Zz])(\')-?(mor)" => "$1|$2|$3"; // z'Morge
+		"(Nacht).?(tischli).?(schub).?(läd-li)" => "$1|$2|$3|$4"; // Nachttischlischublädli
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3869,7 +3872,8 @@
 		"\[&T\]\|(\[?(M)\]?)" => "[&T]\\$1"; // write separatedly (2 words)
 		"(\[&T\])\|(\[ST\])" => "$1\\[#2]$2"; // Luftstösse
 		"(\[&T\])\|(\[KL\])" => "$1\\[#2]$2"; // zurechtkleben
-		"\[&T\]\|(F)" => "[&T]\\[#2]\\$1"; // zartfühlend
+		"(\[&T\])\|(\[PR\])" => "$1\\[#3]$2"; // Kraftprobe
+		"\[&T\]\|([FP])" => "[&T]\\[#2]\\$1"; // zartfühlend
 		"\[&T\]\|(?!NI|{)" => "[&T]\\"; // write separatedly (2 words) (not for -nis(se)
 		"\[&T\]\|({AN})" => "[&T]\\$1"; // write separatedly (2 words) - prefix an-
 		
@@ -5573,6 +5577,7 @@
 		//"(\[[a-zäöü\/#@\+-].*?\])" => "strtoupper()";
 		//"({.*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
 		//"(\[.*?\])" => "strtoupper()";
+		"\|\'\|" => "\'\"; // z'Morge
 		"\|" => "";  // filter out all | from linguistical analysis (not needed any more, spacer needs them removed for correct spacing)
 		"-\]" => "#=#=#]";	// the same goes for - (this one is trickier to get rid off ...)
 		"\[-" => "[#=#=#";	// first combination of - with brackets must be rewritten
