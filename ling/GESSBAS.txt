@@ -2563,6 +2563,8 @@
 		"(\[bei\])\[#.\](\[b@r6\])" => "$1[#1]$2"; // beibringen
 		"(\[st\])\[#.\](\[o\]\[tt\])" => "$1[#7]$2"; // stotternd
 		"(\[d\])\[#.\](\[a\]\[ch@r\])" => "$1[#1]$2"; // Dachraum
+		"(\[AR\^\])\[#.\](\[i\]\[ss\])" => "$1[#0]$2"; // riss
+		"(\[&e\])\[#.\](\[i\]\[\^sch\])" => "$1[#1]$2"; // misstrauisch
 
 		//"(\[&t\])" => "[&T][T]"; // Weltteil - add spacing between separated words
 		// Anhaltspunkt
@@ -2589,7 +2591,7 @@
 		// recorrections
 		//"(\[[NS])\[=\](@#_])" => "$1=$2"; // filter out [] around = (single upper case characters n, s with diacritics) 
 
-		"(?<!\[#6-\])(\\\\)(\[=\])" => "[#6-]$1$2"; // u-förmigen, s-s-stündeler => reduce space
+		"(?<!\[#4-\])(\\\\)(\[=\])" => "[#4-]$1$2"; // u-förmigen, s-s-stündeler => reduce space
 		// recorrections
 		"(\[[lt]\])\[#..?](\\\\)(\[=\])" => "$1[#2-]$2$3"; // Heil= und Pflegeanstalt, Brot-
 
