@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "25/10/20";
+		"model_date" := "31/10/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1269,7 +1269,8 @@
 		"([Jj]ung)\|(fer)" => "$1-$2"; // Jungfern
 		"([Ss]ich-?le-?ten)-" => "$1|"; // Sichletennacht
 		"([Zz])(\')-?(mor)" => "$1|$2|$3"; // z'Morge
-		"(Nacht).?(tischli).?(schub).?(läd-li)" => "$1|$2|$3|$4"; // Nachttischlischublädli
+		"(Nacht).?(tischli).?(schub).?(läd-?li)" => "$1|$2|$3|$4"; // Nachttischlischublädli
+		"([Aa]us).?(fluchts?)-" => "$1+$2|"; // Ausfluchtsmanöver
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3236,6 +3237,7 @@
 		"ge-?habt" => "{GEHABT}";
 		"(?<![CcPp])ha-?b" => { "{HAB}", "^[Hh]a-?bers?$", "[Hh]a-?b-?ich-?t", "[Ee]r[-+]ha-?be-?n" };
 		"^([Aa]n\+|{AN}\+)?[Hh]at(-?t)?" => "$1{HAT}";
+		"{HAT}et$" => "{HAT}{ET}"; 
 		"^chin" => "[CH]in";
 
 		"^hin-?zu" => "{HIN}{ZU}";
@@ -3885,7 +3887,7 @@
 		"(\[&T@R\])O\|" => "$1[&O]\"; // Elektrotechniker
 		"(\[&T@R\]\[A\]\[&A\])\|" => "$1\"; // Extrareise
 
-
+		"(U\[CH\]\[&T\]S)\|M" => "$1\[#4]M"; // Ausfluchtsmanöver
 		"{HEIT}((?:\[&E\])?\[E\]\[ST\])\|" => "{HEIT}$1\\"; // weitestverbreitete
 		"(\[&T])\|?(#?{SCHAFT})(S)?\|" => "$1$2$3\\"; 
 		"\[&T\]{EN}\|" => "[&T]{EN}\\"; // Präsidentenwahl
@@ -4227,6 +4229,7 @@
 		"(I|\[AU\])\[ZL\]" => "$1[^Z1@L3]"; // kitzle
 		"\[ZL\]" => "[Z@L3]";
 		"\[SCHL\]" => "[SCH@L3]";
+		"^\[CHL\]" => "[WELCH@L3]";
 		"\[CHL\]" => "[CH@L3]";
 		"\[BR\]" => "[B@R6]";
 		"\[SPL\]" => "[SP@L]";
@@ -5303,6 +5306,7 @@
 		"{WAR}T$" => "[0U-][#0S][&A][&T]";
 		"{WAR}" => "[0U-][#0S][&A]";
 		"{WÄR}" => "[0U-][#WS][&A]";
+		"{HAT}{ET}" => "[HAT][D.][ET]";
 		"{ET}" => "[ET]";
 		"{HAT}" => "[HAT]";
 		"{DA}" => "[DA]";
