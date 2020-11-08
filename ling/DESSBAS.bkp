@@ -1704,7 +1704,7 @@
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		
-		// abbreviator: eliminates . in abbreviations (based on a list)
+		// abbreviator: eliminates . in abbreviations (based on a list) 
 		// all words conserve original upper/lower case distinction
 		"(Adr|[Aa]llg|Art|[Aa]usschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg|[Mm]ed)\." => "$1";
 		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
