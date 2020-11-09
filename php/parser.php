@@ -1442,8 +1442,8 @@ function GetHandwriting($word) {
     //$output = preg_replace( "/(?<![<>])([0-9]){1,1}/", "[#$1" . $_SESSION['handwriting_marker'] . "]", $output ); 
     //echo "after: $output<br>";
     // tokens with distinciton upper/lower case
-    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]|Ä|Ö|Ü|É){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
-    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]|ä|ö|ü|é){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
+    $output = preg_replace( "/(?<![<>])([ABCDEFGHIJKLMNOPQRSTUVWXYZ]|Ä|Ö|Ü|É|È|Ê|Ë|À|Á|Â|Í|Ì|Î|Ï|Ó|Ò|Ô|Ú|Ù|Û){1,1}/", "[#$1+" . $_SESSION['handwriting_marker'] . "]", $output ); // upper case
+    $output = preg_replace( "/(?<![<>])([abcdefghijklmnopqrstuvwxyz]|ä|ö|ü|é|è|ê|ë|á|à|â|í|ì|î|ï|ó|ò|ô|ú|ù|û){1,1}/", "[#$1-" . $_SESSION['handwriting_marker'] . "]", $output ); // lower case
     $marker = $_SESSION['handwriting_marker'];
     $output = preg_replace( "/(?<![<>])(\!|\?|\'|\"|\.|\,|\;|\:|\(|\)){1,1}/", "[#$1+$marker]", $output ); // lower case
     

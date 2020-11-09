@@ -106,7 +106,7 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <ul>
 <li><b>Modelle:</b>
 <br>DESSBAS: Umfassende Verbesserungen in den Regeln betreffend Grundschrift
-<br>GESSBAS: Umfassende Verbesserungen der Zeichendarstellungen (geteiltes Font)</li>
+<br>GESSBAS (shared font): Umfassende Verbesserungen (Zeichendarstellungen, Abstände, Sonderzeichen)</li>
 <li><b>Bugfixes:</b>
 <br>Switching: Wechseln von Kurzschrift zu Handschrift in Layouted-Modus (Zeilenumbruch nun i.O.)
 <br>Warnings: Globalen Scope korrigiert und Erkennen "leerer" Regeln verbessert
