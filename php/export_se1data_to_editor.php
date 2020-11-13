@@ -379,7 +379,7 @@ if ($_SESSION['user_logged_in'] == false) {
     require_once "vsteno_template_top.php";
     echo "<h1>Fehler</h1>";
     echo "<p>Sie arbeiten aktuell mit dem Model <b><i>standard</i></b>. Wenn Sie Ihr eigenes Stenografie-System bearbeiten wollen, ändern sie das Modell auf <b><i>custom</i></b> und rufen Sie diese Seite erneut auf.</p>";
-    echo "<p><a href='toggle_model.php'><button>ändern</button></a></p>";
+    echo "<p><a href='input.php'><button>zur&uuml;ck</button></a></p>";
     require_once "vsteno_template_bottom.php";
 } else { 
     OpenEditorPage();

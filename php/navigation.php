@@ -38,13 +38,13 @@
                 <?php   require_once "session.php";
                         if (isset($_SESSION['user_logged_in']) && ($_SESSION['user_logged_in'])) {
                         $username_string = (mb_strlen($_SESSION['user_username']) > 10) ? $username_string = mb_substr( $_SESSION['user_username'], 0, 10) . "…" : $username_string = $_SESSION['user_username'];
-                        //$link_toggle_model = ($_SESSION['model_standard_or_custom'] === 'standard') ? "<a href='toggle_model.php'>standard</a>" : "<a href='toggle_model.php'>custom</a>";
                         echo "<p><b>User</b></p><ul><li><a href='show_account_information.php'>" . $username_string . "(" . $_SESSION['user_privilege'] . ")</a></li>";
-                        //echo "<li>$link_toggle_model</li>";
-                        echo "</ul><p><b>Data</b></p></ul>";
-                        echo "<li><a href='olympus.php'>Olympus</a></li>";
-                        echo "<li><a href='elysium.php'>Elysium</a></li>";
-                        /*if (($_SESSION['user_privilege'] > 1) || (($_SESSION['user_privilege'] == 1) && $_SESSION['model_standard_or_custom'] === "custom"))*/ echo "<li><a href='purgatorium.php'>Purgatorium</a></li>";
+                        if ($_SESSION['user_privilege'] == 2) {
+                            echo "</ul><p><b>Data</b></p></ul>";
+                            echo "<li><a href='olympus.php'>Olympus</a></li>";
+                            echo "<li><a href='elysium.php'>Elysium</a></li>";
+                            echo "<li><a href='purgatorium.php'>Purgatorium</a></li>";
+                        }
                         echo "<ul><p><b>Edit</b></p>";
                         echo "<li><a href='edit_header.php'>->Header</a></li>";
                         echo "<li><a href='edit_font.php'>->Zeichen</a></li>";

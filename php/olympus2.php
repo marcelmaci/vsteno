@@ -166,7 +166,7 @@ if (($_SESSION['user_logged_in']) && ($_SESSION['user_privilege'])) {
     } else {
             echo "<h1>Olympus</h1><p>Sie arbeiten zur Zeit mit dem Modell <b>standard</b>, das Sie nicht bearbeiten können. Ändern Sie das Modell auf <b>custom</b> um mit Ihrem
             eigenen Olympus ($olympus) zu arbeiten.</p>";
-            echo "<p><a href='toggle_model.php'><button>&auml;ndern</button></a></p>";
+            echo "<p><a href='input.php'><button>zur&uuml;ck</button></a></p>";
     }
     
     //require_once "vsteno_template_bottom.php";

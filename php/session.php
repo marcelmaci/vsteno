@@ -191,7 +191,7 @@ function InitializeSessionVariables() {
     $_SESSION['model_standard_or_custom'] = "standard";
     $_SESSION['rules_count'] = null;
     $_SESSION['language_hunspell'] = "de_CH"; // do not initialize these variables, so that they can be initialized by model!
-    $_SESSION['language_hyphenator'] = "de"; // correction: can be done here, since toggle_model now actualizes session variables for specific model
+    $_SESSION['language_hyphenator'] = "de"; 
     $_SESSION['language_espeak'] = "de";
     $_SESSION['phonetic_alphabet'] = "espeak";
     // phonetics variables
@@ -427,13 +427,9 @@ if ($_POST['token_size'] != "") {
     $_SESSION['show_distances'] = (htmlspecialchars($_POST['show_distances']) === "yes") ? true : false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
     
-    //$_SESSION['model_custom_or_standard'] = (htmlspecialchars($_POST['model_to_load']) === GetDBUserModelName()) ? "custom" : "standard";
-    //$_SESSION['actual_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : getDBUserModelName();
-    // additional session variable necessary to keep track of selected std model (in input form)
-    // will be used by toggle_model
-    //$_SESSION['selected_std_model'] = ($_SESSION['model_custom_or_standard'] === "standard") ? $_POST['model_to_load'] : $_SESSION['selected_std_model'];
     $_SESSION['language_hunspell'] = htmlspecialchars($_POST['language_hunspell']);
     $_SESSION['language_hyphenator'] = htmlspecialchars($_POST['language_hyphenator']);
+    
     // echo "language_espeak:<br>SESSION: " . $_SESSION['language_espeak'] . "<br>POST: " . $_POST['language_espeak'] . "<br>";
     // there's an annoying bug: when vsteno is newly started, changing the espeak-language and other analyzer options has no effect
     // meaning: old values are used for calculation and to show input form again after the calculation
@@ -511,39 +507,6 @@ function CopyFormToSessionVariables() {
     global $session_subsection; // necessary, because ImportSession() works with this global variable
     if ($_SESSION['return_address'] === "input.php") CopyFormToSessionVariablesMaxi();
     else CopyFormToSessionVariablesMini();
-    
-/* I think this whole section is obsolete ... models cannot be selected via input form any more
-
-    // actualize header session values if model is loaded for the first time
-    $actual_model = $_SESSION['actual_model'];
-    echo "CopyFormToSessionVariables(): actual_model: $actual_model<br>";
-    if ($actual_model !== $_SESSION['last_updated_model']) {
-            echo "Model has to be updated ... <br>";
-            $model_name = ($_SESSION['model_standard_or_custom'] === "custom") ? getDBUserModelName() : $_SESSION['selected_std_model'] ;
-            $model = $_SESSION['model_standard_or_custom'];
-            $last_updated = $_SESSION['last_updated_model'];
-            $output_format = $_SESSION['output_format'];
-            // reset all session variables to raw value
-            $old_text = $_SESSION['original_text_content']; // backup old text
-            $selected_std_model = $_SESSION['selected_std_model'];
-            InitializeSessionVariables(); // initialize with raw values
-            $_SESSION['original_text_content'] = $old_text; // restore old text
-            $_SESSION['selected_std_model'] = $selected_std_model;
-            $_SESSION['model_standard_or_custom'] = $model;
-            $_SESSION['actual_model'] = $model_name;
-            $_SESSION['output_format'] = $output_format;
-            
-            $text_to_parse = LoadModelFromDatabase($_SESSION['actual_model']);
-            //echo ">$text_to_parse<";
-            $output = StripOutComments($text_to_parse);
-            $output = StripOutTabsAndNewlines($output);
-            $header_section = GetSection($output, "header");
-            $session_subsection = GetSubSection($header_section, "session");
-            //echo "update session for model (1st run for $actual_model - last updated: " . $last_updated . ")<br>";
-            ImportSession(); // initialize with values specified by model
-            $_SESSION['last_updated_model'] = $actual_model;
-    }
-*/
 }
 
 // backup all session variables except some specific ones
