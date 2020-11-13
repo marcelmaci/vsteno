@@ -314,8 +314,8 @@
 		"([Bb]e)-?(ja-?h)" => "$1+$2";
 
 		"([Hh])e-?r-?aus-?" => "$1er+aus+";
-		"da-ma(-?)l" => "da+ma$1l";
-		"un(-?|\||\+)te(-?)r" => "un-te$2r"; 
+		"([Dd])a-ma(-?)l" => "$1a+ma$2l";
+		"([Uu])n(-?|\||\+)te(-?)r" => "$1n-te$3r"; 
 		"([Aa]u-?s-?ser)\+(\|dem)" => "$1$2";	// special: recorrect +| before following rule 
 		"(?<!\|\.)(\+|\|)([bd])e([nrsm]?)$" => "-$2e$3";
 		"([WwNn])ie\|de(-?)r\+" => "$1ie-de$2r|";
@@ -1004,7 +1004,7 @@
 		"([Ee]-?ben)-?(dem)\|?(sel-?ben)" => "$1|$2|$3"; // ebendemselben
 		"([Hh]o-?mer)+" => "$1"; // Homer, homerisch
 		"her\+r$" => "herr"; // Ahnherr
-		"([Ss]chau)\|(spie)\|l" => "$1-$2-l"; // Schauspielern
+		"([Ss]chau)\|(spie).?l" => "$1|$2-l"; // "$1-$2-l"; // Schauspielern (not sure)
 		"([Vv]er)\+s(e[ns]?)?$" => "$1s$2"; // Verse
 		"Po\|sei\|don" => "Po-sei-don"; Poseidon
 		"([Ss]pie-le)\|(rin)" => "$1-$2"; // Flötenspielerinnen
@@ -1268,9 +1268,12 @@
 		"([Zz]u).?(o.?b).?(er).?(st)" => "$1+$2$3+$4"; // zuoberst
 		"([Jj]ung)\|(fer)" => "$1-$2"; // Jungfern
 		"([Ss]ich-?le-?ten)-" => "$1|"; // Sichletennacht
-		"([Zz])(\')-?(mor)" => "$1|$2|$3"; // z'Morge
+		//"([Zz])(\')-?(mor)" => "$1$2$3"; // z'Morge => more general rule needed
 		"(Nacht).?(tischli).?(schub).?(läd-?li)" => "$1|$2|$3|$4"; // Nachttischlischublädli
 		"([Aa]us).?(fluchts?)-" => "$1+$2|"; // Ausfluchtsmanöver
+		"(^|\||\+)([Gg]e)-(wo)" => "$1$2+$3"; // niedergeworfen
+		"([Dd])'\|?(sich-?le-?te)" => "$1'$2"; // d'Sichlete (helv.)
+		"(ge)-(schl)" => "$1+$2"; // niedergeschlagen
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1979,7 +1982,6 @@
 		"=Ü($)" => "\\=\\[0N-][Ä][&U@#_]$1"; 
 		"=([HJZ])($)" => "\\=\\[$1@#_][#0]$2"; // add empty spacing => not considered as last character in chain (= fully written with underlength)
 
-
 		"(?<!\[|\[N)=(?!@)" => "\\[=]\\";
 
 		"^(A)$" => "[#_#]\[#5-][#5-][0N-]$1"; // "underscorer"
@@ -2046,6 +2048,10 @@
 		//"#ncrnm#" => ""; 
 	#EndSubSection(packer)
 	#BeginSubSection(decapitalizer)
+
+		"(\')-([a-zA-Z]|ä|ö|ü|Ä|Ö|Ü)" => "$1$2";
+		"([a-zA-Z]|ä|ö|ü|Ä|Ö|Ü)(\')([a-zA-Z]|ä|ö|ü|Ä|Ö|Ü)" => "$1|$2|$3"; // z'Morge, b'hüetis
+
 		"sch(a|ä)ft(s|-?l?-?er\+?(?:in(?:-nen)?)?|-?chens?)?($|\|)" => { "{SCHAFT}$2$3", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
 		"schaf-te" => "{SCHAFT}e"; // gewirtschaftet
 		"{SCHAFT}e-?t" => "{SCHAFT}{ET}"; // bewirtschaftetest
@@ -2225,6 +2231,8 @@
 		"([Ss]a-?n)i-?tä-?t" => "$1{HEIT}"; // Sanitäter
 
 		"#[Ww]a-?r" => "{#WAR}"; // noun Waren (no shortening!) 
+		"[Ee]r.?{#WAR}" => "{ER}{#WAR}"; // Erwartung
+
 		"[Gg]e({#WAR})" => "{GE}$1"; // also gewartet
 		"[Dd]rauf" => "dr{AUF}";
 		"viel-?leicht" => "{VILLEICHT}";
@@ -3421,7 +3429,7 @@
 		"ö[oh](-)?([flmnrst])" => "ö$1$2";
 		"üh(-)?([flmnrst])" => "ü$1$2"; // bemüht (without h)
 		"ieh([tmn])" => "i$1";
-		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$", "^[Ff]ehl.?baum$" }; // Brehm, Fehlbaum: Name
+		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$", "^[Ff]ehl.?baum$", "ehn$" }; // Brehm, Fehlbaum: Name
 		"äh([nrl])" => "ä$1";
 		"öh-(?={LICH})" => "ö[H]"; // conserve h
 		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
@@ -3431,7 +3439,7 @@
 		"ph" => "f";
 		"ß" => "ss";
 		"üh(-)?([lrmn])" => "ü$1$2";
-		"([aeiou]|ä|ö|ü)h(#|-|\+)(bar|sam|ling|sal|nis)" => "$1$2$3";  // h entfällt vor ungekürzten Nachsilben 
+		"([aeiou]|ä|ö|ü)h(#|-|\+)(bar|ba-?re[rsnm]?|sam|sa-?me[rsnm]?|ling|sal|nis)" => "$1$2$3";  // h entfällt vor ungekürzten Nachsilben 
 		"([Mm]ü)h((?:-|\|)?se-?li-?g)" => "$1$2";
 
 		"uhr" => "ur";
@@ -3443,7 +3451,7 @@
 		"\(" => "";
 		"\)" => "";
 		//"\"" => "";
-		"z-?z" => { "z", "Buzz" };
+		"z-?z" => { "z", "[Bb]uzz", "^[Nn]iz-?za$" };
 		"ih#" => "i#";
 
 	#EndSubSection(normalizer)
@@ -3577,7 +3585,8 @@
 		"m-?l" => "[ML]";
 		"n-?l" => "[NL]";
 		"p-?l" => "[PL]";
-		"r-?l" => "[RL]";
+		"r.?l" => "[RL]"; // Perle
+		"{ER}l" => "[RL]"; // Chaschperli
 		"s-?l" => "[SL]";
 		"t-?l" => "[TL]";
 		"v-?l" => "[VL]";
@@ -4113,6 +4122,8 @@
 		"\[&T\]-?Z" => "[&TZ]"; // achtzig
 		"\\\[VR\]" => "\\[AR]"; // Malteserritter
 		
+		"\\\[S\]" => "\[S=]"; // d'Sichlete
+
 		// taken from substituter
 		"tstopt(01)^{HEIT}U\[NG\]" => "[0N-][A][&EITNG]";
 		
@@ -5594,6 +5605,8 @@
 		"\]\+\[" => "]["; // eliminate +
 
 		"([gcktdGCKTD])@[Rr]3\^" => "$1@r"; // rule copied from finisher
+
+		"\\(s)" => "\[S=]"; // d'Sichlete
 
 	#EndSubSection(relancer2)
 	#BeginSubSection(prespacer)

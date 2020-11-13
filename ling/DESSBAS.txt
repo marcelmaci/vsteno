@@ -1274,6 +1274,7 @@
 		"(^|\||\+)([Gg]e)-(wo)" => "$1$2+$3"; // niedergeworfen
 		"([Dd])'\|?(sich-?le-?te)" => "$1'$2"; // d'Sichlete (helv.)
 		"(ge)-(schl)" => "$1+$2"; // niedergeschlagen
+		"([Ww]ar)\|(nun)" => "$1-$2"; // Warnungen
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3015,8 +3016,8 @@
 		"(^|\+|\|)zer\+(?!$)" => "$1{ZER}+";
 
 		"^in-?t-?er$" => "{INTER}";
-		"^in-?t-?er\+" => "{INTER}+";
-		"(\+)in-?t-?er\+" => "$1{INTER}+";
+		"^in-?t-?er[-+]" => "{INTER}+";
+		"(\+)in-?t-?er[-+]" => "$1{INTER}+";
 
 		// -et in verbs
 		"([Ww]ä-?r)et" => "{WÄR}{ET}";
@@ -3429,7 +3430,7 @@
 		"ö[oh](-)?([flmnrst])" => "ö$1$2";
 		"üh(-)?([flmnrst])" => "ü$1$2"; // bemüht (without h)
 		"ieh([tmn])" => "i$1";
-		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$", "^[Ff]ehl.?baum$", "ehn$" }; // Brehm, Fehlbaum: Name
+		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$", "^[Ff]ehl.?baum$", "(?:[GgSs]|[Ss]t)ehn$" }; // Brehm, Fehlbaum: Name
 		"äh([nrl])" => "ä$1";
 		"öh-(?={LICH})" => "ö[H]"; // conserve h
 		"öh-?(?![aeiouäöüAEIOU])" => { "ö", "[Hh]öh-" };
@@ -3444,7 +3445,7 @@
 
 		"uhr" => "ur";
 		
-		"(?<!a|a-)ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re", "[Nn]ie-?t-?z-?sche" }; // list with exceptions
+		"(?<!a|a-)ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re", "[Nn]ie-?t-?z-?sche", "[Ss]tu-?di-?e" }; // list with exceptions
 		"ie" => "i-e"; // separation (2 syllables)
 		
 		"ühr" => "ür";
@@ -3586,7 +3587,7 @@
 		"n-?l" => "[NL]";
 		"p-?l" => "[PL]";
 		"r.?l" => "[RL]"; // Perle
-		"{ER}l" => "[RL]"; // Chaschperli
+		"(?<!^){ER}l" => "[RL]"; // Chaschperli
 		"s-?l" => "[SL]";
 		"t-?l" => "[TL]";
 		"v-?l" => "[VL]";

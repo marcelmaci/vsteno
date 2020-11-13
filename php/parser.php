@@ -1466,6 +1466,7 @@ function GetHandwriting($word) {
         // not possible ... only manual workaround
         //if ($_SESSION['token_type'] === "handwriting") echo "Handwriting: $output";
     }
+
     //echo "output: $output<br>";
     return $output;
 }
