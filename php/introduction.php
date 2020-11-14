@@ -28,7 +28,7 @@ Die Geschichte des gutmütigen Offenbacher Auslaufers Adolf Borges und seiner bo
 <p><i>Ein humoristischer Roman großen Stils</i><br>
 Münchener Zeitung, 19.11.1919</p>
 
-<p>Taschenbuch (12x19cm), 238 Seiten, mattweiss mit grünem Cover. <br>Preis: 20.- CHF (zzgl. Versandkosten CHF 5.-)</p> 
+<p>Taschenbuch (12x19cm), 238 Seiten, mattweiss mit grünem Cover. <br>Preis: 20.- CHF (zzgl. Versand CH/DE/AT CHF 5.-)</p> 
 <p>Bestellen: <a href="mailto:m.maci@gmx.ch">Mail</a></p>
 </td>
 </tr>
