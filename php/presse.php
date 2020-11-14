@@ -6,6 +6,7 @@
 <ul>
     <li><a href="#artikel1">Schweizer Stenograf (Januar 2020)</a></li>
     <li><a href="#artikel2">Stolze-Schrey-Post (Juni 2020)</a></li>
+     <li><a href="#artikel3">Stolze-Schrey-Post (September 2020)</a></li>
 </ul>
 </p>
 <p><center>* * *</center></p>
@@ -140,5 +141,46 @@ Weitere Infos zu VSTENO (Programm, Dokumentation, Artikel, eBooks etc.) finden S
 
 <p><i>Anm.: Der Text wurde für die Druckausgabe an die Deutsche Schreibweise angepasst. Ausserdem gibt es ein Korrigendum: Der Autor des 
 schlafraubenden Romans heisst "Carlos Ruiz Zafón". Und hierzu auch die traurige Ergänzung, dass er leider am 19. Juni 2020 verstorben ist.</i></p>
+
+<p><center>* * *</center></p>
+<a name="artikel3"></a>
+<p><i>Im September 2020 erschien ein weiterer Artikel in der Stolze-Schrey-Post des <a href="http://www.stolze-schrey.de">
+Stenografenverbands Stolze-Schrey</a>. Erstmals wurde hier ein vollständig mit VSTENO generiertes Dokument abgedruckt: Es handelt sich um den
+ersten der zwei so genannten Vesuvbriefe von Plinius dem Jüngeren. Einleitungstext verfügbar als Volltext, Gesamtbeitrag inklusive Praxisteil als 
+<a href="../docs/ssp3_plinius1_komplett.pdf">PDF</a>.</i></p>
+
+<p>
+<h1>Plinius der Jüngere: Vesuvbriefe</h1></p>
+
+<p>
+Es gibt vermutlich wenige Schriftstücke aus der Antike, die
+auch heute noch – fast 2000 Jahre später – so spannend zu
+lesen sind wie die so genannten „Vesuvbriefe“. Gaius Plinius
+Caecilius Secundus (61-113), auch Plinus der Jüngere,
+beschreibt darin nicht nur den Vesuvausbruch aus dem Jahr
+79 n. Chr., der die Stadt Pompeji komplett unter seiner
+Asche begrub, sondern auch den Tod seines Onkels Gaius
+Plinius Secundus Maior (23-79), genannt Plinius der Ältere,
+einem
+angesehenen
+Naturforscher,
+Offizier
+und
+Verwaltungsbeamten, der ihn nach dem frühen Tod seines
+Vaters in seine Obhut genommen hatte.
+Plinius der Jüngere erlebte den gewaltigen Vulkanausbruch,
+der mehrere Tage dauerte, aus nächster Nähe und verfasste
+dazu eine Art Augenzeugenbericht aus erster Hand, den er
+in Form zweier Briefe (Epistulae 6,16 und 6,20) seinem
+Freund und Historiker Publius Cornelius Tacitus (56-120)
+zukommen ließ. Wir publizieren hier den ersten der beiden
+Briefe (6,16) in einer leicht modernisierten Version der
+gemeinfreien Übersetzung von Johann Adam Schäfer (1) . Die
+stenografische Übertragung erfolgte automatisiert mit dem
+Programm VSTENO.
+</p>
+<p>(1) Die Briefe des Plinius, übersetzt und mit Anmerkungen
+erläutert von M. Johann Adam Schäfer, Erlangen bei Karl
+Hender, 1824.</p>
 
 <?php require "vsteno_template_bottom.php"; ?>
