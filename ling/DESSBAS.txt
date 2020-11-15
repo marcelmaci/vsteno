@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "31/10/20";
+		"model_date" := "15/11/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1275,6 +1275,7 @@
 		"([Dd])'\|?(sich-?le-?te)" => "$1'$2"; // d'Sichlete (helv.)
 		"(ge)-(schl)" => "$1+$2"; // niedergeschlagen
 		"([Ww]ar)\|(nun)" => "$1-$2"; // Warnungen
+		"^([Zz])\'\|([a-zA-Z])" => "$1|'|$2"; // z'Tanz
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3313,7 +3314,7 @@
 
 		"be\+" => "{BE}+";
 
-		"^an-?ti" => "{ANTI}";
+		"^an-?ti" => { "{ANTI}", "[Aa]n-?ti-?l-?", "An-?ti-?lo" };
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
 		"kon\+" => "{CON}"; // unkontrollierbar 
@@ -4453,6 +4454,8 @@
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
+
+		"{DER}{SELB}" => "[VR][#5-][SELB]"; // derselbe
 
 		"(\[&T&E\])E#?{SCHAFT}" => "$1[E][&E][SCHAFT]"; // Ärzteschaft
 
