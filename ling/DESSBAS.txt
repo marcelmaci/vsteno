@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "15/11/20";
+		"model_date" := "16/11/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -186,12 +186,12 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "^[Tt]er-?r", "[Ss]er-?bi", "Pier-?re" }; // Terrain, Serbien
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
-		"er(?!\+|st$)" => { "er+", "^[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
+		"er(?!\+|st$|nt|n-t)" => { "er+", "^[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		////////////////////////////////////// end new approach ///////////////////////////////////////
 
@@ -3125,7 +3125,7 @@
 		"(?<!i)er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
 		"^[Hh]er\+r" => "HE[VR+AR]"; // herrühren
-		"(?<!d|#h)er\+" => { "{ER}", "[Ww]ie?-?d-?er" }; // more general rule
+		"(?<!d|#h)er\+" => { "{ER}", "[Ww]ie?-?d-?er", "[Tt]he-?ra-p" }; // more general rule
 		"\+er$" => "{ER}";
 		"(n-?d)er\+" => "$1{ER}+";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
@@ -3648,6 +3648,8 @@
 	#EndSubSection(relancer1)
 	#BeginSubSection(transcriptor)
 
+		"\[SS\](.)" => "[SS@#/]$1"; // ssä
+
 		// special: ich
 		"^[Ii]\[CH\]$" => "[ICH]";
 
@@ -3677,7 +3679,7 @@
 		"^ag" => "[0N-][A][G]";
 
 		// vowel combinations
-		"ou" => "[#N][&O][#NS][&U]";   // wou (dialect)
+		"ou$" => "[#N][&O][#NS][&U]";   // wou (dialect)
 		"u-e" => "[#NS][&U]E"; // mues (dialect)
 		"i-?a$" => "[&I]A[&A]"; // via
 		"i-?ö$" => "[&I]E[&O]"; // adieu (adiö)
@@ -4112,7 +4114,7 @@
 		// Oil
 		"(\[0N-\])\[O\]I" => "$1[&O]I"; // Oil
 
-		"^\[SS\]" => "[0N-][#1][SS]"; // Ssä, ssä, ssä
+		"^\[SS" => "[0N-][#1][SS"; // Ssä, ssä, ssä
 
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
