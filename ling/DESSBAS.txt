@@ -663,7 +663,7 @@
 		"Ber\+s" => "Ber-s"; // name Berset
 
 		// per+ her+
-		"^([Pp]er)\+" => "$1-"; 
+		"(^|\|)([Pp]er)\+" => "$1$2-"; 
 		"^([Hh]er)\+" => { "$1-", "[Hh]er\+rüh-?r" }; // not: herrühren 
 		
 		// er+ and in+
