@@ -566,7 +566,7 @@
 		"([Bb]e)\+(te(?:n|st|t(?:en?)?|nd(?:en?)?))" => "$1-$2";
 		"([Bb]e)\+(b(?:en|e?st|e?t(?:en?)?|nd(?:en?)?))" => "$1-$2";
 		"([Bb]e)\+(sens?)" => "$1-$2";
-		"([Bb]e)\+(ne(?!-?tz|h-?m))" => "$1-$2";
+		"([Bb]e)\+(ne(?!-?tz|h-?m))" => { "$1-$2", "^[Bb]e.nei-?d" };
 		"([Bb]e)\+(x)" => "$1$2";
 		
 
@@ -3648,7 +3648,7 @@
 	#EndSubSection(relancer1)
 	#BeginSubSection(transcriptor)
 
-		"\[SS\](.)" => "[SS@#/]$1"; // ssä
+		"^\[SS\](.)" => "[SS@#/]$1"; // ssä
 
 		// special: ich
 		"^[Ii]\[CH\]$" => "[ICH]";

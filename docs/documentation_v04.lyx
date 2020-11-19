@@ -4896,7 +4896,7 @@ NS
 \end_layout
 
 \begin_layout LyX-Code
-/*late entry point*/ 0.75, 0, 0.5, 0, 2.5, 0, 99, 0.5, 
+/*early exit point*/ 0.75, 0, 0.5, 0, 2.5, 0, 99, 0.5, 
 \end_layout
 
 \begin_layout LyX-Code

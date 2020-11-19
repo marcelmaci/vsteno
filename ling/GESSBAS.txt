@@ -2659,6 +2659,8 @@
 		"(\[m\])\[#.\](\[sch@r\])" => "$1[#4-]$2"; // umschreiben
 		"(\[pf@l\])\[#.\](\[au\]\[m\])" => "$1[#5]$2"; // Pflaumenkuchen
 		"\[ar\](\[e\]\[ck\])" => "[ar^]$1"; // reckte
+		"(\[\^ch\])\[#.\](\[sch@r\])" => "$1[#1]$2"; // Gleichschritt
+		"(\[&u\])\[#.\](\[t@r\])" => "$1[#3]$2"; // übertragen
 		
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
 		"\[\^ch\]$" => "[_^ch]"; 
@@ -2686,8 +2688,11 @@
 		"(\[ss\]\[-e\])\[#..\](\\\\)(\[=\])" => "$1[#3-]$2$3"; // Pisse-vache
 		"(\[vr\]\|?\|?)\[#..\](\\\\)(\[=\])" => "$1[#3-]$2$3"; // Rinder-
 		"(\[ng\])\|?\|?\[#..?\](\\\\)(\[=\])" => "$1|[#1-]$2$3"; // Browning-
+		"(\[tt\])(\\\\)(\[d\])" => "$1$2[#4]$3"; // Herrgottdonner
 
 		"(\[t\]\[#.\]\[s\])(\\\\)(\[0n-\])" => "$1[#4]$2$3"; // Staatsangestelltenverband
+
+		"(\\\\)\[n\]" => "$1[n=]]"; // z'Nacht
 
 		// In VSTENO you go from one problem to another ...
 		// Reducing spacing before / after [=] seemed to be a good and straightforward idea.
