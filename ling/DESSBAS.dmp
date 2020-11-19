@@ -2070,6 +2070,11 @@
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(phonetizer)
 		
+		"[Pp]or.?te.?feu.?i.?l.?le" => "Porte|fö[^LL^]"; // Portefeuille
+		"([Bb])ou.?i.?l.?l" => "$1u[#4][^LL^]"; // Bouillon, Bouillabaisse
+		"([Ff])eu.?i.?l.?le.?ton" => "$1ö[^LL^][&T]on"; // Feuilleton
+		"([Ff])eu.?i.?l.?le" => "$1ö[^LL^]"; // Feuille
+
 		"([Bb]e\+?schw)e(-?r)" => "$1E$2"; // beschweren
 		"([Ee]x-?tr)e(-?m)" => "$1E$2"; // extrem
 
@@ -2159,7 +2164,8 @@
 		"([Cc]h)er.?(che)" => "$1E[VR]-$2"; // cherchez
 		"([Pp]sü.?cho.?g)en" => "$1En"; // psychogen
 		"[Pp]or.?te.?mon.?n(a.?i.?e|ee?)" => "port|mon-ne"; // Portemonnaie, Portemonnee (Systemurkunde recommends: [Ä][A] (-ä) or [AI][&E][-E] (-aie, literally), but I don't agree ... :)
-		"[Pp]or.?te.?feu.?i.?l.?le" => "Port|feuj"; // Portefeuille
+		//"[Pp]or.?te.?feu.?i.?l.?le" => "Port|feuj"; // Portefeuille
+		
 		"(^|\|)([Ll])o(.?)g(en?)" => "$1$2[#3][O][G^]$4"; // Loge
 		"[Bb]eef-?steak" => "Bif-stek"; // Beefsteak
 		"^([Nn]i)e(-?mer\+?)$" => "$1-e$2"; // niemer (schweizerdeutsch)
