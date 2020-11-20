@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "16/11/20";
+		"model_date" := "20/11/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1276,6 +1276,7 @@
 		"(ge)-(schl)" => "$1+$2"; // niedergeschlagen
 		"([Ww]ar)\|(nun)" => "$1-$2"; // Warnungen
 		"^([Zz])\'\|([a-zA-Z])" => "$1|'|$2"; // z'Tanz
+		"([Hh]in)\|(un-?ter)" => "$1-$2"; // hinunterstürzen
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3657,7 +3658,7 @@
 		"^\[SS\](.)" => "[SS@#/]$1"; // ssä
 
 		// special: ich
-		"^[Ii]\[CH\]$" => "[ICH]";
+		"^[Ii]\[CH\]($|\|)" => "[ICH]$1"; // ich, ich's
 
 		// copied from separator
 		"(l-?te-?s{ER})\|" => "$1\\"; // Malteserritter
@@ -4132,7 +4133,7 @@
 		"\[&T\]-?Z" => "[&TZ]"; // achtzig
 		"\\\[VR\]" => "\\[AR]"; // Malteserritter
 		
-		"\\\[S\]" => "\[S=]"; // d'Sichlete
+		"\\\[S\](?!$)" => "\[S=]"; // d'Sichlete vs ich's, mach's etc.
 
 		// taken from substituter
 		"tstopt(01)^{HEIT}U\[NG\]" => "[0N-][A][&EITNG]";
@@ -5570,6 +5571,8 @@
 		"{BEI}" => "[BEI]"; // Beifallsbezeugung
 		"{ALL}" => "[ALL]"; // überallhin
 		"{DURCH}" => "[DURCH]";
+		"{IST}" => "[IST]"; // ists
+		"{HEIT&UL}" => "[HEIT&UL]"; // Meitschi
 
 	#EndSubSection(latesubstituter)
 	#BeginSubSection(rewriter2)
