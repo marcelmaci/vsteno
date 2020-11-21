@@ -300,6 +300,19 @@ y <input type="text" name="page_number_posy"  size="4" value="<?php echo $_SESSI
 Farbe <input type="text" name="page_number_color"  size="4" value="<?php echo $_SESSION['output_page_number_color']; ?>">
 
 <br>
+<input type="checkbox" name="page_number_formatting_yesno" value="yes" <?php echo ($_SESSION['page_number_formatting_yesno']) ? "checked" : "";?>> 
+Format: 
+<input type="radio" name="page_number_format" value="numeric" <?php echo ($_SESSION['page_number_format'] === "numeric") ? "checked" : "";?>> 
+numerisch - alphabetisch:
+<input type="radio" name="page_number_format" value="alpha_lower" <?php echo ($_SESSION['page_number_format'] === "alpha_lower") ? "checked" : "";?>> klein
+<input type="radio" name="page_number_format" value="alpha_upper" <?php echo ($_SESSION['page_number_format'] === "alpha_upper") ? "checked" : "";?>> gross 
+- römisch:
+<input type="radio" name="page_number_format" value="roman_lower" <?php echo ($_SESSION['page_number_format'] === "roman_lower") ? "checked" : "";?>> klein
+<input type="radio" name="page_number_format" value="roman_upper" <?php echo ($_SESSION['page_number_format'] === "roman_upper") ? "checked" : "";?>> gross 
+- Left:<input type="text" name="page_number_format_left"  size="2" value="<?php echo $_SESSION['page_number_format_left']; ?>">
+Right:<input type="text" name="page_number_format_right"  size="2" value="<?php echo $_SESSION['page_number_format_right']; ?>">
+
+<br>
 <input type="checkbox" name="layouted_original_text_yesno" value="yes" <?php echo ($_SESSION['layouted_original_text_yesno']) ? "checked" : "";?>> 
 Paralleltext: 
 Grösse <input type="text" name="layouted_original_text_size"  size="3" value="<?php echo $_SESSION['layouted_original_text_size']; ?>">

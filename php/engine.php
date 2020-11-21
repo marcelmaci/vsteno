@@ -1904,6 +1904,60 @@ function GetWidthNormalTextAsLayoutedSVG( $single_word, $size) {
     return $width;
 }
 
+function ToRoman($num) { 
+    // Be sure to convert the given parameter into an integer
+    $n = intval($num);
+    $result = ''; 
+ 
+    // Declare a lookup array that we will use to traverse the number: 
+    $lookup = array(
+        'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 
+        'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 
+        'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1
+    ); 
+ 
+    foreach ($lookup as $roman => $value) {
+        // Look for number of matches
+        $matches = intval($n / $value); 
+ 
+        // Concatenate characters
+        $result .= str_repeat($roman, $matches); 
+ 
+        // Substract that from the number 
+        $n = $n % $value; 
+    } 
+    return $result; 
+}
+
+function FormatPageNumber($p, $t, $l = "", $r = "") {
+    // can be used to transform raw page number ($p) to different formats using types ($t) and left / right strings ($l, $r), e.g:
+    // type ($t):
+    // numeric or default: no transformation
+    // alpha_lower: 1, 2, 3 ... => a, b, c ...
+    // alpha_upper: 1, 2, 3 ... => A, B, C ...
+    // roman_lower: 1, 2, 3 ... => i, ii, ii ...
+    // roman_upper: 1, 2, 3 ... => I, II, II ...
+    // left / right strings ($l, $r):
+    // $l = "- " / $r = " -": 1, 2, 3 ... => - 1 -, - 2 -, - 3 - ...
+    // default value (if omitted) is an empty string
+   
+    // transform to alpha or roman
+    switch ($t) {
+        case "numeric" : $output = $p; break;
+        case "alpha_lower" : $output = chr($p + ord('a') - 1); break;
+        case "alpha_upper" : $output = chr($p + ord('A') - 1); break;
+        case "roman_lower" : $output = mb_strtolower(ToRoman($p)); break;
+        case "roman_upper" : $output = ToRoman($p); break;
+        default : $output = $p; 
+    }
+    
+    // add left / right part
+    $output = $l . $output .$r;
+    
+    //echo "formatted: $output ord('a'): " . ord('a') . " chr(97): " . chr(97) . "<br>";
+    return $output;
+}
+
 function InsertPageNumber() {
     global $actual_page_number, $actual_page_deltax;
     $output = "";
@@ -1922,7 +1976,9 @@ function InsertPageNumber() {
     switch ($_SESSION['output_page_number_yesno']) {
         case "yes" : if ($actual_page_number >= $start) {
                         $print_number = $actual_page_number - $start + $first;
-                        $output = "<text x='$posx' y='$posy' fill='$color' text-anchor='middle'>$print_number</text>";
+                        if ($_SESSION['page_number_formatting_yesno']) $formatted_number = FormatPageNumber($print_number, $_SESSION['page_number_format'], $_SESSION['page_number_format_left'], $_SESSION['page_number_format_right']);
+                        else $formatted_number = $print_number;
+                        $output = "<text x='$posx' y='$posy' fill='$color' text-anchor='middle'>$formatted_number</text>";
                     }
                     break;
     }
