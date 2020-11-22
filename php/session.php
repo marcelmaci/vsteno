@@ -278,6 +278,10 @@ function InitializeSessionVariables() {
     $_SESSION['layouted_original_text_filter_brackets'] = true;    
     $_SESSION['layouted_original_text_filter_dashes'] = true;    
 
+    // titlebreak: these variables can only be change via inline-tags!
+    $_SESSION['titlebreak_minimum_lines_at_end'] = 4; // empty line + title + empty line + 1st line of following paragraph
+    $_SESSION['titlebreak_number_of_breaks_before'] = 1;
+
     // options: reserve 10 variables
     for ($i=0; $i<=9; $i++) {
         $_SESSION["model_option$i" . "_text"] = "";

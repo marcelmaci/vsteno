@@ -1576,7 +1576,31 @@ function CalculateInlineSVG( $text_array ) {
     return $output;
 }
 
+// functions to handle line number (for <titlebreak>)
+function GetMaxLinesOnPage() {
+    $first_line = $_SESSION['top_margin'] + ($_SESSION['baseline'] * $_SESSION['token_size'] * 10); // hardcode standard line height, because $standard_height get's changed (it shouldn't!?)
+    $delta_y_per_line = $_SESSION['num_system_lines'] * $_SESSION['token_size'] * 10;
+    $total_lines = (int)($_SESSION['output_height'] - $first_line) / $delta_y_per_line;
+    return $total_lines + 1;
+}
+
+function GetActualLineFromYOnPage($y) {
+    // calculation is inaccurate for first line (i.e. as long as there has not been a <br> before
+    // no idea why => I suppose a problem with with variable synchronization from html tag processing
+    // the function is "good enough" for the moment (i.e. for <titlebreak>)
+    // ok, the bug can be corrected, using $y position:
+    // case 1: ($actual_line == 0) && ($y == $first_line) => $actual_line = 1;
+    // otherwise => $actual_line = 2
+    $first_line = $_SESSION['top_margin'] + ($_SESSION['baseline'] * $_SESSION['token_size'] * 10); // hardcode standard line height, because $standard_height get's changed (it shouldn't!?)
+    $delta_y_per_line = $_SESSION['num_system_lines'] * $_SESSION['token_size'] * 10;
+    $actual_line = (int) (($y - $first_line) / $delta_y_per_line);
+    if ($y == $first_line) $final_result = 1;
+    else $final_result = $actual_line + 2;
+    return $final_result;
+}
+
 function LayoutedSVGProcessHTMLTags( $html_string ) {
+    global $word_position_y;
     // Unlike inline-svgs (= svgs containing each one only one word that is given to the browser as inline-element), 
     // HTML-Tags in layouted-SVG can not handled by browser.
     // To offer some basic layout control to the user, the tags <br> and </p> are used as linebreak (newline).
@@ -1597,6 +1621,15 @@ function LayoutedSVGProcessHTMLTags( $html_string ) {
                 case "</p>" : $number_linebreaks++; break;
                 case "<p>" : $number_linebreaks++; break;
                 case "<newpage>" : $number_linebreaks=9999; break; // let's try ...
+                case "<titlebreak>" : 
+                    //echo "max_lines: " . GetMaxLinesOnPage() . " actual_line: " . GetActualLineFromYOnPage($word_position_y) . " number_line_breaks: $number_linebreaks word_position_y: $word_position_y<br>"; 
+                    $max_lines = GetMaxLinesOnPage();
+                    $actual_line = GetActualLineFromYOnPage($word_position_y);
+                    $min_necessary_lines_for_title =  $_SESSION['titlebreak_minimum_lines_at_end']; // default = 4 lines: empty line + title + empty line + 1 line of following paragraphe
+                    if ($actual_line > $max_lines - $min_necessary_lines_for_title + 1) $number_linebreaks=9999; 
+                    elseif ($actual_line != 1) $number_linebreaks = $_SESSION['titlebreak_number_of_breaks_before']; // add a distance before title
+                    //elseif ($word_position_y == 115.11) $number_linebreaks = 1;
+                    break; // conditional newpage
         }
     }
     return $number_linebreaks;
@@ -2128,7 +2161,7 @@ function InsertPageAndTextDimensions() {
 function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
-        $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $actual_page_deltax, $word_tags;
+        $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $actual_page_deltax, $word_tags, $word_position_y;
     // set variables
     $actual_page_number = 1;
     $actual_page_deltax = GetDeltaXForActualPage($actual_page_number);

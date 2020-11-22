@@ -277,8 +277,8 @@ U: <input type="text" name="bottom_margin"  size="10" value="<?php echo $_SESSIO
 <input type="checkbox" name="show_margins" value="yes" <?php echo ($_SESSION['show_margins']) ? "checked" : "";?>> anzeigen
 
 <br>
-Systemhöhe: <input type="text" name="num_system_lines"  size="10" value="<?php echo $_SESSION['num_system_lines']; ?>">
-1. Zeile: <input type="text" name="baseline"  size="10" value="<?php echo $_SESSION['baseline']; ?>">
+Systemhöhe: <input type="text" name="num_system_lines"  size="3" value="<?php echo $_SESSION['num_system_lines']; ?>">
+1. Zeile: nach <input type="text" name="baseline"  size="2" value="<?php echo $_SESSION['baseline']; ?>"> Stufen
 <br>
 Stil: <input type="radio" name="layout_style" value="align_left" <?php echo ($_SESSION['output_style'] === "align_left") ? "checked" : "";?>> 
 Flattersatz <input type="radio" name="layout_style" value="align_left_right" <?php echo ($_SESSION['output_style'] == "align_left_right") ? "checked" : "";?>> Blocksatz
