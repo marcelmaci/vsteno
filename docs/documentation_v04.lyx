@@ -2465,6 +2465,51 @@ page_number_format_left: linker Kontext
 page_number_format_right: rechter Kontext
 \end_layout
 
+\begin_layout Standard
+Ebenfalls besteht die Möglichkeit, die Seitenzahl on-the-fly zu ändern.
+ Auf diese Weise kann z.B.
+ einem Buch, dass die arabische Seitennummerierung verwendet, ein Anhang
+ beigefügt werden, der römische Zahlen verwendet.
+ Erreicht wird dies durch den speziellen Inline-Option-Tag <@set_page_number=x>,
+ wobei die Seitenzahl angibt, ab der neu begonnen werden soll:
+\end_layout
+
+\begin_layout LyX-Code
+<@page_number_formatting_yesno=no>
+\end_layout
+
+\begin_layout LyX-Code
+Hier folgt der Text 
+\end_layout
+
+\begin_layout LyX-Code
+des ganzen Buches 
+\end_layout
+
+\begin_layout LyX-Code
+mit arabischen Seitenzahlen
+\end_layout
+
+\begin_layout LyX-Code
+<@set_page_number=1>
+\end_layout
+
+\begin_layout LyX-Code
+<@page_number_formatting_yesno=yes>
+\end_layout
+
+\begin_layout LyX-Code
+<@page_number_format=roman_lower> 
+\end_layout
+
+\begin_layout LyX-Code
+Hier folgt der Anhang
+\end_layout
+
+\begin_layout LyX-Code
+mit römischen Zahlen
+\end_layout
+
 \begin_layout Subsubsection*
 Hilfslinien
 \end_layout
