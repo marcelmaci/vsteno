@@ -2224,7 +2224,245 @@ Einleitung
 \begin_inset Quotes erd
 \end_inset
 
- abzuwählen, da für ein Buch ein eigenes Cover generiert wird.
+ abzuwählen.
+ In der Regel wird für ein gedrucktes Buch ja eine eigene Titelseite benötigt,
+ welche separat erstellt und auf den Bucheinband gedruckt werden sollte.
+\end_layout
+
+\begin_layout Standard
+Innerhalb des Buches geht es dann um das Handling weiterer Titel, z.B.
+ wenn ein neues Kapitel beginnt.
+ VSTENO bietet hier verschiedene Möglichkeiten Titel hervorzuheben (z.B.
+ Vergrössern der Strichdicke, andere Farbe etc.
+ durch Verwenden von Inline-Option-Tags).
+ Ein grunsätzliches Problem bei Titeln ist jedoch der Zeilenumbruch.
+ Wenn ein Titel nämlich am Seitenende steht, kann es sein, dass der Titel
+ plötzlich alleine steht (weil kein nachfolgender Platz mehr für den folgenden
+ Absatz ist).
+ Für diesen Fall bietet VSTENO den Tag <titlebreak>.
+ Hierbei handelt es sich um einen 
+\begin_inset Quotes eld
+\end_inset
+
+bedingten Seitenumbruch
+\begin_inset Quotes erd
+\end_inset
+
+, d.h.
+ wenn der Titel plus der folgende Text auf der Seite Platz hat, dann wird
+ der Titel noch auf der aktuellen Seite ausgegeben.
+ Ist auf der aktuellen Seite hingegen zu wenig Platz vorhanden, dann fügt
+ VSTENO einen Seitenumbruch ein und platziert den Titel auf der folgenden
+ Seite.
+\end_layout
+
+\begin_layout Standard
+Das Verhalten von <titlebreak> kann mit zwei Session-Variablen gesteuert
+ werden (die wiederum via Inline-Option-Tags gesetzt werden können:
+\end_layout
+
+\begin_layout LyX-Code
+titlebreak_minimum_lines_at_end = 4
+\end_layout
+
+\begin_layout LyX-Code
+titlebreak_number_of_breaks_before = 1
+\end_layout
+
+\begin_layout Standard
+Die aufgeführten Standard-Werte bedeuten, dass VSTENO davon ausgeht, dass
+ für das Einfügen eines Titels noch mindestens vier Zeilen frei sein müssen:
+\end_layout
+
+\begin_layout Itemize
+1 Zeile Abstand zum vorangehenden Text
+\end_layout
+
+\begin_layout Itemize
+1 Zeile für den Titel
+\end_layout
+
+\begin_layout Itemize
+1 Zeile Abstand zum nachfolgenden Text
+\end_layout
+
+\begin_layout Itemize
+1 Zeile für die erste Zeile des folgenden Abschnitts
+\end_layout
+
+\begin_layout Standard
+Diese Grundeinstellung produziert so genannte 
+\begin_inset Quotes eld
+\end_inset
+
+Schusterjungen
+\begin_inset Quotes erd
+\end_inset
+
+: Dieses aus der Typografie stammende Wort bezeichnet 
+\begin_inset Quotes eld
+\end_inset
+
+verwaiste
+\begin_inset Quotes erd
+\end_inset
+
+ (einzelne, alleinstehende) Zeilen am Seitenende.
+ Wenn Sie dies vermeiden möchten, dann setzen Sie title_break_minimum_lines_at_e
+nd auf den Wert 5.
+\end_layout
+
+\begin_layout Standard
+Nicht vermeiden lässt sich allerdings die Bildung von so genannten 
+\begin_inset Quotes eld
+\end_inset
+
+Hurenkindern
+\begin_inset Quotes erd
+\end_inset
+
+, d.h.
+ verwaisten (alleinstehenden) Zeilen auf der folgenden Seite.
+ VSTENO verwendet aus diesem Grund für title_break_minimum_lines_at_end
+ den Wert 4, da so die Wahrscheinlichkeit von Hurenkindern sinkt
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Hurenkinder können nur korrigiert werden, indem zum Beispiel via Inline-Option-T
+ags der Wortabstand und u.U.
+ auch die Distanz zwischen einzelnen Zeichen (z.B.
+ weite Abstände) vergrössert wird.
+ Dies bedeutet allerdings viel manuelle Arbeit und sollte - wenn nötig -
+ erst ganz am Schluss vorgenommen werden.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Absätze
+\end_layout
+
+\begin_layout Standard
+Ein ähnliches Problem wie bei den Titeln stellt sich auch bei den Absätzen:
+ Werden vor Absätzen fixe Zeilenumbrüche gesetzt, so kann es sein, dass
+ die folgende Seite mit einer Leerzeile beginnt.
+ Auch dies ist unschön und kann durch folgende Session-Variablen vermieden
+ werden:
+\end_layout
+
+\begin_layout LyX-Code
+page_top_avoid_breaks_before_br_yesno = yes
+\end_layout
+
+\begin_layout LyX-Code
+page_top_avoid_breaks_before_p_yesno = yes
+\end_layout
+
+\begin_layout Standard
+Standardmässig sind diese Variablen gesetzt und VSTENO unterdrückt in diesem
+ Fall Zeilenumbrüche mittels <br> und <p> oben auf der Seite.
+ Sollen oben an der Seite Zeilenumbrüche eingefügt werden (weil z.B.
+ Platz freigelassen werden soll, bevor der Text beginnt), so kann hier entweder
+ der unbedingte Zeilenumbruch <break> verwendet werden oder die entsprechenden
+ Session-Variablen können via Inline-Option-Tags oder im Eingabeformular
+ auf 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ gesetzt werden.
+\end_layout
+
+\begin_layout Subsubsection*
+Seitenzahlen
+\end_layout
+
+\begin_layout Standard
+Grundsätzlich verwendet VSTENO numerische (arabische) Seitenzahlen, die
+ via Eingabeformular einmal für das ganze Dokument gesetzt werden können.
+ Das Format der Zahlen kann jedoch - ebenfalls via Eingabeformular - weiter
+ angepasst werden.
+ Es bestehen folgende Möglichkeiten:
+\end_layout
+
+\begin_layout LyX-Code
+alpha_lower = Kleinbuchstaben: a, b, c ...
+\end_layout
+
+\begin_layout LyX-Code
+alpha_upper = Grossbuchstaben: A, B, C ...
+\end_layout
+
+\begin_layout LyX-Code
+roman_lower = römisch klein: i, ii, iii, iv ...
+\end_layout
+
+\begin_layout LyX-Code
+roman_upper = römisch gross: I, II, III, IV ...
+\end_layout
+
+\begin_layout Standard
+Zusätzlich kann definiert werden, ob links oder rechts der Zahl noch weitere
+ Zeichen stehen sollen:
+\end_layout
+
+\begin_layout LyX-Code
+Links:  - 
+\end_layout
+
+\begin_layout LyX-Code
+Rechts: -
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Sollen die Striche nicht gleich unmittelbar links und rechts stehen, können
+ Leerzeichen verwendet werden.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dies ergibt dann z.B.
+ Seitenzahlen des Stils -1-, -2-, -3- ...
+ oder -a-, -b-, -c- ...
+ etc.
+ Die Optionen können auch via Inline-Option-Tags und Session-Variablen gesetzt
+ werden:
+\end_layout
+
+\begin_layout LyX-Code
+page_number_formatting_yesno: yes / no 
+\end_layout
+
+\begin_layout LyX-Code
+page_number_format: Format (siehe oben, 
+\begin_inset Quotes eld
+\end_inset
+
+numeric
+\begin_inset Quotes erd
+\end_inset
+
+ = Standard)
+\end_layout
+
+\begin_layout LyX-Code
+page_number_format_left: linker Kontext
+\end_layout
+
+\begin_layout LyX-Code
+page_number_format_right: rechter Kontext
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2232,8 +2470,12 @@ Hilfslinien
 \end_layout
 
 \begin_layout Standard
-Ebenfalls empfiehlt es sich in einem Buch auf die Hilfslinien (Grundlinie
- sowie zusätzliche Linien oberhalb und unterhalb) zu verzichten.
+Im Regelfall (= für geübte Leser/innen) empfiehlt es sich in einem Buch
+ auf die Hilfslinien (Grundlinie sowie zusätzliche Linien oberhalb und unterhalb
+) zu verzichten.
+ Die Hilfslinien machen im Prinzip nur dann Sinn, wenn Steno neu gelernt
+ wird und der/die Schreibende/Lesende noch nicht die nötige Sicherheit erlangt
+ hat.
 \end_layout
 
 \begin_layout Subsubsection*
