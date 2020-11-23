@@ -2471,7 +2471,7 @@ Ebenfalls besteht die Möglichkeit, die Seitenzahl on-the-fly zu ändern.
  einem Buch, dass die arabische Seitennummerierung verwendet, ein Anhang
  beigefügt werden, der römische Zahlen verwendet.
  Erreicht wird dies durch den speziellen Inline-Option-Tag <@set_page_number=x>,
- wobei die Seitenzahl angibt, ab der neu begonnen werden soll:
+ wobei x die Seitenzahl angibt, ab der neu begonnen werden soll:
 \end_layout
 
 \begin_layout LyX-Code
