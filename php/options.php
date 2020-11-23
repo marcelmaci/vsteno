@@ -65,7 +65,8 @@ $whitelist_variables .= " model_se_revision font_load_from_file_yesno handwritin
 $whitelist_variables .= " model_option2_yesno model_option2_text model_option3_yesno model_option3_text model_option4_yesno model_option4_text model_option5_yesno model_option5_text ";
 $whitelist_variables .= " model_option6_yesno model_option6_text model_option7_yesno model_option7_text model_option8_yesno model_option8_text model_option9_yesno model_option9_text ";
 $whitelist_variables .= " interpolated_yesno interpolated_iterations phonetics_acronyms_yesno phonetics_acronyms_lowercase_yesno page_number_formatting_yesno page_number_format";
-$whitelist_variables .= " page_number_format_left page_number_format_right titlebreak_minimum_lines_at_end titlebreak_number_of_breaks_before "; 
+$whitelist_variables .= " page_number_format_left page_number_format_right titlebreak_minimum_lines_at_end titlebreak_number_of_breaks_before page_top_avoid_breaks_before_p_yesno ";
+$whitelist_variables .= " page_top_avoid_breaks_before_br_yesno set_page_number ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
@@ -179,7 +180,7 @@ function ParseAndSetInlineOptions( $tags ) {
 }
 
 function CheckAndSetSessionVariable( $variable, $value ) {
-    global $whitelist_variables, $global_error_string;
+    global $whitelist_variables, $global_error_string, $actual_page_number;
     // ok, this is ugly: for some strange reason, spacer_vowel_groups session variable doesn't get initialized / gets deleted on the way
     // checked everything (is in initializing function, in whitelist - even the resetrestrictedvariables-functions should be ok), but
     // couldn't find any error related to that (even in the parser everything seems to be fine). 
@@ -188,25 +189,28 @@ function CheckAndSetSessionVariable( $variable, $value ) {
     // something similar is ocurring with model_se_revision ... very strange 
     // sometimes errors are printed 2x or 3x ... very strange
     //$_SESSION['spacer_vowel_groups'] = ""; // not a good idea to set this to "" ... breaks RX-GEN ...
-    $_SESSION['model_se_revision'] = ""; 
-    //echo "checkandsetsessionvariable(): [$variable]<br>";
+    $_SESSION['model_se_revision'] = ""; // why is this here ????!?! (probably wrong but has no effect as long as only rev0 is used)
+    //echo "checkandsetsessionvariable(): variable: [$variable] value: [$value]<br>";
 // disable check if variable exists (reason: problems with session-variables that get deleted due to parsing errors and can't be reinitialized after that ...)
 //    if (isset($_SESSION[$variable])) {  // check if variable has been set before (= exists)
                     if (mb_strpos($whitelist_variables, " $variable ") === false) {
                         AddError("ERROR: you are not allowed to set variable '" . htmlspecialchars($variable) . "' to '" . htmlspecialchars($value) . "'!");
                     } else {
-                        /*if ($variable === "spacer_vowel_groups")*/ //echo "session[$variable] = $value<br>";
-                        switch ($value) {
-                            case "true" : $_SESSION[$variable] = true; break;
-                            case "false" : $_SESSION[$variable] = false; break;
-                            case "yes" : $_SESSION[$variable] = true; break;
-                            case "no" : $_SESSION[$variable] = false; break;
-                            default : $_SESSION[$variable] = $value; break;
-                        }
-                        // adjust phonetics array necessary
-                        if ($variable === "phonetics_transcription_list") {
-                            // 2nd paramter true = create array (instead of stdobj)
-                            $_SESSION['phonetics_transcription_array'] = json_decode( "{" . $_SESSION['phonetics_transcription_list'] . "}", true);
+                        if ($variable === "set_page_number") $actual_page_number = $value;
+                        else {
+                            /*if ($variable === "spacer_vowel_groups")*/ //echo "session[$variable] = $value<br>";
+                            switch ($value) {
+                                case "true" : $_SESSION[$variable] = true; break;
+                                case "false" : $_SESSION[$variable] = false; break;
+                                case "yes" : $_SESSION[$variable] = true; break;
+                                case "no" : $_SESSION[$variable] = false; break;
+                                default : $_SESSION[$variable] = $value; break;
+                            }
+                            // adjust phonetics array necessary
+                            if ($variable === "phonetics_transcription_list") {
+                                // 2nd paramter true = create array (instead of stdobj)
+                                $_SESSION['phonetics_transcription_array'] = json_decode( "{" . $_SESSION['phonetics_transcription_list'] . "}", true);
+                            }
                         }
                     } 
 //    } else {

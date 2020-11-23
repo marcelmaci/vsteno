@@ -278,10 +278,12 @@ function InitializeSessionVariables() {
     $_SESSION['layouted_original_text_filter_brackets'] = true;    
     $_SESSION['layouted_original_text_filter_dashes'] = true;    
 
-    // titlebreak: these variables can only be change via inline-tags!
+    // titlebreak and breaks on top of page: 
     $_SESSION['titlebreak_minimum_lines_at_end'] = 4; // empty line + title + empty line + 1st line of following paragraph
     $_SESSION['titlebreak_number_of_breaks_before'] = 1;
-
+    $_SESSION['page_top_avoid_breaks_before_br_yesno'] = true;
+    $_SESSION['page_top_avoid_breaks_before_p_yesno'] = true;
+    
     // options: reserve 10 variables
     for ($i=0; $i<=9; $i++) {
         $_SESSION["model_option$i" . "_text"] = "";
@@ -490,6 +492,13 @@ if ($_POST['token_size'] != "") {
     $_SESSION['font_load_from_file_yesno'] = ($_POST['font_load_from_file_yesno'] === "yes") ? true : false;
    
     $_SESSION['handwriting_marker'] = htmlspecialchars($_POST['handwriting_marker']);
+    
+    // titlebreak and breaks on top of page
+    $_SESSION['titlebreak_minimum_lines_at_end'] = htmlspecialchars($_POST['titlebreak_minimum_lines_at_end']);
+    $_SESSION['titlebreak_number_of_breaks_before'] = htmlspecialchars($_POST['titlebreak_number_of_breaks_before']);
+    $_SESSION['page_top_avoid_breaks_before_br_yesno'] = ($_POST['page_top_avoid_breaks_before_br_yesno'] === "yes") ? true : false;
+    $_SESSION['page_top_avoid_breaks_before_p_yesno'] = ($_POST['page_top_avoid_breaks_before_p_yesno'] === "yes") ? true : false;
+
     
 /*
     echo "model_custom_or_standard: " . $_SESSION['model_custom_or_standard'] . "<br>";

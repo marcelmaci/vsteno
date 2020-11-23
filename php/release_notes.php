@@ -116,7 +116,8 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <br>Buch: Horizontaler Versatz und Zeilennummern in Abhängigkeit gerader / ungerader Seiten
 <br>Ränder: Visualisierung Beschnitt (Seite)
 <br>Seitenzahlen: numerisch, alphabetisch, römisch (weitere Formatoptionen: gross, klein; linke, rechte Zusätze)
-<br><titlebreak>: automatischer Umbruch von Titeln am Seitenende<br>
+<br>Titel: automatischer Umbruch am Seitenende (neuer Tag &lt;titlebreak&gt;)
+<br>Absätze: Vermeiden von Leerzeilen oben auf Seite (+ neuer Tag &lt;break&gt;) 
 <br>Scripts: Deinstallation + Überarbeitung Installation (To do) 
 </ul>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**) Nach Hephaistos, Ariadne und Hyperion dürfte wieder ein weiblicher Name (vielleicht mit A:) aus der griechischen 

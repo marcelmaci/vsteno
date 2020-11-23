@@ -358,7 +358,14 @@ Farbe<input type="text" name="layouted_book_text_dimension_color"  size="3" valu
 Filter: 
 <input type="checkbox" name="layouted_original_text_filter_brackets" value="yes" <?php echo ($_SESSION['layouted_original_text_filter_brackets']) ? "checked" : "";?>> Brackets []
 <input type="checkbox" name="layouted_original_text_filter_dashes" value="yes" <?php echo ($_SESSION['layouted_original_text_filter_dashes']) ? "checked" : "";?>> Dashes #
-
+- Breaks: titlebreak: 
+vorher <input type="text" name="titlebreak_number_of_breaks_before"  size="1" value="<?php echo $_SESSION['titlebreak_number_of_breaks_before']; ?>">
+Mindestzeilen: <input type="text" name="titlebreak_minimum_lines_at_end"  size="1" value="<?php echo $_SESSION['titlebreak_minimum_lines_at_end']; ?>">
+vermeiden:  
+<input type="checkbox" name="page_top_avoid_breaks_before_br_yesno" value="yes" <?php echo ($_SESSION['page_top_avoid_breaks_before_br_yesno']) ? "checked" : "";?>> 
+br 
+<input type="checkbox" name="page_top_avoid_breaks_before_p_yesno" value="yes" <?php echo ($_SESSION['page_top_avoid_breaks_before_p_yesno']) ? "checked" : "";?>> 
+p
 
 </td></tr>
 </table>

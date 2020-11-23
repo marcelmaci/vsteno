@@ -1590,13 +1590,23 @@ function GetActualLineFromYOnPage($y) {
     // the function is "good enough" for the moment (i.e. for <titlebreak>)
     // ok, the bug can be corrected, using $y position:
     // case 1: ($actual_line == 0) && ($y == $first_line) => $actual_line = 1;
-    // otherwise => $actual_line = 2
+    // case 2 (all others): => $actual_line += 2
     $first_line = $_SESSION['top_margin'] + ($_SESSION['baseline'] * $_SESSION['token_size'] * 10); // hardcode standard line height, because $standard_height get's changed (it shouldn't!?)
     $delta_y_per_line = $_SESSION['num_system_lines'] * $_SESSION['token_size'] * 10;
     $actual_line = (int) (($y - $first_line) / $delta_y_per_line);
     if ($y == $first_line) $final_result = 1;
     else $final_result = $actual_line + 2;
     return $final_result;
+}
+
+function AvoidLineBreakOnTopOfPage($type) {
+    global $word_position_y;
+    $break_type = "page_top_avoid_breaks_before_" . $type . "_yesno";
+    $actual_line = GetActualLineFromYOnPage($word_position_y);
+    //echo "Actual line: $actual_line<br>";
+    //echo "Avoid break ($type): " . ($_SESSION["$break_type"] ? "true" : "false") . "<br>";
+    if (($_SESSION["$break_type"]) && ($actual_line == 1)) return true;
+    else return false;
 }
 
 function LayoutedSVGProcessHTMLTags( $html_string ) {
@@ -1617,10 +1627,11 @@ function LayoutedSVGProcessHTMLTags( $html_string ) {
         $match_as_lower = preg_replace( "/[<](.+) .*?[>]/", "<$1>", $match_as_lower );      // strip out all additional parameters => keep only bare html tags
         //echo "match after: #" . htmlspecialchars($match_as_lower) . "#<br>";
         switch ($match_as_lower) {
-                case "<br>" : $number_linebreaks++; break;
-                case "</p>" : $number_linebreaks++; break;
-                case "<p>" : $number_linebreaks++; break;
-                case "<newpage>" : $number_linebreaks=9999; break; // let's try ...
+                case "<br>"         : if (!AvoidLineBreakOnTopOfPage("br")) $number_linebreaks++; break;
+                case "<break>"      : $number_linebreaks++; break; // offer this as inconditional break
+                case "</p>"         : $number_linebreaks++; break;
+                case "<p>"          : if (!AvoidLineBreakOnTopOfPage("p"))$number_linebreaks++; break;
+                case "<newpage>"    : $number_linebreaks=9999; break; // let's try ...
                 case "<titlebreak>" : 
                     //echo "max_lines: " . GetMaxLinesOnPage() . " actual_line: " . GetActualLineFromYOnPage($word_position_y) . " number_line_breaks: $number_linebreaks word_position_y: $word_position_y<br>"; 
                     $max_lines = GetMaxLinesOnPage();
