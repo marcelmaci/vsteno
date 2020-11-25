@@ -66,7 +66,7 @@ $whitelist_variables .= " model_option2_yesno model_option2_text model_option3_y
 $whitelist_variables .= " model_option6_yesno model_option6_text model_option7_yesno model_option7_text model_option8_yesno model_option8_text model_option9_yesno model_option9_text ";
 $whitelist_variables .= " interpolated_yesno interpolated_iterations phonetics_acronyms_yesno phonetics_acronyms_lowercase_yesno page_number_formatting_yesno page_number_format";
 $whitelist_variables .= " page_number_format_left page_number_format_right titlebreak_minimum_lines_at_end titlebreak_number_of_breaks_before page_top_avoid_breaks_before_p_yesno ";
-$whitelist_variables .= " page_top_avoid_breaks_before_br_yesno set_page_number ";
+$whitelist_variables .= " page_top_avoid_breaks_before_br_yesno set_page_number output_line_number_yesno ";
 
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
