@@ -137,7 +137,7 @@ function InitializeSessionVariables() {
     $_SESSION['output_line_number_posx'] = $_SESSION['output_width']-2;
     $_SESSION['output_line_number_deltay'] = 2;
     $_SESSION['output_line_number_color'] = 'black';
-    $_SESSION['output_page_number_yesno'] = true;
+    $_SESSION['output_page_number_yesno'] = false;
     $_SESSION['output_page_number_first'] = 1;
     $_SESSION['output_page_number_start'] = 1;
     $_SESSION['output_page_number_posx'] = 330;
