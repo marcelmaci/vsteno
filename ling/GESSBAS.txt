@@ -2675,6 +2675,9 @@
 		"(\[t@r\])\[#.\](\[u\]\[b\])" => "$1[#6]$2"; // Weihnachtstrubel
 		"(\[&i\])\[#.\](\[o\]\[g@r\])" => "$1[#0]$2"; // Biografie
 		"(\[f\])\[#.\](\[g@r\])" => "$1[#0]$2"; // tiefgreifenden
+		"(\[d\])\[#.\](\[o\]\[y\])" => "$1[#6]$2"; // Plädoyer
+		"(\[m\])\[#.\](\[a\]\[k@r\])" => "$1[#0]$2"; // Makrokosmos
+		"(\[all\])(\[f\])" => "$1[#3]$2"; // allfällige
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
 		"\[\^ch\]$" => "[_^ch]"; 
@@ -2720,7 +2723,7 @@
 		// - however, this might (again...) break the shortened shorthand (Eilschrift) rules (where there are cases in which the writing or not 
 		//   writing of the underscore can make a difference in meaning!
 
-		"(\[#..?\])(\\\\)(\[=\])" => "|$1$2$3"; // apply this to all distances and all = (example: griechisch-lateinisch)
+		"(\[#..?\])(\\\\)(\[=\])" => "$2[#2-]$1$2$3"; // apply this to all distances and all = (example: griechisch-lateinisch)
 		"(\')\[AR\^\]" => "$1\[AR^]"; // Bundesg'richt
 
 		// first tokens (at least some of them) arent written correctly if preceeded by " => insert \
