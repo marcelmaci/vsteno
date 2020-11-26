@@ -32,4 +32,9 @@ Münchener Zeitung, 19.11.1919</p>
 
 <p>Das Werk ist auch als <a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_final_a4_20202509.pdf">eBook</a> verfügbar.</p>
 
+<h2>Errata</h2>
+<p>Die "Widerspenstige" wurde mit grosser Sorgfalt erstellt - trotzdem können sich Fehler eingeschlichen haben. Sie können diese 
+per <a href="mailto:m.maci@gmx.ch">Mail</a> melden. Der Transparenz halber führen wir eine offizielle Liste der gemeldeten 
+<a href="../docs/dwz_errata.pdf">ERRATA</a>. (Nennung des Namens freiwillig und nur mit Einwilligung der betreffenden Personen).</p>
+
 <?php require "vsteno_template_bottom.php"; ?>
