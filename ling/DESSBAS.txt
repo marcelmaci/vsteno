@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "20/11/20";
+		"model_date" := "25/11/20";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
