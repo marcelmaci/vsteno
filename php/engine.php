@@ -2916,7 +2916,7 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
                 // point is a connection point => copy it over marking it as a normal point (= value 0)
                 // new: mark it as type 3 (for later compensation if shadowed)
                 // first copy over data without modifications
-  // bugfix [P@L] => don't insert connection point if no bvect compensation is necessary ("destroys" round connections bevor connection point ...)
+  // bugfix [P@L] => don't insert connection point if no bvect compensation is necessary ("destroys" round connections before connection point ...)
   // experimental
   if ($use_bvect_compensation) {
   /**/              for ($j = 0; $j < tuplet_length; $j++) $new_token[] = $steno_tokens_master[$first_token][$i+$j];

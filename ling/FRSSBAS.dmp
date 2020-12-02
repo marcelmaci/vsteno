@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.3";
 		"required_version" := "0.3";
-		"model_date" := "20. März 2020";
+		"model_date" := "02/12/20";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";
@@ -1157,7 +1157,7 @@
 		"^#pourriez" => "{POUR}je";
 		"^#pour$" => "{POUR}";
 		"^depur" => "de{POUR}"; // depourvu
-		"^pur" => "{POUR}"; // aussi: pourvoir
+		"^pur" => { "{POUR}", "puri" }; // aussi: pourvoir, don't apply to: pourrir (all forms)
 		"^#doit$" => "{DOIT}";
 		"^#quoi$" => "{QUOI}";
 		"^#soit$" => "{SOIT}";
@@ -1608,6 +1608,7 @@
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"^{TOT}$" => "[O][T]"; 
 		"{QUON}" => "K[ON]";
 		"{AUTRUI}" => "[VOR][AU][LES][-I]";
 		"{EXTRA}" => "[0N-]A[LES]";
