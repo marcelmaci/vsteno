@@ -2916,19 +2916,23 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
                 // point is a connection point => copy it over marking it as a normal point (= value 0)
                 // new: mark it as type 3 (for later compensation if shadowed)
                 // first copy over data without modifications
-                for ($j = 0; $j < tuplet_length; $j++) $new_token[] = $steno_tokens_master[$first_token][$i+$j];
+  // bugfix [P@L] => don't insert connection point if no bvect compensation is necessary ("destroys" round connections bevor connection point ...)
+  // experimental
+  if ($use_bvect_compensation) {
+  /**/              for ($j = 0; $j < tuplet_length; $j++) $new_token[] = $steno_tokens_master[$first_token][$i+$j];
                 // change type from 4 to 0 in $newtoken
 
-                $base = count($new_token) - tuplet_length;
-                $type_offset = $base + offs_d1; // offset 3 in the data tuplet
-                if ($use_bvect_compensation) $new_token[$type_offset] = 3; // former type = 0; new: 3 for compensation with shadowed combined token
-                else $new_token[$type_offset] = 0;
+  /**/              $base = count($new_token) - tuplet_length;
+  /**/              $type_offset = $base + offs_d1; // offset 3 in the data tuplet
+  /**/              if ($use_bvect_compensation) $new_token[$type_offset] = 3; // former type = 0; new: 3 for compensation with shadowed combined token
+  /**/              else $new_token[$type_offset] = 0;
+  }
                 // store connection_x and connection_y to calculate relative coordinates of second token
                 $connection_x = $steno_tokens_master[$first_token][$i+offs_x1]; //$new_token[$base+0];    // x
                 $connection_y = $steno_tokens_master[$first_token][$i+offs_y1]; //$new_token[$base+1];    // y
                 // now, after connection point, insert all the points of the second token
                 // since second token has RELATIVE coordinates, calculate x, y from connection point
-
+            
                 // first copy all the values without modification
                 for ($n = header_length; $n < count($steno_tokens_master[$second_token]); $n += tuplet_length) {
                        // echo "$first_token + $second_token => copying: n = $n / connectionx = $connection_x / connectiony = $connection_y / x 2nd token = " . $steno_tokens_master[$second_token][$n] . "<br>"; // / value = $temp2 / count(new_token): $temp1<br>";
@@ -2968,6 +2972,7 @@ function TokenCombinerClassic( $first_token, $second_token, $deltay_before, $del
         }
     }
     $steno_tokens_master["$new_token_key"] = $new_token; 
+    //if ($new_token_key === "P@L") var_dump($steno_tokens_master[$new_token_key]);
 }
 
 function CreateCombinedTokens() {

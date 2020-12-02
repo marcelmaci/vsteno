@@ -10,8 +10,8 @@ von <a href="license_fees.php">Lizenzgebühren</a>. Foto: (c) <a href="https://w
 <ul>
     <li>Franz Kafka, Ein Bericht für eine Akademie (20 Seiten): <a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_24052020.pdf">PDF 24/05/2020</a> 
     (<a href="http://www.gutenberg.org/files/21989/21989-0.txt">Original</a>) [<a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_27042020.pdf">PDF 27/04/2020</a>]</li>
-    <li>Karl Ettlinger, Der Widerspenstigen Zähmung (231 Seiten): <a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_final_a4_20202509.pdf">PDF 25/09/2020</a>
-    (<a href="http://www.gutenberg.org/cache/epub/31733/pg31733.txt">Original</a>)</li>
+    <li>Karl Ettlinger, Der Widerspenstigen Zähmung (231 Seiten): <a href="../books/karl_ettlinger_der_widerspenstigen_zaehmung_final_a4_20202509.pdf">PDF 25/09/2020</a> 
+    (<a href="http://www.gutenberg.org/cache/epub/31733/pg31733.txt">Original</a>) - <a href="../docs/dwz_errata.pdf">ERRATA</a></li>
     <li>Platon, Gastmahl (96 Seiten): <a href="../books/platon_gastmahl_24052020.pdf">PDF 24/05/2020</a>
     (<a href="http://www.gutenberg.org/files/24899/24899-0.txt">Original</a>)</li>
     <li>Plinius der Jüngere, Vesuvbriefe (12 Seiten): 
