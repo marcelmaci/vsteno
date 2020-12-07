@@ -206,7 +206,7 @@ rien, par, notre, nôtre, votre, vôtre, leur, Monsieur, M. Messieurs, MM. contr
 être, trop, sera, sur, sûr, lui, plus, plusieurs, plupart
 
 CH5(20):
-Je ne peu rien promettre. Il n'y risqueront rien. Notre fils Charles est très ému par ce discours. Est-ce que c'est notre
+Je ne peux rien promettre. Il n'y risqueront rien. Notre fils Charles est très ému par ce discours. Est-ce que c'est notre
 frère que vous voulez visiter [à qui vous voulez rendre visite]. Êtes-vous des nôtres? Permettez-vous que je me serve d votre nom comme 
 référence? Il veut être des vôtres. Il se serait perdu, si je n'était pas venu a leur secours. Monsieur Martin lui a dit toute la vérité.
 Ces messieurs seront à votre service. Demain nous cueillerons nos cerises. Mon cousin changera sa place
