@@ -721,6 +721,8 @@
 		//"(?<=^|[\.\?\:\!-])((?:.*?)(?:[A-Z]|Ä|Ö|Ü|À|Á|Â|É|È|Ê|Ó|Ò|Ô|Ú|Ù|Û))" => "strtolower()";
 		"(?<=^|[-\.\?\!])( *?[A-Z])" => "strtolower()";
 
+		"([tl])'avions" => "t#avions"; // avoid confusion with avion(s)
+
 		// high priority replacements (= without any preliminar modification of the original text)		
 		"Êtes" => "#etes";
 		"(?<=^| )([Dd]\')[Aa]ujourd\'?hui(?=[ ,\.]|$)" => "d#aujourdhui";	
@@ -859,7 +861,9 @@
 		"(?<=^| )[Pp]lus(ieurs)?(?=[ ,\.]|$)" => "#plus$1";
 		"(?<=^| )[Pp]lupart(?=[ ,\.]|$)" => "#plupart";
 		"(?<=^| )[Ll]es(?=[ ,\.]|$)" => "#les";
-		"(?<=^| )[Aa]v(ai[st]|ons|i?ez|aient|oir)(?=[ ,\.]|$)" => "#av$1"; // don't include avions! (has been marked earlier)
+		"(?<=^| )[Aa]v(ai[st]|ons|i?ez|aient|oir)(?=[ ,\.]|$)" => "#av$1"; // don't include avions! (has been marked earlier) => hm ... where ?!? => nous t'avions vu must be marked !
+		//"([tl]')avions" => "l'#avions"; // nous l'avions vu => doesn't word => place it earlier!
+
 		"(?<=^| )([CLSMTclsmt]es|[VNvn]os|[Ll]eurs) #avions(?=[ ,\.]|$)" => "$1 avions"; // don't mark it (delete mark again)
 		//"(?<=^| )[Nn]\'y(?= |$)" => "#n'#y";
 		"(?<=^| )[Yy](?=[ ,\.]|$)" => "#y";
@@ -1006,7 +1010,8 @@
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
 
-		
+		"([tl])#avions" => "$1{AV}{ION}"; // nous [lt]'avions vu 
+
 		"tstwrt(^là=)" => { "^\[#NS\][Ll]", "{LA}" };
 		"tstwrt(^bas=)" => { "^(?:ba|\[#NS\]b)$", "{BAS}" };
 		"tstwrt(^ci=)" => { "^(?:si)", "{CI}" };
@@ -1372,6 +1377,7 @@
 		"^r@?" => "[AR]";
 		"{ZION}r" => "{ZION}[VR]";
 		"}r" => "}[AR]"; // p.ex.: subroger
+		"sr" => "[S][AR]"; // Israël
 		"r" => "[VR]";
 		"kaze" => "ka[S@#.]e"; // distinguish: casser vs caser (diacritics)
 		"faz" => "fa[S@#.]"; // face vs phase (diacritics)
@@ -1666,6 +1672,7 @@
 		"{LEUR}" => "[L@R6]";
 		"{MONSIEUR}" => "[M@R6]";
 		"{MESSIEURS}" => "[M@R6]S";
+		"{CONTRE}$" => "[CONTRE]"; // new token 
 		"{CONTRE}" => "[BEI+AR]";
 		"{ETRE}" => "[0N-][&T@R]";
 		"{TROP}" => "O[T@R]";
@@ -1774,6 +1781,7 @@
 		"{ETC}" => "[0N-]ETS";
 		"{SOCANON}" => "[S=]A[&A]";
 		"{CAD}" => "[S=]A[&A]D";
+		
 		
 			
 	#EndSubSection(substituter)

@@ -59,7 +59,7 @@
 	inclination of 60 degrees.</p>
 	<p>The model is now in beta stage (i.e. it still has to be improved and tested but many words are calculated correctly).</p>
 	";
-		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2019 Marcel Maci";
+		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2020 Marcel Maci";
 		// model version
 		"model_version" := "0.4";
 		"required_version" := "0.3";
@@ -1027,7 +1027,7 @@
 		"^ree~te?r" => "{RE}{INTER}";
 		"^partik\[ü\]l" => "{PARTICUL}";
  		"^(d)?otr\[ü\]i$" => "$1{AUTRUI}";
-		"^pl(y|\[ü\])$" => "{PLUS}"; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
+		"tstwrt(^plus)" => { "^pl(y|\[ü\])$", "{PLUS}" }; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
 		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
@@ -1672,6 +1672,7 @@
 		"{SER}" => "[SER]";
 		"{SUR}{PLUS}" => "[SOBRE][AU][@L]";
 		"{SUR}" => "[SOBRE]";
+		"{PLUS}(p)" => "[0N-][EN][#3-][@L][#3]$1"; // plus part: [0N-][#2][A][@L] isn't renderd correctly ?!? 
 		"{PLUS}" => "[0N-][#2]A[@L]";
 		"{LES}" => "[LES]";
 		"{AV}" => "A[LES]";
