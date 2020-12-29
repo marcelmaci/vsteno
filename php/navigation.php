@@ -52,6 +52,7 @@
                         echo "</ul>";
                         echo "<ul><p><b>Tools</b></p>";
                         echo "<li><a href='regex_helper_variable.php'>->RX-GEN</a></li>";
+                        echo "<li><a href='mkcor.php'>->MKCOR</a></li>";
                         echo "<li><a href='export_se1data_to_editor.php'>->VPAINT</a></li>";
                         
                         if ($_SESSION['user_privilege'] == 2) {

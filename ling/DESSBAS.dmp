@@ -1283,6 +1283,7 @@
 		"^([Zz]er)\+(r)\|" => "$1$2-"; // Zerrbild (replace | to avoid separation)
 		"([Pp]lä-?do)y-?er\+" => "$1-yer"; // Plädoyer
 		"([Mm][ia]-?kro)\|" => "$1-"; // Mikrokosmos, Makrokosmos
+		"([Pp]sy-?cho)\|(gen)" => "$1-$2"; // psychogenreaktiv
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3342,6 +3343,7 @@
 		"^([Ss]ch|[Zz])ien$" => "$1[I]n";
 		"(?<=pb)ien$" => "[&I]{EN}";
 		//"je" => "[J][E]";
+		"([Nn]ie)t-?z-?(sche)" => "$1[Z@#/.]$2";  // Nietzsche: use diacritics
 		"iet" => { "[I]t", "[Nn]iet-?z-?sche" };
 		"([^c])(haft)$" => "$1{HAFT}";
 		"{ANT}{LICH}" => "en{TLICH}";
