@@ -119,6 +119,7 @@ und zu verwalten (benutzerspezifische Tables analog zu öffentlichen Standard-Mo
 <br>Titel: automatischer Umbruch am Seitenende (neuer Tag &lt;titlebreak&gt;)
 <br>Absätze: Vermeiden von Leerzeilen oben auf Seite (+ neuer Tag &lt;break&gt;) 
 <br>Scripts: Deinstallation + Überarbeitung Installation (To do) 
+<br>Tool: MKCOR zur Generierung eines Wortkorpus
 </ul>
 <p><i>(*) Als terminus a quo gilt im Zweifelsfall: wenn es fertig ist ... :)<br>(**) Nach Hephaistos, Ariadne und Hyperion dürfte wieder ein weiblicher Name (vielleicht mit A:) aus der griechischen 
 Mythologie zum Zuge kommen ... :)</i></p>

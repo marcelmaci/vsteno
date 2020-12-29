@@ -2047,7 +2047,7 @@ Bücher auf Bestellung
  Optionen und Preise sind hier je nach Anbieter verschieden (z.B.
  Paperback vs Hardcover, Fadenbindung vs Klebebindung, wählbare Papiersorten
  und -dicke, verschiedene Formate), allen gemein ist jedoch in der Regel,
- dass ein so geannter 
+ dass ein so genannter 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2085,7 +2085,60 @@ passen
  Kurzum: Man kann nicht einfach ein mit VSTENO generiertes PDF im A4-Format
  (Standard-Druckformat für Heimcomputer) nehmen und daraus ein Buch generieren,
  sondern es braucht hierfür gewisse Anpassungen, welche im folgenden zusammen
- mit einigen Tipps und Tricks beschrieben werden sollen:
+ mit einigen Tipps und Tricks beschrieben werden sollen.
+\end_layout
+
+\begin_layout Subsubsection*
+Lektorat
+\end_layout
+
+\begin_layout Standard
+Im Unterschied zu den on-the-fly generierten Texten, welche tagesaktuell
+ (z.B.
+ Zeitungsartikel) gelesen werden, erheben gedruckte Bücher Anspruch auf
+ Korrektheit.
+ Sprich: Sie durchlaufen also einen Korrekturprozess (in einem Verlag normalerwe
+ise als 'Lektorat' bezeichnet), in dem Fehler ausgemerzt werden.
+ Bei stenografischen Editionen betrifft dies zwei Bereiche: (1) den Langschriftt
+ext (die Ausgangsbasis für die Übertragung sollte natürlich eine möglichst
+ korrekte Vorlage sein) und (2) die Stenogramme (hier geht es darum zu prüfen,
+ ob das verwendete Modell alle Wörter richtig überträgt).
+\end_layout
+
+\begin_layout Standard
+Für beide Bereich kann das Tool MKCOR, welches ab Version 0.4 zur Verfügung
+ steht, eine enorme Hilfe sein: Ausgehend vom Originaltext erstellt MKCOR
+ einen Korpus an Wörtern, in welchem jedes Wort des Originaltextes nur einmal
+ vorkommt.
+ Ebenfalls bietet MKCOR die Möglichkeit, Sonderzeichen herauszufiltern und
+ gewisse Wörter (deren korrekte Übertragung bereits anderweitig - in einem
+ anderen Text - geprüft wurde) auszuschliessen.
+ Die entsprechenden Optionen lauten:
+\end_layout
+
+\begin_layout Itemize
+Filter: MKCOR schlägt hier bereits eine Reihe an Sonderzeichen (Satzzeichen
+ etc.) vor, welche auch von VSTENO herausgefiltert werden.
+ Die Liste kann vergrössert oder verkleinert werden.
+ Immer herausgefiltert werden Tags (sowohl HTML-Tags als auch Inline-Option-Tags
+), sowie das einfach Anführungszeichen '.
+\end_layout
+
+\begin_layout Itemize
+Originaltext: Fügen Sie hier den Text Ihres Buches ein.
+ Dank der Filteroption kann dieser auch Tags und Sonderzeichen (Satzzeichen
+ etc.) enthalten.
+\end_layout
+
+\begin_layout Itemize
+Ausschliessen: Fügen Sie hier jene Wörter ein, von denen Sie bereits sicher
+ sind, dass sie vom gewählten Modell richtig übertragen werden.
+\end_layout
+
+\begin_layout Standard
+Da die meisten Wörter - insbesondere in längeren Texten - mehrfach vorkommen,
+ reduziert MKCOR den Korrekturaufwand erheblich.
+ 
 \end_layout
 
 \begin_layout Subsubsection*

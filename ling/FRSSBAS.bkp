@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.4";
 		"required_version" := "0.3";
-		"model_date" := "07/12/20";
+		"model_date" := "19/12/20";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";

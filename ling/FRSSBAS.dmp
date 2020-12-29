@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.4";
 		"required_version" := "0.3";
-		"model_date" := "19/12/20";
+		"model_date" := "29/12/20";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";
@@ -1184,7 +1184,7 @@
 		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
 
 		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
-		"(?<!t)e~ter" => "{INTER}"; // not in "tintèrent"
+		"(?<!t)e~ter(?!min)" => "{INTER}"; // not in: tintèrent, interminable
 		"^(l)?e~tr(?!uvabl)" => "$1{INTER}" };
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
 		"^(?:in)(?!(?:j|$))" => { "{IN}", "[Ee]~si ?$" }; // why is original word with E uppercase?!? (see ExecuteRule())
