@@ -2,7 +2,7 @@
 	// 
 	// FRSSBAS - VSTENO shorthand model for french
 	// Set of rules interpreted and processed by VSTENO (www.vsteno.ch) 
-	// (c) 2019 - Marcel Maci (m.maci@gmx.ch)
+	// (c) 2019-2020 - Marcel Maci (m.maci@gmx.ch)
  	//
 	// This program* is free software: you can redistribute it and/or modify it under	
 	// the terms of the GNU General Public License as published by the Free Software
@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.4";
 		"required_version" := "0.3";
-		"model_date" := "29/12/20";
+		"model_date" := "30/12/20";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";
@@ -725,7 +725,7 @@
 
 		// high priority replacements (= without any preliminar modification of the original text)		
 		"Êtes" => "#etes";
-		"(?<=^| )([Dd]\')[Aa]ujourd\'?hui(?=[ ,\.]|$)" => "d#aujourdhui";	
+		"(?<=^| )([Dd])?\'?[Aa]ujourd\'?hui(?=[ ,\.]|$)" => "$1#aujourdhui";	
 		"(?<=^| )[Jj]usqu\'?à ce que(?=[ ,\.]|$)" => "#jusquaceque";	
 		"(?<=^| )[Pp]lus tôt(?=[ ,\.]|$)" => "plutôt";	// make plus tôt and plutôt the same (parallel edition will be impossible ...)
 		//"(?<=^| )([Qq]u)\'a(?=[ ,\.-]|$)" => "$1e a";	
@@ -785,7 +785,8 @@
 		"(?<=^| )([Ss]erai)s?-(je)(?=[ ,\.]|$)" => "$1$2"; // transform it to "seraije" and let eSpeak do the rest ..
 		// and another one ... anyway: peux-je ... I'd prefer puis-je ...
 		"(?<=^| )([Pp]eu|[Pp]ourrai)[sx]-(je)(?=[ ,\.]|$)" => "$1$2"; // transform it to "peuje" and let eSpeak do the rest ..	
-
+		"(?<=^| )([Pp]ouvai)s-(je)(?=[ ,\.]|$)" => "#pouvaisje"; // inversion (special treatment)
+		
 		// some other nice invention: n'étais-je = no inversion (where's the logic anyway ... ;/)
 		"([Eée]tais)-(je)" => "$1 $2"; // separate them
 
@@ -1010,6 +1011,9 @@
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
 
+		"tstwrt(^[Cc]i-)" => { "^si", "{CI}" }; // ci-devant
+		"^sjapre" => "{CI}apre"; // ci-après
+
 		"([tl])#avions" => "$1{AV}{ION}"; // nous [lt]'avions vu 
 
 		"tstwrt(^là=)" => { "^\[#NS\][Ll]", "{LA}" };
@@ -1034,6 +1038,7 @@
  		"^(d)?otr\[ü\]i$" => "$1{AUTRUI}";
 		"tstwrt(^plus)" => { "^pl(y|\[ü\])$", "{PLUS}" }; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
+		"^parf#?wa" => "{PAR}{FOIS}"; // parfois
 		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
 
@@ -1136,7 +1141,7 @@
 		"^pl\[ü\]to$" => "{PLUS}{TOT}";
 		"^#plusieurs$" => "{PLUS}[ö]r";
 		"^#plupart$" => "{PLUS}par";
-		"tstwrt(^[Ll]ui$)" => { "^l\[ü\]i$", "{LUI}" }; // only pronoun "lui", not verb "luire" (luit)
+		"tstwrt(^[Ll]ui(-|$))" => { "^l\[ü\]i$", "{LUI}" }; // only pronoun "lui", not verb "luire" (luit)
 		"^#les$" => "{LES}";
 		"#av(ai[st]|aient)" => "{AV}e";
 		"tstwrt(^(?:n'?)?#avions$)" => { "^(n'?)?.*?$", "$1{AV}j[o~]" }; // should only be applied to verbs now
@@ -1612,6 +1617,7 @@
 		"(k)\[auf\]$" => "$1[EN]";
 		"^bi{CON}" => "bi[&E]{CON}";
 
+		"^(\[#ns\]b)\|" => "$1\"; bas-relief
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -1653,6 +1659,7 @@
 		"{COMME}" => "OK";
 		"^{ITE}$" => "[0N-][HEIT]";
 		"{ITE}" => "[HEIT]";
+		"\|d{DANS}" => "\DAD"; // là-dedans
 		"{DANS}" => "AD";
 		"{DU}" => "[AU]D";
 		"{TOUT}" => "OT";
@@ -1664,6 +1671,8 @@
 		"{CET}" => "[ST]";
 		"{VEUT}" => "W";
 		"{VOS}" => "OW";
+		"(\[[Nn]=\])\|?{MEME}" => "$1M"; // nous-mêmes
+		"{VOUS}\|?{MEME}" => "UWM"; // vous-mêmes
 		"{VOUS}" => "UW";
 		"{RIEN}" => "[AR]";
 		"{PAR}" => "A[AR]";
@@ -1677,9 +1686,10 @@
 		"{ETRE}" => "[0N-][&T@R]";
 		"{TROP}" => "O[T@R]";
 		"{SER}" => "[SER]";
+		"^{PLUS}" => "[PLUS]"; // test, if ok all following substitutions of {PLUS} at beginning of a word can be deleted
 		"{SUR}{PLUS}" => "[SOBRE][AU][@L]";
 		"{SUR}" => "[SOBRE]";
-		"{PLUS}(p)" => "[0N-][EN][#3-][@L][#3]$1"; // plus part: [0N-][#2][A][@L] isn't renderd correctly ?!? 
+		//"{PLUS}(p)" => "[0N-][EN][#3-][@L][#3]$1"; // plus part: [0N-][#2][A][@L] isn't renderd correctly ?!? 
 		"{PLUS}" => "[0N-][#2]A[@L]";
 		"{LES}" => "[LES]";
 		"{AV}" => "A[LES]";
@@ -1728,13 +1738,15 @@
 		"{TOUTEFOIS}" => "UTF[EN]";
 		"{LUI}\|?{MEME}" => "[LUI]M";
 		"{LUI}" => "[LUI]";
+		//"{LUI}" => "[_LUI]"; // celui
 		"{MEME}" => "[0N-]M";
 		"{CECI}" => "[S=]\\I[#4-][S=]";
 		"{SINON}" => "I[S=]\\[0D-][ON]";
 		"{CEUXCI}" => "[S=][E][&O]\\I[#4-][S=]";
 		"{PARCEQUIL}" => "[RÜCK]C\\I[#3-][ES]";
 		"{JUSQUE}" => "[AU][NG]";
-		"{AUJOURDHUI}" => "[0N-]O[NG]";
+		"^{AUJOURDHUI}" => "[0N-]O[NG]";
+		"{AUJOURDHUI}" => "O[NG]";
 		"{GENERAL}" => "[NG][VR]";
 		"{QUEL}" => "[CH]";
 		"^{QUELQUE}$" => "[CH][00]"; // add 00 to finish underlength
@@ -1753,7 +1765,7 @@
 		"{KIL}" => "I[K][EST]";
 		"{PARCEQUE}" => "A[AR]C";
 		"{PARCEQUON}" => "A[AR]C[ON]";
-		"{CELUI}" => "[S=][LUI]";
+		"{CELUI}" => "[S=][_LUI]";
 		"{VAETVIENT}" => "AW\\[EST]\\WI[&E][EI][-EI]";
 		"{JUSQUACEQUE}" => "[AU][NG][EN]\\[#4]C";
 		"{LE}" => "L";
