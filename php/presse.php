@@ -6,12 +6,14 @@
 <ul>
     <li><a href="#artikel1">Schweizer Stenograf (Januar 2020)</a></li>
     <li><a href="#artikel2">Stolze-Schrey-Post (Juni 2020)</a></li>
-     <li><a href="#artikel3">Stolze-Schrey-Post (September 2020)</a></li>
+    <li><a href="#artikel3">Stolze-Schrey-Post (September 2020)</a></li>
+    <li><a href="#artikel4">Schweizer Stenograf (Dezember 2020)</a></li>
+    <li><a href="#artikel5">Stolze-Schrey-Post (Dezember 2020)</a></li>
 </ul>
 </p>
 <p><center>* * *</center></p>
 <a name="artikel1"></a>
-<p><i>Im Januar erschien ein Artikel zu VSTENO im 
+<p><i>Im Januar 2020 erschien ein Artikel zu VSTENO im 
 <a href="https://steno.ch/0/index.php/der-schweizer-stenograf">Schweizer Stenograf</a> (verfügbar als Volltext oder als 
 <a href="../docs/artikel_schweizer_stenograf.pdf">PDF</a>).</i></p>
 
@@ -175,12 +177,67 @@ in Form zweier Briefe (Epistulae 6,16 und 6,20) seinem
 Freund und Historiker Publius Cornelius Tacitus (56-120)
 zukommen ließ. Wir publizieren hier den ersten der beiden
 Briefe (6,16) in einer leicht modernisierten Version der
-gemeinfreien Übersetzung von Johann Adam Schäfer (1) . Die
+gemeinfreien Übersetzung von Johann Adam Schäfer[1] . Die
 stenografische Übertragung erfolgte automatisiert mit dem
 Programm VSTENO.
 </p>
-<p>(1) Die Briefe des Plinius, übersetzt und mit Anmerkungen
+<p>[1] Die Briefe des Plinius, übersetzt und mit Anmerkungen
 erläutert von M. Johann Adam Schäfer, Erlangen bei Karl
 Hender, 1824.</p>
+
+<p><center>* * *</center></p>
+<a name="artikel4"></a>
+<p><h1>
+Die "Widerspenstige" ist käuflich zu erwerben</h1></p>
+
+<p><i>Im Dezember 2020 erschien ein Verweis auf die "Widerspenstige" (der erste vollständig mit VSTENO übertragene Roman) im 
+<a href="https://steno.ch/0/index.php/der-schweizer-stenograf">Schweizer Stenograf</a> (verfügbar als als 
+<a href="../docs/ssv_dezember_2020.png">PNG</a>).</i></p>
+
+<img src="../docs/ssv_dezember_2020.png" style="width:500px">
+
+<p><center>* * *</center></p>
+<a name="artikel5"></a>
+<p><i>Im Dezember 2020 erschien in der letzten Ausgabe Stolze-Schrey-Post des <a href="http://www.stolze-schrey.de">
+Stenografenverbands Stolze-Schrey</a> der zweite Pliniusbrief, sowie eine Vorschau (3 Seiten) des ersten Kapitels aus Friedrich Glausers Roman 
+"Matto regiert", der im Januar 2021 als zweites, vollständig mit VSTENO generiertes Taschenbuch erscheinen soll.
+Der Einleitungstext zu den Pliniusbriefen ist verfügbar als Volltext und <a href="../docs/ssp_einleitung_pliniusbriefe_2020_4.pdf">PDF</a>, der stenografische Praxisteil als 
+<a href="../docs/ssp_leseteil_2020_4.pdf">PDF</a>.</i></p>
+
+<p><h1>Plinius der Jüngere: Vesuvbriefe</h1></p>
+
+<p>In Heft 3 der Stolze-Schrey-Post publizierten wir im Leseteil den ersten so genannten Vesuvbrief (liber 6, epistula 16), in welchem 
+Plinius der Jüngere (62-113) seinem Freund und Geschichtsschreiber Tacitus vom Schicksal seines Onkels berichtet, der – in der Hoffnung, 
+Freunde und Bekannte zu retten – mit einem Schiff der Gefahr entgegenfuhr und dabei den Tod fand.</p>
+<p>Im zweiten Vesuvbrief (epistula 20), den wir nun hier nachreichen, erzählt Plinius, wie es ihm unterdessen im ca. 40 km entfernten Misenum 
+erging, wo er zusammen mit seiner Mutter zurückgeblieben war. Im Vergleich zu seinem Onkel befand er sich mehr als das Doppelte vom Unglücksort 
+entfernt, aber selbst hier erleben die Einwohner das Wüten des Vulkans in dramatischer Weise.</p>
+</p>Auch diesen Brief publizieren wir in einer modernisierten Version der gemeinfreien Übersetzung von Johann Adam Schäfer[1]. Die stenografische 
+Übertragung erfolgte automatisiert mit dem Programm VSTENO[2].  
+
+<p><h2>Eine archäologische Fundgrube</h2></p>
+
+<p>Der Vesuvausbruch, so tragisch er für die Bevölkerung auch war, erwies sich aus archäologischer Sicht als wahrer Segen: Durch die Asche, 
+welche ganze Siedlungen unter sich begrub und praktisch luftdicht einschloss, wurden unzählige Gebäude, Menschen, Tiere, Alltagsgegenstände 
+und sogar Nahrung in einer Momentaufnahme der damaligen Zeit konserviert. Die Körper der Opfer hinterliessen Hohlräume in der Asche, welche die 
+Archäologen mit Gips ausfüllten. Die Abdrücke erlaubten es oft, ganz genau zu rekonstruieren, wie und in welcher Situation die Menschen vom 
+Vulkanausbruch übrrascht wurden.</p>
+
+<p><h2>Briefform und historischer Bericht</h2></p>
+
+<p>Mit seiner Sammlung an Briefen (epistulae) begründet Plinius ein eigenes, neues Genre in der damaligen Literatur. Obwohl einige an Familie 
+und Bekannte gerichtete Briefe tatsächlich privater Natur (und Inhalts) sind, darf man sich nicht täuschen: Plinius verwendet hier eine 
+Kunstform, mit der er sich durchaus auch an ein breiteres Publikum wendet. Seine Briefe enthalten somit auch allgemeine Betrachtungen 
+und historische Tatsachen.</p>
+
+<p><h2>Genauer Zeitpunkt des Vesuvausbruchs</h2></p>
+
+<p>Nebst Plinius erwähnt auch der Historiker Lucius Cassius Dio (155-235) den Vulkanausbruch und datiert diese „gegen den Herbst“. 
+Tatsächlich fand man in Pompeji verkohlte Walnüsse und andere Herbstfrüchte, welche die Vermutung nahe legen, dass der Ausbruch eher 
+am 24. Oktober – und nicht am 24. August wie im Pliniusbrief vermerkt – stattfand. Denkbar ist aber, dass Plinius ursprünglich das 
+korrekte Datum notierte und es sich hier schlicht um einen Übertragungsfehler aus dem Mittelalter handelt.</p>
+
+<p>[1] Die Briefe des Plinius, übersetzt und mit Anmerkungen erläutert von M. Johann Adam Schäfer, Erlangen bei Karl Hender, 1824.<br>
+[2] Siehe www.vsteno.ch / © 2018-2020 Marcel Maci</p>
 
 <?php require "vsteno_template_bottom.php"; ?>

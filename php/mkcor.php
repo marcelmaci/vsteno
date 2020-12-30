@@ -10,7 +10,7 @@ function CreateFilterParameterFromGlobalVariables() {
 <h1>MKCOR</h1>
 <p>Erstellt aus einem originalen, fortlaufenden Text mit oder ohne Tags einen Wortkorpus, in welchem jedes Wort nur 1x vorkommt. 
 Tags und die in Filter angegebenen Zeichen werden herausgefiltert. Wörter, die unter 'Ausschliessen' aufgeführt sind, werden nicht in 
-den Korpus aufgenommen. Das Erstellen eines Wortkorpus erlaubt ein sehr effizientes generieren und lektorieren jener Wörter, die für eine 
+den Korpus aufgenommen. Das Erstellen eines Wortkorpus erlaubt ein sehr effizientes Generieren und Lektorieren jener Wörter, die für eine 
 Gesamtübertragung eines Textes benötigt werden.</p>
 
 <h2>Daten</h2>

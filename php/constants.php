@@ -27,7 +27,7 @@ error_reporting(0);                 // turn off all error reporting
 // version
 const version_name = "Hyperion (latest) - 29/12/2020"; // official release name
 const version_number = "0.3"; // two digit version number (can be used to test compatibility with models)
-const version_commit_id = "1d46f8d4a2519386514c1447551d358a992daff0";   // must be inserted manually after commit => could be from last commit if forgotten
+const version_commit_id = "d64e21a8e36fd4f8612773a2184a97af966d7e61";   // must be inserted manually after commit => could be from last commit if forgotten
 const version_date = "29/12/2020";  // idem
 
 // constants
