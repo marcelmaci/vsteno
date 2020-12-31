@@ -324,7 +324,41 @@ if ((mb_strlen($word) > 1) || ($_SESSION['phonetics_single_char_yesno'])) {
     return $output;
 }
 
+// make analyze_word_linguistically() a native cpp-function
+// in order to achieve that (and full backwards compatibility) make php-function analyze_word_linguistically a wrapper-function
+// which calls either the classic php analyze_word_linguistically() function or the (new) native cpp function
+// original code is agnostic to how the request will be processed: it just calls the php function as before
+// of course, the wrapper slows down php execution (this is an inevitable downside ...)
+// Houston, we have a problem: PHP refuses to execute the wrapper function if no extension is present ... (darned, I hoped that 
+// the interpreter would be more tolerant ... :)
+// solution: use require_once to include either
+// (1) wrapper function (if native extension is present)
+// (2) classic function (if only classic php code is available)
+// advantage(1): almost no slowdown for php-code (since no wrapper included in this case)
+// advantage(2): code fails only if native extensions are not present (and this can always be adjusted by setting global $native_extensions 
+// variable in constants.php to false.
+
+// new solution: conditional include
+if ($_SESSION['native_extensions']) require_once "linguistics_native.php";
+else require_once "linguistics_classic.php";
+
+/*
 function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
+    /*switch ($_SESSION['native_extensions']) {
+        case false : return analyze_word_linguistically_classic($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block);
+                    break;
+        case true : return analyze_word_linguistically_classic($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block);
+                    break;
+    }*/
+/*    // or here's the one-liner for the same (more or less ... :)
+    return ($_SESSION['native_extensions']) ? analyze_word_linguistically_native($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) : analyze_word_linguistically_classic($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block);
+}
+*/
+
+// rename original php analyze_word_linguistically() to analyze_word_linguistically_classic()
+// new solution: include it via a separate file: linguistics_classic.php
+/*
+function analyze_word_linguistically_classic($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
         global $last_written_form;
         $last_written_form = $word;
         //global $parallel_lng_form; // contains analysis of written form if phonetic transcription is selected
@@ -382,7 +416,8 @@ function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $
             return $result;
         }
 }
-    
+*/
+
 function mark_prefixes($word, $prefixes) {
     // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
     // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"

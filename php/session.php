@@ -48,7 +48,10 @@ $restricted_session_variables_list = array(
 
 function InitializeSessionVariables() {
     global $horizontal_distance_none, $horizontal_distance_narrow, $horizontal_distance_wide, $distance_words, $space_before_word,
-    $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model, $standard_models_list;
+    $left_margin, $right_margin, $top_margin, $bottom_margin, $num_system_lines, $standard_height, $default_model, $standard_models_list, 
+    $native_extensions;
+    // native extensions
+    $_SESSION['native_extensions'] = $native_extensions;
     // set standard values for use in session
     $_SESSION['captcha_processing'] = false;
     $_SESSION['debug_show_points_yesno'] = false;

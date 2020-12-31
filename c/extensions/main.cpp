@@ -15,7 +15,11 @@ Php::Value HelloWorld(Php::Parameters &params) {
      string result = "Hello from native C++ function which was called with parameter " + from_php + ".";
      return result;
 }
-
+/*
+Php::Value analyze_word_linguistically_native(Php::Parameters &params) {
+     return "take that";
+}
+*/
 /**
  *  tell the compiler that the get_module is a pure C function
  */
@@ -34,6 +38,7 @@ extern "C" {
         // for the entire duration of the process (that's why it's static)
         static Php::Extension extension("vsteno_native", "1.0");
 		extension.add<HelloWorld>("HelloWorld");
+//		extension.add<analyze_word_linguistically_native>("analyze_word_linguistically_native");
 	// return the extension
         return extension;
     }
