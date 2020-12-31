@@ -1,7 +1,7 @@
 <?php
 
 /* VSTENO - Vector Steno Tool with Enhanced Notational Options
- * (c) 2018 - Marcel Maci (m.maci@gmx.ch)
+ * (c) 2018-2021 - Marcel Maci (m.maci@gmx.ch)
  
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -29,7 +29,7 @@ $value_glue = 2;
 require_once("../phpSyllable-master" . '/classes/autoloader.php');
 
 
-// initialize hunspell and phpSy
+// initialize hunspell and phpSyllables
 
 global $syllable;
 global $hunspell_dictionary;
@@ -49,10 +49,58 @@ if (!isset($_SESSION['fortune_cookie'])) InitializeHunspellAndPHPSyllable(); // 
 
 // functions
 
-// ***************************************************** unused code **********************************
-// pspell: dictionary
+
+////////////////////////////////////// all pspell functions grouped together => probably obsolete //////////////////////////////
+// pspell: dictionary - probably obsolete and hardcoded to "de" 
+// leave it for the moment (in case a system doesn't offer hunspell this could be reactivated - even if pspell is much less
+// performant than hunspell, pspell is better than nothing!
+// reason to leave it: there is a switch($speller) statement in analyze_composed_words_and_hyphenate() function
+
 $pspell_dictionary = "de";
 //$pspell_link = pspell_new("$pspell_dictionary", "", "", "utf-8");
+
+function PSPELLcapitalizedStringList2composedWordsArray($string) {
+    //global $pspell_link; // produces unpredictable results if link is declared only once and reused as global?!?
+    global $pspell_dictionary;
+    $pspell_link = pspell_new("$pspell_dictionary", "", "", "utf-8"); // this seems to work, but us probably slower ... ?!?
+
+    $composed_words = array();
+    $word_list_array = explode(" ", $string);
+    //var_dump($word_list_array);
+    for ($i=0; $i<count($word_list_array); $i++) {
+        $test_in_dictionary = $word_list_array[$i];
+        for ($j=$i; $j<count($word_list_array); $j++) {
+            $hit = false;
+            if ($j!=$i) $test_in_dictionary .= decapitalize($word_list_array[$j]);
+            if (mb_strlen($test_in_dictionary)>2) {
+                //echo "<br>test: i/j: $i/$j: $test_in_dictionary<br>";
+                // check for Fugen-s!
+                //echo "pspell($test_in_dictionary): >" . pspell_check($pspell_link, $test_in_dictionary) . "<<br>"; 
+                if (pspell_check($pspell_link, $test_in_dictionary) != false) {
+                    //echo "Word: $test_in_dictionary found in dictionary!<br>";
+                    $hit = true;
+                    $composed_words[] = $test_in_dictionary;
+                    $i = $j;
+                    $j = count($word_list_array);
+                    break;
+                }
+            }
+        }
+        if (!$hit) {
+            $combine_with_preceeding = $composed_words[count($composed_words)-1] . decapitalize($word_list_array[$i]);
+            //echo "additional check: combine with preceeding = $combine_with_preceeding<br>";
+            if ($i<count($word_list_array)-1) {
+                if (pspell_check($pspell_link, $combine_with_preceeding) != false) {
+                    //echo "<br><br>i=$i<br><br>";
+                    $composed_words[count($composed_words)-1] .= decapitalize($word_list_array[$i]);
+                } else $composed_words[] = $word_list_array[$i];
+            } 
+        }
+    }
+    return $composed_words;
+}
+
+/////////////////////////////////// end pspell functions ///////////////////////////////////////////////////////////////////////
 
 // functions
 function capitalize($word) {
@@ -92,49 +140,6 @@ function composedWordsArray2hyphenatedString($array) {
     }
     return $output;
 }
-function PSPELLcapitalizedStringList2composedWordsArray($string) {
-    //global $pspell_link; // produces unpredictable results if link is declared only once and reused as global?!?
-    global $pspell_dictionary;
-    $pspell_link = pspell_new("$pspell_dictionary", "", "", "utf-8"); // this seems to work, but us probably slower ... ?!?
-
-    $composed_words = array();
-    $word_list_array = explode(" ", $string);
-    //var_dump($word_list_array);
-    for ($i=0; $i<count($word_list_array); $i++) {
-        $test_in_dictionary = $word_list_array[$i];
-        for ($j=$i; $j<count($word_list_array); $j++) {
-            $hit = false;
-            if ($j!=$i) $test_in_dictionary .= decapitalize($word_list_array[$j]);
-            if (mb_strlen($test_in_dictionary)>2) {
-                //echo "<br>test: i/j: $i/$j: $test_in_dictionary<br>";
-                //echo "result hunspell: "; // . $o[1] . "<br>";
-                //var_dump($o);
-                //echo "<br>";
-                // check for Fugen-s!
-                //echo "pspell($test_in_dictionary): >" . pspell_check($pspell_link, $test_in_dictionary) . "<<br>"; 
-                if (pspell_check($pspell_link, $test_in_dictionary) != false) {
-                    //echo "Word: $test_in_dictionary found in dictionary!<br>";
-                    $hit = true;
-                    $composed_words[] = $test_in_dictionary;
-                    $i = $j;
-                    $j = count($word_list_array);
-                    break;
-                }
-            }
-        }
-        if (!$hit) {
-            $combine_with_preceeding = $composed_words[count($composed_words)-1] . decapitalize($word_list_array[$i]);
-            //echo "additional check: combine with preceeding = $combine_with_preceeding<br>";
-            if ($i<count($word_list_array)-1) {
-                if (pspell_check($pspell_link, $combine_with_preceeding) != false) {
-                    //echo "<br><br>i=$i<br><br>";
-                    $composed_words[count($composed_words)-1] .= decapitalize($word_list_array[$i]);
-                } else $composed_words[] = $word_list_array[$i];
-            } 
-        }
-    }
-    return $composed_words;
-}
 function capitalizedStringList2composedWordsArray($string) {
     global $hunspell_dictionary;
     $composed_words = array();
@@ -150,8 +155,6 @@ function capitalizedStringList2composedWordsArray($string) {
                 //echo "<br>test: i/j: $i/$j: $test_in_dictionary<br>";
                 exec("echo \"$test_in_dictionary\" | hunspell -d $hunspell_dictionary -a -m -s", $o); // assign output to $o (= array)
                 //echo "result hunspell: "; // . $o[1] . "<br>";
-                //var_dump($o);
-                //echo "<br>";
                 // check for Fugen-s!
                 if (($o[count($o)-2][0] === "*") || (($o[count($o)-2][0] === "&") && (mb_strpos($o[count($o)-2], "$test_in_dictionary-") > 0))) {
                     //echo "Word: $test_in_dictionary found in dictionary!<br>";
@@ -242,231 +245,6 @@ function count_uppercase($string) {
     if ($length2 === 0) return $acronym;
     else return $difference;
 }
-
-/////////////////////////////////////////////////// optimized functions /////////////////////////////////////////////////
-
-function analyze_word_linguistically_optimized_set_variables ($prefixes, $stems, $suffixes) {
-    $prefixes_array = explode(",", $prefixes);
-    $stems_array = explode(",", $stems);
-    $suffixes_array = explode(",", $suffixes);
-    // trim arrays
-    $prefixes_array=array_map('trim',$prefixes_array); // use callback for trim
-    $stems_array=array_map('trim',$stems_array);
-    $suffixes_array=array_map('trim',$suffixes_array);
-    // implode to add spaces for string comparison
-    $prefixes = " " . implode(" ", $prefixes_array) . " ";
-    $stems = " " . implode(" ", $stems_array) . " ";
-    $suffixes = " " . implode(" ", $suffixes_array) . " ";
-    // complete list
-    $complete = "$prefixes $stems $suffixes";
-    // set session variables
-    $_SESSION['prefixes'] = $prefixes;
-    $_SESSION['stems'] = $stems;
-    $_SESSION['suffixes'] = $suffixes;
-    $_SESSION['complete'] = $complete;
-    $_SESSION['prefixes_array'] = $prefixes_array;
-    $_SESSION['stems_array'] = $stems_array;
-    $_SESSION['suffixes_array'] = $suffixes_array;
-}
-
-function analyze_word_linguistically_optimized($word, $hyphenate, $decompose) {
-    global $value_hyphenate;
-    $several_words = explode("-", $word);  // if word contains - => split it into array
-    $result = "";
-    //echo "stems: $stems<br>";
-    //echo "suffixes: $suffixes<br>";
-    for ($i=0;$i<count($several_words);$i++) {
-        $single_result = analyze_one_word_linguistically_optimized($several_words[$i], $hyphenate, $decompose);
-        //echo "single result: $single_result<br>";
-       
-        $result .= ($i==0) ? $single_result : "=" . $single_result;     // rearrange complete word using = instead of - (since - is used for syllables)
-    }
-    //echo "result: $result<br>";
-    if ($result === "Array") {
-        if ($value_hyphenate) return hyphenate($word);    // if word isn't found in dictionary, string "Array" is returned => why?! This is just a quick fix to prevent wrong results
-        else return $word;
-    } else {
-        $result = mark_affixes_optimized($result);
-        //echo "result: $result<br>";
-        return $result;
-    }
-}
-
-function mark_prefixes_optimized($word) {
-    // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
-    // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
-    $prefix_list = $_SESSION['prefixes_array'];
-    for ($i=0; $i<count($prefix_list); $i++) {
-        $actual_prefix = $prefix_list[$i];
-        //echo "prefix: $actual_prefix word: $word<br>";
-        $word = preg_replace("/(^|\+|\|)($actual_prefix)\|/i", "$1$2+", $word); // i = regex caseless modifier
-        //echo "result: $word<br>";
-    }
-    return $word;
-}
-
-function mark_suffixes_optimized($word) {
-    // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
-    // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
-    $suffix_list = $_SESSION['suffixes_array'];
-    for ($i=0; $i<count($suffix_list); $i++) {
-        $actual_suffix = $suffix_list[$i];
-        //echo "suffix: $actual_suffix word: $word<br>";
-        $word = preg_replace("/(-|\|)($actual_suffix)($|\||#)/i", "#$2$3", $word); // i = regex caseless modifier
-        //echo "result: $word<br>";
-    }
-    return $word;
-}
-
-function mark_affixes_optimized($word) {
-    $word = mark_prefixes_optimized($word);
-    $word = mark_suffixes_optimized($word);
-    return $word;
-}
-
-function analyze_one_word_linguistically_optimized($word, $hyphenate, $decompose) {
-    //echo "analyze: hyphenate: $hyphenate decompose: $decompose separate: $separate glue: $glue<br>";
-    
-    // $separate: if length of composed word < $separate => use | (otherwise use \ and separate composed word)
-    //            if 0: separate always
-    // $glue: if length of composed word < $glue => use - (= syllable of same word), otherwise use | or \
-    //        if 0: glue always (= annulate effect of linguistical analysis)
-    // Examples: 
-    // a) $glue = 4:                                    $glue = 0:
-    //    Eu-len\spie\gel => Eu-len\spie-gel            Eu-len-spie-gel
-    //    Ab\tei-lungs\lei-ter => Ab-teilungs\leiter
-    // b) $separate = 4:                $separate = 0:
-    //    Mut\pro-be => Mut|probe       Mut\pro-be
-    //    Ha-sen\fuss => Hasen\fuss     Ha-sen\fuss
-    // declare globals
-    global $is_noun;    // true if first letter of word is a capital
-    global $acronym, $value_hyphenate;
-    // set globals
-    $value_hyphenate = $hyphenate;
-    //echo "suffixes (one word): $suffixes<br>";
-    
-    // check for acronyms and nouns
-    $upper_case = count_uppercase($word);
-    if ($upper_case === $acronym) return $word;         // return word without modifications if it is an acronym (= upper case only)
-    elseif ($upper_case > 1) return hyphenate($word);   // probably an acronym with some lower case => hyphenate        
-    else {
-    
-        if ($decompose) {
-            //echo "decompose word<br>";
-            list($word_list_as_string, $array) = create_word_list($word);
-            //echo "stems: $stems<br>";
-            //echo "suffixes (one word): $suffixes<br>";
-   
-            $array = eliminate_inexistent_words_from_array_optimized($word_list_as_string, $array);
-            //var_dump($array);
-            $result = recursive_search_optimized(0,0, $array);
-            
-            //echo "inside (one word): word: $word result: $result<br>";
-            if ($result === "") $result = $word; // fix bug: recursive search can return "" instead of a word if word isn't found in hunspell dictionary
-        } else $result = $word; //$result = iconv(mb_detect_encoding($word, mb_detect_order(), true), "UTF-8", $word);
-        //echo "$result - $word<br>";
-        if ($hyphenate) $result = hyphenate($result);
-        if ($upper_case === 1) {
-            //echo "word is noun<br>";
-            //echo "1:$result<br>";
-            $result = mb_strtolower($result, "UTF-8"); // argh ... always these encoding troubles ...
-            //echo "2:$result<br>";
-            $result = capitalize($result);
-            //echo "3:$result<br>";
-           
-        } else $result = mb_strtolower($result);
-        return $result;
-    }
-}
-
-function eliminate_inexistent_words_from_array_optimized($string, $array) {
-    $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d de_CH -a" /* ) */;
-    // explode strings to get rid of commas
-    $prefixes_array = $_SESSION['prefixes_array'];
-    $stems_array = $_SESSION['stems_array'];
-    $suffixes_array = $_SESSION['suffixes_array'];
-    // implode to add spaces for string comparison
-    //$prefixes = $_SESSION['prefixes'];
-    //$stems = $_SESSION['stems'];
-    //$suffixes = $_SESSION['suffixes'];
-    $complete = $_SESSION['complete'];
-    //echo "<br>suffixes(eliminate): $suffixes<br>";
-    
-    //echo "$shell_command<br>";
-    //echo "hunspell: ";
-    exec("$shell_command",$o);
-    //var_dump($o);
-    $length = count($array[0]);
-    $offset = 1;
-    for ($l=0;$l<$length; $l++) {
-        for ($r=0;$r<count($array[$l]); $r++) {
-            //echo "<br>result: " . $array[$l][$r][0] . ": >" . $o[$offset] . "<<br>";
-            //echo "prefix test: $prefixes: " . mb_strpos(mb_strtolower($prefixes), mb_strtolower($array[$l][$r][0])) . "<br>";
-            //echo "stem test: $stems: " . mb_strpos(mb_strtolower($stems), mb_strtolower($array[$l][$r][0])) . "<br>";
-            
-            if (($o[$offset] === "*") || (($o[$offset][0] === "&") && (mb_strpos($o[$offset], $array[$l][$r][0] . "-") != false))) {
-                //echo "match * found: " . $array[$l][$r][0] . "<br>";
-                
-            } elseif (mb_strpos(mb_strtolower($complete), " " . mb_strtolower($array[$l][$r][0]) . " ") !== false) { 
-                // if word is in prefix list => separate it as if it where a word!
-                //echo "word: " . $array[$l][$r][0] . " is a prefix!<br>";
-                // do nothing (leave word in array)
-            } else {
-                // no match => delete string in array (use same data field for performance reason)
-                //echo "no match: " . $array[$l][$r][0] . "<br>";
-                $array[$l][$r][0] = ""; // "" means: no match!
-                
-            }
-            $offset+=1;
-        }
-    }
-    //echo "<br><br>array:<br>";
-    //var_dump($array);
-    return $array;
-}
-
-function recursive_search_optimized($line, $row, $array) {
-    if ($array[$line][$row][0] != "") {
-        //echo "that's a good start: word exists!<br>";
-        if ($row === count($array[$line])-1) {
-            //echo "reached end of line => return >" . $array[$line][$row][0] . "<<br>";
-            //$hit = true;
-            return $array[$line][$row][0];
-        } else {
-            $temp_row = $line+$row+1;
-            $temp_line = 0; //count($array) - $temp_row-1; // could this do horizontal as well?!
-            //if (($line-1-$row>=0) && ($row+$line<count($array[$line-1-$row]))) {
-            if (($temp_line>=0) && ($temp_row<count($array[$temp_line]))) {
-                //echo "=> try up<br>";
-                //$up = recursive_search($line-1, $row+$line, $array);
-                $up = recursive_search_optimized($temp_line, $temp_row, $array);
-            } else $up = "";
-            if (mb_strlen($up)>0) {
-                //echo "found up: $up and return my own: " . $array[$line][$row][0] . "<br>";
-                return $array[$line][$row][0] . "|" . $up;
-            } else {
-                    if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
-                        //echo "=> try down (count(array)=" . count($array) . "/count(array(line))=" . count($array[$line]) . ")<br>";
-                        $down = recursive_search_optimized($line+1, $row, $array);
-                    } else $down = "";
-                    if (mb_strlen($down)>0) {
-                        //echo "found down: $down (don't return own " . $array[$line][$row][0] . "<br>";
-                        return /*$array[$line][$row][0] . "\\" . */ $down;
-                    } else return ""; // no luck - even the main word isn't recognized by hunspell ...
-            }
-        }
-    } else {
-        if (($line+1<count($array)) && ($row<count($array[$line+1]))) {
-            //echo "no luck => traverse down<br>"; 
-            if ($line+1<count($array)) return recursive_search_optimized($line+1, $row, $array);
-        } else {
-            //echo "no luck => end traversing (go back)<br>";
-            return "";
-        }
-    }
-}
-
-/////////////////////////////////////////////// end optimized functions //////////////////////////////////////////////////////////
 
 function TryPhoneticTranscriptionFromList($word) {
     //echo "<br>>$word<";
@@ -618,28 +396,9 @@ function mark_prefixes($word, $prefixes) {
     return $word;
 }
 
-function mark_suffixes($word, $suffix_list) {
-    // word: linguistically analyzed word (hyphenated and containing composed words and prefixes separated by |
-    // prefixes: prefix list => goal is to mark prefixes with an + instead of | like "ge|laufen" => "ge+laufen"
-    //$suffix_list = explode(",", $suffixes);
-    //for ($i=0; $i<count($suffix_list); $i++) {
-        $word = backwards_preg_replace_all($word, $suffix_list, "suffix");
-        
-        /*
-        $actual_suffix = trim($suffix_list[$i]);
-        //echo "prefix: $actual_prefix word: $word<br>";
-        $word = preg_replace("/(-|\|)($actual_suffix)($|\||#)/i", "#$2$3", $word); // i = regex caseless modifier
-        //echo "result: $word<br>";
-        */
-    //}
-    return $word;
-}
-
 function mark_affixes($word, $prefixes, $suffixes) {
     $word = backwards_preg_replace_all($word, $prefixes, "prefix");
     $word = backwards_preg_replace_all($word, $suffixes, "suffix");
-    //$word = mark_prefixes($word, $prefixes);
-    //$word = mark_suffixes($word, $suffixes);
     return $word;
 }
 
@@ -694,34 +453,6 @@ function ApplyFilter($word) {
     
     return $word;
 }
-
-// unfortunately the new version makes the server hang ...
-/*
-function ApplyFilter($word) {
-    $filter_list = $_SESSION['filter_list'];
-    $filter_array = explode(",", $filter_list);
-    $filter_array = array_map('trim',$filter_array);
-    
-    foreach ($filter_array as $key => $element) {
-        
-        // create replacement, e.g.: (?<![Kk]rei-)de\| => de- 
-        // filter out: lookarounds
-        $replacement = preg_replace("/\(\?[^:].*?\)/", "", $element);
-        //echo "element: " . htmlspecialchars($element) . " => replacement: $replacement<br>";
-        // replace | by -
-        $replacement = preg_replace("/\|/", "-", $replacement); // ignore if user wrote \| (see following line) 
-        $replacement = str_replace("\-", "-", $replacement); // this seems to be the only method that works to eliminate \ in \- ... officialy this function is not multibyte safe ...
-        //echo "element: " . htmlspecialchars($element) . " => replacement: $replacement<br>";
-        
-        // replace, e.g.: (?<![Kk]rei-)de\| => de-
-        //echo "PREG_REPLACE: " . htmlspecialchars($element) . " => " . htmlspecialchars($replacement) . " in: $word<br>";
-        //echo "WORD (before): $word<br>";
-        $word = preg_replace("/$element/", "$replacement", $word);
-        //echo "WORD (after): $word<br>";
-    }
-    return $word;
-}
-*/
 
 function analyze_one_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
     global $parallel_lng_form;
@@ -1048,43 +779,5 @@ function recursive_search($line, $row, $array) {
         }
     }
 }
-
-/********************************** some tests with hunspell spellchecker executed via shell
-//echo shell_exec(escapeshellarg("echo \"Testwort\" \| hunspell -d de_CH -a"));
-//echo shell_exec(escapeshellarg("hunspell -d de_CH -f \"testwoerter.txt\""));
-//echo "Schiff=fahrts=mu=se=um" | hunspell -d de_CH -a
-//echo escapeshellarg('echo "test" | hunspell -d de_CH -a');
-echo $safe_mode;
-
-//echo htmlspecialchars(shell_exec("echo 'Schifffahrt' > hello.txt"));
-//echo htmlspecialchars(shell_exec("cat hello.txt"));
-
-//echo "<br>";
-//echo htmlspecialchars(system(escapeshellcmd("hunspell -d de_CH -a -f hello.txt")));
-
-//echo exec("hunspell -d de_CH -a -f hello.txt", $o); // assay output to $o (= array)
-$word = "Voruntersuchung Zweitwort Drittwort"; //"Schifffahrt";
-$dictionary = "de_DE"; //"de_CH";
-
-// check for existing dictionaries
-echo system("hunspell -D -a", $o); // assay output to $o (= array)
-var_dump($o);
-echo "<br>";
-*/
-
-/*
-*/
-
-
-/******************************************* another spellchecker test with pspell */
-/*
-$pspell_link = pspell_new("de");
-
-if (pspell_check($pspell_link, "Schiff-fahrt")) {
-    echo "This is a valid spelling";
-} else {
-    echo "Sorry, wrong spelling";
-}
-*/
 
 ?>
