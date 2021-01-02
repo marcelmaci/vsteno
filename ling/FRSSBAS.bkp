@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.4";
 		"required_version" := "0.3";
-		"model_date" := "30/12/20";
+		"model_date" := "31/12/20";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";
@@ -1027,7 +1027,7 @@
 		"^ekstra(?!k)" =>  "{EXTRA}"; // don't apply to: extraction
 		"e~par" => "{IMPAR}"; // imparfait (impartial?)
 		"^e~s\[ü\]r" => "{INSUR}";
-		"^r[eE][zs]\[ü\]r" => "{RESUR}";
+		"^r[@eE]z\[ü\]r" => "{RESUR}"; // resurrection
 		"^#toutefois$" => "{TOUTEFOIS}";
 		"^#dument$" => "{DU}{MENT}";
 		"^#parcequil$" => "{PARCEQUIL}";
@@ -1267,6 +1267,8 @@
 		// recorrection
 		"{MENT}r" => "{MENT}[VR]"; // where's the logic anyway ... :) :) :) (or - as I use to say - stenographs aren't linguists ... :o)
 		"}\[@L\]" => "}l"; // normal l after prefix
+
+		"pre{EX}" => "{PRE}{EX}"; // préexistence
 
 	#EndSubSection(shortener,#>stage4)
 	#BeginSubSection(phonetizer,#>stage4)
@@ -1624,6 +1626,7 @@
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"{PRE}{EX}" => "[P@R6][E][LES][LES]"; // préeexistence
 		"^{TOT}$" => "[O][T]"; 
 		"{QUON}" => "K[ON]";
 		"{AUTRUI}" => "[VOR][AU][LES][-I]";
@@ -1638,11 +1641,11 @@
 		"{LORSQUE}" => "OL";
 		"{MAINTENANT}" => "[0U-][EM]";
 		"{BIEN}{TOT}" => "B[#4-][TOT]";
-		"{INSUR}" => "[0D-][EI][SOBRE]";
+		"{INSUR}" => "[0D-][EI][_SOBRE]";
 		"^{IMPAR}" => "[0D-][EI][RÜCK]";
 		"{IMPAR}" => "[EI][RÜCK]";
 		"{RE}{EX}" => "[AR]E[&E][&E]";
-		"{RE}{INTER}" => "[AR]E[&E][#1-]I[INTER]";
+		"{RE}{INTER}" => "[AR]E[&E][#3-]I[_INTER]";
 		"{IL}" => "[0U-][-E]"; // "I[EST]"; // use spanish "est"
 		"{ILS}" => "I[EST@#/_]"; // use spanish "est" (diacritics)
 		"{CEQUE}" => "C";
@@ -1782,7 +1785,7 @@
 		"^{EN=}" => "[0N-][EM]O[&E]"; // enhardir
 		"{EN=}" => "[EM]O[&E]"; // enhardir
 		"{PRO}" => "PR[&O]"; // proconsul
-		"{RESUR}" => "[AR]E[SOBRE]"; // resurrection
+		"{RESUR}" => "[AR]E[_SOBRE]"; // resurrection
 		"{LORSQUIL}" => "OL\\[#2-][EST]"; 
 		"{RAT}" => "A[AR@#/]";
 		"{FRANCS}" => "[F@R6]";
