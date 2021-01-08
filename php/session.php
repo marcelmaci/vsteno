@@ -21,6 +21,7 @@ $restricted_session_variables_list = array(
     "model_version" => "",
     "model_date" => "",
     "font_borrow_yesno" => false,
+    "model_use_native_yesno" => false,
  //   "font_borrow_model_name" => "", // must not necessarily be resetted
  //   "font_load_from_file" => false
     // options (must be enumerated)
@@ -52,6 +53,7 @@ function InitializeSessionVariables() {
     $native_extensions;
     // native extensions
     $_SESSION['native_extensions'] = $native_extensions;
+    $_SESSION['model_use_native_yesno'] = false;
     // set standard values for use in session
     $_SESSION['captcha_processing'] = false;
     $_SESSION['debug_show_points_yesno'] = false;

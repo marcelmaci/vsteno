@@ -3,21 +3,25 @@
 // classic php analyze_word_linguistically() function as include
 
 function analyze_word_linguistically($word, $hyphenate, $decompose, $separate, $glue, $prefixes, $stems, $suffixes, $block) {
-        global $last_written_form;
+        global $last_written_form, $prefixes_array, $stems_array, $suffixes_array;
         $last_written_form = $word;
         //global $parallel_lng_form; // contains analysis of written form if phonetic transcription is selected
         //echo "<br>analyze_word_linguistically: word=$word hyphenate=$hyphenate decompose=$decompose separate=$separate glue=$glue prefixes=$prefixes stems=$stems suffixes=$suffixes block=$block<br>";
         // explode strings to get rid of commas
-        $prefixes_array = explode(",", $prefixes);
-        $stems_array = explode(",", $stems);
-        $suffixes_array = explode(",", $suffixes);
+// optimize by doing it globally and just once per calculation => has almost no effect on execution time ...
+/*
+        $prefixes_array = explode(",", preg_replace("/ /", "", $prefixes));
+        $stems_array = explode(",", preg_replace("/ /", "", $stems));
+        $suffixes_array = explode(",", preg_replace("/ /", "", $suffixes));
         //$block_array = explode(",", $block);
+*/
         // trim
-        $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
+// optimize_by_including it above
+ /*       $prefixes_array = array_map('trim',$prefixes_array); // use callback for trim
         $stems_array = array_map('trim',$stems_array);
         $suffixes_array = array_map('trim',$suffixes_array);
         //$block_array = array_map('trim',$suffixes_array);
-    
+ */   
         $several_words = explode("-", $word);  // if word contains - => split it into array
         $result = "";
         //echo "prefixes: $prefixes";

@@ -107,7 +107,9 @@ function ResetSessionGetBackPage() {
         $session_subsection = GetSubSection($header_section, "session");
         //echo "session_text: $session_subsection<br>";
         ImportSession();
-        echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . "$borrow_text wurde geladen und die Optionen aktualisiert.<br>Modeltyp: $model_type</p>";
+        echo "<h1>Aktualisieren</h1><p>Das Modell " . $_SESSION['actual_model'] . "$borrow_text wurde geladen und die Optionen aktualisiert.<br>Modeltyp: " . strtoupper($model_type) . " / ";
+        $model_selection = ($_SESSION['model_use_native_yesno']) ? "YES" : "NO";
+        echo "Native: $model_selection</p>";
         echo GetErrorAndWarningSection();
         /*
         if ((mb_strlen($global_error_string)>0) || ((mb_strlen($global_warnings_string)>0))) {
@@ -288,6 +290,10 @@ if ($_POST['action'] === "abschicken") {
     $_SESSION['rules_count'] = null;
     $_SESSION['rules_count'] = array();
     for ($i=0; $i<count($rules[$actual_model]); $i++) $_SESSION['rules_count'][$i] = 0;
+  
+    // optimization: create arrays for morphological array once per calculation and globally
+    // guess what: has almost no effect on execution time ...
+    CreateAllArraysForMorphologicalAnalysis($_SESSION['prefixes_list'], $_SESSION['stems_list'], $_SESSION['suffixes_list'], $_SESSION['block_list']);
     
     CalculateStenoPage();
     $_SESSION['statistics_cached_results'] = count($cached_results);

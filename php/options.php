@@ -68,6 +68,18 @@ $whitelist_variables .= " interpolated_yesno interpolated_iterations phonetics_a
 $whitelist_variables .= " page_number_format_left page_number_format_right titlebreak_minimum_lines_at_end titlebreak_number_of_breaks_before page_top_avoid_breaks_before_p_yesno ";
 $whitelist_variables .= " page_top_avoid_breaks_before_br_yesno set_page_number output_line_number_yesno layouted_book_lines_odd_yesno layouted_book_lines_even_yesno ";
 
+// model_use_native_yesno shouldn't be settable during a model calculation (because code inclusion depends on this)
+// therefore, model_use_native_yesno has been included in the restricted_session_variables_list (in session.php)
+// so that it gets resetted every time a model is loaded.
+// it then can only be set by ImportSession() function during loading of model.
+// add it to the whitelist here only for test purposes!!!!
+$whitelist_variables .= " model_use_native_yesno ";
+// => actually, it's better to definitely not include it: testing can be done via custom model where model_use_native_yesno is correctly set!
+// ok ... CheckAndSetSessionVariable() in this file won't let ImportSession() set the variable if it is not in whitelist ...
+// so, include it for the moment => should be solved differently:
+// restricted variables should only be writable by ImportSession() (= during loading of a model)
+// whereas whitelist variables should always be writeable during calculation
+
 function GetWordSetPreAndPostTags( $text ) {
         global /*$inline_options_pretags, $inline_options_posttags,*/ $html_pretags, $html_posttags, $combined_pretags, $combined_posttags;
        // echo "GetWordSetPreAndPostTags(): text: $text<br>";

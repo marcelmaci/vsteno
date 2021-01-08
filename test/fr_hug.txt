@@ -456,7 +456,7 @@ la consonne r, rien d'autre, rat commence par un r. Ce vieil âne n'a plus de fo
 il ne prononce pas bien la b espagnole. L'année prochaine nous ferons des excursions das les Andes pendant plusieurs semaines.
 Laissez le passé! Ne le lésez pas! Est-ce que c'est du poison. Son cousin lui a fait cadeau d'un coussin
 électrique. Nous causions de la caution en question. La vaisselle, (?), Westfalie. 
-À quelle date les dattes devront-elles être livrées? Edda (?) Eda (?) Louise est dans la cuisine. Jean Racine était un grand poète.
+À quelle date les dattes devront-elles être livrées? Edda aida Louise dans la cuisine. Jean Racine était un grand poète.
 Il était revenu: ils étaient revenu. Société d'assurance, sociétés d'assurances, factures et traites, il augmente, ils augmentent.
 Elle confectionne, elles confectionnent, il mentionne, ils mentionnent, les lions, les lionnes, 
 mannequin, camping, tournesol, westend à Londres. Le meeting eut lieu hier à Annecy. 
@@ -470,7 +470,7 @@ CH10(39):
 kg = kilogramme, cm = centimètre, no = numéro, ps = postscriptum, gv = grande-vitesse
 pv = petite vitesse, ac = année courante, art = article, sucs = successeur, fro = franco,
 svp = s'il vous plaît, ptt = poste, télégraphe, téléphone, fevr = février, nov = novembre
-// mainly not implemented
+// mainly not implemented => partially implemented (some abbreviations seem obsolete ... ?!)
 
 Rundschreiben:
 Messieurs, avec la présente, nous avons l'honneur de vous remettre notre plan de transport pour les marchandises expédiées

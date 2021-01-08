@@ -31,7 +31,7 @@ const version_commit_id = "d64e21a8e36fd4f8612773a2184a97af966d7e61";   // must 
 const version_date = "29/12/2020";  // idem
 
 // native extensions
-$native_extensions = false;      // true = native extensions available; false = php-only
+$native_extensions = true;      // true = native extensions available; false = php-only
 // IMPORTANT: on server without native extension ALLWAYS SET THIS TO FALSE!!! (Otherwise code won't work!)
 
 // constants

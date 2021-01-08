@@ -103,6 +103,14 @@ function PSPELLcapitalizedStringList2composedWordsArray($string) {
 /////////////////////////////////// end pspell functions ///////////////////////////////////////////////////////////////////////
 
 // functions
+function CreateAllArraysForMorphologicalAnalysis($prefixes, $stems, $suffixes, $block) {
+    global $prefixes_array, $stems_array, $suffixes_array, $block_array;
+    $prefixes_array = explode(",", preg_replace("/ /", "", $prefixes));
+    $stems_array = explode(",", preg_replace("/ /", "", $stems));
+    $suffixes_array = explode(",", preg_replace("/ /", "", $suffixes));
+    $block_array = explode(",", preg_replace("/ /", "", $block));
+}
+
 function capitalize($word) {
     //$word[0] = mb_strtoupper($word[0], "UTF-8");
     $first = mb_substr($word, 0, 1);
@@ -110,6 +118,7 @@ function capitalize($word) {
     $word = mb_strtoupper($first, "UTF-8") . $rest; // always those twisted solutions to solve the annoying UTF-8 problem ... (slow, but I don't see any other possibility for the moment ...)
     return $word;
 }
+
 function array2capitalizedStringList($array) {
     $word_list = "";
     for ($i=0; $i<count($array); $i++) {
@@ -339,7 +348,7 @@ if ((mb_strlen($word) > 1) || ($_SESSION['phonetics_single_char_yesno'])) {
 // variable in constants.php to false.
 
 // new solution: conditional include
-if ($_SESSION['native_extensions']) require_once "linguistics_native.php";
+if (($_SESSION['native_extensions']) && ($_SESSION['model_use_native_yesno'])) require_once "linguistics_native.php";
 else require_once "linguistics_classic.php";
 
 /*
@@ -588,10 +597,13 @@ function backwards_preg_replace_all($word, $array, $type) {
 }
 
 function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stems, $suffixes, $block) {
+    global $prefixes_array, $stems_array, $suffixes_array, $block_array;
     $language_code = $_SESSION['language_hunspell'];
     $shell_command = /* escapeshellcmd( */"echo \"$string\" | hunspell -i utf-8 -d $language_code -a" /* ) */;
     //echo "shell: $shell_command<br>";
     // explode strings to get rid of commas
+// optimized with global variables
+/*
     $prefixes_array = explode(",", $prefixes);
     $stems_array = explode(",", $stems);
     $suffixes_array = explode(",", $suffixes);
@@ -601,6 +613,7 @@ function eliminate_inexistent_words_from_array($string, $array, $prefixes, $stem
     $stems_array = array_map('trim',$stems_array);
     $suffixes_array = array_map('trim',$suffixes_array);
     $block_array = array_map('trim',$block_array);
+*/
     // implode to add spaces for string comparison
     $prefixes = " " . implode(" ", $prefixes_array) . " ";
     $stems = " " . implode(" ", $stems_array) . " ";
@@ -727,9 +740,11 @@ function create_word_list($word) {
     for ($l=0; $l<$syllables_count; $l++) { // l = line of combinations
         for ($r=0; $r<$syllables_count-$l; $r++) {  // r = row of combinations
             $single = "";
+if ($l+$r < $syllables_count) { // test this fix from cpp code
             for ($n=0; $n<$l+1; $n++) {     // n = length of combination
                 $single .= $hyphenated_array[$r+$n];
             }
+}
             $single = capitalize($single);
             //$single_plus_dash = "$single-";
             //$word_list_as_string .= "$single $single_plus_dash ";
