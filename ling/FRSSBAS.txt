@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.4";
 		"required_version" := "0.3";
-		"model_date" := "02/01/21";
+		"model_date" := "23/01/21";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";
@@ -1231,7 +1231,7 @@
 		// this is the new beauty of VSTENO: a hybrid rule!
 		// checks written form in order to determine if ma~ comes form ment$ or mant$, mand$, end$
 		// abbreviation {MENT} can only be applied to ment$
-		"tstwrt((?:an[dt]|end)$)" => { "ma~$", "[M][EM]" };   
+		"tstwrt((?:an[dt]|end)$)" => { "ma~$", "[M]{EM_FR}" };   
 		
 		// original rules
 		//"(?<!^)m[Aa]~t" => "{MENT}"; // also inside word
@@ -1554,7 +1554,7 @@
 		"e$" => "[-E]";
 		"a$" => "[EN]"; // keep token names as in original (mother) system
 	
-		"\[a~\]$" => "[EM]";
+		"\[a~\]$" => "{EM_FR}"; // mark as french "em"
 		"i$" => "[-I]";
 		"^qu({ESTCEQUE})" => "K$1";
 		"u(\||{I|$)" => "A[&U]$1"; 	// write literally as vowel before abbréviation {ITE}
@@ -1652,6 +1652,16 @@
 
 		"{SIX}" => "[S=@#/][/I]"; // six mois
 		"{HUIT}" => "[0N-][AU][&E][/I]"; // huit mois
+		
+		// rewrite some special distances in french
+		// use ###x to mark "fixed" spacing and replace it in finalizer
+		"t{EM_FR}" => "t[###6][EM]"; 
+		"\[(ng|sch)\]{EM_FR}" => "[$1][###0][EM]"; // jugeant
+		"([bfpH]){EM_FR}" => "$1[###0][EM]"; // barbant, greffant
+		"([kdgsx]){EM_FR}" => "$1[###2][EM]"; // vacant, excédent, extravagant
+		"([mnlw]|\[[mnlw]\]){EM_FR}" => "$1[###0][EM]"; // amant, gênant
+		"\[vr\]{EM_FR}" => "[vr][###4-][EM]"; 
+		"{EM_FR}" => "[EM]"; // use standard (common) spacing for all others 
 		
 		"{KG}" => "KG"; // abbréviation kg
 		"{CM}" => "CM"; // abbréviation kg
@@ -2037,6 +2047,7 @@
 	#BeginSubSection(finalizer)
 		// convert all to upper case for final rendering [a-z]|ä|ö|ü
 		"(^.*?$)" => "strtoupper()";
+		"\[###([0123456789]-?)\]" => "[#$1]"; // replace fix spacing ##x with real distances
 		//"ä" => "Ä";	// strtolower() works with umlaut, but strtoupper() doesn't ?!
 		//"ö" => "Ö";
 		//"ü" => "Ü"; 

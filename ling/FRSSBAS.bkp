@@ -63,7 +63,7 @@
 		// model version
 		"model_version" := "0.4";
 		"required_version" := "0.3";
-		"model_date" := "31/12/20";
+		"model_date" := "02/01/21";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";
@@ -743,7 +743,16 @@
 		"(?<=^| )[Ss]\.[Aa]\.(?=[ ,\.-]|$)" => "#socanon";
 		"(?<=^| )[Cc]\.-(?:à|a)-d\.(?=[ ,\.-]|$)" => "#cad";
 		"(?<=^| )[Pp]\.ex\.(?=[ ,\.-]|$)" => "#parex";
-
+		"(?<=^| )[Kk]g(?=[ ,\.-]|$)" => "#kg";
+		"(?<=^| )[Cc]m(?=[ ,\.-]|$)" => "#cm";
+		"(?<=^| )[Nn]o(?=[ ,\.-]|$)" => "#nr";
+		"(?<=^| )[Pp][Ss](?=[ ,\.-]|$)" => "#ps";
+		"(?<=^| )[Aa]rt(?=[ ,\.-]|$)" => "#art";
+		"(?<=^| )[Ss][Vv][Pp](?=[ ,\.-]|$)" => "#svp";
+		"(?<=^| )[Ff]evr?(?=[ ,\.-]|$)" => "#fev";
+		"(?<=^| )[Nn]ov(?=[ ,\.-]|$)" => "#nov";
+		
+		
 		// ok, here's the problem: un avion / l'avion / les avions vs nous avions / nous les avions
 		// this is not an unimportant distinction for "Vol de nuit" by Antoine de St-Exupéry for example ... :)
 		// so, let's try to figure that out as good as we can ...
@@ -902,6 +911,9 @@
 		
 		"(?<=^| )[Vv]a-et-vient(?=[ ,\.]|$)" => "#vaetvient";
 		
+		"(?<=^| )[Ss]ix (#?[bdfjklmnpqrstvwxyz]|#?c[aou]|#?g[aou])" => "#six $1";	// six mois vs six avions
+		"(?<=^| )[Hh]uit (#?[bdfjklmnpqrstvwxyz]|#?c[aou]|#?g[aou])" => "#huit $1";	// idem huit
+		
 		// wrong transcriptions
 		// this is done in phonetics_transcriptor_list now (much better, no interference with original text)
 		//"(?<=^| )([Ll])aid(?= |$)" => "#$1aid";	// eSpeak transcribes this as "lEd" instead of "lE"
@@ -1011,6 +1023,18 @@
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
 
+		"#six" => "{SIX}"; // six "muet" (without x pronounced)
+		"#huit" => "{HUIT}"; // six "muet" (without t pronounced)
+
+		"#kg" => "{KG}"; // abbréviation
+		"#cm" => "{CM}"; // abbréviation
+		"#nr" => "{NR}"; // abbréviation
+		"#ps" => "{PS}"; // abbréviation
+		"#art" => "{ART}"; // abbréviation
+		"#svp" => "{SVP}"; // abbréviation
+		"#fev" => "{FEVR}"; // abbréviation
+		"#nov" => "{NOV}"; // abbréviation
+		
 		"tstwrt(^[Cc]i-)" => { "^si", "{CI}" }; // ci-devant
 		"^sjapre" => "{CI}apre"; // ci-après
 
@@ -1027,7 +1051,7 @@
 		"^ekstra(?!k)" =>  "{EXTRA}"; // don't apply to: extraction
 		"e~par" => "{IMPAR}"; // imparfait (impartial?)
 		"^e~s\[ü\]r" => "{INSUR}";
-		"^r[@eE]z\[ü\]r" => "{RESUR}"; // resurrection
+		"^r[@eE][zs]\[ü\]r" => "{RESUR}"; // resurrection
 		"^#toutefois$" => "{TOUTEFOIS}";
 		"^#dument$" => "{DU}{MENT}";
 		"^#parcequil$" => "{PARCEQUIL}";
@@ -1626,6 +1650,19 @@
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"{SIX}" => "[S=@#/][/I]"; // six mois
+		"{HUIT}" => "[0N-][AU][&E][/I]"; // huit mois
+		
+		"{KG}" => "KG"; // abbréviation kg
+		"{CM}" => "CM"; // abbréviation kg
+		"{NR}" => "[N=][&O]"; // abbréviation kg
+		"{PS}" => "PS"; // abbréviation kg
+		"{ART}" => "[0N-]A[RR]"; // abbréviation kg
+		"{SVP}" => "[S=]WP"; // abbréviation kg
+		"{FEVR}" => "FE[W@R6]"; // abbréviation kg
+		"{NOV}" => "[N=]OW"; // abbréviation kg
+		
+		
 		"{PRE}{EX}" => "[P@R6][E][LES][LES]"; // préeexistence
 		"^{TOT}$" => "[O][T]"; 
 		"{QUON}" => "K[ON]";
@@ -1646,8 +1683,8 @@
 		"{IMPAR}" => "[EI][RÜCK]";
 		"{RE}{EX}" => "[AR]E[&E][&E]";
 		"{RE}{INTER}" => "[AR]E[&E][#3-]I[_INTER]";
-		"{IL}" => "[0U-][-E]"; // "I[EST]"; // use spanish "est"
-		"{ILS}" => "I[EST@#/_]"; // use spanish "est" (diacritics)
+		"{IL}" => "I[IL]"; // "I[EST]"; // use spanish "est"
+		"{ILS}" => "I[IL@#/_]"; // use spanish "est" (diacritics)
 		"{CEQUE}" => "C";
 		"{CEQUA}" => "[#NS]C";
 		"{CEQUI}" => "[#NU]C";
@@ -1786,7 +1823,8 @@
 		"{EN=}" => "[EM]O[&E]"; // enhardir
 		"{PRO}" => "PR[&O]"; // proconsul
 		"{RESUR}" => "[AR]E[_SOBRE]"; // resurrection
-		"{LORSQUIL}" => "OL\\[#2-][EST]"; 
+		"{LORSQUIL}[Ss]" => "OL\\[#2-][ILS]"; // "[IL@#/_][#9-[#9-][#9-]\\OL"; // due to a bug, this doesn't work: "OL\\[#2-][IL@#/_]"; 
+		"{LORSQUIL}" => "OL\\[#2-][IL]"; 
 		"{RAT}" => "A[AR@#/]";
 		"{FRANCS}" => "[F@R6]";
 		"{DOCTEUR}" => "[D@R]";
@@ -1974,12 +2012,15 @@
 	#BeginSubSection(diacritics)
 		"([a-z]|Ä|Ö|Ü)" => "strtolower()";
 		
+		"tstwrt(^[Dd]att)" => { "^(.*?)\[[Tt]\]", "$1[T@#/.]" };
 		"tstwrt(^B)" => { "\[[Bb]\]", "[B@#_]" };
 		"tstwrt(^R)" => { "\[(?:ar|AR])\]", "[AR@#_]" };
 		"tstwrt(^b$)" => { "\[[Bb]\]", "[B@#/]" };
 		"tstwrt(^[Ww])" => { "\[[Ww]\]", "[W@#.]" };
 		"tstwrt(res$)" => { "\[(?:vr|VR)\]$", "[VR@#/_]" };
+		"tstwrt(res$)" => { "\[VR10\]$", "[VR10@#/_]" };
 		"tstwrt(aient$)" => { "\[(?:heit|HEIT)\]$", "[heit@#/_]" }; 
+		"tstwrt(étés$)" => { "\[(?:heit|HEIT)\]$", "[heit@#/_]" }; 
 		"tstwrt(ces$)" => { "\[[Ss]\]$", "[s@#/_]" }; 
 		"tstwrt(tes$)" => { "\[[Tt]\]$", "[t@#/_]" }; 
 		"tstwrt(^r$)" => { "\[(?:ar|AR)\]$", "[ar@#/]" };
@@ -1990,7 +2031,6 @@
 		"tstwrt(^[Ll]és(?!s))" => { "^(.*?)\[[Ss]\]", "$1[S@#.]" };
 		"tstwrt(^[Pp]ois(?!s))" => { "^(.*?)\[[Ss]\]", "$1[S@#.]" };
 		"tstwrt(^[Cc]ous(?![sc]))" => { "^(.*?)\[[Ss]\]", "$1[S@#.]" };
-		"tstwrt(^[Dd]att)" => { "^(.*?)\[[Tt]\]", "$1[T@#/.]" };
 		"tstwrt(^[Ee]lles$)" => { "\[[Ll]\]$", "[L@#/_]" };
 
 	#EndSubSection(diacritics)
