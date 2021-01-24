@@ -202,12 +202,12 @@ function CalculateStenoPage() {
             if ($_SESSION['title_yesno']) {
                     $title_to_add = "<@token_type=\"svgtext\"><@svgtext_size=\"40\">";
                     $title_to_add .= $_SESSION['title_text'];
-                    $title_to_add .= "<@token_type=\"shorthand\"><br>";
+                    $title_to_add .= "<@token_type=\"shorthand\"><break>";
             }
             if ($_SESSION['introduction_yesno']) {
                     $title_to_add .= "<@token_type=\"svgtext\"><@svgtext_size=\"30\">";
                     $title_to_add .= $_SESSION['introduction_text'];
-                    $title_to_add .= "<@token_type=\"shorthand\"><br>";
+                    $title_to_add .= "<@token_type=\"shorthand\"><break>";
             }
             // add this at beginning of original text
             //echo "title_to_add: $title_to_add<br>";
