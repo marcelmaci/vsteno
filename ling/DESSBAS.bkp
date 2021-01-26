@@ -1286,6 +1286,10 @@
 		"([Pp]sy-?cho)\|(gen)" => "$1-$2"; // psychogenreaktiv
 		"(=[Aa]uf)\|" => "$1+"; // -Aufruf
 		"([bB]oy)\|(kot)\|t" => "$1-$2-t"; // boykottieren
+		"([Zz]u)-?(s(?:ä|a|e)-?t-?z)" => "$1+$2"; // zusätzlich
+		"([Cc]o-?ro-?na)-?" => "$1|"; // coronabedingt (not recognized by stems list! => why?)
+
+		"([Bb]ei).?z(e.?r(?:.?in.?(?:nen)))?" => "$1z$2"; // Beiz
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
