@@ -1,4 +1,26 @@
 #!/bin/bash
+
+# 	 configure_database.sh
+# 	 Prepares database for VSTENO by installing a local user and writing
+#    credentials to php-code for with init_db.php which is executed
+#    via local browser (the scripts scans through a list of browsers to
+#    identify one that is installed on the system).
+#
+#    Copyright (c) 2018-2021  Marcel Maci (m.maci@gmx.ch)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 function GetBrowser {
     # returns first browser from list installed on target system 
 	# or empty string if no browser is found

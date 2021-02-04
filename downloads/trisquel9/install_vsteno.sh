@@ -1,4 +1,25 @@
 #!/bin/bash
+
+# 	 install_vsteno.sh
+# 	 Main script that calls all the other scripts to install all tools
+#    and data needed for VSTENO. Accepts one parameter that selects the
+#    version that will be installed.
+#
+#    Copyright (c) 2018-2021  Marcel Maci (m.maci@gmx.ch)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 if [ $(whoami) == "root" ]; then
 	echo "ERROR: run this script as normal user ./install_vsteno version"
 	exit 1
