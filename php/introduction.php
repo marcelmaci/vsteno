@@ -38,7 +38,7 @@ Taschenbuch (12x19cm), 380 Seiten, mattweiss mit gelbem Cover. <br>Preis: 25.- C
 </tr>
 </table>
 <p>Vorbestellungen sind per <a href="mailto:m.maci@gmx.ch">Mail</a> ab sofort möglich, aufgrund von COVID kann die Lieferung derzeit leider 
-bis zu 1 Monat betragen. Weitere Details und Impressionen im <a href="matto_regiert_details.php">Blick ins Buch</a>.</p>
+bis zu 1 Monat betragen. Weitere Details und Impressionen im <a href="matto_regiert_details.php">Blick ins Buch</a> und im <a href="matto_projekt.php">Projektbeschrieb</a>.</p>
 
 
 

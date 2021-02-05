@@ -10,7 +10,7 @@
 «Wie ich die eingesperrten Leute gesehen habe, Herr Doktor, habe ich denken müssen, die Anstalt
 hocke wie eine riesige Spinne inmitten des Landes, und die Fäden ihres Netzes reichten bis in die 
 hintersten Dörfer ... Im Netz, wissen Sie, zappeln die Angehörigen der Patienten ... Und sie spinnt richtige Schicksalsfäden, 
-die Spinne - ich meine die Anstalt -- oder Matto, wenn Sie lieber wollen...»
+die Spinne - ich meine die Anstalt - oder Matto, wenn Sie lieber wollen...»
 
 <p>«Sie sind ein Dichter, Studer. Ein heimlicher Dichter. Und das ist vielleicht ungünstig für den Beruf,
 den Sie nun einmal ausüben müssen. Wären Sie kein Dichter gewesen, hätten Sie sich der Wirklichkeit angepasst, 
@@ -22,7 +22,7 @@ dann wäre Ihnen die Geschichte mit dem Obersten Caplaun nicht passiert ... Aber
 </tr>
 </table>
 </p>
-<p>Der Roman <i>Matto regiert</i> von Friedrich Glauser ist nicht irgendein Roman, sondern einer bekanntesten und bedautsamsten Schweizer Romane 
+<p>Der Roman <i>Matto regiert</i> von Friedrich Glauser ist nicht irgendein Roman, sondern einer bekanntesten und bedeutsamsten Schweizer Romane 
 überhaupt. Treffen Sie hier den Wachtmeister Studer und durchleben Sie mit ihm Irrungen und Wirrungen in der Heil- und Pflegeanstalt Randlingen.
 Ein absoluter Kultroman inklusive Vorwort und Anhang des Herausgebers: 380 Seiten Lesevergnügen pur in Stolze-Schrey!</p>
 
