@@ -1,0 +1,26 @@
+# name:  .gitignore
+# date:  2021-02-06 (YYYY-MM-DD)
+# edit:
+
+# https://www.toptal.com/developers/gitignore/api/lyx
+### LyX ###
+# Ignore LyX backup and autosave files
+# http://www.lyx.org/
+*.lyx~
+*.lyx#
+
+# https://www.toptal.com/developers/gitignore/api/latex
+### LaTeX ###
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
