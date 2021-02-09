@@ -1609,7 +1609,7 @@ function AvoidLineBreakOnTopOfPage($type) {
     else return false;
 }
 
-function LayoutedSVGProcessHTMLTags( $html_string ) {
+function LayoutedSVGProcessHTMLTags( $html_string, $ignore_non_breaking ) {
     global $word_position_y;
     // Unlike inline-svgs (= svgs containing each one only one word that is given to the browser as inline-element), 
     // HTML-Tags in layouted-SVG can not handled by browser.
@@ -1627,7 +1627,8 @@ function LayoutedSVGProcessHTMLTags( $html_string ) {
         $match_as_lower = preg_replace( "/[<](.+) .*?[>]/", "<$1>", $match_as_lower );      // strip out all additional parameters => keep only bare html tags
         //echo "match after: #" . htmlspecialchars($match_as_lower) . "#<br>";
         switch ($match_as_lower) {
-                case "<br>"         : if (!AvoidLineBreakOnTopOfPage("br")) $number_linebreaks++; break;
+                case "<br>"         : if ($ignore_non_breaking) $number_linebreaks++;
+                                      elseif (!AvoidLineBreakOnTopOfPage("br")) $number_linebreaks++; break;
                 case "<break>"      : $number_linebreaks++; break; // offer this as inconditional break
                 case "</p>"         : $number_linebreaks++; break;
                 case "<p>"          : if (!AvoidLineBreakOnTopOfPage("p"))$number_linebreaks++; break;
@@ -2262,8 +2263,15 @@ function CalculateLayoutedSVG( $text_array ) {
             
             //echo "====> set inline options: " . htmlspecialchars($pre) . " session_token_type: " . $_SESSION['token_type'] . "<br>";
             
-            //echo "prehtmltaglist: " . htmlspecialchars($pre_html_tag_list) . "<br>";
-            $number_linebreaks = LayoutedSVGProcessHTMLTags( $pre_html_tag_list ); 
+            // non breaking breaking (= blocked breaking) should only occur with empty lines
+            // i.e. when word_position_x is equal to left_margin
+            // if line contains some word, the breaking should occur
+            // test this and send boolean variable to LayoutedSVGProcessHTMLTags()
+            if ($word_position_x == $left_margin) $ignore_non_breaking = true;
+            else $ignore_non_breaking = false;
+            
+            $number_linebreaks = LayoutedSVGProcessHTMLTags( $pre_html_tag_list, $ignore_non_breaking ); 
+            
             //echo "number_linebreaks: $number_linebreaks<br>";
             
             $angle = $_SESSION['token_inclination'];
