@@ -8,6 +8,11 @@ Vom gleichen Autor (und auf der gleichen Seite) gibt es auch Übertragungen nach
 Gregg (<a href="https://steno.tu-clausthal.de/Gregg.php">Text2Gregg</a>), Pitman (<a href="https://steno.tu-clausthal.de/Pitman.php">Text2Pitman</a>) 
 und Sütterlin (<a href="https://steno.tu-clausthal.de/Suetterlin.php">Text2Suetterlin</a>).</p><p>=> Weitere theoretische Informationen
 zu diesen höchst spannenden Projekten unter <i>Artikel</i>.</p></li>
+<li><a href="https://jens-wawrczeck.de/stenogenerator/">Stenogenerator</a>: Programm von Jens Christian Wawrczeck, das Langschrifttexte nach 
+DEK (Verkehrsschrift) übeträgt. [Alternativer Link: <a href="https://jens-wawrczeck.de/stenogenerator/">
+www.stenogenerator.de</a>]<p>
+</p>
+</li>
 </ul>
 <h2>Artikel</h2>
 <ul>
