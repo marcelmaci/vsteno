@@ -132,6 +132,8 @@
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 
+		"([Bb]e)-(rech-?t)" => "$1+$2"; // gleichberechtigt
+
 		"([Cc]o-?ro-?na)-?(?!\|)" => "$1|"; // coronabedingt (not recognized by stems list! => why?)
 
 		"([Ww]er)\|t" => "$1-t"; // Disziplinenwertungen (crazy word ...)
@@ -744,7 +746,7 @@
 		"([Aa]uf\+?merk)\|(sa-?men)" => "$1#$2";
 		"([Bb]ei)-?(tra-?g)" => "$1+$2";
 
-		"([Tt]rans)\|(por-?t)" => "$1+$2";
+		"([Tt]ran-?s)(?:\||-)?(p[aoi])" => "$1+$2"; // transparent, Transport, transpirieren
 		"([Kk]ür)\|(zun-?ge)" => "$1-$2";
 		"([kK]er)\+(ze)" => "$1-$2";
 
@@ -1294,6 +1296,9 @@
 		"([Pp]o-?le)\|(mi-?sch)" => "$1-$2"; // polemische
 		"(schrei)\|(tun-?g)" => "$1-$2"; // Unterschreitungen
 		"([Gg]e)-?(mä-?s-?s)" => "$1+$2"; // erwartungsgemäss
+		"([Ss]te)r\+eo" => "$1-re-o"; // Stereotypie
+		"(pro-fi)\|(tie-?r)" => "$1-$2"; // profitieren (hm ... Profitieren = Profi-Tieren?:)
+		"(An)\+(ni-?na)" => "$1-$2"; // Annina
 		
 		"([Bb]ei).?z(e.?r(?:.?in.?(?:nen)))?" => "$1z$2"; // Beiz
 		
@@ -3308,7 +3313,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t(?!ums?$)" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t", "[Gg]i-?let", "[Pp]a-?t-?he-?tis-?c-?h", "(?:Ä|ä)s-?th?e-?t", "[Pp]la-?ne-?t", "[Dd]e-?k-?re-?t" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t", "[Gg]i-?let", "[Pp]a-?t-?he-?tis-?c-?h", "(?:Ä|ä)s-?th?e-?t", "[Pp]la-?ne-?t", "[Dd]e-?k-?re-?t", "[Gg]e-?o.?me-?t-?r" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
