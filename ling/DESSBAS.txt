@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "06/02/21";
+		"model_date" := "12/02/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1307,6 +1307,10 @@
 		"([Vv]er)\+(ti-?k)" => "$1-$2"; // vertikal
 		"([Gg]lor)-?(rei-?ch)" => "$1|$2"; // glorreich
 		"([Zz]u)-?(frie-?de-?n)" => "$1+$2"; // zufriedener
+		"([Aa]us)-?(sät-?z)" => "$1+$2"; // aussätzig
+		"([Ww]o)\+(gen)" => "$1-$2"; // wogenden
+		"([Aa]ch)\|(tun-?g)" => "$1-$2"; // Beobachtungen
+		"([Ss]pie)\|(len)" => "$1-$2"; // spielenden (from the series: computers are stupid ... :)
 
 		"([Bb]ei).?z(e.?r(?:.?in.?(?:nen)))?" => "$1z$2"; // Beiz
 		"([Gg]e).?b-?(li-?c-?h)" => "$1+b$2"; // geblichen
@@ -2213,6 +2217,7 @@
 		"[Aa].?c.?h.?e.?cho" => "ache\[WELCH][#4]o"; // achecho (swiss german)
 
 		"([Pp]rä)-?mie" => "$1-mi-e"; // Prämie
+		"([Pp]i)e-?des(-?t)" => "$1-e-des$2"; // Piedestal
 
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => { "$1$2$3", "[Rr]hein" }; // Rhizinus, Rhetorik etc.
