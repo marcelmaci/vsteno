@@ -3125,6 +3125,9 @@
 		"(\[&e\])\[#.\](\[u\]\[ng\])" => "$1[#0]$2"; // Anschauung
 		"(\[ant\])\[#.\](\[a\]\[vr\])" => "$1[#1-]$2"; // Entartung
 		"(\[fort\])\[#..?\](\[l\])" => "$1[#2]$2"; // fortlebte
+		"(\[&eits\])(\[l\])" => "$1[#6]$2"; // arbeitslosen
+		"(\[in\])\[#.\](\[k@r\])" => "$1[#1]$2"; // Salzinkrustation
+		"(\[ar\])\[#.\](\[q\])" => "[ar^][#5]$2"; // verquer (rewriting)
 
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
