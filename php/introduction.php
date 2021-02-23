@@ -26,7 +26,7 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 «Wie ich die eingesperrten Leute gesehen habe, Herr Doktor, habe ich denken müssen, die Anstalt
 hocke wie eine riesige Spinne inmitten des Landes, und die Fäden ihres Netzes reichten bis in die hintersten Dörfer ... 
 Im Netz, wissen Sie, zappeln die Angehörigen der Patienten ... Und sie spinnt richtige Schicksalsfäden, die Spinne - 
-ich meine die Anstalt -- oder Matto, wenn Sie lieber wollen...»
+ich meine die Anstalt - oder Matto, wenn Sie lieber wollen...»
 
 <p>«Sie sind ein Dichter, Studer. Ein heimlicher Dichter. Und das ist vielleicht ungünstig für den Beruf,
 den Sie nun einmal ausüben müssen. Wären Sie kein Dichter gewesen, hätten Sie sich der Wirklichkeit angepasst, 
@@ -37,13 +37,10 @@ Taschenbuch (12x19cm), 380 Seiten, mattweiss mit gelbem Cover. <br>Preis: 25.- C
 </td>
 </tr>
 </table>
-<p>Vorbestellungen sind per <a href="mailto:m.maci@gmx.ch">Mail</a> ab sofort möglich, aufgrund von COVID kann die Lieferung derzeit leider 
-bis zu 1 Monat betragen. Weitere Details und Impressionen im <a href="matto_regiert_details.php">Blick ins Buch</a> und im <a href="matto_projekt.php">Projektbeschrieb</a>.</p>
-
-
-
-
-
+<p><b>Update 23.02.21:</b> Die Bücher sind eingetroffen und die erste Auflage von <i>Matto regiert</i> ist somit ab sofort lieferbar! Bestellung via 
+<a href="mailto:m.maci@gmx.ch">Mail</a>. Spezialangebot: Die beiden bis jetzt publizierten Bücher (<i>Der Widerspenstigen Zähmung</i> und 
+<i>Matto regiert</i>) im <b>Bundle für Fr. 49.-</b> (inklusive Versand, statt 57.- im Einzelversand). 
+Weitere Details und Impressionen im <a href="matto_regiert_details.php">Blick ins Buch</a> und in der <a href="matto_projekt.php">Entstehungsgeschichte</a>.</p>
 
 <p><b>25/09/20 Druckausgabe "Der Widerspenstigen Zähmung" lieferbar!</b><p>
 <p>Das erste vollumfänglich mit VSTENO generierte Buch ist nun lieferbar:<br><p>
