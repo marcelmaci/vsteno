@@ -3164,6 +3164,12 @@
 		"(\[ng\])\|?\|?\[#..?\](\\\\)(\[=\])" => "$1|[#1-]$2$3"; // Browning-
 		"(\[tt\])(\\\\)(\[d\])" => "$1$2[#4]$3"; // Herrgottdonner
 		"(\[\^ll\^\])(\[a\]\[b\])" => "$1[#4]$2"; // Bouillabaisse
+
+		"(\[nn\])\[#.\](\[ar\])" => "$1[#2-]$2"; // Spinnrad
+		"(\[h\])\[#.\](\[h\])" => "$1[#3]$2"; // Fröhlichkeit
+		"(\[&t&e\])(\[a\]\[st\])" => "$1[#4]$2"; // fantastische
+		"(\[bei\])\[#.\](\[AR\^\])" => "[BEI+AR]"; // vorbeiritt ... hm rewriter ... improvised as hell ... :)
+		"(\[\^ch\])\[#.\](\[a\]\[&a\])" => "$1[#6]$2"; // Michael
 		
 		"(\[t\]\[#.\]\[s\])(\\\\)(\[0n-\])" => "$1[#4]$2$3"; // Staatsangestelltenverband
 

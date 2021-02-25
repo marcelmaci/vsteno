@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "13/02/21";
+		"model_date" := "14/02/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -798,7 +798,7 @@
 		"([Ee]r)\+(\'s)" => "$1$2"; 
 		"([Ww]as)-?(er\+?lei)" => "$1+$2"; // waserlei
 		"([Zz]o)-?o\|l" => "$1-o-l"; // zoologisch 
-		"([Ee]r)\+(lo-?sch)" => "$1+|$2"; // erloschen
+		"([Vv]?[Ee]r)\+(lo-?sch)" => "$1+|$2"; // (v)erloschen
 		"([Hh]ol)\|(l(?:a|ä)n-?d)" => "$1-$2"; // Holland
 		"([Bb]e)\+(li-?al)" => "$1-$2"; // Belialsbrut
 		"([Hh])-?(er)\+(zi-?g)" => "$1$2-$3"; // barmherzig
@@ -1327,7 +1327,12 @@
 		"([Uu]n)-?ge-?heu" => "$1+ge+heu"; // Speckstein-Ungeheuers
 		"Ei\|sen-k" => "Ei-sen|k"; // Eisenkeule (very strange ... is analyzed: Ei|sen-keu-le ... ?!)
 		"^([Ll]os)s-tür" => "$1+stür"; // losstürzte (bug in PHPSyllable I suppose ...)
-
+		"([Ee]nt)-?(gel-?t)" => "$1+$2"; // Entgelt
+		"([Ss]al)-?zin-kr" => "$1z|in+kr"; // Salzinkrustation
+		"([Ff]uhr-?mann)-?s(peit)" => "$1s|$2"; // Fuhrmannspeitsche
+		"^([Ee]is)(sa)" => "$1|$2"; // Eissaum
+		"(i-?ums)(tü-?r)" => "$1|$2"; // Laboratiumstür
+		"([Ii]nt-?er-?vi)(ew)" => "$1-$2"; // Interview
 		
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1861,7 +1866,7 @@
 
 		
 		
-		"([Ee]ben)(des)" => "$1 $2"; // ebendeswegen
+		"(?<=^| )([Ee]ben)(des)" => "$1 $2"; // ebendeswegen
 
 		// roman numbers
 		// difficult ... I and V can't be included because of confusion with capital i and v
@@ -2236,6 +2241,8 @@
 		"^([Hh])er\+" => "$1Er+"; // hertragen
 		"([Ss]al-?p)e(-?te-?r)" => "$1E$2"; // Salpeter
 		"([Hh]er.?m)e(-?ti)" => "$1E$2"; // hermetisch
+		"([Kk]o-?m|[Rr]a-?k)e(-?t)" => "$1E$2"; // Kometen, Raketen
+		"([Qq]u)er$" => "$1Er"; // verquer
 
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => { "$1$2$3", "[Rr]hein" }; // Rhizinus, Rhetorik etc.
@@ -2312,6 +2319,7 @@
 		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
 		"[Ww]as\+" => "{WAS}"; // waserlei
 		"[Mm]it[-+]?nich-?ten" => "{MIT}\\{NICHT2}{EN}"; // mitnichten
+		"[Vv]er[-+]?nich-?ten" => "{VER}\\{NICHT2}{EN}"; // vernichten (tolerance: could be written normally, but I prefer using the abbreviation)
 		"[Ii]n[-+]so[-+]fern" => "{IN}{SO}fern"; // insofern
 		
 		"([Ww][Ee]r-?t)e-?t" => "$1{ET}"; // wertete
@@ -3085,6 +3093,8 @@
  		"([Vv]or)-?bei" => "$1{BEI}"; 
  
 		"#er" => "{ER}";
+		"e-?r(un-?g)(en)?$" => "er+$1$2"; 
+
 		"(^|\+|\|)zer\+(?!$)" => "$1{ZER}+";
 
 		"^in-?t-?er$" => "{INTER}";
@@ -3177,7 +3187,9 @@
 		"^es$" => "{ES}";
 
 		
-		"(^|\+|\|)ver(\+)(?!$)" => "$1{VER}$2";
+		"(^|\+|\|)[Vv]er(\+)(?!$)" => "$1{VER}$2";
+		"^ver\+$" => "{VER}+"; // verlosch (doesn't work with preceeding rule?!? => ok: we're in stage3: ver+ is seen as separate word!)
+
 		"ver-" => { "{VER}+", "[Vv]er-?si-?o-?n", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n", "[Vv]er-?si-?fi", "[Vv]er-?gi-?l", "[Vv]er-?ti-?k" }; // can produce wrong results (exclude Overall, Universum)
 
 		"^all$" => "{ALL}";
@@ -3196,7 +3208,7 @@
 		"(?<!i)er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
 		"^[Hh]er\+r" => "HE[VR+AR]"; // herrühren
-		"(?<!d|#h)er\+" => { "{ER}", "[Ww]ie?-?d-?er", "[Tt]he-?ra-p" }; // more general rule
+		"(?<!d|#h|[Vv])er\+" => { "{ER}", "[Ww]ie?-?d-?er", "[Tt]he-?ra-p" }; // more general rule
 		"\+er$" => "{ER}";
 		"(n-?d)er\+" => "$1{ER}+";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
