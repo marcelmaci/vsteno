@@ -3128,6 +3128,17 @@
 		"(\[&eits\])(\[l\])" => "$1[#6]$2"; // arbeitslosen
 		"(\[in\])\[#.\](\[k@r\])" => "$1[#1]$2"; // Salzinkrustation
 		"(\[ar\])\[#.\](\[q\])" => "[ar^][#5]$2"; // verquer (rewriting)
+		"(\[h\])\[#.\](\[u\]\[f\])" => "$1[#6]$2"; // Pferdehuf
+		"(\[\^ch\])(\[a\]\[&tm\])" => "$1[#4]$2"; // Reichtums
+		"(\[d@r\])\[#.\](\[a\]\[t\])" => "$1[#7]$2"; // Draht
+		"(\[h\])\[#.\](\[a\]\[b\])" => "$1[#5]$2"; // Erhabenheit (not abbreviated)
+		"(\[l\])\[#.\](\[u\]\[x\])" => "$1[#5]$2"; // Luxus
+		"(\[l\])\[#.\](\[a\]\[x\])" => "$1[#6]$2"; // lax
+		"(\[&tg\])(\[h\])" => "$1[#3]$2"; // künftighin
+		"(\[AR\^\])\[#.\](\[i\]\[v\])" => "$1[#1-]$2"; // Rivalin
+		"(\[d@r\])\[#.\](\[i\]\[ss\])" => "$1[#6]$2"; // verdriesslicher
+		"(\[ch\])\[#.\](\[a\]\[m\])" => "$1[#5]$2"; // unnachahmliches
+		"(\[w@r6\])\[#.\](\[ar\])" => "$1[#1]$2"; // unwiderruflich
 
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
@@ -3169,7 +3180,14 @@
 		"(\[h\])\[#.\](\[h\])" => "$1[#3]$2"; // Fröhlichkeit
 		"(\[&t&e\])(\[a\]\[st\])" => "$1[#4]$2"; // fantastische
 		"(\[bei\])\[#.\](\[AR\^\])" => "[BEI+AR]"; // vorbeiritt ... hm rewriter ... improvised as hell ... :)
+		//"\[bei\]\[#.\]\[ar\]" => "[BEI+AR]"; // vorbeireiten ... hm rewriter ... improvised as hell ... :)
 		"(\[\^ch\])\[#.\](\[a\]\[&a\])" => "$1[#6]$2"; // Michael
+		"(\[v\])\[#.\](\[ar\])" => "$1[#1]$2"; // davonrollenden
+		"(\[auf\])\[#.\](\[k\])" => "$1[#1]$2"; // aufkommen
+		"(\[&u\])\[#.\](\[durch\])" => "$1[#1]$2"; // undurchdringliche
+		"(\[&th\])(\[u\]\[vr\])" => "$1[#3]$2"; // Arthur
+		"(\[vr\])\[#.\](\[auf-\])" => "$1[#1]$2"; // heraufsehen
+		"\[bei\]\[#.\]\[ar\]" => "[bei+ar]"; // vorbeireiten
 		
 		"(\[t\]\[#.\]\[s\])(\\\\)(\[0n-\])" => "$1[#4]$2$3"; // Staatsangestelltenverband
 
