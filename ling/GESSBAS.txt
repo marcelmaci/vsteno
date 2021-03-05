@@ -3139,6 +3139,8 @@
 		"(\[d@r\])\[#.\](\[i\]\[ss\])" => "$1[#6]$2"; // verdriesslicher
 		"(\[ch\])\[#.\](\[a\]\[m\])" => "$1[#5]$2"; // unnachahmliches
 		"(\[w@r6\])\[#.\](\[ar\])" => "$1[#1]$2"; // unwiderruflich
+		"(\[h\])\[#.\](\[s\])" => "$1[#1]$2"; // Rehs, Wehs, Sehs, Drehs
+		"(\[ch@l3\])(\[-e\])" => "$1[#2]$2"; // niedergezwungene
 
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
