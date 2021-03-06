@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "05/03/21";
+		"model_date" := "06/03/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1084,7 +1084,7 @@
 		// (2) analyzer rules offer full regex
 		// (3) analyzer rules can be debugged (this can't be done with filter)
 		// so here's the regex-rule for Badespass and kreidebleich:
-		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
+		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-|[Hh]än-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
 
 		"([Bb]as-?ket)-?(b(?:a|ä)l-?l)" => "$1|$2"; // Basketball, -bälle
 
@@ -1318,7 +1318,7 @@
 		"([Aa]ch)\|(tun-?g)" => "$1-$2"; // Beobachtungen
 		"([Ss]pie)\|(len)" => "$1-$2"; // spielenden (from the series: computers are stupid ... :)
 
-		"([Bb]ei).?z(e.?r(?:.?in.?(?:nen)))?" => "$1z$2"; // Beiz
+		"([Bb]ei).?z(e.?r(?:.?in.?(?:nen)))?" => { "$1z$2", "^[Bb]ei[-+]?zu" }; // Beiz, not: beizubringen
 		"^([Vv]er)(?:\+|-)?ge[-+]?b[-+]?li-?c-?h" => "$1+geb#lich"; // vergeblich
 		"([Gg]e).?b-?(li-?c-?h)" => "$1+b$2"; // geblichen, not: vergeblich (see line before)
 		"([Dd]e).?bat.?tie" => "$1-bat-tie"; // debattieren
@@ -1361,6 +1361,7 @@
 		"(spie)\|(lun-?g)" => "$1-$2"; // Anspielungen (computers are stupid ... :)
 		"([Aa]n)-?k-?(rän-?k)" => "$1+k$2"; // ankränkelt
 		"([Dd]es)[-+]?(po-?tis)\|m" => "$1-$2-m"; // Despotismus
+		"([Dd]es)[-+]?(po)\|(ti)" => "$1-$2-$3"; // despotischen (computers are studid ... :)
 		"([Gg]u-?te)n\|(acht)" => "$1|n$2"; // Gutenachtkuss
 		"([Ll]au)\|(ni-?s)" => "$1-$2"; // launischen (computers are stupid ... :)
 		"([Ee]nt)-?(sa-?g)" => "$1+$2"; // Entsagung
@@ -1377,6 +1378,13 @@
 		"([Ee]nt)-?(fr)" => "$1+$2"; // entfremdete
 		"([Gg]e)\|(fähr-?t)" => "$1-$2"; // Leidensgefährte
 		"(\|ge)-?zw" => "$1+zw"; // niedergezwungene
+		"^([Ss]ä)-?(ma)" => "$1|$2"; // Sämann, Sämaschiene
+		"Van\|den\|es" => "Van-den-es"; // Vandenesse (name)
+		"([Ee]nt)-?(le)(?!i)" => "$1+$2"; // entledigt (not: Entlein)
+		"([Zz]weit)-?(ran)" => "$1|$2"; // zweitrangig
+		"([Ll]os)s-?(teu)" => "$1+s$2"; // lossteuert
+		"^([Uu]r)-?s-?pr" => "$1+spr"; // ursprüngliche
+		"-nun-ge-tü" => "n|un+ge+tü"; // Wolkenungetüm
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2293,6 +2301,10 @@
 		// rh-
 		"(^|\|)([Rr])h([aeiou]|ä|ö|ü)" => { "$1$2$3", "[Rr]hein" }; // Rhizinus, Rhetorik etc.
 		"([Rr]o?u-?ti-?ni)e(rs?)$" => "$1-E$2"; // Routiniers
+		"([Gg]lo-?ri)e" => "$1-e"; // Glorie
+
+		"([Zz]o)o($|\|)" => "$1$2"; // Zoo (vs zoologisch)
+		"([Aa]-?te-?li)(ers)" => "$1-$2"; // Ateliers
 
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
@@ -2366,6 +2378,7 @@
 		"zu(\+|-|\||#)sam-?men" => "{ZUSAMMEN}"; 
 		"[Ww]as\+" => "{WAS}"; // waserlei
 		"[Mm]it[-+]?nich-?ten" => "{MIT}\\{NICHT2}{EN}"; // mitnichten
+		"[Vv]er[-+]?nich-?t(en-?d)" => "{VER}\\{NICHT2}$1"; // vernichtende (tolerance: could be written normally, but I prefer using the abbreviation)
 		"[Vv]er[-+]?nich-?ten" => "{VER}\\{NICHT2}{EN}"; // vernichten (tolerance: could be written normally, but I prefer using the abbreviation)
 		"[Ii]n[-+]so[-+]fern" => "{IN}{SO}fern"; // insofern
 		
@@ -3176,7 +3189,7 @@
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"{WAR}et$" => "{WAR}{ET}";
 
-		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel", "[Bb]e[+-]?tä-?ti-?g", "[Mm]a-?jes-?tä-?t", "[Gg]e.?tä.?tig", "[Uu]n\+?tä-?tig", "[Ww]ohl[-+]?tä-?t" };
+		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel", "[Bb]e[+-]?tä-?ti-?g", "[Mm]a-?jes-?tä-?t", "[Gg]e.?tä.?tig", "[Uu]n\+?tä-?tig", "[Ww]ohl[-+]?tä-?t", "[Uu]n[-+]?tä-?t" };
 		"(?<!^|s)(i-?)?tä-?ten" => "{HEIT}en";
 		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
 		
@@ -3224,7 +3237,7 @@
 		
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
-		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s", "[Pp]lä-?do-?yer" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s", "[Pp]lä-?do-?yer", "[Aa]-?te-?li-?er" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer", "[Dd]es-?sert", "[Hh]er-?bert" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
@@ -3447,7 +3460,7 @@
 
 		"be\+" => "{BE}+";
 
-		"^an-?ti" => { "{ANTI}", "[Aa]n-?ti-?l-?", "An-?ti-?lo" };
+		"^an-?ti" => { "{ANTI}", "[Aa]n-?ti-?l-?", "An-?ti-?lo", "[Aa]n-?ti-?k(?:$|e)" };
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
 		"kon\+" => "{CON}"; // unkontrollierbar 
@@ -3531,7 +3544,8 @@
 		
 		"rrh$" => "rr";		// Katarrh
 		"ü-?ü" => "ü"; 	// rule for swiss german
-		"(?<!a)u-?u" => { "u", "tu-ung" }; // gruusam, Buurli (dialect); not: Genug|tu-ung
+		// "(?<!a)u-?u" => { "u", "tu-ung" }; // gruusam, Buurli (dialect); not: Genug|tu-ung
+		"([Gg]ru)-?u(-?sa-?m)" => "$1$2"; // only dialect: gruusam => all others: write 2x u (Genugtuung, Individuum) 
 		"û" => "ü";
 		"î" => "i";
 		"é" => "e";
@@ -3587,7 +3601,7 @@
 		"\(" => "";
 		"\)" => "";
 		//"\"" => "";
-		"z-?z" => { "z", "[Bb]uzz", "^[Nn]iz-?za$" };
+		"z-?z" => { "z", "[Bb]uzz", "^[Nn]iz-?za$", "[Mm]ez-?zo" };
 		"ih#" => "i#";
 
 	#EndSubSection(normalizer)
@@ -3764,7 +3778,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}", "[Aa]i-?g-?le-?mont", "[Dd]e-?tai" };
 		"ai" => "[AI]";
 		"\[AI\]-?{EN}" => "[AI][&E]{EN}";
 
@@ -4148,6 +4162,7 @@
 
 		"({DA}).?({SEIN})" => "$1\\$2"; // Dasein 
 		
+		"({HEIT}U\[NG\]S)\|A" => "$1\\[#5][0N-]A"; // Zeitungsartikel
 		"({HEIT}U\[NG\]S)\|" => "$1\\[#5]"; // Zeitungsgeschichte
 		"(?<!&)[Oo](\\)" => "[&O]$1"; // Hobby-Rennvelofahrer
 
@@ -4237,6 +4252,7 @@
 
 		// completor in the end (also necessary)
 		"O\|" => "[#N][&O]|"; // Autobahn
+		"Ä\|" => "[Ä][&A]|"; // Sämann
 		
 		"\[AU\]\\\[=\]" => "[AU][&E]\[=]";
 		"U\\\[=\]" => "A[&U]\[=]";
@@ -5750,7 +5766,9 @@
 		//"(\[[a-zäöü\/#@\+-].*?\])" => "strtoupper()";
 		//"({.*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
 		//"(\[.*?\])" => "strtoupper()";
+		"\|\[&ai" => "|[0D-][&ai"; // d'Aiglemont
 		"\|\'\|" => "\'\"; // z'Morge
+		//"\|\'\|\[&ai" => "\'\[ON-][&ai"; // d'Aiglemont
 		"\|" => "";  // filter out all | from linguistical analysis (not needed any more, spacer needs them removed for correct spacing)
 		"-\]" => "#=#=#]";	// the same goes for - (this one is trickier to get rid off ...)
 		"\[-" => "[#=#=#";	// first combination of - with brackets must be rewritten
