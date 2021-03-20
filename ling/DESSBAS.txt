@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "06/03/21";
+		"model_date" := "20/03/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1385,6 +1385,11 @@
 		"([Ll]os)s-?(teu)" => "$1+s$2"; // lossteuert
 		"^([Uu]r)-?s-?pr" => "$1+spr"; // ursprüngliche
 		"-nun-ge-tü" => "n|un+ge+tü"; // Wolkenungetüm
+		"([Ss]chal)\|(len)" => "$1-$2"; // schallende (Computers are stupid ... :)
+		"^([Bb]ei)\+(de)" => "$1-$2"; // beidemal
+		"([Ww]eit)-?r" => "$1|r"; // weiträumigen
+		"(ja)\|(gen-?d)" => "$1-$2"; // Jagender
+		"(he)r\+(um)$" => "$1-r$2"; // 
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3189,7 +3194,7 @@
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"{WAR}et$" => "{WAR}{ET}";
 
-		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel", "[Bb]e[+-]?tä-?ti-?g", "[Mm]a-?jes-?tä-?t", "[Gg]e.?tä.?tig", "[Uu]n\+?tä-?tig", "[Ww]ohl[-+]?tä-?t", "[Uu]n[-+]?tä-?t" };
+		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel", "[Bb]e[+-]?tä-?ti-?g", "[Gg]e.?tä.?tig", "[Uu]n\+?tä-?tig", "[Ww]ohl[-+]?tä-?t", "[Uu]n[-+]?tä-?t" };
 		"(?<!^|s)(i-?)?tä-?ten" => "{HEIT}en";
 		"ge[-+]?gen" => { "{GEGEN}", "[Gg]e-?gen(?:d|-?den)" };
 		
@@ -3730,7 +3735,7 @@
 		"ngl" => "[NG@L3]";
 		//"^[Aa]n(-)?g(?!r)" => "AN-G"; // angestrengt: an is not recognized as a word => doesn't work: angst
 		"n-?g(?!r)" => "[NG]";
-		"g-?l" => "[GL]";
+		"g-?l" => { "[GL]", "g-?lo-?se?[rnms]?" }; // not: sorglose
 		"k-?l" => "[KL]";
 		"l-?l" => "[LL]";
 		"m-?l" => "[ML]";
@@ -3873,7 +3878,8 @@
 		"{HEIT}-?r" => "[&EIT@R]";
 
 		// heit + i
-		"{HEIT}-?i(?!g|-g)" => "[&EIT&I]";
+		"{HEIT}-?i\[SCH\]" => "[&EIT&E]I[SCH]"; // majestätisch
+		"{HEIT}-?i(?!g|-g)" => "[&EIT&I]"; 
 		"{HAIT}-?i" => "[&AI@#/.][&EIT&I]"; // Haiti (diacritics)
 		"{HAIT}-?e" => "[#4][&AI@#/.][&EIT&E]e"; // Saite (diacritics)
 		"{HAIT}-?{EN}" => "[#4][&AI@#/.][&EIT&E]{EN}"; // Saiten (diacritics)
