@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "20/03/21";
+		"model_date" := "21/03/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -197,13 +197,13 @@
 		"^([Ee]in)-(ge)-" => "$1+$2+";
 
 		// -er-
-		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]" }; // Terrain, Serbien
+		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d" }; // Terrain, Serbien
 		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re", "[Gg]a-lan-t" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
-		"er(?!\+|st$|nt|n-t)" => { "er+", "(?:^|\|)[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert", "[Mm]er-?gel" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
+		"er(?!\+|st$|nt|n-t)" => { "er+", "(?:^|\|)[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert", "[Mm]er-?gel", "[Ff]er-?di-?nan-?d", "schwer$" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		////////////////////////////////////// end new approach ///////////////////////////////////////
 
@@ -221,7 +221,7 @@
 
 		// don't separate -zer, -der, -er at end of words
 		//"([Ss]au)\|(er)" => "$1-$2"; // sauer
-		"([Nn]eu)\|(e-?r\+?)$" => "$1-$2";
+		"([Nn]eu|[Tt]reu)\|(e-?r\+?)$" => "$1-$2"; // treuer
 		"(gr|bl)au\|er" => "$1au-er";
 		"(.?)\|([dz]?er)\+?$" => "$1-$2" ;
 
@@ -643,7 +643,7 @@
 		"([Ff]er)\+t" => "$1t";
 		"([Ww]er)\+d" => "$1d";
 		"([Mm]er)\+c" => "$1c";
-		"([Ee]r)\+b(e|in)" => { "$1-b$2", "[Ee]r[-+]?beb-?t" }; // not: erbebte
+		"([Ee]r)\+b(e|in)" => { "$1-b$2", "[Ee]r[-+]?be-?b" }; // not: erbebte, erbeben
 		"([Ee]r)\+(b\|)" => "$1$2"; // erbberechtigt
 		"([Vv]er)\+(s-)" => "$1$2";
 		"([Vv]er)\+(b(?:s|en)?)$" => "$1$2"; // syllabation disappears if two syllables
@@ -1390,6 +1390,13 @@
 		"([Ww]eit)-?r" => "$1|r"; // weiträumigen
 		"(ja)\|(gen-?d)" => "$1-$2"; // Jagender
 		"(he)r\+(um)$" => "$1-r$2"; // 
+		"(Pi)\|(ra-?ten)" => "$1-$2"; // Piratenschiff (Computers are stupid ... :)
+		"([Ww]eis)-?(sa-?g)" => "$1|$2"; // Weissagung (not in the book - but I think it should be treated as 2 words)
+		"([Ee]n)t[-+]?er" => "$1-ter"; // Enterhaken
+		"([Ee]r)-?(beu-?t)" => "$1+$2"; // erbeutete
+		"([Hh]er)-?(rol)" => "$1|$2"; // herrollte
+		"([Ee]r)-?(strah-?l)" => "$1+$2"; // erstrahlen
+		"([Mm]it)[-+]?(zu)[-+]?(er)[-+]?(le-?b)" => "$1|$2|$3+$4"; // mitzuerleben
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2183,6 +2190,8 @@
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(phonetizer)
 		
+		"([Pp]ro)-?phe-?t" => "$1fEt"; // prophetische
+ 
 		"([Ss])ehn\|s" => "$1en|s"; // Sehnsucht (easier to do that here)
 
 		"[Pp]or.?te.?feu.?i.?l.?le" => "Porte|fö[^LL^]"; // Portefeuille
@@ -2384,6 +2393,7 @@
 		"[Ww]as\+" => "{WAS}"; // waserlei
 		"[Mm]it[-+]?nich-?ten" => "{MIT}\\{NICHT2}{EN}"; // mitnichten
 		"[Vv]er[-+]?nich-?t(en-?d)" => "{VER}\\{NICHT2}$1"; // vernichtende (tolerance: could be written normally, but I prefer using the abbreviation)
+		"[Zz]u[-+]?nich-?t" => "{ZU}\\{NICHT}"; // zunichte machen
 		"[Vv]er[-+]?nich-?ten" => "{VER}\\{NICHT2}{EN}"; // vernichten (tolerance: could be written normally, but I prefer using the abbreviation)
 		"[Ii]n[-+]so[-+]fern" => "{IN}{SO}fern"; // insofern
 		
@@ -3242,7 +3252,7 @@
 		
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
-		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s", "[Pp]lä-?do-?yer", "[Aa]-?te-?li-?er" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s", "[Pp]lä-?do-?yer", "[Aa]-?te-?li-?er", "schwer$" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer", "[Dd]es-?sert", "[Hh]er-?bert" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
@@ -3743,7 +3753,7 @@
 		"p-?l" => "[PL]";
 		"(?<!^[Ee])r[-+]?l" => "[RL]"; // Perle, not: erlernten
 		"ei-{ER}l" => { "[EI][&E][RL]", "{ER}la", "{ER}le-g" }; // zweierlei
-		"(?<!^){ER}l" => { "[RL]", "{ER}la", "{ER}le-g" }; // Chaschperli, not: wiedererlangen, auferlegen
+		"(?<!^){ER}l" => { "[RL]", "{ER}la", "{ER}le-[gb]" }; // Chaschperli, not: wiedererlangen, auferlegen, mitzuerleben
 		"s-?l" => "[SL]";
 		"t-?l" => "[TL]";
 		"v-?l" => "[VL]";
@@ -4022,7 +4032,8 @@
 		"tstopt(01)\[&T\]({MENT2})" => "[&T&E]$1";
 		"tstopt(01)({MENT2})(?!\[)(Ä|Ö|Ü|AU|EU|EI|[AEIOU])" => "$1[O][&E]$2";
 		
-
+		"Ä-?({E[MN]})" => "Ä[&E]$1"; // Pyrenäen, säen
+ 
 	#EndSubSection(transcriptor)
 	#BeginSubSection(separator)
 		// separates two words in one
@@ -4183,6 +4194,8 @@
 		"(\[&TG\]|\[&T-1\]\[G\])\|" => "$1\"; // giftiggrünen
 
 		"(\[&I\])\|(\[AR\])" => "$1\\$2"; // Kavallerieregimenter
+
+		"(\[RL\]{EN})\|" => "$1\\"; // Perlenhalsbänder
 
 
 	#EndSubSection(separator)
