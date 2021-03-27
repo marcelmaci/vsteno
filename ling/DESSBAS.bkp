@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "21/03/21";
+		"model_date" := "24/03/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1397,6 +1397,9 @@
 		"([Hh]er)-?(rol)" => "$1|$2"; // herrollte
 		"([Ee]r)-?(strah-?l)" => "$1+$2"; // erstrahlen
 		"([Mm]it)[-+]?(zu)[-+]?(er)[-+]?(le-?b)" => "$1|$2|$3+$4"; // mitzuerleben
+		"([Ee]r[-+]lauch)\|t" => "$1-t"; // Erlauchteste (Computers are stupid ... :)
+		"([Aa]us\+zu)m-?er\+gel" => "$1+mer-gel"; // auszumergeln
+		"([Ee]-?lek-?tro)\|(ni-?sch)" => "$1-$2"; // elektronische (Computers are stupid ... :)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2319,6 +2322,8 @@
 
 		"([Zz]o)o($|\|)" => "$1$2"; // Zoo (vs zoologisch)
 		"([Aa]-?te-?li)(ers)" => "$1-$2"; // Ateliers
+
+		"([Aa]-?ka-?zi)e" => "$1-e"; // Akazie
 
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
@@ -3283,7 +3288,7 @@
 		"(?<!i)er#" => "{ER}"; // imm-er#hin
 		"^er\+" => "{ER}";
 		"^[Hh]er\+r" => "HE[VR+AR]"; // herrühren
-		"(?<!d|#h|[Vv])er\+" => { "{ER}", "[Ww]ie?-?d-?er", "[Tt]he-?ra-p", "[Hh]er[-+]?bst" }; // more general rule
+		"(?<!i|d|#h|[Vv])er\+" => { "{ER}", "[Ww]ie?-?d-?er", "[Tt]he-?ra-p", "[Hh]er[-+]?bst" }; // more general rule
 		"\+er$" => "{ER}";
 		"(n-?d)er\+" => "$1{ER}+";
 		"a-?ber" => "a-b{ER}"; // frequent word, so include it as a rule
@@ -3425,6 +3430,7 @@
 		"^[Ss]in-?d$" => "{SIND}";
 		"([hk]eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
 		"(eit)(et?(re?)?[nms]?)?$" => "{HEIT}$2";
+		"[Ww]eih-?te" => "w{HEIT}e"; // eingeweihte
 		"([ie]?tät)(en)?$" => "{HEIT}$2";
 		"([Hh])inter" => "HN[&TVR]";
 		//"^([Hh])ing$" => "$1I[NG]";
@@ -3507,7 +3513,7 @@
 		//"(?<!\[)#" => "-";	// not a good idea ...
 		"}-{" => "}{"; 	// it's safe to eliminate - between }{ (and easier for following rules)
 
-		"(?<!#h|v)er\+" => { "{ER}", "[Hh]er[-+]?bst" }; // Studers (hasn't been recognized until now)
+		"(?<!i|#h|v)er\+" => { "{ER}", "[Hh]er[-+]?bst" }; // Studers (hasn't been recognized until now)
 		"{LOS}e-?r" => "{LOS}{ER}";
 
 		// optional abbreviations (option1: MAC)

@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "24/03/21";
+		"model_date" := "27/03/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -199,7 +199,7 @@
 		// -er-
 		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d" }; // Terrain, Serbien
 		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
-		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re", "[Gg]a-lan-t" }; // Schil-der+ung: reorganize syllabical structure ...
+		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re", "[Gg]a-lan-t", "^[Cc]ant-er" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
@@ -432,7 +432,7 @@
 		"#seits" => "|seits";
 
 		// prefix in-
-		"(^|\||=)(Volks\|)?([Ii])n-(?!ter)" => { "$1$2$3n+", "[Ii]n-?n" }; // innig
+		"(^|\||=)(Volks\||ungs-)?([Ii])n-(?!ter)" => { "$1$2$3n+", "[Ii]n-?n" }; // innig
 		"(=|\|)([Ii])n-?i-?t" => "$1$2n+i-t"; // Pestizid-initative => careful with that rule
 
 		"^([Ii]n)-(s[tp])" => "$1+$2"; // Instrument, Institution, Inspektion
@@ -449,7 +449,7 @@
 		"\+([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
 		"^([bg])e-(.*)-(.*)(en(?:(?:-?s-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
 		//"\+([bg])e-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "+$1e+$2-$3$4";
-		"\+([bg])e-(.*)(t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => { "+$1e+$2$3$4", "^(?:[Bb]e[-+]?|[Nn]ach[-+]?)ge-?b" }; // test (replaces line before)
+		"\+([bg])e-(.*)(t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => { "+$1e+$2$3$4", "^(?:[Bb]e[-+]?|[Nn]ach[-+]?|[Ee]r\+?)ge-?b", "(?:[Aa]us[-+]|[Hh]in[-+]|[Zz]u[-+]|[Vv]er[-+])ge-be" }; // test (replaces line before)
 		"^([bg])e-(.*)-(.*)(-?t(?:(?:es-?t|e-?r)?e[nrsm]?))?" => "$1e+$2-$3$4";
 
 		// same for ver-
@@ -493,6 +493,7 @@
 
 		// meinet, deinet, seinetwegen etc. => consider it as two words
 		"(?<![Vv]er)\+(we-?gen)$" => { "|$1", "[Bb]e\+we-gen" }; 
+ 		"(?<!\|)[-+]?(wil-?len)$" => "|$1"; // Ihretwillen 
  
 		// zeit-
 		"([Zz]eit)-?(wei-?l)" => "$1|$2";
@@ -658,7 +659,7 @@
 		"([Ee]nt)-?(f-?er)\+" => "$1+$2";
 		"(Ger)\+(zen)" => "$1-$2"; // Gerzenstein (Glauser, der Chinese)
 		"([Mm])a-?t-e-?ri-?e" => "Ma-te-ri-e"; // recorrection/resyllabation
-		"er\+v(?!er)" => "er-v"; // audacious rule ... Nerven, Verve, but not: weiterverkaufen
+		"er\+v(?!er)" => { "er-v", "^[Cc]ant-er" }; // audacious rule ... Nerven, Verve, but not: weiterverkaufen
 		"([Bb]er)\+(lin)" => "$1-$2";
 		"([Ss]cher)\+?-?(be)" => "$1-$2"; // +- because of recorrected |ben ... (et l'horreur continue ... :)
 		"([Vv]or\+der)-" => "$1+"; 
@@ -1400,6 +1401,9 @@
 		"([Ee]r[-+]lauch)\|t" => "$1-t"; // Erlauchteste (Computers are stupid ... :)
 		"([Aa]us\+zu)m-?er\+gel" => "$1+mer-gel"; // auszumergeln
 		"([Ee]-?lek-?tro)\|(ni-?sch)" => "$1-$2"; // elektronische (Computers are stupid ... :)
+		"([Uu]n)-(aus)-" => "$1+$2+"; // Unaussprechliches
+		"([Ww]and)\|(lun-gen)" => "$1-$2"; // Anwandlungen (computers are stupid ... :)
+		"((?:ü|Ü)-?ber[-+]?)(ge)\+(be)" => "$1$2-be"; // übergebe
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3230,7 +3234,7 @@
 
 		"#li-?ch" => "{LICH}";
 		"tüm{LICH}" => "{TUM}{LICH}"; 
-		"(-|\+)li-?ch(e-?r\+?|-?s?-?t)?(e[rnsm]?|m)?$" => { "$1{LICH}$2$3", "[Zz]wil-?li-?ch", "[Gg]e.?b-?li-?c-?h" }; // not: geblichen
+		"(-|\+)li-?ch(e-?r\+?|-?s?-?t)?(e[rnsm]?\+?|m)?$" => { "$1{LICH}$2$3", "[Zz]wil-?li-?ch", "[Gg]e.?b-?li-?c-?h" }; // not: geblichen
 
 		"ent\+" => "{ANT}+";
 		"(?<![Dd]er\+|[Dd]er-|[Dd]er|[Dd]es-s|[Dd]ess)ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste, not: derentwillen
@@ -3247,6 +3251,8 @@
 		"^in$" => "{IN}";
 		"^in(\+|#)des$" => "{IN}$1{DES}";
 		"^in(\+|#)" => "{IN}$1";
+		"ungs-in(\+|#)" => "ungs{IN}$1";
+
 		"^in(-|\+)?str" => "{IN}$1str";
 		"(\+|#)in(\+|#)" => "$1{IN}$2";
 		"(?<!er)(\+|#)in$" => "$1{IN}";
@@ -3297,7 +3303,7 @@
 		"^sel-?b" => "{SELB}";
 
 		"ant\+" => "{ANT}+";
-		"(?<!f)ant-" => { "{ANT}", "es-?sant" }; // not: interessantere
+		"(?<!f)ant-" => { "{ANT}", "es-?sant", "^[Cc]ant" }; // not: interessantere, Canterville
 
 		"an\+" => "{AN}+";
 		"[Aa]l-?l(e?)-?dem" => "{ALL}$1{DEM}"; 
