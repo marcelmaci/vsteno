@@ -82,7 +82,11 @@
 		"model_option1_yesno" := "no";
 		"model_option3_text" := "MM";
 		"model_option3_yesno" := "no";
-		"model_option8_text" := "SEP"; // separate words that finish by -e (nahekommen, Variétébühne, Höhepunkt etc.)
+		"model_option6_text" := "VSP1"; // "vertical separate": separate very high words (example: Sentimentalität) 
+		"model_option6_yesno" := "yes";
+		"model_option7_text" := "VJN1"; // in combination with VSP1: join end and start token of separated word with a vertical dotted line
+		"model_option7_yesno" := "no";
+		"model_option8_text" := "ESP"; // separate words that finish by -e (nahekommen, Variétébühne, Höhepunkt etc.)
 		"model_option8_yesno" := "yes";
 		"model_option9_text" := "GB"; // filter out # in stage0 for texts coming from Project Gutenberg
 		"model_option9_yesno" := "yes"; // activate this option by default
@@ -555,7 +559,7 @@
 		"([Uu]-ni)\|(for-?m)" => "$1-$2";
 		"([Zz]wei)\|(fels)" => "$1-$2"; // suppose it is never "zwei" + "Fels" (Dreifels exists;-)
 		"([Ss]ei)\|(den)" => "$1-$2";
-		"([Nn]eu)\|(fund)\|(l)" => "$1-$2|$3"; // Neu-Fund will be written separately
+		//"([Nn]eu)\|(fund)\|(l)" => "$1|$2|$3"; // Neu-Fund will be written separately
 		"Zu\+ge(?!\+)" => "Zu-ge";
 		"([Kk]lös-ter)\|(li-?ch)" => "$1#$2";
 		"\|(run-gen)" => "-run-gen"; // very strange results that have to be corrected ... ;-)
@@ -1418,6 +1422,9 @@
 		"([Gg]e[-+]wand)\|t" => "$1-t"; // gewandteste (computers are stupid ... :)
 		"([Gg]e[-+]wal)\|t" => "$1-t"; // gewaltiger (computers are stupid ... :)
 		"([Ee]i-?gen\|ar)\|t" => "$1-t"; // eigenartiger (computers are highly stupid ... :)
+		"([Bb]e)[-+]?(rück)-?s" => "$1+$2+s"; // berücksichtigte
+		"([Kk]on)[-+]?s-?er[-+]?(va)" => "$1+ser+$2"; // konservativ
+		
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3364,6 +3371,7 @@
 		"ietät" => "[&I]{HEIT}";
 		"t(u|ü)m[-#]?li-?ch" => "{TUM}{LICH}";
 		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
+		"[Bb]e[-+]rück\+" => "{BE}{RÜCK}+"; // berücksichtigte
 		"^[Rr]ück" => { "{RÜCK}", "[Rr]ück-?t", "[Rr]ück-?li" }; // not: rücklings
 		"h?eit-?li-?ch" => "{HEIT}{LICH}";
 		"h?ei-?tig" => "{HEIT}ig";
@@ -3641,7 +3649,7 @@
 
 		"uhr" => "ur";
 		
-		"(?<!a|a-)ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re", "[Nn]ie-?t-?z-?sche", "[Ss]tu-?di-?en?$", "^[Jj]u-?li-?e$", "[Aa]-?rien?$" }; // list with exceptions
+		"(?<!a|a-)ie" => { "i", "fa-?mi-?li-?en?", "^[Ff]rie-?d-?rich$", "[Ww]ien", "[Ss]erie", "[Gg]ra-?zi-?e", "[Pp]e-?t-?er[-+]?si-?li-?e", "[Pp]ier-?re", "[Nn]ie-?t-?z-?sche", "[Ss]tu-?di-?en?$", "^[Jj]u-?li-?e$", "[Aa]-?rien?$", "^[bB]iel$" }; // list with exceptions
 		"ie" => "i-e"; // separation (2 syllables)
 		
 		"ühr" => "ür";
@@ -4126,7 +4134,10 @@
 		"(\[TUNG\]S)\|" => "$1\\"; 
 		"(\[&T\]{ION}S)\|([GP]|\[(?:PL|PR)\]|{GE})" => "$1\\[#4]$2"; // Lektionsplan, Sektionsprotokoll, Lumbalpunktionsgerät
 		"(\[&T\]{ION}S)\|" => "$1\\"; // -tions|.. 
-		"\[&T&I\]\|" => "[&T&I]\\"; // Sentimentalität
+		"tstopt(6)\[&T&I\]\|" => "[&T&I]\\"; // Sentimentalität
+		"tstopt(7)\[&T&I\]\\MEN" => " [&T&E][#2][DOTTED25D][#5]IMEN"; // Sentimentalität
+		"(\[S=\]EN)-?\[&T&I\]\|(MEN)" => "$1[&T&E]i$2"; // if opt8 not selected: rewrite Sentimentalität
+		"(\[&T&I\]\\)(MEN)" => "$1[=]\\$2"; // Sentimentalität: if separated, add =
 
 		"\[&T\]\[EI\]\|\[EI\]" => "[&T][&E]E[-EI]\\[0D-][EI]";  // parteieigener
 		"\[&T\]\[EI\]\|" => "[&T][&E]E[-EI]\\"; // Parteiprojekte
@@ -4661,7 +4672,7 @@
 		"\[&T-1\]-?B" => "[&TB]"; // sichtbar
 		"\[&T\]#?N" => "[&TN]"; // Erkenntnis
 		"\[&T(?:-1)?\]-?M" => "[&TM]"; // sanftmütig
-		
+		"\[&T\^CH\](?!$)" => "[&TCH]"; // Kärtchen
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
