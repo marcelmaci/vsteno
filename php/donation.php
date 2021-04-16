@@ -30,6 +30,14 @@ Einverständnis hiezu gegeben haben, namentlich verdankt.</p>
     Spenden: 0.- <i>(Total / Summe aller Spenden)</i><br>
     Danke: Danke an alle, welche dieses Projekt ideell und in anderer Form (z.B. Melden falscher Stenogramme) unterstützen.
     </li>
+    <li><u><b>Jahr 3:</b></u><br>
+    Zeitraum: April 2020 - April 2021<br>
+    Ausgaben: 1559.50 CHF<br>
+    Einnahmen: 638.- CHF (*)<br>
+    Total: <b style="color:red">-921.50 CHF</b><br>
+    (*) Total Buchverkäufe und Spenden<br>
+    Herzlichen Dank an alle, welche auch im dritten Jahr dieses Projekt finanziell und ideell unterstützt haben!
+    </li>
 </ul>
 <h1>Verwendung</h2>
 <p>Mit Datum des 27.04.2020 werden auf www.vsteno.ch erstmals auch stenografische eBooks (PDF) veröffentlicht. Wie unter 

@@ -16,6 +16,9 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 </p>
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
+<p><b>15/04/21 Happy birthday VSTENO!</b><p>
+<p>VSTENO feiert sein 3 Jahr. Was in dieser Zeit alles passiert ist, finden Sie im <a href='vsteno_3rd_year.php'>Jahresbericht</a>.<br><p>
+
 <p><b>01/02/21 Jetzt bestellen: Matto regiert von Friedrich Glauser!</b><p>
 <p>Das zweite, vollumfänglich mit VSTENO generierte Buch ist nun lieferbar:<br><p>
 <table style="border-spacing:0px">
