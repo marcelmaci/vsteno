@@ -268,8 +268,9 @@ Fenster:
 
 <input type="radio" name="output_format" value="layout" <?php echo ($_SESSION['output_format']) === "layout" ? "checked" : "";?>> Layout 
 Breite: <input type="text" name="layout_width"  size="10" value="<?php echo $_SESSION['output_width']; ?>"> 
-Höhe: <input type="text" name="layout_height"  size="10" value="<?php echo $_SESSION['output_height']; ?>"><br>
-Ränder: 
+Höhe: <input type="text" name="layout_height"  size="10" value="<?php echo $_SESSION['output_height']; ?>">
+<input type="checkbox" name="layouted_correct_word_width" value="yes" <?php echo ($_SESSION['layouted_correct_word_width']) ? "checked" : "";?>> Höhenkorrektur (Zeichenbreite)
+<br>Ränder: 
 L: <input type="text" name="left_margin"  size="10" value="<?php echo $_SESSION['left_margin']; ?>">
 R: <input type="text" name="right_margin"  size="10" value="<?php echo $_SESSION['right_margin']; ?>">
 O: <input type="text" name="top_margin"  size="10" value="<?php echo $_SESSION['top_margin']; ?>">

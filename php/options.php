@@ -67,6 +67,7 @@ $whitelist_variables .= " model_option6_yesno model_option6_text model_option7_y
 $whitelist_variables .= " interpolated_yesno interpolated_iterations phonetics_acronyms_yesno phonetics_acronyms_lowercase_yesno page_number_formatting_yesno page_number_format";
 $whitelist_variables .= " page_number_format_left page_number_format_right titlebreak_minimum_lines_at_end titlebreak_number_of_breaks_before page_top_avoid_breaks_before_p_yesno ";
 $whitelist_variables .= " page_top_avoid_breaks_before_br_yesno set_page_number output_line_number_yesno layouted_book_lines_odd_yesno layouted_book_lines_even_yesno ";
+$whitelist_variables .= " layouted_correct_word_width ";
 
 // model_use_native_yesno shouldn't be settable during a model calculation (because code inclusion depends on this)
 // therefore, model_use_native_yesno has been included in the restricted_session_variables_list (in session.php)

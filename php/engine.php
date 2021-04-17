@@ -436,14 +436,16 @@ function CalculateWord( $splines ) {     // parameter $splines
 // TrimSplines: finds left and right x-borders (= min x / max x) and adjust coordinates in splines
 // returns max_width
 function TrimSplines( $splines ) {
-         global $border_margin;
+         global $border_margin, $baseline_y;
          $left_x = 9999; $right_x = -9999;
+         $left_y = 9999; $right_y = 9999;
          $length_splines = count( $splines );
          // first find left_x / right_x;
          for ($i = 0; $i < $length_splines; $i += tuplet_length) {
                 $test_x = $splines[$i+offs_x1];
-                if ($test_x < $left_x) $left_x = $test_x;
-                if ($test_x > $right_x) $right_x = $test_x;
+                $test_y = $splines[$i+offs_y1];
+                if ($test_x < $left_x) { $left_x = $test_x; $left_y = $test_y; }
+                if ($test_x > $right_x) { $right_x = $test_x; $right_y = $test_y; }
          }
          // now left_x / right_x contain min x / max x => use as delta_x to place splines at coordinate 0 at the left
          $left_x -= $border_margin; $right_x += $border_margin;
@@ -457,7 +459,28 @@ function TrimSplines( $splines ) {
          }
          $width = round($right_x - $left_x)+1;
          //echo "width = $width<br>";
-         return array( $splines, $width );
+         
+         // fix problem of exagerated spacing between very high words and low words that follow immediately each other
+         // not beautiful for the human eye
+         // method: correct (reduce) width of word according to angle and y position of left_x / right_x
+         //echo "TrimSplines: left: ($left_x / $left_y) right: ($right_x / $right_y) width: $width<br>";
+         //echo "Baseline: $baseline_y (Session: " . $_SESSION['baseline'] . " * TokenSize: " . $_SESSION['token_size'] . " * 10) Angle: " . $_SESSION['token_inclination'] . "<br>";
+         // ok, width can't be corrected here because it breaks aligning to left and right margin
+         // => return the values and try to solve that in calling function
+         $correction_lx = 0; $correction_rx = 0; // don't leave this variables undefined
+         if ($_SESSION['layouted_correct_word_width']) {
+                // correct left_x
+                $delta_y = $baseline_y - $left_y;
+                $temp_x = $delta_y / tan( deg2rad( $_SESSION['token_inclination'] ));
+                if ($temp_x < 0) $correction_lx = $temp_x;
+                //echo "Correction: delta_y: $delta_y left_x: $temp_x => width: $width<br>";
+                // correct right_x
+                $delta_y = $baseline_y - $right_y;
+                $temp_x = $delta_y / tan( deg2rad( $_SESSION['token_inclination'] ));
+                if ($temp_x > 0) $correction_rx = -$temp_x;
+                //echo "Correction: delta_y: $delta_y right_x: $temp_x => width: $width<br>";
+         }
+         return array( $splines, $width, $correction_lx, $correction_rx );
 }
 
 function InsertAuxiliaryLines( $width ) {
@@ -1280,7 +1303,7 @@ function TokenList2SVG( $TokenList, $angle, $stroke_width, $scaling, $color_html
         //echo "<br><br>TokenList2SVG(): var_dump(splines) before CalculateWord() after SmoothenEntryAndExitPoints()<br>";
         //var_dump($splines);
         
-        list( $splines, $width) = TrimSplines( $splines );
+        list( $splines, $width, $correction_lx, $correction_rx) = TrimSplines( $splines );
         //echo "<br><br>TokenList2SVG(): var_dump(splines) before CalculateWord() after TrimSplines()<br>";
         //var_dump($splines);
         $copy = $splines;
@@ -1762,17 +1785,18 @@ function TokenList2WordSplines( $TokenList, $angle, $scaling, $color_htmlrgb, $l
         // first tilt and then smoothen for better quality!!!
         $splines = TiltWordInSplines( $angle, $splines );
         $splines = SmoothenEntryAndExitPoints( $splines );
-        list($splines, $width) = TrimSplines( $splines );        
+        list($splines, $width, $correction_lx, $correction_rx) = TrimSplines( $splines );        
         $splines = CalculateWord( $splines );
         $separate_spline = CalculateWord( $separate_spline );
         
         //if (mb_strlen($post)>0) ParseAndSetInlineOptions( $post );        // set inline options
         
-        return array( $splines, $separate_spline, $width );
+        return array( $splines, $separate_spline, $width, $correction_lx, $correction_rx );
 }
 
 function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_splines, $word_separate_spline, $word_width, $last_word, $force_left_align ) {
     global $distance_words, $vector_value_precision, $baseline_y, $word_tags, $actual_page_deltax;
+    global $word_widths;
     //echo "DrawOneLineInLayoutedSVG(): word_position_y = $word_position_y<br>";
     //var_dump($word_tags);
     $angle = $_SESSION['token_inclination'];
@@ -1795,7 +1819,11 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
         $number_of_gaps = $number_of_words - 1;
         $width_without_correction = 0;
         $normal_distance = $_SESSION['distance_words'];
-        for ($i = 0; $i<$number_of_words; $i++) $width_without_correction += $normal_distance + $word_width[$i];
+        if ($_SESSION['layouted_correct_word_width']) {
+            for ($i = 0; $i<$number_of_words; $i++) $width_without_correction += $normal_distance + $word_widths[$i][0] + $word_widths[$i][1] + $word_widths[$i][2];
+        } else {
+            for ($i = 0; $i<$number_of_words; $i++) $width_without_correction += $normal_distance + $word_width[$i];
+        }
         $width_without_correction -= $normal_distance;  // first word has no distance
         $leftover_right_side = $_SESSION['output_width'] - $_SESSION['left_margin'] - $_SESSION['right_margin'] - $width_without_correction;
         $additional_distance = $leftover_right_side / $number_of_gaps;
@@ -1893,6 +1921,16 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 $q2y = round($word_splines[$i][$n+7] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $x2 = round($word_splines[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $y2 = round($word_splines[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
+                
+                // if necessary correct position based on separate word_widths array
+                if ($_SESSION['layouted_correct_word_width']) {
+                    //echo "DRAW-CORRECTION: i: $i lx: " .$word_widths[$i][1]. " rx: ".$word_widths[$i][2] . "<br>";
+                    $x1 += $word_widths[$i][1] ;
+                    $q1x += $word_widths[$i][1] ;
+                    $q2x += $word_widths[$i][1] ;
+                    $x2 += $word_widths[$i][1] ;
+                }
+                
                 $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
                 // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
                 // this method doesn't work with n, m, b ... why???
@@ -1923,6 +1961,16 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 $x2 = round($word_separate_spline[$i][$n+8] + $word_position_x + $align_shift_x, $vector_value_precision, PHP_ROUND_HALF_UP) + $actual_page_deltax;
                 $y2 = round($word_separate_spline[$i][$n+9] + $word_position_y + $extra_shift_y, $vector_value_precision, PHP_ROUND_HALF_UP);
                 $absolute_thickness = $stroke_width * $relative_thickness; // echo "splines($n+8+offs_dr) = " . $splines[$n+8+5] . " / thickness(before) = $absolute_thickness / ";
+                
+                // if necessary correct position based on separate word_widths array
+                if ($_SESSION['layouted_correct_word_width']) {
+                    //echo "DRAW-CORRECTION: i: $i lx: " .$word_widths[$i][1]. " rx: ".$word_widths[$i][2] . "<br>";
+                    $x1 += $word_widths[$i][1] ;
+                    $q1x += $word_widths[$i][1] ;
+                    $q2x += $word_widths[$i][1] ;
+                    $x2 += $word_widths[$i][1] ;
+                }
+                
                 // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
                 // this method doesn't work with n, m, b ... why???
                 if ($word_separate_spline[$i][$n+(1*tuplet_length)+offs_dr] == draw_no_connection) { $absolute_thickness = 0; /*$color_htmlrgb="red";*/ /*$x2 = $x1; $y2 = $y1;*/} //echo "absolute_thickness(after) = $absolute_thickness<br>"; // quick and dirty fix: set thickness to 0 if following point is non-connecting (no check if following point exists ...)
@@ -1934,7 +1982,10 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
                 $svg_string .= "<path d=\"M $x1 $y1 C $q1x $q1y $q2x $q2y $x2 $y2\" stroke-dasharray=\"$stroke_dasharray\" stroke=\"$color_htmlrgb\" stroke-width=\"$absolute_thickness\" shape-rendering=\"geometricPrecision\" fill=\"none\" />\n";        
                 
             }
-            $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
+            
+            // correct position if width correction is active
+            if ($_SESSION['layouted_correct_word_width']) $word_position_x += $word_widths[$i][0] + $word_widths[$i][1] + $word_widths[$i][2] + $normal_distance + $align_shift_x;
+            else $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
         }
       }
     }
@@ -2174,6 +2225,7 @@ function CalculateLayoutedSVG( $text_array ) {
     // function for layouted svg
     global $baseline_y, $standard_height, $distance_words, $original_word, $combined_pretags, $combined_posttags, $html_pretags, $html_posttags, $result_after_last_rule,
         $global_debug_string, $global_number_of_rules_applied, $actual_page_number, $actual_page_deltax, $word_tags, $word_position_y;
+    global $word_widths; // declare it global instead of adapting the function_exists and all function calls ...
     // set variables
     $actual_page_number = 1;
     $actual_page_deltax = GetDeltaXForActualPage($actual_page_number);
@@ -2305,10 +2357,39 @@ function CalculateLayoutedSVG( $text_array ) {
                         //$output .= TokenList2SVG( $hw_token_list, $_SESSION['token_inclination'], $_SESSION['token_thickness'], $_SESSION['token_size'], $_SESSION['token_color'], $_SESSION['token_style_custom_value'], $alternative_text );
                     
                     }
-                    list( $word_splines[$actual_word], $word_separate_spline[$actual_word], $delta_width) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
+                    list( $word_splines[$actual_word], $word_separate_spline[$actual_word], $delta_width, $correction_lx, $correction_rx) = TokenList2WordSplines( $tokenlist, $angle, $scaling, $color_htmlrgb, GetLineStyle());
+                    //echo "actual_word: $actual_word delta_width: $delta_width correction_lx: $correction_lx correction_rx: $correction_rx temp_width: $temp_width<br>";
+                    
+                    
+                    // calculate correct width to use inside one line
+                    if ($_SESSION['layouted_correct_word_width']) {
+                        // correct left x: can be corrected whenever word is not at position 0 (= to the left at the beginning of the line)
+                        if ($actual_word > 0) $additional_correction_lx = $correction_lx;
+                        else $additional_correction_lx = 0;
+                        
+                        // right x is more complicated: first check if word overpasses right margin
+                        // if yes: the previous (..) word should not have the correction => correct that
+                        // => this word can have the correction
+                        if ($temp_width + $delta_width + $additional_correction_lx > $max_width-$right_margin-$left_margin) {
+                            // word overpasses right margin => this word can have the correction
+                            $additional_correction_rx = $correction_rx;
+                            // on the otherhand (if it overpasses) it should not have the left_x correction (readjust that)
+                            $additional_correction_lx = 0;
+                            // the previous word should align to the right (= should not have the correction)
+                            if ($actual_word>0) $word_widths[$actual_word-1][2] = 0;
+                        } else {
+                            // there is still space left to the right after the word => suppose the correction can be used
+                            // will be corrected if the following word overpasses
+                            $additional_correction_rx = $correction_rx;
+                        }
+   //                     echo "additional_correction_lx: $additional_correction_lx additional_correction_rx: $additional_correction_rx<br>";
+                        // write all that to a separate array ...
+                        $word_widths[$actual_word] = array( $delta_width, $additional_correction_lx, $additional_correction_rx);
+                    } else $word_widths = null;
+                    
                     $word_width[$actual_word] = $delta_width;
                     //var_dump($word_splines[$actual_word]);
-                    $temp_width += $distance_words + $delta_width;
+                    $temp_width += $distance_words + $delta_width + $additional_correction_lx + $additional_correction_rx;
                     //echo "tempwidth: $temp_width / delta_width: $delta_width<br>";
                     //echo "word: $single_word tempwidth: $temp_width / delta_width: $delta_width<br>";
                 } else {
@@ -2403,6 +2484,10 @@ function CalculateLayoutedSVG( $text_array ) {
                 // bugfix: unset also separate spline of last word
                 unset($word_separate_spline);
                 $word_splines[0] = $last_word_splines;
+                if ($_SESSION['layouted_correct_word_width']) {
+                    // in addition to word_splines[0] corrected word widths must also be copied
+                    $word_widths[0] = $word_widths[$actual_word-1];
+                }
                 // bugfix: copy also separate spline of last word
                 $word_separate_spline[0] = $last_word_separate_spline;
                 $word_width[0] = $word_width[$actual_word-1];

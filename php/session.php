@@ -181,6 +181,7 @@ function InitializeSessionVariables() {
     $_SESSION['bottom_margin'] = $bottom_margin;
     $_SESSION['num_system_lines'] = $num_system_lines;
     $_SESSION['baseline'] = 4;                                  // start at 4th system line for first shorthand text line in layouted svg
+    $_SESSION['layouted_correct_word_width'] = false;
     $_SESSION['show_margins'] = false;
     $_SESSION['show_distances'] = false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
@@ -445,6 +446,7 @@ if ($_POST['token_size'] != "") {
     $_SESSION['bottom_margin'] = htmlspecialchars($_POST['bottom_margin']);
     $_SESSION['num_system_lines'] = htmlspecialchars($_POST['num_system_lines']);
     $_SESSION['baseline'] = htmlspecialchars($_POST['baseline']);
+    $_SESSION['layouted_correct_word_width'] = (htmlspecialchars($_POST['layouted_correct_word_width']) === "yes") ? true : false;
     $_SESSION['show_margins'] = (htmlspecialchars($_POST['show_margins']) === "yes") ? true : false;
     $_SESSION['show_distances'] = (htmlspecialchars($_POST['show_distances']) === "yes") ? true : false;
     $_SESSION['svgtext_size'] = 30;         // svgtext size in px
