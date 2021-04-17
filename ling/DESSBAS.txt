@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "05/04/21";
+		"model_date" := "17/04/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -135,6 +135,9 @@
 		"introduction_text" := "Grundschrift (Stolze-Schrey)";
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
+
+		"([Nn]eu)-?e\|re" => "$1-er+e"; // neueren
+		"([Pp]fer-?de)\|s$" => "$1s"; // Pferdes
 
 		"([Gg]e)-?(r(?:ü|o)-ch)" => "$1+$2"; // Wohlgerüchen
 
@@ -663,7 +666,7 @@
 		"([Ee]nt)-?(f-?er)\+" => "$1+$2";
 		"(Ger)\+(zen)" => "$1-$2"; // Gerzenstein (Glauser, der Chinese)
 		"([Mm])a-?t-e-?ri-?e" => "Ma-te-ri-e"; // recorrection/resyllabation
-		"er\+v(?!er)" => { "er-v", "^[Cc]ant-er" }; // audacious rule ... Nerven, Verve, but not: weiterverkaufen
+		"er\+v(?!er)" => { "er-v", "^[Cc]ant-er", "^Bas-?k-?er" }; // audacious rule ... Nerven, Verve, but not: weiterverkaufen, Baskerville, Canterville
 		"([Bb]er)\+(lin)" => "$1-$2";
 		"([Ss]cher)\+?-?(be)" => "$1-$2"; // +- because of recorrected |ben ... (et l'horreur continue ... :)
 		"([Vv]or\+der)-" => "$1+"; 
@@ -893,7 +896,7 @@
 		"([Tt]ä)-?(te)\|(rin)" => "$1-$2-$3"; // Wohltäterinnen
 		"([Ss]o)\+(li-?d)" => "$1-$2"; // solider
 		"([Gg]e)\+(be)\+?r(in)" => "$1-$2r+$3"; // Geberinnen
-		"([Ff])er\+n" => "$1ern"; // entfernen
+		"([Ff])er\+n(?!d)" => "$1ern"; // entfernen, not: einschläfernd
 		"([Vv]er)\|(mö)" => "$1+$2"; // Vermögen
 		"(Kas-?sa)-" => "$1|"; // Kassaraum
 		"([Vv]er)\+(un)-(st)" => "$1+$2+$3"; // Verunstaltung
@@ -1089,7 +1092,7 @@
 		// (2) analyzer rules offer full regex
 		// (3) analyzer rules can be debugged (this can't be done with filter)
 		// so here's the regex-rule for Badespass and kreidebleich:
-		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-|[Hh]än-|[Hh]un-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
+		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-|[Hh]än-|[Hh]un-|[Hh]ei-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
 
 		"([Bb]as-?ket)-?(b(?:a|ä)l-?l)" => "$1|$2"; // Basketball, -bälle
 
@@ -1358,7 +1361,7 @@
 		"([Ee]in[-+]?fahrts)-?(?!\|)" => "$1|"; // Einfahrtstores
 		"([Ee]i)#che" => "$1-che"; // Eichen
 		"([Ee]-?go)\|(is-?t)" => "$1-$2"; // Egoist
-		"([Pp]fer-?de)-?(?!\||$|n)" => "$1|"; // Pferdegetrappel, not: Pferden
+		"([Pp]fer-?de)-?(?!\||$|n|s$)" => "$1|"; // Pferdegetrappel, not: Pferden
 		"([Gg]e)-?(tr)" => "$1+$2"; // Pferdegetrappel
 		"([Rr]e-?stau)\|(ra-?t)" => "$1-$2"; // Restauration
 		"([Ss]o)-?(for-ti-g)" => "$1+$2"; // sofortigen
@@ -1424,7 +1427,22 @@
 		"([Ee]i-?gen\|ar)\|t" => "$1-t"; // eigenartiger (computers are highly stupid ... :)
 		"([Bb]e)[-+]?(rück)-?s" => "$1+$2+s"; // berücksichtigte
 		"([Kk]on)[-+]?s-?er[-+]?(va)" => "$1+ser+$2"; // konservativ
-		
+		"([Vv]er[-+]?)(rück)\+(tes)" => "$1$2-$3"; // Verrückteste
+		"([Vv]ier)\|(zi-?g)" => "$1-$2"; // vierzig
+		"-(tau-?sen-?d)" => "|$1"; // -tausend
+		"([Aa]n)[-+]?(ge)-?(le-?g)" => "$1+$2+$3"; // angelegentlichst
+		"^([Kk]alt)-" => "$1|"; // Kaltschnauzigkeit
+		"^(Stap-?le)\|(ton)" => "$1-$2"; // Stapleton (name)
+		"^([Ww]ie)\|(sen)[-+]?(ge)\|(vier)" => "$1-$2|$3+$4"; // Wiesengevierten
+		"^([Ee]i)\|(che)" => "$1-$2"; // Eichen
+		"(Fel-?sen)(?!\||-)" => "$1|"; // Felsenklippen
+		"([Tt]au-?send)(?!\||-)" => "$1|"; // tausendkerzige
+		"(^|\|)([Kk]er)\+z" => "$1$2-z"; // tausendkerzige
+		"([Zz]u\+sam-men)\+(sein)" => "$1|$2"; // Zusammensein
+		"([Cc]ho)l-?er\+i" => "$1-le-ri"; // cholerisch
+		"([Ww]and)-?(ge)-?" => "$1|$2+"; // Wandgetäfel
+		"([Dd]op-?pel)tr" => "$1|tr"; // Doppeltreppe
+		"([Ff]ort)[-+]?(zu)[-+]?" => "$1+$2+"; // fortzugraulen
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2350,6 +2368,9 @@
 
 		"([Aa]-?ka-?zi)e" => "$1-e"; // Akazie
 		"([Bb]es-?ti)-?e" => "$1-e"; // Bestie
+		"([Ll]ap-?pa-?li)e" => "$1-e"; // Lappalie
+
+		"([Bb]u-?r)e-?a-?u(s)?" => "$1o$2"; // Büro
 
 	#EndSubSection(phonetizer)
 	#BeginSubSection(accentizer)
@@ -3292,6 +3313,7 @@
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer", "[Dd]es-?sert", "[Hh]er-?bert", "[Ss]cher-?t" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
+		"(?<!^)ver\+$" => "v{ER}"; // Revolver
 
 		"{LICH}er$" => "{LICH}{ER}";
 
@@ -3305,6 +3327,7 @@
 
 		"^all$" => "{ALL}";
 		"\+all$" => "+{ALL}";
+		"[-+]all[-+]ge" => "+{ALL}+{GE}+"; // verallgemeinern
 		
 		"^wie([+#])" => "{WI}$1";
 		"(?<!{ÜBER})([+#])wie$" => "+{WI}";
@@ -3349,7 +3372,7 @@
 		"^hei-?t(e-?r|-?{ER})" => "h{HEIT}$1"; // heitere
 		"[Hh]ai-?ti" => "H{HAIT}I"; // Haiti (diacritics)
 		"[Ss]ai-?t(e|{EN})" => "s{HAIT}$1"; // Saite (diacritics)
-		"(?<![Ss]c)[#-]?[hk]?[ea]i-?t" => "{HEIT}"; // also: Saiten (might have side effects ...)
+		"(?<![Ss]c)[#-]?[hk]?[ea]ih?-?t" => "{HEIT}"; // also: Saiten (might have side effects ...), also: eingeweihten
 		
 		"#li-?ch" => "{H}";
 		
@@ -3430,7 +3453,7 @@
 		"^den-(?!k)" => { "{DEN}", "[Dd]en-?noch" };
 		"^de-nen" => "{DEN}[O][&E]{EN}"; // probably the only case where {EN} can follow {DEN} => add &E here directly
 		//"\|den-" => "{DEN}";
-		"^des(?![p-])" => "{DES}";
+		"^des(?![p-])" => { "{DES}", "^[Dd]es[-+]?mond" };
 		"^die-?s(e[rsnm]?)?" => { "{DIS}$1", "[Dd]ie-?sel" };
 		"dies$" => { "{DIS}", ".*[Pp]aradies" };
 		
@@ -3466,6 +3489,7 @@
 		"([ie]?tät)(en)?$" => "{HEIT}$2";
 		"([Hh])inter" => "HN[&TVR]";
 		//"^([Hh])ing$" => "$1I[NG]";
+		"^[Dd]a[-+]hin(?!d)" => "{DA}{HIN}"; // dahinten
 		"^[Hh]in" => { "{HIN}", "[Hh]in-?[dgz]", "^[Hh]in(?:k-?t|-?ke)" };
 		"^zur$" => "[Z]ur";
 		"^uns(er.*)?$" => "u[NS]$1";
@@ -3480,7 +3504,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t(?!ums?$)" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t", "[Gg]i-?let", "[Pp]a-?t-?he-?tis-?c-?h", "(?:Ä|ä)s-?th?e-?t", "[Pp]la-?ne-?t", "[Dd]e-?k-?re-?t", "[Gg]e-?o.?me-?t-?r" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{HEIT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t", "[Gg]i-?let", "[Pp]a-?t-?he-?tis-?c-?h", "(?:Ä|ä)s-?th?e-?t", "[Pp]la-?ne-?t", "[Dd]e-?k-?re-?t", "[Gg]e-?o.?me-?t-?r", "[Ss]ta-?p-?le-?ton", "[Ee]-?li-?[zs]a-?be-?t" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3793,7 +3817,7 @@
 		"p-?l" => "[PL]";
 		"(?<!^[Ee])r[-+]?l" => "[RL]"; // Perle, not: erlernten
 		"ei-{ER}l" => { "[EI][&E][RL]", "{ER}la", "{ER}le-g" }; // zweierlei
-		"(?<!^){ER}l" => { "[RL]", "{ER}la", "{ER}le-[gb]" }; // Chaschperli, not: wiedererlangen, auferlegen, mitzuerleben
+		"(?<!^){ER}l" => { "[RL]", "{ER}la", "{ER}le-?[gb]" }; // Chaschperli, not: wiedererlangen, auferlegen, mitzuerleben
 		"s-?l" => "[SL]";
 		"t-?l" => "[TL]";
 		"v-?l" => "[VL]";
@@ -3908,7 +3932,7 @@
 
 		// Aufstrich-t				
 		"([bcdfghjklmnpqrvwxyz])(-)?t" => "$1$2[&T]";
-		"({HIN})-?t" => "$1[&T]";
+		"({HIN})[-+]?t" => "$1[&T]";
 		"\[(CH|SCH|NS)\]-?t" => "[$1][&T]";
 		"\[(CH)\]-?\[TR\]" => "[$1][&TAR5]";
 		"\[(BB|DD|FF|GG|CK|LL|RR|MM|NN|NK|PP|RR|SS|PF|MPF|NG|ND)\]-?t" => "[$1][&T]";
@@ -5777,6 +5801,7 @@
 
 		"\[ET\]-?L(\[#.\]\[&I\])" => "[&ET3@L3]$1"; // Heimetli
 		"\[&T-1\]-?K" => "[&TK]"; // hartköpfigen
+		"\[&T\^SCH\](?!$)" => "[&TSCH]"; // Kaltschnauzigkeit
 
 	#EndSubSection(laterewriter)
 	#BeginSubSection(latesubstituter)
