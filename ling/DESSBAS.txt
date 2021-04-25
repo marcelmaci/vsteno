@@ -1446,7 +1446,7 @@
 		"([Dd]op-?pel)tr" => "$1|tr"; // Doppeltreppe
 		"([Ff]ort)[-+]?(zu)[-+]?" => "$1+$2+"; // fortzugraulen
 		"([Ll]eb)-?(ta-?g)" => "$1|$2"; // Lebtage
-		"^([Ee]nt)-?m" => "$1+m"; // entmutigt
+		"^([Ee]nt)-?(m|fl)" => "$1+$2"; // entmutigt, entflohenen
 		"^([Ww]arn)\|" => "$1-"; // Warnbrief => cancel word separation; otherwhise VSTENO will recognize word "war(e)n" 
 		"([Bb]e[-+]hau)\|(sun)" => "$1-$2"; // Behausungen
 		"([Hh]ier)\|(her)" => "$1-$2"; // hierhergekommen
@@ -1462,6 +1462,7 @@
 		"([Uu]m)-?(loh-?t)" => "$1+$2"; // feuerumlohten
 		"([Ee]in)s-?(an-?k)" => "$1+s$2"; // einsanken (computers are stupid ... :)
 		"([Ss]tief)-?(toch)" => "$1|$2"; // Stieftochter
+		"^(War)\|(tau)" => "$1-$2"; // Wartau
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3667,7 +3668,7 @@
 		//"(?<!\|\[)'" => "|[']\";			// temporarily disabled
 		"([Aa]n-?t)h?ro" => "$1ro"; // anthropologischen
 
-		"thr" => { "tHr", "[Tt]hro-?n" }; // Thriller, not: Thron
+		"thr" => { "tHr", "[Tt]hro-?n", "^[Aa]n-?thra-?z" }; // Thriller, not: Thron, Anthrazit
 		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
 		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg", "^[Tt]hu-?n", "[Gg]oe-?t-?he" };
 		//"th(?!er)" => "t";
@@ -4076,6 +4077,7 @@
 		"n" => "N";
 		"p" => "P";
 		"q" => "Q";
+		"(\[LL\]-?)r" => "$1[AR]"; // vollre
 		"(^|\+|\|])r" => "$1[AR]";
 		"\|r" => "|[AR]";
 		"\|r" => "|[AR]";
@@ -4392,6 +4394,7 @@
 		// some token combinations need to be rewritten
 		// that's done in this part (was first part of
 		// transcriptor
+		"\[&T\]A\[&U\]" => "A[&T&U]"; // prozentual
 
 		"\[&T\]-?Z" => "[&TZ]"; // achtzig
 		"\\\[VR\]" => "\\[AR]"; // Malteserritter
@@ -4483,7 +4486,7 @@
 		"\[LL\]" => "[L@L]";
 		"\[BL\]" => "[B@L]";
 		"\[XL\]" => "[X][@L]";
-		"\[MPFL\]" => "[MPF][@R]";
+		"\[MPFL\]" => "[MPF][@L]";
 		"\[MML\]" => "[MM@L]";
 		"\[NNL\]" => "[NN@L]";
 		"\[PPL\]" => "[PP][@L]";
@@ -4723,9 +4726,12 @@
 		"\[&T\]#?N" => "[&TN]"; // Erkenntnis
 		"\[&T(?:-1)?\]-?M" => "[&TM]"; // sanftmütig
 		"\[&T\^CH\](?!$)" => "[&TCH]"; // Kärtchen
+		"\[&T\-1\]-?G" => "[&TG]";	// röntgen
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
+
+		"^{UN}{ZURÜCK}" => "[A][&U][^^ZURÜCK]"; // unzurückziehbar
 
 		"(\\){DIS}" => "$1[DIS]"; // ohnedies
 
@@ -5828,6 +5834,7 @@
 		"\[ET\]-?L(\[#.\]\[&I\])" => "[&ET3@L3]$1"; // Heimetli
 		"\[&T-1\]-?K" => "[&TK]"; // hartköpfigen
 		"\[&T\^SCH\](?!$)" => "[&TSCH]"; // Kaltschnauzigkeit
+		"(\[&T&E\]\[EI\])(I\[\^SCH\])" => "$1[&E]$2"; // parteiisch
 
 	#EndSubSection(laterewriter)
 	#BeginSubSection(latesubstituter)

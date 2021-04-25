@@ -670,6 +670,7 @@
 		"^SCH_" => { "@L3", 0, 0 }
 		"CH" => { "@L3", 0, 0 }
 		"^CH" => { "@L3", 0, 0 }
+		"^CH" => { "@R", 0, 0 }
 		"B" => { "@R6", 0, 0 }
 		"SP" => { "@R6", 0, 0 }
 		"F" => { "@R6", 0, 0 }
@@ -781,6 +782,7 @@
 	#EndSubSection(combiner)
 	#BeginSubSection(shifter)
 		//"VR_NAEP@L" => { "VR@L", 1.0, 1.0, "", "" } // rename token (= create identical copy) => this might create incompatibilities with DESSBAS => leave it as is and replace VR@L by VR_NAEP@L with specific rules for each model
+		"ZURÜCK" => { "^^ZURÜCK", 0, 10, 0, 1 }
 		"DEM" => { "^DEM", 0, 5, 0, 0 }
 		"DEN" => { "^DEN", 0, 5, 0, 0 }
 		"DEM" => { "^^DEM", 0, 10, 0, 0 }
@@ -3203,6 +3205,14 @@
 		"(\[schw\])\[#.\](\[a\]\[pp\])" => "$1[#8]$2"; // schwappte
 		"(\[t@r\])\[#.\](\[i\]\[b@r6\])" => "$1[#7]$2"; // Triebrad
 		"(\[b@r6\])\[#.\](\[a\]\[d\])" => "$1[#6]$2"; // idem
+		"(\[l@l\])\[#5\](\[ar\])" => "$1[#3]$2"; // vollre
+		"(\[h\])\[#.\](\[u\]\[ng@r\])" => "$1[#0]$2"; // hungrig
+		"(\[welch@l3\])(\[o\]\[vr\])" => "$1[#4]$2"; // Chlor
+		"(\[mpf\])\[#.\](\[AR\^\])" => "$1[#3]$2"; // Kampfrichter
+		"(\[sch\])\[#.\](\[u\]\[s\])" => "$1[#1-]$2"; // Schuhs
+		"(\[&t@r\])(\[a\]\[z\])" => "$1[#3-]$2"; // Anthrazit
+		"(\[&t&u\])(\[a\]\[l\])" => "$1[#2]$2"; // prozentual
+		"(\[&t&e\])(\[a\]\[&a\])" => "$1[#2]$2"; // Marta
 
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
