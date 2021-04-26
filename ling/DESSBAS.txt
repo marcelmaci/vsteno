@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "21/04/21";
+		"model_date" := "26/04/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -138,6 +138,7 @@
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 
+		
 		"([Nn]eu)-?e\|re" => "$1-er+e"; // neueren
 		"([Pp]fer-?de)\|s$" => "$1s"; // Pferdes
 
@@ -207,7 +208,7 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d" }; // Terrain, Serbien
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$", "[Ee]-?so-?te-?ri" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$", "[Ee]-?so-?te-?ri", "[Ss]chme-?ri-?ko" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re", "[Gg]a-lan-t", "^[Cc]ant-er" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
@@ -720,6 +721,8 @@
 		// recorrect -zer+n$
 		"zer\+n$" => "zern"; // Luzern
 		// "(lit-zer)\+(n)" => "$1$2"; // glitzernd => short -er- is correct!?!
+
+		"([Ll]uft)-?(ent)-?f" => "$1|$2+f"; // Luftentfeuchtung
 
 		// jemand
 		"([Jj])e\|man(-)?d" => "$1e-man$2d";
@@ -1446,7 +1449,7 @@
 		"([Dd]op-?pel)tr" => "$1|tr"; // Doppeltreppe
 		"([Ff]ort)[-+]?(zu)[-+]?" => "$1+$2+"; // fortzugraulen
 		"([Ll]eb)-?(ta-?g)" => "$1|$2"; // Lebtage
-		"^([Ee]nt)-?(m|fl)" => "$1+$2"; // entmutigt, entflohenen
+		"(^|\|)([Ee]nt)-?(m|fl)" => "$1$2+$3"; // entmutigt, entflohenen
 		"^([Ww]arn)\|" => "$1-"; // Warnbrief => cancel word separation; otherwhise VSTENO will recognize word "war(e)n" 
 		"([Bb]e[-+]hau)\|(sun)" => "$1-$2"; // Behausungen
 		"([Hh]ier)\|(her)" => "$1-$2"; // hierhergekommen
@@ -1463,6 +1466,15 @@
 		"([Ee]in)s-?(an-?k)" => "$1+s$2"; // einsanken (computers are stupid ... :)
 		"([Ss]tief)-?(toch)" => "$1|$2"; // Stieftochter
 		"^(War)\|(tau)" => "$1-$2"; // Wartau
+		"^([Bb]lei)h-?am" => "$1|ham"; // Bleihammer
+		"([Tt]heo)\|(lo-?g)" => "$1-$2"; // Theologe
+		"([Rr]än-?ke)-?(haf)" => "$1#$2"; // ränkehaft
+		"^([Oo]h-?ne)(#hin)" => "$1|$2"; // ohnehin
+		"([Pp]ro-?be)\+(auf\+tr)" => "$1|$2"; // Probeauftrag
+		"([Pp]ro-?kon)-?s" => "$1+s"; // Prokonsul
+		"([Rr]e)-?(in)-?(fek|fi-?z)" => "$1+$2+$3"; // Reinfektion, reinfizieren
+		"([Rr]e-?kla-?me)-?(haf)" => "$1#$2"; // reklamehaft
+		
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2299,7 +2311,7 @@
 		//"([Pp]h)y(-?s)" => "$1ü$2"; // Physik, physisch - bad results with " ...
 
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by", "[Pp]lä-?do-?yer", "Bran-?dy" };
+		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by", "[Pp]lä-?do-?yer", "Bran-?dy", "[Tt]y-?r-?r-?he-?n" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
@@ -3564,7 +3576,7 @@
 		"anten$" => "[A]nten";
 		"kon\+" => "{CON}"; // unkontrollierbar 
 		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r", "^[CcKk]on-?rad" };
-		"i-?[o|ö]-?nn?" => "{ION}";
+		"i-?(o|ö)-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
 		"(^|\|)(un)?zer\+" => "$1$1{ZER}";
 		"(^|\|)rück(?=!ens?$)" => "$1{RÜCK}";
@@ -3877,7 +3889,7 @@
 		"n-?k" => { "[NK]", "[Aa]n-?kunft" };
 		"zw" => { "[ZW]", "[Bb][Zz][Ww]" }; // no zw in bzw.
 		"au" => "[AU]";
-		"(Ä|ä)-?u" => "[EU]";
+		"(Ä|ä)u" => "[EU]"; // not: Jubiläum
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
@@ -3900,6 +3912,12 @@
 		"({.*?})" => "strtoupper()"; 	// {..} to upper again (this is easier...)
 		"(\[.*?\])" => "strtoupper()";
 	#EndSubSection(relancer1)
+	#BeginSubSection(gluer)
+		// glues words together that should not be separated
+		"^([Ww]elt)\|({ALL})" => "$1-$2"; Weltall
+		"^([Ww]{HEIT})\|({AUS})" => "$1-$2"; // weitaus
+		"t\|({HAB}{ER})" => "t-$1"; // Machthaber
+	#EndSubSection(gluer)
 	#BeginSubSection(transcriptor)
 
 		"{LICH}-?t" => "{LICH}[&T]"; // versinnbildlichte
@@ -3929,6 +3947,7 @@
 
 		// initial groups
 		"^o\\" => "[0N-][&O]";
+		"^oa" => "[0N-][&O]A"; // Oase
 		"^o" => "[0N-][O]";
 		//"^r" => "[AR]"; // is done later
 		"^äo" => "[0N-][Ä][&E][O]";
@@ -4029,6 +4048,7 @@
 		"oi" => "[&O][I]";
 		"^a($|\|)" => "[0N-][A][&A]$1";
 		"i-a($|\|)" => "[&I][A][&A]$1"; // Sepiagemälde
+		"öa($|\|)" => "[E][&O][A][&A]$1"; // Euböa
 		"a($|\|)" => "[A][&A]$1";
 		"{ET}e$" => "[ET][&E][-E]";
 		"{HEIT}\[ET3\/4\]" => "{HEIT}[&E][ET3/4]";
@@ -4301,6 +4321,7 @@
 		// specific function of completor: adds dummy tokens at beginning and end of a word
 		// for tokens that need this "completion" (e.g. n, s at beginning; vowels at the end etc.
 		
+		"(Ä|ä)-[Uu]" => "[Ä][&A][U]"; // Jubiläum
 		"I-?\[AU\]" => "[&I][AU]"; // miauen
 		"\[EU\]-?I" => "[EU][&E]I"; // Neuigkeiten
 
@@ -4314,7 +4335,9 @@
 
 		"^([NS])" => "[0N-][$1]";
 		"^\[([NS])\]" => "[0N-][$1]";
-		"(?<!&)([AEIOU]){HEIT}" => "[&$1]{HEIT}";
+		"[Uu]-?{HEIT}" => "A[&U]{HEIT}"; // Kontinuität
+		"[Ii]-?{HEIT}" => "[&I]{HEIT}"; // Pietät
+		"(?<!&)([AEO]){HEIT}" => "[&$1]{HEIT}";
 		"^([{\[]&?EIT)(?!R)" => "[0N-]$1";
 		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
 		"\\Ö" => "[0N-][Ö]"; 
@@ -4388,6 +4411,9 @@
 
 		"^\[SS" => "[0N-][#1][SS"; // Ssä, ssä, ssä
 
+		"(Ö|ö)-[Ii]" => "E[&O]I"; // böig
+		"(Ö|ö)-?(\[-E\])" => "E[&O]$2"; // Böe
+	
 	#EndSubSection(completor)
 	#BeginSubSection(rewriter)
 		// at this point, all characters are upper case
@@ -4730,6 +4756,10 @@
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
+
+		"E\+{IN}" => "E[&E][IN]"; // Reinfektion
+
+		"{HEIT}-?{AUS}" => "[HEIT][-AUS]"; // weitaus
 
 		"^{UN}{ZURÜCK}" => "[A][&U][^^ZURÜCK]"; // unzurückziehbar
 
@@ -5585,6 +5615,7 @@
 		"{LICH}" => "[H]";
 		"{ALS}" => "[L]";
 		"^\[AR\]E{CON}" => "[AR][E][&E][C]"; // rekonstruieren (qué chorrada ... )
+		"O{CON}" => "[&O][C]"; // Prokonsul
 		"{CON}" => "[C]";
 		"{ES}" => "[ES]";
 		"{WENN}" => "[WENN]";
@@ -5643,7 +5674,7 @@
 		"\[&T\]\[VR\]L(\[EI\]N)" => "[&TVR@L]$1"; // Töchterlein		
 		"{ER}L((?:\[#.\])?(?:\[I\]|I)\[NG\](?:S|\[S\]|\[-E\])?$)" => "[VR@L]$1"; // Pfifferling[se]
 		"{ER}" => "[VR]";
-		"^{INTER}" => "[INTER]";
+		"(^|\\){INTER}" => "$1[INTER]";
 		"{INTER}" => "[I][INTER]";
 		"^{ZURÜCK}" => "[ZURÜCK]";
 		"{ZURÜCK}" => "[I][ZURÜCK]";
@@ -5653,6 +5684,7 @@
 		"{SIND}" => "[ND]"; // token "sind" becomes obsolete with this rule
 		"{WAS}" => "[A][W]"; // token "was" probably obsolete
 		"{AUS}" => "[AUS]";
+		"{UR}\[AR\]" => "[UR]I[AR]"; // Urrecht
 		"{UR}" => "[UR]";
 		"{SCHAFT}" => "[SCHAFT]";
 
@@ -5775,6 +5807,7 @@
 		"(.){DIS}" => "$1[#1-][I][S]"; // überdies
 		"{RÜCK}" => "[rück]";
 		"{ANT}" => "[ANT]";
+		"E#{HAFT}" => "[E][&E][A][F]"; // ränkehaft
 		"{HAFT}" => "[A][F]";
 		"{FORT}" => "[FORT]"; 
 		"{ION}" => "[ION]"; 
