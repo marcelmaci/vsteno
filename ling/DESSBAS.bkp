@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "26/04/21";
+		"model_date" := "27/04/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -196,24 +196,24 @@
 		///////////// mark all er as affix and filter out "false positive" at the end //////////////////
 		// be- and ge- must be done before -er (because of ber- ger-)
 		// be-
-		"(^|\|)([Bb]e)-(?!c-?k|t-?t|s-?s)" => { "$1$2+", "Be-?re-?si-?na" };
+		"(^|\|)([Bb]e)-(?!c-?k|t-?t|s-?s)" => { "$1$2+", "Be-?re-?si-?na", "[Bb]e-?go-?ni", "[Bb]e-?lu-?t-?sch-?i-?s-?ta-?n" };
 		"(\|[Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
 
 		// ge-
-		"^([Gg]e)-" => "$1+";
+		"^([Gg]e)-" => { "$1+", "[Gg]e-?par-?d" };
 		"(\|[Gg]e)-" => "$1+";
 
 		//ein-ge (eingebrockt)
 		"^([Ee]in)-(ge)-" => "$1+$2+";
 
 		// -er-
-		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d" }; // Terrain, Serbien
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?ro-?na-?l", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$", "[Ee]-?so-?te-?ri", "[Ss]chme-?ri-?ko" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d", "[Vv]er-?ba-?l(?:e[snrm]?)?$" }; // Terrain, Serbien
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?r[eo]-?na", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$", "[Ee]-?so-?te-?ri", "[Ss]chme-?ri-?ko", "[Ee]-?re-?mi-?t", "[Kk]o-?ni-?fe-?r", "[Vv]e-?ran-?d", "[Vv]e-?ri-?fi" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re", "[Gg]a-lan-t", "^[Cc]ant-er" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
-		"er(?!\+|st$|nt|n-t)" => { "er+", "(?:^|\|)[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert", "[Mm]er-?gel", "[Ff]er-?di-?nan-?d", "schwer$" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
+		"er(?!\+|st$|nt|n-t)" => { "er+", "(?:^|\|)[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert", "[Mm]er-?gel", "[Ff]er-?di-?nan-?d", "schwer$", "[Vv]er-?ba-?l(?:e[rsmn]?)?$" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		////////////////////////////////////// end new approach ///////////////////////////////////////
 
@@ -450,7 +450,7 @@
 		"^([Ii]n)\+(ne)" => "$1-$2";
 
 		// un-
-		"^([Uu]n)-([bcdfghjklmnprstvwxz])" => "$1+$2";
+		"^([Uu]n)-([bcdfghjklmnprstvwxz])" => { "$1+$2", "^[Uu]n-?ken?$" };
 		"([Uu]n)\+(te[rn])" => "$1-$2"; // recorrect unter, unten
 		// un-ent/ver-
 		"^([Uu]n)-?(ent|ver)(-|\+)?" => "$1+$2+";
@@ -1393,7 +1393,7 @@
 		"(\|ge)-?zw" => "$1+zw"; // niedergezwungene
 		"^([Ss]ä)-?(ma)" => "$1|$2"; // Sämann, Sämaschiene
 		"Van\|den\|es" => "Van-den-es"; // Vandenesse (name)
-		"(?<![Gg])([Ee]nt)-?(le)(?!i)" => "$1+$2"; // entledigt (not: Entlein, Gentleman)
+		"(?<![Gg])([Ee]nt)-?(le)(?!i)" => { "$1+$2", "[Ee]n-?t-?le-?bu-?c-?h" }; // entledigt (not: Entlein, Gentleman)
 		"([Zz]weit)-?(ran)" => "$1|$2"; // zweitrangig
 		"([Ll]os)s-?(teu)" => "$1+s$2"; // lossteuert
 		"^([Uu]r)-?s-?pr" => "$1+spr"; // ursprüngliche
@@ -1474,7 +1474,10 @@
 		"([Pp]ro-?kon)-?s" => "$1+s"; // Prokonsul
 		"([Rr]e)-?(in)-?(fek|fi-?z)" => "$1+$2+$3"; // Reinfektion, reinfizieren
 		"([Rr]e-?kla-?me)-?(haf)" => "$1#$2"; // reklamehaft
-		
+		"([Aa]n)\+(ten-?ne)" => "$1-$2"; // Antenne
+		"^([Dd]e)-?m-?(ent)-(ge-?gen)$" => "$1m+$2+$3"; // dementgegen
+		"([Kk]o)-?n(-?os-?se-?men-?t)" => "$1n+$2"; // yes .. of course ..
+		"^([Ee]hr)-?(ver)" => "$1|$2"; // Ehrverletzung
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2311,7 +2314,7 @@
 		//"([Pp]h)y(-?s)" => "$1ü$2"; // Physik, physisch - bad results with " ...
 
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
-		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by", "[Pp]lä-?do-?yer", "Bran-?dy", "[Tt]y-?r-?r-?he-?n" };
+		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?key", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by", "[Pp]lä-?do-?yer", "Bran-?dy", "[Tt]y-?r-?r-?he-?n", "[Uu]-?r-?u-?gu-?a-?y" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
@@ -2420,6 +2423,8 @@
 		"([Pp]o)-?(li)-?(phem|fem)" => "$1-$2-fEM"; // Polyphem
 		"([Ii]n\+t)e(r-?n)" => "$1E$2"; // intern
 		"([Hh]o-?m)-?e(-?r)\+?" => "$1E$2"; 
+		"^([Ee]u-?g)e(ns?)$" => "$1E$2"; // Eugen
+		"^([Hh]o-?mo-?g)e(-?n)" => "$1E$2"; // homogen
 
 	#EndSubSection(accentizer)
 	#BeginSubSection(preshortener)
@@ -2460,6 +2465,7 @@
 	#EndSubSection(preshortener)
 	#BeginSubSection(shortener,#>stage3)
 
+		"^[Kk]o(-?rek-?t)" => "{CON}$1"; // Korektor 
 		"(^|\|)(Ä|ä)us-?se-?r" => "$1$2us-ser+";  // äusserst
 
 		"^([Uu]n)-auf\+" => "$1+auf+"; // unaufhörlichen
@@ -3343,7 +3349,7 @@
 		
 		// -er
 		"((?:-|\+)(?:.*?))e-?r\+?er$" => "$1{ER}{ER}"; // use - to detect preceeding syllable 
-		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s", "[Pp]lä-?do-?yer", "[Aa]-?te-?li-?er", "schwer$" }; // use - to detect preceeding syllable
+		"((?:-|\+)(?:.*?[^i]))(e-?r)(e?[rnms]?)?$" => { "$1{ER}$3", "^[Ll]u-?zer-?n", "[Kk]on-?zer-?n", "[Bb]ar-?ri-?e-?re", "[Bb]el-?ve-?de-?re", "[Hh]err", "(?:Ü|ü)-?b-?er\+?que-?r", "[Pp]or-?ti-?er", "[Rr]e-?vers", "[Cc]ha-?rak-?t-?e-?re", "[Dd]i.?ver.?s", "[Pp]lä-?do-?yer", "[Aa]-?te-?li-?er", "schwer$", "[Kk]o-?ni-?fe-?r" }; // use - to detect preceeding syllable
 		"((?:-|\+)(?:.*?[^i]))(e-?r-?t)(e?[rnms]?)?$" => { "$1{ER}t$3", "[Ww]er-?t", "(?:[Cc]ou|ku)-?ver", "[Qq]uer", "[Dd]es-?sert", "[Hh]er-?bert", "[Ss]cher-?t" }; // use - to detect preceeding syllable
 		"er(-?ne[nsmr]?)$" => {"{ER}$1", "[Ll]er-?n", "[Ff]er-?n", "[Ss]ter-?n", "[Mm]o-?d-?er-?n", "[Kk]on-?zer-?n" };
 		"(?<![VvZzDdWwHhi])er\+" => "{ER}"; //, "[Ss]ter(?:-|\+)?n", "[Ww]ie?-?d-?er\+", "[Kk]on-?zer-?n" };
@@ -3357,7 +3363,7 @@
 		"(^|\+|\|)[Vv]er(\+)(?!$)" => "$1{VER}$2";
 		"^ver\+$" => "{VER}+"; // verlosch (doesn't work with preceeding rule?!? => ok: we're in stage3: ver+ is seen as separate word!)
 
-		"ver-" => { "{VER}+", "[Vv]er-?si-?o-?n", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n", "[Vv]er-?si-?fi", "[Vv]er-?gi-?l", "[Vv]er-?ti-?k" }; // can produce wrong results (exclude Overall, Universum)
+		"ver-" => { "{VER}+", "[Vv]er-?si-?o-?n", "[OoIi]-?ver-", "[Vv]er-?b(?:s|en|ia-?l)", "[Gg]o?u-?ver-?n", "[Vv]er-?si-?fi", "[Vv]er-?gi-?l", "[Vv]er-?ti-?k", "[Vv]er-?ba-?l(?:e[rsmn]?)?$" }; // can produce wrong results (exclude Overall, Universum)
 
 		"^all$" => "{ALL}";
 		"\+all$" => "+{ALL}";
@@ -3512,7 +3518,7 @@
 		"^in$" => "{IN}";
 		"^ist(s?)$" => "{IST}$1";
 		"mitt" => "m1i2t3t4";
-		"mit(?!([tz]|-[tz]))" => { "{M}", "Eremit" };
+		"mit(?!([tz]|-[tz]))" => { "{M}", "(?:[Ee]-?r|{ER})[-+]?e-?mi-?t" };
 		"m1i2t3t4" => "mitt";
 		"^nich-?t" => { "{NICHT2}", "^[Nn]ich-?ten?$" };
 		"^sie$" => "{SI}";
@@ -3571,7 +3577,7 @@
 
 		"be\+" => "{BE}+";
 
-		"^an-?ti" => { "{ANTI}", "[Aa]n-?ti-?l-?", "An-?ti-?lo", "[Aa]n-?ti-?k(?:$|e)" };
+		"^an-?ti" => { "{ANTI}", "[Aa]n-?ti-?l-?", "An-?ti-?lo", "[Aa]n-?ti-?k(?:$|e)", "[Aa]n-?ti-?qua-?r" };
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
 		"kon\+" => "{CON}"; // unkontrollierbar 
@@ -3694,6 +3700,7 @@
 		"ö[oh](-)?([flmnrst])" => "ö$1$2";
 		"üh(-)?([flmnrst])" => "ü$1$2"; // bemüht (without h)
 		"ieh([tmn])" => "i$1";
+		"([Ff]e)h(-?de)" => "$1$2"; // Fehde => can that be generalized and integrated in following rule?
 		"e([eh])(-)?([flmnrst])" => { "e$2$3", "^[Bb]rehms?$", "^[Ff]ehl.?baum$", "(?:[GgSs]|[Ss]t)ehn$", "^[Dd]?[WwRrSs]ehs$" }; // Brehm, Fehlbaum: Name; Wehs, Rehs, Sees => I consider it must be written with h (although the rule in "Interpretation der Systemurkunde", 2.6 is not very clear
 		"äh([nrl])" => "ä$1";
 		"öh-(?={LICH})" => "ö[H]"; // conserve h
@@ -3851,7 +3858,7 @@
 		"m-?l" => "[ML]";
 		"n-?l" => "[NL]";
 		"p-?l" => "[PL]";
-		"(?<!^[Ee])r[-+]?l" => "[RL]"; // Perle, not: erlernten
+		"(?<!^[Ee]|ve)r[-+]?l" => "[RL]"; // Perle, not: erlernten, Ehrverletzung
 		"ei-{ER}l" => { "[EI][&E][RL]", "{ER}la", "{ER}le-g" }; // zweierlei
 		"(?<!^){ER}l" => { "[RL]", "{ER}la", "{ER}le-?[gb]" }; // Chaschperli, not: wiedererlangen, auferlegen, mitzuerleben
 		"s-?l" => "[SL]";
@@ -4336,8 +4343,8 @@
 		"^([NS])" => "[0N-][$1]";
 		"^\[([NS])\]" => "[0N-][$1]";
 		"[Uu]-?{HEIT}" => "A[&U]{HEIT}"; // Kontinuität
-		"[Ii]-?{HEIT}" => "[&I]{HEIT}"; // Pietät
-		"(?<!&)([AEO]){HEIT}" => "[&$1]{HEIT}";
+		"^P[Ii]-?{HEIT}" => "P[&I]{HEIT}"; // Pietät
+		"(?<!&)([AEOI]){HEIT}" => "[&$1]{HEIT}";
 		"^([{\[]&?EIT)(?!R)" => "[0N-]$1";
 		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
 		"\\Ö" => "[0N-][Ö]"; 

@@ -1478,6 +1478,10 @@
 		"^([Dd]e)-?m-?(ent)-(ge-?gen)$" => "$1m+$2+$3"; // dementgegen
 		"([Kk]o)-?n(-?os-?se-?men-?t)" => "$1n+$2"; // yes .. of course ..
 		"^([Ee]hr)-?(ver)" => "$1|$2"; // Ehrverletzung
+		"([Ss]tie-?fel)#?(sch(?:a|ä)f-?t)" => "$1-$2"; // Stiefelschaft
+		"^([Dd]a)\+(mas-?t)" => "$1-$2"; // Damast
+		"^([Dd]e)r\+(i-?v)" => "$1-r$2"; // Derivat
+		"^([Dd]es)[-+]?(in)-?f" => "$1+$2+f"; // desinfizieren
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2255,7 +2259,7 @@
 		"(\')-([a-zA-Z]|ä|ö|ü|Ä|Ö|Ü)" => "$1$2";
 		"([a-zA-Z]|ä|ö|ü|Ä|Ö|Ü)(\')([a-zA-Z]|ä|ö|ü|Ä|Ö|Ü)" => "$1|$2|$3"; // z'Morge, b'hüetis
 
-		"sch(a|ä)ft(s|-?l?-?er\+?(?:in(?:-nen)?)?|-?chens?)?($|\|)" => { "{SCHAFT}$2$3", "[Gg]e(?:-|\+|#)?schäf-?t" }; // from r: must be done before decapitalizer
+		"sch(a|ä)ft(s|-?l?-?er\+?(?:in(?:-nen)?)?|-?chens?)?($|\|)" => { "{SCHAFT}$2$3", "[Gg]e(?:-|\+|#)?schäf-?t", "[Ss]tie-?fel[-+|]sch(?:a|ä)f-?t" }; // from r: must be done before decapitalizer
 		"schaf-te" => "{SCHAFT}e"; // gewirtschaftet
 		"{SCHAFT}e-?t" => "{SCHAFT}{ET}"; // bewirtschaftetest
 		
@@ -3471,7 +3475,7 @@
 		"#wo$" => "#{WO}";	
 	
 		"(?<!f)all(e[n|m|s]?)$" => "{ALL}$1";
-		"^al-?l(?!e-?e)" => { "{ALL}", "[Aa]l-?lü-?r", "[Aa]l-?lon-?ge", "[Aa]l-?ler-?gi" };
+		"^al-?l(?!e-?e)" => { "{ALL}", "[Aa]l-?lü-?r", "[Aa]l-?lon-?ge", "[Aa]l-?ler-?gi", "[Aa]l-?li-?an-?z", "[Aa]l-?li-?ga-?to-?r", "[Aa]l-?le-?go-?ri-?e", "[Aa]l-?len-?s-?pa-?c-?h", "[Aa]l-?l-?gäu" };
 		"(\[^a-z\])all" => "{$1ALL}";
 		"{ALL}er" => "{ALL}r"; // doesn't respect step-by-step philosophy (but necessary for allerlei)
 
@@ -3568,7 +3572,7 @@
 		//"^sch(a|ä)ft(s)?$" => "{SCHAFT}$2"; // hm ... must be placed before decapitalizer!
 				
 		"({ER})t(?:u|ü)-?m" => "$1{TUM}"; // altertümlich
-		"t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|-?{LICH}e[mnrs]?|{E[NMR]}n?)?$" => { "{TUM}$2", "a-?t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH})?$", "ge\+s?tüm", "[Kk]os-?tü-?m" }; // not: Da-tum, Ungetüm, ungestüm
+		"t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|-?{LICH}e[mnrs]?|{E[NMR]}n?)?$" => { "{TUM}$2", "a-?t(u|ü)-?m(ers?|e-?rin|e-?rin-?nen|s|{LICH})?$", "ge\+s?tüm", "[Kk]os-?tü-?m", "[Ff]ak-?to-?tum" }; // not: Da-tum, Ungetüm, ungestüm
 		"^(ein|an|au[fs]|zu|ab|nieder|auseinander)ge([bcdfghjklmnpqrstvwxyz]*[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"^(herein|an|un|gegen|ab|auf)?ge([bcdfghjklmnpqrstvwxyz]+[AEIOUÄÖÜaeiouäöü]+)" => "$1{GE}$2";
 		"(^|\|)be(un|ur)" => "$1{BE}$2";
@@ -3596,7 +3600,7 @@
 		"{ANT}{LICH}" => "en{TLICH}";
 		"{ET}t" => "e[TT]";
 		
-		"da(\+|#|{)" => "{DA}$1";
+		"da(\+|#|{)" => { "{DA}$1", "[Dd]a-?mas-?t" };
 		"^da$" => "{DA}";
 		"#da$" => "{DA}";
 		"-wo$" => "{WO}";
@@ -4343,7 +4347,8 @@
 		"^([NS])" => "[0N-][$1]";
 		"^\[([NS])\]" => "[0N-][$1]";
 		"[Uu]-?{HEIT}" => "A[&U]{HEIT}"; // Kontinuität
-		"^P[Ii]-?{HEIT}" => "P[&I]{HEIT}"; // Pietät
+		"^(P|VA-?\[VR\])[Ii]-?{HEIT}" => "$1[&I]{HEIT}"; // Pietät, Varietät
+		"E{HEIT}" => "E[&E]{HEIT}"; // Spontaneität
 		"(?<!&)([AEOI]){HEIT}" => "[&$1]{HEIT}";
 		"^([{\[]&?EIT)(?!R)" => "[0N-]$1";
 		"^(\[#(?:NS?|WS?)\])" => "[0N-]$1";
@@ -4764,6 +4769,7 @@
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
+		"{DER}L" => "[VR][#5-][SELB]"; // derlei (use selb-)
 		"E\+{IN}" => "E[&E][IN]"; // Reinfektion
 
 		"{HEIT}-?{AUS}" => "[HEIT][-AUS]"; // weitaus
