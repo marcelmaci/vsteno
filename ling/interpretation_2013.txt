@@ -58,7 +58,7 @@ habhaft, Boshaftigkeit, gönnerhaft, lebhafter, massenhaftes, schuldhafterweise,
 Gesundheit, Sicherheit, Wahrheit, Brauchbarkeit, Einigkeit, Wirklichkeit, Fakultät, Majestät, Pubertät, Liquidität, Sanitäter, Qualität, Quantität, Pietät, Sentimentalität, Spontaneität, Varietät, heiter, Heiterkeit, Traktat, Attentat, Traktätchen, Wohltäter
 beharrlich, ehrlich, ehrlicherweise, erblich, erfreulich, liebliche, schmählich, verwirklicht, wesentlicher, Flutlicht, verblich
 Barschaft, Gewerkschaft, Liegenschaft, Landschaftler, Ortschäftchen, Geschäft, Stiefelschaft
-Bistum, Eigentum, irrtümlich, Rechtümer, volkstümlich, Faktum, punktum, Quantum, Ungetüm, Faktotum
+Bistum, Eigentum, irrtümlich, Reichtümer, volkstümlich, Faktum, punktum, Quantum, Ungetüm, Faktotum
 4.3.1.3. das All, allenfalls, allenthalben, Allstromgerät, Weltall, verallgemeinern, Allmend, Allee, allergisch, Allianz, Alligator, Allegorie, Allenspach, Allgäu
 alsbald, alsdann
 aufarbeiten, aufeinander, auferlegen, Mehraufwand, aufopfern, aufrichten, aufs, aufsagen, Auftakt, darauf (drauf), auflösen
@@ -73,3 +73,32 @@ derart, dergleichen, deren, derer, dereinst, derlei, derselbe, dermassen, derent
 desgleichen, deshalb, desjenigen, desselben, indes, dessen, indessen, desinfizieren, Despoten
 diejenigen, dieselbe
 diese, diesmal, Diesseits, ohnedies
+Diesel, diesig, disharmonisch, diskret, Diskussion, dispensieren, Disposition
+durchleuchten, Durchreise, durchschimmern, durchaus, hierdurch, undurchdringlich
+fortab, fortan, fortfahren, fortlaufend, fortreisen, fortwerfen, hinfort, forte, fortissimo, Fortuna
+Fürbitte, füreinander, Fürsorge, Fürsprecher, befürworten, dafürhalten
+Gegenrecht, Gegensatz, Gegenstand, Gegenwart, gegenüber, entgegen, hingegen, vergegenwärtigen, zugegen, Gegner, Gegend, Begegnung, entgegnet
+gehabt, gehabte, gehabtem gehabter, gehabtes, angehabt, inne gehabt, vorgehabt
+die Habe, habhaft, Habgier, Rechthaberei, anhaben, handhaben, vorhaben, mithaben, vorhabt, Habsucht, anzuhaben, mitzuhaben, vorhabend, Farhabe, Liebhaber, Machthaber, erhaben, Habicht, (Gaben)
+hat, hatte, hattet, hattest, anhatte, vorhatte, hätte
+hinaus, hindurch, hinfort, Hingabe, hinreichend, hinüber, hinunter, hinwiederum, hinzu, Hindu, hindern
+hinten, hintansetzen, hintre, dahinter, hinterher, Hintermann, hinterrücks, Hintergoldingen
+Inhaber, indes, indessen, Index, indisponibel, Indossament, Industrie, infolge, inkognito, inkongruent, Inland, Insekten, insofern, Insulin, intakt, inszenieren, Indigo, Ines, Ingrid, Inka, ins, Insel, Ingenieur
+der Ist-Bestand, Istbestand, er isst, Istanbul
+mitdenken, mitnehmen, mitreden, mitteilen, mittun, mithin, mitunter, (munter), Mitte, Mittel
+nicht, nichts, nichtig, Nichtigkeitsbeschwerde, Nichtsnutz (2x), Nichtraucher (2x), mitnichten, zunichtemachen, Taugenichts, Tunichtgut, Vergissmeinnicht, die Nichte, vernichten (2x)
+Sein, des Seins, die Seinigen, seinesgleichen, seinerzeit, Vorhandensein, Dasein, Dabeisein, seinetwegen, Seine (Fluss)
+selber, selbes, selbstlos, selbige, selbstständig, selbständig, unselbstständig, unselbständig
+sich, an und für sich, sicher, Sichel
+sie, Sie
+sind
+sobald, sogar, sogenannt, so genannt, sofort, somit, sooft, soviel, sowie, sowieso, Solo, solo, solid, Soda, sozial
+solch, solche, solcherlei, solchermassen
+überall, überaus, überlegen, überraschen, übers, herüber, Überlingen (2x), übertreten, übrigens
+usw.
+unterdessen, untere, untre, unterer, untrer, unteres, untres, unterhalb, unterm, unterordnen, Vorunterricht, zuunterst, Untereggen, unterwegs, munter
+voneinander, vonnöten, Vontobel (2x)
+Vorabend (vorhabend), vorder (2x), Vorderseite, vorig, voriger, Vorlage, Vorort, Vorrat, Vorrecht, Vorsicht, Voruntersuchung, Vorurteil, vorüber, Vorversuch, Vorvertrag, voreingenommen, vorzuenthalten, vorab (vorhab), Vorarlberg, von vornherein, vorneherein, vorbei, vorn (2x)   
+war, waret, warst, wärest, wäret, Ware, Wahrheit, während, Währung
+Werden und Sein, werdet, Werdegang, werdender, Menschwerdung, Werdenberg
+Wiederholung, Wiedervereinigung, widerrechtlich, zuwider, erwidert, Wiederkehr, widrig, Widder

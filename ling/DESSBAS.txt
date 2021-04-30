@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "27/04/21";
+		"model_date" := "30/04/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -213,7 +213,7 @@
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
-		"er(?!\+|st$|nt|n-t)" => { "er+", "(?:^|\|)[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert", "[Mm]er-?gel", "[Ff]er-?di-?nan-?d", "schwer$", "[Vv]er-?ba-?l(?:e[rsmn]?)?$" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
+		"er(?!\+|st$|nt|n-t)" => { "er+", "(?:^|\|)[Tt]er", "[Ss]er-?bi", "Pier-?re", "Par-?ter-?re", "Re-?vers", "[Dd]es-?sert", "[Mm]er-?gel", "[Ff]er-?di-?nan-?d", "schwer$", "[Vv]er-?ba-?l(?:e[rsmn]?)?$", "^[Cc]lerks?$" }; // generalization of preceeding rule (because also valid for other cases: Pflegern
 
 		////////////////////////////////////// end new approach ///////////////////////////////////////
 
@@ -327,7 +327,7 @@
 
 		"([Gg]ib)\|t" => "$1t"; // what a mess ...
 
-		"^([Nn])eu\|e" => "$1eu-e";
+		"^([Nn])eu\|e(?!nt)" => "$1eu-e"; // not: neuentdeckter
 
 		"([Ii])n-ter-" => "$1n-ter+";
 
@@ -1333,7 +1333,8 @@
 
 		"([Bb]ei).?z(e.?r(?:.?in.?(?:nen)))?" => { "$1z$2", "^[Bb]ei[-+]?zu" }; // Beiz, not: beizubringen
 		"^([Vv]er)(?:\+|-)?ge[-+]?b[-+]?li-?c-?h" => "$1+geb#lich"; // vergeblich
-		"([Gg]e).?b-?(li-?c-?h)" => "$1+b$2"; // geblichen, not: vergeblich (see line before)
+		"([Gg]e).?b-?(li-?c-?h)" => { "$1+b$2", "^[Aa]n[-+]?ge[-+]?b-?l" }; // geblichen, not: vergeblich (see line before), not: angebliche
+		"^([Aa]n)[-+]?(ge)[-+]?b-?li-?ch" => "$1+$2b#lich"; // angebliche
 		"([Dd]e).?bat.?tie" => "$1-bat-tie"; // debattieren
 		"([Hh]a-?be)-?(nicht-?s)" => "$1|$2"; // Habenichtse
 		"([Ee]nt)-?(ar-?t)" => "$1+$2"; // Entartung
@@ -1449,7 +1450,7 @@
 		"([Dd]op-?pel)tr" => "$1|tr"; // Doppeltreppe
 		"([Ff]ort)[-+]?(zu)[-+]?" => "$1+$2+"; // fortzugraulen
 		"([Ll]eb)-?(ta-?g)" => "$1|$2"; // Lebtage
-		"(^|\|)([Ee]nt)-?(m|fl)" => "$1$2+$3"; // entmutigt, entflohenen
+		"(^|\|)([Ee]nt)-?(m|fl|d)" => "$1$2+$3"; // entmutigt, entflohenen, neuentdeckt
 		"^([Ww]arn)\|" => "$1-"; // Warnbrief => cancel word separation; otherwhise VSTENO will recognize word "war(e)n" 
 		"([Bb]e[-+]hau)\|(sun)" => "$1-$2"; // Behausungen
 		"([Hh]ier)\|(her)" => "$1-$2"; // hierhergekommen
@@ -1482,6 +1483,19 @@
 		"^([Dd]a)\+(mas-?t)" => "$1-$2"; // Damast
 		"^([Dd]e)r\+(i-?v)" => "$1-r$2"; // Derivat
 		"^([Dd]es)[-+]?(in)-?f" => "$1+$2+f"; // desinfizieren
+		"^([Vv]or)[-+]?(der)[-+]?(tei-?l)" => "$1+$2+|$3"; // Vorderteil
+		"^([Aa]uf)-?s-?p-?r" => "$1+spr"; // aufsprühte
+		"^([Ww]eh)t-?(a-?t)" => "$1|t$2"; // wehtat
+		"([Ss]in)g\|a\|p" => "$1-ga-p"; // Singapore
+		"^([Aa]n)-?(sons-?ten)$" => "$1+$2"; // ansonsten
+		"([Ww]en)\|(dung)" => "$1-$2"; // Verwendungszweck
+		"([Hh]in)\+du($|s$|is)" => "$1-du$2"; // Hindu
+		"^([Hh]int-?an)-?(?!\+)" => "$1+"; // hintansetzen
+		"^([Ii]n)[-+]?(kon)-" => "$1+$2+"; // inkongruent
+		"^([Ii]n)\+(di-?go)" => "$1-$2"; // Indigo
+		"^(In)\+(grid)" => "$1-$2"; // Ingrid
+		"^So\+da(-|\||s)?" => "So-da"; // Soda
+		"^([Uu]n)\+(tre[rsnm]?)" => "$1-$2"; // untre
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2435,6 +2449,7 @@
 		// "early shortener"
 		// i.e. shortener that applies to composed words
 
+		"^[Dd]as\+h$" => "{DH}";
 		"([Tt]eil\|)ha-?ber" => "$1{HAB}{ER}"; // can't be done in stage 3
 
 		// not sure if this works correctly ... there might be other implications if stage3 doesn't follow
@@ -3291,13 +3306,14 @@
 		
 		"es_ist" => "{ESIST}";
 
-		"ge[-+]?habt" => "{GEHABT}";	
+		"ge[-+]?hab-?t" => "{GEHABT}";	
 	
 		"(Ü|ü)-?ber" => { "{ÜBER}", "[Ss]ü.?ü.?be.?r.?e" };
 
 		"^[Ww]ir$" => "{WIR}";
 		"^[Ww]ir'" => "{WIR}'";
 		
+		"^[Ww]ars$" => "{WAR}s"; // wars
 		"^wa-?r(e?st|(?:e|\')?n|e?t)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"{WAR}et$" => "{WAR}{ET}";
@@ -3439,7 +3455,7 @@
 		"t(u|ü)m[-#]?li-?ch" => "{TUM}{LICH}";
 		"^[Bb]erück" => { "{BE}{RÜCK}", "[Bb]erück[et]" };
 		"[Bb]e[-+]rück\+" => "{BE}{RÜCK}+"; // berücksichtigte
-		"^[Rr]ück" => { "{RÜCK}", "[Rr]ück-?t", "[Rr]ück-?li" }; // not: rücklings
+		"^[Rr]ück(?!s$)" => { "{RÜCK}", "[Rr]ück-?t", "[Rr]ück-?li" }; // not: rücklings, hinterrücks
 		"h?eit-?li-?ch" => "{HEIT}{LICH}";
 		"h?ei-?tig" => "{HEIT}ig";
 		"ei-?tens" => "{HEIT}ens";
@@ -3448,7 +3464,7 @@
 		"sol-?ch" => "{SOLCH}";
 		"^und$" => "{UND}";
 		"\+und[+#]" => "{UND}";
-		"usw\." => "{USW\.}";
+		"^usw$" => "{USW}";
 		
 		"\+von$" => "+{VON}";
 		"^von$" => "{VON}";
@@ -3464,7 +3480,7 @@
 		"wird" => "{WIRD}";
 		"^vo-?r(i-?g)" => "{VOR}$1"; // vorig
 		"vor(?!})" => "{VOR}";
-		"(?<![Pp])for-?t(i-?g)?" => { "{FORT}$1", "[Ff]or-?t-?u-?n-?a" };
+		"(?<![Pp])for-?t(i-?g)?" => { "{FORT}$1", "[Ff]or-?t-?u-?n-?a", "[Kk]om-?for-?t", "^[Ff]or-?te$" };
 		"eiht" => "eit";
 		//"^([Hh])a(f-?t)" => "$1A$2"; // avoid application of following rule
 		"(?<!sc|\+)haf-?t(e|en|es)?" => { "{HAFT}$1", "^[Hh]af-?t" }; // not: ver+haften
@@ -3498,6 +3514,7 @@
 		"^de-nen" => "{DEN}[O][&E]{EN}"; // probably the only case where {EN} can follow {DEN} => add &E here directly
 		//"\|den-" => "{DEN}";
 		"^des(?![p-])" => { "{DES}", "^[Dd]es[-+]?mond" };
+		"^([Dd]i)e(-?si-?g)" => "$1$2"; // avoid shortening of "diesig" (cf. following rule)
 		"^die-?s(e[rsnm]?)?" => { "{DIS}$1", "[Dd]ie-?sel" };
 		"dies$" => { "{DIS}", ".*[Pp]aradies" };
 		
@@ -3509,12 +3526,13 @@
 		"durch" => "{DURCH}";
 		//"fürch" => "Fürch";
 		"für" => { "{FÜR}", "[Ff]ürs-?t", "[Ff]ürch" };
-		"ge-?habt" => "{GEHABT}";
+		//"ge-?habt" => "{GEHABT}"; // rule exists 2x (see above)
 		"(?<![CcPp])ha-?b" => { "{HAB}", "^[Hh]a-?bers?$", "[Hh]a-?b-?ich-?t", "[Ee]r[-+]ha-?be-?n" };
-		"^([Aa]n\+|{AN}\+)?[Hh]at(-?t)?" => "$1{HAT}";
+		"^([Aa]n\+|{AN}\+|{VOR}\+|[Vv]or\+)?[Hh]at(-?t)?" => "$1{HAT}";
 		"{HAT}et$" => "{HAT}{ET}"; 
 		"^chin" => "[CH]in";
 
+		"([Hh]in)\+(der)" => "$1-$2"; // Behinderungen
 		"^hin-?zu" => "{HIN}{ZU}";
 		"#hin$" => "{HIN}";
 		"\+hin\+" => "{HIN}";
@@ -3931,6 +3949,8 @@
 	#EndSubSection(gluer)
 	#BeginSubSection(transcriptor)
 
+		"{IST}\|{BE}" => "{IST}\\{BE}"; // Istbestand
+
 		"{LICH}-?t" => "{LICH}[&T]"; // versinnbildlichte
 
 		"^\[SS\](.)" => "[SS@#/]$1"; // ssä
@@ -4170,6 +4190,8 @@
 		"\|#([Hh][Ee])" => "$1";
 
 		"tstopt(8)E\|" => "E\\"; // this is a new era of separation ... (I don't like it ...)
+
+		"^TU\|{NICHT2}\|" => "TA[&U]\\{NICHT2}\\"; // Tunichtgut
 
 		//"(.{2,}){SEIN}([Ss])?" => "$1\\{SEIN}$2"; // Beisammensein
 		"\|{NICHT2}\|" => "\\{NICHT2}\\"; // Vergissmeinnichtaugen
@@ -4432,6 +4454,7 @@
 		// some token combinations need to be rewritten
 		// that's done in this part (was first part of
 		// transcriptor
+
 		"\[&T\]A\[&U\]" => "A[&T&U]"; // prozentual
 
 		"\[&T\]-?Z" => "[&TZ]"; // achtzig
@@ -4542,6 +4565,7 @@
 		"\[TL\]" => "[T@L3]";
 		"([bcdfghjklmnpqrvwxyzs])\[T" => "$1][&T][";
 		"\[TT\]r" => "[TT@R3^]";
+		"{HIN}\[TR\]" => "{HIN}[&T@R]"; // hintre
 		"\[TR\]" => "[T@R3^]";
 		"\[DR\]" => "[D@R3^]";
 		"\[CR\]" => "[C@R]";
@@ -4630,6 +4654,7 @@
 		"\[&T\](\[?[AEIOU]|Ä|Ö|Ü\]?)" => "[&T][&E]$1"; 	//"[&T&E]$1";
 		"{&TALL}" => "[&TALL]";
 		"\[&T\]\[?N\]?" => "[&TN]";
+		"\[&T\]\[VR\+AR\]" => "[&TVR]\\[AR]"; // hinterrücks ... oh yeah: let's do some bricolage ... :)
 		"\[&T\]\[?VR\]?" => "[&TVR]";
 		"\[&T\]\[?R\]?" => "[&TAR5]";
 		"\[&TL\]" => "[&T@L3]";
@@ -4769,6 +4794,12 @@
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
 
+		"{DH}" => "{DAS}H"; // d.h.
+		"{BEI}{SEIN}" => "{BEI}\\{SEIN}"; // Dabeisein
+		"{HIN}\[&T\]{AN}" => "[H][N][&T&E][A][N]\\"; // hintansetzen
+
+		"{VOR}{HAB}" => "[VOR]\\[HAB]"; // separate "vorhabend" to distinguish from "Vorabend"
+		"{VOR}[-+]D{EM}" => "[VOR][EM]"; // vordem
 		"{DER}L" => "[VR][#5-][SELB]"; // derlei (use selb-)
 		"E\+{IN}" => "E[&E][IN]"; // Reinfektion
 
@@ -5825,6 +5856,8 @@
 		"{FORT}" => "[FORT]"; 
 		"{ION}" => "[ION]"; 
 		"{DIS}" => "[DIS]"; 
+
+		"\[&T\]ES" => "[&TES]"; // necessary for "gehabtes"
 
 	#EndSubSection(substituter)
 	#BeginSubSection(laterewriter)
