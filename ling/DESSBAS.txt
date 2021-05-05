@@ -1101,7 +1101,7 @@
 		// (2) analyzer rules offer full regex
 		// (3) analyzer rules can be debugged (this can't be done with filter)
 		// so here's the regex-rule for Badespass and kreidebleich:
-		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-|[Hh]än-|[Hh]un-|[Hh]ei-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
+		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-|[Hh]än-|[Hh]un-|[Hh]ei-|[Mm]o-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
 
 		"([Bb]as-?ket)-?(b(?:a|ä)l-?l)" => "$1|$2"; // Basketball, -bälle
 
@@ -1520,8 +1520,13 @@
 		"^([Hh]olz)(in\+str)" => "$1|$2"; // Holzinstrument
 		"^([Kk]upp-?le)-?r" => "$1r+"; // Kupplerinnengesicht
 		"^([Gg]e)#(wer-?b)" => "$1+$2"; // Gewerbe
+		"^([Gg]e)#(wer)\+\|(be)\+" => "$1+$2-$3|"; // Gewerbeausschuss
 		"^([Ii]n-?ter\+).?(es).?(san).?t" => "$1$2-$3-t"; // interessanteste
 		"^([Uu]n-?ter\+?kunfts)-?(stel)" => "$1|$2"; // Unterkunftsstelle
+		"^([Aa]n\+nah)\|meer\+\|" => "$1-me|er+"; // Annahmeerklärung (...)
+		"^([Bb]e\+schwer)\|de-" => "$1-de|"; // Beschwerdeinstanz, Beschwerderückzug (..)
+		"^([Pp]ro)-?(be)\+" => "$1-$2|"; // Probedarstellung
+		"^([Kk]ir)\|sch(ro-?t)" => "$1sch|$2"; // kirschrot (computers are stupid ... :)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1957,7 +1962,9 @@
 		
 		// abbreviator: eliminates . in abbreviations (based on a list) 
 		// all words conserve original upper/lower case distinction
-		"(Adr|[Aa]llg|Art|[Aa]usschl|[Ee]inschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg|[Mm]ed|[Dd]esgl|[Dd]iv|[Dd]o|[Kk]ap|[Kk]at|[Ll]it|[Mm]in|[Mm]ot|fak|Gebr)\." => "$1";
+		"(Adr|[Aa]llg|Art|[Aa]usschl|[Ee]inschl|[Bb]etr|[Bb]zw|[Cc]a|[Cc]m|[Dd]ipl|Dir|Dr|[Ee]idg|[Mm]ed|[Dd]esgl|[Dd]iv|[Dd]o|[Kk]ap|[Kk]at|[Ll]it|[Mm]in|[Mm]ot|[Ff]ak|Gebr|[Oo]ff|[Pp]hil|[Pp]pa|Präs|Prof|[Pp]rov|Reg|Sko|[Ss]og|[Ss]pez|[Ss]t|[Oo]bl|[Vv]gl|[Vv]\. ?Chr|[Zz]iff)\." => "$1";
+		"((?: |^)[Vv])\|?\.\|? ?(Chr[ ,])" => "$1$2"; // abbreviation v. Chr.
+
 		"([Ee]ntspr|[Ee]v|[Ee]vtl|Ex|[Ee]xkl|Fa|Fr|GmbH|Ing|[Ii]nkl)\." => "$1";
 		"(Nr|Prosp|Qual|[Ss]og|Tel|Jan|Febr|Apr|Jun|Jul|Aug|Sept|Okt|Nov|Dez)\." => "$1";
 		// words with two points
@@ -2514,6 +2521,10 @@
 		
 	#EndSubSection(preshortener)
 	#BeginSubSection(shortener,#>stage3)
+
+		"^[Vv][Cc]hr$" => "{VOR}chr"; // v.Chr.
+
+		"^[Ss]og$" => "{SO}g"; // abbreviation sog.
 
 		"^[Ee]vtl$" => "ev"; // evtl. (abbreviation)
 		"^[Gg]ebr$" => "gbr"; // Gebr. (abbreviation)
@@ -3872,7 +3883,8 @@
 		"sch-?l" => "[SCHL]";
 		"schm" => "[SCHM]";
 		"schw" => "[SCHW]";
-		"sch(-|\|)?r" => "[SCHR]";
+		"sch-?r" => "[SCHR]";
+		"sch\|r" => "[SCH]\\[AR]"; // kirschrot ... according to certain manuals, separation is better (..)
 		"(?<!n)ndr" => "[ND@R]";
 		"sch" => "[SCH]";
 		"(?<!m)m-?p-?f-?r" => "[MPFR]"; // everything goes ha ha ... :)
@@ -4386,6 +4398,9 @@
 
 		"(\[RL\]{EN})\|" => "$1\\"; // Perlenhalsbänder
 
+		"(\[(?:NK|NS)\])\|({VER})" => "$1\|[#2]\\$2"; // Bankverwaltung
+		"(H)\|({VER})" => "$1\|[#2]\\$2"; // Sehvermögen
+		"X\|(\[AR\])" => "X\\$1"; // Boxring
 
 	#EndSubSection(separator)
 	#BeginSubSection(completor)
@@ -4834,6 +4849,8 @@
 		"\[&T(?:-1)?\]-?M" => "[&TM]"; // sanftmütig
 		"\[&T\^CH\](?!$)" => "[&TCH]"; // Kärtchen
 		"\[&T\-1\]-?G" => "[&TG]";	// röntgen
+
+		"(\[\^CH\])\|({VER})" => "$1[#5]\\$2"; // Rauchverbot
 		
 	#EndSubSection(rewriter)
 	#BeginSubSection(substituter)
@@ -6468,6 +6485,7 @@
 		// make all tokens upper case for rendering and assing prt
 		"([a-z]*?)" => "strtoupper()";
 		"(\[SCH@L3\])$" => "$1[#0]"; // fix problem at end of the word: @l is not drawn if schl is last token (add dummy [#0])
+		"(\[CH@R\])$" => "$1[#0]"; // v.Chr.
 		"ü" => "Ü";
 		"ä" => "Ä";
 		"ö" => "Ö";
