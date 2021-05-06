@@ -128,3 +128,14 @@ Alpenverein, Eisenbahn (2x), Ferienurlaub, Inneneinrichtung, Rattenschwanz, Röh
 5.1.1.6. Boxring, Gemeinderat, Grundriss, Harzreise, kirschrot, klangreich, Knieriemen, Nichtraucher, segensreich, Seerose
 5.2.1. bedroht, bemüht, erbost, liebkost, seht, erbaut, erfreust, gekaut, redend, wandernd, Rosas Hut, Erwins Mappe, des Viehs, Rehlein, Mährlein, Wörtlein, Händler, Fremdling, Neuling, Rohling, ein, eins, einst, gemein, Gemeinde, in, ins, Schlafenszeit, einerlei
 5.2.2. durchschaubar, dreifach, dreifältig, zweimal, Geschehnis, Mühsal, mühselig, geruhsam
+5.2.3. empfand, empfange, empfehlen, empfinden, niemand, Eiland, hoffärtig, Mittag, Montag, Dienstag, Freitag, Barometer, verzinst, dreifältig, zwiespältig, Holland, Baumann, Hablützel, Zwiegespräch, Zwielicht
+5.2.4. bösartig, allezeit, Ehegatte, Hagebutte, allesamt, innehalten, Missetat, Lesebuch, Lebemann, Langeweile, Stresemann, Naseweis, Hagestolz, Klebestreifen, ohnegleichen (Varianten?)
+Eherecht, folgerichtig, Ehegemahl, Geradezu, ohnehin
+5.2.5.1. konkret, Kongress, Konserve, Kontrahent, Kontrast, Kontroverse, Initialen, Ingenieur, inkognito, inkonsequent, inopportun, inoffiziell, insolvent, inspizieren, Instinkt, indizieren, Intelligenz, intensiv, Intrige, inaktiv, Index, indiskret, Individuum, Faktum, punktum, Antropologe, Automobil, Bibliothek, auspizieren, annulieren, bilinguisch, extra, extrem, Dislokation, Subtraktion, Korreferat, prädefiniert, prähistorisch, Stenografie, bilateral, Philosoph, Kosmonaut, Manuskript, homogen, Prospekt, Psychologe, transpirieren, Transport, konisch
+Toleranz: prädefiniert, prähistorisch, Dislokation, Korreferat, Subtraktion, bilateral
+5.2.5.2. Autogarage, Fotomodell, Propagandaminister, Prismaform, Psychohigiene
+5.2.5.3. Alphabet, Philosoph, Logarithmen, mikroskopisch, Perimeter, Psychologe, Stenografie
+6.1.1. Aal, Saal, Saat, Staat, Beet, Seele, Teer, Meer, Boot, Moos, Moor, Ziel, viel, tief, Schmied, liquidieren, kahl, Kehle, Kohl, kühl, ihnen, ihr, mehr, Mohr, empfiehlt, siehst
+6.1.2. Ebbe, addieren, Roggwil, Struwwelpeter
+6.2. Laib, Laich, Laien, Mai, Maid, Saite, Zaine, Fäulnis, Häuser, Häute, Käufe, läuten, Räuber, Räume, Kamion, Camion, Zirkus, Circus, Akklamation, akklimatisieren, Akkord, Akkreditiv, akkumulieren, Akkusativ, okkult, Phase, Phänomen, Philosoph, Physik, phonetisch, Phosphor, Rhetorik, Rheuma, Rhythmik, Rhesus Faktor, Katarrh, Thron, Theater, Thema, Theorie, Apotheke, ästhetisch, Asthma, Physik, System, Gymnasium, Hypothek, Hydrant, Hyäne, Hypnose, Psychologie, Rhythmus, Symbol, Mythologie, Yard, loyal, Rayon, royal, Katze, Skizze, Witz
+6.3.1. Allianz, Allotria, Alphabet, Amphitheater, Baisse, Bankier, Bataillon, Boykottieren, Bridge, Charité, Chef, Chirurg, Kontrast, Detail, detaillieren, dinieren, Diphtong, Disziplin, diskret, Disposition, Enklave, Enthusiasmus, Enzyklopädie
