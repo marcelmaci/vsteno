@@ -21,7 +21,9 @@ Fehler, dann melden Sie diese bitte via <a href="mailto:m.maci@gmx.ch">Mail</a> 
     (<a href="https://babel.hathitrust.org/cgi/pt?id=inu.30000134569080&view=1up&seq=10">Original</a>)</li>
     <li>Stefan Zweig, Der Amokläufer (144 Seiten):  <a href="../books/stefan_zweig_der_amoklaeufer_komplett_hoch_9x12cm.pdf">PDF 01/05/2021</a>** 
     (Quelle: <a href="https://gutenberg.org/cache/epub/57850/pg57850.txt">Original</a>)</li>
-    
+    <li>Thea Wolf, Im Land des Lichts (324 Seiten): <a href="../books/thea_wolf_im_land_des_lichts_hoch_9x12cm.pdf">PDF 15/15/2021</a>**
+    (Quelle: <a href="https://gutenberg.org/files/48205/48205-h/48205-h.htm">Original mit Illustrationen</a>)</li>
+   
 </ul>
 <p><h1>Formate</h1></p>
 <p>* A5 (= zweiseitiger Ausdruck A4 quer)<br>

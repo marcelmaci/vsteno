@@ -38,6 +38,10 @@ Einverständnis hiezu gegeben haben, namentlich verdankt.</p>
     (*) Total Buchverkäufe und Spenden<br>
     Herzlichen Dank an alle, welche auch im dritten Jahr dieses Projekt finanziell und ideell unterstützt haben!
     </li>
+    <li><u><b>Laufendes Jahr</b></u><br>
+    Herzlichen Dank an alle, die VSTENO finanziell oder ideell unterstützen! <br>
+    Namentlich verdanken möchte ich die Spenden von:  Alfred Rub
+    </li>
 </ul>
 <h1>Verwendung</h2>
 <p>Mit Datum des 27.04.2020 werden auf www.vsteno.ch erstmals auch stenografische eBooks (PDF) veröffentlicht. Wie unter 
