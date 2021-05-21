@@ -74,7 +74,7 @@
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "15/05/21";
+		"model_date" := "17/05/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -211,11 +211,12 @@
 
 		// -er-
 		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d", "[Vv]er-?ba-?l(?:e[snrm]?)?$", "^[Vv]er-?ve$", "^[Ss]er-?pen-?t", "^[Kk]er-?ra-?ta", "[Gg]u-?er-?rah", "^[Gg]-?u-?er-?bas?$", "^[Zz]er-?zo-?urs?$", "^[Kk]a-?ser-?n", "^[Ss]ter-?n", "^[Ii]n-?fer-?nos?$" }; // Terrain, Serbien, Serpentinen
-		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?r[eo]-?na", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$", "[Ee]-?so-?te-?ri", "[Ss]chme-?ri-?ko", "[Ee]-?re-?mi-?t", "[Kk]o-?ni-?fe-?r", "[Vv]e-?ran-?d", "[Vv]e-?ri-?fi", "[Gg]a-?le-?e-?re", "Be[-+]?sche-?ru", "^[Mm]e-?ro-?u-?an", "^[Dd]je-?r-?id" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
+		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?r[eo]-?na", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$", "[Ee]-?so-?te-?ri", "[Ss]chme-?ri-?ko", "[Ee]-?re-?mi-?t", "[Kk]o-?ni-?fe-?r", "[Vv]e-?ran-?d", "[Vv]e-?ri-?fi", "[Gg]a-?le-?e-?re", "Be[-+]?sche-?ru", "^[Mm]e-?ro-?u-?an", "^[Dd]je-?r-?id", "^[Tt]h?e-?re-?sa" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"^([Ii]n)-?(fer[-+]?n)" => "$1+$2"; // Inferno, infernalisch
 
 		"-([bcdfghjklmnprstwxyzBCDFGHJKLMNPRSTWXYZ])er(\+|#)" => { "$1-er$2", "[Aa]-?ber", "[Cc]ha-?rak-?t-?e-?re", "[Gg]a-lan-t", "^[Cc]ant-er", "[Dd]ra-?per\+ie" }; // Schil-der+ung: reorganize syllabical structure ...
 		"(Ü|ü)b-er\+" => "$1-ber+"; // recorrect über
+		"(Ü|ü)b-er#" => "$1-ber+#"; // übervoll
 		"(U|u)nt-er\+" => "$1n-ter+"; // recorrect unter
 		//"erst" => "er+st"; // äusserst (eh l'horreur continue ...)
 		"(?<!\|)#?(wer)\|(dung)" => "|$1-$2"; // Menschwerdung
@@ -601,7 +602,7 @@
 		
 
 		// prefix ge+
-		"([Gg]e)\+(he)(?!u)" => { "$1-$2", "[Gg]e\+hef-?t", "[Gg]e\+hem" };
+		"([Gg]e)\+(he)(?!u)" => { "$1-$2", "[Gg]e\+hef-?t", "[Gg]e\+hem", "[Gg]e\+heg-?t" };
 		"([Gg]e)\+(gen)" => "$1-$2";
 		"([Gg]e)\+(be(?:-|\+)?n(?:d?(?:st)?e[mrsn]?)?)" => "$1-$2";
 		"([Gg]e)\+(cko)" => "$1-$2";
@@ -1104,7 +1105,7 @@
 		// (2) analyzer rules offer full regex
 		// (3) analyzer rules can be debugged (this can't be done with filter)
 		// so here's the regex-rule for Badespass and kreidebleich:
-		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-|[Hh]än-|[Hh]un-|[Hh]ei-|[Mm]o-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
+		"(?<![BbLl]a-|[Kk][rl]ei-|[Pp]fer-|[Hh]än-|[Hh]un-|[Hh]ei-|[Mm]o-|[Pp]a-ra-)[Dd]e\|(?!zu$|aus$|wegs)" => { "de-", "[Gg]e\+?ra-?de\|(?:he-?r)?", "^Ge\+?trei-?de", "^Re-de", "\|zu\|", "[Gg]e.?mein.?de" }; // not: geradeaus, geradeso, geradewegs, geradeheraus; special: geradezubiegen (don't delete | around zu)
 
 		"([Bb]as-?ket)-?(b(?:a|ä)l-?l)" => "$1|$2"; // Basketball, -bälle
 
@@ -1563,6 +1564,13 @@
 		"(?<!\|)g-?lut$" => "|glut"; // Sonnenglut (phpsyllable doesn't do a very good job actually ... )
 		"^([Hh]er-?be)\+re" => "$1-re"; // herberen
 		"^([Gg]e)#(ba-?r)" => "$1+$2"; // gebar
+		"^([Tt]ee)k-?(änn-?ch)" => "$1|k$2"; // Teekännchen
+		"^([Ss]o)\+(do-?m)" => "$1-$2"; // Sodom
+		"^([Gg]e\+ne)\|(sen)" => "$1-$2"; // Genesende (computers are stupid ... :)
+		"^([Aa]b)-?(ge)-?(ma-?g)" => "$1+$2+$3"; // abgemagert
+		"^([Ss]che)r\+(er\+ei)" => "$1-r$2"; // Schererei
+		"^([Aa]r)\|(ti-?g)" => "$1-$2"; // artiger
+		"^([Dd]r)(aus)$" => "$1+$2"; // draus
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2079,7 +2087,10 @@
 		"&szlig;" => "ss";
 		"«" => """; //"|[#Q#][#5]]\\|"; // originally in filter but can't be done in stage3!
 		"»" => """; //"|[#5][#Q#]|";
+		" " => " "; // this seems to be another white space (no idea, what utf8-code it is ... !!!
 
+		// soundsoviel => separate: soundso viel
+		"([Ss]oundso)(viel)" => "$1 $2";
 
 		// protect handwritten "Es ist"
 		"(handwriting.*? [Ee]s) (ist .*?shorthand>)" => "$1#$2";
@@ -3618,7 +3629,7 @@
 		"^des(?![p-])" => { "{DES}", "^[Dd]es[-+]?mond" };
 		"^([Dd]i)e(-?si-?g)" => "$1$2"; // avoid shortening of "diesig" (cf. following rule)
 		"^die-?s(e[rsnm]?)?" => { "{DIS}$1", "[Dd]ie-?sel" };
-		"dies$" => { "{DIS}", ".*[Pp]aradies" };
+		"dies$" => { "{DIS}", ".*[Pp]a-?ra-?die-?s" };
 		
 		// die-
 		"^die$" => "{DI}";
@@ -3813,7 +3824,7 @@
 
 		"thr" => { "tHr", "[Tt]hro-?n", "^[Aa]n-?thra-?z" }; // Thriller, not: Thron, Anthrazit
 		"([Tt])h(ro-?n)" => "$1$2"; // Thron 
-		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg", "^[Tt]hu-?n", "[Gg]oe-?t-?he" };
+		"th(?!of$)" => { "t", "[Tt]hur", "^[Tt]he$", "[Ww]ie-?sen#?tha-?l", "[Tt]hor.?berg", "^[Tt]hu-?n", "[Gg]oe-?t-?he", "^[Tt]he-?re-?sas?$" };
 		//"th(?!er)" => "t";
 		//"th(?!in)" => "t";
 		//"th(?!aft)" => "t";
