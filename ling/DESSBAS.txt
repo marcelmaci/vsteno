@@ -1,6 +1,6 @@
 #BeginSection(header)
-	DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)
-    	(c) 2018-2020  Marcel Maci
+	DESSBAS - Model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)
+    	(c) 2018-2021  Marcel Maci
 	
 	This program is free software: you can redistribute it and/or modify
     	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 	
 	#BeginSubSection(session)
 	"license" := "<p>DESSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Deutsch)<br>
-    	(c) 2018-2020  Marcel Maci</p>
+    	(c) 2018-2021  Marcel Maci</p>
 	
 	<p>This program is free software: you can redistribute it and/or modify
     	it under the terms of the GNU General Public License as published by
@@ -69,12 +69,12 @@
 	// +- Gross- oder Kleinschreibung bei Blockschriftzeichen (z.B. [A+] = grosses A, [A-] = kleines A)
 	// & geschriebene Vokale oder Häkchen (z.B. [&I] oder [&E])
         // -1 bei Aufstrich-t: wie viel tiefer weitergeschrieben wird (z.B. [&T-1] in Verbindung mit [B])
-	"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2020 Marcel Maci";
+	"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2021 Marcel Maci";
 		// model version
 		"model_version" := "1.4";
 		"required_version" := "0.3";
 		"model_se_revision" := "0";
-		"model_date" := "21/05/21";
+		"model_date" := "23/05/21";
 		// options
 		"model_option0_text" := "HF1";
 		"model_option0_yesno" := "no";
@@ -1581,6 +1581,9 @@
 		"^([Ss]perr)\|(an-?gel)" => "$1-$2"; // sperrangelweit
 		"^([Vv]er)[-+]?(wahr)[-+]?(lo)" => "$1+$2#$3"; // Verwarlosung
 		"^([Mm]elk)-?(ge)-?f" => "$1|$2+f"; // Melkgefäss
+		"^([Ff]inn|[Dd]eutsch|[Ww]elsch|[Ee]ng)-(l(?:a|ä)n-?d)" => "$1|$2"; // Finnland etc.
+		"([Ii]m)[-+|]?(po)[-+|]?(nie)[-+|]?(ren)[-+|]?d" => "$1-$2-$3-$4-d"; // imponierender (computers are VERY stupid ... :)
+		"^([Aa]b)-?(ge)-?(feim)" => "$1+$2+$3"; // abgefeimt
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -3431,7 +3434,7 @@
 
 		"ge[-+]?hab-?t" => "{GEHABT}";	
 	
-		"(Ü|ü)-?ber" => { "{ÜBER}", "[Ss]ü.?ü.?be.?r.?e" };
+		"(Ü|ü)-?ber" => { "{ÜBER}", "[Ss]ü.?ü.?be.?r.?e", "stü-?b-?(?:er\+?|{ER})s?$" };
 
 		"^[Ww]ir$" => "{WIR}";
 		"^[Ww]ir'" => "{WIR}'";
@@ -3440,6 +3443,7 @@
 		"^wa-?r(e?st|(?:e|\')?n|e?t)?$" => { "{WAR}$1", "[Ww]a-?rum" };
 		"^wä-?r(e?st|e|en|et|t)?$" => "{WÄR}$1";
 		"{WAR}et$" => "{WAR}{ET}";
+		"^[Ww]ärs$" => "{WÄR}s"; // wärs
 
 		"(?<!^|s)(i-?)?tä-?t(?!er?(?:s|in(?:-?nen)?)?)" => { "{HEIT}", "[Tt]rak-?t-?ä-?t-?c-?hen", "[Tt]ä-?t-?schel", "[Bb]e[+-]?tä-?ti-?g", "[Gg]e.?tä.?tig", "[Uu]n\+?tä-?tig", "[Ww]ohl[-+]?tä-?t", "[Uu]n[-+]?tä-?t" };
 		"(?<!^|s)(i-?)?tä-?ten" => "{HEIT}en";
@@ -3931,7 +3935,8 @@
 	#EndSubSection(condenser)
 	#BeginSubSection(bundler)
 
-		"{ER}lein" => "[VR@L]ein"; // Kämmerlein
+		"((?:eu|äu)-?){ER}lein" => "$1[&E][VR@L]ein"; // Bäuerlein
+ 		"{ER}lein" => "[VR@L]ein"; // Kämmerlein
  
 		"([bcdfghjklmnpqrvwxz])t(\|)r" => "$1T$2r"; // Schlachtreihe => don't combine => will be separated later
 		
@@ -4050,7 +4055,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}", "[Aa]i-?g-?le-?mont", "[Dd]e-?tai", "^[Mm]rai-?{ER}s?$", "^[Kk]aid$", "^[Nn]e-?wa-?kais?$" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}", "[Aa]i-?g-?le-?mont", "[Dd]e-?tai", "^[Mm]rai-?{ER}s?$", "^[Kk]aid$", "^[Nn]e-?wa-?kais?$", "^[Mm]i-?c-?hai-?l" };
 		"ai-{ER}" => "[AI][&E]{ER}"; // Mraier (name)
 		"ai" => "[AI]";
 		"\[AI\]-?{EN}" => "[AI][&E]{EN}";
@@ -4963,6 +4968,8 @@
 		"{HIN}\[&T\]{AN}" => "[H][N][&T&E][A][N]\\"; // hintansetzen
 
 		"{VOR}{HAB}T" => "[VOR][HAB][&T]"; // don't separate "vorhabt" (clearly distinguishable from "vorab")
+		"{VOR}{HAB}{EN}" => "[VOR][HAB][EN]"; // idem: vorhaben
+
 		"{VOR}{HAB}" => "[VOR]\\[HAB]"; // separate "vorhabend" to distinguish from "Vorabend"
 		"{VOR}[-+]D{EM}" => "[VOR][EM]"; // vordem
 		"{DER}L" => "[VR][#5-][SELB]"; // derlei (use selb-)
