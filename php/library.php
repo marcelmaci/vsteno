@@ -6,8 +6,8 @@
 von <a href="license_fees.php">Lizenzgebühren</a>. Foto: (c) <a href="https://www.flickr.com/photos/scosanf/">Scott Sanford</a> (CC BY-NC-SA 2.0).</i>
 
 <p><h1>eBooks</h1></p>
-<p><i>Die folgenden E-Books kommen ausdrücklich ohne Garantie auf eine 100% korrekte stenografische Übertragen. Wenn Sie darin 
-Fehler, dann melden Sie diese bitte via <a href="mailto:m.maci@gmx.ch">Mail</a> - besten Dank!</i></p>
+<p><i>Die folgenden E-Books kommen ausdrücklich ohne Garantie auf eine 100% korrekte stenografische Übertragung. Wenn Sie darin 
+Fehler finden, dann melden Sie diese bitte via <a href="mailto:m.maci@gmx.ch">Mail</a> - besten Dank!</i></p>
 <ul>
     <li>Franz Kafka, Ein Bericht für eine Akademie (20 Seiten): <a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_24052020.pdf">PDF 24/05/2020</a>* 
     (<a href="http://www.gutenberg.org/files/21989/21989-0.txt">Original</a>) [<a href="../books/franz_kafka_ein_bericht_fuer_eine_akademie_27042020.pdf">PDF 27/04/2020</a>]</li>
@@ -23,7 +23,8 @@ Fehler, dann melden Sie diese bitte via <a href="mailto:m.maci@gmx.ch">Mail</a> 
     (Quelle: <a href="https://gutenberg.org/cache/epub/57850/pg57850.txt">Original</a>)</li>
     <li>Thea Wolf, Im Land des Lichts (324 Seiten): <a href="../books/thea_wolf_im_land_des_lichts_hoch_9x12cm.pdf">PDF 15/15/2021</a>**
     (Quelle: <a href="https://gutenberg.org/files/48205/48205-h/48205-h.htm">Original mit Illustrationen</a>)</li>
-   
+    <li>Fjodor Dostojewski, Arme Leute (437 Seiten) <a href="../books/dostojewsky_arme_leute_9x12cm_23052021.pdf">PDF 23/05/2021</a>**
+    (Quelle: <a href="https://gutenberg.org/cache/epub/35339/pg35339.txt">Original</a>)</li>
 </ul>
 <p><h1>Formate</h1></p>
 <p>* A5 (= zweiseitiger Ausdruck A4 quer)<br>

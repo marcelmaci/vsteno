@@ -19,7 +19,8 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 <p><b>Neue E-Books</b><p>
 <p>Neu in der <a href="library.php">elektronischen Bibliothek</a>: <br>
 <b>[01.05.2021]</b> <i><a href="../books/stefan_zweig_der_amoklaeufer_komplett_hoch_9x12cm.pdf">Der Amokläufer</a></i> von Stefan Zweig.<br>
-<b>[15.05.2021]</b> <i><a href="../books/thea_wolf_im_land_des_lichts_hoch_9x12cm.pdf">Im Land des Lichts</a></i> von Thea Wolf.<br><p>
+<b>[15.05.2021]</b> <i><a href="../books/thea_wolf_im_land_des_lichts_hoch_9x12cm.pdf">Im Land des Lichts</a></i> von Thea Wolf.<br>
+<b>[23.05.2021]</b> <i><a href="../books/dostojewsky_arme_leute_9x12cm_23052021.pdf">Arme Leute</a></i> von Fjodor Dostojewski.<br><p>
 
 <p><b>15/04/21 Happy birthday VSTENO!</b><p>
 <p>VSTENO feiert sein 3 Jahr. Was in dieser Zeit alles passiert ist, finden Sie im <a href='vsteno_3rd_year.php'>Jahresbericht</a>.<br><p>
