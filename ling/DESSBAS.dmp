@@ -138,6 +138,9 @@
 	#EndSubSection(session)
 	#BeginSubSection(analyzer)
 
+		"^([Mm]as-?ke)\|(ra-?d)" => "$1-$2"; // Maskeraden
+		"^([Ww]al)\|(zer\+)(?!\|)" => "$1-$2|"; // Walzertänzer
+		"^([Kk]o-?los-?se)\|um" => "$1-um"; // Kolosseum
 		"^([Aa]t-?la-?s)(ein-?b)" => "$1|$2"; // Atlaseinbände
 		"^([lL]e-?gen)\|(den)" => "$1-$2"; // legendenhaften
 		"^([Dd]o)m\|(in-?go)" => "$1m$2"; // Domingo
@@ -210,7 +213,7 @@
 		"(\|[Bb]e)-(?!c-?k|t-?t|s-?s)" => "$1+";
 
 		// ge-
-		"^([Gg]e)-" => { "$1+", "[Gg]e-?par-?d" };
+		"^([Gg]e)-" => { "$1+", "[Gg]e-?par-?d", "^[Gg]e-?or-?ge$" };
 		"(\|[Gg]e)-" => "$1+";
 
 		//ein-ge (eingebrockt)
@@ -634,7 +637,7 @@
 		"(?<!ü-|Ü-)b-?er\+g" => "ber-g";			// Aarberg(er) (Berg), not: vornübergebeugt
 		
 		"([BbPpSsWw]|[Zz]w)er\+g" => "$1erg";
-		"([Ee]r)\+(ker)" => "$1-$2";
+		"([Ee]r)\+(ker)" => { "$1-$2", "er\+ker[-+]?z" }; // not: Kandelaberkerzen
 		"([Ee]r)\+(bt)" => "$1$2";
 		"(?<![^e]e)r\+$" => "r";
 		//"eer\+$" => "eer";
@@ -648,7 +651,7 @@
 		"(Zer)\+(matt)" => "$1-$2";
 		"(ie-?r)\+" => { "$1", "vier\+ru-?d" }; // vierruderige
 		"ierte([rsnm])?$" => "ier-te$1"; // recorrect syllabation destroyed by preceeding rule (.. et l'horreur continue ... :)
-		"(er)\+(i-?e)(?!r-?te)" => { "$1$2", "[Mm]a-?t-?er\+?i-?e-?l", "[Gg]a-?l-?e-?r\+i-?e", "[Dd]ra-?per\+ie", "[Ss]ze-?n-?e-?r\+i-?e" }; // not: materiell
+		"(er)\+(i-?e)(?!r-?te)" => { "$1$2", "[Mm]a-?t-?er\+?i-?e-?l", "[Gg]a-?l-?e-?r\+i-?e", "[Dd]ra-?per\+ie", "[Ss]ze-?n-?e-?r\+i-?e", "^[Bb]i-?za-?r-?r-?er\+i" }; // not: materiell
 		"([Bb]er)\+(e-?si-?na)" => "$1$2";
 		"([Mm]er)\+k" => "$1k";
 		"([Ee]r)\+(ns)" => { "$1$2", "dau.?er.?ns" }; 	// ernst, not: bedauernswert
@@ -1624,6 +1627,15 @@
 		"^([Ff]ein)-?(li-?ni)" => "$1|$2"; // feinlinig
 		"^([Ee]in)-?(lü-?d)" => "$1+$2"; // einlüde
 		"^([Hh]olz)-?(ge)-?t" => "$1|$2+t"; // Holzgetäfel
+		"^([Aa]l-?lon-?ge)p-e" => "$1|pe"; // Allongeperücke
+		"([Dd]a)\+(mas-?t)" => "$1-$2"; // Damast
+		"^([Vv]er)[-+]?(schwen-?dungs)-?s" => "$1+$2|s"; // Verschwendungssucht
+		"^([Bb]a-?re)\|ge" => "$1-ge"; // Barege-Kleid
+		"^([Kk]ont-?er\+)(tan-?z)" => "$1|$2"; // Kontertanz
+		"^([Hh]in)-?(ge-?bu-?n-?g)" => "$1+$2"; // hingebungsvoll
+		"^([Mm]ü-?he)\|(vol)" => "$1-$2"; // mühevolle
+		"^([Mm]es-?sin)-?gl" => "$1g|l"; // Messingleiste
+		"^([Bb]lau)-?(wol-?l)" => "$1|$2"; // blauwollnen
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2432,6 +2444,9 @@
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(phonetizer)
 		
+		"^([Rr]e-?fu-?gi)é" => "$1-e"; // Refugié
+		"^([Ff]e-?li-?ci)(es?)$" => "$1-$2"; // Felicie
+		"^([Pp]re-?mi)-?e(-?r)" => "$1-E$2"; // Premiere
 		"([vV]il-?li)er" => "$1-Er"; // Andervillier
 		"^([Vv]au-?bi)es" => "$1-E-s"; // Vaubiessard
 		"([Gg]on-?do-?li)-?e-?re" => "$1-E-re"; // Gondoliere 
@@ -2524,7 +2539,7 @@
 		"([Gg])o(?:u|û)-?t" => "$1ut"; // goutieren
 		"([Gg])ou-?ver" => "$1u-ver"; // Gouvernement
 		"[Cc](on-?do-?r)" => "k$1"; // Kondor
-		"([Ss])ou-?per" => "$1u-pe"; // Souper
+		"([Ss])ou-?per\+?" => "$1u-pe"; // Souper
 		"([Ss])ou(f-?f-?lie-?r)" => "$1u$2"; // Soufflierte
 		"([Pp])ou(s-?sie-?r)" => "$1u$2"; // poussierten
 
@@ -2646,6 +2661,7 @@
 	#EndSubSection(preshortener)
 	#BeginSubSection(shortener,#>stage3)
 
+		"^so-?dann$" => "{SO}dann"; // sodann
 		"^zu\+al-?ler\+" => "{ZU}+{ALL}{ER}+"; // zuallerletzt
 
 		"^sichs$" => "{SICH}s"; // sichs
@@ -3522,7 +3538,7 @@
 		"(?<!^[Gg])ent\+" => "{ANT}+"; // not: Gentleman
 		"(?<![Dd]er\+|[Dd]er-|[Dd]er|[Dd]es-s|[Dd]ess)ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste, not: derentwillen
 		
-		"(?<![ahHMmBbGgKk])un-?te-?r" => "{UNTER}";
+		"(?<![ahHMmBbGgKk])un-?te-?r" => { "{UNTER}", "bräun-?te-?r" }; // not: sonnengebräunter
 		"{UNTER}-" => "{UNTER}+";
 
 		"un(\+|#)" => "{UN}$1"; 
@@ -3589,7 +3605,7 @@
 		"^sel-?b" => "{SELB}";
 
 		"ant\+" => "{ANT}+";
-		"(?<![fk])ant-" => { "{ANT}", "es-?sant", "^[Cc]ant" }; // not: interessantere, Canterville, El-Kantara
+		"(?<![fk])ant-" => { "{ANT}", "es-?sant", "^[Cc]ant", "^[Ee]-?le-?gan-?t" }; // not: interessantere, Canterville, El-Kantara
 
 		"an\+" => "{AN}+";
 		"[Aa]l-?l(e?)-?dem" => "{ALL}$1{DEM}"; 
@@ -3783,7 +3799,7 @@
 		//"sei-?n" => "{SEIN}";
 		"anten$" => "[A]nten";
 		"kon\+" => "{CON}"; // unkontrollierbar 
-		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r", "^[CcKk]on-?rad" };
+		"(^|\|)(in|un)?[k|c]on([^n])" => { "$1$2{CON}$3", "[Kk]on-go", "[Kk]on-?t(?:os?|en)", "[KkCc]on-?do-?r", "^[CcKk]on-?rad", "^[Cc]on-?flans" };
 		"i-?(o|ö)-?nn?" => "{ION}";
 		"(^|\|)(un)?er(!n)" => "$1$2{ER}";
 		"(^|\|)(un)?zer\+" => "$1$1{ZER}";
@@ -3871,6 +3887,7 @@
 		"î" => "i";
 		"([Ss]o-?ci)é(-?t)" => "$1-e$2"; // société
 		"é" => "e";
+		"(?:à|â)" => "a"; // à la Trafalgar, Neufchâtel
 		"{EN}(\||\\)" => "EN$1"; // correct endings: if they are inside words they are not applied
 		"{EM}(\||\\)" => "EM$1";
 
@@ -4109,7 +4126,7 @@
 		"[Ee]u" => "[EU]";
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}", "[Aa]i-?g-?le-?mont", "[Dd]e-?tai", "^[Mm]rai-?{ER}s?$", "^[Kk]aid$", "^[Nn]e-?wa-?kais?$", "^[Mm]i-?c-?hai-?l", "[Gg]er-?vais$" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}", "[Aa]i-?g-?le-?mont", "[Dd]e-?tai", "^[Mm]rai-?{ER}s?$", "^[Kk]aid$", "^[Nn]e-?wa-?kais?$", "^[Mm]i-?c-?hai-?l", "[Gg]er-?vais$", "^[Kk]ais?$" };
 		"ai-{ER}" => "[AI][&E]{ER}"; // Mraier (name)
 		"ai" => "[AI]";
 		"\[AI\]-?{EN}" => "[AI][&E]{EN}";
@@ -4132,7 +4149,7 @@
 	#BeginSubSection(gluer)
 		// glues words together that should not be separated
 		"^([Ww]elt)\|({ALL})" => "$1-$2"; Weltall
-		"^([Ww]{HEIT})\|({AUS})" => "$1-$2"; // weitaus
+		"^([Ww]{HEIT})\|({AUS})(?!{GE}|\+{GE})" => "$1-$2"; // weitaus, not: weitausgeschnittene
 		"t\|({HAB}{ER})" => "t-$1"; // Machthaber
 	#EndSubSection(gluer)
 	#BeginSubSection(transcriptor)
