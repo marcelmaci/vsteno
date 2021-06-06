@@ -222,7 +222,7 @@
 		"^([Ee]in)-(ge)-" => "$1+$2+";
 
 		// -er-
-		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d", "[Vv]er-?ba-?l(?:e[snrm]?)?$", "^[Vv]er-?ve$", "^[Ss]er-?pen-?t", "^[Kk]er-?ra-?ta", "[Gg]u-?er-?rah", "^[Gg]-?u-?er-?bas?$", "^[Zz]er-?zo-?urs?$", "^[Kk]a-?ser-?n", "^[Ss]ter-?n", "^[Ii]n-?fer-?nos?$", "^[Jj]er-?maks?$", "^[Jj]er-?m-?o-?l-?a", "fer-?kels?$", "^[Ff]er-?ron-?ni", "^[Pp]ier-?rot", "^[Dd]e-?ro-?ze-?r[-+]?ays", "[Gg]u-?er[-+]?ri-?(?:e|è)-?re", "^[Aa]n[-+]?mer-?k" }; // Terrain, Serbien, Serpentinen
+		"([Ee]r)-" => { "$1+", "(?:^|\|)[Tt]er-?r", "[Ss]er-?bi", "Pier-?re", "[Vv]or.?he-ri", "[Mm]er-?gel", "^[Ee]r-?d[ei]", "[Ff]er-?di-?nan-?d", "[Vv]er-?ba-?l(?:e[snrm]?)?$", "^[Vv]er-?ve$", "^[Ss]er-?pen-?t", "^[Kk]er-?ra-?ta", "[Gg]u-?er-?rah", "^[Gg]-?u-?er-?bas?$", "^[Zz]er-?zo-?urs?$", "^[Kk]a-?ser-?n", "^[Ss]ter-?n", "^[Ii]n-?fer-?nos?$", "^[Jj]er-?maks?$", "^[Jj]er-?m-?o-?l-?a", "fer-?kels?$", "^[Ff]er-?ron-?ni", "^[Pp]ier-?rot", "^[Dd]e-?ro-?ze-?r[-+]?ays", "[Gg]u-?er[-+]?ri-?(?:e|è)-?re", "^[Aa]n[-+]?mer-?k", "^[Tt]e-?r-?pen-?ti-?n" }; // Terrain, Serbien, Serpentinen
 		"([Ee])-r" => { "$1r+", "[Ee]-?ro-?[st]", "[Bb]el-?ve-?de-?re", "[Aa]b-?ge-?ra-?c-?k", "Cha-?rak-?t-?e-?re", "Ve-?r[eo]-?na", "^E.rich$", "[Rr]e-?fe-?r[aie]", "[Tt]he-ra-p", "[Uu]n[-+]?ge-?r[-+]?ech", "[Vv]or.?he-ri", "ie-ru-?n-?g(?:s|en)?$", "[Ee]-?so-?te-?ri", "[Ss]chme-?ri-?ko", "[Ee]-?re-?mi-?t", "[Kk]o-?ni-?fe-?r", "[Vv]e-?ran-?d", "[Vv]e-?ri-?fi", "[Gg]a-?le-?e-?re", "Be[-+]?sche-?ru", "^[Mm]e-?ro-?u-?an", "^[Dd]je-?r-?id", "^[Tt]h?e-?re-?sa", "^[Bb]a-?ja-?de-?re", "^[Aa]l-?ge-?ri-?s-?c-?h", "^[Gg]u-?e-?rins?$", "^[Dd]e-?ro-?ze-?r[-+]?ays", "^[Mm]e-?ri-?no" }; // Ka-me-rad-schaft, Re-fe-rat ... Steno considers all this as affix (which, linguistically speaking, is completely wrong ...
 		"^([Ii]n)-?(fer[-+]?n)" => "$1+$2"; // Inferno, infernalisch
 
@@ -1673,6 +1673,21 @@
 		"-(ge)-?w-?(ord-?ne[nrsm]?$)" => "|$1+w$2"; // feuchtgewordnen
 		"^([Bb]e)\+(lots?)$" => "$1-$2"; // Belot (name)
 		"^([Hh]än-?ge)-?(lam-?p)" => "$1|$2"; // Hängelampen
+		"^([Ww]ie)\|(gen)" => "$1-$2"; // wiegenden
+		"^([Hh]ei-?de)-?(kr)" => "$1|$2"; // Heidekraut
+		"(?<!\|)-?(tu-?c-?h[es]?)$" => "|$1"; // Chiffontuch
+		"(\||^)([Gg]en)\|(dar-?m)" => "$1$2-$3"; // Landgendarm
+		"^([Tt]rau-?ma)\|(ti-?s-?c-?h)" => "$1-$2"; // traumatische (computers are stupid ... :)
+		"^([Uu]r)-?(wüch)" => "$1+$2"; // urwüchsig
+		"^([Ee]-?he)-?(ri-?n-?g)" => "$1|$2"; // Ehering
+		"^([Kk]o-?se)-?(wor)" => "$1|$2"; // Koseworten
+		"^([Rr]echt)\+(schrei)" => "$1|$2"; // Rechtschreibung
+		"^([Kk]lump)-?(fü|fu)" => "$1|$2"; // Klumpfüsse
+		"([Aa]b)-?(tra-?g(?:un-?g|en?))" => "$1+$2"; // Oberkiefer-Abtragung
+		"([Bb]e\+richt)-?(er\+stat)" => "$1|$2"; // Berichterstattung
+		"([Uu]r\+lau)\|b" => "$1-b"; // Urlaubern
+		"(?<!\|)-?(sch-?li-?chen?)$" => "|$1"; // Pfaffenschlichen
+		"^([Gg]e)-?(ne-?s)" => "$1+$2"; // Genesung
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2550,7 +2565,7 @@
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
 		"^([LlRr]o-?)y(-?a-?l)" => "$1j$2"; // loyal, royal
 
-		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?ke?y", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by", "[Pp]lä-?do-?yer", "Bran-?dy", "[Tt]y-?r-?r-?he-?n", "[Uu]-?r-?u-?gu-?a-?y", "[Rr]a-?yon", "^[Ll]a-?dy", "^[Qq]u-?i-?c-?k-?l-?y", "[Gg]o-?u-?ra-?ya", "^(?:[Kk]a-?)?[Bb]o-?va-?ry", "[Cc]a-?ny", "^[Ff]ray-?s-?si-?nous", "^[Vv]i-?c-?hy$", "^[Ss]a-?vo-?y", "^[Bb]u-?c-?hy", "^[Dd]e-?ro-?ze-?r-?ays", "^[Gg]i-?v-?ry", "^[Ll]o-?y-?o-?la" };
+		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?ke?y", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by", "[Pp]lä-?do-?yer", "Bran-?dy", "[Tt]y-?r-?r-?he-?n", "[Uu]-?r-?u-?gu-?a-?y", "[Rr]a-?yon", "^[Ll]a-?dy", "^[Qq]u-?i-?c-?k-?l-?y", "[Gg]o-?u-?ra-?ya", "^(?:[Kk]a-?)?[Bb]o-?va-?ry", "[Cc]a-?ny", "^[Ff]ray-?s-?si-?nous", "^[Vv]i-?c-?hy$", "^[Ss]a-?vo-?y", "^[Bb]u-?c-?hy", "^[Dd]e-?ro-?ze-?r-?ays", "^[Gg]i-?v-?ry", "^[Ll]o-?y-?o-?la", "^Dü-?puy-?tren" };
 
 		// eu = ö
 		"([Aa]-?ma-?t)eu(-?r)" => "$1ö$2";
@@ -3579,7 +3594,7 @@
 
 		"#li-?ch" => "{LICH}";
 		"tüm{LICH}" => "{TUM}{LICH}"; 
-		"(-|\+)li-?ch(e-?r\+?|-?s?-?t)?(e[rnsm]?\+?|m)?$" => { "$1{LICH}$2$3", "[Zz]wil-?li-?ch", "[Gg]e.?b-?li-?c-?h", "[Hh]el-?lich-?t" }; // not: geblichen
+		"(-|\+)li-?ch(e-?r\+?|-?s?-?t)?(e[rnsm]?\+?|m)?$" => { "$1{LICH}$2$3", "[Zz]wil-?li-?ch", "[Gg]e.?b-?li-?c-?h", "[Hh]el-?lich-?t", "^[Ss]ch-?li-?c-?he" }; // not: geblichen
 
 		"(?<!^[Gg])ent\+" => "{ANT}+"; // not: Gentleman
 		"(?<![Dd]er\+|[Dd]er-|[Dd]er|[Dd]es-s|[Dd]ess)ent-(w|gl)" => "{ANT}+$1"; // Entwicklungshelfer, entgleiste, not: derentwillen
@@ -3659,7 +3674,7 @@
 		"schien" => "schin";	// hm .. ;-)
 		"(er-?)dem$" => "{ER}{DEM}";
 		"(ch-?)dem$" => "$1{DEM}"; 
-		"((?:.*?))en$" => { "$1{EN}", "[Ww]ie-?n", "[Dd]ie.?n", "^[Rr]i-?en$", "^[Bb]en$", "^[Rr]ou-?ens?$", "^[Aa]n-?ci-?en" };
+		"((?:.*?))en$" => { "$1{EN}", "[Ww]ie-?n", "[Dd]ie.?n", "^[Rr]i-?en$", "^[Bb]en$", "^[Rr]ou-?ens?$", "^[Aa]n-?ci-?en", "^[Dd]ü-?puy-?tren" };
 		"([Ss]eit|[Ww]äh?-?rend)-?dem" => "$1{DEM}";
  		"end#wem$" => "end#{WEM}"; // irgendwem
 
@@ -3809,7 +3824,7 @@
 		"t-?t-?l" => "[TTL]"; // war A sagt, muss B sagen (siehe folgende Regel ... :/)
 		"t-?t(?!ums?$)" => "[TT]"; // bundler rule => use it here to avoid application of following et-rule
 		"et-z" => "Et-z"; // avoid et in following rule
-		"(-(?:(?:.*?))|{H[EA]IT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t", "[Gg]i-?let", "[Pp]a-?t-?he-?tis-?c-?h", "(?:Ä|ä)s-?th?e-?t", "[Pp]la-?ne-?t", "[Dd]e-?k-?re-?t", "[Gg]e-?o.?me-?t-?r", "[Ss]ta-?p-?le-?ton", "[Ee]-?li-?[zs]a-?be-?t", "[Pp]e-?r-?i-?me-?ter", "[Aa]-?ze-?ton", "^[Ss]truw?-?wel-?pe-?t", "^(?:[Ff]|[Pp]h)o-?ne-?t", "^[Mm]i-?c-?he-?let", "^[Cc]ha-?bet$", "[Aa]-?me-?t-?h[yi]s-?t", "^[Cc]ou-?ple-?t", "^[Pp]i-?e-?tro", "^[Bb]i-?nets?$", "^[Pp]ol-?lets?$", "^[Bb]ou-?dets?$", "^[Ww]ild[-+|]?bre-?t", "^[Tt]ou-?pet", "^[Dd]i-?o-?cle-?ti-?a-?n", "^[Bb]i-?zet", "[Bb]er[-+]?set", "^[Ss]a-?s-?se-?t(?:ô|o)t" }; // exclude Millimeterchen 
+		"(-(?:(?:.*?))|{H[EA]IT})(?<!i)(e-?t)(e[nrsm])?(?!z)" => { "$1{ET}$3", "[Rr]e[-+]pe-?t", "Mar-?ga-?ret", "[Bb]ud-?get", "(?:[Kk]i-?lo|[Mm]il-?li|[Gg]a-?so)-?me-?t-?er", "[Hh]el-?ve-?tas", "[Tt]a-?pe-?t", "[Tt]rom-?pe-?te", "[Mm]us-?ke-?te", "[Aa]p-?pe-?ti-?t", "[Mm]au-?se-?to-?t", "[Aa]n[-+]?be-?tu-?n-?g", "[Pp]as-?te-?te", "[Dd]ol-?me-?t-?sch", "[Aa]r-?re-?ti", "[Ss]e-?k-?re-?t", "[Vv]a-?r-?i-?e-?te", "[Tt]he-?o-?re-?ti", "[Vv]e-?ge-?ta", "ge-?be-?t", "[Aa]n[-+]?be-?t", "[Bb]il-?le-?t", "[Pp]ro-?le-?t", "^[Aa]d-?met$", "^[Jj]a-?pe-?tos$", "[Bb]ul-?le-?tin", "[Aa]-?t-?h-?le-?t", "[Bb]a-?ro-?me-?ter", "[Kk]om-?pe-?ten", "[Gg]e\+?tre-?te", "sim-?me-?t-?ri-?s-?ch", "tre-?te", "[Rr]ol-?let", "[Aa]l-?(?:p-?h|f)a-?be-?t", "[Gg]i-?let", "[Pp]a-?t-?he-?tis-?c-?h", "(?:Ä|ä)s-?th?e-?t", "[Pp]la-?ne-?t", "[Dd]e-?k-?re-?t", "[Gg]e-?o.?me-?t-?r", "[Ss]ta-?p-?le-?ton", "[Ee]-?li-?[zs]a-?be-?t", "[Pp]e-?r-?i-?me-?ter", "[Aa]-?ze-?ton", "^[Ss]truw?-?wel-?pe-?t", "^(?:[Ff]|[Pp]h)o-?ne-?t", "^[Mm]i-?c-?he-?let", "^[Cc]ha-?bet$", "[Aa]-?me-?t-?h[yi]s-?t", "^[Cc]ou-?ple-?t", "^[Pp]i-?e-?tro", "^[Bb]i-?nets?$", "^[Pp]ol-?lets?$", "^[Bb]ou-?dets?$", "^[Ww]ild[-+|]?bre-?t", "^[Tt]ou-?pet", "^[Dd]i-?o-?cle-?ti-?a-?n", "^[Bb]i-?zet", "[Bb]er[-+]?set", "^[Ss]a-?s-?se-?t(?:ô|o)t", "^[cC]a-?ni-?vet" }; // exclude Millimeterchen 
 		"(\[TT\])(e-?t)(e[nrsm])?" => "$1{ET}$3";  
 		
 
@@ -3868,7 +3883,7 @@
 		"-wo$" => "{WO}";
 
 		"-(.*?)em$" => "-$1{EM}";
-		"-(.*?)en$" => { "-$1{EN}", "[Rr](?:i|\[&I\])-?en", "^[Rr]ou-?ens?$", "^[Aa]n-?ci-?en" };
+		"-(.*?)en$" => { "-$1{EN}", "[Rr](?:i|\[&I\])-?en", "^[Rr]ou-?ens?$", "^[Aa]n-?ci-?en", "^[Dd]ü-?puy-?tren" };
 
 
 		//"\+(?!\])" => "-";	// reduce + and # to simple - (syllable) in order to simplify following rules
@@ -4145,7 +4160,7 @@
 		"d[-\|]?r" => "[DR]";
 		"f(-?|\+|\|)r" => "[FR]";
 		"(g)\|(ro-?t)" => "$1\\$2"; // goldigroten ... separate only "rot" for the moment
-		"g(-?|\|)r" => "[GR]";
+		"g(-?|\||\+)r" => "[GR]"; // also: wegreitenden
 		"k-?r" => "[KR]";
 		"l[-\|]?r" => "[LR]";
 		//"(?<!m)m[-\|+]?r" => "[MR]"; // not: schlummrigen
@@ -4176,7 +4191,7 @@
 		"uei" => "A[&U][EI]"; // Argueil
 		"ei" => "[EI]";
 		"^na-?i-?v" => "na[&A]iv";
-		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}", "[Aa]i-?g-?le-?mont", "[Dd]e-?tai", "^[Mm]rai-?{ER}s?$", "^[Kk]aid$", "^[Nn]e-?wa-?kais?$", "^[Mm]i-?c-?hai-?l", "[Gg]er-?vais$", "^[Kk]ais?$", "^[Hh]o-?mais$", "^(?:[Ff]r|\[FR\])a-?n-?(?:c|ç)ai-?s", "[Vv]ol-?tai-res?$", "(?:^|\\)[Ss]aint" };
+		"ai" => { "[EI]", "[Mm]ain", "[Tt]ail-?l", "^[Mm]ai", "[Ww]ai-se", "[Mm]a-?rais", "[Mm]e-?dail-?le", "mi-?li-?tai-?re", "[Ll]ai-?(?:e|{EN})", "[Ww]ai-?s", "[Ff]ai-?re", "[Kk]ai-?s{ER}", "[Aa]i-?g-?le-?mont", "[Dd]e-?tai", "^[Mm]rai-?{ER}s?$", "^[Kk]aid$", "^[Nn]e-?wa-?kais?$", "^[Mm]i-?c-?hai-?l", "[Gg]er-?vais$", "^[Kk]ais?$", "^[Hh]o-?mais$", "^(?:[Ff]r|\[FR\])a-?n-?(?:c|ç)ai-?s", "[Vv]ol-?tai-res?$", "(?:^|\\)[Ss]aint", "^[Rr]ai-?n" };
 		"ai-{ER}" => "[AI][&E]{ER}"; // Mraier (name)
 		"ai" => "[AI]";
 		"\[AI\]-?{EN}" => "[AI][&E]{EN}";
@@ -4408,6 +4423,7 @@
 		"\|r" => "|[AR]";
 		"({VOR}[-+]?)r" => "$1[AR]";
 		"\[RR\]r" => "[RR][AR]"; // Arrr
+		"{HIN}-?r" => "{HIN}[AR]"; // Hinritts
 		"r" => "[VR]";
 		"s" => "S";
 		"(?<![|+])t" => "T"; // why is | included ?! => Arbeitstherapie
@@ -6257,7 +6273,7 @@
 		//"\[&T\]-?\[H\]" => "[&T3/4][H]";
 		"\[&T\]-?\[H\]" => "[&TH]";
 		"\[&T\]-?\[VR\]" => "[&TVR]";
-		"\[&T\]\[?S\]?(?!CHAFT)" => "[&TS]";
+		"\[&T\]\[?S\]?(?!CHAFT|CH)" => "[&TS]";
 		"(\[&TH\])T" => "$1[&T]"; // veröffentlichten (&t after secondary &th)
 		"\[&T\](\[E[MN]\])" => "[&T&E]$1"; // idem
 		"\[&T\]\[VR\]" => "[&TVR]"; // idem (all these secondary groups ...)

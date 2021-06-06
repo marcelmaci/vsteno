@@ -3381,6 +3381,14 @@
 		"(\[auf\])\[#.\](\[j\])" => "$1[#1-]$2"; // aufjagt
 		"(\[fort\])\[#..\](\[f@l\])" => "$1[#4]$2"; // fortfliegen
 		"(\[nk\])\[#.\](\[sch@r\])" => "$1[#2-]$2"; // Denkschrift
+		"(\[w@r6\])\[#.\](\[(?:AR|ar)\^\])" => "$1[#1]$2"; // Widerrist
+		"(\[ch\])\[#.\](\[u\]\[f\])" => "$1[#7]$2"; // Bachufer
+		"(\[s\])\[#.\](\[o\]\[pf\])" => "$1[#7]$2"; // Liebesopfer
+		"(\[sch@r\])\[#.\](\[i\]\[tt@l3\])" => "$1[#2][sch.][#5]$2"; // Fortschrittler
+		"(\[b\])\[#.\](\[u\]\[ck@l3\])" => "$1[#6]$2"; // Buckligen
+		"\[j\](\[#.\]\[o\]\[ck\])" => "[j^]$1"; // Pferdejockel
+		"(\[z\])\[#.\](\[z@r\])" => "$1[#1-]$2"; // herzzerreissender
+		"(\[in\])\[#.\](\[g@r\])" => "$1[#0]$2"; // Ingrimms
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
 		"\[\^ch\]$" => "[_^ch]"; 
@@ -3481,6 +3489,9 @@
 		"'(\\\\)\[s\]$" => "'$1[=S]"; // ist's
 		"(\[f\])(\\\\)(\[#[0-9]-?\])'" => "$1$2[#1-]'"; // half's
 
+		"\[heit\]\[&e\]" => "[&eit&e]"; // produces problems with cli
+		"\[et3\/4\]\[&e\]" => "[&t&e]"; // beobachtete (problems with cli)
+
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)
 		// not needed for font
@@ -3492,6 +3503,7 @@
 		// SHARED FONT: BORROWING MODEL MUST TAKE CARE OF THIS! (IF NECESSARY)		
 		// convert all to upper case for final rendering [a-z]|ä|ö|ü
 		"(^.*?$)" => "strtoupper()";
+		
 		//"ä" => "Ä";	// strtolower() works with umlaut, but strtoupper() doesn't ?!
 		//"ö" => "Ö";
 		//"ü" => "Ü"; 
