@@ -3397,6 +3397,9 @@
 		"(\[zw\])\[#.\](\[i\]\[st\])" => "$1[#6]$2"; // Zwiste
 		"(\[w\])\[#.\](\[u\]\[nd@r\])" => "$1[#0]$2"; // wundre
 		"(\[s=\])\[#.\](\[a\]\[pp\])" => "$1[#6]$2"; // sapperlott
+		"(\[c\])\[#.\](\[i\]\[p\])" => "$1[#2][sch.][#4]$2"; // Principessa
+		"(\[b@l\])\[#.\](\[a\]\[nd\])" => "$1[#6]$2"; // Saint-Herbland
+		"(\[k@l3\])\[#.\](\[-e\])" => "$1[#3]$2"; // Kleefeld
 
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
@@ -3500,6 +3503,8 @@
 
 		"\[heit\]\[&e\]" => "[&eit&e]"; // produces problems with cli
 		"\[et3\/4\]\[&e\]" => "[&t&e]"; // beobachtete (problems with cli)
+		"(\[0n-\])\[en\](\[o\]\[&e\])" => "$1[#7]$2"; // denen (problems with cli)
+		"\[et\]\[&e\]" => "[&et&e]"; // beschatteten (problems with cli)
 
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)
