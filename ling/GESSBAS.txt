@@ -3400,7 +3400,17 @@
 		"(\[c\])\[#.\](\[i\]\[p\])" => "$1[#2][sch.][#4]$2"; // Principessa
 		"(\[b@l\])\[#.\](\[a\]\[nd\])" => "$1[#6]$2"; // Saint-Herbland
 		"(\[k@l3\])\[#.\](\[-e\])" => "$1[#3]$2"; // Kleefeld
-
+		"(\[&tvr\])(\[w\])" => "$1[#4]$2"; // Selterwasserzubereitungsmaschine (if not separated)
+		"(\[d\])\[#.\](\[sch@r\])" => "$1[#0]$2"; // Geldschrank
+		"(\[sch@r\])\[#.\](\[a\]\[nk\])" => "$1[#4][sch.][#3-]$2"; // idem
+		"(\[k@r\])\[#.\](\[u\]\[p\])" => "$1[#7]$2"; // skrupellos
+		"(\[tt\])\[#.\](\[t\])" => "$1[#7]$2"; // Betttuch (only modernized ortographe)
+		"(\[h\])\[#.\](\[ch\])" => "$1[#5]$2"; // Schuhchen
+		"(\[\^ch\])\[#.\](\[a\]\[t\])" => "$1[#8]$2"; // Bichats
+		"(\[&th\])(\[a\]\[vr\])" => "$1[#3]$2"; // Kanthariden
+		"(\[t\])\[#.\](\[a\]\[pf@r6\])" => "$1[#7]$2"; // tapfre
+		"(\[n\])\[#.\](\[o\]\[tt\])" => "$1[#7]$2"; // Hugenotten
+		"(\[t\])\[#.\](\[u\]\[nd\])" => "$1[#6]$2"; // Rotunde
 
 		"\[i\](\[\^z1@l3\])" => "[#6][I]$1"; // kitzle - very special ...
 		"\[\^ch\]$" => "[_^ch]"; 
