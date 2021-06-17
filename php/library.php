@@ -25,6 +25,9 @@ Fehler finden, dann melden Sie diese bitte via <a href="mailto:m.maci@gmx.ch">Ma
     (Quelle: <a href="https://gutenberg.org/files/48205/48205-h/48205-h.htm">Original mit Illustrationen</a>)</li>
     <li>Fjodor Dostojewski, Arme Leute (437 Seiten) <a href="../books/dostojewsky_arme_leute_9x12cm_23052021.pdf">PDF 23/05/2021</a>**
     (Quelle: <a href="https://gutenberg.org/cache/epub/35339/pg35339.txt">Original</a>)</li>
+    <li>Gustave Flaubert, Madame Bovary (1051 Seiten) <a href="../books/flaubert_madame_bovary_16062021_9x12cm.pdf">PDF 16/06/2021</a>**
+    [<a href="../books/bovary_teil1.pdf">Teil1</a> / <a href="../books/bovary_teil2.pdf">Teil2</a>]
+    (Quelle: <a href="https://gutenberg.org/cache/epub/15711/pg15711.txt">Original</a>)</li>
 </ul>
 <p><h1>Formate</h1></p>
 <p>* A5 (= zweiseitiger Ausdruck A4 quer)<br>
