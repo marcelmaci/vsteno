@@ -1096,6 +1096,7 @@ function MetaParser( $text ) {          // $text is a single word!
     global $global_linguistical_analyzer_debug_string;
     global $parallel_lng_form, $last_written_form;
     global $caching_temporarily_disabled;
+    global $only_pretokens, $only_posttokens, $punctuation;
     
     $global_linguistical_analyzer_debug_string = "";
     //echo "Metaparser(): $text / 'token_type' = " . $_SESSION['token_type'] . "<br>";
@@ -1132,6 +1133,7 @@ if (!$caching_temporarily_disabled) {
                             break;
         }
         $cached_result = true;
+        //echo "cache hit: " . htmlspecialchars($cached_results[$text]) . "<br>";
         return $cached_results[$text];
     }
 }    
@@ -1357,7 +1359,8 @@ if ($_SESSION['analysis_type'] === "selected") {
                         }
                     }
                     if (mb_strlen($posttokens) > 0) {
-                        if ((mb_substr($posttokens, 0, 1) === "}") || (mb_substr($posttokens,0,1) === "]")) { // check only first char of posttokens, since there may be . ? ! afterwards (et l'horreur sous forme de greffes aléatoires continue ...;-))
+                        if (preg_match("/" . preg_quote(mb_substr($posttokens, 0, 1)) . "/", $punctuation . $only_posttokens . $only_pretokens) === 1) {
+                        //if ((mb_substr($posttokens, 0, 1) === "}") || (mb_substr($posttokens,0,1) === "]")) { // check only first char of posttokens, since there may be . ? ! afterwards (et l'horreur sous forme de greffes aléatoires continue ...;-))
                             $output .= $posttokens; // add } and ] without \\
                             $separated_std_form .= $posttokens;     // do the same for std and prt form
                             $separated_prt_form .= $posttokens;
@@ -1372,7 +1375,7 @@ if ($_SESSION['analysis_type'] === "selected") {
                     }
                     // cache result
                     if (isset($cached_results[$text])) $cached_results[$text] = $output;
-    
+                    // echo "output: $output only_pretokens: $only_pretokens only_posttokens: $only_posttokens<br>";
                     return $output;
   
                     break;

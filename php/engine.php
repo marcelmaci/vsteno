@@ -433,23 +433,54 @@ function CalculateWord( $splines ) {     // parameter $splines
         return $splines;
 }
 
+function CalculateXProjection($x, $y) {
+        global $baseline_y;
+        $delta_y = $baseline_y - $y;
+        $delta_x = $delta_y / tan( deg2rad( $_SESSION['token_inclination'] ));
+        //echo "delta_y: $delta_y delta_x: $delta_x<br>";
+        return ($x - $delta_x);
+}
+
 // TrimSplines: finds left and right x-borders (= min x / max x) and adjust coordinates in splines
 // returns max_width
 function TrimSplines( $splines ) {
          global $border_margin, $baseline_y;
          $left_x = 9999; $right_x = -9999;
          $left_y = 9999; $right_y = 9999;
+         $left_px = 9999; $right_px = -9999;
+         
          $length_splines = count( $splines );
          // first find left_x / right_x;
          for ($i = 0; $i < $length_splines; $i += tuplet_length) {
                 $test_x = $splines[$i+offs_x1];
                 $test_y = $splines[$i+offs_y1];
-                if ($test_x < $left_x) { $left_x = $test_x; $left_y = $test_y; }
-                if ($test_x > $right_x) { $right_x = $test_x; $right_y = $test_y; }
+                //echo "[$i]:test_x: $test_x test_y: $test_y<br>";
+                if ($_SESSION['layouted_correct_word_width']) {
+                    // calculate x projection of knot (depending on delta_y) and compare left / right based on projection
+                    $projection_x = CalculateXProjection($test_x, $test_y);
+                    //$comparison = ($projection_x > $right_px) ? ">" : "<";
+                    //echo "projection_x: $projection_x $comparison right_px: $right_px<br>";
+                    if ($test_x < $left_x) { $left_x = $test_x; $left_y = $test_y; }
+                    if ($test_x > $right_x) { $right_x = $test_x; $right_y = $test_y; }
+                    if ($projection_x < $left_px) { $left_px = $projection_x; }
+                    if ($projection_x > $right_px) { $right_px = $projection_x;  
+                        //echo "correct: right_x=$right_x right_y=$right_y<br>"; 
+                    }
+                    //if ($test_x < $left_x) { $left_x = $test_x; $left_y = $test_y; }
+                } else {
+                    // classic approch: calculate only x
+                    if ($test_x < $left_x) { $left_x = $test_x; }
+                    if ($test_x > $right_x) { $right_x = $test_x; }
+                }
+                //echo "i: $i test_x: $test_x test_y: $test_y left_x: $left_x left_y: $left_y right_x: $right_x right_y: $right_y<br>";
          }
+     
          // now left_x / right_x contain min x / max x => use as delta_x to place splines at coordinate 0 at the left
-         $left_x -= $border_margin; $right_x += $border_margin;
-         //echo "left_x = $left_x / right_x = $right_x <br><br>";
+         // don't remember why I added border margin here ... ?!?
+         // keep it for compatibility reasons when width correction isn't active
+         if (!$_SESSION['layouted_correct_word_width']) { $left_x -= $border_margin; $right_x += $border_margin; }
+         //echo "border_margin: $border_margin left_x = $left_x / right_x = $right_x <br><br>";
+         
          for ($i = 0; $i < $length_splines; $i += tuplet_length) {
                 //echo "splines($i) OLD: p1(" . $splines[$i+offs_x1] . "/" . $splines[$i+offs_y1] . ") q1(" . $splines[$i+bezier_offs_qx1] . "/" . $splines[$i+bezier_offs_qy1] . ") q2(" . $splines[$i+bezier_offs_qx2] . "/" . $splines[$i+bezier_offs_qy2] . ")<br>";
                 $splines[$i+offs_x1] -= $left_x;
@@ -467,19 +498,27 @@ function TrimSplines( $splines ) {
          //echo "Baseline: $baseline_y (Session: " . $_SESSION['baseline'] . " * TokenSize: " . $_SESSION['token_size'] . " * 10) Angle: " . $_SESSION['token_inclination'] . "<br>";
          // ok, width can't be corrected here because it breaks aligning to left and right margin
          // => return the values and try to solve that in calling function
+         /*
          $correction_lx = 0; $correction_rx = 0; // don't leave this variables undefined
          if ($_SESSION['layouted_correct_word_width']) {
                 // correct left_x
                 $delta_y = $baseline_y - $left_y;
                 $temp_x = $delta_y / tan( deg2rad( $_SESSION['token_inclination'] ));
-                if ($temp_x < 0) $correction_lx = $temp_x;
-                //echo "Correction: delta_y: $delta_y left_x: $temp_x => width: $width<br>";
+                if ($temp_x < 0) $correction_lx = $temp_x; // NOT SURE IF THIS IS CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //echo "<br>FINAL CORRECTION: left_x: $left_x left_y: $left_y delta_y: $delta_y correction_lx: $correction_lx <br>";
                 // correct right_x
                 $delta_y = $baseline_y - $right_y;
                 $temp_x = $delta_y / tan( deg2rad( $_SESSION['token_inclination'] ));
                 if ($temp_x > 0) $correction_rx = -$temp_x;
-                //echo "Correction: delta_y: $delta_y right_x: $temp_x => width: $width<br>";
-         }
+                //echo "FINAL CORRECTION: right_x: $right_x right_y: $right_y delta_y: $delta_y correction_rx: $correction_rx <br><br>";
+        }
+        */
+         $correction_rx = 0; $correction_lx = 0;
+         if ($left_x < $left_px) $correction_lx = $left_x - $left_px;
+         if ($right_x > $right_px) $correction_rx = $right_px - $right_x;
+         //echo "TRIM0: left_x: $left_x right_x: $right_x<br>";
+         //echo "TRIM1: left_px: $left_px right_px: $right_px<br>";
+         //echo "TRIM2: correction_lx: $correction_lx correction_rx: $correction_rx<br>";
          return array( $splines, $width, $correction_lx, $correction_rx );
 }
 
@@ -1813,14 +1852,21 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
     //echo "In DrawOneLineInLayoutedSVG(): word_position_x: $word_position_x word_position_y: $word_position_y last_word: $last_word stroke_width: $stroke_width<br>word_splines[]<br>";
     //var_dump($word_splines);
     //
+    //echo "test: output_style: " . $_SESSION['output_style'] . " force_lr: >" . $force_left_align ."< <br>";
+   
+    
     $normal_distance = $_SESSION['distance_words'];
     if (($_SESSION['output_style'] === "align_left_right") && (!$force_left_align)) {
         $number_of_words = count($word_splines) - 1;
         $number_of_gaps = $number_of_words - 1;
         $width_without_correction = 0;
         $normal_distance = $_SESSION['distance_words'];
+        
         if ($_SESSION['layouted_correct_word_width']) {
-            for ($i = 0; $i<$number_of_words; $i++) $width_without_correction += $normal_distance + $word_widths[$i][0] + $word_widths[$i][1] + $word_widths[$i][2];
+            for ($i = 0; $i<$number_of_words; $i++) {
+                $width_without_correction += $normal_distance + $word_widths[$i][0] + $word_widths[$i][1] + $word_widths[$i][2];
+                //echo "word(i): $i width(0)=" . $word_widths[$i][0] . "width(1)=" . $word_widths[$i][1] . "width(2)=" . $word_widths[$i][2] . "<br>"; 
+            }
         } else {
             for ($i = 0; $i<$number_of_words; $i++) $width_without_correction += $normal_distance + $word_width[$i];
         }
@@ -1984,7 +2030,10 @@ function DrawOneLineInLayoutedSVG( $word_position_x, $word_position_y, $word_spl
             }
             
             // correct position if width correction is active
-            if ($_SESSION['layouted_correct_word_width']) $word_position_x += $word_widths[$i][0] + $word_widths[$i][1] + $word_widths[$i][2] + $normal_distance + $align_shift_x;
+            //echo "[$i]: word_position_x: $word_position_x normal_distance: $normal_distance align_shift_x: $align_shift_x word_width[0]: " . $word_width[$i] ." widths: " . $word_widths[$i][0] . "/" . $word_widths[$i][1] . "/" . $word_widths[$i][2] . "<br>";
+            //echo "NEXT: word_width[0]: " . $word_width[$i+1] ." widths: " . $word_widths[$i+1][0] . "/" . $word_widths[$i+1][1] . "/" . $word_widths[$i+1][2] . "<br>"; 
+            //var_dump($word_widths);
+            if ($_SESSION['layouted_correct_word_width']) $word_position_x += $word_widths[$i][0] + $word_widths[$i][1] + $word_widths[$i][2] + $normal_distance + $align_shift_x + $distance_words;
             else $word_position_x += $word_width[$i] + $normal_distance + $align_shift_x;
         }
       }
@@ -2284,7 +2333,8 @@ function CalculateLayoutedSVG( $text_array ) {
     $actual_word = 0;
     $text_array_length = count($text_array);
     $collected_inline_option_tags = "";
-    
+// echo "temp_width: $temp_width<br>";
+ 
     foreach ( $text_array as $key => $single_word ) {
             $global_debug_string = ""; // even if there is no debug output in layouted svg, set $debug_string = "" in order to avoid accumulation of data in this variable by parser functions
     //if ($_SESSION['token_type'] === "shorthand") {
@@ -2384,12 +2434,16 @@ function CalculateLayoutedSVG( $text_array ) {
                         }
    //                     echo "additional_correction_lx: $additional_correction_lx additional_correction_rx: $additional_correction_rx<br>";
                         // write all that to a separate array ...
+                        //echo "create word_widths[$actual_word]: $deltawidth / $additional_correction_lx, $additional_correction_rx<br>"; 
                         $word_widths[$actual_word] = array( $delta_width, $additional_correction_lx, $additional_correction_rx);
                     } else $word_widths = null;
                     
                     $word_width[$actual_word] = $delta_width;
                     //var_dump($word_splines[$actual_word]);
-                    $temp_width += $distance_words + $delta_width + $additional_correction_lx + $additional_correction_rx;
+                    // SPACING BUG IS HERE !!!!!!!!!!!!!!!!!!!!!
+                    //echo "distance_words: " .$_SESSION['distance_words'] . "<br>";
+                    $temp_width += $_SESSION['distance_words'] + $delta_width + $additional_correction_lx + $additional_correction_rx;
+                    //echo "[$actual_word] temp_width = $temp_width = " . $_SESSION['distance_words'] . " + $delta_width + $additional_correction_lx + $additional_correction_rx<br>";
                     //echo "tempwidth: $temp_width / delta_width: $delta_width<br>";
                     //echo "word: $single_word tempwidth: $temp_width / delta_width: $delta_width<br>";
                 } else {
@@ -2454,6 +2508,7 @@ function CalculateLayoutedSVG( $text_array ) {
             
             //echo "key: " . $key . " count: " . count($text_array) . "<br>";
             if (($temp_width > $max_width-$right_margin-$left_margin) || ($key == $text_array_length-1)) {
+                //echo "linebreak ... $temp_width > $max_width - $right_margin - $left_margin<br>";
             // if ($temp_width > $max_width) {
                 //echo "Draw actual line at key: $key word: $single_word temp_width: $temp_width actual_word: $actual_word<br>";
                 // we have reached end of actual line => draw that line and set curser at beginning of next line
