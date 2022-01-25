@@ -1742,6 +1742,7 @@
 		"^([Aa]uf\+)#(warte)-?(frau)" => "$1$2|$3"; // Aufwartefrau (special)
 		"^([Vv]es)-?ta-?(tem-?pel)" => "$1-ta|$2"; // Vestatempel
 		"^([Rr]eb)-?(l(?:a|ä)u-?s)" => "$1|$2"; // Reblaus
+		"^([Hh]e)\|(ge-?l)" => "$1-$2"; // Hegel
 
 	#EndSubSection(analyzer)
 #EndSection(header)

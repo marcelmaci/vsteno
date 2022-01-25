@@ -3515,6 +3515,8 @@
 		"\[et3\/4\]\[&e\]" => "[&t&e]"; // beobachtete (problems with cli)
 		"(\[0n-\])\[en\](\[o\]\[&e\])" => "$1[#7]$2"; // denen (problems with cli)
 		"\[et\]\[&e\]" => "[&et&e]"; // beschatteten (problems with cli)
+		"\[&t\]\[schaft\]" => "[&tschaft]"; // Wirtschafterin (problems with cli)
+		"\[&t\]\[&e\]" => "[&t&e]"; // erwiderte (problems with cli)
 
 	#EndSubSection(postspacer)
 	#BeginSubSection(exitkiller)

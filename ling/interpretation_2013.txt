@@ -139,3 +139,17 @@ Toleranz: prädefiniert, prähistorisch, Dislokation, Korreferat, Subtraktion, b
 6.1.2. Ebbe, addieren, Roggwil, Struwwelpeter
 6.2. Laib, Laich, Laien, Mai, Maid, Saite, Zaine, Fäulnis, Häuser, Häute, Käufe, läuten, Räuber, Räume, Kamion, Camion, Zirkus, Circus, Akklamation, akklimatisieren, Akkord, Akkreditiv, akkumulieren, Akkusativ, okkult, Phase, Phänomen, Philosoph, Physik, phonetisch, Phosphor, Rhetorik, Rheuma, Rhythmik, Rhesus Faktor, Katarrh, Thron, Theater, Thema, Theorie, Apotheke, ästhetisch, Asthma, Physik, System, Gymnasium, Hypothek, Hydrant, Hyäne, Hypnose, Psychologie, Rhythmus, Symbol, Mythologie, Yard, loyal, Rayon, royal, Katze, Skizze, Witz
 6.3.1. Allianz, Allotria, Alphabet, Amphitheater, Baisse, Bankier, Bataillon, Boykottieren, Bridge, Charité, Chef, Chirurg, Kontrast, Detail, detaillieren, dinieren, Diphtong, Disziplin, diskret, Disposition, Enklave, Enthusiasmus, Enzyklopädie
+extern, extra, extrem, Fairplay, unfair, Fortuna, genial, Hattrick, (?), Hipps, Hieroglyphen, Hyäne, Hyazinthe, irregulär, irrelevant, Interview, Joke, Clearing, Clique, Cliché, Klischee, Clown, Coiffeur, Corps, Korps, Computer, loyal, maijestätisch, Malheur, Malaise, Massage, Medaillon, Palais, Parenthese, Pavillon, Plädoyer, Portemonnaie, Portemonnee, Proletarier, Prorektor, Rayon, Recherchen, Royalist, Genie, Gelee, clean, Spray, Theorie, Tea Room, Tricot, Trikot, Vase, Jacht, Yankee
+6.3.2. Annonce, Arrangement, Baisse, Balance, Bassin, Bataillon, Beatles, Bowle, Bridge, Cello, Champion, Chance, Charité, Chef, Clique, Clown, Coiffeur, Computer, Corps, Detail, detaillieren, Enquete, Entente, entre, extern, extra, extrem, Fairplay, frivol, Gelee, Genie, Hattrick, Hausse, Hyäne, Interview, Joke, Jury, Lloyd, loyal, Malheur, Malaise, Massage, Medaillon, Mignon, Nuance, Palais, Pavillon, Plädoyer, Police, Portemonnaie, Rayon, Tea Room, Verb, Waggons, Yacht, Yankee, Yard, Yeti, York
+6.3.3. annoncieren, Rayon
+6.3.4. Beethoven, Carlyle, Charley, Kongo, Darwinismus, Descartes, Fahrenheit, Freiburg, Hawaii, Don Carlos, Konstantinopel, Zingg, Lloyd, lutherisch (2x), Martigny, Nietsche, Bad Pyrmont, St. Gallen, Überlingen (2x), Ural, Wien (2x), Württemberg, Nizza
+6.3.5. Chirurg, Chinese, Aktie, Lektion, Motiv, motivieren
+6.4.1. (?), Genie
+6.4.2. Medaillon, Pavillon
+6.5.1. Draier, Bäurer, Bläuler, Lokker, Finck (?), (?), Scharpff, Stutz, Molukken, Albert Schweitzer, Kempff
+6.5.2. Beeren, beehren, gerbt, geerbt, gackert, geackert, Gerte, geehrte, girrt, geirrt, zehrst, zuerst
+6.5.3. Du, Sie, Euch, Ihnen
+6.5.4. Gfeller, Gnägi, Gmünder, Gmünden, Gnann, Zbinden, Wirth
+6.5.5. fahnden, fanden, sucht, Sucht, flucht, Flucht, bucht, Bucht
+6.5.6. Arme, Armee, hinzunehmen, hinzu nehmen, hinzusetzen, hinzusetzen, legende, Legende
+6.5.7. Arterie, Bakterien, Parenthese

@@ -52,6 +52,10 @@ Taschenbuch (12x19cm), 380 Seiten, mattweiss mit gelbem Cover. <br>Preis: 25.- C
 <a href="mailto:m.maci@gmx.ch">Mail</a>. Spezialangebot: Die beiden bis jetzt publizierten Bücher (<i>Der Widerspenstigen Zähmung</i> und 
 <i>Matto regiert</i>) im <b>Bundle für Fr. 49.-</b> (inklusive Versand, statt 57.- im Einzelversand). 
 Weitere Details und Impressionen im <a href="matto_regiert_details.php">Blick ins Buch</a> und in der <a href="matto_projekt.php">Entstehungsgeschichte</a>.</p>
+<p>
+<b>Update 25/01/2022:</b> Trotz mehrfachem Überlesen (mit Argusaugen!) haben sich einige Fehler 
+eingeschlichen. Hier kommt somit das Korrigendum zu <i>Matto regiert</i>. Format: 
+<a href="../books/matto_regiert_errata.pdf">A4</a> (hoch) <a href="../books/matto_regiert_errata_quer.pdf">A5</a> (quer).</p>
 
 <p><b>25/09/20 Druckausgabe "Der Widerspenstigen Zähmung" lieferbar!</b><p>
 <p>Das erste vollumfänglich mit VSTENO generierte Buch ist nun lieferbar:<br><p>

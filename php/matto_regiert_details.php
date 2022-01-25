@@ -44,8 +44,7 @@ Bestellung per <a href="mailto:m.maci@gmx.ch">Mail</a>. Bitte beachten Sie, dass
 
 </p>
 <h2>Haftungsausschluss</h2>
-<p>Die Übertragung dieses Buches erfolgte mit grosser Sorgfalt unter Verwendung des Programmes VSTENO. Dennoch kann keine Garantie gegeben werden,
-dass alle Stenogramme 100% fehlerfrei sind. Allfällige Fehler werden - wie bereits bei <i>Der Widerspenstingen Zähmung</i> - in einem offiziellen 
-<a href="dwz_details.php">ERRATA</a> publiziert. </p>
+<p>Die Übertragung dieses Buches erfolgte mit grosser Sorgfalt unter Verwendung des Programmes VSTENO. Bekannte Fehler werden offiziell im folgenden 
+Korrigendum aufgeführt. Format: <a href="../books/matto_regiert_errata.pdf">A4</a> (hoch) <a href="../books/matto_regiert_errata_quer.pdf">A5</a> (quer). </p>
 
 <?php require "vsteno_template_bottom.php"; ?>

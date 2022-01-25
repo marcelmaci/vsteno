@@ -1,0 +1,93 @@
+<@output_style=align_left>
+<@svgtext_size=30>
+<@token_type=svgtext> HINWEISE & ERRATA <break>
+<@token_type=handwriting> 
+<@svgtext_size=22>
+<@token_type=svgtext> Autor: <@token_type=handwriting> Friedrich Glauser
+<@token_type=svgtext><br>Titel: <@token_type=handwriting>Matto regiert 
+<@token_type=svgtext><br>Datum: <@token_type=handwriting>28. Dezember 2020
+<@token_type=svgtext><br>Ausgabe: <@token_type=handwriting> Taschenbuch
+<br>
+<br>
+<@svgtext_size=30>
+<@token_type=svgtext> KORREKTUREN
+<br> <@token_type=svgtext> <@svgtext_size=22> Vorwort: 
+
+<@token_type=shorthand> <@token_type=handwriting> übere (1,8;78,7) <@token_type=shorthand><@original_text_format=prt> [0N-][#WS][&U][-E] <@svgtext_size=16>
+<@token_type=handwriting> Jahren (3,1) <@token_type=shorthand><@original_text_format=prt> [J][#4][A][VR][#4-][EN] <@svgtext_size=16>
+
+<br> <@token_type=svgtext> <@svgtext_size=22> Romantext: 
+<@token_type=handwriting> Bärtschi (14,6) <@token_type=shorthand><@original_text_format=prt>
+BÄ[VR][&TSCH][&I]
+<@token_type=handwriting> Leinenkleid (17,6) <@token_type=shorthand> <@original_text_format=prt>
+[L][EI][N][#3-][E][N][#6][K@L3][EI][D][#3][.]
+<@token_type=handwriting> Fehlbaum (19,17; 211,16; 212,2; 212,18; 213,10; 213,13; 275,8) <@token_type=shorthand> <@original_text_format=prt>
+[F][E][H@L3][#4][B][#4][AU][M]
+<@token_type=handwriting> Biel (23,11; 134,6) <@token_type=shorthand> <@original_text_format=prt>
+[B][#5][&I][E][L]
+<@token_type=handwriting> Neufundländer (36,3) <@token_type=shorthand> <@original_text_format=prt>
+[N=][EU][&E][#4][F][#4][U][ND][#5][L][Ä][ND][#4][VR]
+<@token_type=handwriting> Tischtuches bückte (36,4) <@token_type=shorthand> <@original_text_format=prt>
+[T][#5][I][^SCH][#6][T][#5][U][CH][#2-][#2-][E][S][,] [B][Ü][CK][#3][&T&E][#2-][-E2]
+<@token_type=handwriting> Kärtchen (36,5+9) <@token_type=shorthand> <@original_text_format=prt>
+[K][Ä][VR][&TCH][EN]
+<@token_type=handwriting> berücksichtigte (38,1) <@token_type=shorthand> <@original_text_format=prt>
+[B][#0][RÜCK][#1-][S][#4][I][^CH][#1][&TG][&T&E][#2-][-E2]
+<@token_type=handwriting> majestätisch (42,14) <@token_type=shorthand> <@original_text_format=prt>
+[M][#4][A][J][#2-][#2-][E][S][&EIT&E][I][^SCH]
+<@token_type=handwriting> konservativ (47,14), stockkonservativ (94,14) <@token_type=shorthand> <@original_text_format=prt>
+[C][#3][S][#7][VR][#1][V][#6][A][T][#3][I][V] [ST][#2][D.][#5][O][CK][#7][C][#3][S][#7][VR][#1][V][#6][A][T][#3][I][V]
+
+<@token_type=handwriting> rücklings (98,5; 314,1; 344,5; 344,7; 352,18) <@token_type=shorthand> <@original_text_format=prt>
+[AR][Ü][CK@L3][#4][I][NG][#4][S]
+<@token_type=handwriting> Sehnsucht (100,15; 272,10) <@token_type=shorthand> <@original_text_format=prt>
+[S=][#3-][E][N][#3][S][#6][U][CH][#2][&T]
+<@token_type=handwriting> aufgerissenen (119,2) <@token_type=shorthand> <@original_text_format=prt>
+[AUF][#1-][G][#3][AR^][#0][I][SS][EN]
+<@token_type=handwriting> Liebeserlebnissen (126,13; 158,6) <@token_type=shorthand> <@original_text_format=prt>
+[L][#4][I][B][#2-][#2-][E][S][#7][VR][#4][L][E][B][#3][N][#3][I][SS][EN]
+
+<@token_type=handwriting> verallgemeinern (128,2) <@token_type=shorthand> <@original_text_format=prt>
+[0N-][EN][AR][#4][ALL][G][#4][M][EI][N][#5][VR][#1-][N]
+<@token_type=handwriting> Weltanschauungen (145,4;146,6) <@token_type=shorthand> <@original_text_format=prt>
+[W][E][L][&T]\[0N-][#3][A][N][#0][SCH][#4][AU][&E][#0][U][NG][EN]
+<@token_type=handwriting> einschläfernd (155,7) <@token_type=shorthand> <@original_text_format=prt>
+[0D-][EI][N][#4][SCH@L3][Ä][F][#4][VR][#4][ND]
+<@token_type=handwriting> stoppligen (175,1) <@token_type=shorthand> <@original_text_format=prt>
+[ST][#5][O][PP@L][#3][I][G][EN]
+<@token_type=handwriting> Stereotypien (203,1) <@token_type=shorthand> <@original_text_format=prt>
+[ST][E][VR][E][&E][#4][O][T][#7][I][P][#3][&I][EN]
+<@token_type=handwriting> Kindheitserlebnisse (216,16) <@token_type=shorthand> <@original_text_format=prt>
+[K][#6][I][ND1][&EITS]\[0N-][#5][VR][#4][L][E][B][#3][N][#3][I][SS][-E] 
+<@token_type=handwriting> zum (254,11) <@token_type=shorthand> <@original_text_format=prt>
+[Z][#3][U][M]
+<@token_type=handwriting> studierte (256,8) <@token_type=shorthand> <@original_text_format=prt>
+[ST][#5][U][D][#6][I][VR10][&T&E][#2-][-E2]
+<@token_type=handwriting> Referat (260,18) <@token_type=shorthand> <@original_text_format=prt>
+[AR][E][F][#4][VR][#6][A][T]
+<@token_type=handwriting> erdbeerfarben (275,1) <@token_type=shorthand> <@original_text_format=prt>
+[0N-][E][VR][#5][D][#7][B][E][VR][#4][F][#4][A][VR][#4][B][EN]
+<@token_type=handwriting> England (332,4) <@token_type=shorthand> <@original_text_format=prt>
+[0N-][E][NG@L3][#4][A][ND]
+<@token_type=handwriting> materielle (335,7) <@token_type=shorthand> <@original_text_format=prt>
+[M][#6][A][T][#5][VR][#3][&I][E][L@L][-E]
+<@token_type=handwriting> Schlussfolgerungen (339,7) <@token_type=shorthand> <@original_text_format=prt>
+[SCH@L3][#3][U][SS][#4][F][#3][O][L][#3][G][#6][VR][#4][U][NG][EN]
+
+
+<@svgtext_size=30>
+<br> <br> <@token_type=svgtext> SPEZIELLES <br>
+<@token_type=handwriting>
+Neuyork: <@token_type=shorthand><@original_text_format=prt> [N=][EU][Y][#5][O][VR][#1][K]<@token_type=handwriting>Glauser schreibt hier tatsächlich y!<br> 
+
+<@token_type=handwriting> <@svgtext_size=20>Sentimentalität (8,10), verwirrteste (50,1), Kaltschnauzigkeit (127,7): <br>
+<@token_type=svgtext><@svgtext_size=18> Eigentlich: <br> <@token_type=shorthand><@original_text_format=prt> [S=][#3-][E][N][&T&E][I][M][#3-][E][N][&T&E][#2][A][L][HEIT] [0N-][EN][AR][#4][W][#3][I][RR][&T&E][E][ST][#1-][-E] [K][#6][A][L][#3][&TSCH][N][#3][AU][^Z][#6][I][G][HEIT]<@token_type=handwriting>
+<br> Um Überschneidungen mit der oberen Zeile zu vermeiden, trennt VSTENO diese und ähnliche Wörter: <@token_type=svgtext><@svgtext_size=11>(Kann mit Option VSP1 ein- und ausgeschaltet werden.)<br>
+<@token_type=shorthand><@original_text_format=prt> [S=][#3-][E][N][&T&I]\[#2-]\[#2-][#4-]\[=]\[M][#3-][E][N][&T&E][#2][A][L][HEIT] [0N-][EN][AR][#4][W][#3][I][RR][&T]\[0N-][E][ST][#1-][-E] [K][#6][A][L][&T]\[SCH][#1][N][#3][AU][^Z][#6][I][G][HEIT]<@token_type=handwriting>
+
+<br>
+<br>
+<@svgtext_size=30>
+<@token_type=svgtext> DANKE
+<br>
+<@token_type=handwriting>Herzlichen Dank an Silvia Seeholzer für zahlreiche Hinweise.
