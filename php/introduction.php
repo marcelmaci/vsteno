@@ -16,13 +16,39 @@ Regeln für andere (im Prinzip beliebige) Stenografie-Systeme definiert werden k
 </p>
 <center>* * *</center>
 <h1>Neuigkeiten</h1>
-<p><b>Neue E-Books</b><p>
-<p>Neu in der <a href="library.php">elektronischen Bibliothek</a>: <br>
+
+<p><b>22/04/22 Happy birthday VSTENO!</b><p>
+<p>Vor etwas mehr als 4 Jahren hatte ich den Traum, "jedwedes" Buch in Steno lesen zu können. Dieser Traum 
+wurde mit VSTENO wahr: Über die Seite <a href="https://www.vsteno.ch">vsteno.ch</a> lassen sich heute, 
+egal ob von Zuhause oder unterwegs, kürzere oder längere Texte ins System Stolze/Schrey 
+übertragen. Steno-"Neulinge" können das Programm auch nutzen, um einzelne Wörter und Sätze zu üben.</p>
+<p>Mit dem Erreichen dieses Ziels habe ich nun meine Aktivitäten für VSTENO zunehmend reduziert. 
+Dies nicht zuletzt auch deshalb, ich gebe es gerne zu, weil mein Herz programmiertechnisch 
+nun wieder sehr für den legendären <a href="https://de.wikipedia.org/wiki/Amiga">
+Amiga</a> - bzw. die absolut fantastische 
+<a href="http://www.apollo-computer.com/v4standalone.php">Vampire V4SA</a> 
+- schlägt. Jede Beschäftigung braucht ja, wie man weiss, Zeit - und der Tag hat nunmal nur 24 Stunden 
+(ars longa vita brevis ...).</p>
+<p>VSTENO bleibe ich dennoch treu, indem ich weiterhin Bugfixes und kleinere Arbeiten daran vornehme. Auch 
+entstand im vergangenen Jahr ein <a href="../books/matto_regiert_errata_quer.pdf">Korrigendum</a> zum 
+Roman <i>Matto regiert</i>. Einige dieser Bücher (es hat nach wie vor welche;) fanden auch dieses Jahr den einen oder die andere 
+interessierte Leser:in - was mich freut und die rote Zahl der Projektkosten etwas reduziert 
+(siehe <a href="donation.php">Abrechnung</a>).</p>
+<p>Und wie geht's weiter? Nach zwei Jahren Pandemie lädt mich der <a href="https://www.steno.ch">SSV</a> am 2. Juni 2022 
+freundlicherweise an die Abgeordnetenversammlung in Olten ein und bietet mir dort Gelegenheit, das Programm 
+live vorzustellen. Im Hinblick darauf schalte ich hier bereits die entsprechende Präsentation auf 
+(<a href="../docs/praesentation_vsteno.odp">odp</a>|<a href="../docs/praesentation_vsteno.pdf">pdf</a>). 
+Selbstverständlich wird es bei dieser Gelegenheit auch eine Live-Demo geben!<br><p>
+
+<p><b>Letzte E-Books</b><p>
+<p>
 <b>[01.05.2021]</b> <i><a href="../books/stefan_zweig_der_amoklaeufer_komplett_hoch_9x12cm.pdf">Der Amokläufer</a></i> von Stefan Zweig.<br>
 <b>[15.05.2021]</b> <i><a href="../books/thea_wolf_im_land_des_lichts_hoch_9x12cm.pdf">Im Land des Lichts</a></i> von Thea Wolf.<br>
 <b>[23.05.2021]</b> <i><a href="../books/dostojewsky_arme_leute_9x12cm_23052021.pdf">Arme Leute</a></i> von Fjodor Dostojewski.<br>
 <b>[16.06.2021]</b> <i><a href="../books/flaubert_madame_bovary_16062021_9x12cm.pdf">Madame Bovary</a></i> von Gustave Flaubert 
-[<a href="../books/bovary_teil1.pdf">Teil1</a> / <a href="../books/bovary_teil2.pdf">Teil2</a>].<br><p>
+[<a href="../books/bovary_teil1.pdf">Teil1</a> / <a href="../books/bovary_teil2.pdf">Teil2</a>].<br>
+=> Weitere E-Books in der <a href="library.php">elektronischen Bibliothek</a>: <br>
+<p>
 
 <p><b>15/04/21 Happy birthday VSTENO!</b><p>
 <p>VSTENO feiert sein 3 Jahr. Was in dieser Zeit alles passiert ist, finden Sie im <a href='vsteno_3rd_year.php'>Jahresbericht</a>.<br><p>

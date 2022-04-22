@@ -38,9 +38,15 @@ Einverständnis hiezu gegeben haben, namentlich verdankt.</p>
     (*) Total Buchverkäufe und Spenden<br>
     Herzlichen Dank an alle, welche auch im dritten Jahr dieses Projekt finanziell und ideell unterstützt haben!
     </li>
-    <li><u><b>Laufendes Jahr</b></u><br>
-    Herzlichen Dank an alle, die VSTENO finanziell oder ideell unterstützen! <br>
-    Namentlich verdanken möchte ich die Spenden von:  Alfred Rub
+    <li><u><b>Jahr 4</b></u><br>
+    Zeitraum: April 2020 - April 2021<br>
+    Ausgaben: 1795.10 CHF<br>
+    Einnahmen: 988.- CHF (*)<br>
+    Total: <b style="color:red">-807.10 CHF</b><br>
+    (*) Total Buchverkäufe und Spenden<br>
+    Herzlichen Dank an alle, welche auch im vierten Jahr dieses Projekt finanziell unterstützt haben, sei es durch 
+    Buchkäufe oder in Form einer Spende!<br>
+    Namentlich verdanken möchte ich die freundliche Spende von Alfred Rub.
     </li>
 </ul>
 <h1>Verwendung</h2>
