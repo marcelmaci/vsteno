@@ -1,0 +1,46 @@
+Test words for French
+
+Based on:
+
+[1] Rob. Meyer, Lehrbuch der französischen Stenographie (Système unifié, 
+offizielle Fassung) für Kenner des Systems Stolze-Schrey, 13. Auflage 1979,
+Verlang und Buchhandlung des Allgemeinen Schweizerischen Stenografenvereins,
+Druckerei Wetzikon AG, 8620 Wetzikon.
+
+Abbreviations:
+
+CH = chapter
+(1)(2)(3) etc. = exercise number
+
+Comments:
+
+In some occasions, several variants have been added.
+Doubts are marked with (?).
+
+Words:
+
+CH1)
+
+(1)
+alpe, alpes, téléphone, téléphones, système, systèmes, égal, égale, égales, max, 
+route, routes, boxer, mer, mère, maire, mers, mères, maires, timide, timides, 
+ordinaire, ordinaires, délégué, déléguée, délégués, déléguées, organe, organes,
+taxe, taxes, poule, poules, espère, espères, fixé, fixer, fixée, fixés, fixées, 
+mal, mals, mâle, mâles, gouter, gouters, gouté, goutée, goutées, peine, peines,
+fatiguer, fatigué, fatigués, fatiguée, fatiguées, respect, ours, tolérer, toléré,
+tolérés, tolérée, tolérées, aimer, aimé, aimée, aimés, aimées, aider, aidé, aidée,
+aidés, aidées, êtes, guerre, guerres, guère, des têtes, ses idées, ces idées, 
+harmoniser, harmonisé, harmonisée, harmonisés, harmonisées, ôte, ôtes, haute, 
+hautes, hotte, hottes, hôtel, hôtels, hélas, hypothèse, hypothèses, habite, 
+habites, Hélène, c'est habile, l'hôpital, n'espérez, l'idée, d'égal, n'aspirez,
+s'estimer, larme, larmes, l'arme, l'armée, l'aspect, l'air, l'os, né, naît, nez,
+c'est organisé, sténographe, libre, libres, phrase, phrases, propre, propres, 
+titre, titres, progrès, après, mes ordres, problème, Glaris, blâmer, blâmé, 
+blâmée, blâmés, blâmées, merle, merles, noble, nobles, faible, faibles, parlèrent,
+double, doubles, s'établir, perle, perles, blouse, blouses, probable, probables,
+près, prêt, prêts, plaisir, plaisirs, ses églises, idéaliste, réorganiser, 
+réorganisé, réorganisée, réorganisés, réorganisées, théâtral, théâtrale, agréer,
+agréé, agréée, agréés, agréées, réel, réels, poète, poètes, bateau, bateaux, 
+Noël, Noëls, beau, beaux, baux, Louise, Édouard, souhaiter, souhaité, souhaitée,
+souhaités, souhaitées, trou, trous, ouïr, feu, feux, deux, bleuâtre, eux, naïf,
+aérer, aéré, aérée, aérés, aérées, trahir, haïr

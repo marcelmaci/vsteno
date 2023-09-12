@@ -707,7 +707,6 @@
 		"M" => { "ISIM", 4, 10, 0, 1 }
 	#EndSubSection(shifter)
 #EndSection(font)
-
 #BeginSection(rules)
 	#BeginSubSection(global,#>stage0)
 		// global replacements in the whole text french
@@ -907,6 +906,10 @@
 		"(?<=^| )[Ss]cies?(?=[ ,\.]|$)" => "#scie"; // treat separately: abbreviation has to be cancelled	
 		"(?<=^| )[Rr]ats?(?=[ ,\.]|$)" => "#rat";	// idem
 		"(?<=^| )[Ww]allons?(?=[ ,\.]|$)" => "#wallon";	// idem
+		"(?<=^| )[Ff]aut(?=[ ,\.]|$)" => "#faut";
+		"(?<=^| )[Tt]rop(?=[ ,\.]|$)" => "#trop";
+		"(?<=^| )[Aa]vec(?=[ ,\.]|$)" => "#avec";
+		"(?<=^| )Glaris(?=[ ,\.]|$)" => "#glaris";
 		//"(?<=^| )[Qq]u\'on(?=[ ,\.]|$)" => "#quon";
 		
 		"(?<=^| )[Vv]a-et-vient(?=[ ,\.]|$)" => "#vaetvient";
@@ -1013,7 +1016,7 @@
 		"(?<!\[)@(?!#)" => { "", "^r@", "rt@r" }; // e muet falls out => all abbreviations with 1 syllable are automatically handled correctly: se, ce, me, ne, te etc.
 		"(?<!#)y" => "[ü]";
 		"^([sn])a$" => "[#NS]$1";
-		"^([fsn])o$" => "[#ND]$1";
+		"^([sn])o$" => "[#ND]$1";  // faux: f + vocal token 'o'
 		"^([sn])u$" => "[#NDS]$1";
 		"tstwrt(ni.+)" => { "^ni$", "[N=][-I]" }; // verb: nier (nie, nies, nions, niez, nient etc.)
 		"^([sn])i$" => "[#NU]$1";
@@ -1022,7 +1025,7 @@
 		"qu#" => "k#"; // qu'avez-vous => qu => before words marked with # in stage 0
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
-
+	
 		"#six" => "{SIX}"; // six "muet" (without x pronounced)
 		"#huit" => "{HUIT}"; // six "muet" (without t pronounced)
 
@@ -1127,7 +1130,7 @@
 		"#comme" => "{COMME}";
 		"#scie" => "[S=@#/][-I]";
 		"tstwrt((êtez|ettez|ait(?:é|e)e?[sz]?)$)" => { "ete$", "E[T]E" }; // arrêtez: no abbreviation!
-		"(i|j?e)te$" => "{ITE}";
+		"(?<!su)(i|j?e)te$" => "{ITE}";   // not: souhaiter (according to Meyer, ch1.1)
 		"#dans" => "{DANS}";
 		"^d\[ü\]$" => "{DU}";
 		"^tu$" => "{TOUT}";
@@ -1151,7 +1154,7 @@
 		"^ko~tra" => "{CONTRE}a"; // preposition and prefix 
 		"^ko~tr" => "{CONTRE}"; 
 		"^etr$" => "{ETRE}";
-		"^tro$" => "{TROP}";
+		"#trop$" => "{TROP}";
 		"^#ser(?:ai[st]?|ez|aient)?$" => "{SER}e";
 		"^#seras?$" => "{SER}a";
 		"^#seron[st]$" => "{SER}o~";
@@ -1243,15 +1246,17 @@
 		"^#moimeme$" => "{MOIMEME}";
 		"^#toimeme$" => "{TOIMEME}";
 		"^#soimeme$" => "{SOIMEME}";
-		"^#euxmemes$" => "{EUXMEMES}";
+		"#euxmemes$" => "{EUXMEMES}";
 		"^#quandmeme$" => "{QUANDMEME}";
 		"^#peutetre$" => "{PEUTETRE}";
 		"^#ceci$" => "{CECI}";
 		"^#sinon$" => "{SINON}";
 		"^#ceuxci$" => "{CEUXCI}";
+		"#faut$" => "{FAUT}";
+		"#glaris$" => "{GLARIS}";
 		
 		"^mem$" => "{MEME}";
-		"^avek$" => "{AVEC}";
+		"#avec$" => "{AVEC}";
 		"^a~kor$" => "{ENCORE}";
 		"^pa~da~$" => "{PENDANT}";
 		"^s@?pa~da~$" => "{CEPENDANT}";
@@ -1770,7 +1775,8 @@
 		"{ZION}" => "[SS]";
 		"{MENT}" => "[MPF]";
 		"{MENT1}" => "[MPF@#/_]";
-		"{AVEC}" => "[0N-]G";
+		"^{AVEC}" => "[0N-]G";
+		"{AVEC}" => "G";
 		"{ENCORE}" => "[0N-]ÄG";
 		"{PENDANT}" => "[0N-]ÄD";
 		"{CEPENDANT}" => "[S=]ÄD";
@@ -1782,7 +1788,10 @@
 		"{MOIMEME}" => "MÜM";
 		"{TOIMEME}" => "TÜM";
 		"{SOIMEME}" => "[S=]ÜM";
-		"{EUXMEMES}" => "[0D-][EU]M";
+		"^{EUXMEMES}" => "[0D-][EU]M";
+		"{EUXMEMES}" => "[EU]M";
+		"{FAUT}" => "O[F]";
+		"{GLARIS}" => "[G@L3]A[VR]IS";
 		"{QUANDMEME}" => "KÄM";
 		"{PEUTETRE}" => "P[&T@R]";
 		"{TOUTEFOIS}" => "UTF[EN]";

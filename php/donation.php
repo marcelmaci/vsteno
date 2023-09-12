@@ -3,15 +3,15 @@
 <p>Sie können VSTENO durch eine Spende unterstützen. Bitte lesen Sie zunächst die Hinweise unter <a href="copyright.php">Copyright</a>.</p>
 <p>Via Banküberweisung:</p>
 <pre>
-Bank:   Raiffeisenbank Küssnacht am Rigi
-IBAN:   CH67 8080 8007 0487 7064 8
+Bank:   Raiffeisenbank Fribourg Ost
+IBAN:   CH95 8080 8006 2576 0943 2
 Name:   Marcel Maci
         Avenue du Guintzet 15
         1700 Fribourg
 </pre>
 <p>SEPA-Zahlungen (Ausland):</p>
 <pre>
-SWIFT-BIC: RAIF22
+SWIFT-BIC: RAIFCH22
 BC-Nr.:    80808
 </pre>
 <p>Spenden sind grundsätzlich nicht öffentlich (anonym) und werden nur mit dem Einverständnis der/des Spenderin/s namentlich erwähnt.</p>
