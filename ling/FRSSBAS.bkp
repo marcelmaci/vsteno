@@ -2,7 +2,7 @@
 	// 
 	// FRSSBAS - VSTENO shorthand model for french
 	// Set of rules interpreted and processed by VSTENO (www.vsteno.ch) 
-	// (c) 2019-2020 - Marcel Maci (m.maci@gmx.ch)
+	// (c) 2019-2023 - Marcel Maci (m.maci@gmx.ch)
  	//
 	// This program* is free software: you can redistribute it and/or modify it under	
 	// the terms of the GNU General Public License as published by the Free Software
@@ -32,7 +32,7 @@
 	#BeginSubSection(session)
 		"license" := "
 	<p>FRSSBAS - model for VSTENO (Grundschrift Stolze-Schrey, Französisch)<br>
-    	(c) 2018-2020  Marcel Maci</p>
+    	(c) 2018-2023  Marcel Maci</p>
 	
 	<p>This program is free software: you can redistribute it and/or modify
     	it under the terms of the GNU General Public License as published by
@@ -52,6 +52,10 @@
 	<p>[1] Emil Hug, "Französische Stenografie, nach dem Einigungssystem Stolze-Schrey", 
 	Offizielle Übertragung des Allgemeinen Schweizerischen Stenografenvereins (Zentralverein Stolze-Schrey), 
 	Verlag und Buchhandlung des Allgemeinen Schweizerischen Stenografenvereins, Druckerei Wetzikon AG, 8620 Wetzikon ZH, 8. Auflage 1983.</p>
+	<p>[2] Rob. Meyer, "Lehrbuch der französischen Stenographie" (Système unifié, offizielle Fassung) für Kenner des Systems Stolze-Schrey, 13. Auflage 1979,
+Verlang und Buchhandlung des Allgemeinen Schweizerischen Stenografenvereins,
+Druckerei Wetzikon AG, 8620 Wetzikon.
+	</p>
 	<p>This is based on the german and spanish models (DESSBAS, SPSSBAS). 
 	Meaning of the characters: FR = french, SS=Stolze-Schrey, BAS=Grundschrift).</p> 
 	
@@ -61,9 +65,9 @@
 	";
 		"copyright_footer" := "Erstellt mit Freier Software<br>VSTENO (www.vsteno.ch)<br>(c) 2018-2020 Marcel Maci";
 		// model version
-		"model_version" := "0.4";
+		"model_version" := "0.5";
 		"required_version" := "0.3";
-		"model_date" := "23/01/21";
+		"model_date" := "13/09/23";
 		// wide distance
 		"token_distance_wide" := "17";
 		"model_se_revision" := "0";
@@ -1066,7 +1070,7 @@
 		"tstwrt(^plus)" => { "^pl(y|\[ü\])$", "{PLUS}" }; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
 		"^parf#?wa" => "{PAR}{FOIS}"; // parfois
-		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
+		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$", "^park$" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
 
 
@@ -1141,7 +1145,7 @@
 		"^p\[(Ö|ö)\]$" => "{PEU}";
 		"^ki$" => "{QUI}";
 		"#cet" => "{CET}";
-		"^v\[Ö\]$" => "{VEUT}";
+		"^v(?:\[Ö\]|w)$" => "{VEUT}";
 		"^vo$" => "{VOS}";
 		"^vu$" => "{VOUS}";
 		"^rie~$" => "{RIEN}";
