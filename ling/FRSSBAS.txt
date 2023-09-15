@@ -283,6 +283,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^inuj$" => "inui"; // inouï
 
 		"^hEnri$" => "a~ri"; // Henry
+		"(labIr)[Ii]n[DtT]" => "$1E~t";  // labyrinthe (error in espeak?)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -2030,11 +2031,18 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		// assign 5 to the rest (standard value)
 		//"\[#d..?\]" => "[#5]";
-
+		
 	#EndSubSection(postspacer)
+	#BeginSubSection(frenchspacer)
+		// include some specific spacings for french here
+		// (in order to not increase rules in general GESSBAS)
+		// (if useful they could be included in general spacer / postspacer)
+		"(\[f\])\[#.\](\[o\]\[d@r\])" => "$1[#1]$2";
+	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
 		"([a-z]|Ä|Ö|Ü)" => "strtolower()";
 		
+
 		"tstwrt(^[Dd]att)" => { "^(.*?)\[[Tt]\]", "$1[T@#/.]" };
 		"tstwrt(^B)" => { "\[[Bb]\]", "[B@#_]" };
 		"tstwrt(^R)" => { "\[(?:ar|AR])\]", "[AR@#_]" };
