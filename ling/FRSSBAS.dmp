@@ -285,6 +285,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^hEnri$" => "a~ri"; // Henry
 		"(labIr)[Ii]n[DtT]" => "$1E~t";  // labyrinthe (error in espeak?)
 
+		"yije" => "yje"; // fuyez
+		// "akWj" => "ak[ö]j"; // accueillant
+
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -729,7 +732,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		// high priority replacements (= without any preliminar modification of the original text)		
 		"Êtes" => "#etes";
-		"(?<=^| )([Dd])?\'?[Aa]ujourd\'?hui(?=[ ,\.]|$)" => "$1#aujourdhui";	
+		"(?<=^| )([Dd]|[Qq]u)?\'?[Aa]ujourd\'?hui(?=[ ,\.]|$)" => "$1#aujourdhui";	
 		"(?<=^| )[Jj]usqu\'?à ce que(?=[ ,\.]|$)" => "#jusquaceque";	
 		"(?<=^| )[Pp]lus tôt(?=[ ,\.]|$)" => "plutôt";	// make plus tôt and plutôt the same (parallel edition will be impossible ...)
 		//"(?<=^| )([Qq]u)\'a(?=[ ,\.-]|$)" => "$1e a";	
@@ -794,6 +797,11 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		// and for the joy of everyone somebody has invented a special abbreviation for dois-je ... :~)
 		"(?<=^| )([Dd]oi)s-(je)(?=[ ,\.]|$)" => "$1$2"; // transform it to "doije" and let eSpeak do the rest ..
+		
+		"(?<=^| )([Aa]vais)-(je)(?=[ ,\.]|$)" => "#$1$2"; // transform it to "#avaisje"
+		"(?<=^| )([Aa]urais)-(je)(?=[ ,\.]|$)" => "#$1$2"; // transform it to "#auraisje"
+		"(?<=^| )[Qq]uiconque(?=[ ,\.]|$)" => "#quiconque"; // transform it to "#avaisje"
+	
 		// and another one for serais-je ...
 		"(?<=^| )([Ss]erai)s?-(je)(?=[ ,\.]|$)" => "$1$2"; // transform it to "seraije" and let eSpeak do the rest ..
 		// and another one ... anyway: peux-je ... I'd prefer puis-je ...
@@ -808,6 +816,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"-t-" => " "; 
 		// as-tu must be transcribed as #as 
 		// because if isolate, eSpeak will pronounce it "as" (like the word "as" = ace) 
+		"(?<=^| )[Qq]u'as-tu(?=[ ,\.]|$)" => "Qu'a tu";  // qu'as-tu bu (lazy solution ...)
 		"(?<=^| )[Aa]s-tu(?=[ ,\.]|$)" => "#as tu";
 		"([Aa]i|[Ss]ais)-(je)" => "$1=$2"; // protect ai-je against following rule
 		"-(moi|toi|lui|leur|je|tu|ils?|elles?|on|nous|vous)" => " $1";
@@ -817,6 +826,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<=^| )[Pp]arce qu\'on(?=[ ,\.]|$)" => "#parcequon";
 		"(?<=^| )[Pp]arce que(?=[ ,\.]|$)" => "#parceque";
 		"(?<=^| )[Cc]e qu\'on(?=[ ,\.]|$)" => "#ce_quon";
+		"(?<=^| )[Cc]e qu\'elles?(?=[ ,\.]|$)" => "#cequelle";
 		"(?<=^| )[Cc]e qu\'ils(?=[ ,\.]|$)" => "#ce_quils";
 		"(?<=^| )[Cc]e qu\'il(?=[ ,\.]|$)" => "#ce_quil";
 		"(?<=^| )[Ee]st-ce qu\'on" => "#estcequon";
@@ -915,8 +925,11 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<=^| )[Tt]rop(?=[ ,\.]|$)" => "#trop";
 		"(?<=^| )[Aa]vec(?=[ ,\.]|$)" => "#avec";
 		"(?<=^| )Glaris(?=[ ,\.]|$)" => "#glaris";
+		"(?<=^| )[Hh]être(?=[ ,\.]|$)" => "#hetre";
+		"(?<=^| )[Mm]aître(?=[ ,\.]|$)" => "#maitre";
 		//"(?<=^| )[Qq]u\'on(?=[ ,\.]|$)" => "#quon";
-		
+		"(?<=^| )([Ss])econd(es?)?(?=[ ,\.]|$)" => "$1cond$2";   // Second(es): correct phonetical transcription (the lazy way ...)
+
 		"(?<=^| )[Vv]a-et-vient(?=[ ,\.]|$)" => "#vaetvient";
 		
 		"(?<=^| )[Ss]ix (#?[bdfjklmnpqrstvwxyz]|#?c[aou]|#?g[aou])" => "#six $1";	// six mois vs six avions
@@ -1031,6 +1044,12 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
 	
+		"#hetre" => "{HETRE}"; // hêtre
+		"#maitre" => "{MAITRE}"; // maître
+		"#avaisje" => "{AVAISJE}"; // avais-je
+		"#auraisje" => "{AURAISJE}"; // aurais-je
+		"#quiconque" => "{QUICONQUE}"; // quiconque
+
 		"#six" => "{SIX}"; // six "muet" (without x pronounced)
 		"#huit" => "{HUIT}"; // six "muet" (without t pronounced)
 
@@ -1045,6 +1064,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		
 		"tstwrt(^[Cc]i-)" => { "^si", "{CI}" }; // ci-devant
 		"^sjapre" => "{CI}apre"; // ci-après
+		"^sj(an[Ee])" => "{CI}$1"; // ci-annexé 
 
 		"([tl])#avions" => "$1{AV}{ION}"; // nous [lt]'avions vu 
 
@@ -1071,7 +1091,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"tstwrt(^plus)" => { "^pl(y|\[ü\])$", "{PLUS}" }; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
 		"^parf#?wa" => "{PAR}{FOIS}"; // parfois
-		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$", "^park$" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
+		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$", "^park$", "^par(?:y|\[ü\])" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
 
 
@@ -1122,6 +1142,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"#ce_quon" => "{CEQUON}";
 		"#ce_quon" => "{CEQUON}";
 		"#ce_quils" => "{CEQUILS}";
+		"#cequelle" => "{CEQUELLE}";
 		"#ce_quil" => "{CEQUIL}";
 		"#ce_qui" => "{CEQUI}";
 		"#estcequon" => "{ESTCEQUON}";
@@ -1158,7 +1179,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^#messieurs$" => "{MESSIEURS}";
 		"^ko~tra" => "{CONTRE}a"; // preposition and prefix 
 		"^ko~tr" => "{CONTRE}"; 
-		"^etr$" => "{ETRE}";
+		"^([mnsldt])etr$" => "$1{ETRE}";   // n'être, d'être, l'être etc.
 		"#trop$" => "{TROP}";
 		"^#ser(?:ai[st]?|ez|aient)?$" => "{SER}e";
 		"^#seras?$" => "{SER}a";
@@ -1277,8 +1298,10 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^#quelquesuns$" => "{QUELQUESUNS}";
 		"^#quelquesunes$" => "{QUELQUESUNES}";
 		"tstwrt((?<!ren)forts?$)" => { "f[Oo]r$", "{FORT}" };  // infort => yes: in{FORT}, renfort => no: ra~for (WHERE IS THE LOGIC ANYWAY ... ;/)
+		
+		"^f[Oo]r(\[ng\]|n)" => "[F][O][VR]$1";   // forger, forn- (..)
 		"^fort" => "{FORTE}";
-		"^for(?!s)" => "{FORT}";
+		"^for(?!s)" => { "{FORT}", "^f[Oo]rm(?:a|e|i)", "^f[Oo]ra", "^f[Oo]rf" }; // format, formattage, former, formidable, forage, forfait, forger, forge, forgeron
 		"^sito$" => "{SI}{TOT}";
 		//"i?to$" => { "{TOT}", "^f[Oo]t[Oo]", "^to$" };
 		"tstwrt(tôt)" => { "i?to$", "{TOT}" }; // more precise rule for -tôt (bientôt, sitôt, aussitôt etc.)
@@ -1296,6 +1319,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		"[ji](?:[oO][nN]|\[[oO][nN]\])$" => "{ION1}"; // diacritics
 		//"[ji](?:[oO][~nN]|\[[oO][~nN]\])" => "{ION}"; // include possible variants, wrong: lorgnon
+		"(e\[sch\]a~ti)j(o~)" => "$1[H]$2"; // echantillons
+
 		"tstwrt((?<!gn)o[nm])" => { "(?<!a)[ji](?:[oO][~nN]|\[[oO][~nN]\])", "{ION}" }; // include possible variants
 		
 		// recorrection
@@ -1478,13 +1503,14 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"[ji]o$" => "I[&O]";
 
 		// double vowels
+		"(\[(?:Ö|ö)\])[Jj](\[[Aa]~\])" => "$1[H]$2"; // acceuillant
 		"ee" => "e[&E]e";
 		"e(\[o~\])" => "e[&E]$1";
 		"i(e|\[e~\]|\[ö\])" => "i[&E]$1"; 
 		"tstwrt(hier$)" => {  "j(e\[vr\])", "i[&E]$1" }; // hier => _|jer
 		"tstwrt(^vien)" => {  "j(\[e~\])", "i[&E]$1" }; // vient
 		"ije(\[vr\])?$" => "i[H]e$1"; // scintillait, cordillère
-		"(?<!\[ö\]|[AaEe]|a\]|u)j(e|\[e~\])" => "I[&E]$1"; // Pierre; don't apply to: veuillez, payez, travaillez, mouillé
+		"(?<!\[ö\]|[AaEe]|a\]|u)j(e|\[e~\])" => { "I[&E]$1", "f(?:y|\[ü\])je" }; // Pierre; don't apply to: veuillez, payez, travaillez, mouillé; and: fuyez (fyje)
 		"(?<!\[wa\]|i|[eE]|[aA]|u)j(a|\[a~\])" => "I[&E]$1"; // mariage; don't apply to: voyageur, brillamment, ayant, envoyé, faïence, bouillant
 		"(?<!a|\[wa\])j(o|\[o~\])" => "I[&E]$1"; // curiosité, pas : voyons
 		"e(\[?[aeiouü]\]?~?)" => "E[&E]$1";
@@ -1517,7 +1543,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^ae" => "[0N-]A[&A]e";
 		"^a" => "[0N-]a";
 		"^(\[a~\])" => "[0N-]$1";
-		"^j\[ö\]$" => "[0N-][EI][&O]";
+		"^(\[ng\]\[wa\])j(\[ö\])" => "$1H$2"; // joyeux
+
+		"^j\[ö\]$" => "[0N-][EI][&O]";  
 		"^([ij]\[&E\](?:e|\[ö\]))" => "[0N-]$1"; // hier => same for other words? => yes for ö
 		"^i" => "[0D-]i";
 		"^o" => "[0N-]o";
@@ -1660,6 +1688,15 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"^{HETRE}" => "[0N-]E[T@R]"; // hêtre
+		"{HETRE}" => "E[T@R]"; // hêtre
+	
+		"{MAITRE}" => "[M]E[T@R]"; // maître
+		"{QUICONQUE}" => "IKKÖK"; // quiconque
+		
+		"{AVAISJE}" => "A[LES]E[NG]"; // avais-je
+		"^{AURAISJE}" => "[0N-]O[VR]E[NG]"; // aurais-je
+
 		"{SIX}" => "[S=@#/][/I]"; // six mois
 		"{HUIT}" => "[0N-][AU][&E][/I]"; // huit mois
 		
@@ -1790,6 +1827,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{KIL}" => "IK[-E]";
 		"{CEQUILS}" => "IC[-E]"; // no distinction between ils / il for now
 		"{CEQUIL}" => "IC[-E]";
+		"{CEQUELLE}" => "ICEL";
 		"{MOIMEME}" => "MÜM";
 		"{TOIMEME}" => "TÜM";
 		"{SOIMEME}" => "[S=]ÜM";
