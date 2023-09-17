@@ -286,7 +286,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(labIr)[Ii]n[DtT]" => "$1E~t";  // labyrinthe (error in espeak?)
 
 		"yije" => "yje"; // fuyez
-		// "akWj" => "ak[ö]j"; // accueillant
+		"manjEr" => "manier"; // manière (correction eSpeak)
+		"^nje$" => "nie"; // nier, nié etc. (correction eSpeak)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -739,6 +740,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<=^| )[Ss]wiss(?=[ ,\.-]|$)" => "#swiss";	
 		
 		// abbreviations
+		"(?<=^| )[Qq]uoiqu\'(il|elle)s?(?=[ ,\.-]|$)" => "#quoiqu$1";
 		"(?<=^| )[Ff]rs?\.(?=[ ,\.-]|$)" => "#francs";
 		"(?<=^| )[Dd]r(?=[ ,\.-]|$)" => "#docteur";
 		//"([Jj]an|[Ff]év|[Mm]ar|[Aa]vr|[Mm]ai|[Jj]uin|[Jj]uil|[Aa]oût|[Ss]ep|[Oo]ct|[Nn]ov|[Dd]éc)\."
@@ -823,6 +825,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"([Aa]i|[Ss]ais)=(je)" => "$1-$2"; // rewrite ai-je
 
 		"(?<=^| )[Pp]arce qu'ils?(?=[ ,\.]|$)" => "#parcequil";
+		"(?<=^| )[Pp]arce qu'elles?(?=[ ,\.]|$)" => "#parcequelle";
 		"(?<=^| )[Pp]arce qu\'on(?=[ ,\.]|$)" => "#parcequon";
 		"(?<=^| )[Pp]arce que(?=[ ,\.]|$)" => "#parceque";
 		"(?<=^| )[Cc]e qu\'on(?=[ ,\.]|$)" => "#ce_quon";
@@ -896,7 +899,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<=^| )[Bb]eaucoup(?=[ ,\.]|$)" => "#beaucoup";
 		"(?<=^| )[Pp]our(?=[ ,\.]|$)" => "#pour";
 		"(?<=^| )[Pp]ourr(ai[st]?|i?ons|i?ez|aient|as?|ont)(?=[ ,\.]|$)" => "#pourr$1";
-		"(?<=^| )[Dd]oi[st](?=[ ,\.]|$)" => "#doit";		
+		"(?<=^| )([Rr]e)?[Dd]oi[st](?=[ ,\.]|$)" => "$1#doit";		
 		"(?<=^| )[Qq]uoi(?=[ ,\.]|$)" => "#quoi";		
 		"(?<=^| )[Ss]oi([st]|ent)?(?=[ ,\.]|$)" => "#soit";		
 		"(?<=^| )[Mm]ois?(?=[ ,\.]|$)" => "#moi";		
@@ -1021,7 +1024,11 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"tstwrt(trembler)" => { "bl@r", "[BL][VR]" };
 		"tstwrt(rner)" => { "rn@r", "[VR][NR]" }; // special: handle n@r as [NR] ?! verbs: retourner, orner
 		"tstwrt(gler)" => { "gl@r", "[GL][VR]" }; // special: handle n@r as [NR] ?! verbs: retourner, orner
-		"([bflmnpv])@r" => "$1[AR]"; // use this for all tokens that finish with a round bow on the baseline
+
+// experimentally replace the following line with a combination (might be completely wrong!)
+// examples: tombera / réservera
+	//	"([bflmnpv])@r" => "$1[AR]"; // use this for all tokens that finish with a round bow on the baseline
+		"([bflmnpv])@r" => "$1r"; // use this for all tokens that finish with a round bow on the baseline
 		
 		"@o" => "[&E]o"; // e muet plus vowel
 		// in all other cases, @ falls out and [VR] is used (?)
@@ -1031,6 +1038,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		// group rt@r => [RT][VR]
 		// (primary) group rtr => [RT][AR] (with additional distance correction [#6-])
 		"^bj@n" => "{BIEN}"; // bien-aimé
+		"^s@r" => "[S=][VR]"; // cerise
 		"(?<!\[)@(?!#)" => { "", "^r@", "rt@r" }; // e muet falls out => all abbreviations with 1 syllable are automatically handled correctly: se, ce, me, ne, te etc.
 		"(?<!#)y" => "[ü]";
 		"^([sn])a$" => "[#NS]$1";
@@ -1049,6 +1057,10 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"#avaisje" => "{AVAISJE}"; // avais-je
 		"#auraisje" => "{AURAISJE}"; // aurais-je
 		"#quiconque" => "{QUICONQUE}"; // quiconque
+
+		"#quoiqu(il|elle)" => "{QUOIQUE}$1"; // quoiqu'il / elle
+		"({QUOIQUE})elle" => "$1{ELLE}"; 
+		"({QUOIQUE})il" => "$1{IL}";
 
 		"#six" => "{SIX}"; // six "muet" (without x pronounced)
 		"#huit" => "{HUIT}"; // six "muet" (without t pronounced)
@@ -1083,6 +1095,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^#toutefois$" => "{TOUTEFOIS}";
 		"^#dument$" => "{DU}{MENT}";
 		"^#parcequil$" => "{PARCEQUIL}";
+		"^#parcequelle$" => "{PARCEQUELLE}";
 		"#aujourdhui$" => "{AUJOURDHUI}";
 		"^reeks" => "{RE}{EX}";
 		"^ree~te?r" => "{RE}{INTER}";
@@ -1091,6 +1104,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"tstwrt(^plus)" => { "^pl(y|\[ü\])$", "{PLUS}" }; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
 		"^parf#?wa" => "{PAR}{FOIS}"; // parfois
+		"tstwrt(part$)" => { "par", "PA[VR]" };
+ 
 		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$", "^park$", "^par(?:y|\[ü\])" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
 
@@ -1177,6 +1192,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^#leur$" => "{LEUR}";
 		"^#monsieur$" => "{MONSIEUR}";
 		"^#messieurs$" => "{MESSIEURS}";
+		"^ko~tre$" => "[K]o~tre"; // contrée(s)
 		"^ko~tra" => "{CONTRE}a"; // preposition and prefix 
 		"^ko~tr" => "{CONTRE}"; 
 		"^([mnsldt])etr$" => "$1{ETRE}";   // n'être, d'être, l'être etc.
@@ -1224,7 +1240,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^#pour$" => "{POUR}";
 		"^depur" => "de{POUR}"; // depourvu
 		"^pur" => { "{POUR}", "puri" }; // aussi: pourvoir, don't apply to: pourrir (all forms)
-		"^#doit$" => "{DOIT}";
+		"#doit$" => "{DOIT}";
 		"^#quoi$" => "{QUOI}";
 		"^#soit$" => "{SOIT}";
 		"^#moi$" => "{MOI}";
@@ -1241,7 +1257,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
 		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
 
+		"^s[Ee]ks(\[ü\]|y|$)" => "SEks$1"; // sex, sexuel etc.
 		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
+
 		"(?<!t)e~ter(?!min)" => "{INTER}"; // not in: tintèrent, interminable
 		"^(l)?e~tr(?!uvabl)" => "$1{INTER}" };
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
@@ -1299,7 +1317,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^#quelquesunes$" => "{QUELQUESUNES}";
 		"tstwrt((?<!ren)forts?$)" => { "f[Oo]r$", "{FORT}" };  // infort => yes: in{FORT}, renfort => no: ra~for (WHERE IS THE LOGIC ANYWAY ... ;/)
 		
-		"^f[Oo]r(\[ng\]|n)" => "[F][O][VR]$1";   // forger, forn- (..)
+		"^f[Oo]r(\[ng\]|n|m(?:y|\[ü\]|$))" => "[F][O][VR]$1";   // forger, forn- (..), formule
 		"^fort" => "{FORTE}";
 		"^for(?!s)" => { "{FORT}", "^f[Oo]rm(?:a|e|i)", "^f[Oo]ra", "^f[Oo]rf" }; // format, formattage, former, formidable, forage, forfait, forger, forge, forgeron
 		"^sito$" => "{SI}{TOT}";
@@ -1359,7 +1377,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"ltr" => "[LTR]";
 		"vrt" => "[VRT]";
 		"brt" => "[BR]T"; // bretelles
-		
+		"blr" => "[BL][VR]"; // Diablerets		
 
 		"(?<!\[)a~" => "[A~]";
 		"(?<!\[)o~" => "[O~]";
@@ -1418,6 +1436,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"tstwrt((ni[eè]re?)$)" => { "nj([eE]r?)", "[N]I[&E]$1" };
 		"tstwrt((nieux|nieuse)$)" => { "nj\[Ö\]", "[N]j[Ö]" };
 		"tstwrt(niez$)" => { "nje$", "nie" }; // retourniez (avoid following rule, i.e. bundling gn)
+		"njl" => "[NN@L]"; // Saignelégier
 		"n\^|nj" => "[GN]";
 		"\[GN\]r" => "[GNR]";
 		"\[sch\]l" => "[SCHL]";
@@ -1440,6 +1459,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^(vis)r" => "$1[AR]"; // vice-recteur
 		"(\|)r" => "$1[AR]"; // vice-rectur
 		
+		"^re{DOIT}" => "[AR]{DOIT}"; redoit
+
 		"^r@?" => "[AR]";
 		"{ZION}r" => "{ZION}[VR]";
 		"}r" => "}[AR]"; // p.ex.: subroger
@@ -1503,7 +1524,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"[ji]o$" => "I[&O]";
 
 		// double vowels
-		"(\[(?:Ö|ö)\])[Jj](\[[Aa]~\])" => "$1[H]$2"; // acceuillant
+		"(\[(?:Ö|ö)\])[Jj](\[[Aa]~\])" => "$1[H]$2"; // accueillant
 		"ee" => "e[&E]e";
 		"e(\[o~\])" => "e[&E]$1";
 		"i(e|\[e~\]|\[ö\])" => "i[&E]$1"; 
@@ -1697,6 +1718,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{AVAISJE}" => "A[LES]E[NG]"; // avais-je
 		"^{AURAISJE}" => "[0N-]O[VR]E[NG]"; // aurais-je
 
+		"{QUOIQUE}{IL}" => "KÜK\\I[IL]";
+		"{QUOIQUE}{ELLE}" => "KÜKEL";
+
 		"{SIX}" => "[S=@#/][/I]"; // six mois
 		"{HUIT}" => "[0N-][AU][&E][/I]"; // huit mois
 		
@@ -1846,6 +1870,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{SINON}" => "I[S=]\\[0D-][ON]";
 		"{CEUXCI}" => "[S=][E][&O]\\I[#4-][S=]";
 		"{PARCEQUIL}" => "[RÜCK]C\\I[#3-][ES]";
+		"{PARCEQUELLE}" => "[RÜCK]CEL";
 		"{JUSQUE}" => "[AU][NG]";
 		"^{AUJOURDHUI}" => "[0N-]O[NG]";
 		"{AUJOURDHUI}" => "O[NG]";
@@ -2076,6 +2101,11 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		// (in order to not increase rules in general GESSBAS)
 		// (if useful they could be included in general spacer / postspacer)
 		"(\[f\])\[#.\](\[o\]\[d@r\])" => "$1[#1]$2";
+		"(\[t\])\[#.\](\[o\]\[x\])" => "$1[#7]$2";
+		"(\[n\])\[#.\](\[o\]\[g@r\])" => "$1[#2-]$2"; // pornografie (should be integrated in GESSBAS!)
+		"(\[s=\])\[#.\](\[vr\])" => "$1[#3]$2"; // cerise
+		"(\[ur\])\[#.\](\[on\])" => "$1[#7-]$2"; // pourrons
+
 	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
 		"([a-z]|Ä|Ö|Ü)" => "strtolower()";
