@@ -289,6 +289,11 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"manjEr" => "manier"; // manière (correction eSpeak)
 		"^nje$" => "nie"; // nier, nié etc. (correction eSpeak)
 
+		"aEko" => "Eko"; // ex aequo (correction eSpeak)
+		"Ekstr@mi" => "ekstremis"; // extremis (correction eSpeak)
+
+		"^zyriS$" => "zyrik"; // Zürich (correction eSpeak)
+
 	#EndSubSection(analyzer)
 #EndSection(header)
 #BeginSection(font)
@@ -737,7 +742,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<=^| )[Jj]usqu\'?à ce que(?=[ ,\.]|$)" => "#jusquaceque";	
 		"(?<=^| )[Pp]lus tôt(?=[ ,\.]|$)" => "plutôt";	// make plus tôt and plutôt the same (parallel edition will be impossible ...)
 		//"(?<=^| )([Qq]u)\'a(?=[ ,\.-]|$)" => "$1e a";	
-		"(?<=^| )[Ss]wiss(?=[ ,\.-]|$)" => "#swiss";	
+		"(?<=^| )[Ss]wiss(air)(?=[ ,\.-]|$)" => "#swiss$1";	
 		
 		// abbreviations
 		"(?<=^| )[Qq]uoiqu\'(il|elle)s?(?=[ ,\.-]|$)" => "#quoiqu$1";
@@ -824,6 +829,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"-(moi|toi|lui|leur|je|tu|ils?|elles?|on|nous|vous)" => " $1";
 		"([Aa]i|[Ss]ais)=(je)" => "$1-$2"; // rewrite ai-je
 
+		
+		"(?<=^| )(?:É|E|é)tait-ce(?=[ ,\.]|$)" => "#etaitce";
+		
 		"(?<=^| )[Pp]arce qu'ils?(?=[ ,\.]|$)" => "#parcequil";
 		"(?<=^| )[Pp]arce qu'elles?(?=[ ,\.]|$)" => "#parcequelle";
 		"(?<=^| )[Pp]arce qu\'on(?=[ ,\.]|$)" => "#parcequon";
@@ -903,7 +911,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<=^| )[Qq]uoi(?=[ ,\.]|$)" => "#quoi";		
 		"(?<=^| )[Ss]oi([st]|ent)?(?=[ ,\.]|$)" => "#soit";		
 		"(?<=^| )[Mm]ois?(?=[ ,\.]|$)" => "#moi";		
-		"(?<=^| )[Ff]ois(?=[ ,\.]|$)" => "#fois"; // fois vs foi (not written the same way!)	
+		"(?<=^| )[Ff]ois(?=[ ,\.-]|$)" => "#fois"; // fois vs foi (not written the same way!), add: cette fois-ci
 		"(?<=^| )[Ff]ixions(?=[ ,\.]|$)" => "#fixions"; // fiction vs fixions (phoneticly indistinguishable)	
 		"(?<=^| )[Ss]'ils?(?=[ ,\.]|$)" => "#sil";	
 		"(?<=^| )d'il(?=[ ,\.]|$)" => "#dil";	
@@ -1052,6 +1060,13 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 	#EndSubSection(normalizer)
 	#BeginSubSection(shortener)
 	
+		"^lin[Ee]ksp" => "l{IN}{EX}p"; // l'inexpérience
+
+		"#fois\=ci" => "{FOIS}{SI}"; 
+
+		"^in$" => "{IN}"; // in (standing alone)
+		"#etaitce" => "{ETAITCE}"; // était-ce
+
 		"#hetre" => "{HETRE}"; // hêtre
 		"#maitre" => "{MAITRE}"; // maître
 		"#avaisje" => "{AVAISJE}"; // avais-je
@@ -1104,7 +1119,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"tstwrt(^plus)" => { "^pl(y|\[ü\])$", "{PLUS}" }; // plus-value (stage 3 = ply alone, since eSpeak transforms it to ply|)
 		"tstwrt(^[Ss]ans)" => { "^s[Aa]~$", "{SANS}" }; // sans-souci, sans-travail
 		"^parf#?wa" => "{PAR}{FOIS}"; // parfois
-		"tstwrt(part$)" => { "par", "PA[VR]" };
+		"tstwrt(^part$)" => { "par", "PA[VR]" }; // add ^ (otherwise it blocks plupart (bleeding))
  
 		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$", "^park$", "^par(?:y|\[ü\])" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
@@ -1195,7 +1210,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^ko~tre$" => "[K]o~tre"; // contrée(s)
 		"^ko~tra" => "{CONTRE}a"; // preposition and prefix 
 		"^ko~tr" => "{CONTRE}"; 
-		"^([mnsldt])etr$" => "$1{ETRE}";   // n'être, d'être, l'être etc.
+		"tstwrt(^lettre)" => { "^letr", "[L]etr" };  // lettre <=> l'être (avoid collusion) 
+		"^([mnsldt])?etr$" => "$1{ETRE}";   // n'être, d'être, l'être etc.
 		"#trop$" => "{TROP}";
 		"^#ser(?:ai[st]?|ez|aient)?$" => "{SER}e";
 		"^#seras?$" => "{SER}a";
@@ -1222,6 +1238,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"k#y$" => "[I][K]";
 		"n#y$" => "[I][N=]";
 		"s#y$" => "[I][S=]";
+		"t#y$" => "[I][T]";
+		"m#y$" => "[I][M]";
 		"#y$" => "{#Y}";
 		"^\[ü\]$" => "{EUT}";
 		"^#pouvoir" => "{POUV}war";
@@ -1252,17 +1270,23 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^k[Oo]~b[ij][Ee]~$" => "{CON}{BIEN}";
 		"^pr[Oo]k[oO]~" => "{PRO}{CON}";
 		"^(l)?[Aa]~k[Oo]~" => "$1[A~]K[O~]";
+		"^k[Oo]~bl" => "[K]o~bl"; // comble (no abbréviation)
 		"(?<!s|\[ü\])(dis|tra~[sz])?ko~" => { "$1{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar", "^[Aa]k[Oo]~p",   "r[Aa]~k[Oo]~t" }; // original word is phonetic  transcription! (without stress! = ')
+		"^ekse$" => "{EX}se"; // excès
+		"^eks$" => "[0N-][E]ks"; // no abbreviation when "ex" stands alone (according to Meyer)
 		"(?<=^r@|^r|^pre|^l|^d|^)e[kg][sz]" => "{EX}";
 		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
 		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
 
 		"^s[Ee]ks(\[ü\]|y|$)" => "SEks$1"; // sex, sexuel etc.
 		"(?<=^[mtsl])e[kg][sz](?!t)" => "{EX}";   // pronoms ... article ... et l'horreur commence ... :)
-
+		
+		"^(dez)e~te?r" => "$1{INTER}"; // désintéressement
+		
 		"(?<!t)e~ter(?!min)" => "{INTER}"; // not in: tintèrent, interminable
 		"^(l)?e~tr(?!uvabl)" => "$1{INTER}" };
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
+		"^linapt" => "l{IN}apt"; // l'inaptitude
 		"^(?:in)(?!(?:j|$))" => { "{IN}", "[Ee]~si ?$" }; // why is original word with E uppercase?!? (see ExecuteRule())
 		"s\[ü\]b" => "{SUB}";
 		"tra~skr" => "{TRANS}skr"; // transcrire
@@ -1318,6 +1342,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"tstwrt((?<!ren)forts?$)" => { "f[Oo]r$", "{FORT}" };  // infort => yes: in{FORT}, renfort => no: ra~for (WHERE IS THE LOGIC ANYWAY ... ;/)
 		
 		"^f[Oo]r(\[ng\]|n|m(?:y|\[ü\]|$))" => "[F][O][VR]$1";   // forger, forn- (..), formule
+		"^(E~|e~)fort" => "$1{FORTE}"; // infortune
 		"^fort" => "{FORTE}";
 		"^for(?!s)" => { "{FORT}", "^f[Oo]rm(?:a|e|i)", "^f[Oo]ra", "^f[Oo]rf" }; // format, formattage, former, formidable, forage, forfait, forger, forge, forgeron
 		"^sito$" => "{SI}{TOT}";
@@ -1330,7 +1355,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^{LORSQUE}il" => "{LORSQUE}{IL}";
 		"^#suis$" => "{SUIS}";
 		"#s#?wiss" => "{SUISSE}";
-		"^s\[ü\]is" => "{SUISSE}";
+		"^s(\[ü\]|#?w)is" => "{SUISSE}";
 		"^#toujours$" => "{TOUJOURS}";
 		"^neseser" => "{NECESSAIRE}";
 		"^(l)?\[?[Aa]~\]?a" => "$1{EN=}a"; // enhardir
@@ -1463,6 +1488,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		"^r@?" => "[AR]";
 		"{ZION}r" => "{ZION}[VR]";
+		"ION}r" => "ION}[VR]";		// sélectionnera (maybe preceeding rule can be eliminated)
 		"}r" => "}[AR]"; // p.ex.: subroger
 		"sr" => "[S][AR]"; // Israël
 		"r" => "[VR]";
@@ -1709,6 +1735,10 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		// convert all abbreviations to upperspace
 		"({.*?})" => "strtoupper()";
 
+		"{FOIS}{SI}" => "[F][EN]\\I[S=]";
+
+		"{ETAITCE}" => "[0N-][HEIT]\\[S=]";
+
 		"^{HETRE}" => "[0N-]E[T@R]"; // hêtre
 		"{HETRE}" => "E[T@R]"; // hêtre
 	
@@ -1754,6 +1784,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{NECESSAIRE}" => "[N=][VR]";
 		"{TOUJOURS}" => "OTU[VR]";
 		"{SUIS}" => "[S=][-I]";
+		"{SUISSE}a\[&a\]i\[vr\]" => "[0U-][#0][SS]E[VR]";
 		"{SUISSE}" => "[0U-][#0][SS]";
 		"{LORSQUE}{IL}" => "OL\\I[ES]";
 		"{LORSQUE}" => "OL";
@@ -1778,7 +1809,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{SON}" => "[#ND][SEIN]";
 		"{SANS}" => "[#NDS][SEIN]";
 		"{COMME}" => "OK";
-		"^{ITE}$" => "[0N-][HEIT]";
+		"^{ITE}" => "[0N-][HEIT]"; // elimate $ for "était-ce"
 		"{ITE}" => "[HEIT]";
 		"\|d{DANS}" => "\DAD"; // là-dedans
 		"{DANS}" => "AD";
@@ -1881,6 +1912,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{QUELQUESUNS}" => "[CH]SE[-EI]"; 
 		"{QUELQUESUNES}" => "[CH]S[AU]N"; 
 		"{FORT}" => "[FORT]"; 
+		"^\[EI\]{FORTE}" => "[0N-][EI][FORT]"; // infortune
+		
 		"^{FORTE}$" => "[FORT][#4-][00]";
 		"{FORTE}" => "[FORT]";
 		"^{SI}" => "I[S=]";
@@ -2105,6 +2138,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(\[n\])\[#.\](\[o\]\[g@r\])" => "$1[#2-]$2"; // pornografie (should be integrated in GESSBAS!)
 		"(\[s=\])\[#.\](\[vr\])" => "$1[#3]$2"; // cerise
 		"(\[ur\])\[#.\](\[on\])" => "$1[#7-]$2"; // pourrons
+		"(\[bei\+ar\])\[#.\](\[o\]\[vr\])" => "$1[#3-]$2"; // contrordre
+		"(\[d\])\[#.\](\[a\]\[x\])" => "$1[#7]$2"; // d'accepter
 
 	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
