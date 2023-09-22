@@ -1106,7 +1106,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^ekstra(?!k)" =>  "{EXTRA}"; // don't apply to: extraction
 		"e~par(sj)" => "e~PA[VR]$1"; // impartial 
 		"e~par" => "{IMPAR}"; // imparfait 
-		"^e~s\[ü\]r" => "{INSUR}";
+		"^([mtsl])?e~s\[ü\]r" => "$1{INSUR}";  // s'insurge, l'insurrection
 		"^r[@eE][zs]\[ü\]r" => "{RESUR}"; // resurrection
 		"^#toutefois$" => "{TOUTEFOIS}";
 		"^#dument$" => "{DU}{MENT}";
@@ -1377,6 +1377,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		//"[ji](?:[oO][~nN]|\[[oO][~nN]\])" => "{ION}"; // include possible variants, wrong: lorgnon
 		"(e\[sch\]a~ti)j(o~)" => "$1[H]$2"; // echantillons
 
+		"^rej(?:o~$|on)" => "re[H]{ION}"; // rayon, rayonnement
+
 		"tstwrt((?<!gn)o[nm])" => { "(?<!a)[ji](?:[oO][~nN]|\[[oO][~nN]\])", "{ION}" }; // include possible variants
 		
 		// recorrection
@@ -1607,7 +1609,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^(\[ng\]\[wa\])j(\[ö\])" => "$1H$2"; // joyeux
 
 		"^j\[ö\]$" => "[0N-][EI][&O]";  
-		"^([ij]\[&E\](?:e|\[ö\]))" => "[0N-]$1"; // hier => same for other words? => yes for ö
+		"^([Iij]\[&E\](?:e|\[ö\]))" => "[0N-]$1"; // hier => same for other words? => yes for ö; hiérarchie
 		"^i" => "[0D-]i";
 		"^o" => "[0N-]o";
 		
@@ -1805,7 +1807,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{LORSQUE}" => "OL";
 		"{MAINTENANT}" => "[0U-][EM]";
 		"{BIEN}{TOT}" => "B[#4-][TOT]";
-		"{INSUR}" => "[0D-][EI][_SOBRE]";
+		"^{INSUR}" => "[0D-][EI][_SOBRE]";
+		"{INSUR}" => "[EI][_SOBRE]";		// s'insurge
 		"^{IMPAR}" => "[0D-][EI][RÜCK]";
 		"{IMPAR}" => "[EI][RÜCK]";
 		"{RE}{EX}" => "[AR]E[&E][&E]";
@@ -1935,6 +1938,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^{SI}" => "I[S=]";
  		"{TOT}" => "[TOT]";
 		"{BIENETRE}" => "B[&T@R]";
+		"(\[[Hh]\]){ION}" => "$1[ON]"; // rayon
 		"{ION}" => "[ION]"; // not really necessary (just to be consistent)
 		"{SIL}" => "I[S=][EST]";
 		"{DIL}" => "I[D][EST]";
@@ -2171,6 +2175,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(\[d\])\[#.\](\[au\]\[p\])" => "$1[#6]$2"; // Dupuis
 		"(\[t\])\[#.\](\[i\]\[mpf\])" => "$1[#6]$2"; // sentiments
 		"(\[ar\])(\\)(\[a\]\[l\])" => "$1$2[#2]$3"; // par-là
+		"(\[h\])\[#.\](\[on\])" => "$1[#1-]$2"; // rayon
 
 	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
