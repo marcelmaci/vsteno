@@ -293,6 +293,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"Ekstr@mi" => "ekstremis"; // extremis (correction eSpeak)
 
 		"^zyriS$" => "zyrik"; // Zürich (correction eSpeak)
+		"^(tirOn)j([Ee])" => "$1i$2"; // tyroniennes (correction eSpeak)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -830,7 +831,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"([Aa]i|[Ss]ais)=(je)" => "$1-$2"; // rewrite ai-je
 
 		
-		"(?<=^| )(?:É|E|é)tait-ce(?=[ ,\.]|$)" => "#etaitce";
+		"(?<=^| )(?:([Nn])')?(?:É|E|é)tait-ce(?=[ ,\.]|$)" => "#$1etaitce";
+		"(?<=^| )(?:([Nn])')?(?:E|e)st-ce(?=[ ,\.]|$)" => "#$1estce";
 		
 		"(?<=^| )[Pp]arce qu'ils?(?=[ ,\.]|$)" => "#parcequil";
 		"(?<=^| )[Pp]arce qu'elles?(?=[ ,\.]|$)" => "#parcequelle";
@@ -928,7 +930,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<=^| )[Cc]eux-ci(?=[ ,\.]|$)" => "#ceuxci";
 		"(?<=^| )[Ss]inon(?=[ ,\.]|$)" => "#sinon";
 		"(?<=^| )[Mm]aintenant(?=[ ,\.]|$)" => "#maintenant";	
-		"(?<=^| )[Ss]ui[st](?=[ ,\.]|$)" => "#suis";	
+		"(?<=^| )[Ss]ui[st](?=[ ,\.:]|$)" => "#suis";	// suit:
 		"(?<=^| )[Ss]cies?(?=[ ,\.]|$)" => "#scie"; // treat separately: abbreviation has to be cancelled	
 		"(?<=^| )[Rr]ats?(?=[ ,\.]|$)" => "#rat";	// idem
 		"(?<=^| )[Ww]allons?(?=[ ,\.]|$)" => "#wallon";	// idem
@@ -1066,6 +1068,10 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		"^in$" => "{IN}"; // in (standing alone)
 		"#etaitce" => "{ETAITCE}"; // était-ce
+		"#[Nn]etaitce" => "{NETAITCE}"; // n'était-ce
+		
+		"#estce" => "{ESTCE}"; // était-ce
+		"#[Nn]estce" => "{NESTCE}"; // n'était-ce
 
 		"#hetre" => "{HETRE}"; // hêtre
 		"#maitre" => "{MAITRE}"; // maître
@@ -1194,6 +1200,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"#sans" => "{SANS}";
 		"#comme" => "{COMME}";
 		"#scie" => "[S=@#/][-I]";
+		"tstwrt(^fêt)" => { "^fet", "^FET" }; // fêté (no abbreviation) 
 		"tstwrt((êtez|ettez|ait(?:é|e)e?[sz]?)$)" => { "ete$", "E[T]E" }; // arrêtez: no abbreviation!
 		"(?<!su)(i|j?e)te$" => "{ITE}";   // not: souhaiter (according to Meyer, ch1.1)
 		"#dans" => "{DANS}";
@@ -1360,6 +1367,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^for(?!s)" => { "{FORT}", "^f[Oo]rm(?:a|e|i)", "^f[Oo]ra", "^f[Oo]rf" }; // format, formattage, former, formidable, forage, forfait, forger, forge, forgeron
 		"^sito$" => "{SI}{TOT}";
 		//"i?to$" => { "{TOT}", "^f[Oo]t[Oo]", "^to$" };
+		"^(ta~)to$" => "$1[T]o"; // tantôt
 		"tstwrt(tôt)" => { "i?to$", "{TOT}" }; // more precise rule for -tôt (bientôt, sitôt, aussitôt etc.)
 		"#bienetre$" => "{BIENETRE}";
 		"^okel$" => "{AUQUEL}";
@@ -1562,6 +1570,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		// necessary to do some separations here (normally work for separator)
 		"\|({VOUS})$" => "\\$1"; // rendez-vous
 
+		// a separator rule that must be here
+		"tstwrt(^mi)" => { "^(?:mj|mi\|)", "M[-I]\\[#2]\\" }; // mi-novembre, mi-mai, mi-avril
+
 		// -io
 		"[ji]o$" => "I[&O]";
 
@@ -1602,16 +1613,16 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"\[?e\]?{ITE}" => "E[&E]{ITE}";
 
 		// vowels at beginning of word
-		"^e" => "[0N-]e";
-		"^ae" => "[0N-]A[&A]e";
-		"^a" => "[0N-]a";
+		"(^|\\|\|)e" => "$1[0N-]e";
+		"(^|\\|\|)ae" => "$1[0N-]A[&A]e";
+		"(^|\\|\|)a" => "$1[0N-]a";
 		"^(\[a~\])" => "[0N-]$1";
 		"^(\[ng\]\[wa\])j(\[ö\])" => "$1H$2"; // joyeux
 
-		"^j\[ö\]$" => "[0N-][EI][&O]";  
+		"(^|\\|\|)j\[ö\]$" => "$1[0N-][EI][&O]";  
 		"^([Iij]\[&E\](?:e|\[ö\]))" => "[0N-]$1"; // hier => same for other words? => yes for ö; hiérarchie
-		"^i" => "[0D-]i";
-		"^o" => "[0N-]o";
+		"(^|\\|\|)i" => "$1[0D-]i";
+		"(^|\\|\|)o" => "$1[0N-]o";
 		
 		"(?<!\[wa\]|[ae])j(\[ö\])(?!$)" => "i[&E]$1"; // don't apply to: joyeux, aïeul, meilleur
 
@@ -1631,12 +1642,12 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		
 		"^(\[wa\])" => "[0N-]$1";
 
-		"^u" => "[0N-]u";
+		"(^|\\|\|)u" => "$1[0N-]u";
 		"^\[&O]" => "[0N-][&O]";
 		"^\[AI]" => "[0N-][AI]";
 
 		// n, s at beginning of word
-		"^(\[#n(?:[sdu]|ds)\])?s" => "$1[S=]";
+		"(^|\\|\|)(\[#n(?:[sdu]|ds)\])?s" => "$1$2[S=]";
 		"^(\[#n(?:[sdu]|ds)\])?n" => "$1[N=]";
 
 		// diptongs at end of the word
@@ -1690,7 +1701,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		"^(\[#(?:NS|ns)\][Ll])\|(\[#(?:NS|ns)\][Bb])$" => "$1\\$2"; // là-bas
 		"^(\[0D-\]i?s)i\|(\[#(?:NS|ns)\][Bb])$" => "$1[-I]\\[#4]$2"; // (i)ci-bas
-
+		
+		
 	#EndSubSection(separator)
 	#BeginSubSection(rewriter)
 		
@@ -1754,6 +1766,10 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"{FOIS}{SI}" => "[F][EN]\\I[S=]";
 
 		"{ETAITCE}" => "[0N-][HEIT]\\[S=]";
+		"{NETAITCE}" => "[N=][HEIT]\\[S=]";
+
+		"{ESTCE}" => "[0N-][E][S]"; // est-ce
+		"{NESTCE}" => "[N=][E][S]"; // n'est-ce
 
 		"^{HETRE}" => "[0N-]E[T@R]"; // hêtre
 		"{HETRE}" => "E[T@R]"; // hêtre
