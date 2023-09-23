@@ -105,7 +105,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 			"vingt":"vE~t",
 			"l'as":"la",
 			"([slmt])?'?enhardi(r)?":"$1a~ardi$2",  // don't use any escape character \
-			"(slmt)?'?enharnach(e[rz]|ée?s?)":"$1a~arnaSe"	// \ leads to an empty array (why?!)
+			"(slmt)?'?enharnach(e[rz]|ée?s?)":"$1a~arnaSe",	// \ leads to an empty array (why?!)
+			"suspects?$":"syspE"  // suspect (translated to syspEkt by eSpeak
 		";
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -294,6 +295,10 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		"^zyriS$" => "zyrik"; // Zürich (correction eSpeak)
 		"^(tirOn)j([Ee])" => "$1i$2"; // tyroniennes (correction eSpeak)
+
+		"(par)\|(briz)" => "$1$2"; // pare-brise
+
+		//"tstwrt([Ss]us)" => "syspE"; // suspect(s) (error in eSpeak)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1135,6 +1140,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^par(#?wa)$" => "PA[VR]$1"; // paroi
 		"^part(a\[(?:ng|NG)\])" => "PA[RT]$1"; // partager, partage
 		"^part(@?ner)" => "PA[RT]$1"; // partenaire, partenariat
+		"^parbriz$" => "PA[VR]briz"; // pare-brise
 
 		"^par(?!l|ti|[Oo]l|[Ee]~?|[Aa]~|ke)" => { "{PAR}", "^pari$", "^park$", "^par(?:y|\[ü\])" }; // exceptions: partir (parti), parôle, paraître (paraît), pareil, parquet etc.
 		"{PAR}tu$" => "{PAR}{TOUT}";
@@ -2192,6 +2198,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(\[t\])\[#.\](\[i\]\[mpf\])" => "$1[#6]$2"; // sentiments
 		"(\[ar\])(\\)(\[a\]\[l\])" => "$1$2[#2]$3"; // par-là
 		"(\[h\])\[#.\](\[on\])" => "$1[#1-]$2"; // rayon
+		"(\[s\])\[#.\](\[a\]\[mpf\])" => "$1[#6]$2"; // récemment
+		"(\[bei\+ar\])\[#.\](\[o\]\[w\])" => "$1[#0]$2"; // controversé
+		"(\[sp\])(\[-e\])" => "$1[#2-]$2"; // suspect
 
 	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
