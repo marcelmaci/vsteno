@@ -288,6 +288,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 
 		"yije" => "yje"; // fuyez
 		"manjEr" => "manier"; // manière (correction eSpeak)
+		"manj([Aa])" => "mani$1"; // en maniant (correction eSpeak)
 		"^nje$" => "nie"; // nier, nié etc. (correction eSpeak)
 
 		"aEko" => "Eko"; // ex aequo (correction eSpeak)
@@ -297,8 +298,6 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^(tirOn)j([Ee])" => "$1i$2"; // tyroniennes (correction eSpeak)
 
 		"(par)\|(briz)" => "$1$2"; // pare-brise
-
-		//"tstwrt([Ss]us)" => "syspE"; // suspect(s) (error in eSpeak)
 
 	#EndSubSection(analyzer)
 #EndSection(header)
@@ -1313,6 +1312,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^(l)?e~tr(?!uvabl)" => "$1{INTER}" };
 		"^e~d\[ü\]$" => "[E~]d[ü]"; // no prefix in- in indû 
 		"^linapt" => "l{IN}apt"; // l'inaptitude
+		"^([lmts])?ini" => "$1{IN}i"; // l'initiative, m'initier etc.
+
 		"^(?:in)(?!(?:j|$))" => { "{IN}", "[Ee]~si ?$" }; // why is original word with E uppercase?!? (see ExecuteRule())
 		"s\[ü\]b" => "{SUB}";
 		"tra~skr" => "{TRANS}skr"; // transcrire
@@ -1424,6 +1425,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		// three characters
 		"str" => "[STR]";
 		"spl" => "[SPL]";
+		"spr" => "[SPR]"; // esprit
 		"ktr" => "[CTR]";
 		"skr" => "[SCR]";
 		"skl" => "[SCL]";
@@ -1715,6 +1717,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		// rewrite bundled tokens
 		"\[str\]" => "[ST@R]";
 		"\[spl\]" => "[SP@L]";
+		"\[spr\]" => "[SP@R6]";  // esprit
 		"\[ctr\]" => "[CK@R]";
 		"\[scr\]" => "[C@R]";
 		"\[scl\]" => "[C@L3]";
@@ -2201,6 +2204,10 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(\[s\])\[#.\](\[a\]\[mpf\])" => "$1[#6]$2"; // récemment
 		"(\[bei\+ar\])\[#.\](\[o\]\[w\])" => "$1[#0]$2"; // controversé
 		"(\[sp\])(\[-e\])" => "$1[#2-]$2"; // suspect
+		"(\[n\])\[#.\](\[au\]\[c@r\])" => "$1[#1]$2"; // manuscrite
+		"(\[les\])\[#.\](\[o\]\[rr\])" => "$1[#2]$2"; // exhorter
+		"(\[ng\])\[#.\](\[au\]\[st\])" => "$1[#6]$2"; // justement
+		"(\[t\])\[#.\](\[a\]\[mpf\])" => "$1[#5]$2"; // notamment
 
 	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
