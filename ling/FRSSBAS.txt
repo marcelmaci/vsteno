@@ -2208,6 +2208,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(\[les\])\[#.\](\[o\]\[rr\])" => "$1[#2]$2"; // exhorter
 		"(\[ng\])\[#.\](\[au\]\[st\])" => "$1[#6]$2"; // justement
 		"(\[t\])\[#.\](\[a\]\[mpf\])" => "$1[#5]$2"; // notamment
+		"(\[l\])\[#.\](\[o\]\[l\])" => "$1[#4]$2"; // l'Olympic
 
 	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
