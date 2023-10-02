@@ -106,7 +106,8 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 			"l'as":"la",
 			"([slmt])?'?enhardi(r)?":"$1a~ardi$2",  // don't use any escape character \
 			"(slmt)?'?enharnach(e[rz]|ée?s?)":"$1a~arnaSe",	// \ leads to an empty array (why?!)
-			"suspects?$":"syspE"  // suspect (translated to syspEkt by eSpeak
+			"suspects?$":"syspE",  // suspect (translated to syspEkt by eSpeak)
+			"^prospects?$":"prospE" // prospect (translated to prospEkt by eSpeak)
 		";
 		// engine parameters
 		"token_distance_wide" := "18";
@@ -1295,9 +1296,12 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"^(l)?[Aa]~k[Oo]~" => "$1[A~]K[O~]";
 		"^k[Oo]~bl" => "[K]o~bl"; // comble (no abbréviation)
 		"lako~pl" => "[L][A][K]o~pl"; // l'accomplissement (no abbréviation)
+		"leksik" => "LE[X]IK"; // lexicographe etc. (no abbréviation)
+		"^tra~seks" => "{TRANS}SE[X]"; // transsexuel (separate s)
 		"(?<!s|\[ü\])(dis|tra~[sz])?ko~" => { "$1{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar", "^[Aa]k[Oo]~p",   "r[Aa]~k[Oo]~t" }; // original word is phonetic  transcription! (without stress! = ')
 		"^ekse$" => "{EX}se"; // excès
 		"^eks$" => "[0N-][E]ks"; // no abbreviation when "ex" stands alone (according to Meyer)
+		"^negzist" => "N{EX}I[ST]"; // n'existant pas 
 		"(?<=^r@|^r|^pre|^l|^d|^)e[kg][sz]" => "{EX}";
 		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
 		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
@@ -2209,6 +2213,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(\[ng\])\[#.\](\[au\]\[st\])" => "$1[#6]$2"; // justement
 		"(\[t\])\[#.\](\[a\]\[mpf\])" => "$1[#5]$2"; // notamment
 		"(\[l\])\[#.\](\[o\]\[l\])" => "$1[#4]$2"; // l'Olympic
+		"(\[s=\])\[#.\](\[a\]\[g@r\])" => "$1[#1-]$2"; // s'agrandit
+		"(\[bei\])\[#.\](\[k@r\])" => "$1[#2-]$2"; // concrète
+		"(\[p@r6\])\[#.\](\[o\]\[sp\])" => "$1[#2]$2"; // prospect
 
 	#EndSubSection(frenchspacer)
 	#BeginSubSection(diacritics)
