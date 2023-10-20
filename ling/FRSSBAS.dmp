@@ -1298,10 +1298,12 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"lako~pl" => "[L][A][K]o~pl"; // l'accomplissement (no abbréviation)
 		"leksik" => "LE[X]IK"; // lexicographe etc. (no abbréviation)
 		"^tra~seks" => "{TRANS}SE[X]"; // transsexuel (separate s)
+		"^kompl" => "{CON}[PL]"; // compléter: local vs productive System: transcription is NOT the same! (different versions?!)
 		"(?<!s|\[ü\])(dis|tra~[sz])?ko~" => { "$1{CON}", "^ko[nm]", "^kO~Ze$", "^rakO~", "kO~tw\'?ar", "^[Aa]k[Oo]~p",   "r[Aa]~k[Oo]~t" }; // original word is phonetic  transcription! (without stress! = ')
 		"^ekse$" => "{EX}se"; // excès
 		"^eks$" => "[0N-][E]ks"; // no abbreviation when "ex" stands alone (according to Meyer)
 		"^negzist" => "N{EX}I[ST]"; // n'existant pas 
+		"^le[kg][sz]a" => "L[E][X]A"; l'Hexagone
 		"(?<=^r@|^r|^pre|^l|^d|^)e[kg][sz]" => "{EX}";
 		"^\[ng\]e[kg][sz]" => "[NG]{EX}";  // j'exigerais
 		"^(in|{IN})e[kg][sz]" => "$1{EX}";  // inexact
@@ -1493,7 +1495,7 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		"(?<!\[)kt(?!\])" => "[CT]";
 		"(?<!\[)ft(?!\])" => "[FT]";
 		"(?<!\[)lt(?!\])" => "[LT]";
-		"tstwrt((ni[eè]re?)$)" => { "nj([eE]r?)", "[N]I[&E]$1" };
+		"tstwrt(ni(?:e|è)re?s?$)" => { "nj([eE]r?)", "[N]I[&E]$1" };
 		"tstwrt((nieux|nieuse)$)" => { "nj\[Ö\]", "[N]j[Ö]" };
 		"tstwrt(niez$)" => { "nje$", "nie" }; // retourniez (avoid following rule, i.e. bundling gn)
 		"njl" => "[NN@L]"; // Saignelégier
