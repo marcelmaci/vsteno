@@ -1398,6 +1398,9 @@ Druckerei Wetzikon AG, 8620 Wetzikon.
 		//"[ji](?:[oO][~nN]|\[[oO][~nN]\])" => "{ION}"; // include possible variants, wrong: lorgnon
 		"(e\[sch\]a~ti)j(o~)" => "$1[H]$2"; // echantillons
 
+		"tstwrt(illon)" => { "ijo~", "ij{ON}" }; // pavillon
+		"tstwrt(ouillon)" => { "ujo~", "uj{ON}" }; // bouillon
+
 		"^rej(?:o~$|on)" => "re[H]{ION}"; // rayon, rayonnement
 
 		"tstwrt((?<!gn)o[nm])" => { "(?<!a)[ji](?:[oO][~nN]|\[[oO][~nN]\])", "{ION}" }; // include possible variants
