@@ -2623,6 +2623,8 @@
 		// y <=> i or ü => by default, transform all y to i (add rules for ü, if necessary)
 		"^([LlRr]o-?)y(-?a-?l)" => "$1j$2"; // loyal, royal
 
+		"^([Bb]a-?b)y(-?lo)" => "$1i$2"; // Babylonier (create bleeding with following rule "Baby")
+
 		"(?<!\[)y" => { "i", "York", "Yvon-?ne", "Wey", "[Bb]oy", "Neu ?[Yy]ork", "Bel-?le-?lay", "[Yy]ou-?tu-?be", "Syd-?ney", "To-?ky-?o", "Whis-?ke?y", "^[Yy]", "[Ff]o-?y-?er", "[Bb]er[-+]?ke-?ley", "[Ll]y-on", "Lob-?by", "Hen-?ry", "[Ss]ay", "[Pp]a-?ra-?gu-?a-?y", "Schre-?y", "[Cc]i-?ty", "^[Dd]re.?y.?er\+?$", "[Bb]a-?by", "[Pp]lä-?do-?yer", "Bran-?dy", "[Tt]y-?r-?r-?he-?n", "[Uu]-?r-?u-?gu-?a-?y", "[Rr]a-?yon", "^[Ll]a-?dy", "^[Qq]u-?i-?c-?k-?l-?y", "[Gg]o-?u-?ra-?ya", "^(?:[Kk]a-?)?[Bb]o-?va-?ry", "[Cc]a-?ny", "^[Ff]ray-?s-?si-?nous", "^[Vv]i-?c-?hy$", "^[Ss]a-?vo-?y", "^[Bb](?:u|ü)-?c-?hy", "^[Dd]e-?ro-?ze-?r-?ays", "^[Gg]i-?v-?ry", "^[Ll]o-?y-?o-?la", "^Dü-?puy-?tren", "^[Ll]a-?f-?a-?y-?e-?t-?t-?e" };
 
 		// eu = ö
