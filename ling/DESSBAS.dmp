@@ -2553,6 +2553,8 @@
 	#EndSubSection(decapitalizer)
 	#BeginSubSection(phonetizer)
 		
+		"(pa-?vi)l-?l(on)" => "$1[^LL^]$2"; // Pavillon 
+
 		"^([Aa]-?t-?t?a-?li)e" => "$1-e"; // Attalie
 		"([Mm]u-?mi)(en)?$" => "$1-$2"; // Königsmumien
 		"^([Hh]os-?ti)e" => "$1-e"; // Hostie
